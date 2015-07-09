@@ -1,0 +1,12 @@
+@CHARSET "UTF-8";
+
+#nav{ width:211px;background:#2b2b2b; float:left; min-height: 1200px}
+#nav_left{ width:211px;  float:left;}
+#nav_left .left_1{width:211px; height:62px;line-height:63px;font-weight:bold;font-size: 18px;font-family:"微软雅黑";color: #fff;border-bottom:1px solid #3a3a3a;cursor: pointer;} 
+#nav_left .left_1 .left1_1{width:180px; height:62px;margin-left:31px;}
+#nav_left .left_list{width:211px;line-height:60px;font-weight:bold;font-size: 14px;font-family:"微软雅黑";color: #fff;cursor: pointer;display:none}
+#nav_left .left_list_mask_detail{width:211px;height:60px;}
+#nav_left .left_list_detail{width:180px; height:59px;margin-left:31px;border-bottom:1px solid #3a3a3a;}
+#nav_left a:link,#nav_left a:visited{ color:white; text-decoration:none;padding-left:51px;}
+#nav_left  .left_list_mask_detail:hover{display:block; background:url(../imgs/side_btn.png) no-repeat; }
+#nav_left  .left_list_mask{display:block; background:url(../imgs/side_btn.png) no-repeat; }

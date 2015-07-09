@@ -1,0 +1,11 @@
+@CHARSET "UTF-8";
+
+/*header部分*/
+#header{  height:70px;margin:0 auto;background:#4cc2ff;min-width:1000px}
+.logo{ width:211px; height:70px; float:left;text-align: center;line-height: 70px;font-size: 25px;color:#fff;}
+.nav_top{ width:216px; height:70px; line-height:70px;float:right;}
+.nav_top a:hover{ text-decoration:underline; color:#F00;}
+.nav_top span{ color:#FFF;padding:0 6px;}
+.pic_san{ padding:0 8px;Display:inline;}
+.logout{width:84px;height:70px;line-height: 70px;color:#00547f;font-size: 16px;float:right;text-align: center;cursor: pointer;}
+.oparetor{width:130px;height:70px;line-height: 70px;color:#fff;font-size: 16px;text-align: center;cursor: pointer;float:left;}

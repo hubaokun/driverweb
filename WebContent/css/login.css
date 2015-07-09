@@ -1,0 +1,97 @@
+@CHARSET "UTF-8";
+
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,dl,dt,dd,ol,ul,li,form,label,table,caption,tbody,tfoot,thead,tr,th,td
+    {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-weight: inherit;
+    font-style: inherit;
+    font-size: 100%;
+    vertical-align: baseline;
+    font-family: '宋体';
+}
+
+.bg{
+    background: url("../imgs/loginbcg.png") ;
+    background-repeat: no-repeat;
+    background-position: center top; 
+    width: 100%;
+    background-size: cover;
+    min-width: 1126px;
+}
+.input{
+	border:none;
+	background-image: url("../imgs/inptt.png");
+	background-repeat:no-repeat;
+	outline:none;
+	width: 236px;
+	height: 35px;
+}
+
+.image{
+	background-image: url("../imgs/login.png");
+	background-repeat:no-repeat;
+	width: 125px;
+	height: 44px;
+	left: 45px;
+}
+
+
+.loginbg {
+	background: url("../imgs/logintab.png") no-repeat;
+    background-position: center top;
+	height:522px;
+    padding-top: 30px;
+    with:100%;
+}
+
+.bottombg {
+    background: url("../images/bottombg.png") no-repeat;
+    width: 1031px;
+    height:180px;
+}
+
+.login_name {
+  width: 84px;
+  text-align: right;
+  color: #8d8d8d;
+  margin-right: 20px;
+}
+
+.login-input {
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+  width: 112px;
+  height: 30px;
+  border: 1px solid #d6dce2;
+  padding-left: 5px;
+}
+
+.login-input2 {
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+  width: 112px;
+  height: 30px;
+  border: 1px solid #d6dce2;
+  padding-left: 5px;
+  background-image: url("../imgs/vcodeinptt.png");
+}
+
+
+.float_right {
+  float: left;
+}
+
+.float_left {
+  float: left;
+}
+.verify_text {
+  margin-left: 10px;
+/*   margin-top: -26px; */
+  font-size: 12px;
+  color: #333;
+} 

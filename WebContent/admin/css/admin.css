@@ -1,0 +1,104 @@
+.edit {
+	position: fixed;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	background: #707070;
+	opacity: 0.5;
+	display: none;
+}
+
+.edit_last {
+	position: fixed;
+	background: #fff;
+	
+	width: 600px;
+	height: 500px;
+	margin: 0 auto;
+	display: none;
+}
+
+
+
+.psw {
+	position: fixed;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	background: #707070;
+	opacity: 0.3;
+	display: none;
+}
+
+.psw_last {
+	position: fixed;
+	background: #fff;
+	width: 500px;
+	height: 400px;
+	margin: 0 auto;
+	display: none;
+}
+
+.school {
+	position: fixed;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	background: #707070;
+	opacity: 0.3;
+	display: none;
+}
+
+.school_last {
+	position: fixed;
+	background: #fff;
+	width: 500px;
+	height: 300px;
+	margin: 0 auto;
+	display: none;
+}
+
+.power {
+	position: fixed;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	background: #707070;
+	opacity: 0.3;
+	display: none;
+}
+
+.power_last {
+	position: fixed;
+	background: #fff;
+	width: 700px;
+	height: 400px;
+	margin: 0 auto;
+	display: none;
+}
+
+.add {
+	position: fixed;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	background: #707070;
+	opacity: 0.5;
+	display: none;
+}
+
+.add_last {
+	position: fixed;
+	background: #fff;
+	
+	width: 700px;
+	height: 600px;
+	margin: 0 auto;
+	display: none;
+}
+

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menu-list appname="小巴" iconURL="" authorityType="0">
+	<menu-item name="管理员设置" iconURL="" authority="1">
+		<sub-item name="管理员列表" authority="2" action="getAdminInfolist.do"/>
+	</menu-item>
+	<menu-item name="用户管理" iconURL="" authority="1">
+		<sub-item name="所有教练" authority="3" action="getCoachlist.do"/>
+		<sub-item name="待审核教练" authority="3" action="getCoachTobeChecked.do"/>
+		<sub-item name="所有学员" authority="4" action="getStudentlist.do"/>
+		<sub-item name="教练学员关系" authority="5" action="getCoachStudent.do"/>
+		<sub-item name="教练余额管理" authority="6" action="getCoachBalance.do"/>
+		<sub-item name="学员余额管理" authority="7" action="getStudentBalance.do"/>
+	</menu-item>
+	<menu-item name="充值提现管理" iconURL="" authority="1">
+		<sub-item name="教练提现申请" authority="3" action="getCoachApplyBySearch.do"/>
+		<sub-item name="教练历史提现" authority="4" action="getCoachBalanceBySearch.do"/>
+		<sub-item name="学员提现申请" authority="5" action="getStudentApplyList.do"/>
+		<sub-item name="学员历史提现" authority="6" action="getStudentApplyRecordList.do"/>
+		<sub-item name="学员历史充值" authority="7" action="getStudentRechargeList.do"/>
+		<sub-item name="驾校余额管理" authority="8" action="schoolmoneymanage.do"/>
+		<sub-item name="驾校历史提现" authority="9" action="getschoolRechargeList.do"/>
+	</menu-item>
+	<menu-item name="系统配置" iconURL="" authority="1">
+		<sub-item name="系统设置项" authority="3" action="getTimeCancel.do"/>
+		<sub-item name="准教车型配置" authority="4" action="getModellist.do"/>
+		<sub-item name="教练等级" authority="5" action="getallLevellist.do"/>
+		<sub-item name="投诉原因" authority="6" action="getComplaintlist.do"/>
+		<sub-item name="教练车型设置" authority="7" action="getTeachcarModellist.do"/>
+		<sub-item name="教学科目设置" authority="8" action="getSubjectlists.do"/>
+		<sub-item name="节假日设置" authority="8" action="getHolidays.do"/>
+	</menu-item>
+	<menu-item name="系统通知" iconURL="" authority="1">
+		<sub-item name="通知列表" authority="3" action="getNoticeList.do"/>
+	</menu-item>
+	<menu-item name="订单管理" iconURL="" authority="1">
+		<sub-item name="订单列表" authority="3" action="getOrderList.do"/>
+	</menu-item>
+	<menu-item name="投诉管理" iconURL="" authority="1">
+		<sub-item name="投诉列表" authority="3" action="getComplaintList.do"/>
+	</menu-item>
+	<menu-item name="驾校管理" iconURL="" authority="1">
+		<sub-item name="驾校列表" authority="3" action="getdriveSchool.do"/>
+	</menu-item>
+	<menu-item name="小巴券管理" iconURL="" authority="1">
+		<sub-item name="小巴券列表" authority="1" action="getCouponList.do"/>
+		<sub-item name="小巴券领取记录" authority="2" action="getCouponRecordList.do"/>
+	</menu-item>
+	<menu-item name="其他" iconURL="" authority="1">
+		<sub-item name="意见反馈" authority="3" action="getFeedback.do"/>
+		<sub-item name="版本管理" authority="4" action="getVersion.do"/>
+	</menu-item>
+	<menu-item name="日报" iconURL="" authority="1">
+		<sub-item name="系统日报" authority="3" action="systemdaily.do"/>
+		<sub-item name="驾校日报" authority="3" action="schooldaily.do"/>
+		<sub-item name="教练日报" authority="3" action="coachdaily.do"/>
+		<sub-item name="学生账户日报" authority="3" action="studentaccountdaily.do"/>
+		<sub-item name="教练账户日报" authority="3" action="coachaccountdaily.do"/>
+		<sub-item name="学生提现日报" authority="3" action="studentapply.do"/>
+		<sub-item name="教练提现日报" authority="3" action="coachapply.do"/>
+		<sub-item name="驾校对账单" authority="3" action="schoolbilldaily.do"/>
+		<sub-item name="小巴券日报" authority="3" action="xiaobadaily.do"/>
+	</menu-item>
+</menu-list>

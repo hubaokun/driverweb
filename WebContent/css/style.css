@@ -1,0 +1,390 @@
+@charset "utf-8";
+/* CSS Document */
+/*全局控制*/
+body {
+	margin: 0;
+	padding: 0;
+	font-size: 12px;
+	font-family: "微软雅黑";
+	margin: 0px;
+	padding: 0px;
+}
+/*重置浏览器默认样式*/
+h1,h2,ul,p,li,dl,dt,dd,img,input {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	border: 0;
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
+}
+
+
+.inputwithborder{
+	border: 1px;
+	border-color:#ff0000;
+	border-style:solid;
+}
+/*搜索*/
+.search .search_tex {
+	width: 78px;
+	height: 27px;
+	color: #323232;
+	font-size: 14px;
+	float: left;
+	line-height: 27px;
+}
+
+.search {
+	width: 251px;
+	height: 27px;
+	padding: 13px 30px;
+	float: left;
+}
+
+.search .tex {
+	width: 123px;
+	height: 27px;
+	line-height: 27px;
+	background: url(../imgs/search_tex.png) no-repeat;
+	float: left;
+	padding: 0 7px;
+}
+
+.search .but {
+	width: 31px;
+	height: 27px;
+	background: url(../imgs/search_btn.png) no-repeat;
+	float: left;
+	cursor: pointer;
+}
+/*内容*/
+#content {
+	min-width: 1000px;
+	overflow: hidden;
+}
+
+#content_form {
+	overflow: hidden;
+	margin-left: 211px;
+/* 	margin-bottom: -99999px; */
+/* 	padding-bottom: 99999px; */
+}
+
+#content_form_top {
+	width: 100%;
+	height: 84px;
+	border-bottom: 1px solid #cfd9df;
+}
+
+#content_form_table {
+	width: 100%;
+	margin-top: 13px;
+}
+
+#content_form_table table {
+	border: 0;
+	margin: 0 auto;
+}
+
+#content_form_table table th {
+	background: #f4f8fa;
+	height: 47px;
+	border-width: 0px 0px 0px 0px;
+	text-align: center;
+	line-height: 47px;
+	font-size: 16px;
+	color: #5b7697;
+}
+
+#content_form_table table tr {
+	height: 46px;
+	border: 1px solid #eaeff2;
+	text-align: center;
+}
+/* #content_form table{ border:solid #CCC;} */
+/* #content_form td{ width:198px; height:48px; font-size:14px;} */
+/* #content_form th{ width:198px; height:48px;text-align:center; font-size:14px;} */
+#content_form a:hover {
+	text-decoration: underline;
+}
+
+.form_t {
+	width: 198px;
+	height: 51px;
+}
+
+.tex_form {
+	width: 189px;
+	height: 51px;
+	background-color: #CCC;
+	padding: 0 5px;
+}
+
+.td.k {
+	width: 120px;
+	height: 30px;
+}
+/*分页*/
+#page {
+	width: 1000px;
+	height: 76px;
+	margin: 0 auto;
+}
+
+.demo {
+	width: 100px;
+	height: 100px;
+	float: left;
+	line-height: 100px;
+	padding-left: 275px;
+}
+
+.add a {
+	width: 67px;
+	height: 40px;
+	float: left;
+	padding-top: 37px;
+	padding-left: 173px;
+	cursor: pointer;
+}
+
+.pager li {
+	display: inline-block;
+	margin: 0 auto;
+	line-height: 25px;
+	background-color: #CCC;
+}
+
+.pager a {
+	display: block;
+	color: #333;
+	padding: 0 10px;
+	text-decoration: none;
+}
+
+.pager a:hover {
+	text-decoration: none;
+	background-color: #F60;
+	text-align: center;
+}
+
+.pageradd {
+	width: 67px;
+	height: 26px;
+	float: right;
+	text-align: center;
+	background-color: #F00;
+}
+
+#foot {
+	width: 100%;
+	height: 92px;
+	background: url(../imgs/foot_.png) repeat-x;
+	margin: 0 auto;
+	margin: 0px;
+	padding: 0px;
+	float: left; /* position: relative;top: 30px; */
+}
+
+.foot_text {
+	text-align: center;
+	line-height: 92px;
+}
+
+.breakall {
+	word-break: break-all
+}
+/*添加按钮*/
+.addbutton {
+	width: 85px;
+	height: 40px;
+	line-height: 40px;
+	background: #35aa47;
+	color: #fff;
+	text-align: center;
+	cursor: pointer;
+}
+/*删除按钮*/
+.delbutton {
+	width: 85px;
+	height: 40px;
+	line-height: 40px;
+	background: #e5e5e5;
+	color: #333333;
+	text-align: center;
+	cursor: pointer;
+}
+/*群发按钮*/
+.sendmessage {
+	width: 105px;
+	height: 40px;
+	line-height: 40px;
+	background: #e5e5e5;
+	color: #333333;
+	text-align: center;
+	cursor: pointer;
+}
+/*查询按钮*/
+.searchbutton {
+	width: 54px;
+	height: 40px;
+	line-height: 40px;
+	background: #4cc2ff;
+	text-align: center;
+	cursor: pointer;
+}
+
+.serchcontentdiv {
+	width: 297px;
+	height: 38px;
+	border: 1px solid #cfd9df;
+}
+
+select {
+	border: 0px;
+	font-family: "微软雅黑";
+	font-size: 14px;
+	text-align: center;
+}
+
+.border_right_bottom {
+	border-left: 0px;
+	border-bottom: 1px solid #eaeff2;
+	border-top: 0px;
+	border-right: 1px solid #eaeff2;
+}
+
+.border_noright_bottom {
+	border-left: 0px;
+	border-bottom: 1px solid #eaeff2;
+	border-top: 0px;
+	border-right: 0px;
+}
+
+.table_del_button {
+	width: 56px;
+	height: 26px;
+	background: #f83a22;
+	background-position: center;
+	background-size: 100% 100%;
+	cursor: pointer;
+}
+
+.table_edit_button {
+	width: 56px;
+	height: 26px;
+	background:#4cc2ff;
+	background-position: center;
+	background-size: 100% 100%;
+	cursor: pointer;
+}
+
+.table_share_button {
+	width: 56px;
+	height: 26px;
+	background: gray;
+	background-position: center;
+	background-size: 100% 100%;
+	cursor: pointer;
+}
+
+.table_message_button {
+	width: 56px;
+	height: 26px;
+	background: orange;
+	background-position: center;
+	background-size: 100% 100%;
+	cursor: pointer;
+}
+
+.table_button_del_icon {
+	width: 24px;
+	height: 100%;
+	float: left;
+	background-image: url(../imgs/common/delicon.png);
+	background-repeat: no-repeat;
+	background-size: 9px 12px;
+	background-position: center;
+}
+
+.table_button_edit_icon {
+	width: 24px;
+	height: 100%;
+	float: left;
+	background-image: url(../imgs/common/editicon.png);
+	background-repeat: no-repeat;
+	background-size: 14px 12px;
+	background-position: center;
+}
+
+.table_button_share_icon {
+	width: 24px;
+	height: 100%;
+	float: left;
+	background-image: url(../imgs/common/shareicon.png);
+	background-repeat: no-repeat;
+	background-size: 12px 11px;
+	background-position: center;
+}
+
+.table_button_message_icon {
+	width: 24px;
+	height: 100%;
+	float: left;
+	background-image: url(../imgs/common/tablemessageicon.png);
+	background-repeat: no-repeat;
+	background-size: 12px 12px;
+	background-position: center;
+}
+
+.table_button_text {
+	float: left;
+	text-align: center;
+	line-height: 26px;
+	color: #fff;
+	font-size: 9px;
+}
+
+.addscenic_center{
+	width: 98%;
+	margin: 0 auto;
+}
+
+.addscenic_center_top{
+	width: 100%;
+	height: 55px;
+	line-height: 55px;
+	color: #929a9e;
+	font-size: 12px;
+}
+
+/******** 是否按钮样式 end *****************/
+.binding_detail{
+/* 	position: absolute; */
+	background-color: #fff;
+	border: 1px solid #e1e1e1;
+	border-top:none;
+	display: none;
+	left: 101px;
+	width: 202px;
+	position:relative;
+/* 	top: 80px; */
+	z-index: 300;
+	max-height: 120px;
+	overflow-y: scroll;
+}
+.binding_detail_item{
+	height: 40px;
+	line-height: 40px;
+	padding-left: 10px;
+	max-width: 376px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.binding_detail_item:hover{
+	background-color: #e1e1e1;
+	cursor: pointer;
+}

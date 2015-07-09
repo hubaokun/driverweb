@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+	http://www.springframework.org/schema/task  
+	http://www.springframework.org/schema/task/spring-task-3.0.xsd
+	"
+	xmlns:task="http://www.springframework.org/schema/task">
+	<!-- 使用 annotation -->
+	<context:annotation-config />
+	<!-- 定时器注解配置 -->
+	<task:annotation-driven />
+	<!-- 定时器扫描 -->
+	<!-- <context:annotation-config /> -->
+	<context:component-scan base-package="com.daoshun.guangda.serviceImpl" />
+	<!-- 使用 annotation 自动注册bean,并检查@Controller, @Service, @Repository注解已被注入 -->
+	<context:component-scan base-package="com.daoshun" />
+
+	<!-- <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"> -->
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
+		<property name="targetDataSource">
+			<bean class="org.logicalcobwebs.proxool.ProxoolDataSource">
+				<property name="driver" value="com.mysql.jdbc.Driver" />
+
+				<!-- <property name="driverUrl" value="jdbc:mysql://120.25.236.228:3306/db_guangda?useUnicode=true&amp;characterEncoding=UTF-8&amp;characterSetResults=UTF-8" 
+					/> <property name="user" value="guangda" /> -->
+				<property name="driverUrl"
+					value="jdbc:mysql://localhost:3306/db_guangda?useUnicode=true&amp;characterEncoding=UTF-8&amp;characterSetResults=UTF-8" />
+
+				<!-- <property name="driverUrl" value="jdbc:mysql://120.25.236.228:3306/db_guangda?useUnicode=true&amp;characterEncoding=UTF-8&amp;characterSetResults=UTF-8" 
+					/> -->
+				<!-- <property name="user" value="root" /> -->
+				<!-- <property name="driverUrl" value="jdbc:mysql://localhost:3306/db_guangda?useUnicode=true&amp;characterEncoding=UTF-8&amp;characterSetResults=UTF-8" 
+					/> -->
+				<!-- <property name="driverUrl" value="jdbc:mysql://192.168.1.44:3306/db_guangda?useUnicode=true&amp;characterEncoding=UTF-8&amp;characterSetResults=UTF-8" 
+					/> -->
+				<property name="user" value="root" />
+				<property name="password" value="123456" />
+				<property name="maximumConnectionCount" value="20" />
+				<property name="minimumConnectionCount" value="5" />
+				<property name="statistics" value="1m,15m,1h,1d" />
+				<property name="simultaneousBuildThrottle" value="30" />
+				<!--一个活动连接最大活动时间默认5分钟 -->
+				<property name="maximumActiveTime" value="1000000" />
+				<!--自动侦察各个连接状态的时间间隔(毫秒),侦察到空闲的连接就马上回收,超时的销毁 -->
+				<property name="houseKeepingSleepTime" value="99000" />
+				<!--Test SQL(SELECT getDate()) -->
+				<property name="houseKeepingTestSql" value="select 1 from dual" />
+				<property name="trace" value="false" />
+			</bean>
+		</property>
+	</bean>
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource">
+		</property>
+		<property name="packagesToScan">
+			<list>
+				<value>com.daoshun.guangda.pojo</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<!-- 指定Hibernate的连接方言 -->
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="hibernate.show_sql">false</prop>
+				<prop key="hibernate.format_sql">true</prop>
+				<prop key="hibernate.current_session_context_class">org.springframework.orm.hibernate4.SpringSessionContext
+				</prop>
+				<prop key="hibernate.cache.use_second_level_cache">true</prop>
+				<!-- 配置RegionFactory为Ehcache的RegionFactory -->
+				<prop key="hibernate.cache.region.factory_class">org.hibernate.cache.EhCacheRegionFactory</prop>
+
+				<!-- <prop key="hibernate.query.substitutions">true 1, false 0</prop> 
+					<prop key="hibernate.default_batch_fetch_size">16</prop> <prop key="hibernate.max_fetch_depth">2</prop> 
+					<prop key="hibernate.generate_statistics">true</prop> <prop key="hibernate.bytecode.use_reflection_optimizer">true</prop> -->
+
+				<!-- <prop key="hibernate.cache.use_query_cache">true</prop> <prop key="net.sf.ehcache.configurationResourceName">/ehcache_hibernate.xml</prop> 
+					<prop key="hibernate.cache.use_structured_entries">true</prop> -->
+
+			</props>
+		</property>
+
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+
+	<!-- 配置注解实现管理事务（cglib：proxy-target-class="true"） -->
+	<tx:annotation-driven transaction-manager="transactionManager"
+		proxy-target-class="true" />
+</beans>

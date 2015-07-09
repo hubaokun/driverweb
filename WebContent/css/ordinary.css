@@ -1,0 +1,63 @@
+@CHARSET "UTF-8";
+
+.delbutton{
+	float:left;
+	margin-left:28px;
+	margin-top:22px;
+}
+.addbutton{
+	float:left;
+	margin-left:18px;
+	margin-top:22px;
+}
+
+.sendmessage{
+	float:left;
+	margin-left:18px;
+	margin-top:22px;
+}
+
+.searchbutton{
+	float:right;
+	margin-right:36px;
+	margin-top:22px;
+}
+
+.serchcontentdiv{
+	float:right;
+	margin-top:22px;
+	border-right:0px;
+}
+
+.searchdiv{
+	width:73px;
+	height: 100%;
+	border-right: 1px solid #cfd9df;
+}
+
+.table_del_button{
+	margin-left: 10px;
+	float: left;
+}
+
+.table_edit_button{
+	margin-left: 10px;
+	float: left;
+}
+.table_share_button{
+	margin-left: 10px;
+	float: left;
+}
+.table_message_button{
+	margin-left: 10px;
+	float: left;
+}
+.table_lookdetail{
+	float:left;
+	width:83px;
+	height:26px;
+	line-height: 26px;
+	text-align: center;
+	border-left: 1px solid #d3d6d8;
+	margin-left: 10px;
+}
