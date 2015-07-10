@@ -550,7 +550,7 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 									if (couponType == 1) {// 时间券
 										// 把券增加到教练那边去
 										CouponCoach mCouponCoach = new CouponCoach();
-										mCouponCoach.setCoachid(crecord.getCouponid());
+										mCouponCoach.setCoachid(order.getCoachid());
 										mCouponCoach.setCouponid(crecord.getCouponid());
 										mCouponCoach.setGettime(new Date());
 										mCouponCoach.setMoney_value(crecord.getMoney_value());
