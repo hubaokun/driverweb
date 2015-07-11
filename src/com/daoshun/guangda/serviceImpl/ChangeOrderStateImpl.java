@@ -43,28 +43,6 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 		Calendar now = Calendar.getInstance();
 		now.add(Calendar.SECOND, -1);
 
-		// 记录所有教练和学员的账户余额信息
-		List<CuserInfo> cUserList = dataDao.getAllObject(CuserInfo.class);
-		for (CuserInfo cuser : cUserList) {
-			CoachBalancerecord record = new CoachBalancerecord();
-			record.setAddtime(now.getTime());
-			record.setCoachid(cuser.getCoachid());
-			record.setFmoney(cuser.getFmoney());
-			record.setGmoney(cuser.getGmoney());
-			record.setMoney(cuser.getMoney());
-			dataDao.addObject(record);
-		}
-
-		List<SuserInfo> sUserList = dataDao.getAllObject(SuserInfo.class);
-		for (SuserInfo suser : sUserList) {
-			StudentBalanceRecord record = new StudentBalanceRecord();
-			record.setAddtime(now.getTime());
-			record.setStudentid(suser.getStudentid());
-			record.setFmoney(suser.getFmoney());
-			record.setMoney(suser.getMoney());
-			dataDao.addObject(record);
-		}
-
 		// 首先查询出订单相关的几个时间配置
 		String hqlset = "from SystemSetInfo where 1 = 1";
 		SystemSetInfo setInfo = (SystemSetInfo) dataDao.getFirstObjectViaParam(hqlset, null);
@@ -177,6 +155,28 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 				}
 				dataDao.updateObject(order);
 			}
+		}
+
+		// 记录所有教练和学员的账户余额信息,在订单结算之后再去记录用户的余额等情况
+		List<CuserInfo> cUserList = dataDao.getAllObject(CuserInfo.class);
+		for (CuserInfo cuser : cUserList) {
+			CoachBalancerecord record = new CoachBalancerecord();
+			record.setAddtime(now.getTime());
+			record.setCoachid(cuser.getCoachid());
+			record.setFmoney(cuser.getFmoney());
+			record.setGmoney(cuser.getGmoney());
+			record.setMoney(cuser.getMoney());
+			dataDao.addObject(record);
+		}
+
+		List<SuserInfo> sUserList = dataDao.getAllObject(SuserInfo.class);
+		for (SuserInfo suser : sUserList) {
+			StudentBalanceRecord record = new StudentBalanceRecord();
+			record.setAddtime(now.getTime());
+			record.setStudentid(suser.getStudentid());
+			record.setFmoney(suser.getFmoney());
+			record.setMoney(suser.getMoney());
+			dataDao.addObject(record);
 		}
 
 		// 每天24点清楚下订单提醒记录表中已经过期的数据
