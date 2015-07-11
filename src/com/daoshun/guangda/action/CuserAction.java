@@ -380,6 +380,20 @@ public class CuserAction extends BaseAction {
 	
 
 	/**
+	+	 * 账号验证
+	+	 */
+		@Action(value = "/checkCoachExistance")
+		public void checklogin() {
+			CuserInfo cuser = cuserService.getCuserByPhone(newcoachphone);
+			if (cuser != null) {
+				setResponseStr("error");
+			} else {
+				setResponseStr("success");
+			}
+		}
+		
+	
+	/**
 	 * 审核通过、或者不通过 根据传过来的checknum
 	 * 
 	 * @return
