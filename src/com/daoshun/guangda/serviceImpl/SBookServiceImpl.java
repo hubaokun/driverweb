@@ -955,6 +955,15 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					if (student != null) {
 						student.setFmoney(student.getFmoney().add(total));
 						student.setMoney(student.getMoney().subtract(total));
+
+						if (student.getMoney().doubleValue() < 0 || student.getFmoney().doubleValue() < 0) {
+							result.put("failtimes", failtimes);
+							result.put("successorderid", successorderid);
+							result.put("coachauth", student.getCoachstate());
+							result.put("code", 2);
+							return result;
+						}
+
 						dataDao.updateObject(student);
 					}
 
