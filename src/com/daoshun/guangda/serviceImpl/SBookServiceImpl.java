@@ -624,6 +624,18 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					cancel = scheduleinfoList.get(0).getCancelstate();
 				}
 
+				// 如果是用了小巴券,但是又没有传delmoney的话,订单预订失败
+				if (!CommonUtils.isEmptyString(recordid) && delmoney == 0) {
+					for (int j = 0; j < times.length(); j++) {
+						if (failtimes.length() == 0) {
+							failtimes = date1 + times.get(j).toString() + "点";
+						} else {
+							failtimes += "," + date1 + times.get(j).toString() + "点";
+						}
+					}
+					canOrder = false;
+				}
+
 				if (state == 0) {// 当天休息的情况
 					for (int j = 0; j < times.length(); j++) {
 						if (failtimes.length() == 0) {
