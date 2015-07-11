@@ -156,6 +156,11 @@ public class CuserAction extends BaseAction {
 	
 	private String coachdate;
 
+	// 添加教练
+	private String newcoachrealname;
+
+	private String newcoachphone;
+	
 	// 修改教练个人详细
 	private String editrealname;
 
@@ -297,6 +302,82 @@ public class CuserAction extends BaseAction {
 		}
 		return SUCCESS;
 	}
+	
+	
+	/**
+	 * 得到一个教练的详情
+	 * 
+	 * @return
+	 */
+	@Action(value = "/getCoachDetailByPhone", results = { @Result(name = SUCCESS, location = "/singlecoach.jsp") })
+	public String getCoachDetailByPhone() {
+		cuser = cuserService.getCuserByPhone(newcoachphone);
+		modellist = cuserService.getModelList();
+		teachcarlist = cuserService.getTeachcarInfolist();
+		if (cuser != null) {
+			if (cuser.getModelid() != null) {
+				String[] modelid = cuser.getModelid().split(",");
+				coachmodellist = new ArrayList<ModelsInfo>();
+				for (String id : modelid) {
+					ModelsInfo model = cuserService
+							.getmodellistbycoachid(CommonUtils.parseInt(id, 0));
+					if (model != null) {
+						coachmodellist.add(model);
+					}
+				}
+			}
+			if (cuser.getCarmodelid() != 0) {
+				TeachcarInfo teachcar = cuserService.getTeachcarInfoByID(cuser
+						.getCarmodelid());
+				if (teachcar != null) {
+					cuser.setCarmodel(teachcar.getModelname());
+				}
+			}
+			if (cuser.getDrive_schoolid() != null
+					&& cuser.getDrive_schoolid() != 0) {
+				DriveSchoolInfo school = driveSchoolService
+						.getDriveSchoolInfoByid(cuser.getDrive_schoolid());
+				if (school != null) {
+					cuser.setDrive_school(school.getName());
+					driveSchoolname = cuser.getDrive_schoolid();
+				}
+			}
+		}
+		if (!CommonUtils.isEmptyString(cuser.getBirthday())) {
+			cuser.setAge(cuserService.getCoachAgeByid(CommonUtils.parseInt(
+					coachid, 0)));
+		}
+
+		return SUCCESS;
+	}
+
+	
+	
+	/**
+	 * 添加教练
+	 */
+	@Action(value = "/addCoachByPhone", results = { @Result(name = SUCCESS, location = "/getCoachDetailByPhone.do?newcoachphone=${newcoachphone}", type = "redirect") })
+	public String addCoachByPhone() {
+
+		CuserInfo cuser = new CuserInfo();
+		cuser.setRealname(newcoachrealname);
+		cuser.setPhone(newcoachphone);
+		cuser.setTotaltime(0);
+		cuser.setPassword("");
+		cuser.setState(Constant.CUSER_UNCOMPLETE); // 设置状态
+		cuser.setAddtime(new Date()); // 设置添加时间
+		cuser.setNewtasknoti(0); // 设置消息默认提醒
+		cuser.setCancancel(0); // 设置是否可以取消订单
+		cuser.setFmoney(new BigDecimal(0)); // 冻结金额
+		cuser.setMoney(new BigDecimal(0)); // 金额
+		cuser.setGmoney(new BigDecimal(0)); // 保证金
+		cuser.setPrice(new BigDecimal(0)); // 教练单价
+
+		cuserService.addCuser(cuser);
+
+		return SUCCESS;
+	}
+	
 
 	/**
 	 * 审核通过、或者不通过 根据传过来的checknum
@@ -2575,5 +2656,19 @@ public class CuserAction extends BaseAction {
 		this.frozecoachtype = frozecoachtype;
 	}
 	
+	public String getNewcoachrealname() {
+		return newcoachrealname;
+	}
 
+	public void setNewcoachrealname(String newcoachrealname) {
+		this.newcoachrealname = newcoachrealname;
+	}
+
+	public String getNewcoachphone() {
+		return newcoachphone;
+	}
+
+	public void setNewcoachphone(String newcoachphone) {
+		this.newcoachphone = newcoachphone;
+	}
 }

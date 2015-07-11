@@ -220,6 +220,8 @@ function dataToLead(){
 			
 			<div id="content_form_top" >
 			
+			<div class="addbutton" onclick="showaddcoach()">+&nbsp;添加</div>
+			
 				<div class="addbutton" style="margin-left: 16px;width: 100px;background: #ff0000;cursor: default;"><b>&nbsp;批量操作按钮:</b></div>
 			<div class="addbutton" style="margin-left: 35px;background: #4cc2ff" onclick="allpass()">审核通过</div>
 									  <div class="addbutton" style="background: #4cc2ff" onclick="allunpass()">审核不通过</div>
@@ -534,6 +536,24 @@ function dataToLead(){
 		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 180x;margin-top: -40px;font-size: 18px" value="取消" onclick="unshowfrozen()">
 		<input type="hidden" value="" id="allchangefrozen">
 		</div>
+		</div>
+		</div>
+	</div>
+	
+	<!-- 添加教练弹框 -->
+	<div id="add" class="add"></div>
+	<div id="add_sec" style="position: fixed; width: 100%; height: 300px;z-index: 300; top:20%;left:25%;display:none">
+		<div id="add_last" class="add_last">
+		
+		<div style="position: fixed; width: 600px; height: 300px;background: #4cc2ff;margin-left: 50px;margin-top: 50px;">
+		<form action="addCoachByPhone.do" method="post" id="form_submit">
+			<input id="newcoachphone" name="newcoachphone" type="text" style="width: 250px;height: 40px;margin: auto;margin-left: 40px;margin-top: 30px;font-size: 18px;text-align: center;" onblur="checkCoachExistance()"     placeholder="请输入手机号码"/>
+	<input name="newcoachrealname" id="newcoachrealname" type="text" style="width: 250px;height: 40px;margin: auto;margin-left: 20px;margin-top: 15px;font-size: 18px;text-align: center;"     placeholder="请输入教练姓名"/>
+
+
+		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 200px;margin-top: 50px;font-size: 18px" value="确定" onclick="addcoach()">
+		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 180x;margin-top: -30px;font-size: 18px" value="取消" onclick="unshowaddcoach()">
+		</form>
 		</div>
 		</div>
 	</div>

@@ -1211,3 +1211,62 @@ function hiddentimeinput(){
 }
 
 
+//显示添加管理员弹框
+function showaddcoach() {
+	$("#add").show();
+	$("#add_sec").show();
+	$("#add_last").show();
+}
+
+//点击隐藏管理员弹框
+function unshowaddcoach() {
+	$("#add").hide();
+	$("#add_sec").hide();
+	$("#add_last").hide();
+}
+
+
+//添加管理员
+function addcoach() {
+//	var admin_login=$("#admin_login").val();
+//	var admin_name=$("#admin_name").val();
+//	var admin_password=$("#admin_password").val();
+	var newcoachphone=$("#newcoachphone").val();
+	var regu =/^(?:13\d|15[0123456789]|12[0123456789]|11[0123456789]|14[0123456789]|16[0123456789]|17[0123456789]|19[0123456789]|18[0123456789]|17[0123456789])-?\d{5}(\d{3}|\*{3})$/;
+	if(!regu.test($("input[name=newcoachphone]").val())){
+		alert("用户联系电话格式不正确");
+		return;
+	}
+	if(newcoachphone==""){
+		alert("手机号码不能为空");
+		return;
+	}else{
+		$("#form_submit").submit();
+	}
+}
+
+
+/**
+* 检验修改的账户名是否存在
+*/
+function checkCoachExistance() {
+	var newcoachphone = $("#newcoachphone").val();
+	if(newcoachphone==0){
+		alert("手机号码不能为空");
+	}else{
+	$.ajax({
+		type : "POST",
+		url : "checkCoachExistance.do",
+		data : {
+			newcoachphone : newcoachphone
+		},
+		success : function(data) {
+			if (data == "error") {
+				alert("该账户已存在");
+				return;
+			}
+		}
+	});
+	}
+}
+
