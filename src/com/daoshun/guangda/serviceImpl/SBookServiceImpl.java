@@ -960,7 +960,11 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 							result.put("failtimes", failtimes);
 							result.put("successorderid", successorderid);
 							result.put("coachauth", student.getCoachstate());
-							result.put("code", 2);
+							if (failtimes.length() == 0) {
+								result.put("code", 1);
+							} else {
+								result.put("code", 2);
+							}
 							return result;
 						}
 
@@ -996,6 +1000,13 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
+			//版本需要更新
+			result.put("failtimes", -1);
+			result.put("successorderid", -1);
+			result.put("coachauth", -1);
+			result.put("code", -1);
+			return result;
+			
 		}
 		result.put("failtimes", failtimes);
 		result.put("successorderid", successorderid);
