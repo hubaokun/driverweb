@@ -604,9 +604,24 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				boolean canOrder = true;
 				JSONObject array = json.getJSONObject(i);
 				JSONArray times = array.getJSONArray("time");// 订单的时间点数组
+				
+
+				
+				
 				String date1 = array.getString("date");// 订单的日期
 				String start = "", end = "";// 订单的开始时间和结束时间
 				String recordid = array.getString("recordid");
+				if((recordid.lastIndexOf(',')==recordid.length()-1)|| recordid.split(",").length>times.length())
+				{
+					//版本需要更新
+					result.put("failtimes", -1);
+					result.put("successorderid", -1);
+					result.put("coachauth", -1);
+					result.put("code", -1);
+					return result;
+				}
+//				array.has("delmoney");
+//				array.get("delmoney")
 				int delmoney = array.getInt("delmoney");
 				BigDecimal total = new BigDecimal(0);// 订单的总价
 				String longitude = null;
