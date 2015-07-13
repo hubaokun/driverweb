@@ -640,7 +640,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				}
 
 				// 如果是用了小巴券,但是又没有传delmoney的话,订单预订失败
-				if (!CommonUtils.isEmptyString(recordid) && delmoney == 0) {
+				if (!CommonUtils.isEmptyString(recordid) && delmoney == 0 && recordid.length()>2 ) {//
 					for (int j = 0; j < times.length(); j++) {
 						if (failtimes.length() == 0) {
 							failtimes = date1 + times.get(j).toString() + "点";
