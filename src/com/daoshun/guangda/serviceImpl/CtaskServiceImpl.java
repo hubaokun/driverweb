@@ -535,6 +535,7 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 				if (now.after(c)) {// 结算时间已经过去
 					// 教练金额的修改
 					order.setOver_time(new Date());
+					order.setStudentstate(3);
 					dataDao.updateObject(order);
 					CuserInfo cuser = dataDao.getObjectById(CuserInfo.class, order.getCoachid());
 					if (cuser != null) {

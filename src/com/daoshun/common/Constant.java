@@ -72,6 +72,9 @@ public class Constant {
 
 	// 学员登录
 	public static final String SLOGIN = "LOGIN";
+	
+	// 学员登录
+	public static final String SENROLL = "ENROLL";
 
 	public static final String ThirdLogin = "THIRDLOGIN";
 

@@ -45,7 +45,7 @@ public class SuserServlet extends BaseServlet {
 			String action = getAction(request);
 
 			if (Constant.PERFECTACCOUNTINFO.equals(action) || Constant.CHANGEAVATAR.equals(action) || Constant.PERFECTSTUDENTINFO.equals(action) || Constant.PERFECTPERSONINFO.equals(action)
-					|| Constant.GETMYBALANCEINFO.equals(action) || Constant.APPLYCASH.equals(action) || Constant.RECHARGE.equals(action)) {
+					|| Constant.GETMYBALANCEINFO.equals(action) || Constant.APPLYCASH.equals(action) ||Constant.SENROLL.equals(action)|| Constant.RECHARGE.equals(action)) {
 				if (!checkSession(request, action, resultMap)) {
 					setResult(response, resultMap);
 					return;
@@ -58,6 +58,10 @@ public class SuserServlet extends BaseServlet {
 			} else if (Constant.SLOGIN.equals(action)) {
 				// 登录
 				login(request, resultMap);
+				
+			} else if (Constant.SENROLL.equals(action)) {
+				// 登录
+				enroll(request, resultMap);
 			} else if (Constant.ThirdLogin.equals(action)) {// 第三方登录
 				thirdLogin(request, resultMap);
 			} else if (Constant.BINDACCOUNT.equals(action)) {
@@ -113,6 +117,9 @@ public class SuserServlet extends BaseServlet {
 		} else if (Constant.RECHARGE.equals(action)) {
 			userid = getRequestParamter(request, "studentid");
 		}
+		 else if (Constant.SENROLL.equals(action)) {
+				userid = getRequestParamter(request, "studentid");
+			}
 
 		if (!CommonUtils.isEmptyString(userid)) {
 			SuserInfo suser = suserService.getUserById(userid);
@@ -601,6 +608,28 @@ public class SuserServlet extends BaseServlet {
 			suserService.updateUserInfo(user);
 		}
 	}
+	
+	
+	//学员报名
+	public void enroll(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+
+		try
+		{
+		String studentid = getRequestParamter(request, "studentid");
+		SuserInfo student = suserService.getUserById(studentid);
+		student.setState(1);
+		suserService.updateUserInfo(student);
+		resultMap.put("code", 1);
+		resultMap.put("message", "报名成功");
+		}catch(Exception ex)
+		{
+			resultMap.put("code", 2);
+			resultMap.put("message", "报名失败");
+		}
+			
+	}
+	
+	
 
 	public void getMyBalanceInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
 		String studentid = getRequestParamter(request, "studentid");

@@ -97,6 +97,7 @@ public interface ISUserService {
 
 	public abstract SuserInfo getUserById_cardnum(String id_cardnum);
 
+	
 	/**
 	 * 修改头像
 	 * 

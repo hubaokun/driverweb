@@ -220,7 +220,7 @@ function dataToLead(){
 			
 			<div id="content_form_top" >
 			
-			<div class="addbutton" onclick="showaddcoach()">+&nbsp;添加</div>
+			<div class="addbutton" onclick="showadduser()">+&nbsp;添加</div>
 			
 				<div class="addbutton" style="margin-left: 16px;width: 100px;background: #ff0000;cursor: default;"><b>&nbsp;批量操作按钮:</b></div>
 			<div class="addbutton" style="margin-left: 35px;background: #4cc2ff" onclick="allpass()">审核通过</div>
@@ -552,7 +552,7 @@ function dataToLead(){
 
 
 		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 200px;margin-top: 50px;font-size: 18px" value="确定" onclick="addcoach()">
-		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 180x;margin-top: -30px;font-size: 18px" value="取消" onclick="unshowaddcoach()">
+		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 180x;margin-top: -30px;font-size: 18px" value="取消" onclick="unshowadduser()">
 		</form>
 		</div>
 		</div>

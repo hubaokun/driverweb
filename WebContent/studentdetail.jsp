@@ -98,7 +98,7 @@ function dataExport(){
 		<div id="content_form">
 			<div id="content_form_top">
 		
-				
+				<div class="addbutton" onclick="showadduser()">+&nbsp;添加</div>
 					<div class="searchbutton" onclick="allstudentsearch()">
 						<img src="imgs/common/searchicon.png" width=22px height=22px
 							style="margin-top: 9px;" >
@@ -323,6 +323,25 @@ function dataExport(){
 		<br>
 		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 130px;margin-top: 100px;font-size: 18px" value="确定" onclick="dataExport()">
 		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 180x;margin-top: -40px;font-size: 18px" value="取消" onclick="unAlertDataExportBox()">
+		</div>
+		</div>
+	</div>
+	
+	
+	<!-- 添加教练弹框 -->
+	<div id="add" class="add"></div>
+	<div id="add_sec" style="position: fixed; width: 100%; height: 300px;z-index: 300; top:20%;left:25%;display:none">
+		<div id="add_last" class="add_last">
+		
+		<div style="position: fixed; width: 600px; height: 300px;background: #4cc2ff;margin-left: 50px;margin-top: 50px;">
+		<form action="addCoachByPhone.do" method="post" id="form_submit">
+			<input id="newstudentphone" name="newstudentphone" type="text" style="width: 250px;height: 40px;margin: auto;margin-left: 40px;margin-top: 30px;font-size: 18px;text-align: center;" onblur="checkstudentExistance()"     placeholder="请输入手机号码"/>
+	<input name="newstudentrealname" id="newstudentrealname" type="text" style="width: 250px;height: 40px;margin: auto;margin-left: 20px;margin-top: 15px;font-size: 18px;text-align: center;"     placeholder="请输入学员姓名"/>
+
+
+		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 200px;margin-top: 50px;font-size: 18px" value="确定" onclick="addstudent()">
+		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 180x;margin-top: -30px;font-size: 18px" value="取消" onclick="unshowadduser()">
+		</form>
 		</div>
 		</div>
 	</div>

@@ -122,7 +122,8 @@ public class SuserInfo implements Serializable {
 	@Column(name = "wb_openid")
 	private String wb_openid;
 
-	// 审核状态(0:未审核 1：审核通过 2：审核未通过)
+	// 审核状态(0:未审核 1：审核通过 2：审核未通过)--------已废弃，意义变更如下
+	//学员状态：0-新注册用户，1-报名进行中，2-科目一进行中，3-科目三进行中，4-科目三进行中，5-科目四进行中
 	@Column(name = "state", columnDefinition = "INT default 0")
 	private Integer state = 0;
 
