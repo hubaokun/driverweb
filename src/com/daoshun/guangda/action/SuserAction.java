@@ -22,7 +22,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.daoshun.common.CommonUtils;
-import com.daoshun.common.Constant;
 import com.daoshun.common.QueryResult;
 import com.daoshun.guangda.NetData.StudentInfoForExcel;
 import com.daoshun.guangda.pojo.BalanceStudentInfo;
@@ -94,6 +93,12 @@ public class SuserAction extends BaseAction {
 
 	private Integer pageCount = 0;
 
+	
+	//添加新学员
+	private String  newstudentphone;
+	
+	private String  newstudentname;
+	
 	// 学员提现申请id
 	private int applyid;
 
@@ -117,14 +122,6 @@ public class SuserAction extends BaseAction {
 	
 	private String studentdate;
 	
-	
-	//添加用户
-	private String  newstudentphone;
-	
-	private String  newstudentname;
-	
-	
-
 	//编辑学员个人资料
 	private String editrealname;
 
@@ -196,11 +193,11 @@ public class SuserAction extends BaseAction {
 	
 	
 
-	
+
 	/**
-	 * 添加教练
+	 * 添加学员
 	 */
-	@Action(value = "/addStudentByPhone", results = { @Result(name = SUCCESS, location = "/getStudetnDetailByPhone.do?newstudentphone=${newstudentphone}", type = "redirect") })
+	@Action(value = "/addStudentByPhone", results = { @Result(name = SUCCESS, location = "/getStudentDetailByPhone.do?newstudentphone=${newstudentphone}", type = "redirect") })
 	public String addCoachByPhone() {
 
 		SuserInfo suser = new SuserInfo();
@@ -218,50 +215,38 @@ public class SuserAction extends BaseAction {
 
 		return SUCCESS;
 	}
+
 	
 
-	/**
-	+	 * 账号验证
-	+	 */
-		@Action(value = "/checkStudentExistance")
-		public void checkStudentExistance() {
-			SuserInfo suser = suserService.getUserByPhone(newstudentphone);
-			if (suser != null) {
-				setResponseStr("error");
-			} else {
-				setResponseStr("success");
+	
+
+/**
+ * 通过手机号码得到一个学员的详情
+ * 
+ * @return
+ */
+@Action(value = "/getStudentDetailByPhone", results = { @Result(name = SUCCESS, location = "/singlestudent.jsp") })
+public String getStudentDetailByPhone() {
+	suser = suserService.getUserByPhone(newstudentphone);
+	if(!CommonUtils.isEmptyString(suser.getBirthday())){
+		int age = suserService.getSuserAgeByid(suser.getStudentid());
+		suser.setAge(age);
+	}
+	if(suser.getCoachstate()==1){
+		studentcheck=suserService.getcoachbycheck(suser.getStudentid());
+		if(studentcheck!=null){
+			cuser=cuserService.getCoachByid(studentcheck.getCoachid());
+			if(cuser!=null){
+				suser.setCuser(cuser);
 			}
 		}
-		
-		
-		
-//		
-//
-//	/**
-//	 * 通过手机号码得到一个学员的详情
-//	 * 
-//	 * @return
-//	 */
-//	@Action(value = "/getStudentDetail", results = { @Result(name = SUCCESS, location = "/singlestudent.jsp") })
-//	public String getStudentDetailByPhone() {
-//		suser = suserService.ge(String.valueOf(studentid));
-//		if(!CommonUtils.isEmptyString(suser.getBirthday())){
-//			int age = suserService.getSuserAgeByid(suser.getStudentid());
-//			suser.setAge(age);
-//		}
-//		if(suser.getCoachstate()==1){
-//			studentcheck=suserService.getcoachbycheck(suser.getStudentid());
-//			if(studentcheck!=null){
-//				cuser=cuserService.getCoachByid(studentcheck.getCoachid());
-//				if(cuser!=null){
-//					suser.setCuser(cuser);
-//				}
-//			}
-//		}
-//		
-//		
-//		return SUCCESS;
-//	}
+	}
+	
+	
+	return SUCCESS;
+}
+
+
 
 	/**
 	 * 得到一个学员的详情
@@ -288,6 +273,9 @@ public class SuserAction extends BaseAction {
 		
 		return SUCCESS;
 	}
+
+
+	
 
 	/**
 	 * 修改学员金额
@@ -429,6 +417,21 @@ public class SuserAction extends BaseAction {
 		setResponseStr("success");
 	}
 	
+	
+	
+	/**
+	+	 * 账号验证
+	+	 */
+		@Action(value = "/checkStudentExistance")
+		public void checkStudentExistance() {
+			SuserInfo cuser = suserService.getUserByPhone(newstudentphone);
+			if (cuser != null) {
+				setResponseStr("error");
+			} else {
+				setResponseStr("success");
+			}
+		}
+		
 	/**
 	 * 减少学员余额
 	 * @return
@@ -1014,19 +1017,6 @@ public class SuserAction extends BaseAction {
 	
 	
 	
-	/**
-	+	 * 账号验证
-	+	 */
-		@Action(value = "/checkStudentExistance")
-		public void checklogin() {
-			SuserInfo cuser = suserService.getUserByPhone(newstudentphone);
-			if (cuser != null) {
-				setResponseStr("error");
-			} else {
-				setResponseStr("success");
-			}
-		}
-	
 	
 	public Integer getPageCount() {
 		return pageCount;
@@ -1455,7 +1445,6 @@ public class SuserAction extends BaseAction {
 	public void setMoney(BigDecimal money) {
 		this.money = money;
 	}
-	
 	public String getNewstudentphone() {
 		return newstudentphone;
 	}
@@ -1471,6 +1460,4 @@ public class SuserAction extends BaseAction {
 	public void setNewstudentname(String newstudentname) {
 		this.newstudentname = newstudentname;
 	}
-
-	
 }

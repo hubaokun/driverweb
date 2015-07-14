@@ -6,9 +6,11 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -26,6 +28,7 @@ import org.springframework.stereotype.Controller;
 
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.QueryResult;
+import com.daoshun.exception.NullParameterException;
 import com.daoshun.guangda.NetData.CoachInfoForExcel;
 import com.daoshun.guangda.pojo.CApplyCashInfo;
 import com.daoshun.guangda.pojo.ComplaintInfo;
@@ -149,6 +152,20 @@ public class OrderAction extends BaseAction {
 		return SUCCESS;
 	}
 	
+
+	@Action(value = "/cancelOrder", results = { @Result(name = SUCCESS, location = "/order.jsp") })
+	public String cancelOrder(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {	
+		HttpSession session = ServletActionContext.getRequest().getSession();
+		String orderid = String.valueOf(session.getAttribute("orderid"));
+		String studentid = String.valueOf(session.getAttribute("studentid"));
+		CommonUtils.validateEmpty(studentid);
+		CommonUtils.validateEmpty(orderid);
+		int code = orderService.cancelOrder(studentid, orderid);
+		if (code == 0) {
+			return SUCCESS;
+		} 
+		return "";
+	}
 	@SuppressWarnings("deprecation")
 	@Action(value = "/orderDataExport")
 	public void orderDataExport() throws IOException {

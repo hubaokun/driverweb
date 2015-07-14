@@ -383,7 +383,7 @@ public class CuserAction extends BaseAction {
 	+	 * 账号验证
 	+	 */
 		@Action(value = "/checkCoachExistance")
-		public void checklogin() {
+		public void checkCoachExistance() {
 			CuserInfo cuser = cuserService.getCuserByPhone(newcoachphone);
 			if (cuser != null) {
 				setResponseStr("error");

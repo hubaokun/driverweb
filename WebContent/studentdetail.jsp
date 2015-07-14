@@ -334,7 +334,7 @@ function dataExport(){
 		<div id="add_last" class="add_last">
 		
 		<div style="position: fixed; width: 600px; height: 300px;background: #4cc2ff;margin-left: 50px;margin-top: 50px;">
-		<form action="addCoachByPhone.do" method="post" id="form_submit">
+		<form action="addStudentByPhone.do" method="post" id="form_submit">
 			<input id="newstudentphone" name="newstudentphone" type="text" style="width: 250px;height: 40px;margin: auto;margin-left: 40px;margin-top: 30px;font-size: 18px;text-align: center;" onblur="checkstudentExistance()"     placeholder="请输入手机号码"/>
 	<input name="newstudentrealname" id="newstudentrealname" type="text" style="width: 250px;height: 40px;margin: auto;margin-left: 20px;margin-top: 15px;font-size: 18px;text-align: center;"     placeholder="请输入学员姓名"/>
 
