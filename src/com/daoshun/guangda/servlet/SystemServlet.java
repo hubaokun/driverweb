@@ -62,7 +62,10 @@ public class SystemServlet extends BaseServlet {
 				updateUserLocation(request, resultMap);
 			} else if (Constant.CHECKVERSION.equals(action)) {
 				checkVersion(request, resultMap);
-			} else {
+			} else if (Constant.CHECKCONFIG.equals(action)) {
+				checkconfig(request, resultMap);
+			} 
+			else {
 				throw new NullParameterException();
 			}
 
@@ -265,6 +268,19 @@ public class SystemServlet extends BaseServlet {
 
 		systemService.updateUserLocation(openid, devicetype, usertype, appversion, province, city, area);
 	}
+
+	public void checkconfig(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+		String userid = getRequestParamter(request, "userid");
+		String usertype = getRequestParamter(request, "usertype");
+		String devicetype = getRequestParamter(request, "devicetype");
+		String version = getRequestParamter(request, "version");
+		SystemSetInfo sinf= systemService.getSystemSet();
+		resultMap.put("config", sinf);
+		
+//		HashMap<String, Object> result = 
+	}
+
+
 
 	public void checkVersion(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
 		String userid = getRequestParamter(request, "userid");

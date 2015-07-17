@@ -296,6 +296,8 @@ public class Constant {
 	public static final String UPDATEUSERLOCATION = "UPDATEUSERLOCATION";
 
 	public static final String CHECKVERSION = "CHECKVERSION";
+	
+	public static final String CHECKCONFIG = "CHECKCONFIG";
 
 	// 获取教练教学用车车型
 	public static final String CGETALLTEACHCARMODEL = "GETALLTEACHCARMODEL";

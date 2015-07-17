@@ -32,19 +32,19 @@
 
 				<!-- <property name="driverUrl" value="jdbc:mysql://120.25.236.228:3306/db_guangda?useUnicode=true&amp;characterEncoding=UTF-8&amp;characterSetResults=UTF-8" 
 					/> <property name="user" value="guangda" /> -->
-				<property name="driverUrl"
+				<!-- <property name="driverUrl"
 					value="jdbc:mysql://localhost:3306/driver?useUnicode=true&amp;characterEncoding=UTF-8&amp;characterSetResults=UTF-8" />
-
+ -->
 				<!-- <property name="driverUrl" value="jdbc:mysql://120.25.236.228:3306/db_guangda?useUnicode=true&amp;characterEncoding=UTF-8&amp;characterSetResults=UTF-8" 
 					/> -->
 				<!-- <property name="user" value="root" /> -->
 				<!-- <property name="driverUrl" value="jdbc:mysql://localhost:3306/db_guangda?useUnicode=true&amp;characterEncoding=UTF-8&amp;characterSetResults=UTF-8" 
 					/> -->
-				<!-- <property name="driverUrl" value="jdbc:mysql://192.168.1.44:3306/db_guangda?useUnicode=true&amp;characterEncoding=UTF-8&amp;characterSetResults=UTF-8" 
-					/> -->
+			 <property name="driverUrl" value="jdbc:mysql://127.0.0.1:3306/driver?useUnicode=true&amp;characterEncoding=UTF-8&amp;characterSetResults=UTF-8" />
+			  
 				<property name="user" value="root" />
 				<property name="password" value="123456" />
-				<property name="maximumConnectionCount" value="20" />
+				<property name="maximumConnectionCount" value="50" />
 				<property name="minimumConnectionCount" value="5" />
 				<property name="statistics" value="1m,15m,1h,1d" />
 				<property name="simultaneousBuildThrottle" value="30" />

@@ -1045,7 +1045,15 @@ function unshowpic() {
 }
 
 function editsinglesuser() {
-	$("#singlestudentForm").attr("action", "editsinglestudent.do").submit();
+	
+	var editphone=$("#editphone").val();
+	var regu =/^(?:13\d|15[0123456789]|12[0123456789]|11[0123456789]|14[0123456789]|16[0123456789]|17[0123456789]|19[0123456789]|18[0123456789]|17[0123456789])-?\d{5}(\d{3}|\*{3})$/;
+	if(!regu.test($("input[name=editphone]").val())){
+		alert("用户联系电话格式不正确");
+		return;
+	}
+	
+	$("#singlestudentForm").attr("action", "editsinglestudent.do").submit();//studentdetail
 }
 
 function selectall() {

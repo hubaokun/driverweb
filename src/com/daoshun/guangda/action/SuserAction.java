@@ -93,6 +93,7 @@ public class SuserAction extends BaseAction {
 
 	private Integer pageCount = 0;
 
+
 	
 	//添加新学员
 	private String  newstudentphone;
@@ -124,6 +125,10 @@ public class SuserAction extends BaseAction {
 	
 	//编辑学员个人资料
 	private String editrealname;
+
+	private String editphone;
+	
+	
 
 	private Integer editgender;
 
@@ -218,11 +223,11 @@ public class SuserAction extends BaseAction {
 
 	
 
-	
+
 
 /**
  * 通过手机号码得到一个学员的详情
- * 
+ * enroll
  * @return
  */
 @Action(value = "/getStudentDetailByPhone", results = { @Result(name = SUCCESS, location = "/singlestudent.jsp") })
@@ -917,11 +922,18 @@ public String getStudentDetailByPhone() {
 
 	
 	@Action(value = "/editsinglestudent", results = { @Result(name = SUCCESS, location = "/getStudentDetail.do?studentid=${studentid}&index=${index}&change_id=${change_id}",type="redirect") })
+
+//	@Action(value = "/editsinglestudent", results = { @Result(name = SUCCESS, location = "/getStudentlist.do?studentid=${studentid}&index=${index}&change_id=${change_id}",type="redirect") })
+	
 	public String editSingleStudent(){
 		suser = suserService.getUserById(String.valueOf(studentid));
 		//修改姓名
 		if (!CommonUtils.isEmptyString(editrealname)) {
 			suser.setRealname(editrealname);
+		}
+		
+		if (!CommonUtils.isEmptyString(editphone)) {
+			suser.setPhone(editphone);
 		}
 		//修改性别
 		if (editgender!=null) {
@@ -1459,5 +1471,14 @@ public String getStudentDetailByPhone() {
 
 	public void setNewstudentname(String newstudentname) {
 		this.newstudentname = newstudentname;
+	}
+	
+
+	public String getEditphone() {
+		return editphone;
+	}
+
+	public void setEditphone(String editphone) {
+		this.editphone = editphone;
 	}
 }

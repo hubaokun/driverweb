@@ -82,7 +82,7 @@ $(function(){
 
 <td  style="width:150px;min-width:150px;background: #e5e5e5" class="border_right_bottom"><input name="studentid" id="studentid" value="${suser.studentid }" style="text-align: center;width:150px;background: #e5e5e5;height: 35px;font-size:18px"  readonly="readonly"/></td>
 <td  style="width:150px;min-width:150px;" class="border_right_bottom">					 <input name="editrealname" id="realname" value="${suser.realname }" style="text-align: center;width:150px;height: 35px;font-size:18px"  /></td>
-<td  style="width:150px;min-width:150px;background: #e5e5e5" class="border_right_bottom"><input value="${suser.phone }" style="text-align: center;width:150px;background: #e5e5e5;height: 35px;font-size:18px"  readonly="readonly"/></td>
+<td  style="width:150px;min-width:150px; class="border_right_bottom"><input value="${suser.phone}" id="editphone" name="editphone"  style="text-align: center;width:150px;height: 35px;font-size:18px"  /></td>
 <s:if test="suser.gender==1">
 <td  style="width:150px;min-width:150px;" class="border_right_bottom">
 <select  name="editgender" style="font-size:18px" >

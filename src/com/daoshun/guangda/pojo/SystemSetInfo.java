@@ -79,6 +79,12 @@ public class SystemSetInfo implements Serializable {
 
 	@Column(name = "can_use_coupon_count", length = 2, columnDefinition = "TINYINT default 1")
 	private Integer can_use_coupon_count;
+	
+	@Column(name = "advertisement_flag", length = 2, columnDefinition = "TINYINT default 0")
+	private Integer advertisement_flag;
+	
+	@Column(name = "advertisement_url",  length = 1000)
+	private String advertisement_url;
 
 	public int getDataid() {
 		return dataid;
@@ -222,6 +228,24 @@ public class SystemSetInfo implements Serializable {
 
 	public void setCan_use_coupon_count(Integer can_use_coupon_count) {
 		this.can_use_coupon_count = can_use_coupon_count;
+	}
+	
+	
+	public Integer getAdvertisement_flag() {
+		return advertisement_flag;
+	}
+
+	public void setAdvertisement_flag(Integer advertisement_flag) {
+		this.advertisement_flag = advertisement_flag;
+	}
+
+	
+	public String getAdvertisement_url() {
+		return advertisement_url;
+	}
+
+	public void setAdvertisement_url(String advertisement_url) {
+		this.advertisement_url = advertisement_url;
 	}
 
 }

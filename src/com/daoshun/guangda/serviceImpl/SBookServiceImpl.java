@@ -376,6 +376,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			List<Integer> cids = new ArrayList<Integer>();
 			for (CaddAddressInfo info : addresslist) {
 				cids.add(info.getCoachid());
+				if(info.getCoachid()==157)
+					System.out.println(info.getCoachid());
 			}
 			List<CuserInfo> cuserlist = (List<CuserInfo>) dataDao.getObjectsViaParam(hqlCoach.toString(), paramsCoach, cids, now, now, now, now, now);
 			if (cuserlist != null && cuserlist.size() > 0) {

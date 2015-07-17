@@ -421,7 +421,7 @@ public class CmyServiceImpl extends BaseServiceImpl implements ICmyService {
 	@Override
 	public List<CouponCoach> getCouponCoachList(String coachid) {
 		List<CouponCoach> list = new ArrayList<CouponCoach>();
-		String hql = "from CouponCoach where coachid = :coachid and state = 1 order by gettime desc";
+		String hql = "from CouponCoach where coachid = :coachid and (state = 1 or state=2) order by state asc,gettime desc";
 		String[] params = { "coachid" };
 		list.addAll((List<CouponCoach>) dataDao.getObjectsViaParam(hql, params, CommonUtils.parseInt(coachid, 0)));
 		return list;

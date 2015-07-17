@@ -558,6 +558,8 @@ public class SystemConfigAction extends BaseAction {
 				systemSetInfo.setCan_use_coupon_count(Integer.parseInt(editvalue));
 			else if(colname.equals("can_use_diff_coupon"))
 				systemSetInfo.setCan_use_diff_coupon(Integer.parseInt(editvalue));
+			else if(colname.equals("advertisement_flag"))
+				systemSetInfo.setAdvertisement_flag(Integer.parseInt(editvalue));
 			cuserService.updateObject(systemSetInfo);
 			setResponseStr("success");
 		}

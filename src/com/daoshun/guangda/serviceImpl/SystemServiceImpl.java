@@ -82,6 +82,11 @@ public class SystemServiceImpl extends BaseServiceImpl implements ISystemService
 
 		return result;
 	}
+	
+	
+
+	
+	
 
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override

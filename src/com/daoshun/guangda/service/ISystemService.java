@@ -27,4 +27,5 @@ public interface ISystemService {
 	public abstract void recordUserAction(String userid, String usertype, String sername, String actionname);
 
 	public abstract SystemSetInfo getSystemSet();
+
 }

@@ -967,13 +967,13 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 		}
 		if (state != null) {
 			if (state == 1) {
-				cuserhql.append(" and (coachstate<>2 or over_time ='' or studentstate in(0,2))");
+				cuserhql.append(" and (coachstate<>2 or over_time is null or studentstate in(0,2))");
 			}
 			if (state == 2) {
-				cuserhql.append(" and (coachstate=2 and over_time <>'' and studentstate=3)");
+				cuserhql.append(" and (coachstate=2 and over_time is not null and studentstate=3)");
 			}
 			if (state == 3) {
-				cuserhql.append(" and (coachstate=2 and over_time <>'' and studentstate=4)");
+				cuserhql.append(" and (coachstate=4 or  studentstate=4)");
 			}
 		}
 		if (!CommonUtils.isEmptyString(inputordertotal)) {

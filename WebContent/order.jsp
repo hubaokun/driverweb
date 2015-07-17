@@ -191,6 +191,7 @@ function dataExport(){
 						<th>开始时间</th>
 						<th>结束时间</th>
 						<th>总价</th>
+						<th>支付方式</th>
 						<th>订单状态</th>
 						<th>投诉条数</th>
 						<th>预定时间</th>
@@ -206,11 +207,18 @@ function dataExport(){
 							<td style="width: 100px;" class="border_right_bottom"><s:date name="start_time" format="yyyy-MM-dd HH:mm:ss"/></td>
 							<td style="width: 100px;" class="border_right_bottom"><s:date name="end_time" format="yyyy-MM-dd HH:mm:ss"/></td>
 							<td style="width: 100px;" class="border_right_bottom">${total}</td>
+							<s:if test="couponrecordid.length()>2 && delmoney>0">
+								<td style="width: 100px;" class="border_right_bottom">小巴券</td>
+							</s:if>
+							<s:else>
+								<td style="width: 100px;" class="border_right_bottom">余额</td>
+							</s:else>
+							
 							<s:if test="coachstate==2&&over_time!=null&&studentstate==3">
 								<td style="width: 100px;" class="border_right_bottom">已结算</td>
 							</s:if>
-							<s:elseif test="coachstate==2&&over_time!=null&&studentstate==4">
-								<td style="width: 100px;" class="border_right_bottom">已取消</td>
+							<s:elseif test="over_time==null&&studentstate==4">
+								<td style="width: 100px;" class="border_right_bottom">学员已取消</td>
 							</s:elseif>
 							<s:elseif test="coachstate!=2||over_time==null||studentstate!=3&&studentstate!=4">
 								<td style="width: 100px;" class="border_right_bottom">未结算</td>
@@ -221,10 +229,7 @@ function dataExport(){
 								<div class="table_lookdetail" >
 									<a href="getOrderDetail.do?orderid=${orderid}&index=5&change_id=${orderid}"
 										style="text-decoration: none; cursor: pointer;font-family: 微软雅黑; "><b>查看详情</b></a>
-										
-										<a href="/cancelOrder.do?orderid=${orderid}&studentid=${studentinfo.studentid}"
-										style="text-decoration: none; cursor: pointer;font-family: 微软雅黑; "><b>取消订单</b></a>
-										
+													
 								
 								</div>
 							</td>

@@ -248,7 +248,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 			cuserhql.append(" and carlicense like '%" + carlicense + "%'");
 		}
 
-		List<CuserInfo> cuserInfolist = (List<CuserInfo>) dataDao.pageQueryViaParam(cuserhql.toString() + " order by id", pagesize, pageIndex, null);
+		List<CuserInfo> cuserInfolist = (List<CuserInfo>) dataDao.pageQueryViaParam(cuserhql.toString() + " order by id desc ", pagesize, pageIndex, null);
 		String counthql = " select count(*) " + cuserhql.toString();
 		long total = (long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<CuserInfo>(cuserInfolist, total);

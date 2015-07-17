@@ -60,7 +60,7 @@ public class SuserServlet extends BaseServlet {
 				login(request, resultMap);
 				
 			} else if (Constant.SENROLL.equals(action)) {
-				// 登录
+				//报名
 				enroll(request, resultMap);
 			} else if (Constant.ThirdLogin.equals(action)) {// 第三方登录
 				thirdLogin(request, resultMap);

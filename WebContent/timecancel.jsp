@@ -84,7 +84,7 @@ $(function(){
 }
 </style>
 
-<title>订单取消时间</title>
+<title>系统参数设置</title>
 </head>
 <input type="hidden" id="index" value="${index}" />
 <input type="hidden" id="change_id" value="${change_id}"/>
@@ -319,6 +319,36 @@ $(function(){
 </td>
 </tr>
 
+
+<!-- 17 订单是否启用广告 -->
+<tr class="tr_td">
+<td style="width:500px;" class="border_right_bottom">是否启用广告</td>
+<s:if test="systemSetInfo.advertisement_flag==0">
+	<td  style="width:500px;" class="border_right_bottom">不启用</td>
+</s:if>
+<s:else>
+	<td  style="width:500px;" class="border_right_bottom">启用</td>
+</s:else>
+<td  style="width:120px;" class="border_noright_bottom">
+
+<div class="table_edit_button">
+	<div class="table_button_edit_icon"></div>
+	<div class="table_button_text" onclick="showdiffadv('${systemSetInfo.dataid}','${systemSetInfo.advertisement_flag}','advertisement_flag')">设置</div>
+</div>
+</td>
+</tr>
+
+<%-- 
+<!-- 18 订单是否可以使用不同的小巴券 -->
+<tr class="tr_td">
+<td style="width:500px;" class="border_right_bottom">广告URL</td>
+
+<div class="table_edit_button">
+	<div class="table_button_edit_icon"></div>
+	<div class="table_button_text" onclick="showdiffxiaoba('${systemSetInfo.dataid}','${systemSetInfo.can_use_diff_coupon}','can_use_diff_coupon')">设置</div>
+</div>
+</td>
+</tr> --%>
 </table>
 
 </div>
@@ -373,5 +403,25 @@ $(function(){
 		</div>
 		</div>
 	</div>
+	
+	
+		<!-- 是否可以启用广告弹出框-->
+	<div id="maskadv" class="mask"></div>
+	<div id="mask_adv" style="position: fixed; width: 100%; height: 300px;z-index: 300;">
+		<div id="adv_last" class="mask_last">
+		<div style="position: fixed; width: 300px; height: 200px;background: #4cc2ff;margin-left: 400px;top: 250px;">
+		 <input id="advid" type="hidden" > 
+		<input id="advflag" type="hidden" >
+		<input id="advoldvalue" type="text" style="width: 218px;height: 40px;margin: auto;margin-left: 41px;margin-top: 13px;font-size: 18px;text-align: center;" disabled="disabled"/>
+		<select id="diffadv" style="width: 75px; height:25px; margin: auto;margin-left: 110px;margin-top: 20px;">
+			<option value="0">不启用</option>
+			<option value="1">启用</option>
+		</select> 
+		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 50px;margin-top: 25px;font-size: 18px" value="确定" onclick="updateadv()">
+		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 180x;margin-top: -40px;font-size: 18px" value="取消" onclick="unupdateadv()">
+		</div>
+		</div>
+	</div>
+	
 </body>
 </html>
