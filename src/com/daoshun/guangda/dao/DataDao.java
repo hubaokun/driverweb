@@ -312,6 +312,12 @@ public class DataDao {
 		query.executeUpdate();
 	}
 	
+	public void updateBySql(String sql) {
+		SQLQuery query = getSession().createSQLQuery(sql);
+		query.executeUpdate();
+	}
+	
+	
 	public List<Object> callSyetem(String addtime){
 		Session session=this.getSession();
 		SQLQuery query= session.createSQLQuery("{Call systemDaliy(?)}");

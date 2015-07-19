@@ -794,13 +794,28 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 			if (order.getStart_time().after(c.getTime())) {
 
 				if (student != null) {
-					student.setMoney(student.getMoney().add(order.getTotal()));
-					student.setFmoney(student.getFmoney().subtract(order.getTotal()));
-					dataDao.updateObject(student);
+					if(order.getDelmoney()>0 && order.getCouponrecordid().length()>1)
+					{
+						String coupongetrecordids=order.getCouponrecordid();
+						if(coupongetrecordids.lastIndexOf(',')== coupongetrecordids.length()-1)
+						{
+							System.out.println("old: "+coupongetrecordids);
+							coupongetrecordids = coupongetrecordids.substring(0, coupongetrecordids.length()-2);
+							System.out.println("now :"+coupongetrecordids);
+						}
+					dataDao.updateBySql(" update t_couponget_record set state=0 where recordid in("+coupongetrecordids+") ");
+						
+					}
+					else
+					{
+						student.setMoney(student.getMoney().add(order.getTotal()));
+						student.setFmoney(student.getFmoney().subtract(order.getTotal()));
+						dataDao.updateObject(student);
+					}
 				}
 
-				order.setStudentstate(4);
-				order.setCoachstate(4);
+				order.setStudentstate(4);//学员取消
+				order.setCoachstate(4);//教练取消
 				dataDao.updateObject(order);
 
 				// 把订单中原来预订的时间返回回来
@@ -1011,12 +1026,12 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				cuserhql1.append("from ComplaintInfo where order_id =:orderid ");
 				String[] params = { "orderid" };
 				String countnumhql = " select count(*) " + cuserhql1.toString();
-				long complaintnum = (long) dataDao.getFirstObjectViaParam(countnumhql, params, order.getOrderid());
+				long complaintnum = (Long) dataDao.getFirstObjectViaParam(countnumhql, params, order.getOrderid());
 				order.setComplaintnum(complaintnum);
 			}
 		}
 		String counthql = " select count(*) " + cuserhql.toString();
-		long total = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<OrderInfo>(orderlist, total);
 	}
 
@@ -1051,7 +1066,7 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 			}
 		}
 		String counthql = " select count(*) " + cuserhql.toString();
-		long total = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<ComplaintInfo>(complaintlist, total);
 	}
 
@@ -1152,7 +1167,7 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 			}
 		}
 		String counthql = " select count(*) " + cuserhql.toString();
-		long total = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<ComplaintInfo>(complaintlist, total);
 	}
 
@@ -1389,12 +1404,12 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				cuserhql1.append("from ComplaintInfo where order_id =:orderid ");
 				String[] params = { "orderid" };
 				String countnumhql = " select count(*) " + cuserhql1.toString();
-				long complaintnum = (long) dataDao.getFirstObjectViaParam(countnumhql, params, order.getOrderid());
+				long complaintnum = (Long) dataDao.getFirstObjectViaParam(countnumhql, params, order.getOrderid());
 				order.setComplaintnum(complaintnum);
 			}
 		}
 		String counthql = " select count(*) " + cuserhql.toString();
-		long total = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<OrderInfo>(orderlist, total);
 	}
 

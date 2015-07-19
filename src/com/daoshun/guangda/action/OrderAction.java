@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -104,6 +105,17 @@ public class OrderAction extends BaseAction {
 		QueryResult<OrderInfo> result = orderService.getOrderList(coachphone,studentphone,startminsdate,startmaxsdate,endminsdate,endmaxsdate,state,ordertotal,inputordertotal,ishavacomplaint, pageIndex, pagesize);
 		total = result.getTotal();
 		orderlist = result.getDataList();
+		for(int i=0; i< orderlist.size();i++)
+		{
+			OrderInfo o = orderlist.get(i);
+			Calendar now = Calendar.getInstance();
+			
+			Calendar starttime = Calendar.getInstance();
+			starttime.setTime(o.getStart_time());
+			
+			if (now.before(starttime))
+				o.setCan_cancel(1);
+		}
 		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
 		if (pageIndex > 1) {
 			if (orderlist == null || orderlist.size() == 0) {
@@ -154,10 +166,11 @@ public class OrderAction extends BaseAction {
 	
 
 	@Action(value = "/cancelOrder", results = { @Result(name = SUCCESS, location = "/order.jsp") })
-	public String cancelOrder(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {	
+	public String getCoachDetail() throws NullParameterException {
 		HttpSession session = ServletActionContext.getRequest().getSession();
-		String orderid = String.valueOf(session.getAttribute("orderid"));
-		String studentid = String.valueOf(session.getAttribute("studentid"));
+		String orderid = request.getParameter("orderid");
+//		  orderid = String.valueOf(session.getAttribute("orderid"));
+		String studentid = request.getParameter("studentid");//String.valueOf(session.getAttribute("studentid"));
 		CommonUtils.validateEmpty(studentid);
 		CommonUtils.validateEmpty(orderid);
 		int code = orderService.cancelOrder(studentid, orderid);

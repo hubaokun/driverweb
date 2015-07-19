@@ -277,7 +277,7 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 		}
 		List<NoticesInfo> noticesInfolist = (List<NoticesInfo>) dataDao.pageQueryViaParam(ctaskhql.toString(), pagesize, pageIndex, null);
 		String counthql = " select count(*) " + ctaskhql.toString();
-		long total = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<NoticesInfo>(noticesInfolist, total);
 	}
 
@@ -326,7 +326,7 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 		}
 		List<NoticesInfo> noticesInfolist = (List<NoticesInfo>) dataDao.pageQueryViaParam(ctaskhql.toString(), pagesize, pageIndex, null);
 		String counthql = " select count(*) " + ctaskhql.toString();
-		long total = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<NoticesInfo>(noticesInfolist, total);
 	}
 
@@ -382,7 +382,7 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 		StringBuffer ctaskhql = new StringBuffer();
 		ctaskhql.append("select count(*) from ComplaintInfo where orderid = :orderid ");
 		String[] params = { "orderid" };
-		int count = (int) dataDao.getFirstObjectViaParam(ctaskhql.toString(), params, id);
+		int count = (Integer) dataDao.getFirstObjectViaParam(ctaskhql.toString(), params, id);
 		return count;
 	}
 
@@ -739,7 +739,7 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 		ctaskhql.append(" order by addtime");
 		List<FeedBackInfo> list = (List<FeedBackInfo>) dataDao.pageQueryViaParam(ctaskhql.toString(), pageSize, pageIndex, null);
 		String counthql = " select count(*) " + ctaskhql.toString();
-		long count = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long count = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		QueryResult<FeedBackInfo> result = new QueryResult<FeedBackInfo>(list, count);
 		return result;
 	}

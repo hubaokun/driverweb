@@ -76,7 +76,7 @@ public class CouponServiceImpl extends BaseServiceImpl implements ICouponService
 			}
 		}
 		String counthql = couponhql.insert(0, " select count(*) ").toString();
-		long count = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long count = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		QueryResult<CouponInfo> result = new QueryResult<CouponInfo>(couponlist, count);
 		return result;
 	}
@@ -193,7 +193,7 @@ public class CouponServiceImpl extends BaseServiceImpl implements ICouponService
 			}
 		}
 		String counthql = couponhql.insert(0, " select count(*)").toString();
-		long count = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long count = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		QueryResult<CouponRecord> result = new QueryResult<CouponRecord>(CouponRecordlist, count);
 		return result;
 	}
@@ -290,7 +290,7 @@ public class CouponServiceImpl extends BaseServiceImpl implements ICouponService
 			}
 		}
 		String counthql = couponhql.insert(0, " select count(*)").toString();
-		long count = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long count = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		QueryResult<CouponRecord> result = new QueryResult<CouponRecord>(CouponRecordlist, count);
 		return result;
 	}

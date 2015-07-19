@@ -234,7 +234,7 @@ public class AdminAction extends BaseAction {
 	public void delAdmin() {
 		admin = cuserService.getAdminInfoByid(adminid);
 		HttpSession session = ServletActionContext.getRequest().getSession();
-		int admin_id = (int) session.getAttribute("userid");
+		int admin_id = (Integer) session.getAttribute("userid");
 		if(adminid==admin_id){
 			setResponseStr("error1");
 		}else if(admin == null) {

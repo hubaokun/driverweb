@@ -158,7 +158,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 		cuserhql.append("from AdminInfo");
 		List<AdminInfo> adminlist = (List<AdminInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), pagesize, pageIndex, null);
 		String counthql = " select count(*) " + cuserhql.toString();
-		long total = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<AdminInfo>(adminlist, total);
 	}
 
@@ -175,7 +175,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 		}
 		List<AdminInfo> adminlist = (List<AdminInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), pagesize, pageIndex, null);
 		String counthql = " select count(*) " + cuserhql.toString();
-		long total = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<AdminInfo>(adminlist, total);
 	}
 
@@ -210,7 +210,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 		cuserhql.append("from CuserInfo where isquit = 0 ");
 		List<CuserInfo> cuserInfolist = (List<CuserInfo>) dataDao.pageQueryViaParam(cuserhql.toString() + " order by id desc ", pagesize, pageIndex, null);
 		String counthql = " select count(*) " + cuserhql.toString();
-		long total = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<CuserInfo>(cuserInfolist, total);
 	}
 
@@ -250,7 +250,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 
 		List<CuserInfo> cuserInfolist = (List<CuserInfo>) dataDao.pageQueryViaParam(cuserhql.toString() + " order by id desc ", pagesize, pageIndex, null);
 		String counthql = " select count(*) " + cuserhql.toString();
-		long total = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<CuserInfo>(cuserInfolist, total);
 	}
 
@@ -296,7 +296,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 			}
 		}
 		String counthql = " select count(*) " + cuserhql.toString();
-		long total = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<CApplyCashInfo>(applycashlist, total);
 	}
 
@@ -384,7 +384,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 			}
 		}
 		String counthql = " select count(*) " + cuserhql.toString();
-		long total = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<CApplyCashInfo>(applycashlist, total);
 	}
 
@@ -404,7 +404,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 			}
 		}
 		String counthql = " select count(*) " + cuserhql.toString();
-		long total = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<BalanceCoachInfo>(balancecoachlist, total);
 	}
 
@@ -455,7 +455,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 			}
 		}
 		String counthql = " select count(*) " + cuserhql.toString();
-		long total = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<BalanceCoachInfo>(applycashlist, total);
 	}
 
@@ -466,7 +466,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 		cuserhql.append("from ModelsInfo ");
 		List<ModelsInfo> modelsInfo = (List<ModelsInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), pagesize, pageIndex, null);
 		String counthql = " select count(*) " + cuserhql.toString();
-		long total = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<ModelsInfo>(modelsInfo, total);
 	}
 
@@ -727,7 +727,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 		StringBuffer cuserhql = new StringBuffer();
 		cuserhql.append(" select year(now())-year(birthday) as age  from CuserInfo where coachid = :coachid");
 		String[] params = { "coachid" };
-		int count = (int) dataDao.getFirstObjectViaParam(cuserhql.toString(), params, id);
+		int count = (Integer) dataDao.getFirstObjectViaParam(cuserhql.toString(), params, id);
 		return count;
 	}
 
@@ -947,7 +947,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 		String hql = " from DriveSchoolInfo";
 		List<DriveSchoolInfo> schoollist = (List<DriveSchoolInfo>) dataDao.pageQueryViaParam(hql + " order by addtime ", pageSize, pageIndex, null);
 		String counthql = " select count(*) " + hql;
-		long count = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long count = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		QueryResult<DriveSchoolInfo> result = new QueryResult<DriveSchoolInfo>(schoollist, count);
 		return result;
 	}

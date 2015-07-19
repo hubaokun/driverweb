@@ -3,6 +3,7 @@
 <%@ taglib uri="/struts-tags" prefix="s"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
+
 <%@page import="com.daoshun.menu.SideMenu"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -200,38 +201,55 @@ function dataExport(){
 					<s:iterator value="orderlist" var="cuser">
 						<tr class="tr_td">
 							<td style="width: 52px;" class="border_right_bottom">${orderid}</td>
-							<td style="width: 100px;" class="border_right_bottom">${cuserinfo.realname}</td>
+							<td style="width: 80px;" class="border_right_bottom">${cuserinfo.realname}</td>
 							<td style="width: 150px;" class="border_right_bottom">${cuserinfo.phone}</td>
-							<td style="width: 100px;" class="border_right_bottom">${studentinfo.realname}</td>
-							<td style="width: 150px;" class="border_right_bottom">${studentinfo.phone}</td>
+							<td style="width: 80px;" class="border_right_bottom">${studentinfo.realname}</td>
+							<td style="width: 80px;" class="border_right_bottom">${studentinfo.phone}</td>
 							<td style="width: 100px;" class="border_right_bottom"><s:date name="start_time" format="yyyy-MM-dd HH:mm:ss"/></td>
 							<td style="width: 100px;" class="border_right_bottom"><s:date name="end_time" format="yyyy-MM-dd HH:mm:ss"/></td>
 							<td style="width: 100px;" class="border_right_bottom">${total}</td>
 							<s:if test="couponrecordid.length()>2 && delmoney>0">
-								<td style="width: 100px;" class="border_right_bottom">小巴券</td>
+								<td style="width: 60px;" class="border_right_bottom">小巴券</td>
 							</s:if>
 							<s:else>
-								<td style="width: 100px;" class="border_right_bottom">余额</td>
+								<td style="width: 60px;" class="border_right_bottom">余额</td>
 							</s:else>
 							
 							<s:if test="coachstate==2&&over_time!=null&&studentstate==3">
-								<td style="width: 100px;" class="border_right_bottom">已结算</td>
+								<td style="width: 40px;" class="border_right_bottom">已结算</td>
 							</s:if>
 							<s:elseif test="over_time==null&&studentstate==4">
-								<td style="width: 100px;" class="border_right_bottom">学员已取消</td>
+								<td style="width: 80px;" class="border_right_bottom">学员已取消</td>
+							</s:elseif>
+							<s:elseif test="can_cancel>0">
+								<td style="width: 80px;" class="border_right_bottom">未开始</td>
 							</s:elseif>
 							<s:elseif test="coachstate!=2||over_time==null||studentstate!=3&&studentstate!=4">
-								<td style="width: 100px;" class="border_right_bottom">未结算</td>
+								<td style="width: 60px;" class="border_right_bottom">未结算</td>
 							</s:elseif>
-							<td style="width: 100px;" class="border_right_bottom">${complaintnum}</td>
-							<td style="width: 100px;" class="border_right_bottom"><s:date name="creat_time" format="yyyy-MM-dd HH:mm:ss"/></td>
-							<td style="width: 200px;" class="border_noright_bottom">
+								
+							
+							
+							<td style="width: 40px;" class="border_right_bottom">${complaintnum}</td>
+							<td style="width: 80px;" class="border_right_bottom"><s:date name="creat_time" format="yyyy-MM-dd HH:mm:ss"/></td>
+							<td style="width: 300px;" class="border_noright_bottom">
 								<div class="table_lookdetail" >
 									<a href="getOrderDetail.do?orderid=${orderid}&index=5&change_id=${orderid}"
-										style="text-decoration: none; cursor: pointer;font-family: 微软雅黑; "><b>查看详情</b></a>
+										style="text-decoration: none; cursor: pointer;font-family: 微软雅黑; "><b>查看详情</b></a></div>
 													
+								<s:if test="couponrecordid.length()>2 && delmoney>0&&coachstate==0&&studentstate==0&&can_cancel>0">
+								<div class="table_lookdetail" style="width:150px">
 								
-								</div>
+								<a href="cancelOrder.do?orderid=${orderid}&studentid=${studentinfo.studentid}&index=5&change_id=${orderid}"
+										style="text-decoration: none; cursor: pointer;font-family: 微软雅黑; "><b>取消<%-- ${couponrecordid}--${delmoney}--${coachstate}--${studentstate} } --%></b></a>
+							</div>
+							</s:if>		
+<%-- 							<s:else>
+								<div class="table_lookdetail" style="width:150px">
+								<a href="getOrderDetail.do?orderid=${orderid}&index=5&change_id=${orderid}"
+										style="text-decoration: none; cursor: pointer;font-family: 微软雅黑; "><b>${couponrecordid}--${delmoney}--${coachstate}--${studentstate} }</b></a>
+							</div>
+							</s:else> --%>						
 							</td>
 
 						</tr>
