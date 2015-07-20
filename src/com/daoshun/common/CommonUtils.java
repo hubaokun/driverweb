@@ -13,9 +13,13 @@ import java.lang.reflect.Field;
 import java.security.MessageDigest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.Stack;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -517,5 +521,62 @@ public class CommonUtils {
 		}
 		return path;
 	}
+	
+	
+	/** 
+     * 将数转为24进制 
+     * @param num 
+     * @param base 
+     * @return 
+     */  
+    public static String to24Base(int num){  
+    	int base= 24;
+        StringBuffer str = new StringBuffer("");  
+        String digths = "ABCDEFGHJKLMNPQRSTUVWXYZ";  
+        Stack<Character> s = new Stack<Character>();  
+        while(num != 0){  
+            s.push(digths.charAt(num%base));  
+            num/=base;  
+        }  
+        while(!s.isEmpty()){  
+            str.append(s.pop());  
+        }  
+        return str.toString();  
+    } 
+    
+    public static String getShareCode(String phone)
+    {
+    	String first=phone.substring(0, 3);
+    	Integer index=Integer.parseInt(first);
+    	List<String> list = Arrays.asList("130","131","132","133","134","135","136","137","138","139","150","151","152","153","154","155","156","157","158","159","170","171","172","173","174","175","176","177","178","179","180","181","182","183","184","185","186","187","188","189");
+    	 Iterator<String> iter = list.iterator();  
+    	 
+    	Integer end=Integer.parseInt(phone.substring(3, 11));
+    	int i=0;
+    	
+    	for (String elem : list)
+    	{
+    		 if(elem.equals(first))
+    		 {    		
+    			 break;
+    		 }
+    		 else
+    		 {
+    			 i++;
+    		 } 
+    	}
+    	
+    	 int num=(i+1)*100000000+end;   	 
+    	String code=to24Base(num);
+    	
+    	return code;
+    }
 
+    
+    public static void main(String[] args) { 
+    	String phone="15088600199";
+    	String code=CommonUtils.getShareCode(phone);
+    	System.out.print(code);
+    }
+    
 }
