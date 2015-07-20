@@ -871,7 +871,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 		CuserInfo cuser = new CuserInfo();
 		cuser.setPhone(phone); // 设置电话
 		cuser.setPhone(phone);
-		String code="S"+CommonUtils.getInviteCode(phone);
+		String code="C"+CommonUtils.getInviteCode(phone);
 		cuser.setInvitecode(code);
 		cuser.setTelphone(phone);
 		cuser.setPassword("");
