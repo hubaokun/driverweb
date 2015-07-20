@@ -544,7 +544,7 @@ public class CommonUtils {
         return str.toString();  
     } 
     
-    public static String getShareCode(String phone)
+    public static String getInviteCode(String phone)
     {
     	String first=phone.substring(0, 3);
     	Integer index=Integer.parseInt(first);
@@ -575,7 +575,7 @@ public class CommonUtils {
     
     public static void main(String[] args) { 
     	String phone="15088600199";
-    	String code=CommonUtils.getShareCode(phone);
+    	String code=CommonUtils.getInviteCode(phone);
     	System.out.print(code);
     }
     

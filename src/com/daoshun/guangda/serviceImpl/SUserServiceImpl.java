@@ -559,6 +559,8 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 
 		SuserInfo user1 = new SuserInfo();
 		user1.setPhone(phone);
+		String code="S"+CommonUtils.getInviteCode(phone);
+		user1.setInvitecode(code);
 		user1.setSecondphone(phone);
 		user1.setMoney(S_register_money);
 		user1.setAddtime(new Date());

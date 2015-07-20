@@ -303,7 +303,7 @@ public class CuserServlet extends BaseServlet {
 		if (result == 1) {// 可以登录
 			String token = request.getSession().getId().toLowerCase();
 			CuserInfo cuser = cuserService.getCuserByPhone(loginid);
-			if (cuser == null) {
+			if (cuser == null) {				
 				cuser = cuserService.registerUser(loginid, token);// 注册
 				cuser.setPassword(password);
 				resultMap.put("isregister", 1);
