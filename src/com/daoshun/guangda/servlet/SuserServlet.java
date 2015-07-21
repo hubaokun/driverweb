@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
 import com.daoshun.exception.NullParameterException;
+import com.daoshun.guangda.pojo.CouponRecord;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.pojo.SystemSetInfo;
@@ -45,7 +47,8 @@ public class SuserServlet extends BaseServlet {
 			String action = getAction(request);
 
 			if (Constant.PERFECTACCOUNTINFO.equals(action) || Constant.CHANGEAVATAR.equals(action) || Constant.PERFECTSTUDENTINFO.equals(action) || Constant.PERFECTPERSONINFO.equals(action)
-					|| Constant.GETMYBALANCEINFO.equals(action) || Constant.APPLYCASH.equals(action) ||Constant.SENROLL.equals(action)|| Constant.RECHARGE.equals(action)) {
+					|| Constant.GETMYBALANCEINFO.equals(action) || Constant.APPLYCASH.equals(action)  || Constant.GETSTUDENTWALLETINFO.equals(action) || Constant.GETSTUDENTCOUPONLIST.equals(action) 
+					||Constant.SENROLL.equals(action)|| Constant.RECHARGE.equals(action)) {
 				if (!checkSession(request, action, resultMap)) {
 					setResult(response, resultMap);
 					return;
@@ -88,7 +91,11 @@ public class SuserServlet extends BaseServlet {
 			} else if (Constant.RECHARGE.equals(action)) {
 				// 账户充值
 				recharge(request, resultMap);
-			} else {
+			}  else if (Constant.GETSTUDENTWALLETINFO.equals(action)) {
+				// 账户充值
+				getWalletInfo(request, resultMap);
+			} 
+			else {
 				throw new NullParameterException();
 			}
 
@@ -117,8 +124,11 @@ public class SuserServlet extends BaseServlet {
 		} else if (Constant.RECHARGE.equals(action)) {
 			userid = getRequestParamter(request, "studentid");
 		}
-		 else if (Constant.SENROLL.equals(action)) {
-				userid = getRequestParamter(request, "studentid");
+		else if (Constant.GETSTUDENTWALLETINFO.equals(action)) {
+			userid = getRequestParamter(request, "studentid");
+		}
+		else if (Constant.SENROLL.equals(action)) {
+			userid = getRequestParamter(request, "studentid");
 			}
 
 		if (!CommonUtils.isEmptyString(userid)) {
@@ -673,6 +683,18 @@ public class SuserServlet extends BaseServlet {
 
 		HashMap<String, Object> rechargeResult = suserService.recharge(studentid, amount);
 		resultMap.putAll(rechargeResult);
+	}
+	
+	
+	// 获取账户信息充值
+	public void getWalletInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException 
+	{		
+		String studentid = getRequestParamter(request, "studentid");// 教练ID
+		CommonUtils.validateEmpty(studentid);	
+		int sum= suserService.getCouponSum(Integer.parseInt(studentid));
+		
+		resultMap.put("couponsum", sum);
+		resultMap.put("coinsum", sum);
 	}
 
 }

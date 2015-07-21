@@ -16,6 +16,8 @@ import com.daoshun.common.CommonUtils;
 import com.daoshun.common.QueryResult;
 import com.daoshun.guangda.pojo.BalanceStudentInfo;
 import com.daoshun.guangda.pojo.CoachStudentInfo;
+import com.daoshun.guangda.pojo.CouponInfo;
+import com.daoshun.guangda.pojo.CouponRecord;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.RechargeRecordInfo;
 import com.daoshun.guangda.pojo.StudentApplyInfo;
@@ -708,6 +710,19 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		CoachStudentInfo coachstudent = (CoachStudentInfo) dataDao.getFirstObjectViaParam(suserhql.toString(), params, coachid, studentid);
 		return coachstudent;
 	}
+	
+
+	
+	@Override
+	public int getCouponSum(int studentid) {
+		StringBuffer suserhql = new StringBuffer();
+		suserhql.append(" from CouponRecord where  userid ="+studentid);			
+		String counthql = " select count(*) " + suserhql.toString();
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
+		return (int)total;		
+//		return couponList;
+	}
+	
 
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override
