@@ -625,7 +625,7 @@ public String getStudentDetailByPhone() {
 					String student_cardnum = null;
 					String student_card_creat = null;
 					String id_cardnum = null;
-					String city = null;
+					String cityid = null;
 					String address = null;
 					Integer gender = 0;
 					String birthday = null;
@@ -655,7 +655,7 @@ public String getStudentDetailByPhone() {
 						}else if(title.equals("学员证制证时间")){
 							student_card_creat = sheet.getCell(j, i).getContents().replaceAll("/", "-");
 						}else if(title.equals("城市")){
-							city = sheet.getCell(j, i).getContents();
+							cityid = sheet.getCell(j, i).getContents();
 						}else if(title.equals("地址")){
 							address = sheet.getCell(j, i).getContents();
 						}else if(title.equals("性别(1:男  2:女)")){
@@ -726,10 +726,10 @@ public String getStudentDetailByPhone() {
 								continue;
 							}
 						}
-						if(city==null){
-							student1.setCity(student1.getCity());
+						if(cityid==null){
+							student1.setCityid(student1.getCityid());
 						}else{
-							student1.setCity(city);
+							student1.setCityid(cityid);
 						}
 						if(address==null){
 							student1.setAddress(student1.getAddress());
@@ -827,7 +827,7 @@ public String getStudentDetailByPhone() {
 						continue;
 					}
 					student.setStudent_card_creat(student_card_creat);
-					student.setCity(city);
+					student.setCityid(cityid);
 					student.setAddress(address);
 					student.setGender(gender);
 					student.setBirthday(birthday);
@@ -881,7 +881,7 @@ public String getStudentDetailByPhone() {
 				}else if(data[i].equals("1")){
 					studentexcel.setStudent_card_creat(student.getStudent_card_creat());
 				}else if(data[i].equals("2")){
-					studentexcel.setCity(student.getCity());
+					studentexcel.setCity(student.getCityid());
 				}else if(data[i].equals("3")){
 					studentexcel.setAddress(student.getAddress());
 				}else if(data[i].equals("4")){
@@ -945,7 +945,7 @@ public String getStudentDetailByPhone() {
 		}
 		//修改城市
 		if(!CommonUtils.isEmptyString(editcity)){
-			suser.setCity(editcity);
+			suser.setCityid(editcity);
 		}
 		//修改地址
 		if(!CommonUtils.isEmptyString(editaddress)){

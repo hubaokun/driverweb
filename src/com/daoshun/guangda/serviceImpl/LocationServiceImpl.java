@@ -61,6 +61,11 @@ public class LocationServiceImpl extends BaseServiceImpl implements ILocationSer
 		String hql="from Cities  where provinceid =(SELECT provinceid from Provinces where province=:province)";
 		return (List<Cities>)dataDao.getObjectsViaParam(hql, params,name);
 	}
+	@Override
+	public Areas getAreaByAreaId(String areaid) {
+		String[] params = { "areaid" };
+		return (Areas)dataDao.getFirstObjectViaParam("from Areas where areaid=:areaid", params,CommonUtils.parseInt(areaid, 0));
+	}
 	
 	
 

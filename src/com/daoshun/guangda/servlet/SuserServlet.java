@@ -545,9 +545,9 @@ public class SuserServlet extends BaseServlet {
 		String studentid = getRequestParamter(request, "studentid");
 		String gender = getRequestParamter(request, "gender");
 		String birthday = getRequestParamter(request, "birthday");
-		String province = getRequestParamter(request, "province");//添加省市区 at 20150722
-		String city = getRequestParamter(request, "city");
-		String area = getRequestParamter(request, "area");
+		String provinceid = getRequestParamter(request, "provinceid");//添加省市区 at 20150722
+		String cityid = getRequestParamter(request, "cityid");
+		String areaid = getRequestParamter(request, "areaid");
 		String address = getRequestParamter(request, "address");
 		String urgentperson = getRequestParamter(request, "urgentperson");
 		String urgentphone = getRequestParamter(request, "urgentphone");
@@ -564,14 +564,14 @@ public class SuserServlet extends BaseServlet {
 			if (birthday != null) {
 				student.setBirthday(birthday);
 			}
-			if (province != null) {
-				student.setProvince(province);
+			if (provinceid != null) {
+				student.setProvinceid(provinceid);
 			}
-			if (city != null) {
-				student.setCity(city);
+			if (cityid != null) {
+				student.setCityid(cityid);
 			}
-			if (area != null) {
-				student.setArea(area);
+			if (areaid != null) {
+				student.setAreaid(areaid);
 			}
 			if (address != null) {
 				student.setAddress(address);

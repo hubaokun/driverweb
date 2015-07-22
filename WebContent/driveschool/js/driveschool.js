@@ -40,18 +40,18 @@ function unshowaddschool() {
 	$("#mask_sec").hide();
 	$("#mask_last").hide();
 }
-var citys;
-var areas;
+var citysid;
+var areasid;
 //修改驾校信息
-function showeditschool(schoolname,schoolphone,schoolcontact,alipay,order_pull,province,city,area) {
+function showeditschool(schoolname,schoolphone,schoolcontact,alipay,order_pull,provinceid,cityid,areaid) {
 	$("#oldschoolname").val("原驾校名："+schoolname);
 	$("#oldschoolphone").val("原联系电话："+schoolphone);
 	$("#oldschoolcontact").val("原联系人姓名："+schoolcontact);
 	$("#oldalipay_account").val("原支付宝账号："+alipay);
 	$("#oldorder_pull").val("原订单抽成： "+order_pull+"%");
 	$("#name").val(schoolname);
-	citys=city;
-	areas=area;
+	citysid=cityid;
+	areasid=areaid;
 	//填充省选项,并且选中原来的省选项
 	var params = {};
 	jQuery.post("getProvinceToJson.do", params, function(obj){
@@ -65,15 +65,15 @@ function showeditschool(schoolname,schoolphone,schoolcontact,alipay,order_pull,p
 			//选中省
 			var objSelect= $("#province1").get(0);
 			for(var i=0;i<objSelect.options.length;i++) {  
-		        if(objSelect.options[i].text == province) {  
+		        if(objSelect.options[i].value == provinceid) {  
 		            objSelect.options[i].selected = true;  
 		            break;  
 		        }  
 		    }  
 	    }, 'json');
 	//填充市，设置选中市选项
-	var params = {provinceName:province};
-	jQuery.post("getCityByProvinceName.do", params, showEditCity,'json');
+	var params = {provinceid:provinceid};
+	jQuery.post("getCityByProvinceId.do", params, showEditCity,'json');
 	
 	$("#edit").show();
 	$("#edit_sec").show();
@@ -96,8 +96,8 @@ function setAreainfo(citysid,area)
         //选中区
 		var objSelect= $("#area1").get(0);
 		for(var i=0;i<objSelect.options.length;i++) {  
-	        if(objSelect.options[i].text == area) { 
-	        	cityid=objSelect.options[i].value;//
+	        if(objSelect.options[i].value == areasid) { 
+	        	//cityid=objSelect.options[i].value;//
 	            objSelect.options[i].selected = true;  
 	            break;  
 	        }  
@@ -118,10 +118,10 @@ function showEditCity(obj)
     //选中市
 	var objSelect= $("#city1").get(0);
 	for(var i=0;i<objSelect.options.length;i++) {  
-        if(objSelect.options[i].text == citys) { 
+        if(objSelect.options[i].value == citysid) { 
             objSelect.options[i].selected = true; 
-            var citysid=objSelect.options[i].value;//
-            setAreainfo(citysid,areas)
+           // var citysid=objSelect.options[i].value;//
+            setAreainfo(citysid,areasid)
             break;
         }  
     }  
@@ -152,9 +152,9 @@ function addshcool(){
 	var schoolcontact=$("#schoolcontact").val();
 	var alipay_account=$("#alipay_account").val();
 	var order_pull=$("#order_pull").val();
-	var province=$("#province").find("option:selected").text();
-	var city=$("#city").find("option:selected").text();
-	var area=$("#area").find("option:selected").text();
+	var provinceid=$("#province").val();
+	var cityid=$("#city").val();
+	var areaid=$("#area").val();
 	if(city==""){
 		alert("请选择 市");
 		return;
@@ -173,9 +173,9 @@ function addshcool(){
 				schoolcontact:schoolcontact,
 				alipay_account:alipay_account,
 				order_pull:order_pull,
-				province:province,
-				city:city,
-				area:area
+				provinceid:provinceid,
+				cityid:cityid,
+				areaid:areaid
 			},
 			success : function(data) {
 				if (data == "error") {
@@ -231,10 +231,9 @@ function editschool(){
 	var editalipay_account=$("#editalipay_account").val();
 	var editorder_pull=$("#editorder_pull").val();
 	
-	var province=$("#province1").find("option:selected").text();
-	var city=$("#city1").find("option:selected").text();
-	var area=$("#area1").find("option:selected").text();
-	
+	var provinceid=$("#province1").val();
+	var cityid=$("#city1").val();
+	var areaid=$("#area1").val();
 	if(editorder_pull!=0){
 		var re =/^(?:0|[1-9][0-9]?|100)$/;   //判断字符串是否为数字     //判断正整数 /^[1-9]+[0-9]*]*$/  
 		   if (!re.test(editorder_pull))
@@ -255,9 +254,9 @@ function editschool(){
 				editschoolcontact:editschoolcontact,
 				editalipay_account:editalipay_account,
 				editorder_pull:editorder_pull,
-				province:province,
-				city:city,
-				area:area
+				provinceid:provinceid,
+				cityid:cityid,
+				areaid:areaid
 			},
 			success : function(data) {
 				if (data == "error") {

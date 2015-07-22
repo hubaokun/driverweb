@@ -171,7 +171,7 @@ $(function(){
 <div class="table_edit_button">
 <div class="table_button_edit_icon"></div>
 <div class="table_button_text" 
-onclick="showeditschool('${name}','${telphone }','${contact }','${alipay_account }','${order_pull}','${province}','${city}','${area}')">修改</div>
+onclick="showeditschool('${name}','${telphone }','${contact }','${alipay_account }','${order_pull}','${provinceid}','${cityid}','${areaid}')">修改</div>
 </div>
 
 

@@ -461,7 +461,7 @@ public class CuserAction extends BaseAction {
 					String drive_school = null;
 					int gender = 0;
 					String birthday = null;
-					String city = null;
+					String cityid = null;
 					String address = null;
 					String realname = null;
 					String urgent_person = null;
@@ -523,7 +523,7 @@ public class CuserAction extends BaseAction {
 						}else if(title.equals("出生日期")){
 							 birthday = sheet.getCell(j, i).getContents().replaceAll("/", "-");
 						}else if(title.equals("教练所属城市")){
-							 city = sheet.getCell(j, i).getContents();
+							 cityid = sheet.getCell(j, i).getContents();
 						}else if(title.equals("教练联系地址")){
 							 address = sheet.getCell(j, i).getContents();
 						}else if(title.equals("紧急联系人姓名")){
@@ -698,10 +698,10 @@ public class CuserAction extends BaseAction {
 						}else{
 							coach1.setBirthday(birthday);
 						}
-						if(city==null){
-							coach1.setCity(coach1.getCity());
+						if(cityid==null){
+							coach1.setCityid(coach1.getCityid());
 						}else{
-							coach1.setCity(city);
+							coach1.setCityid(cityid);
 						}
 						if(address==null){
 							coach1.setAddress(coach1.getAddress());
@@ -844,7 +844,7 @@ public class CuserAction extends BaseAction {
 					coach.setDrive_school(drive_school);
 					coach.setGender(gender);
 					coach.setBirthday(birthday);
-					coach.setCity(city);
+					coach.setCityid(cityid);
 					coach.setAddress(address);
 					coach.setRealname(realname);
 					coach.setUrgent_person(urgent_person);
@@ -939,7 +939,7 @@ public class CuserAction extends BaseAction {
 					coachexcel.setBirthday(coach.getBirthday());
 				}else
 				if(data[i].equals("15")){
-					coachexcel.setCity(coach.getCity());
+					coachexcel.setCity(coach.getCityid());
 				}else
 				if(data[i].equals("16")){
 					coachexcel.setAddress(coach.getAddress());
@@ -1478,7 +1478,7 @@ public class CuserAction extends BaseAction {
 			}
 			//修改城市
 			if(!CommonUtils.isEmptyString(editcity)){
-				cuser.setCity(editcity);
+				cuser.setCityid(editcity);
 			}
 			//修改地址
 			if(!CommonUtils.isEmptyString(editaddress)){
