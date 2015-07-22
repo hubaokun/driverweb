@@ -40,7 +40,7 @@
 				<!-- <property name="user" value="root" /> -->
 				<!-- <property name="driverUrl" value="jdbc:mysql://localhost:3306/db_guangda?useUnicode=true&amp;characterEncoding=UTF-8&amp;characterSetResults=UTF-8" 
 					/> -->
-			 <property name="driverUrl" value="jdbc:mysql://127.0.0.1:3306/driver?useUnicode=true&amp;characterEncoding=UTF-8&amp;characterSetResults=UTF-8" />
+			 <property name="driverUrl" value="jdbc:mysql://127.0.0.1:3306/db_guangda?useUnicode=true&amp;characterEncoding=UTF-8&amp;characterSetResults=UTF-8" />
 			  
 				<property name="user" value="root" />
 				<property name="password" value="123456" />

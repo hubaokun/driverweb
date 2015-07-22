@@ -76,8 +76,8 @@ public class SuserInfo implements Serializable {
 	private Integer id_cardpicb = 0;
 
 	// 城市
-	@Column(name = "city")
-	private String city;
+	@Column(name = "cityid")
+	private String cityid;
 
 	// 地址
 	@Column(name = "address")
@@ -207,34 +207,20 @@ public class SuserInfo implements Serializable {
 	@Transient
 	private CuserInfo cuser;
 	
-	@Column(name = "province", length = 100)
-	private String province;
+	@Column(name = "provinceid", length = 100)
+	private String provinceid;
 	
 	/*@Column(name = "city", length = 100)
 	private String city;*/
 	
 	
-	@Column(name = "area", length = 100)
-	private String area;
+	@Column(name = "areaid", length = 100)
+	private String areaid;
 	
 	
 	
 	
-	public String getProvince() {
-		return province;
-	}
-
-	public void setProvince(String province) {
-		this.province = province;
-	}
-
-	public String getArea() {
-		return area;
-	}
-
-	public void setArea(String area) {
-		this.area = area;
-	}
+	
 
 	public int getStudentid() {
 		return studentid;
@@ -468,12 +454,30 @@ public class SuserInfo implements Serializable {
 		this.score = score;
 	}
 
-	public String getCity() {
-		return city;
+	
+
+	public String getCityid() {
+		return cityid;
 	}
 
-	public void setCity(String city) {
-		this.city = city;
+	public void setCityid(String cityid) {
+		this.cityid = cityid;
+	}
+
+	public String getProvinceid() {
+		return provinceid;
+	}
+
+	public void setProvinceid(String provinceid) {
+		this.provinceid = provinceid;
+	}
+
+	public String getAreaid() {
+		return areaid;
+	}
+
+	public void setAreaid(String areaid) {
+		this.areaid = areaid;
 	}
 
 	public String getAddress() {

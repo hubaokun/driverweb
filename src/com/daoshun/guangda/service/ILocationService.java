@@ -14,6 +14,7 @@ public interface ILocationService {
 	public List<Provinces> getProvinces();
 	public List<Cities> getCityByProvinceId(String provinceid);
 	public List<Areas> getAreaByCityId(String cityid);
+	public Areas getAreaByAreaId(String areaid);
 	public List<Cities> getCityByHotKey(String hotKey);
 	public List<Cities>  getCityByCName(String name);
 	public List<Cities>  getCityByProvinceName(String name);

@@ -354,7 +354,9 @@ public class Constant {
 	public static final String GETCITYBYCNAME = "GETCITYBYCNAME";
 	
 	
-	/**获取区信息**/
+	/**按城市ID获取区信息**/
 	public static final String GETAREABYCITYID = "GETAREABYCITYID";
+	/**按区ID获取区信息**/
+	public static final String GETAREABYAREAID = "GETAREABYAREAID";
 	
 }

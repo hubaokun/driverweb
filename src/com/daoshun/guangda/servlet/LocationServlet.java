@@ -52,6 +52,9 @@ public class LocationServlet extends BaseServlet{
 			}else if (Constant.GETAREABYCITYID.equals(action)) {
 				// 按市编号查询区
 				getAreaByCityId(request,resultMap);
+			}else if (Constant.GETAREABYAREAID.equals(action)) {
+				// 按市编号查询区
+				getAreaByAreaId(request,resultMap);
 			}
 		} catch (NullParameterException e) {
 			e.printStackTrace();
@@ -71,7 +74,7 @@ public class LocationServlet extends BaseServlet{
 	 * 按省编号查询市
 	 */
 	public void getCityByProvinceId(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
-		String provinceId= getRequestParamter(request, "provinceId");
+		String provinceId= getRequestParamter(request, "provinceid");
 		List<Cities> list=locationService.getCityByProvinceId(provinceId);
 		resultMap.put("citylist", list);
 	}
@@ -95,8 +98,16 @@ public class LocationServlet extends BaseServlet{
 	 *  按市编号查询区
 	 */
 	public void getAreaByCityId(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
-		String cityId= getRequestParamter(request, "cityId");
+		String cityId= getRequestParamter(request, "cityid");
 		List<Areas> list=locationService.getAreaByCityId(cityId);
 		resultMap.put("arealist", list);
+	}
+	/**
+	 *  按区编号查询区
+	 */
+	public void getAreaByAreaId(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+		String areaid= getRequestParamter(request, "areaid");
+		Areas area=locationService.getAreaByAreaId(areaid);
+		resultMap.put("area", area);
 	}
 }

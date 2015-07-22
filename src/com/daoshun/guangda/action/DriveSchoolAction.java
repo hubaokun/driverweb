@@ -103,14 +103,12 @@ public class DriveSchoolAction extends BaseAction {
 	
 	private int changetype;
 	
-	private List<Provinces> provincelist;//添加省市区的省列表
 	@Resource
 	private  LocationServiceImpl locationService;//省市区的业务对象
 	
-	private String province;
-	
-	private String city;
-	private String area;
+	private String provinceid;//省ID
+	private String cityid;//市ID
+	private String areaid;//区ID
 	
 	
 	
@@ -123,7 +121,6 @@ public class DriveSchoolAction extends BaseAction {
 	public String getdriveSchool() {
 		QueryResult<DriveSchoolInfo> result = cuserService.getDriveSchoolInfoByPage(pageIndex, 10);
 		driveSchoollist = result.getDataList();
-		//provincelist=locationService.getProvinces();
 		total = (int)result.getTotal();
 		pageCount = (int) ((total + 9)/10);
 		if(pageIndex>1){
@@ -243,9 +240,9 @@ public class DriveSchoolAction extends BaseAction {
 			}
 			driveSchoolInfo.setMoney(new BigDecimal(0));
 			driveSchoolInfo.setAddtime(new Date());
-			driveSchoolInfo.setProvince(province);
-			driveSchoolInfo.setCity(city);
-			driveSchoolInfo.setArea(area);
+			driveSchoolInfo.setProvinceid(provinceid);
+			driveSchoolInfo.setCityid(cityid);
+			driveSchoolInfo.setAreaid(areaid);
 			cuserService.addObject(driveSchoolInfo);
 			setResponseStr("success");
 		}
@@ -293,20 +290,20 @@ public class DriveSchoolAction extends BaseAction {
 				}
 				if (CommonUtils.isEmptyString(editschoolphone) && CommonUtils.isEmptyString(editschoolcontact) 
 						&& CommonUtils.isEmptyString(editalipay_account)&&editorder_pull==null
-						&& driveSchoolInfo.getProvince().equals(province) && driveSchoolInfo.getCity().equals(city)
-						&& driveSchoolInfo.getArea().equals(area)
+						&& driveSchoolInfo.getProvinceid().equals(provinceid) && driveSchoolInfo.getCityid().equals(cityid)
+						&& driveSchoolInfo.getAreaid().equals(areaid)
 						) {
 					setResponseStr("error2");
 					return;
 				} else {
-					if (!CommonUtils.isEmptyString(province)) {
-						driveSchoolInfo.setProvince(province);
+					if (!CommonUtils.isEmptyString(provinceid)) {
+						driveSchoolInfo.setProvinceid(provinceid);
 					}
-					if (!CommonUtils.isEmptyString(city)) {
-						driveSchoolInfo.setCity(city);
+					if (!CommonUtils.isEmptyString(cityid)) {
+						driveSchoolInfo.setCityid(cityid);
 					}
-					if (!CommonUtils.isEmptyString(area)) {
-						driveSchoolInfo.setArea(area);
+					if (!CommonUtils.isEmptyString(areaid)) {
+						driveSchoolInfo.setAreaid(areaid);
 					}
 					cuserService.updateObject(driveSchoolInfo);
 					setResponseStr("success");
@@ -327,14 +324,14 @@ public class DriveSchoolAction extends BaseAction {
 					if(editorder_pull!=null){
 						driveSchoolInfo.setOrder_pull(editorder_pull);
 					}
-					if (!CommonUtils.isEmptyString(province)) {
-						driveSchoolInfo.setProvince(province);
+					if (!CommonUtils.isEmptyString(provinceid)) {
+						driveSchoolInfo.setProvinceid(provinceid);
 					}
-					if (!CommonUtils.isEmptyString(city)) {
-						driveSchoolInfo.setCity(city);
+					if (!CommonUtils.isEmptyString(cityid)) {
+						driveSchoolInfo.setCityid(cityid);
 					}
-					if (!CommonUtils.isEmptyString(area)) {
-						driveSchoolInfo.setArea(area);
+					if (!CommonUtils.isEmptyString(areaid)) {
+						driveSchoolInfo.setAreaid(areaid);
 					}
 					cuserService.updateObject(driveSchoolInfo);
 					setResponseStr("success");
@@ -606,37 +603,30 @@ public class DriveSchoolAction extends BaseAction {
 		this.changetype = changetype;
 	}
 
-	public List<Provinces> getProvincelist() {
-		return provincelist;
+	public String getProvinceid() {
+		return provinceid;
 	}
 
-	public void setProvincelist(List<Provinces> provincelist) {
-		this.provincelist = provincelist;
+	public void setProvinceid(String provinceid) {
+		this.provinceid = provinceid;
 	}
 
-	public String getProvince() {
-		return province;
+	public String getCityid() {
+		return cityid;
 	}
 
-	public void setProvince(String province) {
-		this.province = province;
+	public void setCityid(String cityid) {
+		this.cityid = cityid;
 	}
 
-	public String getCity() {
-		return city;
+	public String getAreaid() {
+		return areaid;
 	}
 
-	public void setCity(String city) {
-		this.city = city;
+	public void setAreaid(String areaid) {
+		this.areaid = areaid;
 	}
 
-	public String getArea() {
-		return area;
-	}
-
-	public void setArea(String area) {
-		this.area = area;
-	}
 	
 	
 }

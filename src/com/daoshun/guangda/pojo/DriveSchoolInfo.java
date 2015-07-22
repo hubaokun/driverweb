@@ -59,41 +59,39 @@ public class DriveSchoolInfo implements Serializable {
 	private BigDecimal money;
 	
 	//省
-	@Column(name = "province")
-	private String province;
+	@Column(name = "provinceid")
+	private String provinceid;
 	
 	//市
-	@Column(name = "city")
-	private String city;
+	@Column(name = "cityid")
+	private String cityid;
 	
 	//区
-	@Column(name = "area")
-	private String area;
-	
-	
-	
-	public String getProvince() {
-		return province;
+	@Column(name = "areaid")
+	private String areaid;
+
+	public String getProvinceid() {
+		return provinceid;
 	}
 
-	public void setProvince(String province) {
-		this.province = province;
+	public void setProvinceid(String provinceid) {
+		this.provinceid = provinceid;
 	}
 
-	public String getCity() {
-		return city;
+	public String getCityid() {
+		return cityid;
 	}
 
-	public void setCity(String city) {
-		this.city = city;
+	public void setCityid(String cityid) {
+		this.cityid = cityid;
 	}
 
-	public String getArea() {
-		return area;
+	public String getAreaid() {
+		return areaid;
 	}
 
-	public void setArea(String area) {
-		this.area = area;
+	public void setAreaid(String areaid) {
+		this.areaid = areaid;
 	}
 
 	public int getSchoolid() {
