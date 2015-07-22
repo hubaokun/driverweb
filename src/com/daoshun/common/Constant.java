@@ -104,6 +104,12 @@ public class Constant {
 
 	// 获取账户余额信息
 	public static final String GETMYBALANCEINFO = "GETMYBALANCEINFO";
+	
+	//获取学员钱包页面所需的附加信息：券的张数，小巴币的
+	public static final String GETSTUDENTWALLETINFO="GETSTUDENTWALLETINFO";
+	
+	//获取学员小巴券列表
+	public static final String GETSTUDENTCOUPONLIST="GETSTUDENTCOUPONLIST";
 
 	// 申请提现
 	public static final String APPLYCASH = "APPLYCASH";
@@ -325,6 +331,11 @@ public class Constant {
 	public static final String DELALIACCOUNT = "DELALIACCOUNT";
 	
 	public static final String CHANGEAPPLYTYPE = "CHANGEAPPLYTYPE";
+
+    //获取推荐人员列表
+	public static final String CGETRECOMMENDLIST = "CGETRECOMMENDLIST";
+	//增加推荐人员
+	public static final String CHEAKINVITECODE ="CHEAKINVITECODE";
 	/**************************** 默认属性设置 ********************************/
 	/************ 默认全天状态 ************/
 	public static final int STATE_DEF = 0;

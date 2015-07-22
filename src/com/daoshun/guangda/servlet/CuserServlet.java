@@ -303,13 +303,14 @@ public class CuserServlet extends BaseServlet {
 		if (result == 1) {// 可以登录
 			String token = request.getSession().getId().toLowerCase();
 			CuserInfo cuser = cuserService.getCuserByPhone(loginid);
-			if (cuser == null) {
+			if (cuser == null) {				
 				cuser = cuserService.registerUser(loginid, token);// 注册
 				cuser.setPassword(password);
 				resultMap.put("isregister", 1);
 			} else {
 				cuser.setToken(token);
 				cuser.setToken_time(new Date());
+				cuser.setInvitecode("C"+CommonUtils.getInviteCode(cuser.getPhone()));
 				cuserService.updateCuser(cuser);
 				cuser.setCar_cardpicfurl(cuserService.backUrl(cuser.getCar_cardpicf())); // 行驶证正面照
 				cuser.setCar_cardpicburl(cuserService.backUrl(cuser.getCar_cardpicb())); // 行驶证反面照

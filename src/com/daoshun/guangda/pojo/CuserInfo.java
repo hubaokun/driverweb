@@ -44,6 +44,10 @@ public class CuserInfo implements Serializable {
 	@Column(name = "phone", length = 20, unique = true)
 	private String phone;
 
+	//邀请码
+	@Column(name = "invitecode", length = 20, unique = true)
+	private String invitecode;
+
 	// 教练联系电话(默认是为phone)
 	@Column(name = "telphone", length = 20)
 	private String telphone;
@@ -968,5 +972,11 @@ public class CuserInfo implements Serializable {
 	public void setLevelname(String levelname) {
 		this.levelname = levelname;
 	}
+	public String getInvitecode() {
+		return invitecode;
+	}
 
+	public void setInvitecode(String invitecode) {
+		this.invitecode = invitecode;
+	}
 }

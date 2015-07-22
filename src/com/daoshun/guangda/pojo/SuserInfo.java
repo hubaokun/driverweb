@@ -37,6 +37,12 @@ public class SuserInfo implements Serializable {
 	@Column(name = "phone", length = 20, unique = true)
 	private String phone;
 
+	//邀请码
+	@Column(name = "invitecode", length = 20, unique = true)
+	private String invitecode;
+	
+
+
 	// 头像id
 	@Column(name = "avatar", length = 10, columnDefinition = "INT default 0")
 	private Integer avatar = 0;
@@ -589,5 +595,11 @@ public class SuserInfo implements Serializable {
 	public void setToken_time(Date token_time) {
 		this.token_time = token_time;
 	}
+	public String getInvitecode() {
+		return invitecode;
+	}
 
+	public void setInvitecode(String invitecode) {
+		this.invitecode = invitecode;
+	}
 }

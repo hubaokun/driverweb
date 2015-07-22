@@ -6,6 +6,8 @@ import java.util.List;
 import com.daoshun.common.QueryResult;
 import com.daoshun.guangda.pojo.BalanceStudentInfo;
 import com.daoshun.guangda.pojo.CoachStudentInfo;
+import com.daoshun.guangda.pojo.CouponInfo;
+import com.daoshun.guangda.pojo.CouponRecord;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.NoticesInfo;
 import com.daoshun.guangda.pojo.StudentApplyInfo;
@@ -230,4 +232,6 @@ public interface ISUserService {
 	public abstract CoachStudentInfo getCoachStudentByPhone(int coachid, int studentid);
 
 	public abstract void addCoachStudent(CoachStudentInfo coachstudent);
+
+	public abstract int getCouponSum(int studentid);
 }

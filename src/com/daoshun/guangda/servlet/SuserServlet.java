@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
 import com.daoshun.exception.NullParameterException;
+import com.daoshun.guangda.pojo.CouponRecord;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.pojo.SystemSetInfo;
@@ -45,7 +47,8 @@ public class SuserServlet extends BaseServlet {
 			String action = getAction(request);
 
 			if (Constant.PERFECTACCOUNTINFO.equals(action) || Constant.CHANGEAVATAR.equals(action) || Constant.PERFECTSTUDENTINFO.equals(action) || Constant.PERFECTPERSONINFO.equals(action)
-					|| Constant.GETMYBALANCEINFO.equals(action) || Constant.APPLYCASH.equals(action) ||Constant.SENROLL.equals(action)|| Constant.RECHARGE.equals(action)) {
+					|| Constant.GETMYBALANCEINFO.equals(action) || Constant.APPLYCASH.equals(action)  || Constant.GETSTUDENTWALLETINFO.equals(action) || Constant.GETSTUDENTCOUPONLIST.equals(action) 
+					||Constant.SENROLL.equals(action)|| Constant.RECHARGE.equals(action)) {
 				if (!checkSession(request, action, resultMap)) {
 					setResult(response, resultMap);
 					return;
@@ -88,7 +91,11 @@ public class SuserServlet extends BaseServlet {
 			} else if (Constant.RECHARGE.equals(action)) {
 				// 账户充值
 				recharge(request, resultMap);
-			} else {
+			}  else if (Constant.GETSTUDENTWALLETINFO.equals(action)) {
+				// 账户充值
+				getWalletInfo(request, resultMap);
+			} 
+			else {
 				throw new NullParameterException();
 			}
 
@@ -117,8 +124,11 @@ public class SuserServlet extends BaseServlet {
 		} else if (Constant.RECHARGE.equals(action)) {
 			userid = getRequestParamter(request, "studentid");
 		}
-		 else if (Constant.SENROLL.equals(action)) {
-				userid = getRequestParamter(request, "studentid");
+		else if (Constant.GETSTUDENTWALLETINFO.equals(action)) {
+			userid = getRequestParamter(request, "studentid");
+		}
+		else if (Constant.SENROLL.equals(action)) {
+			userid = getRequestParamter(request, "studentid");
 			}
 
 		if (!CommonUtils.isEmptyString(userid)) {
@@ -140,14 +150,16 @@ public class SuserServlet extends BaseServlet {
 						tokenTime.add(Calendar.DAY_OF_YEAR, login_vcode_time);
 						if (now.after(tokenTime)) {
 							resultMap.put(Constant.CODE, 95);
-							resultMap.put(Constant.MESSAGE, "您的登录信息已经过期,请重新登录.");
+//							System.out.print("SuserServlet checkSession-----1111111111");
+							resultMap.put(Constant.MESSAGE, "SuserServlet checkSession您的登录信息已经过期,请重新登录111.");
 							return false;
 						} else {
 							return true;
 						}
 					} else {
 						resultMap.put(Constant.CODE, 95);
-						resultMap.put(Constant.MESSAGE, "您的登录信息已经过期,请重新登录.");
+//						System.out.print("SuserServlet checkSession-----222222222");
+						resultMap.put(Constant.MESSAGE, "checkSession您的登录信息已经过期,请重新登录222.");
 						return false;
 					}
 				} else {
@@ -315,26 +327,32 @@ public class SuserServlet extends BaseServlet {
 
 		if (result == 1) {
 			String token = request.getSession().getId().toLowerCase();
+//			System.out.println("longin set token="+token+" "+Thread.currentThread().getId());
 
 			SuserInfo user = suserService.getUserByPhone(phone);
 			if (user == null) {
+//				System.out.println("do not save token to db "+token);
+				
 				user = suserService.registerUser(phone, token);// 注册
 				user.setPassword(password);
 				resultMap.put("isregister", 1);
 			} else {
 				user.setToken(token);
 				user.setToken_time(new Date());
+				user.setInvitecode("S"+CommonUtils.getInviteCode(user.getPhone()));
 				suserService.updateUserInfo(user);
 				user.setPassword(password);
 				resultMap.put("isregister", 0);
+//				System.out.println("longin save token to db "+token+" "+Thread.currentThread().getId());
 			}
 			resultMap.put("UserInfo", user);
 		} else if (result == 0) {
 			resultMap.put("code", 2);
 			resultMap.put("message", "验证码错误,请重新输入");
 		} else {
+//			System.out.println("-您的登录信息已经过期,请重新获取验证码登录login----:"+result);
 			resultMap.put("code", 3);
-			resultMap.put("message", "您的登录信息已经过期,请重新获取验证码登录");
+			resultMap.put("message", "您的登录信息已经过期,请重新获取验证码登录login");
 		}
 	}
 
@@ -681,6 +699,18 @@ public class SuserServlet extends BaseServlet {
 
 		HashMap<String, Object> rechargeResult = suserService.recharge(studentid, amount);
 		resultMap.putAll(rechargeResult);
+	}
+	
+	
+	// 获取账户信息充值
+	public void getWalletInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException 
+	{		
+		String studentid = getRequestParamter(request, "studentid");// 教练ID
+		CommonUtils.validateEmpty(studentid);	
+		int sum= suserService.getCouponSum(Integer.parseInt(studentid));
+		
+		resultMap.put("couponsum", sum);
+		resultMap.put("coinsum", sum);
 	}
 
 }
