@@ -339,6 +339,7 @@ public class SuserServlet extends BaseServlet {
 			} else {
 				user.setToken(token);
 				user.setToken_time(new Date());
+				user.setInvitecode("S"+CommonUtils.getInviteCode(user.getPhone()));
 				suserService.updateUserInfo(user);
 				user.setPassword(password);
 				resultMap.put("isregister", 0);

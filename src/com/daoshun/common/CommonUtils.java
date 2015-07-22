@@ -531,11 +531,12 @@ public class CommonUtils {
      * @return 
      */  
     public static String to24Base(int num){  
+    	
     	int base= 24;
         StringBuffer str = new StringBuffer("");  
         String digths = "ABCDEFGHJKLMNPQRSTUVWXYZ";  
         Stack<Character> s = new Stack<Character>();  
-        while(num != 0){  
+        while(num > base){  
             s.push(digths.charAt(num%base));  
             num/=base;  
         }  
@@ -547,6 +548,7 @@ public class CommonUtils {
     
     public static String getInviteCode(String phone)
     {
+    	System.out.println("to24Base:"+phone);    	
     	String first=phone.substring(0, 3);
     	Integer index=Integer.parseInt(first);
     	List<String> list = Arrays.asList("130","131","132","133","134","135","136","137","138","139","150","151","152","153","154","155","156","157","158","159","170","171","172","173","174","175","176","177","178","179","180","181","182","183","184","185","186","187","188","189");
