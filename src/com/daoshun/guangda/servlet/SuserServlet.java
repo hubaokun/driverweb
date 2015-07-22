@@ -150,7 +150,7 @@ public class SuserServlet extends BaseServlet {
 						tokenTime.add(Calendar.DAY_OF_YEAR, login_vcode_time);
 						if (now.after(tokenTime)) {
 							resultMap.put(Constant.CODE, 95);
-							System.out.print("SuserServlet checkSession-----1111111111");
+//							System.out.print("SuserServlet checkSession-----1111111111");
 							resultMap.put(Constant.MESSAGE, "SuserServlet checkSession您的登录信息已经过期,请重新登录111.");
 							return false;
 						} else {
@@ -158,7 +158,7 @@ public class SuserServlet extends BaseServlet {
 						}
 					} else {
 						resultMap.put(Constant.CODE, 95);
-						System.out.print("SuserServlet checkSession-----222222222");
+//						System.out.print("SuserServlet checkSession-----222222222");
 						resultMap.put(Constant.MESSAGE, "checkSession您的登录信息已经过期,请重新登录222.");
 						return false;
 					}

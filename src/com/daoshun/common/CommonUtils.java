@@ -115,7 +115,8 @@ public class CommonUtils {
 	 */
 	public static void validateEmpty(String value) throws NullParameterException {
 		if (value == null || value.length() == 0) {
-			throw new NullParameterException();
+			System.out.println("参数为空");
+//			throw new NullParameterException();
 		}
 	}
 
