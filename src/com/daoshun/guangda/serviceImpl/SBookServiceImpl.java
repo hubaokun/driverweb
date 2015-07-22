@@ -289,7 +289,12 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 
 				int subjectid = CommonUtils.parseInt(condition6, 0);
 
-				Date start = CommonUtils.getDateFormat(condition3, "yyyy-MM-dd HH:mm:ss");
+				Date start = null;
+				if(condition3.length() == 10){
+					start = CommonUtils.getDateFormat(condition3, "yyyy-MM-dd");
+				}else if(condition3.length() == 19){
+					start = CommonUtils.getDateFormat(condition3, "yyyy-MM-dd HH:mm:ss");
+				}
 
 				if (start != null) {
 					Calendar startCal = Calendar.getInstance();
@@ -421,7 +426,12 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 
 			int subjectid = CommonUtils.parseInt(condition6, 0);
 
-			Date start = CommonUtils.getDateFormat(condition3, "yyyy-MM-dd HH:mm:ss");
+			Date start = null;
+			if(condition3.length() == 10){
+				start = CommonUtils.getDateFormat(condition3, "yyyy-MM-dd");
+			}else if(condition3.length() == 19){
+				start = CommonUtils.getDateFormat(condition3, "yyyy-MM-dd HH:mm:ss");
+			}
 
 			if (start != null) {
 				Calendar startCal = Calendar.getInstance();
