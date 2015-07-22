@@ -1,0 +1,102 @@
+package com.daoshun.guangda.servlet;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.daoshun.common.Constant;
+import com.daoshun.exception.NullParameterException;
+import com.daoshun.guangda.pojo.Areas;
+import com.daoshun.guangda.pojo.Cities;
+import com.daoshun.guangda.pojo.Provinces;
+import com.daoshun.guangda.service.ILocationService;
+/**
+ * 省市区 服务接口  for app
+ * @author 卢磊
+ *
+ */
+@WebServlet("/location")
+public class LocationServlet extends BaseServlet{
+	private static final long serialVersionUID = 1L;
+	private ILocationService locationService;
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+		locationService = (ILocationService) applicationContext.getBean("locationService");
+		
+	}
+	
+	@Override
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		try {
+			String action = getAction(request);
+			if (Constant.GETPROVINCE.equals(action)) {
+				// 获取所有的省名称
+				getProvince(request,resultMap);
+			}else if (Constant.GETCITYBYPROID.equals(action)) {
+				// 按省编号查询市
+				getCityByProvinceId(request,resultMap);
+			}else if (Constant.GETCITYBYHOTKEY.equals(action)) {
+				//按热键查询市
+				getCityByHotKey(request,resultMap);
+			}else if (Constant.GETCITYBYCNAME.equals(action)) {
+				// 按市名称模糊查询市
+				getCityByCName(request,resultMap);
+			}else if (Constant.GETAREABYCITYID.equals(action)) {
+				// 按市编号查询区
+				getAreaByCityId(request,resultMap);
+			}
+		} catch (NullParameterException e) {
+			e.printStackTrace();
+			setResultWhenException(response, e.getMessage());
+		}
+		setResult(response, resultMap);
+	
+	}
+	/**
+	 *  获取所有的省名称
+	 */
+	public void getProvince(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+		List<Provinces> list=locationService.getProvinces();
+		resultMap.put("provincelist", list);
+	}
+	/**
+	 * 按省编号查询市
+	 */
+	public void getCityByProvinceId(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+		String provinceId= getRequestParamter(request, "provinceId");
+		List<Cities> list=locationService.getCityByProvinceId(provinceId);
+		resultMap.put("citylist", list);
+	}
+	/**
+	 * 按热键查询市
+	 */
+	public void getCityByHotKey(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+		String hotkey= getRequestParamter(request, "hotkey");
+		List<Cities> list=locationService.getCityByHotKey(hotkey);
+		resultMap.put("citylist", list);
+	}
+	/**
+	 * 按市名称模糊查询市
+	 */
+	public void getCityByCName(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+		String cname= getRequestParamter(request, "cname");
+		List<Cities> list=locationService.getCityByCName(cname);
+		resultMap.put("citylist", list);
+	}
+	/**
+	 *  按市编号查询区
+	 */
+	public void getAreaByCityId(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+		String cityId= getRequestParamter(request, "cityId");
+		List<Areas> list=locationService.getAreaByCityId(cityId);
+		resultMap.put("arealist", list);
+	}
+}
