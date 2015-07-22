@@ -3,15 +3,11 @@ package com.daoshun.guangda.action;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -28,11 +24,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.daoshun.common.CommonUtils;
+import com.daoshun.common.ErrException;
 import com.daoshun.common.QueryResult;
-import com.daoshun.exception.NullParameterException;
-import com.daoshun.guangda.NetData.CoachInfoForExcel;
-import com.daoshun.guangda.pojo.CApplyCashInfo;
-import com.daoshun.guangda.pojo.ComplaintInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.OrderInfo;
 import com.daoshun.guangda.pojo.OrderPrice;
@@ -166,7 +159,7 @@ public class OrderAction extends BaseAction {
 	
 
 	@Action(value = "/cancelOrder", results = { @Result(name = SUCCESS, location = "/order.jsp") })
-	public String getCoachDetail() throws NullParameterException {
+	public String getCoachDetail() throws ErrException {
 		HttpSession session = ServletActionContext.getRequest().getSession();
 		String orderid = request.getParameter("orderid");
 //		  orderid = String.valueOf(session.getAttribute("orderid"));

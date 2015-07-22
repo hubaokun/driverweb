@@ -22,13 +22,12 @@ import org.json.JSONObject;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
 import com.daoshun.common.CscheduleCompare;
-import com.daoshun.exception.NullParameterException;
+import com.daoshun.common.ErrException;
 import com.daoshun.guangda.pojo.CBookTimeInfo;
 import com.daoshun.guangda.pojo.CaddAddressInfo;
 import com.daoshun.guangda.pojo.CscheduleInfo;
 import com.daoshun.guangda.pojo.CsubjectInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
-import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.pojo.SystemSetInfo;
 import com.daoshun.guangda.service.ICUserService;
 import com.daoshun.guangda.service.ICscheduleService;
@@ -86,7 +85,7 @@ public class CscheduleServlet extends BaseServlet {
 			} else if (Constant.SETDEFAULT.equals(action)) {
 				setDefault(request, resultMap);
 			} else {
-				throw new NullParameterException();
+				throw new ErrException();
 			}
 
 			recordUserAction(request, action);
@@ -97,7 +96,7 @@ public class CscheduleServlet extends BaseServlet {
 		setResult(response, resultMap);
 	}
 
-	private boolean checkSession(HttpServletRequest request, String action, HashMap<String, Object> resultMap) throws NullParameterException {
+	private boolean checkSession(HttpServletRequest request, String action, HashMap<String, Object> resultMap) throws ErrException {
 		String userid = "";// 1.教练 2.学员
 		String usertype = "";
 
@@ -200,9 +199,9 @@ public class CscheduleServlet extends BaseServlet {
 	 * 获取教练的日程安排
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void getSchedule(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getSchedule(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		// 获取参数教练ID
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
@@ -392,9 +391,9 @@ public class CscheduleServlet extends BaseServlet {
 	 * 设置教练某天的休息时间
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void setDateTime(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void setDateTime(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		String day = getRequestParamter(request, "day");
@@ -614,9 +613,9 @@ public class CscheduleServlet extends BaseServlet {
 	 * 改变某一天的全天安排
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void changeAllDaySchedule(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void changeAllDaySchedule(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		String day = getRequestParamter(request, "day");
@@ -672,9 +671,9 @@ public class CscheduleServlet extends BaseServlet {
 	 * 修改订单式是否可以取消
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void changeOrderCancel(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void changeOrderCancel(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		String day = getRequestParamter(request, "day");
@@ -719,7 +718,7 @@ public class CscheduleServlet extends BaseServlet {
 		}
 	}
 
-	public void setDefault(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void setDefault(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		String day = getRequestParamter(request, "day");

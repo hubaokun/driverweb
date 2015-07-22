@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
-import com.daoshun.exception.NullParameterException;
+import com.daoshun.common.ErrException;
 import com.daoshun.guangda.pojo.CouponRecord;
 import com.daoshun.guangda.pojo.CscheduleInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
@@ -79,7 +79,7 @@ public class SbookServlet extends BaseServlet {
 			} else if (Constant.GETCANUSECOUPONLIST.equals(action)) {
 				getCanUseCouponList(request, resultMap);
 			} else {
-				throw new NullParameterException();
+				throw new ErrException();
 			}
 
 			recordUserAction(request, action);
@@ -90,7 +90,7 @@ public class SbookServlet extends BaseServlet {
 		setResult(response, resultMap);
 	}
 
-	private boolean checkSession(HttpServletRequest request, String action, HashMap<String, Object> resultMap) throws NullParameterException {
+	private boolean checkSession(HttpServletRequest request, String action, HashMap<String, Object> resultMap) throws ErrException {
 		String userid = "";// 1.教练 2.学员
 		String usertype = "";
 
@@ -241,14 +241,14 @@ public class SbookServlet extends BaseServlet {
 		}
 	}
 
-	public void getCoachDetail(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getCoachDetail(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		CuserInfo cuser = sbookService.getCoachDetail(coachid);
 		resultMap.put("coachinfo", cuser);
 	}
 
-	public void refreshCoachSchedule(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void refreshCoachSchedule(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		String studentid = getRequestParamter(request, "studentid");
 		String date = getRequestParamter(request, "date");
@@ -258,7 +258,7 @@ public class SbookServlet extends BaseServlet {
 		resultMap.put("datelist", datelist);
 	}
 
-	public void getNearByCoach(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getNearByCoach(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String pointcenter = getRequestParamter(request, "pointcenter");
 		String radius = getRequestParamter(request, "radius");
 		CommonUtils.validateEmpty(pointcenter);
@@ -279,7 +279,7 @@ public class SbookServlet extends BaseServlet {
 		resultMap.put("coachlist", coachlist);
 	}
 
-	public void getCoachList(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getCoachList(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String pagenum = getRequestParamter(request, "pagenum");
 		String condition1 = getRequestParamter(request, "condition1");// 关键字
 		String condition2 = getRequestParamter(request, "condition2");// 星级的下限
@@ -296,7 +296,7 @@ public class SbookServlet extends BaseServlet {
 		resultMap.putAll(result);
 	}
 
-	public void bookCoach(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void bookCoach(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		String studentid = getRequestParamter(request, "studentid");
 		String date = getRequestParamter(request, "date");
@@ -312,7 +312,7 @@ public class SbookServlet extends BaseServlet {
 		}
 	}
 
-	public void getCoachComments(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getCoachComments(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		// String studentid = getRequestParamter(request, "studentid");
 		String pagenum = getRequestParamter(request, "pagenum");
@@ -324,9 +324,9 @@ public class SbookServlet extends BaseServlet {
 	 * 获取学员小巴券列表
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void getCouponList(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getCouponList(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");// 学员ID
 		CommonUtils.validateEmpty(studentid);
 		List<CouponRecord> list = sbookService.getcouponList(studentid);
@@ -337,9 +337,9 @@ public class SbookServlet extends BaseServlet {
 	 * 获取学员历史小巴券列表
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void getHisCouponList(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getHisCouponList(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");// 学员ID
 		CommonUtils.validateEmpty(studentid);
 		List<CouponRecord> list = sbookService.getHisCouponList(studentid);
@@ -350,9 +350,9 @@ public class SbookServlet extends BaseServlet {
 	 * 获取可以使用的小巴券列表 条件:未过期，未使用过,且满足平台、驾校、教练规则
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void getCanUseCouponList(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getCanUseCouponList(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");// 学员ID
 		String coachid = getRequestParamter(request, "coachid");// 预订的教练ID
 		CommonUtils.validateEmpty(studentid);

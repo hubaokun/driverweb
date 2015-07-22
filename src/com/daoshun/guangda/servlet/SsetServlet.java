@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
-import com.daoshun.exception.NullParameterException;
+import com.daoshun.common.ErrException;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.NoticesInfo;
 import com.daoshun.guangda.pojo.SuserInfo;
@@ -71,7 +71,7 @@ public class SsetServlet extends BaseServlet {
 				// 意见反馈
 				feedback(request, resultMap);
 			} else {
-				throw new NullParameterException();
+				throw new ErrException();
 			}
 
 			recordUserAction(request, action);
@@ -83,7 +83,7 @@ public class SsetServlet extends BaseServlet {
 		setResult(response, resultMap);
 	}
 
-	private boolean checkSession(HttpServletRequest request, String action, HashMap<String, Object> resultMap) throws NullParameterException {
+	private boolean checkSession(HttpServletRequest request, String action, HashMap<String, Object> resultMap) throws ErrException {
 		String userid = "";// 1.教练 2.学员
 		String usertype = "";
 
@@ -224,7 +224,7 @@ public class SsetServlet extends BaseServlet {
 		}
 	}
 
-	public void getNotices(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getNotices(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
 		String pagenum = getRequestParamter(request, "pagenum");
 		CommonUtils.validateEmpty(studentid);
@@ -234,7 +234,7 @@ public class SsetServlet extends BaseServlet {
 		resultMap.put("datalist", datalist);
 	}
 
-	public void delNotice(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void delNotice(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
 		String noticeid = getRequestParamter(request, "noticeid");
 		CommonUtils.validateEmpty(studentid);
@@ -242,7 +242,7 @@ public class SsetServlet extends BaseServlet {
 		ssetService.delNotice(studentid, noticeid);
 	}
 
-	public void readNotice(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void readNotice(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
 		String noticeid = getRequestParamter(request, "noticeid");
 		CommonUtils.validateEmpty(studentid);
@@ -250,14 +250,14 @@ public class SsetServlet extends BaseServlet {
 		ssetService.readNotice(studentid, noticeid);
 	}
 
-	public void getMessageCount(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getMessageCount(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
 		CommonUtils.validateEmpty(studentid);
 		int noticecount = ssetService.getMessageCount(studentid);
 		resultMap.put("noticecount", noticecount);
 	}
 
-	public void feedback(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void feedback(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
 		String content = getRequestParamter(request, "content");
 		String type = getRequestParamter(request, "type");
