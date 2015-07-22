@@ -331,6 +331,11 @@ public class Constant {
 	public static final String DELALIACCOUNT = "DELALIACCOUNT";
 	
 	public static final String CHANGEAPPLYTYPE = "CHANGEAPPLYTYPE";
+
+    //获取推荐人员列表
+	public static final String CGETRECOMMENDLIST = "CGETRECOMMENDLIST";
+	//增加推荐人员
+	public static final String CHEAKINVITECODE ="CHEAKINVITECODE";
 	/**************************** 默认属性设置 ********************************/
 	/************ 默认全天状态 ************/
 	public static final int STATE_DEF = 0;
