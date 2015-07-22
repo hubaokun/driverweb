@@ -310,6 +310,7 @@ public class CuserServlet extends BaseServlet {
 			} else {
 				cuser.setToken(token);
 				cuser.setToken_time(new Date());
+				cuser.setInvitecode(cuser.getPhone());
 				cuserService.updateCuser(cuser);
 				cuser.setCar_cardpicfurl(cuserService.backUrl(cuser.getCar_cardpicf())); // 行驶证正面照
 				cuser.setCar_cardpicburl(cuserService.backUrl(cuser.getCar_cardpicb())); // 行驶证反面照
