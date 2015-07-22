@@ -150,14 +150,16 @@ public class SuserServlet extends BaseServlet {
 						tokenTime.add(Calendar.DAY_OF_YEAR, login_vcode_time);
 						if (now.after(tokenTime)) {
 							resultMap.put(Constant.CODE, 95);
-							resultMap.put(Constant.MESSAGE, "您的登录信息已经过期,请重新登录.");
+							System.out.print("SuserServlet checkSession-----1111111111");
+							resultMap.put(Constant.MESSAGE, "SuserServlet checkSession您的登录信息已经过期,请重新登录111.");
 							return false;
 						} else {
 							return true;
 						}
 					} else {
 						resultMap.put(Constant.CODE, 95);
-						resultMap.put(Constant.MESSAGE, "您的登录信息已经过期,请重新登录.");
+						System.out.print("SuserServlet checkSession-----222222222");
+						resultMap.put(Constant.MESSAGE, "checkSession您的登录信息已经过期,请重新登录222.");
 						return false;
 					}
 				} else {
@@ -325,9 +327,12 @@ public class SuserServlet extends BaseServlet {
 
 		if (result == 1) {
 			String token = request.getSession().getId().toLowerCase();
+//			System.out.println("longin set token="+token+" "+Thread.currentThread().getId());
 
 			SuserInfo user = suserService.getUserByPhone(phone);
 			if (user == null) {
+//				System.out.println("do not save token to db "+token);
+				
 				user = suserService.registerUser(phone, token);// 注册
 				user.setPassword(password);
 				resultMap.put("isregister", 1);
@@ -337,14 +342,16 @@ public class SuserServlet extends BaseServlet {
 				suserService.updateUserInfo(user);
 				user.setPassword(password);
 				resultMap.put("isregister", 0);
+//				System.out.println("longin save token to db "+token+" "+Thread.currentThread().getId());
 			}
 			resultMap.put("UserInfo", user);
 		} else if (result == 0) {
 			resultMap.put("code", 2);
 			resultMap.put("message", "验证码错误,请重新输入");
 		} else {
+//			System.out.println("-您的登录信息已经过期,请重新获取验证码登录login----:"+result);
 			resultMap.put("code", 3);
-			resultMap.put("message", "您的登录信息已经过期,请重新获取验证码登录");
+			resultMap.put("message", "您的登录信息已经过期,请重新获取验证码登录login");
 		}
 	}
 
