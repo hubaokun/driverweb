@@ -331,4 +331,19 @@ public class Constant {
 	/****************** 短信配置 ********************/
 	public static final String SMS_USER = "6799";
 	public static final String SMS_PWD = "yjia@6799yz";
+	
+	/******************省市区查询常量 ********************/
+	/**获取省信息**/
+	public static final String GETPROVINCE = "GETPROVINCE";
+	/**通过省id获取市信息**/
+	public static final String GETCITYBYPROID = "GETCITYBYPROID";
+	/**通过热键获取市信息**/
+	public static final String GETCITYBYHOTKEY = "GETCITYBYHOTKEY";
+	/**通过城市名称获取市信息**/
+	public static final String GETCITYBYCNAME = "GETCITYBYCNAME";
+	
+	
+	/**获取区信息**/
+	public static final String GETAREABYCITYID = "GETAREABYCITYID";
+	
 }

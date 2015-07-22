@@ -17,7 +17,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name ="t_complaintset")
-public class ComplaintSetInfo implements Serializable{
+public  class ComplaintSetInfo implements Serializable{
 
 	/**
 	 * 

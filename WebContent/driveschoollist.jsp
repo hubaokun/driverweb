@@ -23,6 +23,69 @@ $(function(){
 	$("#change_"+j+index).addClass('left_list_mask');
 })
 </script>
+<script type="text/javascript">
+		
+		function tofindCity(v)
+		{
+			//发送异步请求
+			var params = {provinceid:v};
+			jQuery.post("getCityByProvinceId.do", params, showCity, 'json');
+		}
+		
+		function showCity(obj)
+		{
+			var citys=document.getElementsByName("city");
+			for(var j=0;j<citys.length;j++){
+				citys[j].length=0;
+				for(var i=0;i<obj.length;i++)
+		         {
+		        	 var o=new Option(obj[i].city,obj[i].cityid);
+		         	 //document.getElementById("city").add(o);
+		         	citys[j].add(o);
+		         }
+		         var cityOneId=obj[0].cityid;//得到第一个城市的ID
+		         tofindArea(cityOneId);
+			}
+		}
+		function tofindArea(v)
+		{
+			//发送异步请求
+			var params = {cityid:v};
+			jQuery.post("getAreaByCityId.do", params, showArea, 'json');
+		}
+		
+		function showArea(obj)
+		{
+				 var areas=document.getElementsByName("area");
+				 for(var j=0;j<areas.length;j++){
+					 areas[j].length=0;
+					 for(var i=0;i<obj.length;i++)
+			         {
+			         	var o=new Option(obj[i].area,obj[i].areaid);
+			         	areas[j].add(o);
+			         }
+				 }
+		}
+		function tofindCityByHotKey()
+		{
+			//发送异步请求
+			var v=$("#hotkey").val();
+			var params = {hotkey:v};
+			jQuery.post("getCityByHotKey.do", params, showCityHotKey, 'json');
+		}
+		
+		function showCityHotKey(obj)
+		{
+		         var html="";
+		         for(var i=0;i<obj.length;i++)
+		         {
+		        	 html=html+obj[i].city+"<br>";
+		         
+		         }
+		         $("#citys").html(html);
+		}
+	
+	</script>
 <style type="text/css">
 .mask {
 	position: fixed;
@@ -107,7 +170,8 @@ $(function(){
 </div>
 <div class="table_edit_button">
 <div class="table_button_edit_icon"></div>
-<div class="table_button_text" onclick="showeditschool('${name}','${telphone }','${contact }','${alipay_account }','${order_pull}')">修改</div>
+<div class="table_button_text" 
+onclick="showeditschool('${name}','${telphone }','${contact }','${alipay_account }','${order_pull}','${province}','${city}','${area}')">修改</div>
 </div>
 
 
@@ -201,14 +265,25 @@ $(function(){
 	<div id="mask" class="mask"></div>
 	<div id="mask_sec" style="position: fixed; width: 100%; height: 300px;z-index: 300;">
 		<div id="mask_last" class="mask_last">
-		<div style="position: fixed; width: 400px; height: 400px;background: #4cc2ff;margin-left: 100px;margin-top: 50px;">
+		<div style="position: fixed; width: 450px; height: 490px;background: #4cc2ff;margin-left: 100px;margin-top: 10px;">
 		<input id="schoolname" type="text" style="width: 240px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;"  placeholder="请输入要添加的驾校名称"/>
 		<input id="schoolphone" type="text" style="width: 240px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;"  placeholder="请输入要驾校联系电话" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="11"/>
 		<input id="schoolcontact" type="text" style="width: 240px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;"  placeholder="请输入驾校联系人姓名"/>
 		<input id="alipay_account" type="text" style="width: 240px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;"  placeholder="请输入联系人支付宝账号"/>
 		<input id="order_pull" type="text" style="width: 240px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;"  placeholder="请设置驾校提成" onkeyup="value=value.replace(/[^\d]/g,'')"/>
-		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 100px;margin-top: 25px;font-size: 18px" value="确定" onclick="addshcool()">
-		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-top: -40px;font-size: 18px" value="取消" onclick="unshowaddschool()">
+		<br>
+		省
+		<select  id="province" 
+						 style="width: 80px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;" onchange="tofindCity(this.value)"></select><br>
+						
+						 市<select id="city" name="city" style="width: 80px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;" onchange="tofindArea(this.value)"></select>
+						 
+						 区<select id="area" name="area" style="width: 80px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;"  ></select>
+<!-- 		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 100px;margin-top: 25px;font-size: 18px" value="确定" onclick="addshcool()">
+		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-top: -40px;font-size: 18px" value="取消" onclick="unshowaddschool()"> -->
+		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 125px;margin-top: 15px;font-size: 18px" value="确定" onclick="addshcool()">
+		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-top: -40px;font-size: 15px" value="取消" onclick="unshowaddschool()">
+		
 		</div>
 		</div>
 	</div>
@@ -217,7 +292,7 @@ $(function(){
 	<div id="edit" class="edit"></div>
 	<div id="edit_sec" style="position: fixed; width: 100%; height: 300px;z-index: 300;">
 		<div id="edit_last" class="edit_last">
-		<div style="position: fixed; width: 450px; height: 650px;background: #4cc2ff;margin-left: 25px;margin-top: 25px;">
+		<div style="position: fixed; width: 450px; height: 800px;background: #4cc2ff;margin-left: 25px;margin-top: 25px;">
 		<input type="hidden" value=""  id="name">
 		<input id="oldschoolname" type="text" style="width: 300px;height: 40px;margin: auto;margin-left: 75px;margin-top: 15px;font-size: 18px;text-align: center;" disabled="disabled"/>
 		<input id="editschoolname" type="text" style="width: 300px;height: 40px;margin: auto;margin-left: 75px;margin-top: 18px;font-size: 18px;text-align: center;" placeholder="请输入修改驾校名" />
@@ -229,6 +304,14 @@ $(function(){
 		<input id="editalipay_account" type="text" style="width: 300px;height: 40px;margin: auto;margin-left: 75px;margin-top: 18px;font-size: 18px;text-align: center;" placeholder="请输入修改联系人支付宝账号" />
 		<input id="oldorder_pull" type="text" style="width: 300px;height: 40px;margin: auto;margin-left: 75px;margin-top: 18px;font-size: 18px;text-align: center;" disabled="disabled"/>
 		<input id="editorder_pull" type="text" style="width: 300px;height: 40px;margin: auto;margin-left: 75px;margin-top: 18px;font-size: 18px;text-align: center;" placeholder="请输入修改驾校订单提成" />
+		省
+		<select  id="province1" 
+						 style="width: 80px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;" onchange="tofindCity(this.value)"></select><br>
+						
+						 市<select id="city1" name="city" style="width: 80px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;" onchange="tofindArea(this.value)"></select>
+						 
+						 区<select id="area1" name="area" style="width: 80px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;"  ></select>
+		
 		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 125px;margin-top: 15px;font-size: 18px" value="确定" onclick="editschool()">
 		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-top: -40px;font-size: 15px" value="取消" onclick="unshoweditschool()">
 		</div>

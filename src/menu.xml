@@ -28,6 +28,7 @@
 		<sub-item name="教练车型设置" authority="7" action="getTeachcarModellist.do"/>
 		<sub-item name="教学科目设置" authority="8" action="getSubjectlists.do"/>
 		<sub-item name="节假日设置" authority="8" action="getHolidays.do"/>
+		<sub-item name="省市区" authority="9" action="getProvince.do"/>
 	</menu-item>
 	<menu-item name="系统通知" iconURL="" authority="1">
 		<sub-item name="通知列表" authority="3" action="getNoticeList.do"/>

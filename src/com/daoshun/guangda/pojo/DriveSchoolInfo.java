@@ -57,6 +57,44 @@ public class DriveSchoolInfo implements Serializable {
 
 	@Column(name = "money", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")
 	private BigDecimal money;
+	
+	//省
+	@Column(name = "province")
+	private String province;
+	
+	//市
+	@Column(name = "city")
+	private String city;
+	
+	//区
+	@Column(name = "area")
+	private String area;
+	
+	
+	
+	public String getProvince() {
+		return province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getArea() {
+		return area;
+	}
+
+	public void setArea(String area) {
+		this.area = area;
+	}
 
 	public int getSchoolid() {
 		return schoolid;

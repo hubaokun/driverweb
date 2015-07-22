@@ -19,10 +19,12 @@ import com.daoshun.common.CommonUtils;
 import com.daoshun.common.QueryResult;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.DriveSchoolInfo;
+import com.daoshun.guangda.pojo.Provinces;
 import com.daoshun.guangda.pojo.SchoolBalance;
 import com.daoshun.guangda.service.ICUserService;
 import com.daoshun.guangda.service.ICtaskService;
 import com.daoshun.guangda.service.IDriveSchoolService;
+import com.daoshun.guangda.serviceImpl.LocationServiceImpl;
 
 @ParentPackage("default")
 @Controller
@@ -101,6 +103,17 @@ public class DriveSchoolAction extends BaseAction {
 	
 	private int changetype;
 	
+	private List<Provinces> provincelist;//添加省市区的省列表
+	@Resource
+	private  LocationServiceImpl locationService;//省市区的业务对象
+	
+	private String province;
+	
+	private String city;
+	private String area;
+	
+	
+	
 	/**
 	 * 得到驾校列表
 	 * 
@@ -110,6 +123,7 @@ public class DriveSchoolAction extends BaseAction {
 	public String getdriveSchool() {
 		QueryResult<DriveSchoolInfo> result = cuserService.getDriveSchoolInfoByPage(pageIndex, 10);
 		driveSchoollist = result.getDataList();
+		//provincelist=locationService.getProvinces();
 		total = (int)result.getTotal();
 		pageCount = (int) ((total + 9)/10);
 		if(pageIndex>1){
@@ -229,6 +243,9 @@ public class DriveSchoolAction extends BaseAction {
 			}
 			driveSchoolInfo.setMoney(new BigDecimal(0));
 			driveSchoolInfo.setAddtime(new Date());
+			driveSchoolInfo.setProvince(province);
+			driveSchoolInfo.setCity(city);
+			driveSchoolInfo.setArea(area);
 			cuserService.addObject(driveSchoolInfo);
 			setResponseStr("success");
 		}
@@ -270,13 +287,27 @@ public class DriveSchoolAction extends BaseAction {
 				if (!CommonUtils.isEmptyString(editalipay_account)) {
 					driveSchoolInfo.setAlipay_account(editalipay_account);
 				}
+				
 				if(editorder_pull!=null){
 					driveSchoolInfo.setOrder_pull(editorder_pull);
 				}
-				if (CommonUtils.isEmptyString(editschoolphone) && CommonUtils.isEmptyString(editschoolcontact) && CommonUtils.isEmptyString(editalipay_account)&&editorder_pull==null) {
+				if (CommonUtils.isEmptyString(editschoolphone) && CommonUtils.isEmptyString(editschoolcontact) 
+						&& CommonUtils.isEmptyString(editalipay_account)&&editorder_pull==null
+						&& driveSchoolInfo.getProvince().equals(province) && driveSchoolInfo.getCity().equals(city)
+						&& driveSchoolInfo.getArea().equals(area)
+						) {
 					setResponseStr("error2");
 					return;
 				} else {
+					if (!CommonUtils.isEmptyString(province)) {
+						driveSchoolInfo.setProvince(province);
+					}
+					if (!CommonUtils.isEmptyString(city)) {
+						driveSchoolInfo.setCity(city);
+					}
+					if (!CommonUtils.isEmptyString(area)) {
+						driveSchoolInfo.setArea(area);
+					}
 					cuserService.updateObject(driveSchoolInfo);
 					setResponseStr("success");
 				}
@@ -295,6 +326,15 @@ public class DriveSchoolAction extends BaseAction {
 					}
 					if(editorder_pull!=null){
 						driveSchoolInfo.setOrder_pull(editorder_pull);
+					}
+					if (!CommonUtils.isEmptyString(province)) {
+						driveSchoolInfo.setProvince(province);
+					}
+					if (!CommonUtils.isEmptyString(city)) {
+						driveSchoolInfo.setCity(city);
+					}
+					if (!CommonUtils.isEmptyString(area)) {
+						driveSchoolInfo.setArea(area);
 					}
 					cuserService.updateObject(driveSchoolInfo);
 					setResponseStr("success");
@@ -566,4 +606,37 @@ public class DriveSchoolAction extends BaseAction {
 		this.changetype = changetype;
 	}
 
+	public List<Provinces> getProvincelist() {
+		return provincelist;
+	}
+
+	public void setProvincelist(List<Provinces> provincelist) {
+		this.provincelist = provincelist;
+	}
+
+	public String getProvince() {
+		return province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getArea() {
+		return area;
+	}
+
+	public void setArea(String area) {
+		this.area = area;
+	}
+	
+	
 }

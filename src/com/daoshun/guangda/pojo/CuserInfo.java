@@ -331,6 +331,35 @@ public class CuserInfo implements Serializable {
 	//教练等级
 	@Transient
 	private String levelname;
+	
+	@Column(name = "province", length = 100)
+	private String province;
+	
+	/*@Column(name = "city", length = 100)
+	private String city;*/
+	
+	@Column(name = "area", length = 100)
+	private String area;
+
+	
+	
+	
+	
+	public String getProvince() {
+		return province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
+	}
+
+	public String getArea() {
+		return area;
+	}
+
+	public void setArea(String area) {
+		this.area = area;
+	}
 
 	public int getCoachid() {
 		return coachid;

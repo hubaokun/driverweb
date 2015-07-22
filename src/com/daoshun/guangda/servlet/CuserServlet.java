@@ -476,6 +476,8 @@ public class CuserServlet extends BaseServlet {
 		CommonUtils.validateEmpty(coachid);
 		String birthday = getRequestParamter(request, "birthday"); // 生日
 		String city = getRequestParamter(request, "city"); // 城市
+		String province = getRequestParamter(request, "province"); // 省份
+		String area = getRequestParamter(request, "area"); // 地区
 		String address = getRequestParamter(request, "address"); // 住址
 		String urgentperson = getRequestParamter(request, "urgentperson"); // 紧急联系人
 		String urgentphone = getRequestParamter(request, "urgentphone"); // 紧急联系人电话
@@ -492,6 +494,12 @@ public class CuserServlet extends BaseServlet {
 			}
 			if (!CommonUtils.isEmptyString(city)) {
 				cuser.setCity(city);
+			}
+			if (!CommonUtils.isEmptyString(province)) {
+				cuser.setProvince(province);
+			}
+			if (!CommonUtils.isEmptyString(area)) {
+				cuser.setArea(area);
 			}
 			if (!CommonUtils.isEmptyString(address)) {
 				cuser.setAddress(address);

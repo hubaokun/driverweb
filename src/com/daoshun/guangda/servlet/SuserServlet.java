@@ -522,12 +522,14 @@ public class SuserServlet extends BaseServlet {
 		}
 
 	}
-
+	
 	public void perfectPersonInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
 		String studentid = getRequestParamter(request, "studentid");
 		String gender = getRequestParamter(request, "gender");
 		String birthday = getRequestParamter(request, "birthday");
+		String province = getRequestParamter(request, "province");//添加省市区 at 20150722
 		String city = getRequestParamter(request, "city");
+		String area = getRequestParamter(request, "area");
 		String address = getRequestParamter(request, "address");
 		String urgentperson = getRequestParamter(request, "urgentperson");
 		String urgentphone = getRequestParamter(request, "urgentphone");
@@ -544,8 +546,14 @@ public class SuserServlet extends BaseServlet {
 			if (birthday != null) {
 				student.setBirthday(birthday);
 			}
+			if (province != null) {
+				student.setProvince(province);
+			}
 			if (city != null) {
 				student.setCity(city);
+			}
+			if (area != null) {
+				student.setArea(area);
 			}
 			if (address != null) {
 				student.setAddress(address);
