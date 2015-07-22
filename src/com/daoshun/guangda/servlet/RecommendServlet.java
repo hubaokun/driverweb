@@ -201,6 +201,11 @@ public class RecommendServlet extends BaseServlet {
     	CommonUtils.validateEmpty(coachid);
     	CommonUtils.validateEmpty(page);
     	QueryResult<RecommendInfo> qr=recommendService.getRecommendList(coachid, CommonUtils.parseInt(page, 0));
+    	int hasmore=recommendService.ifhasmoreRecommendinfo(coachid, CommonUtils.parseInt(page, 0));
+    	if(hasmore==0)
+    		resultMap.put("hasmore",0);
+    	else
+    		resultMap.put("hasmore",1);
     	List<RecommendInfo> list=qr.getDataList();
     	List<Integer> coachs=new ArrayList<Integer>();
     	for(int i=0;i<list.size();i++)

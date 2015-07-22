@@ -105,4 +105,18 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 		else
 			return 1;
 	}
+	@Override
+	public int ifhasmoreRecommendinfo(String coachid, int page) {
+		StringBuilder querystring=new StringBuilder();
+	    querystring.append("from RecommendInfo where coachid=:coachid order by coachid");
+	    String[] params={"coachid"};
+		List<RecommendInfo> listr=(List<RecommendInfo>)dataDao.pageQueryViaParam(querystring.toString(), Constant.USERLIST_SIZE, page+1, params,CommonUtils.parseInt(coachid, 0));
+		if(listr.size()==0)
+		{
+			return 0;
+		}
+		else
+			return 1;
+		
+	}
 }
