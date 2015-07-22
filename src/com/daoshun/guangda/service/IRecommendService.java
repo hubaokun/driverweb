@@ -13,6 +13,7 @@ public interface IRecommendService{
 	/**
 	 * 获取推荐人员详细内容
 	 * @param coachid 教练ID
+	 * @param page   当前页
 	 */
 	public abstract QueryResult<RecommendInfo> getRecommendList(String coachid,int page);	
 	/**
@@ -42,4 +43,10 @@ public interface IRecommendService{
 	 *  @param invitedcoachid 被邀请教练ID
 	 */
 	public abstract int checkRecommendinfo(String coachid,String invitedcoachid);
+	/**
+	 * 检测是否还有记录
+	 *  @param coachid 教练ID
+	 *  @param page    当前页
+	 */
+	public abstract int ifhasmoreRecommendinfo(String coachid,int page);
 } 
