@@ -29,7 +29,6 @@ public class LocationServlet extends BaseServlet{
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		locationService = (ILocationService) applicationContext.getBean("locationService");
-		
 	}
 	
 	@Override
