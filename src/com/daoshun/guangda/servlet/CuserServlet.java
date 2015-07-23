@@ -25,6 +25,7 @@ import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.pojo.SystemSetInfo;
 import com.daoshun.guangda.pojo.TeachcarInfo;
 import com.daoshun.guangda.service.ICUserService;
+import com.daoshun.guangda.service.IRecommendService;
 import com.daoshun.guangda.service.ISUserService;
 import com.daoshun.guangda.service.ISystemService;
 
@@ -46,13 +47,14 @@ public class CuserServlet extends BaseServlet {
 	private ICUserService cuserService;
 	private ISystemService systemService;
 	private ISUserService suserService;
-
+    private IRecommendService recommendService;
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		cuserService = (ICUserService) applicationContext.getBean("cuserService");
 		systemService = (ISystemService) applicationContext.getBean("systemService");
 		suserService = (ISUserService) applicationContext.getBean("suserService");
+		recommendService=(IRecommendService) applicationContext.getBean("recommendService");
 	}
 
 	@Override
@@ -380,6 +382,14 @@ public class CuserServlet extends BaseServlet {
 			}
 
 			resultMap.put("UserInfo", cuser);
+			int rflag=recommendService.checkRecommendinfo(String.valueOf(cuser.getCoachid()));
+			if(rflag==0)
+				//返回0代表已经存在记录了
+				resultMap.put("isInvited", 0);
+			else
+				//返回1代表没有记录
+				resultMap.put("isInvited", 1);
+			
 		} else if (result == 0) {
 			resultMap.put("code", 2);
 			resultMap.put("message", "验证码错误,请重新输入");

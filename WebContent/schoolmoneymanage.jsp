@@ -120,7 +120,7 @@ function schooltransfar(){
 <input type="hidden" id="hidamount" value="${amount}" />
 <input type="hidden" id="hidstate" value="${state}" />
 <input type="hidden" id="index" value="2"/>
-<input type="hidden" id="change_id" value="5"/>
+<input type="hidden" id="change_id" value="${change_id}"/>
 <body onload="getTop()">
 	<div id="content">
 		<jsp:include page="left.jsp" />
