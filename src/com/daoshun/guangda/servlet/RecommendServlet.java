@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.ServletConfig;
@@ -13,15 +14,18 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.alipay.refund.util.httpClient.HttpRequest;
+import com.alipay.refund.util.httpClient.HttpResponse;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
-import com.daoshun.common.ErrException;
 import com.daoshun.common.QueryResult;
+import com.daoshun.exception.NullParameterException;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.RecommendInfo;
 import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.pojo.SystemSetInfo;
 import com.daoshun.guangda.service.ICUserService;
+import com.daoshun.guangda.service.ICtaskService;
 import com.daoshun.guangda.service.IRecommendService;
 import com.daoshun.guangda.service.ISUserService;
 import com.daoshun.guangda.service.ISystemService;
@@ -81,7 +85,7 @@ public class RecommendServlet extends BaseServlet {
     	}
     	setResult(response, resultMap);
     }
-    private boolean checkSession(HttpServletRequest request, String action, HashMap<String, Object> resultMap) throws ErrException {
+    private boolean checkSession(HttpServletRequest request, String action, HashMap<String, Object> resultMap) throws NullParameterException {
 		String userid = "";// 1.教练 2.学员
 		String usertype = "";
 
@@ -190,7 +194,7 @@ public class RecommendServlet extends BaseServlet {
 			return false;
 		}
 	}
-    public void getRecommendList(HttpServletRequest request,HashMap<String, Object> resultMap) throws ErrException
+    public void getRecommendList(HttpServletRequest request,HashMap<String, Object> resultMap) throws NullParameterException
 	{
     	String coachid=request.getParameter("coachid");
     	String page=request.getParameter("pagenum");
@@ -220,7 +224,7 @@ public class RecommendServlet extends BaseServlet {
 		resultMap.put("invitlist",invitlist);
 		resultMap.put("orderlist",orderlist);
 	}
-    public void addRecommendInfo(HttpServletRequest request,HashMap<String, Object> resultMap) throws ErrException
+    public void addRecommendInfo(HttpServletRequest request,HashMap<String, Object> resultMap) throws NullParameterException
     {
     	String inviteid=request.getParameter("InviteCode");
     	String invitedcoachid=request.getParameter("InvitedCoachid");
