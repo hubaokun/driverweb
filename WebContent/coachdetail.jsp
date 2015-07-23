@@ -256,7 +256,8 @@ function dataToLead(){
 						<th>性别</th>
 						<th>年龄</th>
 						<th>教龄</th>
-						<th>综合评分</th>
+						<th>评分</th>
+						<th>驾校</th>
 						<th>状态</th>
 						<th>地址</th>
 						<th>注册时间</th>
@@ -265,10 +266,10 @@ function dataToLead(){
 					</tr>
 					<s:iterator value="cuserlist" var="cuser">
 						<tr class="tr_td">
-						<td style="width: 52px;" class="border_right_bottom"><input type="checkbox" name="checkbox" value="${coachid}" ></td>
+						<td style="width: 40px;" class="border_right_bottom"><input type="checkbox" name="checkbox" value="${coachid}" ></td>
 						
 							<td style="width: 52px;" class="border_right_bottom">${coachid}</td>
-							<td style="width: 100px;" class="border_right_bottom">${realname}</td>
+							<td style="width: 80px;" class="border_right_bottom">${realname}</td>
 							<td style="width: 100px;" class="border_right_bottom">${phone}</td>
 							<s:if test="gender==1">
 							<td style="width: 50px;" class="border_right_bottom">男</td>
@@ -276,9 +277,10 @@ function dataToLead(){
 							<s:else>
 							<td style="width: 50px;" class="border_right_bottom">女</td>
 							</s:else>
-							<td style="width: 80px;" class="border_right_bottom">${age}</td>
+							<td style="width: 40px;" class="border_right_bottom">${age}</td>
 							<td style="width: 50px;" class="border_right_bottom">${years}&nbsp;年</td>
-							<td style="width: 80px;" class="border_right_bottom">${score}&nbsp;分</td>
+							<td style="width: 60px;" class="border_right_bottom">${score}&nbsp;分</td>
+							<td style="width: 100px;" class="border_right_bottom">${drive_school}</td>
 							<s:if test="state==0">
 							<td style="width: 100px;" class="border_right_bottom">资料不完善</td>
 							</s:if>
@@ -316,13 +318,13 @@ function dataToLead(){
 									<div class="table_button_text" onclick="showchangelevel(${coachid})">教练等级</div>
 								</div>
 								<s:if test="cancancel == 0">
-								<div class="table_edit_button" style="width: 110px;background:#1bbc9b">
+								<div class="table_edit_button" style="width: 90px;background:#1bbc9b">
 									<div class="table_button_edit_icon"></div>
-									<div class="table_button_text" onclick="changecancancel(1,${coachid})">订单可以取消</div>
+									<div class="table_button_text" onclick="changecancancel(1,${coachid})">订单可取消</div>
 								</div>
 								</s:if>
 								<s:else>
-								<div class="table_edit_button" style="width: 110px;background:#f83a22">
+								<div class="table_edit_button" style="width: 90px;background:#f83a22">
 									<div class="table_button_edit_icon"></div>
 									<div class="table_button_text" onclick="changecancancel(0,${coachid})">订单不可取消</div>
 									</div>
