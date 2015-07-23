@@ -20,7 +20,7 @@
 <script type="text/javascript" src="student/js/My97DatePicker/WdatePicker.js"></script>
 <script type="text/javascript">
 $(function(){
-	var index = $("#index").val()
+	var index = $("#index").val();
 	$("#left_list_"+index).show();
 	var j = $("#change_id").val();
 	$("#change_"+j+index).addClass('left_list_mask');

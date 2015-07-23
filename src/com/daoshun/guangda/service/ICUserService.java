@@ -125,7 +125,7 @@ public interface ICUserService {
 
 	/** 得到驾校信息 **/
 	public abstract List<DriveSchoolInfo> getDriveSchoolInfo();
-	
+
 	public abstract List<DriveSchoolInfo> getDriveSchoolListById(int schoolid);
 
 	public abstract QueryResult<DriveSchoolInfo> getDriveSchoolInfoByPage(int pageIndex, int pageSize);
@@ -201,7 +201,7 @@ public interface ICUserService {
 			Integer pageIndex, int pagesize);
 
 	/** 根据条件搜索历史提现 */
-	public abstract QueryResult<BalanceCoachInfo> getCoachBalanceBySearch(int schoolid,String searchname, String searchphone, String amount, String inputamount, String minsdate, String maxsdate,
+	public abstract QueryResult<BalanceCoachInfo> getCoachBalanceBySearch(int schoolid, String searchname, String searchphone, String amount, String inputamount, String minsdate, String maxsdate,
 			Integer pageIndex, int pagesize);
 
 	/** 获取提现申请信息 */
@@ -221,7 +221,7 @@ public interface ICUserService {
 	public abstract CuserInfo getCuserByBrive_cardnum(String drive_cardnum);
 
 	public abstract List<DriveSchoolInfo> getDriveSchoolList(String keyword);
-	
+
 	public abstract List<TeachcarInfo> getTeachcarInfolist();
 
 	public abstract TeachcarInfo getTeachcarInfoBymodelname(String modelname);
@@ -229,4 +229,9 @@ public interface ICUserService {
 	public abstract void coachCancelOrder(CuserInfo cuser);
 
 	public abstract void addSchoolBalance(SchoolBalance entity);
+
+	public abstract QueryResult<BalanceCoachInfo> getRechargeRecordList(int pageIndex, int pagesize);
+
+	public abstract QueryResult<BalanceCoachInfo> searchCoachRecharge(String searchname, String searchphone, String amount, String inputamount, String minsdate, String maxsdate, int pageIndex,
+			int pagesize);
 }

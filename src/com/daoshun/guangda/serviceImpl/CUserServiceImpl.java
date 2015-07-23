@@ -1001,4 +1001,72 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 		List<DriveSchoolInfo> schoollist = (List<DriveSchoolInfo>) dataDao.getObjectsViaParam(hql, null);
 		return schoollist;
 	}
+
+	@Override
+	public QueryResult<BalanceCoachInfo> getRechargeRecordList(int pageIndex, int pagesize) {
+		
+		StringBuffer cuserhql = new StringBuffer();
+		cuserhql.append("from BalanceCoachInfo where type = 3");
+		@SuppressWarnings("unchecked")
+		List<BalanceCoachInfo> balancecoachlist = (List<BalanceCoachInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), pagesize, pageIndex, null);
+		if (balancecoachlist != null && balancecoachlist.size() > 0) {
+			for (BalanceCoachInfo balanceCoach : balancecoachlist) {
+				CuserInfo coach = dataDao.getObjectById(CuserInfo.class, balanceCoach.getUserid());
+				if (coach != null) {
+					balanceCoach.setRealname(coach.getRealname());
+					balanceCoach.setPhone(coach.getPhone());
+				}
+			}
+		}
+		String counthql = " select count(*) " + cuserhql.toString();
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
+		return new QueryResult<BalanceCoachInfo>(balancecoachlist, total);
+
+	}
+
+	@Override
+	public QueryResult<BalanceCoachInfo> searchCoachRecharge(String searchname, String searchphone, String amount, String inputamount, String minsdate, String maxsdate, int pageIndex, int pagesize) {
+		StringBuffer cuserhql = new StringBuffer();
+		cuserhql.append("from BalanceCoachInfo where type = 3");
+		if (!CommonUtils.isEmptyString(searchname)) {
+			cuserhql.append(" and userid in (select coachid from CuserInfo where realname like '%" + searchname + "%')");
+		}
+		if (!CommonUtils.isEmptyString(searchphone)) {
+			cuserhql.append(" and userid in (select coachid from CuserInfo where phone like '%" + searchphone + "%')");
+		}
+		if (CommonUtils.parseFloat(inputamount, 0) != 0) {
+			if (CommonUtils.parseInt(amount, -1) == 0) {
+				cuserhql.append("and amount >" + inputamount);
+			} else if (CommonUtils.parseInt(amount, -1) == 1) {
+				cuserhql.append("and amount =" + inputamount);
+			} else {
+				cuserhql.append("and amount <" + inputamount);
+			}
+		}
+		if (!CommonUtils.isEmptyString(minsdate)) {
+			cuserhql.append("and addtime >'" + minsdate + "'");
+		}
+		if (!CommonUtils.isEmptyString(maxsdate)) {
+			Date enddate = CommonUtils.getDateFormat(maxsdate, "yyyy-MM-dd");
+			enddate.setHours(23);
+			enddate.setMinutes(59);
+			enddate.setSeconds(59);
+			String endmaxstime = CommonUtils.getTimeFormat(enddate, "yyyy-MM-dd HH:mm:ss");
+			cuserhql.append("and addtime <'" + endmaxstime + "'");
+		}
+		
+		List<BalanceCoachInfo> applycashlist = (List<BalanceCoachInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), pagesize, pageIndex, null);
+		if (applycashlist != null && applycashlist.size() > 0) {
+			for (BalanceCoachInfo capplyCash : applycashlist) {
+				CuserInfo student = dataDao.getObjectById(CuserInfo.class, capplyCash.getUserid());
+				if (student != null) {
+					capplyCash.setRealname(student.getRealname());
+					capplyCash.setPhone(student.getPhone());
+				}
+			}
+		}
+		String counthql = " select count(*) " + cuserhql.toString();
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
+		return new QueryResult<BalanceCoachInfo>(applycashlist, total);
+	}
 }

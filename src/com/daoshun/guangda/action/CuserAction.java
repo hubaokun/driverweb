@@ -29,6 +29,7 @@ import com.daoshun.common.Constant;
 import com.daoshun.common.QueryResult;
 import com.daoshun.guangda.NetData.CoachInfoForExcel;
 import com.daoshun.guangda.pojo.BalanceCoachInfo;
+import com.daoshun.guangda.pojo.BalanceStudentInfo;
 import com.daoshun.guangda.pojo.CApplyCashInfo;
 import com.daoshun.guangda.pojo.CoachLevelInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
@@ -65,6 +66,8 @@ public class CuserAction extends BaseAction {
 	private List<BalanceCoachInfo> balancecoachlist;
 
 	private List<DriveSchoolInfo> driveSchoollist;
+	
+	private List<BalanceCoachInfo> balanceCoachList;
 
 	private CuserInfo cuser;
 
@@ -1860,6 +1863,53 @@ public class CuserAction extends BaseAction {
 		} 
 	}
 	
+	/**
+	 * 获取充值历史列表
+	 * 
+	 * @return
+	 */
+	@Action(value = "/getCoachRechargeList", results = { @Result(name = SUCCESS, location = "/coachrechargelist.jsp") })
+	public String getCoachRechargeList() {
+		HttpSession session = ServletActionContext.getRequest().getSession();
+		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
+
+		QueryResult<BalanceCoachInfo> result = cuserService.getRechargeRecordList(pageIndex, pagesize);
+		total = result.getTotal();
+		balanceCoachList = result.getDataList();
+		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
+		if (pageIndex > 1) {
+			if (balanceCoachList == null || balanceCoachList.size() == 0) {
+				pageIndex--;
+				getCoachRechargeList();
+			}
+		}
+		return SUCCESS;
+	}
+
+	/**
+	 * 关键字搜索历史充值列表
+	 * 
+	 * @return
+	 */
+	@Action(value = "/searchCoachRecharge", results = { @Result(name = SUCCESS, location = "/coachrechargelist.jsp") })
+	public String searchCoachRecharge() {
+		HttpSession session = ServletActionContext.getRequest().getSession();
+		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
+
+		QueryResult<BalanceCoachInfo> result = cuserService.searchCoachRecharge(searchname, searchphone, amount, inputamount, minsdate, maxsdate, pageIndex, pagesize);
+		total = result.getTotal();
+		balanceCoachList = result.getDataList();
+		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
+		if (pageIndex > 1) {
+			if (balanceCoachList == null || balanceCoachList.size() == 0) {
+				pageIndex--;
+				searchCoachRecharge();
+			}
+		}
+		return SUCCESS;
+	}
+	
+	
 	public int getChecknum() {
 		return checknum;
 	}
@@ -2684,5 +2734,15 @@ public class CuserAction extends BaseAction {
 
 	public void setNewcoachphone(String newcoachphone) {
 		this.newcoachphone = newcoachphone;
+	}
+
+
+	public List<BalanceCoachInfo> getBalanceCoachList() {
+		return balanceCoachList;
+	}
+
+
+	public void setBalanceCoachList(List<BalanceCoachInfo> balanceCoachList) {
+		this.balanceCoachList = balanceCoachList;
 	}
 }
