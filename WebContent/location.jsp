@@ -25,7 +25,7 @@
 <input type="hidden" id="change_id" value="${change_id}"/>
 <body onload="getTop()">
 	<div id="content">
-		<jsp:include page="../left.jsp" />
+		<jsp:include page="left.jsp" />
 		<div id="content_form">
 			<div id="content_form_top">
 					<div class="searchbutton">
@@ -34,8 +34,9 @@
 					</div>
 					<div class="serchcontentdiv" style="float: left; margin-left: 50px; width: 180px" >
 						<input type="text" class="searchdiv" style="width: 65px;text-align: center;font-family: 微软雅黑;" value="省份" readonly="readonly">
+						<s:if test="provincelist!=null">
 						<s:select list="provincelist" listKey="provinceid" 
-						listValue="province" cssClass="searchdiv" onchange="tofindCity(this.value)"></s:select>
+						listValue="province" cssClass="searchdiv" onchange="tofindCity(this.value)"></s:select></s:if>
 					</div>
 					
 					<div class="serchcontentdiv" style="float: left; margin-left: 50px; width: 180px" >
