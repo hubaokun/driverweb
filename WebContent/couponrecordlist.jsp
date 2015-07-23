@@ -262,6 +262,7 @@
 											var starttime = $("#starttime")
 													.val();
 											var endtime = $("#endtime").val();
+											var state = $("#hiddenstate").val();
 											var a = [];
 											//总页数少于10 全部显示,大于10 显示前3 后3 中间3 其余....
 											if (pageindex == 1) {
@@ -282,6 +283,8 @@
 														+ starttime
 														+ "&endtime="
 														+ endtime
+														+ "&state="
+														+ state
 														+ "&')\" class=\"page_prev\"></a>";
 											}
 											function setPageList() {
@@ -298,6 +301,8 @@
 															+ starttime
 															+ "&endtime="
 															+ endtime
+															+ "&state="
+															+ state
 															+ "&',"
 															+ i
 															+ ")\" class=\"on\">"
@@ -315,6 +320,8 @@
 															+ starttime
 															+ "&endtime="
 															+ endtime
+															+ "&state="
+															+ state
 															+ "&',"
 															+ i
 															+ ")\">"
@@ -346,6 +353,8 @@
 															+ starttime
 															+ "&endtime="
 															+ endtime
+															+ "&state="
+															+ state
 															+ "&',"
 															+ count
 															+ ")\">"
@@ -363,6 +372,8 @@
 															+ starttime
 															+ "&endtime="
 															+ endtime
+															+ "&state="
+															+ state
 															+ "&',1)\">1</a>...";
 													for ( var i = count - 4; i <= count; i++) {
 														setPageList();
@@ -381,6 +392,8 @@
 															+ starttime
 															+ "&endtime="
 															+ endtime
+															+ "&state="
+															+ state
 															+ "&',1)\">1</a>...";
 													for ( var i = pageindex - 2; i <= pageindex + 2; i++) {
 														setPageList();
@@ -397,6 +410,8 @@
 															+ starttime
 															+ "&endtime="
 															+ endtime
+															+ "&state="
+															+ state
 															+ "&',"
 															+ count
 															+ ")\">"
@@ -420,6 +435,8 @@
 														+ starttime
 														+ "&endtime="
 														+ endtime
+														+ "&state="
+														+ state
 														+ "&',"
 														+ $("#pageSize").val()
 														+ ")\")\">"
@@ -439,6 +456,8 @@
 														+ starttime
 														+ "&endtime="
 														+ endtime
+														+ "&state="
+														+ state
 														+ "&')\" "
 														+ "class=\"page_next\"></a> 共"
 														+ count
@@ -456,6 +475,8 @@
 														+ starttime
 														+ "&endtime="
 														+ endtime
+														+ "&state="
+														+ state
 														+ "&',"
 														+ $("#pageSize").val()
 														+ ")\">"

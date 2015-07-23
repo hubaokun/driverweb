@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
-import com.daoshun.exception.NullParameterException;
+import com.daoshun.common.ErrException;
 import com.daoshun.guangda.NetData.ComplaintNetData;
 import com.daoshun.guangda.pojo.ComplaintInfo;
 import com.daoshun.guangda.pojo.ComplaintSetInfo;
@@ -98,7 +98,7 @@ public class SorderServlet extends BaseServlet {
 				// 确认下车
 				confirmDown(request, resultMap);
 			} else {
-				throw new NullParameterException();
+				throw new ErrException();
 			}
 
 			recordUserAction(request, action);
@@ -109,7 +109,7 @@ public class SorderServlet extends BaseServlet {
 		setResult(response, resultMap);
 	}
 
-	private boolean checkSession(HttpServletRequest request, String action, HashMap<String, Object> resultMap) throws NullParameterException {
+	private boolean checkSession(HttpServletRequest request, String action, HashMap<String, Object> resultMap) throws ErrException {
 		String userid = "";// 1.教练 2.学员
 		String usertype = "";
 
@@ -308,7 +308,7 @@ public class SorderServlet extends BaseServlet {
 		}
 	}
 
-	public void getComplaintToMy(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getComplaintToMy(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
 		String pagenum = getRequestParamter(request, "pagenum");
 		CommonUtils.validateEmpty(studentid);
@@ -318,7 +318,7 @@ public class SorderServlet extends BaseServlet {
 		resultMap.put("complaintlist", complaintlist);
 	}
 
-	public void getMyComplaint(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getMyComplaint(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
 		String pagenum = getRequestParamter(request, "pagenum");
 		CommonUtils.validateEmpty(studentid);
@@ -332,9 +332,9 @@ public class SorderServlet extends BaseServlet {
 	 * 取得待评价订单列表
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void getWaitEvaluationOrder(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getWaitEvaluationOrder(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
 		String pagenum = getRequestParamter(request, "pagenum");
 		CommonUtils.validateEmpty(studentid);
@@ -348,9 +348,9 @@ public class SorderServlet extends BaseServlet {
 	 * 取得未完成订单列表
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void getUnCompleteOrder(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getUnCompleteOrder(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
 		String pagenum = getRequestParamter(request, "pagenum");
 		CommonUtils.validateEmpty(studentid);
@@ -364,9 +364,9 @@ public class SorderServlet extends BaseServlet {
 	 * 取得已完成订单列表
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void getCompleteOrder(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getCompleteOrder(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
 		String pagenum = getRequestParamter(request, "pagenum");
 		CommonUtils.validateEmpty(studentid);
@@ -376,7 +376,7 @@ public class SorderServlet extends BaseServlet {
 		resultMap.put("orderlist", orderlist);
 	}
 
-	public void getOrderDetail(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getOrderDetail(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String orderid = getRequestParamter(request, "orderid");
 		CommonUtils.validateEmpty(orderid);
 		OrderInfo orderinfo = sorderService.getCompleteOrder(orderid);
@@ -388,14 +388,14 @@ public class SorderServlet extends BaseServlet {
 		}
 	}
 
-	public void getComplaintReason(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getComplaintReason(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String type = getRequestParamter(request, "type");
 		CommonUtils.validateEmpty(type);
 		List<ComplaintSetInfo> reasonlist = sorderService.getComplaintReason(type);
 		resultMap.put("reasonlist", reasonlist);
 	}
 
-	public void complaint(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void complaint(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String userid = getRequestParamter(request, "userid");
 		String orderid = getRequestParamter(request, "orderid");
 		String type = getRequestParamter(request, "type");
@@ -409,7 +409,7 @@ public class SorderServlet extends BaseServlet {
 		sorderService.addComplaint(userid, orderid, type, reason, content);
 	}
 
-	public void cancelOrder(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void cancelOrder(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
 		String orderid = getRequestParamter(request, "orderid");
 		CommonUtils.validateEmpty(studentid);
@@ -426,7 +426,7 @@ public class SorderServlet extends BaseServlet {
 		}
 	}
 
-	public void CancelComplaint(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void CancelComplaint(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
 		String orderid = getRequestParamter(request, "orderid");
 		CommonUtils.validateEmpty(studentid);
@@ -434,7 +434,7 @@ public class SorderServlet extends BaseServlet {
 		sorderService.CancelComplaint(studentid, orderid);
 	}
 
-	public void confirmOn(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void confirmOn(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
 		String orderid = getRequestParamter(request, "orderid");
 		String lon = getRequestParamter(request, "lon");
@@ -485,7 +485,7 @@ public class SorderServlet extends BaseServlet {
 		}
 	}
 
-	public void confirmDown(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void confirmDown(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
 		String orderid = getRequestParamter(request, "orderid");
 		String lon = getRequestParamter(request, "lon");

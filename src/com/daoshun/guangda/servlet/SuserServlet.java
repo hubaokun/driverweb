@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -14,8 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
-import com.daoshun.exception.NullParameterException;
-import com.daoshun.guangda.pojo.CouponRecord;
+import com.daoshun.common.ErrException;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.pojo.SystemSetInfo;
@@ -96,7 +94,7 @@ public class SuserServlet extends BaseServlet {
 				getWalletInfo(request, resultMap);
 			} 
 			else {
-				throw new NullParameterException();
+				throw new ErrException();
 			}
 
 			recordUserAction(request, action);
@@ -107,7 +105,7 @@ public class SuserServlet extends BaseServlet {
 		setResult(response, resultMap);
 	}
 
-	private boolean checkSession(HttpServletRequest request, String action, HashMap<String, Object> resultMap) throws NullParameterException {
+	private boolean checkSession(HttpServletRequest request, String action, HashMap<String, Object> resultMap) throws ErrException {
 		String userid = "";
 		if (Constant.PERFECTACCOUNTINFO.equals(action)) {
 			userid = getRequestParamter(request, "studentid");
@@ -261,7 +259,7 @@ public class SuserServlet extends BaseServlet {
 		}
 	}
 
-	public void register(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void register(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String phone = getRequestParamter(request, "phone");
 		String realname = getRequestParamter(request, "realname");
 		String password = getRequestParamter(request, "password");
@@ -281,7 +279,7 @@ public class SuserServlet extends BaseServlet {
 		}
 	}
 
-	public void getVerCode(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getVerCode(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String phone = getRequestParamter(request, "phone");
 		String type = getRequestParamter(request, "type");
 		CommonUtils.validateEmpty(phone);
@@ -296,7 +294,7 @@ public class SuserServlet extends BaseServlet {
 		}
 	}
 
-	public void verificationCode(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void verificationCode(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String phone = getRequestParamter(request, "phone");
 		String type = getRequestParamter(request, "type");
 		String code = getRequestParamter(request, "code");
@@ -317,7 +315,7 @@ public class SuserServlet extends BaseServlet {
 		}
 	}
 
-	public void login(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void login(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String phone = getRequestParamter(request, "phone");
 		String password = getRequestParamter(request, "password");// 验证码
 		CommonUtils.validateEmpty(phone);
@@ -360,9 +358,9 @@ public class SuserServlet extends BaseServlet {
 	 * 第三方登录
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void thirdLogin(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void thirdLogin(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String openid = getRequestParamter(request, "openid");// openID
 		String type = getRequestParamter(request, "type");// 类型：1.QQ登录 2.微信登录 3.微博登录
 		CommonUtils.validateEmpty(openid);
@@ -386,7 +384,7 @@ public class SuserServlet extends BaseServlet {
 		resultMap.put("UserInfo", user);
 	}
 
-	public void bindAccount(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void bindAccount(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String phone = getRequestParamter(request, "phone");
 		String password = getRequestParamter(request, "password");
 		String openid = getRequestParamter(request, "openid");
@@ -426,7 +424,7 @@ public class SuserServlet extends BaseServlet {
 		}
 	}
 
-	public void bindNewAccount(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void bindNewAccount(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String phone = getRequestParamter(request, "phone");
 		String realname = getRequestParamter(request, "realname");
 		String password = getRequestParamter(request, "password");
@@ -461,7 +459,7 @@ public class SuserServlet extends BaseServlet {
 		}
 	}
 
-	public void perfectAccountInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void perfectAccountInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
 		String realname = getRequestParamter(request, "realname");
 		String phone = getRequestParamter(request, "phone");
@@ -482,7 +480,7 @@ public class SuserServlet extends BaseServlet {
 		}
 	}
 
-	public void changeAvatar(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void changeAvatar(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
 		CommonUtils.validateEmpty(studentid);
 		String fileid = (String) request.getAttribute("avatar");
@@ -490,7 +488,7 @@ public class SuserServlet extends BaseServlet {
 		resultMap.put("avatarurl", avatarurl);
 	}
 
-	public void perfectStudentInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void perfectStudentInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
 		String idnum = getRequestParamter(request, "idnum");
 		String studentcardnum = getRequestParamter(request, "studentcardnum");
@@ -541,7 +539,7 @@ public class SuserServlet extends BaseServlet {
 
 	}
 	
-	public void perfectPersonInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void perfectPersonInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
 		String gender = getRequestParamter(request, "gender");
 		String birthday = getRequestParamter(request, "birthday");
@@ -586,7 +584,7 @@ public class SuserServlet extends BaseServlet {
 		}
 	}
 
-	public void verifyPsw(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void verifyPsw(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
 		String password = getRequestParamter(request, "password");
 		CommonUtils.validateEmpty(studentid);
@@ -603,7 +601,7 @@ public class SuserServlet extends BaseServlet {
 		}
 	}
 
-	public void changePsw(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void changePsw(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
 		String password = getRequestParamter(request, "password");
 		CommonUtils.validateEmpty(studentid);
@@ -619,7 +617,7 @@ public class SuserServlet extends BaseServlet {
 		}
 	}
 
-	public void findPsw(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void findPsw(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String phone = getRequestParamter(request, "phone");
 		String newpassword = getRequestParamter(request, "newpassword");
 		CommonUtils.validateEmpty(phone);
@@ -637,7 +635,7 @@ public class SuserServlet extends BaseServlet {
 	
 	
 	//学员报名
-	public void enroll(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void enroll(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 
 		try
 		{
@@ -657,7 +655,7 @@ public class SuserServlet extends BaseServlet {
 	
 	
 
-	public void getMyBalanceInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getMyBalanceInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
 		CommonUtils.validateEmpty(studentid);
 		SuserInfo student = suserService.getUserById(studentid);
@@ -672,7 +670,7 @@ public class SuserServlet extends BaseServlet {
 		}
 	}
 
-	public void applyCash(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void applyCash(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
 		String count = getRequestParamter(request, "count");
 		CommonUtils.validateEmpty(studentid);
@@ -691,7 +689,7 @@ public class SuserServlet extends BaseServlet {
 	}
 
 	// 账户充值
-	public void recharge(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void recharge(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");// 教练ID
 		String amount = getRequestParamter(request, "amount");// 充值金额
 		CommonUtils.validateEmpty(studentid);
@@ -703,7 +701,7 @@ public class SuserServlet extends BaseServlet {
 	
 	
 	// 获取账户信息充值
-	public void getWalletInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException 
+	public void getWalletInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException 
 	{		
 		String studentid = getRequestParamter(request, "studentid");// 教练ID
 		CommonUtils.validateEmpty(studentid);	

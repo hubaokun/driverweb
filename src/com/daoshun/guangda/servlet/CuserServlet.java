@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
-import com.daoshun.exception.NullParameterException;
+import com.daoshun.common.ErrException;
 import com.daoshun.guangda.pojo.CaddAddressInfo;
 import com.daoshun.guangda.pojo.CsubjectInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
@@ -94,7 +94,7 @@ public class CuserServlet extends BaseServlet {
 				// 获取账户余额信息
 				getMyBalanceInfo(request, resultMap);
 			} else {
-				throw new NullParameterException();
+				throw new ErrException();
 			}
 
 			recordUserAction(request, action);
@@ -105,7 +105,7 @@ public class CuserServlet extends BaseServlet {
 		setResult(response, resultMap);
 	}
 
-	private boolean checkSession(HttpServletRequest request, String action, HashMap<String, Object> resultMap) throws NullParameterException {
+	private boolean checkSession(HttpServletRequest request, String action, HashMap<String, Object> resultMap) throws ErrException {
 		String userid = "";// 1.教练 2.学员
 		String usertype = "";
 
@@ -260,9 +260,9 @@ public class CuserServlet extends BaseServlet {
 	 * 注册
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void register(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void register(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String phone = getRequestParamter(request, "phone");
 		CommonUtils.validateEmpty(phone);
 		String realname = getRequestParamter(request, "realname");
@@ -290,9 +290,9 @@ public class CuserServlet extends BaseServlet {
 	 * 登录
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void login(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void login(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String loginid = getRequestParamter(request, "loginid");// 电话号码
 		CommonUtils.validateEmpty(loginid);
 		String password = getRequestParamter(request, "password");// 验证码
@@ -393,9 +393,9 @@ public class CuserServlet extends BaseServlet {
 	 * 完善账号信息
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void perfectAccountInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void perfectAccountInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		String realname = getRequestParamter(request, "realname");
@@ -439,9 +439,9 @@ public class CuserServlet extends BaseServlet {
 	 * 修改头像
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void changeAvatar(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void changeAvatar(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		CuserInfo cuser = cuserService.getCuserByCoachid(coachid);
@@ -459,9 +459,9 @@ public class CuserServlet extends BaseServlet {
 	 * 得到所有准教车型
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void getCarModel(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getCarModel(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		List<ModelsInfo> modellist = cuserService.getAllModelInfo();
 		resultMap.put("modellist", modellist);
 	}
@@ -470,9 +470,9 @@ public class CuserServlet extends BaseServlet {
 	 * 完善教练个人资料信息
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void perfectPersonInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void perfectPersonInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		String birthday = getRequestParamter(request, "birthday"); // 生日
@@ -525,9 +525,9 @@ public class CuserServlet extends BaseServlet {
 	 * 找回原密码
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void findPsw(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void findPsw(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String phone = getRequestParamter(request, "phone");
 		CommonUtils.validateEmpty(phone);
 		String newpassword = getRequestParamter(request, "newpassword");
@@ -548,9 +548,9 @@ public class CuserServlet extends BaseServlet {
 	 * 修改密码验证原密码
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void varifyPsw(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void varifyPsw(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		String password = getRequestParamter(request, "password");
@@ -569,9 +569,9 @@ public class CuserServlet extends BaseServlet {
 	 * 修改密码
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void changePsw(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void changePsw(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		String password = getRequestParamter(request, "password");
@@ -590,9 +590,9 @@ public class CuserServlet extends BaseServlet {
 	 * 完善教练资格资料
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void perfectCoachInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void perfectCoachInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		String idnum = getRequestParamter(request, "idnum"); // 身份证号码
@@ -717,7 +717,7 @@ public class CuserServlet extends BaseServlet {
 	}
 
 	// 账户充值
-	public void recharge(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void recharge(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");// 教练ID
 		String amount = getRequestParamter(request, "amount");// 充值金额
 		CommonUtils.validateEmpty(coachid);
@@ -728,7 +728,7 @@ public class CuserServlet extends BaseServlet {
 	}
 
 	// 获取账户余额 和充值记录
-	public void getMyBalanceInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getMyBalanceInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");// 教练ID
 
 		HashMap<String, Object> balanceResult = cuserService.getBalanceList(coachid);

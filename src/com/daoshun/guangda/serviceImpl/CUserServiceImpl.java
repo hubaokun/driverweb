@@ -788,11 +788,9 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 		if (info != null) {
 
 			int type = info.getType();
-			System.out.println("buySuccess:" + type);
 			if (type == 1) {
 				CuserInfo user = dataDao.getObjectById(CuserInfo.class, info.getUserid());
 				if (user != null) {
-					System.out.println("buySuccess_userID:" + user.getCoachid());
 					user.setMoney(user.getMoney().add(info.getAmount()));
 					dataDao.updateObject(user);
 					// 插入充值记录
@@ -809,7 +807,6 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 				SuserInfo user = dataDao.getObjectById(SuserInfo.class, info.getUserid());
 				if (user != null) {
 					user.setMoney(user.getMoney().add(info.getAmount()));
-					System.out.println("buySuccess_userID:" + user.getStudentid());
 					dataDao.updateObject(user);
 					// 插入充值记录
 					BalanceStudentInfo balance = new BalanceStudentInfo();

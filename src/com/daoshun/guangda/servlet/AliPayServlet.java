@@ -46,7 +46,6 @@ public class AliPayServlet extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
-		System.out.println("alipay_callback");
 		// System.out.println("支付宝回调");
 		try {
 			// 获取支付宝POST过来反馈信息
@@ -75,9 +74,6 @@ public class AliPayServlet extends HttpServlet {
 			String buyer_id = new String(request.getParameter("buyer_id").getBytes("ISO-8859-1"), "UTF-8");
 			String buyer_email = new String(request.getParameter("buyer_email").getBytes("ISO-8859-1"), "UTF-8");
 
-			System.out.println("out_trade_no: " + out_trade_no + "trade_no:" + trade_no + "trade_status" + trade_status + "total_fee: " + total_fee + "buyer_id :" + buyer_id + "buyer_email: "
-					+ buyer_email);
-
 			// 获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以上仅供参考)//
 			if (AlipayNotify.verify(params)) {// 验证成功
 				// ////////////////////////////////////////////////////////////////////////////////////////
@@ -98,7 +94,6 @@ public class AliPayServlet extends HttpServlet {
 					// 注意：
 					// 该种交易状态只在一种情况下出现——开通了高级即时到账，买家付款成功后。
 					// System.out.println("支付宝回调成功" + out_trade_no);
-					System.out.println("TRADE_SUCCESS");
 					cuserService.buySuccess(out_trade_no, buyer_id, buyer_email);
 				}
 				// ——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
@@ -112,7 +107,6 @@ public class AliPayServlet extends HttpServlet {
 				// out.println("fail");
 			}
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
 	}

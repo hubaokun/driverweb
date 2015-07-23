@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.daoshun.common.Constant;
-import com.daoshun.exception.NullParameterException;
+import com.daoshun.common.ErrException;
 import com.daoshun.guangda.pojo.Areas;
 import com.daoshun.guangda.pojo.Cities;
 import com.daoshun.guangda.pojo.Provinces;
@@ -55,7 +55,7 @@ public class LocationServlet extends BaseServlet{
 				// 按市编号查询区
 				getAreaByAreaId(request,resultMap);
 			}
-		} catch (NullParameterException e) {
+		} catch (ErrException e) {
 			e.printStackTrace();
 			setResultWhenException(response, e.getMessage());
 		}
@@ -65,14 +65,14 @@ public class LocationServlet extends BaseServlet{
 	/**
 	 *  获取所有的省名称
 	 */
-	public void getProvince(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getProvince(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		List<Provinces> list=locationService.getProvinces();
 		resultMap.put("provincelist", list);
 	}
 	/**
 	 * 按省编号查询市
 	 */
-	public void getCityByProvinceId(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getCityByProvinceId(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String provinceId= getRequestParamter(request, "provinceid");
 		List<Cities> list=locationService.getCityByProvinceId(provinceId);
 		resultMap.put("citylist", list);
@@ -80,7 +80,7 @@ public class LocationServlet extends BaseServlet{
 	/**
 	 * 按热键查询市
 	 */
-	public void getCityByHotKey(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getCityByHotKey(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String hotkey= getRequestParamter(request, "hotkey");
 		List<Cities> list=locationService.getCityByHotKey(hotkey);
 		resultMap.put("citylist", list);
@@ -88,7 +88,7 @@ public class LocationServlet extends BaseServlet{
 	/**
 	 * 按市名称模糊查询市
 	 */
-	public void getCityByCName(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getCityByCName(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String cname= getRequestParamter(request, "cname");
 		List<Cities> list=locationService.getCityByCName(cname);
 		resultMap.put("citylist", list);
@@ -96,7 +96,7 @@ public class LocationServlet extends BaseServlet{
 	/**
 	 *  按市编号查询区
 	 */
-	public void getAreaByCityId(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getAreaByCityId(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String cityId= getRequestParamter(request, "cityid");
 		List<Areas> list=locationService.getAreaByCityId(cityId);
 		resultMap.put("arealist", list);
@@ -104,7 +104,7 @@ public class LocationServlet extends BaseServlet{
 	/**
 	 *  按区编号查询区
 	 */ 
-	public void getAreaByAreaId(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getAreaByAreaId(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String areaid= getRequestParamter(request, "areaid");
 		Areas area=locationService.getAreaByAreaId(areaid);
 		resultMap.put("area", area);
