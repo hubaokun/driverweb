@@ -35,7 +35,7 @@ public class LocationAction extends BaseAction {
 	private String hotkey;//热键
 	private String provinceName;//省名称
 	//查询所有的省信息
-	@Action(value = "getProvince", results = {@Result(name = SUCCESS, location = "/location/location.jsp")})
+	@Action(value = "getProvince", results = {@Result(name = SUCCESS, location = "/location.jsp")})
 	public String getPrivinces(){
 		provincelist=locationService.getProvinces();
 		return SUCCESS;
