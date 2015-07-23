@@ -77,7 +77,7 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 		CuserInfo cquery=(CuserInfo)dataDao.getFirstObjectViaParam(querystring, params,inviteid);
 		BigDecimal c_reward = new BigDecimal(0);
 		int coachid=cquery.getCoachid();
-		int isExist=checkRecommendinfo(String.valueOf(coachid), invitedcoachid);
+		int isExist=checkRecommendinfo(invitedcoachid);
 		if(isExist==1)
 		{
 			RecommendInfo rectemp=new RecommendInfo();
@@ -94,15 +94,17 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 			return 0;
 	}
 	@Override
-	public int checkRecommendinfo(String coachid, String invitedcoachid) {
-		String querystring="from RecommendInfo where coachid=:coachid  and invitedcoachid=:invitedcoachid";
-		String[] params={"coachid","invitedcoachid"};
-		List querylist=(List)dataDao.getObjectsViaParam(querystring, params,CommonUtils.parseInt(coachid,0),CommonUtils.parseInt(invitedcoachid,0));
+	public int checkRecommendinfo(String invitedcoachid) {
+		String querystring="from RecommendInfo where invitedcoachid=:invitedcoachid";
+		String[] params={"invitedcoachid"};
+		List querylist=(List)dataDao.getObjectsViaParam(querystring, params,CommonUtils.parseInt(invitedcoachid,0));
 		if(!(querylist.size()==0))
 		{
+			//返回0代表已经存在记录了
 			return 0;
 		}
 		else
+			//返回1代表没有记录
 			return 1;
 	}
 	@Override

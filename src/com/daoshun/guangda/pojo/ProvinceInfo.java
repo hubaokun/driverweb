@@ -7,26 +7,23 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 /**
- * 市 信息
+ * 省 信息
  * @author 卢磊
  *
  */
 @Entity
-@Table(name = "cities")
-public class Cities {
+@Table(name = "t_provinces")
+public class ProvinceInfo {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", length = 20, nullable = false)
 	private Integer id;
 	
-	@Column(name = "cityid",  nullable = false)
-	private Integer cityid;
-	
-	@Column(name = "city", length = 100, nullable = false)
-	private String city;
-	
-	@Column(name = "provinceid",  nullable = false)
+	@Column(name = "provinceid", length =20, nullable = false)
 	private Integer provinceid;
+	
+	@Column(name = "province", length = 100, nullable = false)
+	private String province;
 	
 	@Column(name = "hotkey", length = 100, nullable = false)
 	private String hotkey;
@@ -39,28 +36,22 @@ public class Cities {
 		this.id = id;
 	}
 
-	public Integer getCityid() {
-		return cityid;
-	}
-
-	public void setCityid(Integer cityid) {
-		this.cityid = cityid;
-	}
-
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
-
 	public Integer getProvinceid() {
 		return provinceid;
 	}
 
 	public void setProvinceid(Integer provinceid) {
 		this.provinceid = provinceid;
+	}
+
+	
+
+	public String getProvince() {
+		return province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
 	}
 
 	public String getHotkey() {
@@ -70,8 +61,6 @@ public class Cities {
 	public void setHotkey(String hotkey) {
 		this.hotkey = hotkey;
 	}
-
-	
 	
 	
 }

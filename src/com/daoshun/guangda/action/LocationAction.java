@@ -15,11 +15,11 @@ import org.apache.struts2.convention.annotation.Result;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import com.daoshun.guangda.pojo.Areas;
-import com.daoshun.guangda.pojo.Cities;
+import com.daoshun.guangda.pojo.AreaInfo;
+import com.daoshun.guangda.pojo.CityInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.DriveSchoolInfo;
-import com.daoshun.guangda.pojo.Provinces;
+import com.daoshun.guangda.pojo.ProvinceInfo;
 import com.daoshun.guangda.pojo.SchoolBalance;
 import com.daoshun.guangda.service.ICUserService;
 import com.daoshun.guangda.service.ICtaskService;
@@ -38,7 +38,7 @@ public class LocationAction extends BaseAction {
 	@Resource
 	private  LocationServiceImpl locationService;
 	
-	private List<Provinces> provincelist;
+	private List<ProvinceInfo> provincelist;
 	
 	private String provinceid;//省id
 	private String cityid;//市id
@@ -52,36 +52,36 @@ public class LocationAction extends BaseAction {
 	}
 	@Action(value = "getProvinceToJson")
 	public void getPrivincesToJson(){
-		List<Provinces> list=locationService.getProvinces();
+		List<ProvinceInfo> list=locationService.getProvinces();
 		strToJson(list);
 	}
 	
 	
 	@Action(value = "getCityByProvinceId")
 	public void getCityByProvinceId(){
-		List<Cities> list=locationService.getCityByProvinceId(provinceid);
+		List<CityInfo> list=locationService.getCityByProvinceId(provinceid);
 		strToJson(list);
 	}
 	@Action(value = "getCityByProvinceName")
 	public void getCityByProvinceName(){
-		List<Cities> list=locationService.getCityByProvinceName(provinceName);
+		List<CityInfo> list=locationService.getCityByProvinceName(provinceName);
 		strToJson(list);
 	}
 	
 	@Action(value = "getAreaByCityId")
 	public void getAreaByCityId(){
-		List<Areas> list=locationService.getAreaByCityId(cityid);
+		List<AreaInfo> list=locationService.getAreaByCityId(cityid);
 		strToJson(list);
 	}
 	@Action(value = "getCityByHotKey")
 	public void getCityByHotKey(){
-		List<Cities> list=locationService.getCityByHotKey(hotkey);
+		List<CityInfo> list=locationService.getCityByHotKey(hotkey);
 		strToJson(list);
 	}
-	public List<Provinces> getProvincelist() {
+	public List<ProvinceInfo> getProvincelist() {
 		return provincelist;
 	}
-	public void setProvincelist(List<Provinces> provincelist) {
+	public void setProvincelist(List<ProvinceInfo> provincelist) {
 		this.provincelist = provincelist;
 	}
 	public String getProvinceid() {

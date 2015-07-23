@@ -39,10 +39,9 @@ public interface IRecommendService{
 	public abstract int addRecommendInfo(String inviteid,String invitedcoachid);
 	/**
 	 * 检测推荐人员信息是否存在
-	 *  @param coachid 邀请教练ID
 	 *  @param invitedcoachid 被邀请教练ID
 	 */
-	public abstract int checkRecommendinfo(String coachid,String invitedcoachid);
+	public abstract int checkRecommendinfo(String invitedcoachid);
 	/**
 	 * 检测是否还有记录
 	 *  @param coachid 教练ID

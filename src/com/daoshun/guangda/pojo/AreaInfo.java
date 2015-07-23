@@ -7,23 +7,26 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 /**
- * 省 信息
+ * 区 信息
  * @author 卢磊
  *
  */
 @Entity
-@Table(name = "provinces")
-public class Provinces {
+@Table(name = "t_areas")
+public class AreaInfo {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", length = 20, nullable = false)
 	private Integer id;
 	
-	@Column(name = "provinceid", length =20, nullable = false)
-	private Integer provinceid;
+	@Column(name = "areaid", length =20, nullable = false)
+	private Integer areaid;
 	
-	@Column(name = "province", length = 100, nullable = false)
-	private String province;
+	@Column(name = "area", length = 100, nullable = false)
+	private String area;
+	
+	@Column(name = "cityid", length =20, nullable = false)
+	private Integer cityid;
 	
 	@Column(name = "hotkey", length = 100, nullable = false)
 	private String hotkey;
@@ -36,22 +39,28 @@ public class Provinces {
 		this.id = id;
 	}
 
-	public Integer getProvinceid() {
-		return provinceid;
+	public Integer getAreaid() {
+		return areaid;
 	}
 
-	public void setProvinceid(Integer provinceid) {
-		this.provinceid = provinceid;
+	public void setAreaid(Integer areaid) {
+		this.areaid = areaid;
 	}
 
-	
-
-	public String getProvince() {
-		return province;
+	public String getArea() {
+		return area;
 	}
 
-	public void setProvince(String province) {
-		this.province = province;
+	public void setArea(String area) {
+		this.area = area;
+	}
+
+	public Integer getCityid() {
+		return cityid;
+	}
+
+	public void setCityid(Integer cityid) {
+		this.cityid = cityid;
 	}
 
 	public String getHotkey() {
@@ -61,6 +70,5 @@ public class Provinces {
 	public void setHotkey(String hotkey) {
 		this.hotkey = hotkey;
 	}
-	
 	
 }
