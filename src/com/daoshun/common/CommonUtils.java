@@ -539,7 +539,7 @@ public class CommonUtils {
     
     public static String getInviteCode(String phone)
     {
-    	System.out.println("to24Base:"+phone);    	
+    	  	
     	String first=phone.substring(0, 3);
     	Integer index=Integer.parseInt(first);
     	List<String> list = Arrays.asList("130","131","132","133","134","135","136","137","138","139","150","151","152","153","154","155","156","157","158","159","170","171","172","173","174","175","176","177","178","179","180","181","182","183","184","185","186","187","188","189");
@@ -562,7 +562,7 @@ public class CommonUtils {
     	
     	 int num=(i+1)*100000000+end;   	 
     	String code=to24Base(num);
-    	
+    	System.out.println("to24Base:"+phone+"-->"+code);  
     	return code;
     }
 
