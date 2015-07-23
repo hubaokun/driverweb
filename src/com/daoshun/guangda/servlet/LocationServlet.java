@@ -103,7 +103,7 @@ public class LocationServlet extends BaseServlet{
 	}
 	/**
 	 *  按区编号查询区
-	 */
+	 */ 
 	public void getAreaByAreaId(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String areaid= getRequestParamter(request, "areaid");
 		Areas area=locationService.getAreaByAreaId(areaid);
