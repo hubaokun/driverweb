@@ -25,11 +25,19 @@ $(function(){
 	$("#change_"+j+index).addClass('left_list_mask');
 	
 	var checkstates=$("#checkstatus").val();
-	if(checkstates==2){
-		$("#check2").attr("selected",true);
+	if(checkstates==0){
+		$("#check0").attr("selected",true);
 	}
 	if(checkstates==1){
 		$("#check1").attr("selected",true);
+	}
+	
+	if(checkstates==2){
+		$("#check2").attr("selected",true);
+	}
+	
+	if(checkstates==3){
+		$("#check3").attr("selected",true);
 	}
 	
 	var schoolstate=$("#schoolstate").val();
@@ -205,8 +213,10 @@ function dataToLead(){
 <input  type="text" class="searchdiv" style="width:70px;font-family: 微软雅黑;text-align: center;" value="审核状态" readonly="readonly"/>
 		<select id="checkstate" class="searchdiv" style="width: 85px;">
 				<option value="0" selected="selected">不限</option>
-				<option id="check1" value="1">审核未通过</option>
+				<option id="check0" value="0">资料不完善</option>
+				<option id="check1" value="1">等待审核</option>
 				<option id="check2" value="2">审核通过</option>
+				<option id="check3" value="3">审核未通过</option>
 		</select>
 	</div>
 	

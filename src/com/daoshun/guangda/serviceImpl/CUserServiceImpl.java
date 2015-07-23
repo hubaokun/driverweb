@@ -236,11 +236,19 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 
 		}
 		if (checkstate != null) {
+			if (checkstate == 0) {
+				cuserhql.append(" and state = 0 ");
+			}
+			if (checkstate == 1) {
+				cuserhql.append(" and state = 1 ");
+			}
+			
 			if (checkstate == 2) {
 				cuserhql.append(" and state = 2 ");
 			}
-			if (checkstate == 1) {
-				cuserhql.append(" and state != 2 ");
+			
+			if (checkstate == 3) {
+				cuserhql.append(" and state = 3 ");
 			}
 		}
 
