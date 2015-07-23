@@ -1,14 +1,10 @@
 package com.daoshun.guangda.action;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 
-import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
@@ -17,13 +13,7 @@ import org.springframework.stereotype.Controller;
 
 import com.daoshun.guangda.pojo.AreaInfo;
 import com.daoshun.guangda.pojo.CityInfo;
-import com.daoshun.guangda.pojo.CuserInfo;
-import com.daoshun.guangda.pojo.DriveSchoolInfo;
 import com.daoshun.guangda.pojo.ProvinceInfo;
-import com.daoshun.guangda.pojo.SchoolBalance;
-import com.daoshun.guangda.service.ICUserService;
-import com.daoshun.guangda.service.ICtaskService;
-import com.daoshun.guangda.service.IDriveSchoolService;
 import com.daoshun.guangda.serviceImpl.LocationServiceImpl;
 
 @ParentPackage("default")
@@ -44,40 +34,44 @@ public class LocationAction extends BaseAction {
 	private String cityid;//市id
 	private String hotkey;//热键
 	private String provinceName;//省名称
-	
+	//查询所有的省信息
 	@Action(value = "getProvince", results = {@Result(name = SUCCESS, location = "/location/location.jsp")})
 	public String getPrivinces(){
 		provincelist=locationService.getProvinces();
 		return SUCCESS;
 	}
+	//查询所有的省信息的JSON格式
 	@Action(value = "getProvinceToJson")
 	public void getPrivincesToJson(){
 		List<ProvinceInfo> list=locationService.getProvinces();
 		strToJson(list);
 	}
 	
-	
+	//按省ID查询市
 	@Action(value = "getCityByProvinceId")
 	public void getCityByProvinceId(){
 		List<CityInfo> list=locationService.getCityByProvinceId(provinceid);
 		strToJson(list);
 	}
+	//按省名称查询市
 	@Action(value = "getCityByProvinceName")
 	public void getCityByProvinceName(){
 		List<CityInfo> list=locationService.getCityByProvinceName(provinceName);
 		strToJson(list);
 	}
-	
+	//按市ID查询区
 	@Action(value = "getAreaByCityId")
 	public void getAreaByCityId(){
 		List<AreaInfo> list=locationService.getAreaByCityId(cityid);
 		strToJson(list);
 	}
+	//按热键查询市
 	@Action(value = "getCityByHotKey")
 	public void getCityByHotKey(){
 		List<CityInfo> list=locationService.getCityByHotKey(hotkey);
 		strToJson(list);
 	}
+	
 	public List<ProvinceInfo> getProvincelist() {
 		return provincelist;
 	}
