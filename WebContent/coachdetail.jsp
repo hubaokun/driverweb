@@ -153,10 +153,7 @@ function dataToLead(){
 	display: none;
 }
 
-
 </style>
-
-
 <title>教练列表</title>
 </head>
 <input type="hidden" id="change_id" value="0"/>
@@ -168,8 +165,6 @@ function dataToLead(){
 		<jsp:include page="left.jsp" />
 		<div id="content_form">
 			<div id="content_form_top" >
-		
-
 					<div class="searchbutton" style="width:80px;">
 						<div class="table_button_edit_icon"></div>
 						<div class="table_button_text" style="font-size: 12px;line-height: 38px;" onclick="dataToLead();">数据导入</div>
