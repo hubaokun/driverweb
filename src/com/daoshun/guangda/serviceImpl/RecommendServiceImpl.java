@@ -1,6 +1,7 @@
 package com.daoshun.guangda.serviceImpl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -31,7 +32,10 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 		List<RecommendInfo> listr=(List<RecommendInfo>)dataDao.pageQueryViaParam(querystring.toString(), Constant.USERLIST_SIZE, page, params,CommonUtils.parseInt(coachid, 0));
 		String querys="select count(*)"+querystring.toString();
 		long total=(long) dataDao.getFirstObjectViaParam(querys, params, CommonUtils.parseInt(coachid, 0));
-		return new QueryResult<RecommendInfo>(listr,total);
+		if(listr!=null)
+		    return new QueryResult<RecommendInfo>(listr,total);
+		else
+			return new QueryResult<RecommendInfo>(null,0);
 	}
    //获取所得奖励总额
 	@Override
@@ -41,7 +45,7 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 	    BigDecimal sumreward=(BigDecimal)dataDao.getFirstObjectViaParam(querystring, params, CommonUtils.parseInt(coachid, 0));
 		return sumreward;
 	}
-
+   
 	@Override
 	public List<CuserInfo> getInvitedState(List<Integer> coachs) {
 		String querystring="from CuserInfo where coachid in(:coachs) order by coachid";
@@ -121,4 +125,23 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 			return 1;
 		
 	}
+	/*@Override
+	public QueryResult<RecommendInfo> getRecommendListForServer(int page, int pagesize) {
+		String queryString="from RecommendInfo group by coachid order by coachid";
+		String[] params={""};
+		List<RecommendInfo> listr=(List<RecommendInfo>)dataDao.pageQueryViaParam(queryString.toString(), pagesize, page, params);
+		List<Integer> coachs=new ArrayList<Integer>(); 
+		for(RecommendInfo temp:listr)
+		{
+			coachs.add(temp.getCoachid());
+		}
+		queryString="from CuserInfo where coachid in(:coachs) order by coachid";
+		params[0]="coachs";
+		List<CuserInfo> clistr=(List<CuserInfo>) dataDao.getObjectsViaParam(queryString, params,coachs);
+		for(CuserInfo c:clistr)
+		{
+			System.out.println(c.getRealname());
+		}
+		return null;
+	}*/
 }

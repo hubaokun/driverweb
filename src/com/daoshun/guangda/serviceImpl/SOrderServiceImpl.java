@@ -792,6 +792,7 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 		}
 		if (order != null) {
 			if (order.getStart_time().after(c.getTime())) {
+			
 
 				if (student != null) {
 					if(order.getDelmoney()>0 && order.getCouponrecordid().length()>1)

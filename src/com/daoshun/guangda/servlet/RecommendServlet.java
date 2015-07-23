@@ -194,7 +194,7 @@ public class RecommendServlet extends BaseServlet {
 			return false;
 		}
 	}
-    public void getRecommendList(HttpServletRequest request,HashMap<String, Object> resultMap) throws NullParameterException
+    public <T> void getRecommendList(HttpServletRequest request,HashMap<String, Object> resultMap) throws NullParameterException
 	{
     	String coachid=request.getParameter("coachid");
     	String page=request.getParameter("pagenum");
@@ -202,27 +202,43 @@ public class RecommendServlet extends BaseServlet {
     	CommonUtils.validateEmpty(page);
     	QueryResult<RecommendInfo> qr=recommendService.getRecommendList(coachid, CommonUtils.parseInt(page, 0));
     	int hasmore=recommendService.ifhasmoreRecommendinfo(coachid, CommonUtils.parseInt(page, 0));
+    	int rflag=0;
     	if(hasmore==0)
     		resultMap.put("hasmore",0);
     	else
     		resultMap.put("hasmore",1);
-    	List<RecommendInfo> list=qr.getDataList();
-    	List<Integer> coachs=new ArrayList<Integer>();
-    	for(int i=0;i<list.size();i++)
-    	{
-    		RecommendInfo temp=list.get(i);
-    		coachs.add(Integer.valueOf(temp.getInvitedcoachid()));
-    	}
-    	List<CuserInfo> invitlist=recommendService.getInvitedState(coachs);
-        List orderlist=recommendService.getFirstOrderState(coachs);
-    	
+    	List<T> list=(List<T>) qr.getDataList();
     	long total=qr.getTotal();
-    	BigDecimal reward=recommendService.getReward(coachid);
-		resultMap.put("RecommendList",list);
-		resultMap.put("total",total);
-		resultMap.put("reward",reward);
+    	List<Integer> coachs=new ArrayList<Integer>();
+    	List<T> invitlist=(List<T>) new ArrayList<CuserInfo>();
+    	List orderlist =new ArrayList();
+    	if(list.size()!=0)
+    	{
+	    	for(int i=0;i<list.size();i++)
+	    	{
+	    		RecommendInfo temp=(RecommendInfo) list.get(i);
+	    		coachs.add(Integer.valueOf(temp.getInvitedcoachid()));
+	    	}
+	    	invitlist=(List<T>) recommendService.getInvitedState(coachs);
+	    	orderlist=recommendService.getFirstOrderState(coachs);
+	    	BigDecimal reward=recommendService.getReward(coachid);	
+	    	rflag=1;
+	    	resultMap.put("reward",reward);
+    	}  	
+    	else
+    	{
+    		list.add((T) new Object());
+    		invitlist.add((T) new Object());
+    		orderlist.add(new Object());
+    		resultMap.put("reward",0);
+    	}  	
+    	resultMap.put("rflag", rflag);
+        resultMap.put("RecommendList",list);
 		resultMap.put("invitlist",invitlist);
-		resultMap.put("orderlist",orderlist);
+		resultMap.put("orderlist",orderlist);		
+		resultMap.put("total",total);
+		
+	
 	}
     public void addRecommendInfo(HttpServletRequest request,HashMap<String, Object> resultMap) throws NullParameterException
     {
