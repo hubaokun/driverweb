@@ -521,14 +521,16 @@ public class CommonUtils {
      * @param base 
      * @return 
      */  
-    public static String to24Base(int num){  
+    public static String to24Base(long num){  
     	
     	int base= 24;
         StringBuffer str = new StringBuffer("");  
         String digths = "ABCDEFGHJKLMNPQRSTUVWXYZ";  
         Stack<Character> s = new Stack<Character>();  
+        
         while(num > base){  
-            s.push(digths.charAt(num%base));  
+        	int idx=(int)(num%base);
+            s.push(digths.charAt(idx));  
             num/=base;  
         }  
         while(!s.isEmpty()){  
@@ -560,7 +562,7 @@ public class CommonUtils {
     		 } 
     	}
     	
-    	 int num=(i+1)*100000000+end;   	 
+    	 long num=((long)i+1)*100000000+end;   	 
     	String code=to24Base(num);
     	System.out.println("to24Base:"+phone+"-->"+code);  
     	return code;
@@ -568,7 +570,7 @@ public class CommonUtils {
 
     
     public static void main(String[] args) { 
-    	String phone="15088600199";
+    	String phone="18758234668";
     	String code=CommonUtils.getInviteCode(phone);
     	System.out.print(code);
     }
