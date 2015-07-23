@@ -54,6 +54,9 @@ public class LocationServlet extends BaseServlet{
 			}else if (Constant.GETAREABYAREAID.equals(action)) {
 				// 按市编号查询区
 				getAreaByAreaId(request,resultMap);
+			}else if (Constant.GETPROCITYAREA.equals(action)) {
+				//返回所有的省市区JSON
+				getProCityArea(request,resultMap);
 			}
 		} catch (ErrException e) {
 			e.printStackTrace();
@@ -108,5 +111,20 @@ public class LocationServlet extends BaseServlet{
 		String areaid= getRequestParamter(request, "areaid");
 		AreaInfo area=locationService.getAreaByAreaId(areaid);
 		resultMap.put("area", area);
+	}
+	/**
+	 *  返回所有的省市区JSON
+	 */ 
+	public void getProCityArea(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		List<ProvinceInfo> list=locationService.getProvinces();
+		for (ProvinceInfo provinceInfo : list) {
+			List<CityInfo> list2=locationService.getCityByProvinceId(provinceInfo.getProvinceid().toString());
+			provinceInfo.setCities(list2);
+			for (CityInfo cityInfo : list2) {
+				List<AreaInfo> list3=locationService.getAreaByCityId(cityInfo.getCityid().toString());
+				cityInfo.setAreas(list3);
+			}
+		}
+		resultMap.put("china", list);
 	}
 }
