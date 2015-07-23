@@ -12,9 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.daoshun.common.Constant;
 import com.daoshun.common.ErrException;
-import com.daoshun.guangda.pojo.Areas;
-import com.daoshun.guangda.pojo.Cities;
-import com.daoshun.guangda.pojo.Provinces;
+import com.daoshun.guangda.pojo.AreaInfo;
+import com.daoshun.guangda.pojo.CityInfo;
+import com.daoshun.guangda.pojo.ProvinceInfo;
 import com.daoshun.guangda.service.ILocationService;
 /**
  * 省市区 服务接口  for app
@@ -66,7 +66,7 @@ public class LocationServlet extends BaseServlet{
 	 *  获取所有的省名称
 	 */
 	public void getProvince(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
-		List<Provinces> list=locationService.getProvinces();
+		List<ProvinceInfo> list=locationService.getProvinces();
 		resultMap.put("provincelist", list);
 	}
 	/**
@@ -74,7 +74,7 @@ public class LocationServlet extends BaseServlet{
 	 */
 	public void getCityByProvinceId(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String provinceId= getRequestParamter(request, "provinceid");
-		List<Cities> list=locationService.getCityByProvinceId(provinceId);
+		List<CityInfo> list=locationService.getCityByProvinceId(provinceId);
 		resultMap.put("citylist", list);
 	}
 	/**
@@ -82,7 +82,7 @@ public class LocationServlet extends BaseServlet{
 	 */
 	public void getCityByHotKey(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String hotkey= getRequestParamter(request, "hotkey");
-		List<Cities> list=locationService.getCityByHotKey(hotkey);
+		List<CityInfo> list=locationService.getCityByHotKey(hotkey);
 		resultMap.put("citylist", list);
 	}
 	/**
@@ -90,7 +90,7 @@ public class LocationServlet extends BaseServlet{
 	 */
 	public void getCityByCName(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String cname= getRequestParamter(request, "cname");
-		List<Cities> list=locationService.getCityByCName(cname);
+		List<CityInfo> list=locationService.getCityByCName(cname);
 		resultMap.put("citylist", list);
 	}
 	/**
@@ -98,7 +98,7 @@ public class LocationServlet extends BaseServlet{
 	 */
 	public void getAreaByCityId(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String cityId= getRequestParamter(request, "cityid");
-		List<Areas> list=locationService.getAreaByCityId(cityId);
+		List<AreaInfo> list=locationService.getAreaByCityId(cityId);
 		resultMap.put("arealist", list);
 	}
 	/**
@@ -106,7 +106,7 @@ public class LocationServlet extends BaseServlet{
 	 */ 
 	public void getAreaByAreaId(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String areaid= getRequestParamter(request, "areaid");
-		Areas area=locationService.getAreaByAreaId(areaid);
+		AreaInfo area=locationService.getAreaByAreaId(areaid);
 		resultMap.put("area", area);
 	}
 }
