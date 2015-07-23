@@ -1,11 +1,14 @@
 package com.daoshun.guangda.pojo;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 /**
  * 省 信息
  * @author 卢磊
@@ -27,6 +30,17 @@ public class ProvinceInfo {
 	
 	@Column(name = "hotkey", length = 100, nullable = false)
 	private String hotkey;
+	
+	@Transient
+	List<CityInfo> cities;
+
+	public List<CityInfo> getCities() {
+		return cities;
+	}
+
+	public void setCities(List<CityInfo> cities) {
+		this.cities = cities;
+	}
 
 	public Integer getId() {
 		return id;
