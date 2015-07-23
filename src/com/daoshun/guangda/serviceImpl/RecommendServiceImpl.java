@@ -100,9 +100,11 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 		List querylist=(List)dataDao.getObjectsViaParam(querystring, params,CommonUtils.parseInt(invitedcoachid,0));
 		if(!(querylist.size()==0))
 		{
+			//返回0代表已经存在记录了
 			return 0;
 		}
 		else
+			//返回1代表没有记录
 			return 1;
 	}
 	@Override
