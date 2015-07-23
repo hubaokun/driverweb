@@ -32,7 +32,7 @@ public class LocationServiceImpl extends BaseServiceImpl implements ILocationSer
 	@Override
 	public List<CityInfo> getCityByProvinceId(String provinceid) {
 		String[] params = { "provinceid" };
-		return (List<CityInfo>)dataDao.getObjectsViaParam("from Cityinfo where  provinceid=:provinceid", params,CommonUtils.parseInt(provinceid, 0));
+		return (List<CityInfo>)dataDao.getObjectsViaParam("from CityInfo where  provinceid=:provinceid", params,CommonUtils.parseInt(provinceid, 0));
 	}
 	/**
 	 * 根据市的ID查询此市的所有区信息
