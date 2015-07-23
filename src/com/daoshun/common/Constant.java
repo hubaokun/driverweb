@@ -359,4 +359,7 @@ public class Constant {
 	/**按区ID获取区信息**/
 	public static final String GETAREABYAREAID = "GETAREABYAREAID";
 	
+	/**按区ID获取区信息**/
+	public static final String GETPROCITYAREA = "GETPROCITYAREA"; 
+	
 }
