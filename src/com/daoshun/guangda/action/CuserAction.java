@@ -13,10 +13,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import jxl.Sheet;
-import jxl.Workbook;
-import jxl.WorkbookSettings;
-
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -29,16 +25,21 @@ import com.daoshun.common.Constant;
 import com.daoshun.common.QueryResult;
 import com.daoshun.guangda.NetData.CoachInfoForExcel;
 import com.daoshun.guangda.pojo.BalanceCoachInfo;
-import com.daoshun.guangda.pojo.BalanceStudentInfo;
 import com.daoshun.guangda.pojo.CApplyCashInfo;
 import com.daoshun.guangda.pojo.CoachLevelInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.DriveSchoolInfo;
 import com.daoshun.guangda.pojo.ModelsInfo;
+import com.daoshun.guangda.pojo.ProvinceInfo;
 import com.daoshun.guangda.pojo.TeachcarInfo;
 import com.daoshun.guangda.service.IBaseService;
 import com.daoshun.guangda.service.ICUserService;
 import com.daoshun.guangda.service.IDriveSchoolService;
+import com.daoshun.guangda.service.ILocationService;
+
+import jxl.Sheet;
+import jxl.Workbook;
+import jxl.WorkbookSettings;
 
 @ParentPackage("default")
 @Controller
@@ -259,6 +260,124 @@ public class CuserAction extends BaseAction {
 	private List<CoachLevelInfo> levelist;
 
 	private int frozecoachtype;
+	
+	private String provinceid;
+	private String cityid;
+	private String areaid;
+	private String driver_school;
+	private String startdate;
+	private String enddate;
+	
+	
+	public String getStartdate() {
+		return startdate;
+	}
+
+	public void setStartdate(String startdate) {
+		this.startdate = startdate;
+	}
+
+	public String getEnddate() {
+		return enddate;
+	}
+
+	public void setEnddate(String enddate) {
+		this.enddate = enddate;
+	}
+
+	public String getDriver_school() {
+		return driver_school;
+	}
+
+	public void setDriver_school(String driver_school) {
+		this.driver_school = driver_school;
+	}
+
+	public String getProvinceid() {
+		return provinceid;
+	}
+
+	public void setProvinceid(String provinceid) {
+		this.provinceid = provinceid;
+	}
+
+	public String getCityid() {
+		return cityid;
+	}
+
+	public void setCityid(String cityid) {
+		this.cityid = cityid;
+	}
+
+	public String getAreaid() {
+		return areaid;
+	}
+
+	public void setAreaid(String areaid) {
+		this.areaid = areaid;
+	}
+	private List<ProvinceInfo> provincelist;
+	
+	public List<ProvinceInfo> getProvincelist() {
+		return provincelist;
+	}
+
+	public void setProvincelist(List<ProvinceInfo> provincelist) {
+		this.provincelist = provincelist;
+	}
+	
+	@Resource
+	private  ILocationService locationService;
+	@Action(value = "/coachreport", results = { @Result(name = SUCCESS, location = "/coachreport.jsp") })
+	public String coachreport() {
+		provincelist=locationService.getProvinces();
+		HttpSession session = ServletActionContext.getRequest().getSession();
+		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
+		QueryResult<CuserInfo> result =cuserService.getCuserReport(provinceid,cityid,areaid,driver_school,startdate,enddate,pageIndex,pagesize);
+		total = result.getTotal();
+		cuserlist = result.getDataList();
+		driveSchoollist = cuserService.getDriveSchoolInfo();
+		for (CuserInfo cu : cuserlist) {
+			Long sumnum=cuserService.getOrderSum(cu.getCoachid());
+			Long overnum=cuserService.getOrderOver(cu.getCoachid());
+			Long cancelnum=cuserService.getOrderCancel(cu.getCoachid());
+			Long waitnum=sumnum-overnum-cancelnum;
+			cu.setSumnum(sumnum);
+			cu.setOvernum(overnum);
+			cu.setCancelnum(cancelnum);
+			cu.setWaitnum(waitnum);
+			
+		}
+		
+		/*for (int i = 0; i < cuserlist.size(); i++) {
+			if (cuserlist.get(i).getIsfrozen() == 1 && cuserlist.get(i).getFrozenend() != null) {
+				Date today = new Date();
+				Calendar nowtime = Calendar.getInstance();
+				nowtime.setTime(today);
+				nowtime.set(Calendar.HOUR_OF_DAY, 0);
+				nowtime.set(Calendar.MINUTE, 0);
+				nowtime.set(Calendar.SECOND, 0);
+				nowtime.set(Calendar.MILLISECOND, 0);
+				today = nowtime.getTime();
+				if (today.after(cuserlist.get(i).getFrozenend())) {
+					cuserlist.get(i).setIsfrozen(0);
+					cuserService.updateObject(cuserlist.get(i));
+				}
+			}
+			if (!CommonUtils.isEmptyString(cuserlist.get(i).getBirthday())) {
+				int age = cuserService.getCoachAgeByid(cuserlist.get(i).getCoachid());
+				cuserlist.get(i).setAge(age);
+			}
+		}*/
+		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
+		if (pageIndex > 1) {
+			if (cuserlist == null || cuserlist.size() == 0) {
+				pageIndex--;
+				getCoachByKeyword();
+			}
+		}
+		return SUCCESS;
+	}
 
 	/**
 	 * 得到教练列表

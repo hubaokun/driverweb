@@ -135,6 +135,8 @@ public class DailyAction extends BaseAction {
 	private List<XiaoBaDaily> xiaobadaily;
 
 	private List<DriveSchoolInfo> driveSchoollist;
+	
+	private List<Object> cuserinfolist;//驾校报表list
 
 	/**
 	 * 系统日报
@@ -2871,4 +2873,15 @@ public class DailyAction extends BaseAction {
 		this.driveSchoollist = driveSchoollist;
 	}
 
+	public List<Object> getCuserinfolist() {
+		return cuserinfolist;
+	}
+
+	public void setCuserinfolist(List<Object> cuserinfolist) {
+		this.cuserinfolist = cuserinfolist;
+	}
+
+	
+	
+	
 }
