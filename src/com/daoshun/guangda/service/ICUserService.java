@@ -234,4 +234,13 @@ public interface ICUserService {
 
 	public abstract QueryResult<BalanceCoachInfo> searchCoachRecharge(String searchname, String searchphone, String amount, String inputamount, String minsdate, String maxsdate, int pageIndex,
 			int pagesize);
+	public  QueryResult<CuserInfo> getCuserReport(String provinceid,String cityid,String areaid,String drive_school,String startdate,String enddate,Integer pageIndex, int pagesize);
+	/**
+	 * 按教练ID查询总订单数
+	 * @param coachid
+	 * @return
+	 */
+	public Long getOrderSum(int coachid);
+	public Long getOrderOver(int coachid);
+	public Long getOrderCancel(int coachid);
 }
