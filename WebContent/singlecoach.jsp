@@ -147,7 +147,7 @@ $(function(){
 <jsp:include page="left.jsp"/>
 <div id="content_form">
 
-<div id="content_form_top">
+<div id="content_form_top1">
 	<div class="delbutton">&nbsp;基本资料</div>
 	<div class="addbutton" style="float: left;margin-left: 10px;" onclick="editsinglecoach()">保存修改</div>
 	<div class="addbutton" style="float: right;margin-right: 10px;" onclick="gobackcoach()">返&nbsp;回</div>
@@ -155,7 +155,7 @@ $(function(){
 
 
 <form action="" id="singlecoachForm" enctype="multipart/form-data" method="post">
-<div id="content_form_table" style="min-width: 1200px">
+<div id="content_form_table1" style="min-width: 1200px">
 <table  border="0" cellspacing="0" cellpadding="0" style="width: 98%;">
 <tr class="tr_th"  >
 <th >ID</th>
@@ -199,7 +199,7 @@ $(function(){
 </td>
 
 <td  style="width:100px;min-width:150px;" class="border_right_bottom"><input name="editbirthday" value="${cuser.birthday }" style="text-align: center;width:150px;height: 35px;font-size:18px" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})"/></td>
-<td  style="width:150px;min-width: 150px" class="border_right_bottom"><input name="editcity" value="${cuser.city }" style="text-align: center;width:90px;height: 35px;font-size:18px"  /></td>
+<td  style="width:150px;min-width: 150px" class="border_right_bottom"><input name="editcity" value="${cuser.cityid}" style="text-align: center;width:90px;height: 35px;font-size:18px"  /></td>
 </tr>
 
 
@@ -238,10 +238,10 @@ $(function(){
 
 </div>
 
-<div id="content_form_top">
+<div id="content_form_top2">
 	<div class="delbutton">&nbsp;教练资格资料</div>
 </div>
-<div id="content_form_table">
+<div id="content_form_table2">
 <table  border="0" cellspacing="0" cellpadding="0" style="width: 98%;">
 
 <tr class="tr_th">

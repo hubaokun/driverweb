@@ -46,6 +46,7 @@
 	<menu-item name="小巴券管理" iconURL="" authority="1">
 		<sub-item name="小巴券列表" authority="1" action="getCouponList.do"/>
 		<sub-item name="小巴券领取记录" authority="2" action="getCouponRecordList.do"/>
+		<sub-item name="小巴币" authority="2" action="getCoinRecordList.do"/>
 	</menu-item>
 	<menu-item name="其他" iconURL="" authority="1">
 		<sub-item name="意见反馈" authority="3" action="getFeedback.do"/>

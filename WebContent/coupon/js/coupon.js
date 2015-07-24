@@ -85,7 +85,7 @@ function changeserachdiv(){
 		$("#textareaid").css("margin-top","30px");
 		$("#somestudent").show();
 		$("#exslfile").css("display","block");
-		
+
 	}
 	else if(givingtype==4){
 		var html = "";
@@ -99,7 +99,7 @@ function changeserachdiv(){
 		$("#somestudent").hide();
 		$("#exslfile").css("display","none");
 		$("#bigsearch").remove();
-		
+
 	}
 	else{
 		var html = "";

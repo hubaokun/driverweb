@@ -387,7 +387,7 @@ public class CuserAction extends BaseAction {
 	@Action(value = "/getCoachlist", results = { @Result(name = SUCCESS, location = "/coachdetail.jsp") })
 	public String getCoachlist() {
 		HttpSession session = ServletActionContext.getRequest().getSession();
-		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 20);
+		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
 		// pagesize = CommonUtils.parseInt(String.valueOf(request.getAttribute("pagesize")), pagesize);
 		driveSchoollist = cuserService.getDriveSchoolInfo();
 		levelist = cuserService.getLevellist();
@@ -419,7 +419,7 @@ public class CuserAction extends BaseAction {
 				DriveSchoolInfo school = driveSchoolService.getDriveSchoolInfoByid(cuser.getDrive_schoolid());
 				if (school != null) {
 					cuser.setDrive_school(school.getName());
-					driveSchoolname = cuser.getDrive_schoolid();
+//					driveSchoolname = cuser.getDrive_schoolid();
 				}
 			}
 		}
