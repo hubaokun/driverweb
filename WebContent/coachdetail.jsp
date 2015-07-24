@@ -276,7 +276,7 @@ function dataToLead(){
 							<td style="width: 40px;" class="border_right_bottom">${age}</td>
 							<td style="width: 50px;" class="border_right_bottom">${years}&nbsp;年</td>
 							<td style="width: 60px;" class="border_right_bottom">${score}&nbsp;分</td>
-							<td style="width: 100px;" class="border_right_bottom">${drive_school}</td>
+							<td style="width: 100px;" class="border_right_bottom">${cuser.drive_school}</td>
 							<s:if test="state==0">
 							<td style="width: 100px;" class="border_right_bottom">资料不完善</td>
 							</s:if>
