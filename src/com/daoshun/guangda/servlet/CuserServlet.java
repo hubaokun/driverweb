@@ -387,11 +387,13 @@ public class CuserServlet extends BaseServlet {
 				resultMap.put("isregister", 0);
 			}
 			//根据省市区ID查询对应的名称
-			ProvinceInfo pro=locationService.getProvincesById(cuser.getProvinceid());
-			CityInfo city=locationService.getCityById(cuser.getCityid());
-			AreaInfo area=locationService.getAreaById(cuser.getAreaid());
-			String locationname=pro.getProvince()+city.getCity()+area.getArea();
-			cuser.setLocationname(locationname);
+			if(cuser.getProvinceid()!=null && cuser.getCityid()!=null && cuser.getAreaid()!=null){
+				ProvinceInfo pro=locationService.getProvincesById(cuser.getProvinceid());
+				CityInfo city=locationService.getCityById(cuser.getCityid());
+				AreaInfo area=locationService.getAreaById(cuser.getAreaid());
+				String locationname=pro.getProvince()+city.getCity()+area.getArea();
+				cuser.setLocationname(locationname);
+			}
 			resultMap.put("UserInfo", cuser);
 			int rflag=recommendService.checkRecommendinfo(String.valueOf(cuser.getCoachid()));
 			if(rflag==0)

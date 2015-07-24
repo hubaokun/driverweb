@@ -349,11 +349,13 @@ public class SuserServlet extends BaseServlet {
 //				System.out.println("longin save token to db "+token+" "+Thread.currentThread().getId());
 			}
 			//根据省市区ID查询对应的名称
-			ProvinceInfo pro=locationService.getProvincesById(user.getProvinceid());
-			CityInfo city=locationService.getCityById(user.getCityid());
-			AreaInfo area=locationService.getAreaById(user.getAreaid());
-			String locationname=pro.getProvince()+city.getCity()+area.getArea();
-			user.setLocationname(locationname);
+			if(user.getProvinceid()!=null && user.getCityid()!=null && user.getAreaid()!=null){
+				ProvinceInfo pro=locationService.getProvincesById(user.getProvinceid());
+				CityInfo city=locationService.getCityById(user.getCityid());
+				AreaInfo area=locationService.getAreaById(user.getAreaid());
+				String locationname=pro.getProvince()+city.getCity()+area.getArea();
+				user.setLocationname(locationname);
+			}
 			resultMap.put("UserInfo", user);
 		} else if (result == 0) {
 			resultMap.put("code", 2);
