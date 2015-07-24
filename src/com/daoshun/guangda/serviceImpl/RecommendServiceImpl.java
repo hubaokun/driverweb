@@ -31,7 +31,7 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 	    String[] params={"coachid"};
 		List<RecommendInfo> listr=(List<RecommendInfo>)dataDao.pageQueryViaParam(querystring.toString(), Constant.USERLIST_SIZE, page, params,CommonUtils.parseInt(coachid, 0));
 		String querys="select count(*)"+querystring.toString();
-		long total=(long) dataDao.getFirstObjectViaParam(querys, params, CommonUtils.parseInt(coachid, 0));
+		long total=(Long) dataDao.getFirstObjectViaParam(querys, params, CommonUtils.parseInt(coachid, 0));
 		if(listr!=null)
 		    return new QueryResult<RecommendInfo>(listr,total);
 		else
