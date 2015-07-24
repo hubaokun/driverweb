@@ -16,15 +16,19 @@ import javax.servlet.http.HttpServletResponse;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
 import com.daoshun.common.ErrException;
+import com.daoshun.guangda.pojo.AreaInfo;
 import com.daoshun.guangda.pojo.CaddAddressInfo;
+import com.daoshun.guangda.pojo.CityInfo;
 import com.daoshun.guangda.pojo.CsubjectInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.DriveSchoolInfo;
 import com.daoshun.guangda.pojo.ModelsInfo;
+import com.daoshun.guangda.pojo.ProvinceInfo;
 import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.pojo.SystemSetInfo;
 import com.daoshun.guangda.pojo.TeachcarInfo;
 import com.daoshun.guangda.service.ICUserService;
+import com.daoshun.guangda.service.ILocationService;
 import com.daoshun.guangda.service.IRecommendService;
 import com.daoshun.guangda.service.ISUserService;
 import com.daoshun.guangda.service.ISystemService;
@@ -48,6 +52,7 @@ public class CuserServlet extends BaseServlet {
 	private ISystemService systemService;
 	private ISUserService suserService;
     private IRecommendService recommendService;
+    private ILocationService locationService;
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
@@ -55,6 +60,7 @@ public class CuserServlet extends BaseServlet {
 		systemService = (ISystemService) applicationContext.getBean("systemService");
 		suserService = (ISUserService) applicationContext.getBean("suserService");
 		recommendService=(IRecommendService) applicationContext.getBean("recommendService");
+		locationService=(ILocationService) applicationContext.getBean("locationService");
 	}
 
 	@Override
@@ -380,7 +386,12 @@ public class CuserServlet extends BaseServlet {
 				cuser.setCouponhour(cuserService.getCoachAllCouponTime(cuser.getCoachid()));
 				resultMap.put("isregister", 0);
 			}
-
+			//根据省市区ID查询对应的名称
+			ProvinceInfo pro=locationService.getProvincesById(cuser.getProvinceid());
+			CityInfo city=locationService.getCityById(cuser.getCityid());
+			AreaInfo area=locationService.getAreaById(cuser.getAreaid());
+			String locationname=pro.getProvince()+city.getCity()+area.getArea();
+			cuser.setLocationname(locationname);
 			resultMap.put("UserInfo", cuser);
 			int rflag=recommendService.checkRecommendinfo(String.valueOf(cuser.getCoachid()));
 			if(rflag==0)
