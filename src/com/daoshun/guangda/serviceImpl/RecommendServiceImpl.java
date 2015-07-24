@@ -79,20 +79,25 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
         String querystring="from CuserInfo where invitecode=:inviteid";
         String[] params={"inviteid"};
 		CuserInfo cquery=(CuserInfo)dataDao.getFirstObjectViaParam(querystring, params,inviteid);
-		BigDecimal c_reward = new BigDecimal(0);
-		int coachid=cquery.getCoachid();
-		int isExist=checkRecommendinfo(invitedcoachid);
-		if(isExist==1)
+		if(cquery!=null)
 		{
-			RecommendInfo rectemp=new RecommendInfo();
-			rectemp.setCoachid(coachid);
-			rectemp.setInvitedcoachid(Integer.parseInt(invitedcoachid));
-			rectemp.setType(0);
-			rectemp.setInviteid(inviteid);
-			rectemp.setAddtime(new Date());
-			rectemp.setReward(c_reward);
-			dataDao.addObject(rectemp);
-			return 1;
+			BigDecimal c_reward = new BigDecimal(0);
+			int coachid=cquery.getCoachid();
+			int isExist=checkRecommendinfo(invitedcoachid);
+			if(isExist==1)
+			{
+				RecommendInfo rectemp=new RecommendInfo();
+				rectemp.setCoachid(coachid);
+				rectemp.setInvitedcoachid(Integer.parseInt(invitedcoachid));
+				rectemp.setType(0);
+				rectemp.setInviteid(inviteid);
+				rectemp.setAddtime(new Date());
+				rectemp.setReward(c_reward);
+				dataDao.addObject(rectemp);
+				return 1;
+			}
+			else
+				return 0;
 		}
 		else
 			return 0;
