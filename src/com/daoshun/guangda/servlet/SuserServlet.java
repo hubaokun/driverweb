@@ -14,11 +14,15 @@ import javax.servlet.http.HttpServletResponse;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
 import com.daoshun.common.ErrException;
+import com.daoshun.guangda.pojo.AreaInfo;
+import com.daoshun.guangda.pojo.CityInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
+import com.daoshun.guangda.pojo.ProvinceInfo;
 import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.pojo.SystemSetInfo;
 import com.daoshun.guangda.pojo.VerifyCodeInfo;
 import com.daoshun.guangda.service.IBaseService;
+import com.daoshun.guangda.service.ILocationService;
 import com.daoshun.guangda.service.ISUserService;
 import com.daoshun.guangda.service.ISystemService;
 
@@ -29,6 +33,7 @@ public class SuserServlet extends BaseServlet {
 	private ISUserService suserService;
 	private IBaseService baseService;
 	private ISystemService systemService;
+	private ILocationService locationService;
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -36,6 +41,7 @@ public class SuserServlet extends BaseServlet {
 		suserService = (ISUserService) applicationContext.getBean("suserService");
 		baseService = (IBaseService) applicationContext.getBean("baseService");
 		systemService = (ISystemService) applicationContext.getBean("systemService");
+		locationService = (ILocationService) applicationContext.getBean("locationService");
 	}
 
 	@Override
@@ -322,7 +328,6 @@ public class SuserServlet extends BaseServlet {
 		CommonUtils.validateEmpty(password);
 		// 验证验证码的有效性
 		int result = suserService.checkVerCode(phone, password);
-
 		if (result == 1) {
 			String token = request.getSession().getId().toLowerCase();
 //			System.out.println("longin set token="+token+" "+Thread.currentThread().getId());
@@ -343,6 +348,12 @@ public class SuserServlet extends BaseServlet {
 				resultMap.put("isregister", 0);
 //				System.out.println("longin save token to db "+token+" "+Thread.currentThread().getId());
 			}
+			//根据省市区ID查询对应的名称
+			ProvinceInfo pro=locationService.getProvincesById(user.getProvinceid());
+			CityInfo city=locationService.getCityById(user.getCityid());
+			AreaInfo area=locationService.getAreaById(user.getAreaid());
+			String locationname=pro.getProvince()+city.getCity()+area.getArea();
+			user.setLocationname(locationname);
 			resultMap.put("UserInfo", user);
 		} else if (result == 0) {
 			resultMap.put("code", 2);
