@@ -261,123 +261,13 @@ public class CuserAction extends BaseAction {
 
 	private int frozecoachtype;
 	
-	private String provinceid;
-	private String cityid;
-	private String areaid;
-	private String driver_school;
-	private String startdate;
-	private String enddate;
-	
-	
-	public String getStartdate() {
-		return startdate;
-	}
-
-	public void setStartdate(String startdate) {
-		this.startdate = startdate;
-	}
-
-	public String getEnddate() {
-		return enddate;
-	}
-
-	public void setEnddate(String enddate) {
-		this.enddate = enddate;
-	}
-
-	public String getDriver_school() {
-		return driver_school;
-	}
-
-	public void setDriver_school(String driver_school) {
-		this.driver_school = driver_school;
-	}
-
-	public String getProvinceid() {
-		return provinceid;
-	}
-
-	public void setProvinceid(String provinceid) {
-		this.provinceid = provinceid;
-	}
-
-	public String getCityid() {
-		return cityid;
-	}
-
-	public void setCityid(String cityid) {
-		this.cityid = cityid;
-	}
-
-	public String getAreaid() {
-		return areaid;
-	}
-
-	public void setAreaid(String areaid) {
-		this.areaid = areaid;
-	}
-	private List<ProvinceInfo> provincelist;
-	
-	public List<ProvinceInfo> getProvincelist() {
-		return provincelist;
-	}
-
-	public void setProvincelist(List<ProvinceInfo> provincelist) {
-		this.provincelist = provincelist;
-	}
-	
-	@Resource
-	private  ILocationService locationService;
-	@Action(value = "/coachreport", results = { @Result(name = SUCCESS, location = "/coachreport.jsp") })
-	public String coachreport() {
-		provincelist=locationService.getProvinces();
-		HttpSession session = ServletActionContext.getRequest().getSession();
-		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
-		QueryResult<CuserInfo> result =cuserService.getCuserReport(provinceid,cityid,areaid,driver_school,startdate,enddate,pageIndex,pagesize);
-		total = result.getTotal();
-		cuserlist = result.getDataList();
-		driveSchoollist = cuserService.getDriveSchoolInfo();
-		for (CuserInfo cu : cuserlist) {
-			Long sumnum=cuserService.getOrderSum(cu.getCoachid());
-			Long overnum=cuserService.getOrderOver(cu.getCoachid());
-			Long cancelnum=cuserService.getOrderCancel(cu.getCoachid());
-			Long waitnum=sumnum-overnum-cancelnum;
-			cu.setSumnum(sumnum);
-			cu.setOvernum(overnum);
-			cu.setCancelnum(cancelnum);
-			cu.setWaitnum(waitnum);
-			
-		}
-		
-		/*for (int i = 0; i < cuserlist.size(); i++) {
-			if (cuserlist.get(i).getIsfrozen() == 1 && cuserlist.get(i).getFrozenend() != null) {
-				Date today = new Date();
-				Calendar nowtime = Calendar.getInstance();
-				nowtime.setTime(today);
-				nowtime.set(Calendar.HOUR_OF_DAY, 0);
-				nowtime.set(Calendar.MINUTE, 0);
-				nowtime.set(Calendar.SECOND, 0);
-				nowtime.set(Calendar.MILLISECOND, 0);
-				today = nowtime.getTime();
-				if (today.after(cuserlist.get(i).getFrozenend())) {
-					cuserlist.get(i).setIsfrozen(0);
-					cuserService.updateObject(cuserlist.get(i));
-				}
-			}
-			if (!CommonUtils.isEmptyString(cuserlist.get(i).getBirthday())) {
-				int age = cuserService.getCoachAgeByid(cuserlist.get(i).getCoachid());
-				cuserlist.get(i).setAge(age);
-			}
-		}*/
-		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
-		if (pageIndex > 1) {
-			if (cuserlist == null || cuserlist.size() == 0) {
-				pageIndex--;
-				getCoachByKeyword();
-			}
-		}
-		return SUCCESS;
-	}
+	private String provinceid;//省ID
+	private String cityid;//市ID
+	private String areaid;//区ID
+	private String driver_school;//驾校名称
+	private String startdate;//开始日期
+	private String enddate;//结束日期
+	private List<ProvinceInfo> provincelist;//省列表
 
 	/**
 	 * 得到教练列表
@@ -2000,7 +1890,37 @@ public class CuserAction extends BaseAction {
 		}
 		return SUCCESS;
 	}
-
+	//教练订单统计报表
+		@Resource
+		private  ILocationService locationService;
+		@Action(value = "/coachreport", results = { @Result(name = SUCCESS, location = "/coachreport.jsp") })
+		public String coachreport() {
+			provincelist=locationService.getProvinces();
+			HttpSession session = ServletActionContext.getRequest().getSession();
+			int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
+			QueryResult<CuserInfo> result =cuserService.getCuserReport(provinceid,cityid,areaid,driver_school,startdate,enddate,pageIndex,pagesize);
+			total = result.getTotal();
+			cuserlist = result.getDataList();
+			driveSchoollist = cuserService.getDriveSchoolInfo();
+			for (CuserInfo cu : cuserlist) {
+				Long sumnum=cuserService.getOrderSum(cu.getCoachid());
+				Long overnum=cuserService.getOrderOver(cu.getCoachid());
+				Long cancelnum=cuserService.getOrderCancel(cu.getCoachid());
+				Long waitnum=sumnum-overnum-cancelnum;
+				cu.setSumnum(sumnum);
+				cu.setOvernum(overnum);
+				cu.setCancelnum(cancelnum);
+				cu.setWaitnum(waitnum);
+			}
+			pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
+			if (pageIndex > 1) {
+				if (cuserlist == null || cuserlist.size() == 0) {
+					pageIndex--;
+					coachreport();
+				}
+			}
+			return SUCCESS;
+		}
 	public int getChecknum() {
 		return checknum;
 	}
@@ -2743,5 +2663,60 @@ public class CuserAction extends BaseAction {
 
 	public void setBalanceCoachList(List<BalanceCoachInfo> balanceCoachList) {
 		this.balanceCoachList = balanceCoachList;
+	}
+	public String getStartdate() {
+		return startdate;
+	}
+
+	public void setStartdate(String startdate) {
+		this.startdate = startdate;
+	}
+
+	public String getEnddate() {
+		return enddate;
+	}
+
+	public void setEnddate(String enddate) {
+		this.enddate = enddate;
+	}
+
+	public String getDriver_school() {
+		return driver_school;
+	}
+
+	public void setDriver_school(String driver_school) {
+		this.driver_school = driver_school;
+	}
+
+	public String getProvinceid() {
+		return provinceid;
+	}
+
+	public void setProvinceid(String provinceid) {
+		this.provinceid = provinceid;
+	}
+
+	public String getCityid() {
+		return cityid;
+	}
+
+	public void setCityid(String cityid) {
+		this.cityid = cityid;
+	}
+
+	public String getAreaid() {
+		return areaid;
+	}
+
+	public void setAreaid(String areaid) {
+		this.areaid = areaid;
+	}
+
+	public List<ProvinceInfo> getProvincelist() {
+		return provincelist;
+	}
+
+	public void setProvincelist(List<ProvinceInfo> provincelist) {
+		this.provincelist = provincelist;
 	}
 }
