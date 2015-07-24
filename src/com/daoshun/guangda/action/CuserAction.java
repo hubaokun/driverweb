@@ -385,7 +385,7 @@ public class CuserAction extends BaseAction {
 	 * @return
 	 */
 	@Action(value = "/getCoachlist", results = { @Result(name = SUCCESS, location = "/coachdetail.jsp") })
-	public String cuserlist() {
+	public String getCoachlist() {
 		HttpSession session = ServletActionContext.getRequest().getSession();
 		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 20);
 		// pagesize = CommonUtils.parseInt(String.valueOf(request.getAttribute("pagesize")), pagesize);
@@ -395,7 +395,8 @@ public class CuserAction extends BaseAction {
 		total = result.getTotal();
 		cuserlist = result.getDataList();
 		for (int i = 0; i < cuserlist.size(); i++) {
-			if (cuserlist.get(i).getIsfrozen() == 1 && cuserlist.get(i).getFrozenend() != null) {
+			CuserInfo cuser=cuserlist.get(i);
+			if (cuser.getIsfrozen() == 1 && cuser.getFrozenend() != null) {
 				Date today = new Date();
 				Calendar nowtime = Calendar.getInstance();
 				nowtime.setTime(today);
@@ -404,21 +405,29 @@ public class CuserAction extends BaseAction {
 				nowtime.set(Calendar.SECOND, 0);
 				nowtime.set(Calendar.MILLISECOND, 0);
 				today = nowtime.getTime();
-				if (today.after(cuserlist.get(i).getFrozenend())) {
-					cuserlist.get(i).setIsfrozen(0);
-					cuserService.updateObject(cuserlist.get(i));
+				if (today.after(cuser.getFrozenend())) {
+					cuser.setIsfrozen(0);
+					cuserService.updateObject(cuser);
 				}
 			}
-			if (!CommonUtils.isEmptyString(cuserlist.get(i).getBirthday())) {
-				int age = cuserService.getCoachAgeByid(cuserlist.get(i).getCoachid());
-				cuserlist.get(i).setAge(age);
+			if (!CommonUtils.isEmptyString(cuser.getBirthday())) {
+				int age = cuserService.getCoachAgeByid(cuser.getCoachid());
+				cuser.setAge(age);
+			}
+
+			if (cuser.getDrive_schoolid() != null && cuser.getDrive_schoolid() != 0) {
+				DriveSchoolInfo school = driveSchoolService.getDriveSchoolInfoByid(cuser.getDrive_schoolid());
+				if (school != null) {
+					cuser.setDrive_school(school.getName());
+					driveSchoolname = cuser.getDrive_schoolid();
+				}
 			}
 		}
 		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
 		if (pageIndex > 1) {
 			if (cuserlist == null || cuserlist.size() == 0) {
 				pageIndex--;
-				cuserlist();
+				getCoachlist();
 			}
 		}
 		return SUCCESS;

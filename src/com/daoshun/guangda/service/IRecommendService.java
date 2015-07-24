@@ -48,4 +48,8 @@ public interface IRecommendService{
 	 *  @param page    当前页
 	 */
 	public abstract int ifhasmoreRecommendinfo(String coachid,int page);
+	/**
+	 * 获取教练推荐教练列表（后台）
+	 */
+	//public abstract QueryResult<RecommendInfo> getRecommendListForServer(int page,int pagesize);
 } 
