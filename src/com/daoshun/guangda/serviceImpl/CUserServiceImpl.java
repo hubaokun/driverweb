@@ -1136,8 +1136,8 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 		if(!CommonUtils.isEmptyString(drive_school)){
 			cuserhql.append(" and drive_schoolid="+drive_school);
 		}
-		System.out.println(cuserhql.toString());
-		List<CuserInfo> cuserInfolist = (List<CuserInfo>) dataDao.pageQueryViaParam(cuserhql.toString() + " order by coachid desc ", pagesize, pageIndex, null);
+		//System.out.println(cuserhql.toString());
+		List<CuserInfo> cuserInfolist = (List<CuserInfo>) dataDao.pageQueryViaParam(cuserhql.toString() + " order by coachid  ", pagesize, pageIndex, null);
 		String counthql = " select count(*) " + cuserhql.toString();
 		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<CuserInfo>(cuserInfolist, total);
