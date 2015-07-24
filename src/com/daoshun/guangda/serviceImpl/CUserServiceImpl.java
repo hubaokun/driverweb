@@ -1110,7 +1110,19 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 		StringBuffer cuserhql = new StringBuffer();
 		cuserhql.append("from CuserInfo where 1=1 ");
 		if(!CommonUtils.isEmptyString(startdate) && ! CommonUtils.isEmptyString(enddate)){
-			cuserhql.append(" and coachid in (select coachid from OrderInfo where date >"+startdate+" and date<"+enddate+")  ");
+			cuserhql.append(" and coachid in (select coachid from OrderInfo where date >'"+startdate+"' and date<'"+enddate+"')  ");
+		}
+		if("null".equals(provinceid)){
+			provinceid="";
+		}
+		if("null".equals(cityid)){
+			cityid="";
+		}
+		if("null".equals(areaid)){
+			areaid="";
+		}
+		if("0".equals(drive_school)){
+			drive_school="";
 		}
 		if(!CommonUtils.isEmptyString(provinceid)){
 			cuserhql.append(" and provinceid="+provinceid);
@@ -1122,8 +1134,9 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 			cuserhql.append(" and areaid="+areaid);
 		}
 		if(!CommonUtils.isEmptyString(drive_school)){
-			cuserhql.append(" and drive_school="+drive_school);
+			cuserhql.append(" and drive_schoolid="+drive_school);
 		}
+		System.out.println(cuserhql.toString());
 		List<CuserInfo> cuserInfolist = (List<CuserInfo>) dataDao.pageQueryViaParam(cuserhql.toString() + " order by coachid desc ", pagesize, pageIndex, null);
 		String counthql = " select count(*) " + cuserhql.toString();
 		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
