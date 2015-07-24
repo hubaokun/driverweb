@@ -84,10 +84,9 @@ function search() {
 						<input type="text" class="searchdiv" style="width:70px;font-family: 微软雅黑;text-align: center;" value="所属驾校" readonly="readonly"/>
 								<select id="driver_school" class="searchdiv" style="width: 85px;">
 										<option value="0" selected="selected">不限</option>
-										<option id="school-1" value="-1">无驾校</option>
-									<s:iterator value="driveSchoollist" var="driveSchool">
-										<option id="school${schoolid}" value="${schoolid}">${name}</option>
-									</s:iterator>
+										<s:iterator value="driveSchoollist" var="driveSchool">
+											<option id="school${schoolid}" value="${schoolid}">${name}</option>
+										</s:iterator>
 								</select>
 					</div>
 					<div class="serchcontentdiv"style="float: left; margin-left: 50px; width: 309px"  >
