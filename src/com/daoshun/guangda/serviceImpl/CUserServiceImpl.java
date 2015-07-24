@@ -1077,4 +1077,57 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<BalanceCoachInfo>(applycashlist, total);
 	}
+
+	
+
+	@Override
+	public Long getOrderSum(int coachid) {
+		String hql="select count(*) from OrderInfo where coachid=:coachid";
+		String p[]={"coachid"};
+		Long o=(Long) dataDao.getFirstObjectViaParam(hql, p, coachid);
+		return o;
+	}
+
+	@Override
+	public Long getOrderOver(int coachid) {
+		String hql="select count(*) from OrderInfo where coachid=:coachid and over_time is not null";
+		String p[]={"coachid"};
+		Long o=(Long) dataDao.getFirstObjectViaParam(hql, p, coachid);
+		return o;
+	}
+
+	@Override
+	public Long getOrderCancel(int coachid) {
+		String hql="select count(*) from OrderInfo where coachid=:coachid and coachstate=4";
+		String p[]={"coachid"};
+		Long o=(Long) dataDao.getFirstObjectViaParam(hql, p, coachid);
+		return o;
+	}
+	
+	@Override
+	public QueryResult<CuserInfo> getCuserReport(String provinceid,String cityid,String areaid,String drive_school,String startdate,String enddate,Integer pageIndex, int pagesize) {
+		//dataDao.callCoachReport();
+		StringBuffer cuserhql = new StringBuffer();
+		cuserhql.append("from CuserInfo where 1=1 ");
+		if(!CommonUtils.isEmptyString(startdate) && ! CommonUtils.isEmptyString(enddate)){
+			cuserhql.append(" and coachid in (select coachid from OrderInfo where date >"+startdate+" and date<"+enddate+")  ");
+		}
+		if(!CommonUtils.isEmptyString(provinceid)){
+			cuserhql.append(" and provinceid="+provinceid);
+		}
+		if(!CommonUtils.isEmptyString(cityid)){
+			cuserhql.append(" and cityid="+cityid);
+		}
+		if(!CommonUtils.isEmptyString(areaid)){
+			cuserhql.append(" and areaid="+areaid);
+		}
+		if(!CommonUtils.isEmptyString(drive_school)){
+			cuserhql.append(" and drive_school="+drive_school);
+		}
+		List<CuserInfo> cuserInfolist = (List<CuserInfo>) dataDao.pageQueryViaParam(cuserhql.toString() + " order by coachid desc ", pagesize, pageIndex, null);
+		String counthql = " select count(*) " + cuserhql.toString();
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
+		return new QueryResult<CuserInfo>(cuserInfolist, total);
+	}
+
 }
