@@ -344,12 +344,69 @@ public class CuserInfo implements Serializable {
 	
 	@Column(name = "areaid", length = 100)
 	private String areaid;
+	
+	//总订单数量
+	@Transient
+	private Long sumnum;
+	
+	//完成的订单数量
+	@Transient
+	private Long overnum;
+	
+	//取消的订单数量
+	@Transient
+	private Long cancelnum;
+	
+	//待完成的订单数量
+	@Transient
+	private Long waitnum;
 
 	
+	@Transient
+	private String locationname;//省市区全称
 	
 	
 	
 	
+	public String getLocationname() {
+		return locationname;
+	}
+
+	public void setLocationname(String locationname) {
+		this.locationname = locationname;
+	}
+
+	public Long getSumnum() {
+		return sumnum;
+	}
+
+	public void setSumnum(Long sumnum) {
+		this.sumnum = sumnum;
+	}
+
+	public Long getOvernum() {
+		return overnum;
+	}
+
+	public void setOvernum(Long overnum) {
+		this.overnum = overnum;
+	}
+
+	public Long getCancelnum() {
+		return cancelnum;
+	}
+
+	public void setCancelnum(Long cancelnum) {
+		this.cancelnum = cancelnum;
+	}
+
+	public Long getWaitnum() {
+		return waitnum;
+	}
+
+	public void setWaitnum(Long waitnum) {
+		this.waitnum = waitnum;
+	}
 
 	public int getCoachid() {
 		return coachid;
