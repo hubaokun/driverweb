@@ -217,10 +217,16 @@ public class SuserInfo implements Serializable {
 	@Column(name = "areaid", length = 100)
 	private String areaid;
 	
+	@Transient
+	private String locationname;
 	
-	
-	
-	
+	public String getLocationname() {
+		return locationname;
+	}
+
+	public void setLocationname(String locationname) {
+		this.locationname = locationname;
+	}
 
 	public int getStudentid() {
 		return studentid;
