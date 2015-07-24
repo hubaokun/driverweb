@@ -55,6 +55,7 @@
 		<sub-item name="系统日报" authority="3" action="systemdaily.do"/>
 		<sub-item name="驾校日报" authority="3" action="schooldaily.do"/>
 		<sub-item name="教练日报" authority="3" action="coachdaily.do"/>
+		<sub-item name="教练报表" authority="3" action="coachreport.do"/>
 		<sub-item name="学生账户日报" authority="3" action="studentaccountdaily.do"/>
 		<sub-item name="教练账户日报" authority="3" action="coachaccountdaily.do"/>
 		<sub-item name="学生提现日报" authority="3" action="studentapply.do"/>
