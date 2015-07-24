@@ -3,21 +3,31 @@ package com.daoshun.guangda.action;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.guangda.pojo.CoinRecordInfo;
 import com.daoshun.guangda.pojo.CouponInfo;
+import com.daoshun.guangda.pojo.CuserInfo;
+import com.daoshun.guangda.service.ICoinRecordService;
+import com.daoshun.guangda.service.ICouponService;
+import com.daoshun.guangda.serviceImpl.CoinRecordServiceImpl;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Result;
 
+import javax.annotation.Resource;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by tutu on 15/7/24.
  */
 public class CoinAction extends BaseAction{
 
+
+    @Resource
+    private ICoinRecordService coinRecordService;
 
     private Integer coinrecordid;
 
@@ -136,6 +146,30 @@ public class CoinAction extends BaseAction{
 //        couponService.addCoupon(coupon);
         return SUCCESS;
     }
+
+
+
+
+    @Action(value = "addCoinRecord")
+    public void addCoinRecord() {
+
+        CoinRecordInfo coinRecordInfo = new CoinRecordInfo ();
+        coinRecordInfo.setReceiverid(receiverid);
+        coinRecordInfo.setOwnerid(ownerid);
+        coinRecordInfo.setPayerid(ownerid);
+        coinRecordInfo.setOwnertype(ownertype);
+        coinRecordInfo.setCoinnum(coinnum);
+        coinRecordInfo.setType(1);
+        coinRecordInfo.setAddtime(new Date());
+
+        coinRecordService.addCoinRecord(coinRecordInfo);
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("code", 1);
+        strToJson(map);
+
+    }
+
+
 
 
 }

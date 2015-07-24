@@ -169,13 +169,13 @@ $(function(){
 </tr>
 
 <tr class="tr_td">
-<td  style="width:150px;min-width:150px;background: #e5e5e5" class="border_right_bottom"><input name="coachid" id="coachid" value="${cuser.coachid }" style="text-align: center;width:150px;background: #e5e5e5;height: 35px;font-size:18px"  readonly="readonly"/></td>
-<td  style="width:150px;min-width:150px;" class="border_right_bottom"><input   name="editrealname" id="realname" value="${cuser.realname }" style="text-align: center;width:150px;height: 35px;font-size:18px"  /></td>
-<td  style="width:150px;min-width:150px;background: #e5e5e5" class="border_right_bottom"><input value="${cuser.phone }" style="text-align: center;width:150px;background: #e5e5e5;height: 35px;font-size:18px"  readonly="readonly"/></td>
+<td  style="width:150px;min-width:150px;background: #e5e5e5" class="border_right_bottom"><input name="coachid" id="coachid" value="${cuser.coachid }" style="text-align: center;width:150px;background: #e5e5e5;height: 35px;font-size:12px"  readonly="readonly"/></td>
+<td  style="width:150px;min-width:150px;" class="border_right_bottom"><input   name="editrealname" id="realname" value="${cuser.realname }" style="text-align: center;width:150px;height: 35px;font-size:12px"  /></td>
+<td  style="width:150px;min-width:150px;background: #e5e5e5" class="border_right_bottom"><input value="${cuser.phone }" style="text-align: center;width:150px;background: #e5e5e5;height: 35px;font-size:12px"  readonly="readonly"/></td>
 
 <s:if test="cuser.gender==1">
 <td  style="width:150px;min-width:150px;" class="border_right_bottom">
-<select  name="editgender" style="font-size:18px" >
+<select  name="editgender" style="font-size:12px" >
 <option selected="selected"  value="1" >男</option>
 <option   value="2" >女</option>
 </select>
@@ -183,7 +183,7 @@ $(function(){
 </s:if>
 <s:else>
 <td  style="width:150px;min-width:150px;" class="border_right_bottom">
-<select  name="editgender" style="font-size:18px">
+<select  name="editgender" style="font-size:12px">
 <option   value="1" >男</option>
 <option   selected="selected" value="2" >女</option>
 </select>
@@ -191,15 +191,15 @@ $(function(){
 </s:else>
 
 
-<td  style="width:150px;min-width:150px;" class="border_right_bottom"><input name="edityears" id="years" value="${cuser.years }" style="text-align: center;width:150px;height: 35px;font-size:18px"/></td>
-<td  style="width:250px;min-width:150px;" class="border_right_bottom"><input value="${cuser.drive_school }" style="text-align: center;width:240px;height: 35px;font-size:18px"  readonly="readonly"/>
+<td  style="width:150px;min-width:150px;" class="border_right_bottom"><input name="edityears" id="years" value="${cuser.years }" style="text-align: center;width:150px;height: 35px;font-size:12px"/></td>
+<td  style="width:250px;min-width:150px;" class="border_right_bottom"><input value="${cuser.drive_school }" style="text-align: center;width:240px;height: 35px;font-size:12px"  readonly="readonly"/>
 
 
 
 </td>
 
-<td  style="width:100px;min-width:150px;" class="border_right_bottom"><input name="editbirthday" value="${cuser.birthday }" style="text-align: center;width:150px;height: 35px;font-size:18px" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})"/></td>
-<td  style="width:150px;min-width: 150px" class="border_right_bottom"><input name="editcity" value="${cuser.cityid}" style="text-align: center;width:90px;height: 35px;font-size:18px"  /></td>
+<td  style="width:100px;min-width:150px;" class="border_right_bottom"><input name="editbirthday" value="${cuser.birthday }" style="text-align: center;width:150px;height: 35px;font-size:12px" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})"/></td>
+<td  style="width:150px;min-width: 150px" class="border_right_bottom"><input name="editcity" value="${cuser.cityid}" style="text-align: center;width:90px;height: 35px;font-size:12px"  /></td>
 </tr>
 
 
@@ -217,10 +217,10 @@ $(function(){
 
 
 <tr class="tr_td">
-<td  style="width:150px;min-width: 150px" class="border_right_bottom"><input name="editaddress" id="address" value="${cuser.address}" style="text-align: center;width:150px;height: 35px;font-size:18px"  /></td>
-<td  style="width:150px;min-width: 150px" class="border_right_bottom"><input name="editurgent_person" value="${cuser.urgent_person }" style="text-align: center;width:150px;height: 35px;font-size:18px"  /></td>
-<td  style="width:150px;min-width: 150px" class="border_right_bottom"><input name="editurgent_phone" onkeyup="value=value.replace(/[^\d]/g,'')" value="${cuser.urgent_phone }"   style="text-align: center;width:150px;height: 35px;font-size:18px" /></td>
-<td  style="width:150px;min-width: 150px" class="border_right_bottom"><input  name="editselfval" value="${cuser.selfeval }" style="text-align: center;width:150px;height: 35px;font-size:18px"/></td>
+<td  style="width:150px;min-width: 150px" class="border_right_bottom"><input name="editaddress" id="address" value="${cuser.address}" style="text-align: center;width:150px;height: 35px;font-size:12px"  /></td>
+<td  style="width:150px;min-width: 150px" class="border_right_bottom"><input name="editurgent_person" value="${cuser.urgent_person }" style="text-align: center;width:150px;height: 35px;font-size:12px"  /></td>
+<td  style="width:150px;min-width: 150px" class="border_right_bottom"><input name="editurgent_phone" onkeyup="value=value.replace(/[^\d]/g,'')" value="${cuser.urgent_phone }"   style="text-align: center;width:150px;height: 35px;font-size:12px" /></td>
+<td  style="width:150px;min-width: 150px" class="border_right_bottom"><input  name="editselfval" value="${cuser.selfeval }" style="text-align: center;width:150px;height: 35px;font-size:12px"/></td>
 <td  style="width:150px;min-width: 150px" class="border_right_bottom">
 	<select id="clevel" name="editlevel" class="searchdiv" style="width: 100px;height: 35px;">
 		<s:iterator value="levelist" var="list">
@@ -228,8 +228,8 @@ $(function(){
 		</s:iterator>
 	</select>
 </td>
-<td  style="width:150px;min-width: 150px" class="border_right_bottom"><input name="editaddtime" value="<s:date name="cuser.addtime" format="yyyy-MM-dd HH:mm:ss" />" style="text-align: center;width:200px;height: 35px;font-size:18px" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})"/></td>
-<td  style="width:150px;min-width: 150px" class="border_right_bottom"><input name="editscore" value="${cuser.score }" style="text-align: center;width:150px;height: 35px;font-size:18px;" onpaste="return false" ondragenter="return false" oncontextmenu="return false;" onkeyup="this.value=this.value.replace(/[\u4e00-\u9fa5]/g,'')"  onkeydown="myKeyDown(this.value, event)"/></td>
+<td  style="width:150px;min-width: 150px" class="border_right_bottom"><input name="editaddtime" value="<s:date name="cuser.addtime" format="yyyy-MM-dd HH:mm:ss" />" style="text-align: center;width:200px;height: 35px;font-size:12px" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})"/></td>
+<td  style="width:150px;min-width: 150px" class="border_right_bottom"><input name="editscore" value="${cuser.score }" style="text-align: center;width:150px;height: 35px;font-size:12px;" onpaste="return false" ondragenter="return false" oncontextmenu="return false;" onkeyup="this.value=this.value.replace(/[\u4e00-\u9fa5]/g,'')"  onkeydown="myKeyDown(this.value, event)"/></td>
 </tr>
 
 
@@ -254,9 +254,9 @@ $(function(){
 </th>
 </tr>
 <tr class="tr_td">
-<td  style="width:200px;min-width: 200px" class="border_right_bottom"><input name="editid_cardnum" value="${cuser.id_cardnum }" class="inputwithborder" style="text-align: center;width:200px;height: 35px;font-size:18px"/></td>
+<td  style="width:200px;min-width: 200px" class="border_right_bottom"><input name="editid_cardnum" value="${cuser.id_cardnum }" class="inputwithborder" style="text-align: center;width:200px;height: 35px;font-size:12px"/></td>
 
-<td  style="width:150px;min-width: 200px" class="border_right_bottom"><input name="editid_cardexptime" value="${cuser.id_cardexptime }" class="inputwithborder" style="text-align: center;width:200px;height: 35px;font-size:18px" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})"/></td>
+<td  style="width:150px;min-width: 200px" class="border_right_bottom"><input name="editid_cardexptime" value="${cuser.id_cardexptime }" class="inputwithborder" style="text-align: center;width:200px;height: 35px;font-size:12px" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})"/></td>
 
 <td  style="width:200px;height: 200px;min-width: 200px" class="border_right_bottom">
 <img alt="" src="${cuser.id_cardpicfurl}" style="width: 180px;height: 130px;" id="image01" onclick="changesize(1,'${cuser.id_cardpicfurl}')">
@@ -276,15 +276,15 @@ $(function(){
 <th>准教车型<input type="button" style="margin-left: 15px" onclick="showchangemoney()" value="修改"></th>
 </tr>
 <tr class="tr_td">
-<td  style="width:150px;min-width: 200px" class="border_right_bottom"><input name="editcoach_cardnum" value="${cuser.coach_cardnum }" class="inputwithborder" style="text-align: center;width:150px;height: 35px;font-size:18px"/></td>
-<td  style="width:150px;min-width: 200px" class="border_right_bottom"><input name="editcoach_cardexptime" value="${cuser.coach_cardexptime }" class="inputwithborder" style="text-align: center;width:200px;height: 35px;font-size:18px" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})"/></td>
+<td  style="width:150px;min-width: 200px" class="border_right_bottom"><input name="editcoach_cardnum" value="${cuser.coach_cardnum }" class="inputwithborder" style="text-align: center;width:150px;height: 35px;font-size:12px"/></td>
+<td  style="width:150px;min-width: 200px" class="border_right_bottom"><input name="editcoach_cardexptime" value="${cuser.coach_cardexptime }" class="inputwithborder" style="text-align: center;width:200px;height: 35px;font-size:12px" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})"/></td>
 <td style="width:200px;height: 200px;min-width: 200px" class="border_right_bottom">
 <img alt="" src="${cuser.coach_cardpicurl}" style="width: 180px;height: 130px;" id="image03"  onclick="changesize(3,'${cuser.coach_cardpicurl}')">
 <!-- <input name="editcoach_cardpicurl" type="file" id="file03" style="width:38px;height: 20px;position: absolute;margin-left: -40px;opacity:0;margin-top: -67px;" onchange="change('image03', 'file03')"> -->
 </td>
 <td  style="width:200px;" class="border_right_bottom">
 		<s:iterator value="coachmodellist" status="list">
-			<input name="aaaa" value="${modelname}" style="text-align: center;width:80px;height: 35px;font-size:18px"/>
+			<input name="aaaa" value="${modelname}" style="text-align: center;width:80px;height: 35px;font-size:12px"/>
 		</s:iterator>
 </td>
 </tr>
@@ -298,8 +298,8 @@ $(function(){
 <input name="editdrive_cardpicurl" type="file" id="file04" style="width:38px;height: 20px;position: absolute;margin-left: -30px;opacity:0;margin-top: 14px;" onchange="change('image04', 'file04')">
 </tr>
 <tr class="tr_td">
-<td  style="width:150px;min-width: 200px" class="border_right_bottom"><input name="editdrive_cardnum" value="${cuser.drive_cardnum}" class="inputwithborder" style="text-align: center;width:150px;height: 35px;font-size:18px"/></td>
-<td  style="width:150px;min-width: 200px" class="border_right_bottom"><input name="editdrive_cardexptime" value="${cuser.drive_cardexptime }" class="inputwithborder"  style="text-align: center;width:200px;height: 35px;font-size:18px" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})"/></td>
+<td  style="width:150px;min-width: 200px" class="border_right_bottom"><input name="editdrive_cardnum" value="${cuser.drive_cardnum}" class="inputwithborder" style="text-align: center;width:150px;height: 35px;font-size:12px"/></td>
+<td  style="width:150px;min-width: 200px" class="border_right_bottom"><input name="editdrive_cardexptime" value="${cuser.drive_cardexptime }" class="inputwithborder"  style="text-align: center;width:200px;height: 35px;font-size:12px" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})"/></td>
 <td style="width:200px;height: 200px;min-width: 200px" class="border_right_bottom">
 <img alt="" src="${cuser.drive_cardpicurl}" style="width: 180px;height: 130px;" id="image04"  onclick="changesize(4,'${cuser.drive_cardpicurl}')">
 <!-- <input name="editdrive_cardpicurl" type="file" id="file04" style="width:38px;height: 20px;position: absolute;margin-left: -40px;opacity:0;margin-top: -67px;" onchange="change('image04', 'file04')"> -->
@@ -318,8 +318,8 @@ $(function(){
 </th>
 </tr>
 <tr class="tr_td">
-<td  style="width:200px;min-width: 200px" class="border_right_bottom"><input name="editcar_cardnum" value="${cuser.car_cardnum }" class="inputwithborder"  style="text-align: center;width:150px;height: 35px;font-size:18px"/></td>
-<td  style="width:200px;min-width: 200px" class="border_right_bottom"><input name="editcar_cardexptime" value="${cuser.car_cardexptime }" class="inputwithborder"  style="text-align: center;width:200px;height: 35px;font-size:18px" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})"/></td>
+<td  style="width:200px;min-width: 200px" class="border_right_bottom"><input name="editcar_cardnum" value="${cuser.car_cardnum }" class="inputwithborder"  style="text-align: center;width:150px;height: 35px;font-size:12px"/></td>
+<td  style="width:200px;min-width: 200px" class="border_right_bottom"><input name="editcar_cardexptime" value="${cuser.car_cardexptime }" class="inputwithborder"  style="text-align: center;width:200px;height: 35px;font-size:12px" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})"/></td>
 <td style="width:200px;height: 200px;min-width: 200px" class="border_right_bottom">
 <img alt="" src="${cuser.car_cardpicfurl}" style="width: 180px;height: 130px;" id="image05"  onclick="changesize(5,'${cuser.car_cardpicfurl}')">
 <!-- <input name="editcar_cardpicfurl" type="file" id="file05" style="width:38px;height: 20px;position: absolute;margin-left: -40px;opacity:0;margin-top: -67px;" onchange="change('image05', 'file05')"> -->
@@ -342,13 +342,13 @@ $(function(){
 
 
 <tr class="tr_td">
-<td  style="width:200px;min-width: 200px" class="border_right_bottom"><input name="editcarmodel" value="${cuser.carmodel }" style="text-align: center;width:150px;height: 35px;font-size:18px" readonly="readonly"/></td>
-<td  style="width:200px;min-width: 200px" class="border_right_bottom"><input name="editcarlicense" value="${cuser.carlicense}" style="text-align: center;width:150px;height: 35px;font-size:18px"/></td>
+<td  style="width:200px;min-width: 200px" class="border_right_bottom"><input name="editcarmodel" value="${cuser.carmodel }" style="text-align: center;width:150px;height: 35px;font-size:12px" readonly="readonly"/></td>
+<td  style="width:200px;min-width: 200px" class="border_right_bottom"><input name="editcarlicense" value="${cuser.carlicense}" style="text-align: center;width:150px;height: 35px;font-size:12px"/></td>
 <s:if test="cuser.address==null">
-<td  style="width:200px;font-size:18px;min-width: 200px" class="border_right_bottom">未设置</td>
+<td  style="width:200px;font-size:12px;min-width: 200px" class="border_right_bottom">未设置</td>
 </s:if>
 <s:else>
-<td  style="width:200px;font-size:18px;min-width: 200px" class="border_right_bottom">已设置</td>
+<td  style="width:200px;font-size:12px;min-width: 200px" class="border_right_bottom">已设置</td>
 </s:else>
 <td style="width: 340px;min-width: 340px" class="border_noright_bottom">
 
