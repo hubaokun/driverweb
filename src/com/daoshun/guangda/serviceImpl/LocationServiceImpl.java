@@ -66,6 +66,21 @@ public class LocationServiceImpl extends BaseServiceImpl implements ILocationSer
 		String[] params = { "areaid" };
 		return (AreaInfo)dataDao.getFirstObjectViaParam("from AreaInfo where areaid=:areaid", params,CommonUtils.parseInt(areaid, 0));
 	}
+	@Override
+	public ProvinceInfo getProvincesById(String provinceid) {
+		String[] params = { "provinceid" };
+		return (ProvinceInfo)dataDao.getFirstObjectViaParam("from ProvinceInfo where provinceid=:provinceid", params, CommonUtils.parseInt(provinceid, 0));
+	}
+	@Override
+	public CityInfo getCityById(String cityid) {
+		String[] params = { "cityid" };
+		return (CityInfo)dataDao.getFirstObjectViaParam("from CityInfo where cityid=:cityid", params,CommonUtils.parseInt(cityid, 0) );
+	}
+	@Override
+	public AreaInfo getAreaById(String areaid) {
+		String[] params = { "areaid" };
+		return (AreaInfo)dataDao.getFirstObjectViaParam("from AreaInfo where areaid=:areaid", params,CommonUtils.parseInt(areaid, 0) );
+	}
 	
 	
 
