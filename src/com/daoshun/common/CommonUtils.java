@@ -564,7 +564,7 @@ public class CommonUtils {
     	
     	 long num=((long)i+1)*100000000+end;   	 
     	String code=to24Base(num);
-    	System.out.println("to24Base:"+phone+"-->"+code);  
+//    	System.out.println("to24Base:"+phone+"-->"+code);
     	return code;
     }
 

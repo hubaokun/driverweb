@@ -51,7 +51,7 @@ function cancelcoupon(id){
         $.ajax({
             url:"./cancelcoupon.do",
             type:"post",
-            data:{"recordid":id,},
+            data:{"recordid":id},
             success:function(msg){
                 alert("作废成功!");
                 window.location.reload();
@@ -135,7 +135,7 @@ function addcoupongiving(){
 
 
 function searchSuser(){
-    var name = $("#ssearchname").val();
+    var name = $("#receivername").val();
     if(name == ''){
         return;
     }
@@ -202,11 +202,11 @@ function searchCoach(){
 
 function ssearchName(id,name){
 
-    $("#searchsuserid").val(id);
-    $("#ssearchname").val(name);
+    $("#receiverid").val(id);
+    $("#receivername").val(name);
     $("#optionalStudent").empty();
     $("#optionalStudent").hide();
-    alert($("#searchsuserid").val());
+    //alert($("#searchsuserid").val());
 }
 
 function searchcoachName(id,name){
@@ -320,6 +320,47 @@ function selectall() {
         }
         $("#allcheck").val("0");
     }
+}
+
+
+
+
+
+function addCoinRecord(){
+    var name = $("#receivername").val();
+    if(name == ''){
+        return;
+    }
+    $.ajax({
+        url: "searchSuser.do",
+        data:{cuserkeyword: name},
+        type: "POST",
+        success: function(msg){
+            var obj = eval("("+msg+")");
+            var suserlist = obj.suserlist;
+            $("#optionalStudent").empty();
+            $("#optionalStudent").show();
+            for(var i = 0; i < suserlist.length; i++){
+                var id = suserlist[i].studentid;
+                var name = suserlist[i].realname;
+                var phone = suserlist[i].phone;
+                if(name==null){
+                    name="未设置";
+                    $("#optionalStudent").append(
+                        '<div class="binding_detail_item" onclick="ssearchName('+id+', \''+name+'\')">'
+                        +name+":"+phone
+                        +'</div>'
+                    );
+                }else{
+                    $("#optionalStudent").append(
+                        '<div class="binding_detail_item" onclick="ssearchName('+id+', \''+name+'\')">'
+                        +name+":"+phone
+                        +'</div>'
+                    );
+                }
+            }
+        }
+    });
 }
 
 

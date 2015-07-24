@@ -30,7 +30,7 @@
     <jsp:include page="left.jsp"/>
     <div id="content_form">
         <div id="content_form_blank" style="min-height: 800px">
-            <form id="addcoinrecordForm" action="addcoinrecord.do" enctype="multipart/form-data" method="post">
+            <form id="addcoinrecordForm" action="addCoinRecord.do" enctype="multipart/form-data" method="post">
                 <div class="addscenic_center">
 
                     <div style=" height: 75px; border-bottom: 1px solid #eaeff2;">
