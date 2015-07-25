@@ -64,17 +64,16 @@ function search() {
 		<img src="imgs/common/searchicon.png" width="22px" height="22px" style="margin-top: 9px;">
 	</div>
 	
-	
 	<div class="serchcontentdiv" style="float: left; margin-left: 50px; width: 180px" >
 						<input type="text" class="searchdiv" style="width: 65px;text-align: center;font-family: 微软雅黑;" value="省份" readonly="readonly">
 						<s:if test="provincelist!=null">
-						<s:select id="province" list="provincelist" listKey="provinceid" 
-						listValue="province" cssClass="searchdiv" onchange="tofindCity(this.value)"></s:select></s:if>
+						<s:select id="province" name="provinceid" list="provincelist" listKey="provinceid" 
+						listValue="province" cssClass="searchdiv" onchange="tofindCity(this.value)" headerValue="不限" headerKey="null"></s:select></s:if>
 					</div>
 					
 					<div class="serchcontentdiv" style="float: left; margin-left: 50px; width: 180px" >
 						<input type="text" class="searchdiv" style="width: 65px;text-align: center;font-family: 微软雅黑;" value="市" readonly="readonly">
-						 <select id="city" onchange="tofindArea(this.value)"></select>
+						 <select id="city" name="pro" onchange="tofindArea(this.value)"></select>
 					</div>
 					<div class="serchcontentdiv" style="float: left; margin-left: 50px; width: 180px" >
 						<input type="text" class="searchdiv11" style="width: 65px;text-align: center;font-family: 微软雅黑;" value="区" readonly="readonly">
@@ -82,12 +81,9 @@ function search() {
 					</div>
 					<div class="serchcontentdiv"style="float: left; margin-left: 50px; width: 160px"  >
 						<input type="text" class="searchdiv" style="width:70px;font-family: 微软雅黑;text-align: center;" value="所属驾校" readonly="readonly"/>
-								<select id="driver_school" class="searchdiv" style="width: 85px;">
-										<option value="0" selected="selected">不限</option>
-										<s:iterator value="driveSchoollist" var="driveSchool">
-											<option id="school${schoolid}" value="${schoolid}">${name}</option>
-										</s:iterator>
-								</select>
+								
+								<s:select list="driveSchoollist" cssClass="searchdiv" 
+								name="driver_school" listKey="schoolid" listValue="name" headerKey="0" headerValue="不限"></s:select>
 					</div>
 					<div class="serchcontentdiv"style="float: left; margin-left: 50px; width: 309px"  >
 						<input type="text" class="searchdiv" style="width: 71px;text-align: center;font-family: 微软雅黑;" value="注册时间" readonly="readonly">
@@ -167,31 +163,31 @@ function search() {
 					      for (var i = 1; i <= 5; i++) {
 					        setPageList();
 					      }
-					      a[a.length] = "...<a onclick=\"goPage('coachdaily.do?addtime="+addtime+"&',"+count+")\">" + count + "</a>";
+					      a[a.length] = "...<a onclick=\"goPage('coachreport.do?addtime="+addtime+"&',"+count+")\">" + count + "</a>";
 					    } else if (pageindex >= count - 3) {
-					      a[a.length] = "<a onclick=\"goPage('coachdaily.do?addtime="+addtime+"&',1)\">1</a>...";
+					      a[a.length] = "<a onclick=\"goPage('coachreport.do?addtime="+addtime+"&',1)\">1</a>...";
 					      for (var i = count - 4; i <= count; i++) {
 					        setPageList();
 					      };
 					    } else { //当前页在中间部分
-					      a[a.length] = "<a onclick=\"goPage('coachdaily.do?addtime="+addtime+"&',1)\">1</a>...";
+					      a[a.length] = "<a onclick=\"goPage('coachreport.do?addtime="+addtime+"&',1)\">1</a>...";
 					      for (var i = pageindex - 2; i <= pageindex+2; i++) {
 					        setPageList();
 					      }
-					      a[a.length] = "...<a onclick=\"goPage('coachdaily.do?addtime="+addtime+"&',"+count+")\">" + count + "</a>";
+					      a[a.length] = "...<a onclick=\"goPage('coachreport.do?addtime="+addtime+"&',"+count+")\">" + count + "</a>";
 					    }
 					  }
 					  if (pageindex == count) {
 						    a[a.length] = "<a onclick=\"\" class=\"hide_page_next unclicknext\"></a> 共"+count+"页  到第  "+
 						    "<input type=\"text\" class=\"jump_num\" id=\"topage\"/> 页"+
-						    "<a class=\"jump_btn\" onclick=\"gotoPage('coachdaily.do?addtime="+addtime+"&',"+$("#pageSize").val()+")\")\">"+
+						    "<a class=\"jump_btn\" onclick=\"gotoPage('coachreport.do?addtime="+addtime+"&',"+$("#pageSize").val()+")\")\">"+
 						    "<a id='page_msg'></a>";
 						  } else {
 						    a[a.length] = 
-						    	"<a onclick=\"nextPage("+$("#pageIndex").val()+",'coachdaily.do?addtime="+addtime+"&')\" "+
+						    	"<a onclick=\"nextPage("+$("#pageIndex").val()+",'coachreport.do?addtime="+addtime+"&')\" "+
 						    	"class=\"page_next\"></a> 共"+count+"页 到第 "+
 						    "<input type=\"text\" class=\"jump_num\" id=\"topage\"/> 页"+
-						    "<a class=\"jump_btn\" onclick=\"gotoPage('coachdaily.do?addtime="+addtime+"&',"+$("#pageSize").val()+")\">"+
+						    "<a class=\"jump_btn\" onclick=\"gotoPage('coachreport.do?addtime="+addtime+"&',"+$("#pageSize").val()+")\">"+
 						    "<a id='page_msg'></a>";
 						  }
 // 					  a[a.length]="<a href='#' onclick='addunit()' style='float: right;position: relative;right: 50px;padding: 0px; margin: 0px; top: 3px;'><img src='imgs/add_.png'></a>";
