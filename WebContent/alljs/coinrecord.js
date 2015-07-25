@@ -327,38 +327,19 @@ function selectall() {
 
 
 function addCoinRecord(){
-    var name = $("#receivername").val();
-    if(name == ''){
+var id = $("#receiverid").val();
+    if(id == ''){
         return;
     }
     $.ajax({
-        url: "searchSuser.do",
-        data:{cuserkeyword: name},
+        url: "addCoinRecord.do",
+        data:{ownerid: ownerid,receiverid:receiverid,coinnumzz:coinnum,ownertype:ownertype},
         type: "POST",
         success: function(msg){
+            alert(msg);
             var obj = eval("("+msg+")");
-            var suserlist = obj.suserlist;
-            $("#optionalStudent").empty();
-            $("#optionalStudent").show();
-            for(var i = 0; i < suserlist.length; i++){
-                var id = suserlist[i].studentid;
-                var name = suserlist[i].realname;
-                var phone = suserlist[i].phone;
-                if(name==null){
-                    name="未设置";
-                    $("#optionalStudent").append(
-                        '<div class="binding_detail_item" onclick="ssearchName('+id+', \''+name+'\')">'
-                        +name+":"+phone
-                        +'</div>'
-                    );
-                }else{
-                    $("#optionalStudent").append(
-                        '<div class="binding_detail_item" onclick="ssearchName('+id+', \''+name+'\')">'
-                        +name+":"+phone
-                        +'</div>'
-                    );
-                }
-            }
+            var code = obj.code;
+            alert(code);
         }
     });
 }

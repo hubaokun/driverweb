@@ -30,7 +30,11 @@
     <jsp:include page="left.jsp"/>
     <div id="content_form">
         <div id="content_form_blank" style="min-height: 800px">
+<<<<<<< HEAD
             <form id="addcoinrecordForm" action="addCoinRecord.do" enctype="multipart/form-data" method="post">
+=======
+            <form id="addcoinrecordForm" action="" enctype="multipart/form-data" method="post">
+>>>>>>> 72465e1243c3e23771e08a03f0077ace9066ec17
                 <div class="addscenic_center">
 
                     <div style=" height: 75px; border-bottom: 1px solid #eaeff2;">
@@ -70,7 +74,7 @@
 
                         </div>
                     </div>
-                    <input type="submit" value="提交"
+                    <input type="button"  value="提交" onclick="addCoinRecord()"
                            style="clear: both;height: 60px;width: 184px;background: #4cc2ff; color: #fff; font-size: 16px;text-align: center; line-height: 60px;margin-left: 248px;margin-top: 20px;cursor: pointer;">
         </form>
         </div>
