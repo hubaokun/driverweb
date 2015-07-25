@@ -52,12 +52,12 @@
 				<property name="maximumActiveTime" value="1000000" />
 				<!--自动侦察各个连接状态的时间间隔(毫秒),侦察到空闲的连接就马上回收,超时的销毁 -->
 				<property name="houseKeepingSleepTime" value="99000" />
-				<!--Test SQL(SELECT getDate()) -->
-				<property name="houseKeepingTestSql" value="select 1 from dual" />
+				<!--Test SQL(SELECT ge
+	</bean>tDate()) -->
+	<property name="houseKeepingTestSql" value="select 1 from dual" />
 				<property name="trace" value="false" />
-			</bean>
+</bean>
 		</property>
-	</bean>
 	<bean id="sessionFactory"
 		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
 		<property name="dataSource" ref="dataSource">
