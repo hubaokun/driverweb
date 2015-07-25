@@ -406,6 +406,9 @@ public class CuserServlet extends BaseServlet {
 			else
 				//返回1代表没有记录
 				resultMap.put("isInvited", 1);
+			 SystemSetInfo systemSetInfo=cuserService.getSystemSetInfo();
+			 resultMap.put("crewardamount", systemSetInfo.getCrewardamount());
+			 resultMap.put("orewardamount", systemSetInfo.getOrewardamount());
 			
 		} else if (result == 0) {
 			resultMap.put("code", 2);

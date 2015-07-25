@@ -209,33 +209,23 @@ public class RecommendServlet extends BaseServlet {
     		resultMap.put("hasmore",1);
     	List<T> list=(List<T>) qr.getDataList();
     	long total=qr.getTotal();
-    	List<Integer> coachs=new ArrayList<Integer>();
-    	List<T> invitlist=(List<T>) new ArrayList<CuserInfo>();
-    	List orderlist =new ArrayList();
     	if(list.size()!=0)
     	{
 	    	for(int i=0;i<list.size();i++)
 	    	{
 	    		RecommendInfo temp=(RecommendInfo) list.get(i);
-	    		coachs.add(Integer.valueOf(temp.getInvitedcoachid()));
 	    	}
-	    	invitlist=(List<T>) recommendService.getInvitedState(coachs);
-	    	orderlist=recommendService.getFirstOrderState(coachs);
-	    	BigDecimal reward=recommendService.getReward(coachid);	
+	    	BigDecimal totalreward=recommendService.getReward(coachid);	
 	    	rflag=1;
-	    	resultMap.put("reward",reward);
+	    	resultMap.put("totalreward",totalreward);
     	}  	
     	else
     	{
     		list.add((T) new Object());
-    		invitlist.add((T) new Object());
-    		orderlist.add(new Object());
     		resultMap.put("reward",0);
     	}  	
     	resultMap.put("rflag", rflag);
-        resultMap.put("RecommendList",list);
-		resultMap.put("invitlist",invitlist);
-		resultMap.put("orderlist",orderlist);		
+        resultMap.put("RecommendList",list);		
 		resultMap.put("total",total);
 		
 	
@@ -247,10 +237,20 @@ public class RecommendServlet extends BaseServlet {
     	CommonUtils.validateEmpty(inviteid);
     	CommonUtils.validateEmpty(invitedcoachid);
     	//String codetype=inviteid.substring(0, 0).toUpperCase();   邀请码类型，C=教练  S=学员
-    	inviteid=inviteid.substring(1, 8).toUpperCase();
-    	if((recommendService.addRecommendInfo(inviteid, invitedcoachid))==1)
-    	  resultMap.put("isRecommended",1);
+    	if(inviteid.length()!=8)
+    	{
+    		resultMap.put("inviteCode","0");
+    		resultMap.put("isRecommended",0);
+    	}
     	else
-    	  resultMap.put("isRecommended",0);
+    	{
+	    	inviteid=inviteid.substring(1, 8).toUpperCase();
+	    	if((recommendService.addRecommendInfo(inviteid, invitedcoachid))==1)
+	    	  resultMap.put("isRecommended",1);
+	    	else
+	    	  resultMap.put("isRecommended",0);
+	    	resultMap.put("inviteCode","1");
+    	}
+    	
     }
 }

@@ -560,6 +560,10 @@ public class SystemConfigAction extends BaseAction {
 				systemSetInfo.setCan_use_diff_coupon(Integer.parseInt(editvalue));
 			else if(colname.equals("advertisement_flag"))
 				systemSetInfo.setAdvertisement_flag(Integer.parseInt(editvalue));
+			else if(colname.equals("crewardamount_flag"))
+				systemSetInfo.setCrewardamount(new BigDecimal(editvalue));
+			else if(colname.equals("orewardamount_flag"))
+				systemSetInfo.setOrewardamount(new BigDecimal(editvalue));
 			cuserService.updateObject(systemSetInfo);
 			setResponseStr("success");
 		}
