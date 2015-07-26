@@ -141,13 +141,21 @@ public class CoinAction extends BaseAction{
 
 
 
-    @Action(value = "addCoinRecord")
-    public void addCoinRecord() {
+    @Action(value = "grantCoinRecord")
+    public void grantCoinRecord() {
 
         CoinRecordInfo coinRecordInfo = new CoinRecordInfo ();
         coinRecordInfo.setReceiverid(receiverid);
-        coinRecordInfo.setOwnerid(ownerid);
-        coinRecordInfo.setPayerid(ownerid);
+        if(ownertype==0)//平台发放
+        {
+            coinRecordInfo.setOwnerid(0);
+            coinRecordInfo.setPayerid(0);
+        }
+        else//教练发放
+        {
+            coinRecordInfo.setOwnerid(ownerid);
+            coinRecordInfo.setPayerid(ownerid);
+        }
         coinRecordInfo.setOwnertype(ownertype);
         coinRecordInfo.setCoinnum(coinnum);
         coinRecordInfo.setType(1);

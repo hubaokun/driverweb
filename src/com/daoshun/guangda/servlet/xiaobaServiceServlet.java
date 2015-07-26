@@ -12,23 +12,23 @@ import com.daoshun.common.Constant;
 
 
 /**
- * 
+ *
  * @author wjr
  *
  */
 @WebServlet("/xbservice")
 public class xiaobaServiceServlet extends BaseServlet{
-	    @Override
-	    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-	    {
-		 HashMap<String, Object> resultMap = new HashMap<String, Object>();
-		    	String action=getAction(request);
-		    	
-		    	if(action.equals(Constant.XIAOBASERVICE))
-		    	{
-		    		resultMap.put("simulatetraining", "https://jinshuju.net/f/VC2AGm");
-		    		resultMap.put("bookexam", "https://jinshuju.net/f/N3jDXw");
-		    	}
-	    	setResult(response, resultMap);
-	    }
+	@Override
+	public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		String action=getAction(request);
+
+		if(action.equals(Constant.XIAOBASERVICE))
+		{
+			resultMap.put("simulatetraining", "https://jinshuju.net/f/VC2AGm");
+			resultMap.put("bookexam", "https://jinshuju.net/f/N3jDXw");
+		}
+		setResult(response, resultMap);
+	}
 }

@@ -69,7 +69,7 @@
 
                         </div>
                     </div>
-                    <input type="button"  value="提交" onclick="addCoinRecord()"
+                    <input type="button"  value="提交" onclick="grantCoinRecord()"
                            style="clear: both;height: 60px;width: 184px;background: #4cc2ff; color: #fff; font-size: 16px;text-align: center; line-height: 60px;margin-left: 248px;margin-top: 20px;cursor: pointer;">
         </form>
         </div>

@@ -326,7 +326,7 @@ function selectall() {
 
 
 
-function addCoinRecord(){
+function grantCoinRecord(){
     var id = $("#receiverid").val();
     if(id == ''){
         return;
@@ -338,7 +338,7 @@ function addCoinRecord(){
     var ownertype = $("#ownertype").val();
 
     $.ajax({
-        url: "addCoinRecord.do",
+        url: "grantCoinRecord.do",
         data:{ownerid: ownerid,receiverid:receiverid,coinnum:coinnum,ownertype:ownertype},
         type: "POST",
         success: function(msg){

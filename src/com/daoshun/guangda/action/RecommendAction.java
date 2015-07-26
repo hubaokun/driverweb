@@ -28,10 +28,10 @@ public class RecommendAction extends BaseAction {
 
 	@Resource
 	private IRecommendService recommendService;
-	
-	
-	
-	
+
+
+
+
 	private Integer pageIndex = 1;
 	private Integer pageCount = 0;
 	private Integer inviteCount;
@@ -74,7 +74,7 @@ public class RecommendAction extends BaseAction {
 	}
 	@Action(value = "/offerReward", results = { @Result(name = SUCCESS, location = "/getRecommendDetail.do?coachid=${coachid}&inviteCount=${invitecount}&checkPastCount=${checkmancount}&earnCount=${totalreward}&orderCount=${ordercount}&index=${index}&change_id=1",type = "redirect")})
 	public String offerReward()
-	{                           
+	{
 		HttpSession session = ServletActionContext.getRequest().getSession();
 		recommendService.offeredReward(coachid.toString(), invitedcoachid.toString(),typestyle);
 		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
@@ -173,5 +173,5 @@ public class RecommendAction extends BaseAction {
 		this.typestyle = typestyle;
 	}
 
-	
+
 }

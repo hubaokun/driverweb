@@ -20,7 +20,7 @@ import javax.persistence.Table;
 public class SystemSetInfo implements Serializable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -6900085673250783762L;
 
@@ -79,12 +79,16 @@ public class SystemSetInfo implements Serializable {
 
 	@Column(name = "can_use_coupon_count", length = 2, columnDefinition = "TINYINT default 1")
 	private Integer can_use_coupon_count;
-	
+
 	@Column(name = "advertisement_flag", length = 2, columnDefinition = "TINYINT default 0")
 	private Integer advertisement_flag;
-	
+
 	@Column(name = "advertisement_url",  length = 1000)
 	private String advertisement_url;
+	@Column(name = "creward_amount", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")
+	private BigDecimal crewardamount;
+	@Column(name = "oreward_amount", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")
+	private BigDecimal orewardamount;
 
 	public int getDataid() {
 		return dataid;
@@ -229,8 +233,8 @@ public class SystemSetInfo implements Serializable {
 	public void setCan_use_coupon_count(Integer can_use_coupon_count) {
 		this.can_use_coupon_count = can_use_coupon_count;
 	}
-	
-	
+
+
 	public Integer getAdvertisement_flag() {
 		return advertisement_flag;
 	}
@@ -239,7 +243,7 @@ public class SystemSetInfo implements Serializable {
 		this.advertisement_flag = advertisement_flag;
 	}
 
-	
+
 	public String getAdvertisement_url() {
 		return advertisement_url;
 	}
@@ -248,4 +252,19 @@ public class SystemSetInfo implements Serializable {
 		this.advertisement_url = advertisement_url;
 	}
 
+	public BigDecimal getCrewardamount() {
+		return crewardamount;
+	}
+
+	public void setCrewardamount(BigDecimal crewardamount) {
+		this.crewardamount = crewardamount;
+	}
+
+	public BigDecimal getOrewardamount() {
+		return orewardamount;
+	}
+
+	public void setOrewardamount(BigDecimal orewardamount) {
+		this.orewardamount = orewardamount;
+	}
 }

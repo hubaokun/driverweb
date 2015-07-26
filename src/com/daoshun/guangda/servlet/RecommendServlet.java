@@ -30,7 +30,7 @@ import com.daoshun.guangda.service.IRecommendService;
 import com.daoshun.guangda.service.ISUserService;
 import com.daoshun.guangda.service.ISystemService;
 /**
- * 
+ *
  * @author wjr
  *
  */
@@ -38,11 +38,11 @@ import com.daoshun.guangda.service.ISystemService;
 public class RecommendServlet extends BaseServlet {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -1262197095863272112L;
-	
-	
+
+
 	private IRecommendService recommendService;
 	private ISUserService suserService;
 	private ICUserService cuserService;
@@ -55,37 +55,37 @@ public class RecommendServlet extends BaseServlet {
 		cuserService = (ICUserService) applicationContext.getBean("cuserService");
 		systemService = (ISystemService) applicationContext.getBean("systemService");
 	}
-    @Override
-    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
-    	HashMap<String, Object> resultMap = new HashMap<String, Object>();
-    	try
-    	{
-	    	String action=getAction(request);
-	    	if(action.equals(Constant.CGETRECOMMENDLIST) && action.equals(Constant.CHEAKINVITECODE))
-	    	{
-					if (!checkSession(request, action, resultMap)) {
-						setResult(response, resultMap);
-						return;
-					}
-	    	}
-	    	if(action.equals(Constant.CGETRECOMMENDLIST))
-	    	{
-	    		getRecommendList(request,resultMap);
-	    	}
-	    	else if(action.equals(Constant.CHEAKINVITECODE))
-	    	{
-	    		addRecommendInfo(request,resultMap);
-	    	}
-    	}
-    	catch(Exception ex)
-    	{
-    		ex.printStackTrace();
-    		setResultWhenException(response, ex.getMessage());
-    	}
-    	setResult(response, resultMap);
-    }
-    private boolean checkSession(HttpServletRequest request, String action, HashMap<String, Object> resultMap) throws NullParameterException {
+	@Override
+	public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		try
+		{
+			String action=getAction(request);
+			if(action.equals(Constant.CGETRECOMMENDLIST) && action.equals(Constant.CHEAKINVITECODE))
+			{
+				if (!checkSession(request, action, resultMap)) {
+					setResult(response, resultMap);
+					return;
+				}
+			}
+			if(action.equals(Constant.CGETRECOMMENDLIST))
+			{
+				getRecommendList(request,resultMap);
+			}
+			else if(action.equals(Constant.CHEAKINVITECODE))
+			{
+				addRecommendInfo(request,resultMap);
+			}
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+			setResultWhenException(response, ex.getMessage());
+		}
+		setResult(response, resultMap);
+	}
+	private boolean checkSession(HttpServletRequest request, String action, HashMap<String, Object> resultMap) throws NullParameterException {
 		String userid = "";// 1.教练 2.学员
 		String usertype = "";
 
@@ -194,63 +194,63 @@ public class RecommendServlet extends BaseServlet {
 			return false;
 		}
 	}
-    public <T> void getRecommendList(HttpServletRequest request,HashMap<String, Object> resultMap) throws NullParameterException
+	public <T> void getRecommendList(HttpServletRequest request,HashMap<String, Object> resultMap) throws NullParameterException
 	{
-    	String coachid=request.getParameter("coachid");
-    	String page=request.getParameter("pagenum");
-    	CommonUtils.validateEmpty(coachid);
-    	CommonUtils.validateEmpty(page);
-    	QueryResult<RecommendInfo> qr=recommendService.getRecommendList(coachid, CommonUtils.parseInt(page, 0));
-    	int hasmore=recommendService.ifhasmoreRecommendinfo(coachid, CommonUtils.parseInt(page, 0));
-    	int rflag=0;
-    	if(hasmore==0)
-    		resultMap.put("hasmore",0);
-    	else
-    		resultMap.put("hasmore",1);
-    	List<T> list=(List<T>) qr.getDataList();
-    	long total=qr.getTotal();
-    	List<Integer> coachs=new ArrayList<Integer>();
-    	List<T> invitlist=(List<T>) new ArrayList<CuserInfo>();
-    	List orderlist =new ArrayList();
-    	if(list.size()!=0)
-    	{
-	    	for(int i=0;i<list.size();i++)
-	    	{
-	    		RecommendInfo temp=(RecommendInfo) list.get(i);
-	    		coachs.add(Integer.valueOf(temp.getInvitedcoachid()));
-	    	}
-	    	invitlist=(List<T>) recommendService.getInvitedState(coachs);
-	    	orderlist=recommendService.getFirstOrderState(coachs);
-	    	BigDecimal reward=recommendService.getReward(coachid);	
-	    	rflag=1;
-	    	resultMap.put("reward",reward);
-    	}  	
-    	else
-    	{
-    		list.add((T) new Object());
-    		invitlist.add((T) new Object());
-    		orderlist.add(new Object());
-    		resultMap.put("reward",0);
-    	}  	
-    	resultMap.put("rflag", rflag);
-        resultMap.put("RecommendList",list);
-		resultMap.put("invitlist",invitlist);
-		resultMap.put("orderlist",orderlist);		
+		String coachid=request.getParameter("coachid");
+		String page=request.getParameter("pagenum");
+		CommonUtils.validateEmpty(coachid);
+		CommonUtils.validateEmpty(page);
+		QueryResult<RecommendInfo> qr=recommendService.getRecommendList(coachid, CommonUtils.parseInt(page, 0));
+		int hasmore=recommendService.ifhasmoreRecommendinfo(coachid, CommonUtils.parseInt(page, 0));
+		int rflag=0;
+		if(hasmore==0)
+			resultMap.put("hasmore",0);
+		else
+			resultMap.put("hasmore",1);
+		List<T> list=(List<T>) qr.getDataList();
+		long total=qr.getTotal();
+		if(list.size()!=0)
+		{
+			for(int i=0;i<list.size();i++)
+			{
+				RecommendInfo temp=(RecommendInfo) list.get(i);
+			}
+			BigDecimal totalreward=recommendService.getReward(coachid);
+			rflag=1;
+			resultMap.put("totalreward",totalreward);
+		}
+		else
+		{
+			list.add((T) new Object());
+			resultMap.put("reward",0);
+		}
+		resultMap.put("rflag", rflag);
+		resultMap.put("RecommendList",list);
 		resultMap.put("total",total);
-		
-	
+
+
 	}
-    public void addRecommendInfo(HttpServletRequest request,HashMap<String, Object> resultMap) throws NullParameterException
-    {
-    	String inviteid=request.getParameter("InviteCode");
-    	String invitedcoachid=request.getParameter("InvitedCoachid");
-    	CommonUtils.validateEmpty(inviteid);
-    	CommonUtils.validateEmpty(invitedcoachid);
-    	//String codetype=inviteid.substring(0, 0).toUpperCase();   邀请码类型，C=教练  S=学员
-    	inviteid=inviteid.substring(1, 8).toUpperCase();
-    	if((recommendService.addRecommendInfo(inviteid, invitedcoachid))==1)
-    	  resultMap.put("isRecommended",1);
-    	else
-    	  resultMap.put("isRecommended",0);
-    }
+	public void addRecommendInfo(HttpServletRequest request,HashMap<String, Object> resultMap) throws NullParameterException
+	{
+		String inviteid=request.getParameter("InviteCode");
+		String invitedcoachid=request.getParameter("InvitedCoachid");
+		CommonUtils.validateEmpty(inviteid);
+		CommonUtils.validateEmpty(invitedcoachid);
+		//String codetype=inviteid.substring(0, 0).toUpperCase();   邀请码类型，C=教练  S=学员
+		if(inviteid.length()!=8)
+		{
+			resultMap.put("inviteCode","0");
+			resultMap.put("isRecommended",0);
+		}
+		else
+		{
+			inviteid=inviteid.substring(1, 8).toUpperCase();
+			if((recommendService.addRecommendInfo(inviteid, invitedcoachid))==1)
+				resultMap.put("isRecommended",1);
+			else
+				resultMap.put("isRecommended",0);
+			resultMap.put("inviteCode","1");
+		}
+
+	}
 }

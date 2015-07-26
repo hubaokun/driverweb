@@ -48,9 +48,13 @@
 		<sub-item name="小巴券领取记录" authority="2" action="getCouponRecordList.do"/>
 		<sub-item name="小巴币" authority="2" action="getCoinRecordList.do"/>
 	</menu-item>
+	<menu-item name="邀请管理" iconURL="" authority="1">
+				<sub-item name="教练邀请教练" authority="1" action="getRecommendList.do"/>
+				<sub-item name="邀请日报" authority="2" action="getRecommendReport.do"/>
+			</menu-item>
 	<menu-item name="其他" iconURL="" authority="1">
 		<sub-item name="意见反馈" authority="3" action="getFeedback.do"/>
-		<sub-item name="版本管理" authority="4" action="getVersion.do"/>
+		<!--<sub-item name="版本管理" authority="4" action="getVersion.do"/>-->
 	</menu-item>
 	<menu-item name="日报" iconURL="" authority="1">
 		<sub-item name="系统日报" authority="3" action="systemdaily.do"/>

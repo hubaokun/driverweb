@@ -336,6 +336,13 @@ public class Constant {
 	public static final String CGETRECOMMENDLIST = "CGETRECOMMENDLIST";
 	//增加推荐人员
 	public static final String CHEAKINVITECODE ="CHEAKINVITECODE";
+
+
+
+		//小巴服务接口
+	public static final String XIAOBASERVICE ="XIAOBASERVICE";
+
+
 	/**************************** 默认属性设置 ********************************/
 	/************ 默认全天状态 ************/
 	public static final int STATE_DEF = 0;
