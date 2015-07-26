@@ -222,7 +222,7 @@ public class RecommendServlet extends BaseServlet {
 		else
 		{
 			list.add((T) new Object());
-			resultMap.put("reward",0);
+			resultMap.put("totalreward",0);
 		}
 		resultMap.put("rflag", rflag);
 		resultMap.put("RecommendList",list);
