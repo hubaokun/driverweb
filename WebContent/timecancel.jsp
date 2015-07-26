@@ -337,7 +337,30 @@ $(function(){
 </div>
 </td>
 </tr>
+<!-- 18认证奖励金额 -->
+<tr class="tr_td">
+<td style="width:500px;" class="border_right_bottom">认证奖励金额</td>
+<td  style="width:500px;" class="border_right_bottom">${systemSetInfo.crewardamount}元</td>
+<td  style="width:120px;" class="border_noright_bottom">
 
+<div class="table_edit_button">
+	<div class="table_button_edit_icon"></div>
+	<div class="table_button_text" onclick="showedittimecancel('${systemSetInfo.dataid}','${systemSetInfo.crewardamount}','crewardamount_flag')">设置</div>
+</div>
+</td>
+</tr>
+<!-- 19开单奖励金额 -->
+<tr class="tr_td">
+<td style="width:500px;" class="border_right_bottom">开单奖励金额</td>
+<td  style="width:500px;" class="border_right_bottom">${systemSetInfo.orewardamount}元</td>
+<td  style="width:120px;" class="border_noright_bottom">
+
+<div class="table_edit_button">
+	<div class="table_button_edit_icon"></div>
+	<div class="table_button_text" onclick="showedittimecancel('${systemSetInfo.dataid}','${systemSetInfo.orewardamount}','orewardamount_flag')">设置</div>
+</div>
+</td>
+</tr>
 <%-- 
 <!-- 18 订单是否可以使用不同的小巴券 -->
 <tr class="tr_td">
