@@ -234,4 +234,6 @@ public interface ISUserService {
 	public abstract void addCoachStudent(CoachStudentInfo coachstudent);
 
 	public abstract int getCouponSum(int studentid);
+
+	public abstract int changeCoach(String studentId,String oldCoachId,String newCoachId);
 }

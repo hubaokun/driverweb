@@ -730,4 +730,16 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	public void addCoachStudent(CoachStudentInfo coachstudent) {
 		dataDao.addObject(coachstudent);
 	}
+
+
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	@Override
+	public  int changeCoach(String studentId,String oldCoachId,String newCoachId)
+	{
+		StringBuffer suserhql = new StringBuffer();
+		suserhql.append(" update t_couponget_record set ownerid="+newCoachId +" where state=0 and ownerid="+ oldCoachId+" and userid ="+studentId);
+		dataDao.updateBySql(suserhql.toString());
+		return 1;
+	}
+
 }

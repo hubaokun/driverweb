@@ -40,7 +40,7 @@
                             <select name="ownertype" id="ownertype" onchange="showsearchowner()" class="searchdiv"
                                     style="  height: 50px;  border: 1px solid #cfd9df;margin-top:10px;">
                                 <option value="0">平台发放</option>
-                                <option value="1">驾校发放</option>
+                                <%--<option value="1">驾校发放</option>--%>
                                 <option value="2">教练发放</option>
                             </select>
                         </div>
@@ -52,6 +52,7 @@
                             <input value="" required="required" onkeyup="value=value.replace(/[^\d]/g,'')" name="coinnum" id="coinnum"
                                    style="width: 200px; height: 33px; padding-left:5px; border: 1px solid #eaeff2; margin-top: 20px;">
                         </div>
+
                     </div>
 
 

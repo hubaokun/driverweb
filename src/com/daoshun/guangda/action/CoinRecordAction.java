@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Created by tutu on 15/7/24.
  */
-public class CoinAction extends BaseAction{
+public class CoinRecordAction extends BaseAction{
 
 
     @Resource
@@ -133,8 +133,8 @@ public class CoinAction extends BaseAction{
 
 
 
-    @Action(value = "getCoinRecordList", results = { @Result(name = SUCCESS, location = "/addCoin.jsp") })
-    public String getCoinRecordList() {
+    @Action(value = "goGrantCoinRecord", results = { @Result(name = SUCCESS, location = "/coinGrant.jsp") })
+    public String goGrantCoinRecord() {
         return SUCCESS;
     }
 
@@ -173,6 +173,9 @@ public class CoinAction extends BaseAction{
         strToJson(map);
 
     }
+
+
+
 
 
 

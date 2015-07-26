@@ -4,12 +4,14 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.daoshun.guangda.pojo.*;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.WorkbookSettings;
@@ -24,11 +26,6 @@ import org.springframework.stereotype.Controller;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.QueryResult;
 import com.daoshun.guangda.NetData.StudentInfoForExcel;
-import com.daoshun.guangda.pojo.BalanceStudentInfo;
-import com.daoshun.guangda.pojo.CuserInfo;
-import com.daoshun.guangda.pojo.StudentApplyInfo;
-import com.daoshun.guangda.pojo.StudentCheckInfo;
-import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.service.IBaseService;
 import com.daoshun.guangda.service.ICUserService;
 import com.daoshun.guangda.service.ISUserService;
@@ -167,6 +164,11 @@ public class SuserAction extends BaseAction {
 	private String[] checkbox;
 	
 	private BigDecimal money;
+
+	private String oldcoachid;
+
+	private String newcoachid;
+
 	/**
 	 * 得到学员列表
 	 * 
@@ -221,11 +223,33 @@ public class SuserAction extends BaseAction {
 		return SUCCESS;
 	}
 
-	
+
+	/**
+	 * 前往学员更换教练页面
+	 * @return
+	 */
+	@Action(value = "goChangeCoach", results = { @Result(name = SUCCESS, location = "/changeCoach.jsp") })
+	public String goChangeCoach() {
+		return SUCCESS;
+	}
+
+
+	/**
+	 * 学员更换教练
+	 * @return
+	 */
+	@Action(value = "changeCoach")
+	public void changeCoach() {
+		suserService.changeCoach(studentid.toString(),oldcoachid.toString(),newcoachid.toString());
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("code", 1);
+		strToJson(map);
+
+	}
 
 
 
-/**
+	/**
  * 通过手机号码得到一个学员的详情
  * enroll
  * @return
@@ -1480,5 +1504,21 @@ public String getStudentDetailByPhone() {
 
 	public void setEditphone(String editphone) {
 		this.editphone = editphone;
+	}
+
+	public String getOldcoachid() {
+		return oldcoachid;
+	}
+
+	public void setOldcoachid(String oldcoachid) {
+		this.oldcoachid = oldcoachid;
+	}
+
+	public String getNewcoachid() {
+		return newcoachid;
+	}
+
+	public void setNewcoachid(String newcoachid) {
+		this.newcoachid = newcoachid;
 	}
 }
