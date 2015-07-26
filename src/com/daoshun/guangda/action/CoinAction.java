@@ -4,8 +4,10 @@ import com.daoshun.common.CommonUtils;
 import com.daoshun.guangda.pojo.CoinRecordInfo;
 import com.daoshun.guangda.pojo.CouponInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
+import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.service.ICoinRecordService;
 import com.daoshun.guangda.service.ICouponService;
+import com.daoshun.guangda.service.ISUserService;
 import com.daoshun.guangda.serviceImpl.CoinRecordServiceImpl;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Result;
@@ -28,6 +30,9 @@ public class CoinAction extends BaseAction{
 
     @Resource
     private ICoinRecordService coinRecordService;
+
+    @Resource
+    private ISUserService suserService;
 
     private Integer coinrecordid;
 
@@ -130,20 +135,6 @@ public class CoinAction extends BaseAction{
 
     @Action(value = "getCoinRecordList", results = { @Result(name = SUCCESS, location = "/addCoin.jsp") })
     public String getCoinRecordList() {
-//        CoinRecordInfo coinrecord = new CoinRecordInfo();
-//
-//
-//        String newtime = CommonUtils.getTimeFormat(addtime, "yyyy-MM-dd");
-//        Date newend = CommonUtils.getDateFormat(newtime, "yyyy-MM-dd");
-//        Calendar sectime = Calendar.getInstance();
-//        sectime.setTime(newend);
-//        sectime.set(Calendar.HOUR_OF_DAY, 23);
-//        sectime.set(Calendar.MINUTE, 59);
-//        sectime.set(Calendar.SECOND, 59);
-//        Date newendtime = sectime.getTime();
-//        coupon.setEnd_time(newendtime);
-//        coupon.setAddtime(new Date());
-//        couponService.addCoupon(coupon);
         return SUCCESS;
     }
 
@@ -163,6 +154,12 @@ public class CoinAction extends BaseAction{
         coinRecordInfo.setAddtime(new Date());
 
         coinRecordService.addCoinRecord(coinRecordInfo);
+
+        SuserInfo suser =suserService.getUserById(receiverid.toString());
+        int num = suser.getCoinnum()+coinnum;
+        suser.setCoinnum(num);
+        suserService.updateUserInfo(suser);
+
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("code", 1);
         strToJson(map);

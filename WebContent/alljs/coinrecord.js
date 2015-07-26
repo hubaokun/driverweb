@@ -331,16 +331,29 @@ function addCoinRecord(){
     if(id == ''){
         return;
     }
+
+    var receiverid = $("#receiverid").val();
+    var ownerid = $("#ownerid").val();
+    var coinnum = $("#coinnum").val();
+    var ownertype = $("#ownertype").val();
+
     $.ajax({
         url: "addCoinRecord.do",
-        data:{ownerid: ownerid,receiverid:receiverid,coinnumzz:coinnum,ownertype:ownertype},
+        data:{ownerid: ownerid,receiverid:receiverid,coinnum:coinnum,ownertype:ownertype},
         type: "POST",
         success: function(msg){
-            alert(msg);
+            //alert(msg);
             var obj = eval("("+msg+")");
             var code = obj.code;
-            alert(code);
-
+            if(code==1)
+                alert("添加成功!");
+            else
+                alert("添加失败!");
+            $("#receivername").val('');
+        },
+        error:function(msg)
+        {
+            alert("添加失败,请重试!");
         }
     });
 }

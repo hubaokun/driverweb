@@ -111,6 +111,10 @@ public class SuserInfo implements Serializable {
 	@Column(name = "money", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")
 	private BigDecimal money;
 
+	//小巴币个数
+	@Column(name = "coinnum", length = 10, columnDefinition = "INT default 0")
+	private Integer coinnum;
+
 	// 注册时间
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "addtime", nullable = false)
@@ -611,5 +615,14 @@ public class SuserInfo implements Serializable {
 
 	public void setInvitecode(String invitecode) {
 		this.invitecode = invitecode;
+	}
+
+
+	public Integer getCoinnum() {
+		return coinnum;
+	}
+
+	public void setCoinnum(Integer coinnum) {
+		this.coinnum = coinnum;
 	}
 }

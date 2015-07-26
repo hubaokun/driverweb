@@ -49,8 +49,7 @@
                         <div style="float:left; width: 143px; height: 100%; line-height: 75px; border-right: 1px solid #eaeff2;text-align: right;">
                             发放数量<span style="color:#f83a22; margin-right:16px; margin-left: 8px;">*</span></div>
                         <div style="height: 100%; line-height: 75px; float:left; margin-left: 20px;">
-                            <input value="" required="required" onkeyup="value=value.replace(/[^\d]/g,'')"
-                                   name="coinnum" id="coinnum"
+                            <input value="" required="required" onkeyup="value=value.replace(/[^\d]/g,'')" name="coinnum" id="coinnum"
                                    style="width: 200px; height: 33px; padding-left:5px; border: 1px solid #eaeff2; margin-top: 20px;">
                         </div>
                     </div>
