@@ -291,7 +291,6 @@ public class SbookServlet extends BaseServlet {
 		String condition9 = getRequestParamter(request, "condition9");// 价格上限
 		String condition10 = getRequestParamter(request, "condition10");// 车型 0.表示不限
 		String condition11 = getRequestParamter(request, "condition11");// 准教车型
-
 		HashMap<String, Object> result = sbookService.getCoachList(condition1, condition2, condition3, condition4, condition5, condition6, condition8, condition9, condition10, condition11, pagenum);
 		resultMap.putAll(result);
 	}
