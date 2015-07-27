@@ -277,9 +277,15 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 		String[] params1 = { "invitedcoachid" };
 		RecommendInfo tempRecommendInfo = (RecommendInfo) dataDao.getFirstObjectViaParam(cuserhql1.toString(), params1, CommonUtils.parseInt(coachid, 0));
 		if(type==2)
+		{
 			tempRecommendInfo.setIschecked(1);
+			tempRecommendInfo.setCflag(1);
+		}
 		else
+		{
 			tempRecommendInfo.setIschecked(0);
+			tempRecommendInfo.setCflag(0);
+		}
 		dataDao.updateObject(tempRecommendInfo);
 	}
 

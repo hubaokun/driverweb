@@ -26,10 +26,10 @@ $(function(){
  function showconfirm(coachid,invitedcoachid,types,pageIndex)
  {  
 	 if(confirm("确认发放奖励吗？"))
-	 {		
+	 {	
 		 document.getElementById("typestyle").value=types;
 		 document.getElementById("invitedcoachid").value=invitedcoachid;
-		 document.getElementById("pageIndex").value=pageIndex;
+		// document.getElementById("pageIndex").value=pageIndex;
 		 $("#offeredForm").attr("action","offerReward.do").submit(); 
 
 	 }
@@ -118,7 +118,7 @@ $(function(){
 								<div class="table_lookdetail">
 									
 									<s:if test="%{cflag==1}">
-									<a href="javascript:showconfirm(${coachid},${invitedcoachid},0,${pageIndex});" style="text-decoration: none; cursor: pointer;">发放奖励</a>
+									<a href="javascript:showconfirm(${coachid},${invitedcoachid},0);" style="text-decoration: none; cursor: pointer;">发放奖励</a>
 									</s:if>
 									<s:elseif test="%{cflag==2}">
 									 <font color="red">奖励已发放</font>
@@ -129,7 +129,7 @@ $(function(){
 							<td style="width: 100px;" class="border_noright_bottom">
 								<div class="table_lookdetail">
 									<s:if test="%{oflag==1}">
-									   <a href="javascript:showconfirm(${coachid},${invitedcoachid},1,${pageIndex});" style="text-decoration: none; cursor: pointer;">发放奖励</a>
+									   <a href="javascript:showconfirm(${coachid},${invitedcoachid},1);" style="text-decoration: none; cursor: pointer;">发放奖励</a>
 									</s:if>
 									<s:elseif test="%{oflag==2}">
 									        <font color="red">奖励已发放</font>

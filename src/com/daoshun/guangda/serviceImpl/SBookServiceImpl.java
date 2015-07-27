@@ -1029,6 +1029,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					String[] params = { "invitedcoachid" };
 					RecommendInfo tempRecommendInfo = (RecommendInfo) dataDao.getFirstObjectViaParam(cuserhql.toString(), params, CommonUtils.parseInt(coachid, 0));
 					tempRecommendInfo.setIsorder(1);
+					tempRecommendInfo.setOflag(1);
 					dataDao.updateObject(tempRecommendInfo);
 					// 增加学员与教练的关系
 					String coachStudentHql = "from CoachStudentInfo where coachid = :coachid and studentid = :studentid";
