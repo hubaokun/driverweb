@@ -115,9 +115,8 @@ function search() {
 							<td style="width: 100px;" class="border_right_bottom">${overnum }</td>
 							<td style="width: 100px;" class="border_right_bottom">${cancelnum }</td>
 							<td style="width: 100px;" class="border_right_bottom">${waitnum }</td>
-							<td style="width: 100px;" class="border_right_bottom">${drive_school}</td>
-							<td style="width: 100px;" class="border_right_bottom">${drive_schoolid}</td>
-							
+							<td style="width: 100px;" class="border_right_bottom">${drive_school}&nbsp;</td>
+							<td style="width: 100px;" class="border_right_bottom">${drive_schoolid}&nbsp;</td>
 						</tr>
 					</s:iterator>
 										<tr>
@@ -143,13 +142,13 @@ function search() {
 						  //alert(pageindex);
 					    a[a.length] = "<a onclick=\"\" class=\"hide_page_prev unclickprev on\"></a>";
 					  } else {
-					    a[a.length] = "<a onclick=\"previousPage("+pageindex+",'coachdaily.do?addtime="+addtime+"&')\" class=\"page_prev\"></a>";
+					    a[a.length] = "<a onclick=\"previousPage("+pageindex+",'coachreport.do?addtime="+addtime+"&')\" class=\"page_prev\"></a>";
 					  }
 					  function setPageList() {
 					    if (pageindex == i) {
-					      a[a.length] = "<a onclick=\"goPage('coachdaily.do?addtime="+addtime+"&',"+i+")\" class=\"on\">" + i + "</a>";
+					      a[a.length] = "<a onclick=\"goPage('coachreport.do?addtime="+addtime+"&',"+i+")\" class=\"on\">" + i + "</a>";
 					    } else {
-					      a[a.length] = "<a onclick=\"goPage('coachdaily.do?addtime="+addtime+"&',"+i+")\">" + i + "</a>";
+					      a[a.length] = "<a onclick=\"goPage('coachreport.do?addtime="+addtime+"&',"+i+")\">" + i + "</a>";
 					    }
 					  }
 					  //总页数小于10
