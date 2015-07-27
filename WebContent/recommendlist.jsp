@@ -70,8 +70,8 @@ $(function(){
 </style>
 <title>邀请列表</title>
 </head>
-<input type="hidden" id="index" value="1" />
-<input type="hidden" id="change_id" value="2"/>
+<input type="hidden" id="index" value="9" />
+<input type="hidden" id="change_id" value="0"/>
 <body onload="getTop()" style="min-width: 1500px">
 	<div id="content">
 		<jsp:include page="left.jsp" />
@@ -119,7 +119,7 @@ $(function(){
 							<td style="width: 80px;" class="border_right_bottom">${totalreward}</td>
 							<td style="width: 100px;" class="border_noright_bottom">
 								<div class="table_lookdetail">
-									<a href="getRecommendDetail.do?coachid=${coachid}&inviteCount=${invitecount}&checkPastCount=${checkmancount}&earnCount=${totalreward}&orderCount=${ordercount}&index=1&change_id=1"
+									<a href="getRecommendDetail.do?coachid=${coachid}&inviteCount=${invitecount}&checkPastCount=${checkmancount}&earnCount=${totalreward}&orderCount=${ordercount}&index=9&change_id=0"
 										style="text-decoration: none; cursor: pointer;">查看详情</a>
 								</div>
 							</td>
