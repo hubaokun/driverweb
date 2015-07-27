@@ -365,9 +365,7 @@ public class CuserInfo implements Serializable {
 	@Transient
 	private String locationname;//省市区全称
 	
-	
-	
-	
+
 	public String getLocationname() {
 		return locationname;
 	}
