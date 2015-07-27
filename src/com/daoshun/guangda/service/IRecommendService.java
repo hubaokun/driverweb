@@ -11,6 +11,7 @@ import com.daoshun.guangda.pojo.RecommendInfo;
 /**
  *  @author wjr 
  */
+import com.daoshun.guangda.pojo.SuserInfo;
 public interface IRecommendService{
 	/**
 	 * 获取推荐人员详细内容
@@ -55,7 +56,7 @@ public interface IRecommendService{
 	 * @param page 当前页
 	 * @param pagesize  一页数量
 	 */
-	public abstract List<RecommendInfo> getRecommendListForServer(int page,int pagesize);
+	public abstract QueryResult<RecommendInfo> getRecommendListForServer(int page,int pagesize);
 	
 	/**
 	 * 获取某个教练的总推荐人数
@@ -73,7 +74,7 @@ public interface IRecommendService{
     * @param page 当前页
     * @param pagesize 页数
     */
-	public abstract List<RecommendInfo> getInvitedDetails(String coachid,int page,int pagesize);
+	public abstract QueryResult<RecommendInfo> getInvitedDetailsForServer(String coachid,int page,int pagesize);
 	/**
 	 * 根据被推荐教练ID获取奖励金额
 	 * @param invitedcoachid 被推荐教练ID
@@ -119,4 +120,8 @@ public interface IRecommendService{
 	public abstract List<RecommendInfo> getRecommondInviteInfoByCoachid(String coachid,String realname);
 	/** 根据教练id找到教练被分享信息 **/
 	public abstract RecommendInfo getRecommondInvitedInfoByCoachid(String coachid,String realname);
+	/**
+	 * 根据搜索条件搜索教练推荐信息
+	 */
+	public abstract QueryResult<RecommendInfo> getRecommonedInfoByKeyWord(String realname,String telphone,Integer pageIndex,Integer pagesize);
 } 
