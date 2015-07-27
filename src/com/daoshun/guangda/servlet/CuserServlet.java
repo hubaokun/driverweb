@@ -24,6 +24,7 @@ import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.DriveSchoolInfo;
 import com.daoshun.guangda.pojo.ModelsInfo;
 import com.daoshun.guangda.pojo.ProvinceInfo;
+import com.daoshun.guangda.pojo.RecommendInfo;
 import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.pojo.SystemSetInfo;
 import com.daoshun.guangda.pojo.TeachcarInfo;
@@ -38,21 +39,21 @@ import com.daoshun.guangda.service.ISystemService;
  */
 /**
  * @author liukn
- *
+ * 
  */
 @WebServlet("/cuser")
 public class CuserServlet extends BaseServlet {
 
 	/**
-	 *
+	 * 
 	 */
 	private static final long serialVersionUID = 6998440419757851253L;
 
 	private ICUserService cuserService;
 	private ISystemService systemService;
 	private ISUserService suserService;
-	private IRecommendService recommendService;
-	private ILocationService locationService;
+    private IRecommendService recommendService;
+    private ILocationService locationService;
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
@@ -266,7 +267,7 @@ public class CuserServlet extends BaseServlet {
 
 	/**
 	 * 注册
-	 *
+	 * 
 	 * @param request
 	 * @throws ErrException
 	 */
@@ -296,7 +297,7 @@ public class CuserServlet extends BaseServlet {
 
 	/**
 	 * 登录
-	 *
+	 * 
 	 * @param request
 	 * @throws ErrException
 	 */
@@ -311,7 +312,7 @@ public class CuserServlet extends BaseServlet {
 		if (result == 1) {// 可以登录
 			String token = request.getSession().getId().toLowerCase();
 			CuserInfo cuser = cuserService.getCuserByPhone(loginid);
-			if (cuser == null) {
+			if (cuser == null) {				
 				cuser = cuserService.registerUser(loginid, token);// 注册
 				cuser.setPassword(password);
 				resultMap.put("isregister", 1);
@@ -406,10 +407,10 @@ public class CuserServlet extends BaseServlet {
 			else
 				//返回1代表没有记录
 				resultMap.put("isInvited", 1);
-			SystemSetInfo systemSetInfo=cuserService.getSystemSetInfo();
-			resultMap.put("crewardamount", systemSetInfo.getCrewardamount());
-			resultMap.put("orewardamount", systemSetInfo.getOrewardamount());
-
+			 SystemSetInfo systemSetInfo=cuserService.getSystemSetInfo();
+			 resultMap.put("crewardamount", systemSetInfo.getCrewardamount());
+			 resultMap.put("orewardamount", systemSetInfo.getOrewardamount());
+			
 		} else if (result == 0) {
 			resultMap.put("code", 2);
 			resultMap.put("message", "验证码错误,请重新输入");
@@ -421,7 +422,7 @@ public class CuserServlet extends BaseServlet {
 
 	/**
 	 * 完善账号信息
-	 *
+	 * 
 	 * @param request
 	 * @throws ErrException
 	 */
@@ -463,11 +464,26 @@ public class CuserServlet extends BaseServlet {
 
 			cuserService.updateCuser(cuserFir);
 		}
+		List<RecommendInfo> tempList=recommendService.getRecommondInviteInfoByCoachid(coachid, realname);
+		RecommendInfo temp=recommendService.getRecommondInvitedInfoByCoachid(coachid, realname);
+		if(tempList.size()!=0)
+		{
+			for(RecommendInfo r:tempList)
+			{
+				r.setCoachname(realname);
+				recommendService.updateRecommendInfo(r);
+			}
+		}
+		if(temp!=null)
+		{
+			temp.setInvitedpeoplename(realname);
+			recommendService.updateRecommendInfo(temp);
+		}
 	}
 
 	/**
 	 * 修改头像
-	 *
+	 * 
 	 * @param request
 	 * @throws ErrException
 	 */
@@ -487,7 +503,7 @@ public class CuserServlet extends BaseServlet {
 
 	/**
 	 * 得到所有准教车型
-	 *
+	 * 
 	 * @param request
 	 * @throws ErrException
 	 */
@@ -498,7 +514,7 @@ public class CuserServlet extends BaseServlet {
 
 	/**
 	 * 完善教练个人资料信息
-	 *
+	 * 
 	 * @param request
 	 * @throws ErrException
 	 */
@@ -553,7 +569,7 @@ public class CuserServlet extends BaseServlet {
 
 	/**
 	 * 找回原密码
-	 *
+	 * 
 	 * @param request
 	 * @throws ErrException
 	 */
@@ -576,7 +592,7 @@ public class CuserServlet extends BaseServlet {
 
 	/**
 	 * 修改密码验证原密码
-	 *
+	 * 
 	 * @param request
 	 * @throws ErrException
 	 */
@@ -597,7 +613,7 @@ public class CuserServlet extends BaseServlet {
 
 	/**
 	 * 修改密码
-	 *
+	 * 
 	 * @param request
 	 * @throws ErrException
 	 */
@@ -618,7 +634,7 @@ public class CuserServlet extends BaseServlet {
 
 	/**
 	 * 完善教练资格资料
-	 *
+	 * 
 	 * @param request
 	 * @throws ErrException
 	 */

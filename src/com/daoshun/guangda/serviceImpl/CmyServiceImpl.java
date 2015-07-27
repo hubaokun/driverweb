@@ -489,7 +489,7 @@ public class CmyServiceImpl extends BaseServiceImpl implements ICmyService {
 			StudentInfo studentInfo = new StudentInfo();
 			studentInfo.setAvatar(getFilePathById(suserInfo.getAvatar()));
 			studentInfo.setCoachstate(suserInfo.getCoachstate());
-			studentInfo.setPhone(suserInfo.getSecondphone());
+			studentInfo.setPhone(suserInfo.getPhone());
 			studentInfo.setRealname(suserInfo.getRealname());
 			studentInfo.setStudent_cardnum(suserInfo.getStudent_cardnum());
 			studentInfo.setStudentid(suserInfo.getStudentid());

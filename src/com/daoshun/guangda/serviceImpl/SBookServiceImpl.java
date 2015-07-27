@@ -632,9 +632,6 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				JSONObject array = json.getJSONObject(i);
 				JSONArray times = array.getJSONArray("time");// 订单的时间点数组
 				
-
-				
-				
 				String date1 = array.getString("date");// 订单的日期
 				String start = "", end = "";// 订单的开始时间和结束时间
 				String recordid = array.getString("recordid");

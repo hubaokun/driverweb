@@ -6,8 +6,7 @@
 	<menu-item name="用户管理" iconURL="" authority="1">
 		<sub-item name="所有教练" authority="3" action="getCoachlist.do"/>
 		<sub-item name="待审核教练" authority="3" action="getCoachTobeChecked.do"/>
-		<sub-item name="所有学员" authority="4" action="getStudentlist.do"/>
-		<sub-item name="更换教练" authority="4" action="goChangeCoach.do"/>
+		<sub-item name="所有学员" authority="4" action="getStudentlist.do"/>		
 		<sub-item name="教练学员关系" authority="5" action="getCoachStudent.do"/>
 		<sub-item name="教练余额管理" authority="6" action="getCoachBalance.do"/>
 		<sub-item name="学员余额管理" authority="7" action="getStudentBalance.do"/>
@@ -15,7 +14,6 @@
 	<menu-item name="充值提现管理" iconURL="" authority="1">
 		<sub-item name="教练提现申请" authority="3" action="getCoachApplyBySearch.do"/>
 		<sub-item name="教练历史提现" authority="4" action="getCoachBalanceBySearch.do"/>
-		<sub-item name="教练历史充值" authority="4" action="getCoachRechargeList.do"/>
 		<sub-item name="学员提现申请" authority="5" action="getStudentApplyList.do"/>
 		<sub-item name="学员历史提现" authority="6" action="getStudentApplyRecordList.do"/>
 		<sub-item name="学员历史充值" authority="7" action="getStudentRechargeList.do"/>
@@ -47,16 +45,14 @@
 	<menu-item name="小巴券管理" iconURL="" authority="1">
 		<sub-item name="小巴券列表" authority="1" action="getCouponList.do"/>
 		<sub-item name="小巴券领取记录" authority="2" action="getCouponRecordList.do"/>
-		<!--<sub-item name="小巴币查询" authority="2" action="#"/>-->
-		<sub-item name="发放小巴币" authority="2" action="goGrantCoinRecord.do"/>
 	</menu-item>
 	<menu-item name="邀请管理" iconURL="" authority="1">
-				<sub-item name="教练邀请教练" authority="1" action="getRecommendList.do"/>
-				<sub-item name="邀请日报" authority="2" action="getRecommendReport.do"/>
-			</menu-item>
+		<sub-item name="教练邀请教练" authority="1" action="getRecommendList.do"/>
+		<!--  <sub-item name="邀请日报" authority="2" action="getRecommendReport.do"/>-->
+	</menu-item>
 	<menu-item name="其他" iconURL="" authority="1">
 		<sub-item name="意见反馈" authority="3" action="getFeedback.do"/>
-		<!--<sub-item name="版本管理" authority="4" action="getVersion.do"/>-->
+		<sub-item name="版本管理" authority="4" action="getVersion.do"/>
 	</menu-item>
 	<menu-item name="日报" iconURL="" authority="1">
 		<sub-item name="系统日报" authority="3" action="systemdaily.do"/>

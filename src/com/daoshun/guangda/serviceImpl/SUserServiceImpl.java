@@ -737,8 +737,9 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	public  int changeCoach(String studentId,String oldCoachId,String newCoachId)
 	{
 		StringBuffer suserhql = new StringBuffer();
-		suserhql.append(" update t_couponget_record set ownerid="+newCoachId +" where state=0 and ownerid="+ oldCoachId+" and userid ="+studentId);
-		dataDao.updateBySql(suserhql.toString());
+		suserhql.append(" update CouponRecord set ownerid=:newCoachId where state=0 and ownertype=2 and ownerid=:oldCoachId  and userid =:studentId");
+		String[] params = { "newCoachId", "oldCoachId","studentId" };
+ 		dataDao.updateObjectsViaParam(suserhql.toString(), params, Integer.parseInt(newCoachId), Integer.parseInt(oldCoachId), Integer.parseInt(studentId));
 		return 1;
 	}
 
