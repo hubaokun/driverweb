@@ -48,6 +48,7 @@ public class CuserInfo implements Serializable {
 	@Column(name = "invitecode", length = 20, unique = true)
 	private String invitecode;
 
+
 	// 教练联系电话(默认是为phone)
 	@Column(name = "telphone", length = 20)
 	private String telphone;
@@ -183,6 +184,10 @@ public class CuserInfo implements Serializable {
 	// 冻结金额
 	@Column(name = "fmoney", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")
 	private BigDecimal fmoney;
+
+	//小巴币个数
+	@Column(name = "coinnum", length = 10, columnDefinition = "INT default 0")
+	private Integer coinnum;
 
 	// 教练教车单价
 	@Column(name = "price", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")
@@ -1039,5 +1044,15 @@ public class CuserInfo implements Serializable {
 
 	public void setInvitecode(String invitecode) {
 		this.invitecode = invitecode;
+	}
+
+
+
+	public Integer getCoinnum() {
+		return coinnum;
+	}
+
+	public void setCoinnum(Integer coinnum) {
+		this.coinnum = coinnum;
 	}
 }

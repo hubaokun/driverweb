@@ -317,8 +317,22 @@ public class DataDao {
 		System.out.println(sql);
 		int code =query.executeUpdate();
 	}
-	
-	
+
+
+
+
+	public void updateObjectsViaParam(String hql, String[] params, Object... p) {
+		Query query = getSession().createQuery(hql);
+		if (p != null) {
+			for (int i = 0; i < p.length; i++) {
+				query.setParameter(params[i], p[i]);
+			}
+		}
+		query.executeUpdate();
+	}
+
+
+
 	public List<Object> callSyetem(String addtime){
 		Session session=this.getSession();
 		SQLQuery query= session.createSQLQuery("{Call systemDaliy(?)}");
