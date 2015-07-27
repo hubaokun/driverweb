@@ -45,7 +45,7 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 			System.out.println(temp.getInvitedcoachid());
 		}*/
 		String querys="select count(*)"+querystring.toString();
-		long total=(long) dataDao.getFirstObjectViaParam(querys, params, CommonUtils.parseInt(coachid, 0));
+		long total=(Long) dataDao.getFirstObjectViaParam(querys, params, CommonUtils.parseInt(coachid, 0));
 		if(listr!=null)
 		    return new QueryResult<RecommendInfo>(listr,total);
 		else
@@ -177,7 +177,7 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 	public int getRecommendCount(String coachid) {
 	    String queryString="select count(*) from RecommendInfo where coachid=:coachid";
 	    String[] params={"coachid"};
-	    long total=(long) dataDao.getFirstObjectViaParam(queryString, params, CommonUtils.parseInt(coachid, 0));	    
+	    long total=(Long) dataDao.getFirstObjectViaParam(queryString, params, CommonUtils.parseInt(coachid, 0));
 		return (int)total;
 	}
 	@Override
@@ -247,7 +247,7 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 	public int getInviteCount(Integer coachid) {
 		String queryString="select count(*) from RecommendInfo where coachid =:coachid";
 		String[] params={"coachid"};
-		long total=(long)dataDao.getFirstObjectViaParam(queryString, params, coachid);
+		long total=(Long)dataDao.getFirstObjectViaParam(queryString, params, coachid);
 		return (int)total;
 	}
 	@SuppressWarnings("unchecked")
