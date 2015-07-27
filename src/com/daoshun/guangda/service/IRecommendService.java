@@ -9,7 +9,7 @@ import com.daoshun.common.QueryResult;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.RecommendInfo;
 /**
- *  @author wjr
+ *  @author wjr 
  */
 public interface IRecommendService{
 	/**
@@ -17,7 +17,7 @@ public interface IRecommendService{
 	 * @param coachid 教练ID
 	 * @param page   当前页
 	 */
-	public abstract QueryResult<RecommendInfo> getRecommendList(String coachid,int page);
+	public abstract QueryResult<RecommendInfo> getRecommendList(String coachid,int page);	
 	/**
 	 * 获取推荐获得的总金额
 	 *  @param coachid 教练ID
@@ -56,7 +56,7 @@ public interface IRecommendService{
 	 * @param pagesize  一页数量
 	 */
 	public abstract List<RecommendInfo> getRecommendListForServer(int page,int pagesize);
-
+	
 	/**
 	 * 获取某个教练的总推荐人数
 	 * @param coachid 教练ID
@@ -67,12 +67,12 @@ public interface IRecommendService{
 	 * @param coachs 要查询的教练List
 	 */
 	public abstract Map<String,List> getInviteCheckAndEarnMoneyCount(List<Integer> coachs);
-	/**
-	 * 获取教练邀请详细信息
-	 * @param coachid 推荐教练ID
-	 * @param page 当前页
-	 * @param pagesize 页数
-	 */
+   /**
+    * 获取教练邀请详细信息
+    * @param coachid 推荐教练ID
+    * @param page 当前页
+    * @param pagesize 页数
+    */
 	public abstract List<RecommendInfo> getInvitedDetails(String coachid,int page,int pagesize);
 	/**
 	 * 根据被推荐教练ID获取奖励金额
@@ -111,4 +111,12 @@ public interface IRecommendService{
 	 * @param type 奖励类型 0=认证奖励 1=开单奖励
 	 */
 	public abstract void offeredReward(String coachid,String invitedcoachid,int type);
+	/**
+	 * 更行推荐表信息
+	 */
+	public abstract void updateRecommendInfo(RecommendInfo temp);
+	/** 根据教练id找到教练分享信息 **/
+	public abstract List<RecommendInfo> getRecommondInviteInfoByCoachid(String coachid,String realname);
+	/** 根据教练id找到教练被分享信息 **/
+	public abstract RecommendInfo getRecommondInvitedInfoByCoachid(String coachid,String realname);
 } 
