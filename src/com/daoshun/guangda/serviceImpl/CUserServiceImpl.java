@@ -30,6 +30,7 @@ import com.daoshun.guangda.pojo.ModelsInfo;
 import com.daoshun.guangda.pojo.OrderInfo;
 import com.daoshun.guangda.pojo.PermissionSetInfo;
 import com.daoshun.guangda.pojo.RechargeRecordInfo;
+import com.daoshun.guangda.pojo.RecommendInfo;
 import com.daoshun.guangda.pojo.SchoolBalance;
 import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.pojo.SystemSetInfo;
@@ -271,6 +272,15 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 		CuserInfo cuserInfo = (CuserInfo) dataDao.getFirstObjectViaParam(cuserhql.toString(), params, CommonUtils.parseInt(coachid, 0));
 		cuserInfo.setState(type);
 		dataDao.updateObject(cuserInfo);
+		StringBuffer cuserhql1 = new StringBuffer();
+		cuserhql1.append("from RecommendInfo where invitedcoachid = :invitedcoachid");
+		String[] params1 = { "invitedcoachid" };
+		RecommendInfo tempRecommendInfo = (RecommendInfo) dataDao.getFirstObjectViaParam(cuserhql1.toString(), params1, CommonUtils.parseInt(coachid, 0));
+		if(type==2)
+			tempRecommendInfo.setIschecked(1);
+		else
+			tempRecommendInfo.setIschecked(0);
+		dataDao.updateObject(tempRecommendInfo);
 	}
 
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
