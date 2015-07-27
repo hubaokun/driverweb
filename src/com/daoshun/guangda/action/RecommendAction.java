@@ -52,8 +52,9 @@ public class RecommendAction extends BaseAction {
 	{
 		HttpSession session = ServletActionContext.getRequest().getSession();
 		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
-		mp=(List<RecommendInfo>)recommendService.getRecommendListForServer(pageIndex,pagesize);
-		total=mp.size();
+		QueryResult<RecommendInfo> qresult=recommendService.getRecommendListForServer(pageIndex,pagesize);
+		total=qresult.getTotal();
+	    mp=qresult.getDataList();
 		pageCount = ((int) total + pagesize - 1) / pagesize;
 		if (pageIndex > 1) {
 			if (mp == null || mp.size() == 0) {
@@ -68,17 +69,34 @@ public class RecommendAction extends BaseAction {
 	{
 		HttpSession session = ServletActionContext.getRequest().getSession();
 		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
-		mp=(List<RecommendInfo>)recommendService.getInvitedDetails(coachid.toString(),index,pagesize);
-		total=mp.size();
+		QueryResult<RecommendInfo> qresult=recommendService.getInvitedDetailsForServer(coachid.toString(),pageIndex,pagesize);
+		total=qresult.getTotal();
+	    mp=qresult.getDataList();
+		pageCount = ((int) total + pagesize - 1) / pagesize;
+		if (pageIndex > 1) {
+			if (mp == null || mp.size() == 0) {
+				pageIndex--;
+				getRecommendDetail();
+			}
+		}
 		return SUCCESS;
 	}
-	@Action(value = "/offerReward", results = { @Result(name = SUCCESS, location = "/getRecommendDetail.do?coachid=${coachid}&inviteCount=${invitecount}&checkPastCount=${checkmancount}&earnCount=${totalreward}&orderCount=${ordercount}&index=${index}&change_id=1",type = "redirect")})
+	@Action(value = "/offerReward", results = { @Result(name = SUCCESS, location = "/getRecommendDetail.do?coachid=${coachid}&inviteCount=${invitecount}&checkPastCount=${checkmancount}&earnCount=${totalreward}&orderCount=${ordercount}&index=${index}&change_id=1&pageIndex=${pageIndex}",type = "redirect")})
 	public String offerReward()
 	{
 		HttpSession session = ServletActionContext.getRequest().getSession();
 		recommendService.offeredReward(coachid.toString(), invitedcoachid.toString(),typestyle);
 		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
-		mp=(List<RecommendInfo>)recommendService.getInvitedDetails(coachid.toString(),index,pagesize);
+		QueryResult<RecommendInfo> qresult=recommendService.getInvitedDetailsForServer(coachid.toString(),pageIndex,pagesize);
+		mp=qresult.getDataList();
+		total=qresult.getTotal();
+		pageCount = ((int) total + pagesize - 1) / pagesize;
+		if (pageIndex > 1) {
+			if (mp == null || mp.size() == 0) {
+				pageIndex--;
+				getRecommendDetail();
+			}
+		}
 		return SUCCESS;
 	}
 	public Integer getPageIndex() {

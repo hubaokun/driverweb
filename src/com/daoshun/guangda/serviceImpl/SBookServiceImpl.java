@@ -36,6 +36,7 @@ import com.daoshun.guangda.pojo.OrderInfo;
 import com.daoshun.guangda.pojo.OrderNotiRecord;
 import com.daoshun.guangda.pojo.OrderNotiSetInfo;
 import com.daoshun.guangda.pojo.OrderPrice;
+import com.daoshun.guangda.pojo.RecommendInfo;
 import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.pojo.SystemSetInfo;
 import com.daoshun.guangda.pojo.UserPushInfo;
@@ -1036,7 +1037,14 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 							ApplePushUtil.sendpush(userpush.getDevicetoken(), "{\"aps\":{\"alert\":\"" + "您有新的订单哦" + "\",\"sound\":\"default\"},\"userid\":" + coachid + "}", 1, 1);
 						}
 					}
-
+					//修改分享表中的开单标识位
+					StringBuffer cuserhql = new StringBuffer();
+					cuserhql.append("from RecommendInfo where invitedcoachid = :invitedcoachid");
+					String[] params = { "invitedcoachid" };
+					RecommendInfo tempRecommendInfo = (RecommendInfo) dataDao.getFirstObjectViaParam(cuserhql.toString(), params, CommonUtils.parseInt(coachid, 0));
+					tempRecommendInfo.setIsorder(1);
+					tempRecommendInfo.setOflag(1);
+					dataDao.updateObject(tempRecommendInfo);
 					// 增加学员与教练的关系
 					String coachStudentHql = "from CoachStudentInfo where coachid = :coachid and studentid = :studentid";
 					String[] params8 = { "coachid", "studentid" };
