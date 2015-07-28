@@ -407,14 +407,14 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		}
 		return coachlist;
 	}
+
 	@Override
 	public HashMap<String, Object> getCoachList(String condition1, String condition2, String condition3, String condition4, String condition5, String condition6, String condition8, String condition9,
 			String condition10, String condition11, String pagenum) {
 		long starttime=System.currentTimeMillis();
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		StringBuffer cuserhql = new StringBuffer();
-		//drive_schoolid字段存放教练的总订单数，因为sumnum不是表字段，hibernate无法自动封装，所有使用drive_schoolid代替
-		cuserhql.append("select getTeachAddress(u.coachid) as address,getCoachOrderCount(u.coachid) as drive_schoolid,u.*  from t_user_coach u where state = 2 and id_cardexptime > curdate() and coach_cardexptime > curdate() and drive_cardexptime > curdate() and car_cardexptime > curdate() and (select count(*) from t_teach_address a where u.coachid = a.coachid and iscurrent = 1) > 0");
+		cuserhql.append("select getTeachAddress(u.coachid) as address,u.*  from t_user_coach u where state = 2 and id_cardexptime > curdate() and coach_cardexptime > curdate() and drive_cardexptime > curdate() and car_cardexptime > curdate() and (select count(*) from t_teach_address a where u.coachid = a.coachid and iscurrent = 1) > 0");
 		// 真实姓名和教练所属驾校
 		if (!CommonUtils.isEmptyString(condition1)) {
 			cuserhql.append(" and (realname like '%" + condition1 + "%' or drive_school like '%" + condition1 + "%' or drive_schoolid in (select schoolid from t_drive_school_info where name like  '%"
@@ -516,23 +516,26 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		// cuserhql.append(" and length(carmodel) > 0");
 		// }
 
-		cuserhql.append(" and money >= gmoney and isquit = 0  order by score desc,drive_schoolid desc ");
-		//System.out.println(cuserhql.toString());
+		cuserhql.append(" and money >= gmoney and isquit = 0 order by score desc");
 		//String[] params = { "now", "now", "now", "now" };
 		//String now = CommonUtils.getTimeFormat(new Date(), "yyyy-MM-dd");
 		//System.out.println(cuserhql.toString());
-		List<CuserInfo> coachlist = (List<CuserInfo>) dataDao.SqlPageQuery(cuserhql.toString(), Constant.USERLIST_SIZE, CommonUtils.parseInt(pagenum, 0) + 1,CuserInfo.class, null);
-		if (coachlist != null && coachlist.size() > 0) {
-			for (CuserInfo coach : coachlist) {
+		List<CuserInfo> coachlist = (List<CuserInfo>) dataDao.SqlPageQuery(cuserhql.toString(), Constant.USERLIST_SIZE+1, CommonUtils.parseInt(pagenum, 0) + 1,CuserInfo.class, null);
+		List<CuserInfo> coachlist2=new ArrayList<>();
+		if(coachlist!=null && coachlist.size()==(Constant.USERLIST_SIZE+1)){
+			coachlist.remove(Constant.USERLIST_SIZE);
+			coachlist2.addAll(coachlist);
+			result.put("hasmore", 1);
+		} else {
+			coachlist2.addAll(coachlist);
+			result.put("hasmore", 0);
+		} 
+		if (coachlist2 != null && coachlist2.size() > 0) {
+			for (CuserInfo coach : coachlist2) {
 				//StringBuffer cuserhql1 = new StringBuffer();
 				//cuserhql1.append("from CaddAddressInfo where coachid =:coachid and iscurrent = 1");
 				//String[] params1 = { "coachid" };
 				//CaddAddressInfo address = (CaddAddressInfo) dataDao.getFirstObjectViaParam(cuserhql1.toString(), params1, coach.getCoachid());
-				if(coach.getDrive_schoolid()!=null){
-					//设置教练的总订单数
-					coach.setSumnum(new Long(coach.getDrive_schoolid()));
-				}
-				coach.setPassword("");
 				if(coach.getAddress()!=null){
 					String str[]=coach.getAddress().split("#");
 					coach.setAddress("");
@@ -545,35 +548,18 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				}
 			}
 		}
-		result.put("coachlist", coachlist);
-		if(coachlist != null && coachlist.size()==Constant.USERLIST_SIZE){
-			result.put("hasmore", 1);
-		}else if(coachlist != null && coachlist.size()<Constant.USERLIST_SIZE){
-			result.put("hasmore", 0);
-		}else{
-			result.put("hasmore", 0);
-		}
-		
 		/*int n=cuserhql.toString().indexOf("from");
 		String countSql=cuserhql.toString().substring(n, cuserhql.toString().length());
-		countSql="select count(*)  "+countSql;
+		countSql="select count(*)  "+countSql;*/
 		//System.out.println(countSql);
 		//Long o=(Long) dataDao.getFirstObjectViaParam(countSql, p, coachid);
-		List<Long> coachlistnext = (List<Long>) dataDao.SqlPageQuery(countSql, Constant.USERLIST_SIZE, CommonUtils.parseInt(pagenum, 0) + 2,null);
-		if(coachlistnext!=null && coachlistnext.size()>0){
-			Long isNext=coachlistnext.get(0);
-			if(isNext>0){
-				result.put("hasmore", 1);
-			}else{
-				result.put("hasmore", 0);
-			}
-		}else{
-			result.put("hasmore", 0);
-		}*/
+		//List<Long> coachlistnext = (List<Long>) dataDao.SqlPageQuery(countSql, Constant.USERLIST_SIZE, CommonUtils.parseInt(pagenum, 0) + 2,null);
+		result.put("coachlist", coachlist2);
 		long endtime=System.currentTimeMillis();
 		System.out.println("总耗时："+(endtime-starttime));
 		return result;
 	}
+
 	class OrderModel {
 		OrderInfo mOrderInfo;
 		List<OrderPrice> OrderPriceList;
@@ -595,16 +581,6 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		String hql3 = "from CaddAddressInfo where coachid =:coachid and iscurrent = 1";
 		String params3[] = { "coachid" };
 
-		SuserInfo student = dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
-		if(student.getMoney().doubleValue()<0.0)// 余额不够
-		{
-			//版本需要更新
-			result.put("failtimes", -1);
-			result.put("successorderid", -1);
-			result.put("coachauth", -1);
-			result.put("code", -1);
-			return result;
-		}
 		// 首先查询出订单相关的几个时间配置
 		String hqlset = "from SystemSetInfo where 1 = 1";
 		SystemSetInfo setInfo = (SystemSetInfo) dataDao.getFirstObjectViaParam(hqlset, null);
@@ -635,7 +611,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			}
 		}
 
-
+		SuserInfo student = dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
 		// 订单的提醒设置
 		String hqlnoti = "from OrderNotiSetInfo where 1 = 1";
 		List<OrderNotiSetInfo> orderNotiList = (List<OrderNotiSetInfo>) dataDao.getObjectsViaParam(hqlnoti, null);
@@ -669,6 +645,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					result.put("code", -1);
 					return result;
 				}
+//				array.has("delmoney");
+//				array.get("delmoney")
 				int delmoney = array.getInt("delmoney");
 				BigDecimal total = new BigDecimal(0);// 订单的总价
 				String longitude = null;
@@ -1045,14 +1023,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 							ApplePushUtil.sendpush(userpush.getDevicetoken(), "{\"aps\":{\"alert\":\"" + "您有新的订单哦" + "\",\"sound\":\"default\"},\"userid\":" + coachid + "}", 1, 1);
 						}
 					}
-					//修改分享表中的开单标识位
-					StringBuffer cuserhql = new StringBuffer();
-					cuserhql.append("from RecommendInfo where invitedcoachid = :invitedcoachid");
-					String[] params = { "invitedcoachid" };
-					RecommendInfo tempRecommendInfo = (RecommendInfo) dataDao.getFirstObjectViaParam(cuserhql.toString(), params, CommonUtils.parseInt(coachid, 0));
-					tempRecommendInfo.setIsorder(1);
-					tempRecommendInfo.setOflag(1);
-					dataDao.updateObject(tempRecommendInfo);
+					
 					// 增加学员与教练的关系
 					String coachStudentHql = "from CoachStudentInfo where coachid = :coachid and studentid = :studentid";
 					String[] params8 = { "coachid", "studentid" };

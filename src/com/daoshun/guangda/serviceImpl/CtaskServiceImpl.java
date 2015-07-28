@@ -25,6 +25,7 @@ import com.daoshun.guangda.pojo.NoticesInfo;
 import com.daoshun.guangda.pojo.NoticesUserInfo;
 import com.daoshun.guangda.pojo.OrderInfo;
 import com.daoshun.guangda.pojo.OrderRecordInfo;
+import com.daoshun.guangda.pojo.RecommendInfo;
 import com.daoshun.guangda.pojo.StudentCheckInfo;
 import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.pojo.SystemSetInfo;
@@ -537,6 +538,14 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 					order.setOver_time(new Date());
 					order.setStudentstate(3);
 					dataDao.updateObject(order);
+					//修改分享表中的开单标识位
+					StringBuffer cuserhql = new StringBuffer();
+					cuserhql.append("from RecommendInfo where invitedcoachid = :invitedcoachid");
+					String[] params1 = { "invitedcoachid" };
+					RecommendInfo tempRecommendInfo = (RecommendInfo) dataDao.getFirstObjectViaParam(cuserhql.toString(), params1, order.getCoachid());
+					tempRecommendInfo.setIsorder(1);
+					tempRecommendInfo.setOflag(1);
+					dataDao.updateObject(tempRecommendInfo);
 					CuserInfo cuser = dataDao.getObjectById(CuserInfo.class, order.getCoachid());
 					if (cuser != null) {
 						// 查询订单中使用的优惠券的情况
