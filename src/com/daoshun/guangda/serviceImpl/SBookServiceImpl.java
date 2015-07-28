@@ -426,30 +426,21 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		}
 
 		if (!CommonUtils.isEmptyString(condition3)) {
-
-			int subjectid = CommonUtils.parseInt(condition6, 0);
-
-			Date start = null;
-			if(condition3.length() == 10){
-				start = CommonUtils.getDateFormat(condition3, "yyyy-MM-dd");
-			}else if(condition3.length() == 19){
-				start = CommonUtils.getDateFormat(condition3, "yyyy-MM-dd HH:mm:ss");
-			}
-
+			//int subjectid = CommonUtils.parseInt(condition6, 0);
+			Date start = CommonUtils.getDateFormat(condition3, "yyyy-MM-dd");
 			if (start != null) {
-				Calendar startCal = Calendar.getInstance();
-				startCal.setTime(start);
-
-				int starthour = startCal.get(Calendar.HOUR_OF_DAY);
-				int datecount = 1;
-				cuserhql.append(" and getcoachstate(u.coachid," + datecount + ",'" + CommonUtils.getTimeFormat(start, "yyyy-MM-dd") + "'," + starthour + "," + 23 + "," + subjectid + ") = 1");
-
+				cuserhql.append(" and (select count(*) from t_coach_schedule where  t_coach_schedule.coachid =  ");
+				cuserhql.append(" u.coachid and t_coach_schedule.date = '");
+				cuserhql.append(start).append("'");
+				cuserhql.append(" and t_coach_schedule.hour = 0 and t_coach_schedule.state = 1)>0");
 			}
 		} else {
-			int subjectid = CommonUtils.parseInt(condition6, 0);
-			Calendar c = Calendar.getInstance();
-
-			cuserhql.append(" and getcoachstate(u.coachid," + 30 + ",'" + CommonUtils.getTimeFormat(c.getTime(), "yyyy-MM-dd") + "'," + 5 + "," + 23 + "," + subjectid + ") = 1");
+			/*int subjectid = CommonUtils.parseInt(condition6, 0);
+			Calendar c = Calendar.getInstance();*/
+			cuserhql.append(" and (select count(*) from t_coach_schedule where  t_coach_schedule.coachid =  ");
+			cuserhql.append(" u.coachid and t_coach_schedule.date  <=date_sub(now(),interval -30 day) and ");
+			cuserhql.append(" t_coach_schedule.hour = 0 and t_coach_schedule.state = 1)>0");
+			//cuserhql.append(" and getcoachstate(u.coachid," + 30 + ",'" + CommonUtils.getTimeFormat(c.getTime(), "yyyy-MM-dd") + "'," + 5 + "," + 23 + "," + subjectid + ") = 1");
 		}
 
 		if (!CommonUtils.isEmptyString(condition11)) {
@@ -516,15 +507,13 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		// cuserhql.append(" and length(carmodel) > 0");
 		// }
 
-		cuserhql.append(" and money >= gmoney and isquit = 0  order by score desc,drive_schoolid desc ");
-		System.out.println(cuserhql.toString());
+		cuserhql.append(" and money >= gmoney and isquit = 0 and state=2 order by score desc,drive_schoolid desc ");
+		//System.out.println(cuserhql.toString());
 		//String[] params = { "now", "now", "now", "now" };
 		//String now = CommonUtils.getTimeFormat(new Date(), "yyyy-MM-dd");
 		//System.out.println(cuserhql.toString());
 		//String t="select getTeachAddress(u.coachid) as address,getCoachOrderCount(u.coachid) as drive_schoolid,u.*  from t_user_coach u";
-		String s="select getTeachAddress(u.coachid) as address,getCoachOrderCount(u.coachid) as drive_schoolid,u.*  from t_user_coach u where state = 2 and id_cardexptime > curdate() and coach_cardexptime > curdate() and drive_cardexptime > curdate() and car_cardexptime > curdate() and (select count(*) from t_teach_address a where u.coachid = a.coachid and iscurrent = 1) > 0 and getcoachstate(u.coachid,30,'2015-07-27',5,23,0) = 1  and money >= gmoney and isquit = 0  order by score desc,drive_schoolid desc ";
-		
-		List<CuserInfo> coachlist = (List<CuserInfo>) dataDao.SqlPageQuery(s, Constant.USERLIST_SIZE, CommonUtils.parseInt(pagenum, 0) + 1,CuserInfo.class, null);
+		List<CuserInfo> coachlist = (List<CuserInfo>) dataDao.SqlPageQuery(cuserhql.toString(), Constant.USERLIST_SIZE, CommonUtils.parseInt(pagenum, 0) + 1,CuserInfo.class, null);
 		if (coachlist != null && coachlist.size() > 0) {
 			for (CuserInfo coach : coachlist) {
 				//StringBuffer cuserhql1 = new StringBuffer();
@@ -549,15 +538,15 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			}
 		}
 		result.put("coachlist", coachlist);
-		if(coachlist != null && coachlist.size()==Constant.USERLIST_SIZE){
+		/*if(coachlist != null && coachlist.size()==Constant.USERLIST_SIZE){
 			result.put("hasmore", 1);
 		}else if(coachlist != null && coachlist.size()<Constant.USERLIST_SIZE){
 			result.put("hasmore", 0);
 		}else{
 			result.put("hasmore", 0);
-		}
+		}*/
 		
-		/*int n=cuserhql.toString().indexOf("from");
+		int n=cuserhql.toString().indexOf("from");
 		String countSql=cuserhql.toString().substring(n, cuserhql.toString().length());
 		countSql="select count(*)  "+countSql;
 		//System.out.println(countSql);
@@ -572,7 +561,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			}
 		}else{
 			result.put("hasmore", 0);
-		}*/
+		}
 		long endtime=System.currentTimeMillis();
 		System.out.println("总耗时："+(endtime-starttime));
 		return result;
