@@ -245,6 +245,7 @@ public class DataDao {
 		return query.list();
 	}
 	
+	
 	/**
 	 * 按条件查询单条数据
 	 * 

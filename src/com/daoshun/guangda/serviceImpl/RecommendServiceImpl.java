@@ -244,8 +244,10 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 		OrderInfo oi=(OrderInfo)dataDao.getFirstObjectViaParam(querystring, params, CommonUtils.parseInt(coachid, 0));
 		if(oi==null)		
 		   return 0;
+		else if(oi.getOver_time()==null)
+			 return 0;
 		else
-			return 1;
+			 return 1;
 	}
 	@Override
 	public int getInviteCount(Integer coachid) {
@@ -315,18 +317,19 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 			{
 				Balanceplus=systemSetInfo.getCrewardamount();
 		    	tempRecommendInfo.setCflag(2);
+		    	tempBalanceCoachInfo.setType(4);
 			}
 			else
 			{
 				Balanceplus=systemSetInfo.getOrewardamount();
 				tempRecommendInfo.setOflag(2);
+				tempBalanceCoachInfo.setType(5);
 			}
 			Balance=Balance.add(Balanceplus);
 			tempCuserInfo.setMoney(Balance);
 			tempRecommendInfo.setReward(tempRecommendInfo.getReward().add(Balanceplus));
 			tempBalanceCoachInfo.setUserid(CommonUtils.parseInt(coachid, 0));
-			tempBalanceCoachInfo.setAmount(Balanceplus);
-			tempBalanceCoachInfo.setType(4);
+			tempBalanceCoachInfo.setAmount(Balanceplus);		
 			tempBalanceCoachInfo.setAddtime(new Date());
 			tempBalanceCoachInfo.setAmount_out1(new BigDecimal(0));
 			tempBalanceCoachInfo.setAmount_out2(new BigDecimal(0));	

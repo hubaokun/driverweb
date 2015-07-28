@@ -1921,6 +1921,36 @@ public class CuserAction extends BaseAction {
 			}
 			return SUCCESS;
 		}
+	
+	//教练课时统计报表
+	@Action(value = "/coachClassReport", results = { @Result(name = SUCCESS, location = "/coachreport.jsp") })
+	public String coachClassReport() {
+					provincelist=locationService.getProvinces();
+					HttpSession session = ServletActionContext.getRequest().getSession();
+					int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
+					QueryResult<CuserInfo> result =cuserService.getCuserReport(provinceid,cityid,areaid,driver_school,startdate,enddate,pageIndex,pagesize);
+					total = result.getTotal();
+					cuserlist = result.getDataList();
+					driveSchoollist = cuserService.getDriveSchoolInfo();
+					for (CuserInfo cu : cuserlist) {
+						Long sumnum=cuserService.getOrderSum(cu.getCoachid());
+						Long overnum=cuserService.getOrderOver(cu.getCoachid());
+						Long cancelnum=cuserService.getOrderCancel(cu.getCoachid());
+						Long waitnum=sumnum-overnum-cancelnum;
+						cu.setSumnum(sumnum);
+						cu.setOvernum(overnum);
+						cu.setCancelnum(cancelnum);
+						cu.setWaitnum(waitnum);
+					}
+					pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
+					if (pageIndex > 1) {
+						if (cuserlist == null || cuserlist.size() == 0) {
+							pageIndex--;
+							coachreport();
+						}
+					}
+					return SUCCESS;
+	}	
 	public int getChecknum() {
 		return checknum;
 	}
