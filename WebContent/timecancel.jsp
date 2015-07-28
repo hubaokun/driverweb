@@ -345,11 +345,11 @@
 
 						<div class="table_edit_button">
 							<div class="table_button_edit_icon"></div>
-							<div class="table_button_text" onclick="showedittimecancel('${systemSetInfo.dataid}','${systemSetInfo.crewardamount}','crewardamount_flag')">设置</div>
+							<div class="table_button_text" onclick="showeditreward('${systemSetInfo.dataid}','${systemSetInfo.crewardamount}','crewardamount_flag')">设置</div>
 						</div>
 					</td>
 				</tr>
-				<!--1推荐开单奖励金额 -->
+				<!--19推荐开单奖励金额 -->
 				<tr class="tr_td">
 					<td style="width:500px;" class="border_right_bottom">开单奖励金额</td>
 					<td  style="width:500px;" class="border_right_bottom">${systemSetInfo.orewardamount}元</td>
@@ -357,7 +357,7 @@
 
 						<div class="table_edit_button">
 							<div class="table_button_edit_icon"></div>
-							<div class="table_button_text" onclick="showedittimecancel('${systemSetInfo.dataid}','${systemSetInfo.orewardamount}','orewardamount_flag')">设置</div>
+							<div class="table_button_text" onclick="showeditreward('${systemSetInfo.dataid}','${systemSetInfo.orewardamount}','orewardamount_flag')">设置</div>
 						</div>
 					</td>
 				</tr>
@@ -426,7 +426,26 @@
 		</div>
 	</div>
 </div>
-
+<!-- 设置分享奖励弹出框-->
+<div id="maskreward" class="mask"></div>
+<div id="mask_rew" style="position: fixed; width: 100%; height: 300px;z-index: 300; top:20%;left:15%">
+	<div id="mask_lastrew" class="mask_last">
+		<div style="position: fixed; width: 300px; height: 200px;background: #4cc2ff;margin-left: 100px;margin-top:50px;">
+			<input id="systemxiaobaid_rew" type="hidden" >
+			<input id="xiaobaname_rew" type="hidden" >
+			<input id="xiaobaoldvalue_rew" type="text" style="width: 218px;height: 40px;margin: auto;margin-left: 41px;margin-top: 13px;font-size: 18px;text-align: center;" disabled="disabled"/>
+			<select id="diffxiaoba_rew" style="width: 75px; height:25px; margin: auto;margin-left: 110px;margin-top: 20px;">
+				<option value="10">10元</option>
+				<option value="20">20元</option>
+				<option value="30">30元</option>
+				<option value="40">40元</option>
+				<option value="50">50元</option>
+			</select>
+			<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 50px;margin-top: 25px;font-size: 18px" value="确定" onclick="edit_reward_num()">
+			<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 180x;margin-top: -40px;font-size: 18px" value="取消" onclick="hide_reward_num()">
+		</div>
+	</div>
+</div>
 
 <!-- 是否可以启用广告弹出框-->
 <div id="maskadv" class="mask"></div>
