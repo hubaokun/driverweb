@@ -67,6 +67,7 @@ public class RecommendAction extends BaseAction {
 	@Action(value = "/getRecommendDetail", results = { @Result(name = SUCCESS, location = "/recommenddetail.jsp") })
 	public String getRecommendDetail()
 	{
+		System.out.println("pageIndex="+pageIndex);
 		HttpSession session = ServletActionContext.getRequest().getSession();
 		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
 		QueryResult<RecommendInfo> qresult=recommendService.getInvitedDetailsForServer(coachid.toString(),pageIndex,pagesize);
@@ -81,7 +82,7 @@ public class RecommendAction extends BaseAction {
 		}
 		return SUCCESS;
 	}
-	@Action(value = "/offerReward", results = { @Result(name = SUCCESS, location = "/getRecommendDetail.do?coachid=${coachid}&inviteCount=${invitecount}&checkPastCount=${checkmancount}&earnCount=${totalreward}&orderCount=${ordercount}&index=${index}&change_id=1&pageIndex=${pageIndex}",type = "redirect")})
+	@Action(value = "/offerReward", results = { @Result(name = SUCCESS, location = "/getRecommendDetail.do?coachid=${coachid}&inviteCount=${invitecount}&checkPastCount=${checkmancount}&earnCount=${totalreward}&orderCount=${ordercount}&index=9&change_id=0&pageIndex=${pageIndex}",type = "redirect")})
 	public String offerReward()
 	{
 		HttpSession session = ServletActionContext.getRequest().getSession();
@@ -90,6 +91,7 @@ public class RecommendAction extends BaseAction {
 		QueryResult<RecommendInfo> qresult=recommendService.getInvitedDetailsForServer(coachid.toString(),pageIndex,pagesize);
 		mp=qresult.getDataList();
 		total=qresult.getTotal();
+		System.out.println("pageIndex2222222="+pageIndex);
 		pageCount = ((int) total + pagesize - 1) / pagesize;
 		if (pageIndex > 1) {
 			if (mp == null || mp.size() == 0) {

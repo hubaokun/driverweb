@@ -23,8 +23,8 @@ $(function(){
 	var j = $("#change_id").val();
 	$("#change_"+j+index).addClass('left_list_mask');
 });
- function showconfirm(coachid,invitedcoachid,types,pageIndex)
- {  
+ function showconfirm(coachid,invitedcoachid,types)
+ { 
 	 if(confirm("确认发放奖励吗？"))
 	 {	
 		 document.getElementById("typestyle").value=types;
@@ -80,8 +80,8 @@ $(function(){
 </style>
 <title>学员列表</title>
 </head>
-<input type="hidden" id="index" value="1" />
-<input type="hidden" id="change_id" value="2"/>
+<input type="hidden" id="index" value="9" />
+<input type="hidden" id="change_id" value="0"/>
 <body onload="getTop()" style="min-width: 1500px">
 	<div id="content">
 		<jsp:include page="left.jsp" />
@@ -154,8 +154,8 @@ $(function(){
 							<div style="float: right; margin-top: 34px; margin-right: 20px;">
 								<s:if test="%{pageCount>1}">
 
-									<input type="hidden" value="${pageCount}" id="pageSize" />
-									<input type="hidden" value="${pageIndex}" id="pageIndex" />	
+									<input type="hidden" value="${pageCount}" id="pageSize"  />
+									<input type="hidden" value="${pageIndex}" id="pageIndex" name="pageIndex"/>	
 									<div id="untreatedpage"></div>
 									<script type="text/javascript">
 					//container 容器，count 总页数 pageindex 当前页数
