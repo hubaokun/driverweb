@@ -517,11 +517,14 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		// }
 
 		cuserhql.append(" and money >= gmoney and isquit = 0  order by score desc,drive_schoolid desc ");
-		//System.out.println(cuserhql.toString());
+		System.out.println(cuserhql.toString());
 		//String[] params = { "now", "now", "now", "now" };
 		//String now = CommonUtils.getTimeFormat(new Date(), "yyyy-MM-dd");
 		//System.out.println(cuserhql.toString());
-		List<CuserInfo> coachlist = (List<CuserInfo>) dataDao.SqlPageQuery(cuserhql.toString(), Constant.USERLIST_SIZE, CommonUtils.parseInt(pagenum, 0) + 1,CuserInfo.class, null);
+		//String t="select getTeachAddress(u.coachid) as address,getCoachOrderCount(u.coachid) as drive_schoolid,u.*  from t_user_coach u";
+		String s="select getTeachAddress(u.coachid) as address,getCoachOrderCount(u.coachid) as drive_schoolid,u.*  from t_user_coach u where state = 2 and id_cardexptime > curdate() and coach_cardexptime > curdate() and drive_cardexptime > curdate() and car_cardexptime > curdate() and (select count(*) from t_teach_address a where u.coachid = a.coachid and iscurrent = 1) > 0 and getcoachstate(u.coachid,30,'2015-07-27',5,23,0) = 1  and money >= gmoney and isquit = 0  order by score desc,drive_schoolid desc ";
+		
+		List<CuserInfo> coachlist = (List<CuserInfo>) dataDao.SqlPageQuery(s, Constant.USERLIST_SIZE, CommonUtils.parseInt(pagenum, 0) + 1,CuserInfo.class, null);
 		if (coachlist != null && coachlist.size() > 0) {
 			for (CuserInfo coach : coachlist) {
 				//StringBuffer cuserhql1 = new StringBuffer();
