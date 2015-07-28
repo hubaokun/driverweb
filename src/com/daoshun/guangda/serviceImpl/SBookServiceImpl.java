@@ -595,6 +595,16 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		String hql3 = "from CaddAddressInfo where coachid =:coachid and iscurrent = 1";
 		String params3[] = { "coachid" };
 
+		SuserInfo student = dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
+		if(student.getMoney().doubleValue()<0.0)// 余额不够
+		{
+			//版本需要更新
+			result.put("failtimes", -1);
+			result.put("successorderid", -1);
+			result.put("coachauth", -1);
+			result.put("code", -1);
+			return result;
+		}
 		// 首先查询出订单相关的几个时间配置
 		String hqlset = "from SystemSetInfo where 1 = 1";
 		SystemSetInfo setInfo = (SystemSetInfo) dataDao.getFirstObjectViaParam(hqlset, null);
@@ -625,7 +635,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			}
 		}
 
-		SuserInfo student = dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
+
 		// 订单的提醒设置
 		String hqlnoti = "from OrderNotiSetInfo where 1 = 1";
 		List<OrderNotiSetInfo> orderNotiList = (List<OrderNotiSetInfo>) dataDao.getObjectsViaParam(hqlnoti, null);
@@ -659,8 +669,6 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					result.put("code", -1);
 					return result;
 				}
-//				array.has("delmoney");
-//				array.get("delmoney")
 				int delmoney = array.getInt("delmoney");
 				BigDecimal total = new BigDecimal(0);// 订单的总价
 				String longitude = null;
