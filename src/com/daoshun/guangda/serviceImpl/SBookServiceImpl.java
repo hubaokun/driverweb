@@ -326,7 +326,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				Calendar c = Calendar.getInstance();*/
 				cuserhql.append(" and (select count(*) from t_coach_schedule where  t_coach_schedule.coachid =  ");
 				cuserhql.append(" u.coachid and t_coach_schedule.date  <=date_sub(now(),interval -30 day) and ");
-				cuserhql.append(" t_coach_schedule.hour = 0 and t_coach_schedule.state = 1)>0");
+				cuserhql.append(" t_coach_schedule.hour = 0 and t_coach_schedule.state = 1)>0  ");
 				//cuserhql.append(" and getcoachstate(u.coachid," + 30 + ",'" + CommonUtils.getTimeFormat(c.getTime(), "yyyy-MM-dd") + "'," + 5 + "," + 23 + "," + subjectid + ") = 1");
 			}
 
