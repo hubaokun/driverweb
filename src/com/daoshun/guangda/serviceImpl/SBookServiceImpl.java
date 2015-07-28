@@ -599,10 +599,11 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		if(student.getMoney().doubleValue()<0.0)// 余额不够
 		{
 			//版本需要更新
-			result.put("failtimes", -1);
-			result.put("successorderid", -1);
-			result.put("coachauth", -1);
-			result.put("code", -1);
+			result.put("failtimes",11);
+			result.put("successorderid", 11);
+			result.put("coachauth", 11);
+			result.put("message", "您当前处于欠费状态,无法生成订单!");
+			result.put("code", 11);//app应当提示"您当前处于欠费状态,无法生成订单
 			return result;
 		}
 		// 首先查询出订单相关的几个时间配置
