@@ -393,12 +393,12 @@ public class CuserServlet extends BaseServlet {
 			//根据省市区ID查询对应的名称
 			if(cuser.getProvinceid()!=null && cuser.getCityid()!=null && cuser.getAreaid()!=null){
 				ProvinceInfo pro=locationService.getProvincesById(cuser.getProvinceid());
-				System.out.println("----"+pro.getProvince());
+				//System.out.println("----"+pro.getProvince());
 				CityInfo city=locationService.getCityById(cuser.getCityid());
-				System.out.println("----"+pro.getProvince()+city.getCity());
+				//System.out.println("----"+pro.getProvince()+city.getCity());
 				AreaInfo area=locationService.getAreaById(cuser.getAreaid());
-				System.out.println("----"+pro.getProvince()+city.getCity()+area.getArea());
-				String locationname=pro.getProvince()+city.getCity()+area.getArea();
+				//System.out.println("----"+pro.getProvince()+city.getCity()+area.getArea());
+				String locationname=pro.getProvince()+"-"+city.getCity()+"-"+area.getArea();
 
 				cuser.setLocationname(locationname);
 			}
