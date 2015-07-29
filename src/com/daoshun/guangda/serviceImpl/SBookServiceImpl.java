@@ -596,6 +596,18 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		String hql3 = "from CaddAddressInfo where coachid =:coachid and iscurrent = 1";
 		String params3[] = { "coachid" };
 
+		SuserInfo student = dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
+		if(student.getMoney().doubleValue()<0.0)// 余额不够
+		{
+			//版本需要更新
+			result.put("failtimes",11);
+			result.put("successorderid", 11);
+			result.put("coachauth", 11);
+			result.put("message", "您当前处于欠费状态,无法生成订单!");
+			result.put("code", 11);//app应当提示"您当前处于欠费状态,无法生成订单
+			return result;
+		}
+
 		// 首先查询出订单相关的几个时间配置
 		String hqlset = "from SystemSetInfo where 1 = 1";
 		SystemSetInfo setInfo = (SystemSetInfo) dataDao.getFirstObjectViaParam(hqlset, null);
@@ -626,7 +638,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			}
 		}
 
-		SuserInfo student = dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
+
 		// 订单的提醒设置
 		String hqlnoti = "from OrderNotiSetInfo where 1 = 1";
 		List<OrderNotiSetInfo> orderNotiList = (List<OrderNotiSetInfo>) dataDao.getObjectsViaParam(hqlnoti, null);
