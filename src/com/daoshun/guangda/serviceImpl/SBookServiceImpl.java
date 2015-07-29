@@ -428,10 +428,9 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 	@Override
 	public HashMap<String, Object> getCoachList(String condition1, String condition2, String condition3, String condition4, String condition5, String condition6, String condition8, String condition9,
 			String condition10, String condition11, String pagenum) {
-		long starttime=System.currentTimeMillis();
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		StringBuffer cuserhql = new StringBuffer();
-		cuserhql.append("select getTeachAddress(u.coachid) as address,u.*  from t_user_coach u where state = 2 and id_cardexptime > curdate() and coach_cardexptime > curdate() and drive_cardexptime > curdate() and car_cardexptime > curdate() and (select count(*) from t_teach_address a where u.coachid = a.coachid and iscurrent = 1) > 0");
+		cuserhql.append("select getTeachAddress(u.coachid) as address,getCoachOrderCount(u.coachid) as drive_schoolid, u.*  from t_user_coach u where state = 2 and id_cardexptime > curdate() and coach_cardexptime > curdate() and drive_cardexptime > curdate() and car_cardexptime > curdate() and (select count(*) from t_teach_address a where u.coachid = a.coachid and iscurrent = 1) > 0");
 		// 真实姓名和教练所属驾校
 		if (!CommonUtils.isEmptyString(condition1)) {
 			cuserhql.append(" and (realname like '%" + condition1 + "%' or drive_school like '%" + condition1 + "%' or drive_schoolid in (select schoolid from t_drive_school_info where name like  '%"
@@ -540,6 +539,9 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				//cuserhql1.append("from CaddAddressInfo where coachid =:coachid and iscurrent = 1");
 				//String[] params1 = { "coachid" };
 				//CaddAddressInfo address = (CaddAddressInfo) dataDao.getFirstObjectViaParam(cuserhql1.toString(), params1, coach.getCoachid());
+				if(coach.getDrive_schoolid()!=null){
+					coach.setSumnum(new Long(coach.getDrive_schoolid()));
+				}
 				if(coach.getAddress()!=null){
 					String str[]=coach.getAddress().split("#");
 					coach.setAddress("");
@@ -570,7 +572,6 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		String countSql=cuserhql.toString().substring(n, cuserhql.toString().length());
 		countSql="select count(*)  "+countSql;*/
 		//System.out.println(countSql);
-		long endtime=System.currentTimeMillis();
 		//System.out.println("总耗时："+(endtime-starttime));
 		return result;
 	}
