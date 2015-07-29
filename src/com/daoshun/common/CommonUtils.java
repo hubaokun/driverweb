@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.security.MessageDigest;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -20,6 +21,8 @@ import java.util.Properties;
 import java.util.Stack;
 
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.FileUtils;
 
 import jxl.Workbook;
 import jxl.format.Alignment;
@@ -32,8 +35,6 @@ import jxl.write.WritableCellFormat;
 import jxl.write.WritableFont;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
-
-import org.apache.commons.io.FileUtils;
 
 /**
  * @author wangcl
@@ -110,7 +111,23 @@ public class CommonUtils {
 			throw new ErrException();
 		}
 	}
-
+	
+	/**
+	 * 判断字符是否是合法的日期格式
+	 * @param str  日期字符串
+	 * @return true 是  false 否
+	 * @author 卢磊
+	 */
+	public static boolean validDateFormat(String str) throws ErrException{
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+	    try{
+	        Date date = (Date)formatter.parse(str);
+	        return str.equals(formatter.format(date));
+	    }catch(Exception e){
+	       System.out.println("日期格式有误!");
+	       throw new ErrException();
+	    }
+	}
 	/**
 	 * 判断String是否为空
 	 * 

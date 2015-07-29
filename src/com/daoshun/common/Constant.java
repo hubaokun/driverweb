@@ -256,9 +256,12 @@ public class Constant {
 	// 获取消息条数
 	public static final String CGETMESSAGECOUNT = "GETMESSAGECOUNT";
 
-	// 取得教练日程安排
+	// 取得教练今天日程安排
 	public static final String CGETSCHEDULE = "GETSCHEDULE";
-
+	
+	// 根据日期取得教练日程安排
+	public static final String CGETSCHEDULEBYDATE = "CGETSCHEDULEBYDATE";
+	
 	// 修改某天的休息时间
 	public static final String CSETDATETIME = "SETDATETIME";
 
