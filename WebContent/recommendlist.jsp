@@ -24,7 +24,10 @@ $(function(){
 	$("#change_"+j+index).addClass('left_list_mask');
 });
 
-
+function searchbegin()
+{
+	//var searchname=
+}
 </script>
 <style type="text/css">
 .mask {
@@ -77,21 +80,20 @@ $(function(){
 		<jsp:include page="left.jsp" />
 		<div id="content_form">
 			<div id="content_form_top">
-					<!-- 
-					 
-
-					
-<div class="serchcontentdiv" style="float: left; margin-left: 50px; width: 156px" >
+		<div class="serchcontentdiv" style="float: left; margin-left: 50px; width: 156px" >
 						<input  type="text" class="searchdiv" style="width: 50px;text-align: center;font-family: 微软雅黑;" value="姓名" readonly="readonly">
 						<input id="realname" type="text" class="searchdiv" style="width:100px;font-family: 微软雅黑;" value="${searchname}"/>
 					</div>
 
 					<div class="serchcontentdiv" style="float: left; margin-left: 50px; width: 156px" >
-						<input type="text" class="searchdiv" style="width: 50px;text-align: center;font-family: 微软雅黑;" value="电话" readonly="readonly">
+						<input type="text" class="searchdiv" style="width: 50px;text-align: center;font-family: 微软雅黑;" value="手机号" readonly="readonly">
 						<input id="phone" type="text" class="searchdiv" style="width:100px;font-family: 微软雅黑;" value="${searchphone}" onkeyup="value=value.replace(/[^\d]/g,'')" onchange="phoneisNum()"/>
-					</div>-->
+					</div>
 
-
+           <div class="searchbutton" onclick="searchbegin()">
+						<img src="imgs/common/searchicon.png" width=22px height=22px
+							style="margin-top: 9px;" >				
+					</div>
 
 
 

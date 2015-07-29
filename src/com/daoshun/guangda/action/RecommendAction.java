@@ -46,6 +46,9 @@ public class RecommendAction extends BaseAction {
 	private long total;
 	private RecommendInfo rinfo;
 	private int displayflag=0;
+	private String searchname;
+	private String searchphone;
+	private int resultstring=0;
 	List<RecommendInfo> mp=new ArrayList<RecommendInfo>();
 	@Action(value = "/getRecommendList", results = { @Result(name = SUCCESS, location = "/recommendlist.jsp") })
 	public String getRecommendList()
@@ -81,13 +84,49 @@ public class RecommendAction extends BaseAction {
 		}
 		return SUCCESS;
 	}
-	@Action(value = "/offerReward", results = { @Result(name = SUCCESS, location = "/getRecommendDetail.do?coachid=${coachid}&inviteCount=${invitecount}&checkPastCount=${checkmancount}&earnCount=${totalreward}&orderCount=${ordercount}&index=9&change_id=0&pageIndex=${pageIndex}",type = "redirect")})
+	@Action(value = "/offerReward", results = { @Result(name = SUCCESS, location = "/getRecommendDetail.do?coachid=${coachid}&inviteCount=${invitecount}&checkPastCount=${checkmancount}&earnCount=${totalreward}&orderCount=${ordercount}&index=9&change_id=0&pageIndex=${pageIndex}",type = "redirect")
+	                                           , @Result(name=ERROR,location="/recommenddetail.jsp")})
 	public String offerReward()
 	{
 		HttpSession session = ServletActionContext.getRequest().getSession();
-		recommendService.offeredReward(coachid.toString(), invitedcoachid.toString(),typestyle);
+	    resultstring=recommendService.offeredReward(coachid.toString(), invitedcoachid.toString(),typestyle);
 		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
 		QueryResult<RecommendInfo> qresult=recommendService.getInvitedDetailsForServer(coachid.toString(),pageIndex,pagesize);
+		mp=qresult.getDataList();
+		total=qresult.getTotal();
+		pageCount = ((int) total + pagesize - 1) / pagesize;
+		if (pageIndex > 1) {
+			if (mp == null || mp.size() == 0) {
+				pageIndex--;
+				getRecommendDetail();
+			}
+		}
+		return SUCCESS;
+	}
+	@Action(value = "/SearchRecommoned", results = { @Result(name = SUCCESS, location = "/recommendlist.jsp")})
+	public String SearchRecommoned()
+	{
+		HttpSession session = ServletActionContext.getRequest().getSession();
+		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
+		QueryResult<RecommendInfo> qresult=recommendService.getRecommonedInfoByKeyWord(searchname, searchphone, pageIndex, pagesize);
+		total=qresult.getTotal();
+	    mp=qresult.getDataList();
+		pageCount = ((int) total + pagesize - 1) / pagesize;
+		if (pageIndex > 1) {
+			if (mp == null || mp.size() == 0) {
+				pageIndex--;
+				SearchRecommoned();
+			}
+		}
+		return SUCCESS;
+	}
+	@Action(value = "/deleteRecommoned", results = { @Result(name = SUCCESS, location = "/getRecommendDetail.do?coachid=${coachid}&inviteCount=${invitecount}&checkPastCount=${checkmancount}&earnCount=${totalreward}&orderCount=${ordercount}&index=9&change_id=0&pageIndex=${pageIndex}",type = "redirect")})
+	public String deleteRecommoned()
+	{
+		HttpSession session = ServletActionContext.getRequest().getSession();
+		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
+		QueryResult<RecommendInfo> qresult=recommendService.getInvitedDetailsForServer(coachid.toString(),pageIndex,pagesize);
+		recommendService.deleteRecommonedInfo(coachid.toString(), invitedcoachid.toString());
 		mp=qresult.getDataList();
 		total=qresult.getTotal();
 		pageCount = ((int) total + pagesize - 1) / pagesize;
@@ -189,6 +228,24 @@ public class RecommendAction extends BaseAction {
 	}
 	public void setTypestyle(int typestyle) {
 		this.typestyle = typestyle;
+	}
+	public String getSearchname() {
+		return searchname;
+	}
+	public void setSearchname(String searchname) {
+		this.searchname = searchname;
+	}
+	public String getSearchphone() {
+		return searchphone;
+	}
+	public void setSearchphone(String searchphone) {
+		this.searchphone = searchphone;
+	}
+	public int getResultstring() {
+		return resultstring;
+	}
+	public void setResultstring(int resultstring) {
+		this.resultstring = resultstring;
 	}
 
 

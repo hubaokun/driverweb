@@ -34,7 +34,14 @@ $(function(){
 
 	 }
  }
-
+function deleteinvite(invitedcoachid)
+{
+	if(confirm("确认删除吗？"))
+	 {			
+		document.getElementById("invitedcoachid").value=invitedcoachid;
+	    $("#offeredForm").attr("action","deleteRecommoned.do").submit(); 
+	 }
+}
 </script>
 <style type="text/css">
 .mask {
@@ -78,7 +85,7 @@ $(function(){
 	display: none;
 }
 </style>
-<title>学员列表</title>
+<title>邀请详情</title>
 </head>
 <input type="hidden" id="index" value="9" />
 <input type="hidden" id="change_id" value="0"/>
@@ -87,8 +94,25 @@ $(function(){
 		<jsp:include page="left.jsp" />
 		<div id="content_form">
 			<div id="content_form_top">
+			<div class="serchcontentdiv" style="float: left; margin-left: 50px; width: 156px" >
+						<input  type="text" class="searchdiv" style="width: 50px;text-align: center;font-family: 微软雅黑;" value="被邀请人姓名" readonly="readonly">
+						<input id="realname" type="text" class="searchdiv" style="width:100px;font-family: 微软雅黑;" value="${searchname}"/>
+					</div>
 
-			</div>
+					<div class="serchcontentdiv" style="float: left; margin-left: 50px; width: 156px" >
+						<input type="text" class="searchdiv" style="width: 50px;text-align: center;font-family: 微软雅黑;" value="手机号" readonly="readonly">
+						<input id="phone" type="text" class="searchdiv" style="width:100px;font-family: 微软雅黑;" value="${searchphone}" onkeyup="value=value.replace(/[^\d]/g,'')" onchange="phoneisNum()"/>
+					</div>
+                		<div class="searchbutton" style="width:120px;">
+						<a href="javascript:history.go(-1);" style="width:50px;height:50px " >返回上一步>>>></a>
+					</div>
+                <div class="searchbutton" onclick="allstudentsearch()">
+						<img src="imgs/common/searchicon.png" width=22px height=22px
+							style="margin-top: 9px;" >				
+					</div>
+			
+					
+			</div> 
 			<form action="" id="offeredForm" method="post">
 
 			<div id="content_form_table">
@@ -104,6 +128,7 @@ $(function(){
 						<th>奖励金额</th>
 						<th>审核奖励</th>
 						<th>开单奖励</th>
+						<th>操作</th>
 					</tr>
 					<s:iterator value="mp" id="rinfo">
 					
@@ -136,6 +161,14 @@ $(function(){
 									</s:elseif>
                                  
 								</div>
+							</td>
+							<td style="width: 80px;" class="border_right_bottom">
+							<s:if test="%{oflag==2 ||cflag==2}">
+							
+							</s:if>
+							<s:else>
+							<a href="javascript:deleteinvite(${invitedcoachid})">删除邀请</a>
+							</s:else>
 							</td>
 					      </tr>
 	
