@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.daoshun.common.ApplePushUtil;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
+import com.daoshun.common.PushtoSingle;
 import com.daoshun.common.QueryResult;
 import com.daoshun.guangda.NetData.ComplaintNetData;
 import com.daoshun.guangda.pojo.BalanceCoachInfo;
@@ -32,6 +34,7 @@ import com.daoshun.guangda.pojo.OrderPrice;
 import com.daoshun.guangda.pojo.OrderRecordInfo;
 import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.pojo.SystemSetInfo;
+import com.daoshun.guangda.pojo.UserPushInfo;
 import com.daoshun.guangda.service.ISOrderService;
 
 @Service("sorderService")
@@ -260,7 +263,7 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 		List<OrderInfo> orderlist = new ArrayList<OrderInfo>();
 		cuserhql.append("from OrderInfo a where a.studentid =:studentid and a.studentstate = 0 and ((select count(*) from ComplaintInfo c where c.order_id"
 				+ " = a.orderid and c.type = 1 and c.state = 0) > 0 or ((select count(*) from ComplaintInfo c where c.order_id"
-				+ " = a.orderid and c.type = 1 and c.state = 0) = 0 and  a.end_time > :now)) order by a.start_time asc");
+				+ " = a.orderid and c.type = 1 and c.state = 0) = 0 and  a.end_time > :now))  order by a.start_time asc");
 		String[] params = { "studentid", "now" };
 		orderlist.addAll((List<OrderInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), Constant.ORDERLIST_SIZE, CommonUtils.parseInt(pagenum, 0) + 1, params, CommonUtils.parseInt(studentid, 0),
 				nowCanDown.getTime()));
@@ -864,6 +867,175 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 			} else {
 				return result;
 			}
+		}
+		return -1;
+	}
+	
+	
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	@Override
+	public int cancelOrderByStudent(String studentid, String orderid) {
+		OrderInfo order = dataDao.getObjectById(OrderInfo.class, CommonUtils.parseInt(orderid, 0));
+		SuserInfo student = dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
+		/*String hql = "from SystemSetInfo where 1=1";
+		SystemSetInfo system = (SystemSetInfo) dataDao.getFirstObjectViaParam(hql, null);*/
+		Calendar c = Calendar.getInstance();
+		int result = 0;
+		/*if (system != null && system.getTime_cancel() != 0) {
+			c.add(Calendar.MINUTE, system.getTime_cancel());
+			result = system.getTime_cancel();
+		} else {
+			c.add(Calendar.HOUR, 1);
+			result = 60;
+		}*/
+		c.add(Calendar.MINUTE,10);
+		result = 60;
+		if (order != null ) {
+			int coachid=order.getCoachid();
+			if (order.getStart_time().after(c.getTime())) {
+				order.setStudentstate(4);//学员取消
+				//order.setCoachstate(4);//教练取消
+				dataDao.updateObject(order);
+				
+				String studentName=student.getRealname();
+				//张三申请取消07/12 21:00-22:00学车课程
+				String pushMsg=studentName+"申请取消"+order.getStart_time()+"的学车课程";
+				//给此订单关联的教练推送消息，提示让他同意取消订单
+				String hql5 = "from UserPushInfo where userid =:userid and usertype = 1";
+				String params5[] = { "userid" };
+				UserPushInfo userpush = (UserPushInfo) dataDao.getFirstObjectViaParam(hql5, params5,coachid);
+				if (userpush != null) {
+					if (userpush.getType() == 0 && !CommonUtils.isEmptyString(userpush.getJpushid())) {// 安卓
+						PushtoSingle pushsingle = new PushtoSingle();
+						pushsingle.pushsingle(userpush.getJpushid(), 1, "{\"message\":\"" + pushMsg + "\",\"type\":\"1\",\"orderid\":\""+orderid+"\"}");
+					} else if (userpush.getType() == 1 && !CommonUtils.isEmptyString(userpush.getDevicetoken())) {
+						ApplePushUtil.sendpush(userpush.getDevicetoken(), "{\"aps\":{\"alert\":\"" + pushMsg + "\",\"sound\":\"default\"},\"userid\":" + coachid + ",\"orderid\":\""+orderid+"\"}", 1, 1);
+					}
+				}
+				return 0;
+			} else {
+				return result;
+			}
+		}
+		return -1;
+	}
+	/**
+	 * 教练同意取消订单
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	@Override
+	public int cancelOrderByCoach(String orderid,String agree) {
+		OrderInfo order = dataDao.getObjectById(OrderInfo.class, CommonUtils.parseInt(orderid, 0));
+		if(order!=null && "1".equals(agree)){//教练不同意
+			order.setStudentstate(0);
+			dataDao.updateObject(order);
+			return 0;
+		}
+		String studentid="";
+		if(order!=null){
+			studentid=String.valueOf(order.getStudentid());
+		}
+		SuserInfo student = dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
+		String hql = "from SystemSetInfo where 1=1";
+		SystemSetInfo system = (SystemSetInfo) dataDao.getFirstObjectViaParam(hql, null);
+		Calendar c = Calendar.getInstance();
+		int result = 0;
+		if (system != null && system.getTime_cancel() != 0) {
+			c.add(Calendar.MINUTE, system.getTime_cancel());
+			result = system.getTime_cancel();
+		} else {
+			c.add(Calendar.HOUR, 1);
+			result = 60;
+		}
+		if (order != null) {
+			//if (order.getStart_time().after(c.getTime())) {
+			
+
+				if (student != null) {
+					if(order.getDelmoney()>0 && order.getCouponrecordid().length()>1)
+					{
+						String coupongetrecordids=order.getCouponrecordid();
+						if(coupongetrecordids.lastIndexOf(',')== coupongetrecordids.length()-1)
+						{
+							System.out.println("old: "+coupongetrecordids);
+							coupongetrecordids = coupongetrecordids.substring(0, coupongetrecordids.length()-2);
+							System.out.println("now :"+coupongetrecordids);
+						}
+					dataDao.updateBySql(" update t_couponget_record set state=0 where recordid in("+coupongetrecordids+") ");
+						
+					}
+					else
+					{
+						student.setMoney(student.getMoney().add(order.getTotal()));
+						student.setFmoney(student.getFmoney().subtract(order.getTotal()));
+						dataDao.updateObject(student);
+					}
+				}
+
+				//order.setStudentstate(4);//学员取消
+				order.setCoachstate(4);//教练取消
+				dataDao.updateObject(order);
+
+				// 把订单中原来预订的时间返回回来
+				Calendar start = Calendar.getInstance();
+				start.setTime(order.getStart_time());
+				int starthour = start.get(Calendar.HOUR_OF_DAY);
+
+				Calendar end = Calendar.getInstance();
+				end.setTime(order.getEnd_time());
+				int endhour = end.get(Calendar.HOUR_OF_DAY);
+
+				String hqlCoach = "from CBookTimeInfo where bookedtime in (:bookedtimes) and date = :date and coachid = :coachid";
+				String[] paramsCoach = { "bookedtimes", "date", "coachid" };
+
+				List<String> bookedtimes = new ArrayList<String>();
+				for (int i = starthour; i < endhour; i++) {
+					bookedtimes.add(String.valueOf(i));
+				}
+
+				List<CBookTimeInfo> list = (List<CBookTimeInfo>) dataDao.getObjectsViaParam(hqlCoach, paramsCoach, bookedtimes, CommonUtils.getTimeFormat(order.getStart_time(), "yyyy-MM-dd"),
+						order.getCoachid());
+				if (list != null) {
+					for (CBookTimeInfo cBookTimeInfo : list) {
+						dataDao.deleteObject(cBookTimeInfo);
+					}
+				}
+
+				// 把订单原来的提醒记录删除掉
+				String hqlDelete = "from OrderNotiRecord where orderid = :orderid";
+				String[] paramsD = { "orderid" };
+				List<OrderNotiRecord> listDelete = (List<OrderNotiRecord>) dataDao.getObjectsViaParam(hqlDelete, paramsD, order.getOrderid());
+				if (listDelete != null) {
+					for (OrderNotiRecord orderNotiRecord : listDelete) {
+						dataDao.deleteObject(orderNotiRecord);
+					}
+				}
+				// 记录取消订单
+				OrderRecordInfo orderRecord = new OrderRecordInfo();
+				orderRecord.setAddtime(new Date());
+				orderRecord.setOperation(5);
+				orderRecord.setOrderid(CommonUtils.parseInt(orderid, 0));
+				orderRecord.setUserid(CommonUtils.parseInt(studentid, 0));
+				dataDao.addObject(orderRecord);
+				//给学员推送消息
+				String pushMsg="教练已同意您取消"+order.getStart_time()+"的学车课程，支付的金额已退回到小巴账户余额。";
+				//给此订单关联的教练推送消息，提示让他同意取消订单
+				String hql5 = "from UserPushInfo where userid =:userid and usertype = 1";
+				String params5[] = { "userid" };
+				UserPushInfo userPushInfo = (UserPushInfo) dataDao.getFirstObjectViaParam(hql5, params5,CommonUtils.parseInt(studentid, 0));
+				if (userPushInfo != null && userPushInfo.getDevicetoken() != null) {
+					if (userPushInfo.getType() == 0 && !CommonUtils.isEmptyString(userPushInfo.getJpushid())) {
+						PushtoSingle push = new PushtoSingle();
+						push.pushsingle(userPushInfo.getJpushid(), 2, "{\"message\":\"" + pushMsg + "\",\"type\":\"4\"}");
+					} else if (userPushInfo.getType() == 1 && !CommonUtils.isEmptyString(userPushInfo.getDevicetoken())) {
+						ApplePushUtil.sendpush(userPushInfo.getDevicetoken(), "{\"aps\":{\"alert\":\"" + pushMsg + "\",\"sound\":\"default\"},\"userid\":" + studentid + "}", 1, 2);
+					}
+				}
+				
+				return 0;
+			/*} else {
+				return result;
+			}*/
 		}
 		return -1;
 	}

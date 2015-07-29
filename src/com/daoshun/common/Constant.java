@@ -167,6 +167,9 @@ public class Constant {
 
 	// 取消订单
 	public static final String CANCELORDER = "CANCELORDER";
+	
+	// 教练同意取消订单
+	public static final String CANCELORDERAGREE = "CANCELORDERAGREE";
 
 	// 获取教练详细
 	public static final String GETCOACHDETAIL = "GETCOACHDETAIL";
@@ -260,7 +263,7 @@ public class Constant {
 	public static final String CGETSCHEDULE = "GETSCHEDULE";
 	
 	// 根据日期取得教练日程安排
-	public static final String CGETSCHEDULEBYDATE = "CGETSCHEDULEBYDATE";
+	public static final String CGETSCHEDULEBYDATE = "GETSCHEDULEBYDATE";
 	
 	// 修改某天的休息时间
 	public static final String CSETDATETIME = "SETDATETIME";
