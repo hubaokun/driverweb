@@ -1,6 +1,7 @@
 package com.daoshun.guangda.servlet;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.daoshun.common.Constant;
 import com.daoshun.common.ErrException;
 import com.daoshun.guangda.pojo.AreaInfo;
+import com.daoshun.guangda.pojo.AutoPositionInfo;
 import com.daoshun.guangda.pojo.CityInfo;
 import com.daoshun.guangda.pojo.ProvinceInfo;
 import com.daoshun.guangda.service.ILocationService;
@@ -57,6 +59,11 @@ public class LocationServlet extends BaseServlet{
 			}else if (Constant.GETPROCITYAREA.equals(action)) {
 				//返回所有的省市区JSON
 				getProCityArea(request,resultMap);
+			}
+			else if(Constant.GETAUTOPOSITION.equals(action))
+			{
+				getAutoPosition(request,resultMap);
+				//自动获取当前位置省市区信息
 			}
 		} catch (ErrException e) {
 			e.printStackTrace();
@@ -126,5 +133,16 @@ public class LocationServlet extends BaseServlet{
 			}
 		}
 		resultMap.put("china", list);
+	}
+	/**
+	 * 自动获取省市区
+	 * @throws UnsupportedEncodingException 
+	 */
+	public void getAutoPosition(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException, UnsupportedEncodingException {
+		String pname=getRequestParamter(request,"pname");
+		String cname=getRequestParamter(request,"cname");
+		String aname=getRequestParamter(request,"aname");
+		AutoPositionInfo tempAutoPositionInfo=locationService.getAutoPositionInfo(pname, cname, aname);
+		resultMap.put("autoposition", tempAutoPositionInfo);
 	}
 }

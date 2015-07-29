@@ -50,7 +50,6 @@
 	</menu-item>
 	<menu-item name="邀请管理" iconURL="" authority="1">
 		<sub-item name="教练邀请教练" authority="1" action="getRecommendList.do"/>
-		<!--  <sub-item name="邀请日报" authority="2" action="getRecommendReport.do"/>-->
 	</menu-item>
 	<menu-item name="其他" iconURL="" authority="1">
 		<sub-item name="意见反馈" authority="3" action="getFeedback.do"/>
@@ -67,5 +66,6 @@
 		<sub-item name="教练提现日报" authority="3" action="coachapply.do"/>
 		<sub-item name="驾校对账单" authority="3" action="schoolbilldaily.do"/>
 		<sub-item name="小巴券日报" authority="3" action="xiaobadaily.do"/>
+	    <sub-item name="邀请日报" authority="2" action="getRecommendReport.do"/>
 	</menu-item>
 </menu-list>

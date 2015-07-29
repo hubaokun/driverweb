@@ -342,7 +342,8 @@ public class Constant {
 	public static final String CGETRECOMMENDLIST = "CGETRECOMMENDLIST";
 	//增加推荐人员
 	public static final String CHEAKINVITECODE ="CHEAKINVITECODE";
-
+    //自动获取当前省市区信息
+	public static final String GETAUTOPOSITION="GETAUTOPOSITION";
 
 
 		//小巴服务接口

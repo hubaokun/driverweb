@@ -19,6 +19,7 @@ import com.daoshun.common.Constant;
 import com.daoshun.common.QueryResult;
 import com.daoshun.guangda.pojo.AdminInfo;
 import com.daoshun.guangda.pojo.BalanceCoachInfo;
+import com.daoshun.guangda.pojo.CscheduleInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.OrderInfo;
 import com.daoshun.guangda.pojo.RecommendInfo;
@@ -298,7 +299,7 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 	}
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-	public void offeredReward(String coachid,String invitedcoachid,int type) {
+	public int offeredReward(String coachid,String invitedcoachid,int type) {
 		String queryString="from CuserInfo where coachid =:coachid";
 		String queryString1="from RecommendInfo where coachid =:coachid and invitedcoachid=:invitedcoachid";
 		String[] params={"coachid"};
@@ -315,9 +316,15 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 		    BalanceCoachInfo tempBalanceCoachInfo=new BalanceCoachInfo();
 			if(type==0)
 			{
-				Balanceplus=systemSetInfo.getCrewardamount();
-		    	tempRecommendInfo.setCflag(2);
-		    	tempBalanceCoachInfo.setType(4);
+				if(judgeTeacheOrNot(invitedcoachid)==1)
+				{
+					Balanceplus=systemSetInfo.getCrewardamount();
+			        tempRecommendInfo.setCflag(2);
+			    	tempBalanceCoachInfo.setType(4);
+			    	return 1;
+				}
+				else
+					return 0;
 			}
 			else
 			{
@@ -336,7 +343,10 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 			dataDao.updateObject(tempRecommendInfo);
 			dataDao.updateObject(tempCuserInfo);
 			dataDao.addObject(tempBalanceCoachInfo);
+			return 1;
 	    }
+		else
+			return 0;
 	}
 
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
@@ -361,12 +371,64 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 		return tempRecommendInfo;
 	}
 	@Override
-	public QueryResult<RecommendInfo> getRecommonedInfoByKeyWord(String realname, String telphone, Integer pageIndex,
-			Integer pagesize) {
-		StringBuffer querystring=new StringBuffer();
-		querystring.append("from RecommendInfo ");
-		
-		return null;
+	public QueryResult<RecommendInfo> getRecommonedInfoByKeyWord(String searchname, String searchphone, Integer pageIndex,Integer pagesize) 
+	{
+		String queryString="from RecommendInfo where coachname like '%coachname%' or coachtelphone like '%coachtelphone%' group by coachid order by coachid";
+		String[] params={"coachname"};
+		List<RecommendInfo> listr=(List<RecommendInfo>)dataDao.pageQueryViaParam(queryString.toString(), pagesize, pageIndex, params);
+		for(RecommendInfo temp:listr)
+		{
+			temp.setInvitecount(getRecommendCount(String.valueOf(temp.getCoachid())));
+			temp.setCheckmancount(getCheckManCount(temp.getCoachid()));
+			temp.setOrdercount(getOrderCount(temp.getCoachid()));
+			temp.setTotalreward(getReward(String.valueOf(temp.getCoachid())));
+		}
+		String querys="SELECT count(*)"+queryString;
+ 		List countlist=(List)dataDao.getObjectsViaParam(querys, params);
+ 		long total=	countlist.size();
+        return new  QueryResult<RecommendInfo>(listr,total);
 	}
+	@Override
+	public int judgeTeacheOrNot(String coachid) {
+		String[] params={"coachid"};
+		//查找 hour=0 并且state=1的开课记录
+		List<CscheduleInfo> tempCscheduleInfo=(List<CscheduleInfo>)dataDao.getObjectsViaParam("from CscheduleInfo where coachid=:coachid and hour='0' and state=1 order by date desc", params,CommonUtils.parseInt(coachid, 0));
+		for(CscheduleInfo c:tempCscheduleInfo)
+		 {
+			 //根据教练开课日期查找当天开课记录数
+			 String[] params1={"coachid","date"};
+			 List<CscheduleInfo> tempCscheduleInfo1=(List<CscheduleInfo>)dataDao.getObjectsViaParam("from CscheduleInfo where coachid=:coachid and date=:date", params1,CommonUtils.parseInt(coachid, 0),c.getDate());
+				if(tempCscheduleInfo1!=null &&tempCscheduleInfo1.size()>1)
+				  {
+					    StringBuffer cuserhql1 = new StringBuffer();
+						cuserhql1.append("from RecommendInfo where invitedcoachid = :invitedcoachid");
+						String[] params2 = { "invitedcoachid" };
+						RecommendInfo tempRecommendInfo = (RecommendInfo) dataDao.getFirstObjectViaParam(cuserhql1.toString(), params2, CommonUtils.parseInt(coachid, 0));
+						if(tempRecommendInfo!=null)
+						{
+							if(tempRecommendInfo.getCflag()!=2)
+							{
+						      	tempRecommendInfo.setCflag(1);
+						      	updateRecommendInfo(tempRecommendInfo);
+						      	return 1;
+							}
+				        }
+				  }
+		 }
+		 return 0;
+	
+
+		
+		
+	}
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	@Override
+	public void deleteRecommonedInfo(String coachid, String invitedcoachid) {
+		String queryString="from RecommendInfo where coachid=:coachid and invitedcoachid=:invitedcoachid";
+		String[] params={"coachid","invitedcoachid"};
+		RecommendInfo tempRecommendInfo=(RecommendInfo)dataDao.getFirstObjectViaParam(queryString, params,CommonUtils.parseInt(coachid, 0),CommonUtils.parseInt(invitedcoachid, 0));
+		dataDao.deleteObject(tempRecommendInfo);
+	}
+	
 	
 }

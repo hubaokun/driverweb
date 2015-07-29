@@ -111,7 +111,7 @@ public interface IRecommendService{
 	 * @param invitedcoachid 被推荐教练的ID
 	 * @param type 奖励类型 0=认证奖励 1=开单奖励
 	 */
-	public abstract void offeredReward(String coachid,String invitedcoachid,int type);
+	public abstract int offeredReward(String coachid,String invitedcoachid,int type);
 	/**
 	 * 更行推荐表信息
 	 */
@@ -122,6 +122,16 @@ public interface IRecommendService{
 	public abstract RecommendInfo getRecommondInvitedInfoByCoachid(String coachid,String realname);
 	/**
 	 * 根据搜索条件搜索教练推荐信息
+	 * @param searchname 查询姓名
+	 * @param searchphone 查询电话号码
 	 */
-	public abstract QueryResult<RecommendInfo> getRecommonedInfoByKeyWord(String realname,String telphone,Integer pageIndex,Integer pagesize);
+	public abstract QueryResult<RecommendInfo> getRecommonedInfoByKeyWord(String searchname,String searchphone,Integer pageIndex,Integer pagesize);
+    /**
+     * 判断这个教练是否开课过
+     */
+	public abstract int judgeTeacheOrNot(String coachid);
+	/**
+	 *  删除邀请
+	 */
+	public abstract void deleteRecommonedInfo(String coachid,String invitedcoachid);
 } 

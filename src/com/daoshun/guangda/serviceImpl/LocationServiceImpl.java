@@ -2,12 +2,15 @@ package com.daoshun.guangda.serviceImpl;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.daoshun.common.CommonUtils;
 import com.daoshun.guangda.pojo.AreaInfo;
+import com.daoshun.guangda.pojo.AutoPositionInfo;
 import com.daoshun.guangda.pojo.CityInfo;
 import com.daoshun.guangda.pojo.ProvinceInfo;
 import com.daoshun.guangda.service.ILocationService;
@@ -81,7 +84,59 @@ public class LocationServiceImpl extends BaseServiceImpl implements ILocationSer
 		String[] params = { "areaid" };
 		return (AreaInfo)dataDao.getFirstObjectViaParam("from AreaInfo where areaid=:areaid", params,CommonUtils.parseInt(areaid, 0) );
 	}
-	
-	
+	/**
+	 *  根据省名称模糊查询省ID
+	 */
+	@Override
+	public ProvinceInfo getProvinceInfoByProvinceName(String name) {
+		String[] params = { "province" };
+		return (ProvinceInfo)dataDao.getFirstObjectViaParam("from ProvinceInfo where province like:province", params,"%"+name+"%" );
+	}
+	/**
+	 *  根据区名称模糊查询区ID
+	 */
+	@Override
+	public AreaInfo getAreaInfoByAreaName(String name) {
+		String[] params = { "area" };
+		return (AreaInfo)dataDao.getFirstObjectViaParam("from AreaInfo where area like:area", params,"%"+name+"%");
+	}
+	/**
+	 * 根据省市区名称获得自动匹配地区详情
+	 */
+	@Override
+	public AutoPositionInfo getAutoPositionInfo(String pname,String cname,String aname) {
+		ProvinceInfo tempProvinceInfo=getProvinceInfoByProvinceName(pname);
+		List<CityInfo> tempCityInfo=getCityByCName(cname);
+		AreaInfo tempAreaInfo=getAreaInfoByAreaName(aname);
+		if(tempProvinceInfo!=null && tempCityInfo.size()!=0 && tempAreaInfo!=null)
+		{
+			Integer provinceid=tempProvinceInfo.getProvinceid();
+			Integer[] cityid=new Integer[2];
+			int count=0;
+			for(CityInfo c:tempCityInfo)
+			{
+				cityid[count++]=c.getCityid();
+			}
+			Integer areaid=tempAreaInfo.getAreaid();
+			String querystring="from AutoPositionInfo where provinceid=:provinceid and cityid=:cityid and areaid=:areaid";
+			String[] params={"provinceid","cityid","areaid"};
+			for(int i=0;i<cityid.length;i++)
+			{
+				AutoPositionInfo tempAutoPositionInfo=(AutoPositionInfo) dataDao.getFirstObjectViaParam(querystring, params,provinceid,cityid[i],areaid);
+			    if(tempAutoPositionInfo!=null)
+			    	return tempAutoPositionInfo;
+			}
+		
+		}
+		else
+		{
+		      Logger logger=Logger.getRootLogger();
+		      logger.warn("AutoPosition Exception province="+pname+" city="+cname+" area="+aname);
+		}
+		       
+		return null;
+	}
+
+   
 
 }
