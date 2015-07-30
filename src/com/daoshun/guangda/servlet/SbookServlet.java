@@ -175,12 +175,12 @@ public class SbookServlet extends BaseServlet {
 					resultMap.put(Constant.MESSAGE, "用户参数错误!");
 					return false;
 				}
-				else if ( CommonUtils.isEmptyString(version))
+				/*else if ( CommonUtils.isEmptyString(version))
 				{
 					resultMap.put(Constant.CODE, -1);
 					resultMap.put(Constant.MESSAGE, "版本太低,请升级!");
 					return false;
-				}else if ( CommonUtils.isEmptyString(token))
+				}*/else if ( CommonUtils.isEmptyString(token))
 				{
 					resultMap.put(Constant.CODE, -1);
 					resultMap.put(Constant.MESSAGE, "您必须升级才能下订单!");
