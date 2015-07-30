@@ -1,12 +1,15 @@
 package com.daoshun.guangda.service;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.daoshun.common.CommonUtils;
+import com.daoshun.common.Constant;
 import com.daoshun.common.QueryResult;
 import com.daoshun.guangda.model.InviteReport;
 import com.daoshun.guangda.pojo.CuserInfo;
@@ -163,5 +166,12 @@ public interface IRecommendService{
 	 * @param searchphone 查询电话号码
 	 * @param coachid    推荐教练ID
 	 */
-	public abstract QueryResult<RecommendInfo> getRecommonedInfoByKeyWord(String searchname,String searchphone,String coachid);
+	public abstract QueryResult<RecommendInfo> getRecommoneddetailInfoByKeyWord(String searchname,String searchphone,String coachid);
+	/**
+	 * 获取正在开课的教练列表
+	 */
+	public abstract HashMap<String, Object> getCoachList(String condition1, String condition2, String condition3, String condition4, String condition5, String condition6, String condition8, String condition9,
+			String condition10, String condition11);
+	
+	
 } 

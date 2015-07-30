@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.QueryResult;
 import com.daoshun.guangda.model.InviteReport;
+import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.RecommendInfo;
 import com.daoshun.guangda.service.ICUserService;
 import com.daoshun.guangda.service.IRecommendService;
@@ -94,7 +95,7 @@ public class RecommendAction extends BaseAction {
 	public String offerReward()
 	{
 		HttpSession session = ServletActionContext.getRequest().getSession();
-		HashMap<String, Object> resultmap=(HashMap<String, Object>)sbookService.getCoachList("", "", "", "", "", "", "", "", "", "", "");
+		HashMap<String, Object> resultmap=recommendService.getCoachList("", "", "", "", "", "", "", "", "", "");
 	    resultstring=recommendService.offeredReward(coachid.toString(), invitedcoachid.toString(),typestyle,resultmap);
 		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
 		QueryResult<RecommendInfo> qresult=recommendService.getInvitedDetailsForServer(coachid.toString(),pageIndex,pagesize);

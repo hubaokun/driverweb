@@ -11,6 +11,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.poi.util.SystemOutLogger;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +38,7 @@ import com.daoshun.guangda.service.IRecommendService;
 @Service("recommendService")
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendService {
-
+	private SessionFactory sessionFactory;
 
 	@Override
 	//获取教练推荐人员列表
@@ -428,13 +432,12 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 	}
 	@Override
 	public int judgeTeacheOrNot(String coachid,HashMap<String, Object> resultmap) {
-		List<CuserInfo> coachlist=(List<CuserInfo>) resultmap.get("coachlist");
+		List<CuserInfo> coachlist=(List<CuserInfo>)resultmap.get("coachlist");
 		for(CuserInfo c:coachlist)
-		{
-			if(coachid.equals(c.getCoachid()))
-			{
+		{  
+			if(coachid.equals(String.valueOf(c.getCoachid())))
 				return 1;
-			}
+				
 		}
 		 return 0;
 	}
@@ -498,12 +501,87 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 		return result;
 
 	}
+	public HashMap<String, Object> getCoachList(String condition1, String condition2, String condition3, String condition4, String condition5, String condition6, String condition8, String condition9,
+			String condition10, String condition11) {
+		HashMap<String, Object> result = new HashMap<String, Object>();
+		StringBuffer cuserhql = new StringBuffer();
+		cuserhql.append("select getTeachAddress(u.coachid) as address,getCoachOrderCount(u.coachid) as drive_schoolid, u.*  from t_user_coach u where state = 2 and id_cardexptime > curdate() and coach_cardexptime > curdate() and drive_cardexptime > curdate() and car_cardexptime > curdate() and (select count(*) from t_teach_address a where u.coachid = a.coachid and iscurrent = 1) > 0");
+		// 真实姓名和教练所属驾校
+		if (!CommonUtils.isEmptyString(condition1)) {
+			cuserhql.append(" and (realname like '%" + condition1 + "%' or drive_school like '%" + condition1 + "%' or drive_schoolid in (select schoolid from t_drive_school_info where name like  '%"
+					+ condition1 + "%')) ");
+		}
+		// 星级
+		if (!CommonUtils.isEmptyString(condition2)) {
+			cuserhql.append(" and score >= " + condition2);
+		}
+
+		if (!CommonUtils.isEmptyString(condition3)) {
+
+			int subjectid = CommonUtils.parseInt(condition6, 0);
+
+			Date start = null;
+			if(condition3.length() == 10){
+				start = CommonUtils.getDateFormat(condition3, "yyyy-MM-dd");
+			}else if(condition3.length() == 19){
+				start = CommonUtils.getDateFormat(condition3, "yyyy-MM-dd HH:mm:ss");
+			}
+
+			if (start != null) {
+				Calendar startCal = Calendar.getInstance();
+				startCal.setTime(start);
+
+				int starthour = startCal.get(Calendar.HOUR_OF_DAY);
+				int datecount = 1;
+				cuserhql.append(" and getcoachstate(u.coachid," + datecount + ",'" + CommonUtils.getTimeFormat(start, "yyyy-MM-dd") + "'," + starthour + "," + 23 + "," + subjectid + ") = 1");
+
+			}
+		} else {
+			int subjectid = CommonUtils.parseInt(condition6, 0);
+			Calendar c = Calendar.getInstance();
+
+			cuserhql.append(" and getcoachstate(u.coachid," + 10 + ",'" + CommonUtils.getTimeFormat(c.getTime(), "yyyy-MM-dd") + "'," + 5 + "," + 23 + "," + subjectid + ") = 1");
+		}
+
+		if (!CommonUtils.isEmptyString(condition11)) {
+			cuserhql.append(" and modelid like '%" + condition11 + "%'");
+		}
+
+
+		
+		cuserhql.append(" and money >= gmoney and isquit = 0 and state=2 order by score desc,drive_schoolid desc ");
+		System.out.println(cuserhql.toString());
+		List<CuserInfo> coachlist = (List<CuserInfo>) dataDao.SqlQuery(cuserhql.toString(),CuserInfo.class);
+		
+		if (coachlist != null && coachlist.size() > 0) {
+			for (CuserInfo coach : coachlist) {
+			
+				if(coach.getDrive_schoolid()!=null){
+					coach.setSumnum(new Long(coach.getDrive_schoolid()));
+				}
+				if(coach.getAddress()!=null){
+					String str[]=coach.getAddress().split("#");
+					coach.setAddress("");
+					if(str!=null && str.length==3){
+						coach.setLongitude(str[0]);
+						coach.setLatitude(str[1]);
+						coach.setDetail(str[2]);
+					}
+					coach.setAvatarurl(getFilePathById(coach.getAvatar()));
+				}
+			}
+		}
+		result.put("coachlist", coachlist);
+	
+		return result;
+	}
 	@Override
-	public QueryResult<RecommendInfo> getRecommonedInfoByKeyWord(String searchname, String searchphone,
+	public QueryResult<RecommendInfo> getRecommoneddetailInfoByKeyWord(String searchname, String searchphone,
 			String coachid) {
-	      
+		// TODO Auto-generated method stub
 		return null;
 	}
+
     
 	
 }

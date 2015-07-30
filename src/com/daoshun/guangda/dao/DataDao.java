@@ -209,7 +209,10 @@ public class DataDao {
 		}
 		return query.list();
 	}
-	
+	public List<?> SqlQuery(String sql,Class<?> cl){
+		Query query = getSession().createSQLQuery(sql).addEntity(cl);
+		return query.list();
+	}
 	public List<?> SqlPageQuery(String sql , final Integer pageSize, final Integer page, final Object... p){
 		Query query = getSession().createSQLQuery(sql);
 		if (p != null) {
@@ -244,8 +247,7 @@ public class DataDao {
 		}
 		return query.list();
 	}
-	
-	
+
 	/**
 	 * 按条件查询单条数据
 	 * 
