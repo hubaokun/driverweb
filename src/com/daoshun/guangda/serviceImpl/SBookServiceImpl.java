@@ -320,13 +320,22 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					cuserhql.append(" u.coachid and t_coach_schedule.date = '");
 					cuserhql.append(start).append("'");
 					cuserhql.append(" and t_coach_schedule.hour = 0 and t_coach_schedule.state = 1)>0");
+					cuserhql.append(" and (select count(*) from t_coach_schedule where  t_coach_schedule.coachid =  ");
+					cuserhql.append(" u.coachid and t_coach_schedule.date = '");
+					cuserhql.append(start).append("'");
+					cuserhql.append(" and t_coach_schedule.hour != 0 and t_coach_schedule.isrest=0)>0 ");
 				}
 			} else {
 				/*int subjectid = CommonUtils.parseInt(condition6, 0);
 				Calendar c = Calendar.getInstance();*/
 				cuserhql.append(" and (select count(*) from t_coach_schedule where  t_coach_schedule.coachid =  ");
 				cuserhql.append(" u.coachid and t_coach_schedule.date  <=date_sub(now(),interval -30 day) and ");
-				cuserhql.append(" t_coach_schedule.hour = 0 and t_coach_schedule.state = 1)>0  ");
+				cuserhql.append(" t_coach_schedule.hour = 0 and t_coach_schedule.state = 1)>0");
+				
+				cuserhql.append(" and (select count(*) from t_coach_schedule where  t_coach_schedule.coachid =  ");
+				cuserhql.append(" u.coachid and t_coach_schedule.date  <=date_sub(now(),interval -30 day) and ");
+				cuserhql.append(" t_coach_schedule.hour != 0 and t_coach_schedule.isrest = 0)>0 ");
+				
 				//cuserhql.append(" and getcoachstate(u.coachid," + 30 + ",'" + CommonUtils.getTimeFormat(c.getTime(), "yyyy-MM-dd") + "'," + 5 + "," + 23 + "," + subjectid + ") = 1");
 			}
 
@@ -449,6 +458,10 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				cuserhql.append(" u.coachid and t_coach_schedule.date = '");
 				cuserhql.append(start).append("'");
 				cuserhql.append(" and t_coach_schedule.hour = 0 and t_coach_schedule.state = 1)>0");
+				cuserhql.append(" and (select count(*) from t_coach_schedule where  t_coach_schedule.coachid =  ");
+				cuserhql.append(" u.coachid and t_coach_schedule.date = '");
+				cuserhql.append(start).append("'");
+				cuserhql.append(" and t_coach_schedule.hour != 0 and t_coach_schedule.isrest=0)>0 ");
 			}
 		} else {
 			/*int subjectid = CommonUtils.parseInt(condition6, 0);
@@ -456,6 +469,11 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			cuserhql.append(" and (select count(*) from t_coach_schedule where  t_coach_schedule.coachid =  ");
 			cuserhql.append(" u.coachid and t_coach_schedule.date  <=date_sub(now(),interval -30 day) and ");
 			cuserhql.append(" t_coach_schedule.hour = 0 and t_coach_schedule.state = 1)>0");
+			
+			cuserhql.append(" and (select count(*) from t_coach_schedule where  t_coach_schedule.coachid =  ");
+			cuserhql.append(" u.coachid and t_coach_schedule.date  <=date_sub(now(),interval -30 day) and ");
+			cuserhql.append(" t_coach_schedule.hour != 0 and t_coach_schedule.isrest = 0)>0 ");
+			
 			//cuserhql.append(" and getcoachstate(u.coachid," + 30 + ",'" + CommonUtils.getTimeFormat(c.getTime(), "yyyy-MM-dd") + "'," + 5 + "," + 23 + "," + subjectid + ") = 1");
 		}
 
@@ -527,6 +545,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		//String now = CommonUtils.getTimeFormat(new Date(), "yyyy-MM-dd");
 		//System.out.println(cuserhql.toString());
 		cuserhql.append(" and money >= gmoney and isquit = 0 and state=2 order by score desc,drive_schoolid desc ");
+		System.out.println(cuserhql.toString());
 		List<CuserInfo> coachlist = (List<CuserInfo>) dataDao.SqlPageQuery(cuserhql.toString(), Constant.USERLIST_SIZE+1, CommonUtils.parseInt(pagenum, 0) + 1,CuserInfo.class, null);
 		//System.out.println(cuserhql.toString());
 		//String[] params = { "now", "now", "now", "now" };

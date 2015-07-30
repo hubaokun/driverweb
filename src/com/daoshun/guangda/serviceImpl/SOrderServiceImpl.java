@@ -261,7 +261,7 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 		nowCanDown.add(Calendar.MINUTE, -s_can_down);
 		StringBuffer cuserhql = new StringBuffer();
 		List<OrderInfo> orderlist = new ArrayList<OrderInfo>();
-		cuserhql.append("from OrderInfo a where a.studentid =:studentid and a.studentstate = 0 and ((select count(*) from ComplaintInfo c where c.order_id"
+		cuserhql.append("from OrderInfo a where a.studentid =:studentid and (a.studentstate in (0,4) and a.coachstate!=4) and ((select count(*) from ComplaintInfo c where c.order_id"
 				+ " = a.orderid and c.type = 1 and c.state = 0) > 0 or ((select count(*) from ComplaintInfo c where c.order_id"
 				+ " = a.orderid and c.type = 1 and c.state = 0) = 0 and  a.end_time > :now))  order by a.start_time asc");
 		String[] params = { "studentid", "now" };
