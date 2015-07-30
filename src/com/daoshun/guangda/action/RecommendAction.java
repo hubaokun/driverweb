@@ -22,6 +22,7 @@ import com.daoshun.guangda.model.InviteReport;
 import com.daoshun.guangda.pojo.RecommendInfo;
 import com.daoshun.guangda.service.ICUserService;
 import com.daoshun.guangda.service.IRecommendService;
+import com.daoshun.guangda.service.ISBookService;
 
 @ParentPackage("default")
 @Controller
@@ -31,7 +32,7 @@ public class RecommendAction extends BaseAction {
 	@Resource
 	private IRecommendService recommendService;
 	@Resource
-	private ICUserService cuserService;
+	private ISBookService sbookService;
 	
 
 
@@ -93,7 +94,7 @@ public class RecommendAction extends BaseAction {
 	public String offerReward()
 	{
 		HttpSession session = ServletActionContext.getRequest().getSession();
-		HashMap<String, Object> resultmap=(HashMap<String, Object>)cuserService.getCoachlist();
+		HashMap<String, Object> resultmap=(HashMap<String, Object>)sbookService.getCoachList("", "", "", "", "", "", "", "", "", "", "");
 	    resultstring=recommendService.offeredReward(coachid.toString(), invitedcoachid.toString(),typestyle,resultmap);
 		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
 		QueryResult<RecommendInfo> qresult=recommendService.getInvitedDetailsForServer(coachid.toString(),pageIndex,pagesize);
