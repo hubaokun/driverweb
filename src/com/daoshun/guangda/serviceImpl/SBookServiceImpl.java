@@ -262,6 +262,10 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		String[] centers = pointcenter.split(",");
 		String longitude = centers[0].trim();
 		String latitude = centers[1].trim();
+		//120.048943   30.329578
+		/*String longitude="120.048943";
+		String latitude="30.329578";*/
+		
 		// 获得符合条件的地址
 		StringBuffer cuserhql = new StringBuffer();
 		cuserhql.append("from CaddAddressInfo where getdistance(:longitude,:latitude, longitude ,latitude)<=:radius and iscurrent = 1");
@@ -286,7 +290,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				hqlCoach.append(" and score >= " + condition2);
 			}
 			// 开始时间和结束时间
-			/*if (!CommonUtils.isEmptyString(condition3)) {
+			if (!CommonUtils.isEmptyString(condition3)) {
 
 				int subjectid = CommonUtils.parseInt(condition6, 0);
 
@@ -310,33 +314,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				int subjectid = CommonUtils.parseInt(condition6, 0);
 				Calendar c = Calendar.getInstance();
 
-				hqlCoach.append(" and getcoachstate(u.coachid," + 30 + ",'" + CommonUtils.getTimeFormat(c.getTime(), "yyyy-MM-dd") + "'," + 5 + "," + 23 + "," + subjectid + ") = 1");
-			}*/
-			if (!CommonUtils.isEmptyString(condition3)) {
-				//int subjectid = CommonUtils.parseInt(condition6, 0);
-				Date start = CommonUtils.getDateFormat(condition3, "yyyy-MM-dd");
-				if (start != null) {
-					cuserhql.append(" and (select count(*) from t_coach_schedule where  t_coach_schedule.coachid =  ");
-					cuserhql.append(" u.coachid and t_coach_schedule.date = '");
-					cuserhql.append(start).append("'");
-					cuserhql.append(" and t_coach_schedule.hour = 0 and t_coach_schedule.state = 1)>0");
-					cuserhql.append(" and (select count(*) from t_coach_schedule where  t_coach_schedule.coachid =  ");
-					cuserhql.append(" u.coachid and t_coach_schedule.date = '");
-					cuserhql.append(start).append("'");
-					cuserhql.append(" and t_coach_schedule.hour != 0 and t_coach_schedule.isrest=0)>0 ");
-				}
-			} else {
-				/*int subjectid = CommonUtils.parseInt(condition6, 0);
-				Calendar c = Calendar.getInstance();*/
-				cuserhql.append(" and (select count(*) from t_coach_schedule where  t_coach_schedule.coachid =  ");
-				cuserhql.append(" u.coachid and t_coach_schedule.date  <=date_sub(now(),interval -30 day) and ");
-				cuserhql.append(" t_coach_schedule.hour = 0 and t_coach_schedule.state = 1)>0");
-				
-				cuserhql.append(" and (select count(*) from t_coach_schedule where  t_coach_schedule.coachid =  ");
-				cuserhql.append(" u.coachid and t_coach_schedule.date  <=date_sub(now(),interval -30 day) and ");
-				cuserhql.append(" t_coach_schedule.hour != 0 and t_coach_schedule.isrest = 0)>0 ");
-				
-				//cuserhql.append(" and getcoachstate(u.coachid," + 30 + ",'" + CommonUtils.getTimeFormat(c.getTime(), "yyyy-MM-dd") + "'," + 5 + "," + 23 + "," + subjectid + ") = 1");
+				hqlCoach.append(" and getcoachstate(u.coachid," + 10 + ",'" + CommonUtils.getTimeFormat(c.getTime(), "yyyy-MM-dd") + "'," + 5 + "," + 23 + "," + subjectid + ") = 1");
 			}
 
 			if (!CommonUtils.isEmptyString(condition11)) {
@@ -411,6 +389,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				if(info.getCoachid()==157)
 					System.out.println(info.getCoachid());
 			}
+			//System.out.println(hqlCoach.toString());
 			List<CuserInfo> cuserlist = (List<CuserInfo>) dataDao.getObjectsViaParam(hqlCoach.toString(), paramsCoach, cids, now, now, now, now, now);
 			if (cuserlist != null && cuserlist.size() > 0) {
 				for (CuserInfo cuser : cuserlist) {
@@ -451,35 +430,36 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		}
 
 		if (!CommonUtils.isEmptyString(condition3)) {
-			//int subjectid = CommonUtils.parseInt(condition6, 0);
-			Date start = CommonUtils.getDateFormat(condition3, "yyyy-MM-dd");
+
+			int subjectid = CommonUtils.parseInt(condition6, 0);
+
+			Date start = null;
+			if(condition3.length() == 10){
+				start = CommonUtils.getDateFormat(condition3, "yyyy-MM-dd");
+			}else if(condition3.length() == 19){
+				start = CommonUtils.getDateFormat(condition3, "yyyy-MM-dd HH:mm:ss");
+			}
+
 			if (start != null) {
-				cuserhql.append(" and (select count(*) from t_coach_schedule where  t_coach_schedule.coachid =  ");
-				cuserhql.append(" u.coachid and t_coach_schedule.date = '");
-				cuserhql.append(start).append("'");
-				cuserhql.append(" and t_coach_schedule.hour = 0 and t_coach_schedule.state = 1)>0");
-				cuserhql.append(" and (select count(*) from t_coach_schedule where  t_coach_schedule.coachid =  ");
-				cuserhql.append(" u.coachid and t_coach_schedule.date = '");
-				cuserhql.append(start).append("'");
-				cuserhql.append(" and t_coach_schedule.hour != 0 and t_coach_schedule.isrest=0)>0 ");
+				Calendar startCal = Calendar.getInstance();
+				startCal.setTime(start);
+
+				int starthour = startCal.get(Calendar.HOUR_OF_DAY);
+				int datecount = 1;
+				cuserhql.append(" and getcoachstate(u.coachid," + datecount + ",'" + CommonUtils.getTimeFormat(start, "yyyy-MM-dd") + "'," + starthour + "," + 23 + "," + subjectid + ") = 1");
+
 			}
 		} else {
-			/*int subjectid = CommonUtils.parseInt(condition6, 0);
-			Calendar c = Calendar.getInstance();*/
-			cuserhql.append(" and (select count(*) from t_coach_schedule where  t_coach_schedule.coachid =  ");
-			cuserhql.append(" u.coachid and t_coach_schedule.date  <=date_sub(now(),interval -30 day) and ");
-			cuserhql.append(" t_coach_schedule.hour = 0 and t_coach_schedule.state = 1)>0");
-			
-			cuserhql.append(" and (select count(*) from t_coach_schedule where  t_coach_schedule.coachid =  ");
-			cuserhql.append(" u.coachid and t_coach_schedule.date  <=date_sub(now(),interval -30 day) and ");
-			cuserhql.append(" t_coach_schedule.hour != 0 and t_coach_schedule.isrest = 0)>0 ");
-			
-			//cuserhql.append(" and getcoachstate(u.coachid," + 30 + ",'" + CommonUtils.getTimeFormat(c.getTime(), "yyyy-MM-dd") + "'," + 5 + "," + 23 + "," + subjectid + ") = 1");
+			int subjectid = CommonUtils.parseInt(condition6, 0);
+			Calendar c = Calendar.getInstance();
+
+			cuserhql.append(" and getcoachstate(u.coachid," + 10 + ",'" + CommonUtils.getTimeFormat(c.getTime(), "yyyy-MM-dd") + "'," + 5 + "," + 23 + "," + subjectid + ") = 1");
 		}
 
 		if (!CommonUtils.isEmptyString(condition11)) {
 			cuserhql.append(" and modelid like '%" + condition11 + "%'");
 		}
+
 
 		// 开始时间和结束时间
 		// if (!CommonUtils.isEmptyString(condition3) && !CommonUtils.isEmptyString(condition4)) {

@@ -291,6 +291,15 @@ public class SbookServlet extends BaseServlet {
 		String condition9 = getRequestParamter(request, "condition9");// 价格上限
 		String condition10 = getRequestParamter(request, "condition10");// 车型 0.表示不限
 		String condition11 = getRequestParamter(request, "condition11");// 准教车型
+		//接收经纬度和城市名称
+		String longitude = getRequestParamter(request, "longitude");//经纬度
+		String latitude = getRequestParamter(request, "latitude");
+		String cityid = getRequestParamter(request, "cityid");//城市ID
+		
+		CommonUtils.validateEmpty(longitude);
+		CommonUtils.validateEmpty(latitude);
+		CommonUtils.validateEmpty(cityid);
+		
 		HashMap<String, Object> result = sbookService.getCoachList(condition1, condition2, condition3, condition4, condition5, condition6, condition8, condition9, condition10, condition11, pagenum);
 		resultMap.putAll(result);
 	}
