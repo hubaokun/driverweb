@@ -26,7 +26,7 @@ $(function(){
 
 function searchbegin()
 {
-	//var searchname=
+	$("#searchform").attr("action","SearchRecommoned.do").submit();
 }
 </script>
 <style type="text/css">
@@ -80,21 +80,22 @@ function searchbegin()
 		<jsp:include page="left.jsp" />
 		<div id="content_form">
 			<div id="content_form_top">
+			<form action="" id="searchform" method="post">
 		<div class="serchcontentdiv" style="float: left; margin-left: 50px; width: 156px" >
 						<input  type="text" class="searchdiv" style="width: 50px;text-align: center;font-family: 微软雅黑;" value="姓名" readonly="readonly">
-						<input id="realname" type="text" class="searchdiv" style="width:100px;font-family: 微软雅黑;" value="${searchname}"/>
+						<input id="realname" name="realname" type="text" class="searchdiv" style="width:100px;font-family: 微软雅黑;" value="${searchname}"/>
 					</div>
 
 					<div class="serchcontentdiv" style="float: left; margin-left: 50px; width: 156px" >
 						<input type="text" class="searchdiv" style="width: 50px;text-align: center;font-family: 微软雅黑;" value="手机号" readonly="readonly">
-						<input id="phone" type="text" class="searchdiv" style="width:100px;font-family: 微软雅黑;" value="${searchphone}" onkeyup="value=value.replace(/[^\d]/g,'')" onchange="phoneisNum()"/>
+						<input id="phone" name="phone" type="text" class="searchdiv" style="width:100px;font-family: 微软雅黑;" value="${searchphone}" onkeyup="value=value.replace(/[^\d]/g,'')" onchange="phoneisNum()"/>
 					</div>
 
-           <div class="searchbutton" onclick="searchbegin()">
+                <div class="searchbutton" onclick="searchbegin()">
 						<img src="imgs/common/searchicon.png" width=22px height=22px
 							style="margin-top: 9px;" >				
 					</div>
-
+           </form>
 
 
 			</div>
@@ -111,7 +112,7 @@ function searchbegin()
 						<th>操作</th>
 
 					</tr>
-						<s:iterator value="mp" var="rinfo">
+						<s:iterator value="mp">
 					      <tr class="tr_td">
 							<td style="width: 80px;" class="border_right_bottom">${coachname}</td>
 							<td style="width: 200px;" class="border_right_bottom">${coachtelphone}</td>
