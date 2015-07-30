@@ -47,6 +47,15 @@ function deleteinvite(invitedcoachid)
 		document.getElementById("invitedcoachid").value=invitedcoachid;
 	    $("#offeredForm").attr("action","deleteRecommoned.do").submit(); 
 	 }
+	
+}
+function goback()
+{
+	window.location.href="getRecommendList.do";
+}
+function searchbegin()
+{
+	
 }
 </script>
 <style type="text/css">
@@ -102,23 +111,24 @@ function deleteinvite(invitedcoachid)
 			<div id="content_form_top">
 			<div class="serchcontentdiv" style="float: left; margin-left: 50px; width: 156px" >
 						<input  type="text" class="searchdiv" style="width: 50px;text-align: center;font-family: 微软雅黑;" value="被邀请人姓名" readonly="readonly">
-						<input id="realname" type="text" class="searchdiv" style="width:100px;font-family: 微软雅黑;" value="${searchname}"/>
+						<input id="realname" name="realname" type="text" class="searchdiv" style="width:100px;font-family: 微软雅黑;" value="${searchname}"/>
 					</div>
 
 					<div class="serchcontentdiv" style="float: left; margin-left: 50px; width: 156px" >
 						<input type="text" class="searchdiv" style="width: 50px;text-align: center;font-family: 微软雅黑;" value="手机号" readonly="readonly">
-						<input id="phone" type="text" class="searchdiv" style="width:100px;font-family: 微软雅黑;" value="${searchphone}" onkeyup="value=value.replace(/[^\d]/g,'')" onchange="phoneisNum()"/>
+						<input id="phone" name="phone" type="text" class="searchdiv" style="width:100px;font-family: 微软雅黑;" value="${searchphone}" onkeyup="value=value.replace(/[^\d]/g,'')" onchange="phoneisNum()"/>
 					</div>
                 		<div class="searchbutton" style="width:120px;">
-						<a href="javascript:history.go(-1);" style="width:50px;height:50px " >返回上一步>>>></a>
+						<a href="javascript:goback();" style="width:50px;height:50px " >返回列表>>>></a>
 					</div>
-                <div class="searchbutton" onclick="allstudentsearch()">
+                <div class="searchbutton" onclick="searchbegin()">
 						<img src="imgs/common/searchicon.png" width=22px height=22px
 							style="margin-top: 9px;" >				
 					</div>
 			
 					
 			</div> 
+			<input type="hidden" value="${resultstring}" id="resultstring" />
 			<form action="" id="offeredForm" method="post">
 
 			<div id="content_form_table">
@@ -136,7 +146,7 @@ function deleteinvite(invitedcoachid)
 						<th>开单奖励</th>
 						<th>操作</th>
 					</tr>
-					<s:iterator value="mp" id="rinfo">
+					<s:iterator value="mp">
 					
 					      <tr class="tr_td">
 							<td style="width: 80px;" class="border_right_bottom">${invitedpeoplename}</td>
