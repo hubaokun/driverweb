@@ -54,6 +54,8 @@ public class CuserServlet extends BaseServlet {
 	private ISUserService suserService;
     private IRecommendService recommendService;
     private ILocationService locationService;
+
+
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
@@ -71,7 +73,7 @@ public class CuserServlet extends BaseServlet {
 			String action = getAction(request);
 
 			if (Constant.CPERFECTACCOUNTINFO.equals(action) || Constant.CCHANGEAVATAR.equals(action) || Constant.CPERFECTPERSONINFO.equals(action) || Constant.CPERFECTCOACHINFO.equals(action)
-					|| Constant.RECHARGE.equals(action) || Constant.GETMYBALANCEINFO.equals(action)) {
+					|| Constant.RECHARGE.equals(action) || Constant.GETMYBALANCEINFO.equals(action) || Constant.GETMYCOINRECORD.equals(action)) {
 				if (!checkSession(request, action, resultMap)) {
 					setResult(response, resultMap);
 					return;
@@ -102,7 +104,10 @@ public class CuserServlet extends BaseServlet {
 			} else if (Constant.GETMYBALANCEINFO.equals(action)) {
 				// 获取账户余额信息
 				getMyBalanceInfo(request, resultMap);
-			} else {
+			} else if (Constant.GETMYCOINRECORD.equals(action)) {
+				// 获取账户余额信息
+				getMyCoinRecord(request, resultMap);
+			}else {
 				throw new ErrException();
 			}
 
@@ -782,6 +787,15 @@ public class CuserServlet extends BaseServlet {
 
 		HashMap<String, Object> balanceResult = cuserService.getBalanceList(coachid);
 		resultMap.putAll(balanceResult);
+	}
+
+
+	// 获取账户小巴币记录
+	public void getMyCoinRecord(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String coachid = getRequestParamter(request, "coachid");// 教练ID
+
+		HashMap<String, Object> coinRecordResult = cuserService.getCoinRecordList(coachid);
+		resultMap.putAll(coinRecordResult);
 	}
 
 }
