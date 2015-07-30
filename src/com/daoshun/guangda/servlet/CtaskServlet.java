@@ -68,7 +68,7 @@ public class CtaskServlet extends BaseServlet {
 					return;
 				}
 			}
-
+			System.out.println(action+"@@@@@@@@@@@@");
 			if (Constant.CGETNOWTASK.equals(action)) {
 				// 获得未进行的列表
 				getNowTask(request, resultMap);
@@ -296,6 +296,12 @@ public class CtaskServlet extends BaseServlet {
 					} else if (orderInfolist.get(i).getCoachstate() == 1) {
 						orderInfolist.get(i).setState(3);
 					}
+				}
+				//如果
+				if(orderInfolist.get(i).getStudentstate()==4 && orderInfolist.get(i).getCoachstate()!=4){
+					orderInfolist.get(i).setAgreecancel(0);
+				}else{
+					orderInfolist.get(i).setAgreecancel(1);
 				}
 				// 将学生信息保存到list中
 				SuserInfo suser = suserService.getUserById(String.valueOf(orderInfolist.get(i).getStudentid()));

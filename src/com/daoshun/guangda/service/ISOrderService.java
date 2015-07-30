@@ -322,4 +322,17 @@ public interface ISOrderService {
 	 * @return
 	 */
 	public abstract List<OrderInfo> getAllOrder();
+	/**
+	 * 学员取消订单
+	 * @param studentid
+	 * @param orderid
+	 * @return
+	 */
+	public int cancelOrderByStudent(String studentid, String orderid);
+	/**
+	 * 教练 同意取消订单
+	 * @param orderid 订单ID
+	 * @return
+	 */
+	public int cancelOrderByCoach(String orderid,String agree);
 }

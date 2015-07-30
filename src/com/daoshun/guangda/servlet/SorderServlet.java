@@ -54,13 +54,13 @@ public class SorderServlet extends BaseServlet {
 
 			if (Constant.GETCOMPLAINTTOMY.equals(action) || Constant.GETMYCOMPLAINT.equals(action) || Constant.GETWAITEVALUATIONORDER.equals(action) || Constant.GETUNCOMPLETEORDER.equals(action)
 					|| Constant.GETCOMPLETEORDER.equals(action) || Constant.GETORDERDETAIL.equals(action) || Constant.COMPLAINT.equals(action) || Constant.CANCELORDER.equals(action)
-					|| Constant.CANCELCOMPLAINT.equals(action) || Constant.CONFIRMON.equals(action) || Constant.CONFIRMDOWN.equals(action)) {
+					|| Constant.CANCELCOMPLAINT.equals(action) || Constant.CONFIRMON.equals(action) || Constant.CONFIRMDOWN.equals(action) || Constant.CANCELORDERAGREE.equals(action)) {
 				if (!checkSession(request, action, resultMap)) {
 					setResult(response, resultMap);
 					return;
 				}
 			}
-
+			//System.out.println(action+"##########");
 			if (Constant.GETCOMPLAINTTOMY.equals(action)) {
 				// 获取被投诉列表
 				getComplaintToMy(request, resultMap);
@@ -88,6 +88,9 @@ public class SorderServlet extends BaseServlet {
 			} else if (Constant.CANCELORDER.equals(action)) {
 				// 取消订单
 				cancelOrder(request, resultMap);
+			} else if (Constant.CANCELORDERAGREE.equals(action)) {
+				// 取消订单教练同意
+				cancelOrderAgree(request, resultMap);
 			} else if (Constant.CANCELCOMPLAINT.equals(action)) {
 				// 取消订单投诉
 				CancelComplaint(request, resultMap);
@@ -147,6 +150,10 @@ public class SorderServlet extends BaseServlet {
 			// 取消订单
 			userid = getRequestParamter(request, "userid");
 			usertype = "2";
+		} else if (Constant.CANCELORDERAGREE.equals(action)) {
+			// 教练同意取消订单
+			userid = request.getParameter("coachid");
+			usertype = "1";
 		} else if (Constant.CANCELCOMPLAINT.equals(action)) {
 			// 取消订单投诉
 			userid = getRequestParamter(request, "studentid");
@@ -289,7 +296,11 @@ public class SorderServlet extends BaseServlet {
 			// 取消订单
 			userid = getRequestParamter(request, "userid");
 			usertype = "2";
-		} else if (Constant.CANCELCOMPLAINT.equals(action)) {
+		} else if (Constant.CANCELORDERAGREE.equals(action)) {
+			// 教练同意取消订单
+			userid = request.getParameter("coachid");
+			usertype = "1";
+		}else if (Constant.CANCELCOMPLAINT.equals(action)) {
 			// 取消订单投诉
 			userid = getRequestParamter(request, "studentid");
 			usertype = "2";
@@ -414,7 +425,8 @@ public class SorderServlet extends BaseServlet {
 		String orderid = getRequestParamter(request, "orderid");
 		CommonUtils.validateEmpty(studentid);
 		CommonUtils.validateEmpty(orderid);
-		int code = sorderService.cancelOrder(studentid, orderid);
+		//int code = sorderService.cancelOrder(studentid, orderid);
+		int code = sorderService.cancelOrderByStudent(studentid, orderid);
 		if (code == -1) {
 			resultMap.put("code", 3);
 			resultMap.put("message", "取消订单失败,订单不存在");
@@ -424,6 +436,24 @@ public class SorderServlet extends BaseServlet {
 			resultMap.put("message", "取消订单失败,您必须在订单开始" + code / 60 + "小时前取消订单");
 			return;
 		}
+	}
+	/**
+	 * 教练同意取消订单
+	 * @param request
+	 * @param resultMap
+	 * @throws ErrException
+	 */
+	public void cancelOrderAgree(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String agree = getRequestParamter(request, "agree");
+		String orderid = getRequestParamter(request, "orderid");
+		CommonUtils.validateEmpty(agree);
+		CommonUtils.validateEmpty(orderid);
+		int code = sorderService.cancelOrderByCoach(orderid,agree);
+		if (code == -1) {
+			resultMap.put("code", 3);
+			resultMap.put("message", "取消订单失败,订单不存在");
+			return;
+		} 
 	}
 
 	public void CancelComplaint(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {

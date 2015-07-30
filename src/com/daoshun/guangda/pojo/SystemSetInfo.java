@@ -44,6 +44,7 @@ public class SystemSetInfo implements Serializable {
 	@Column(name = "s_order_end", length = 10, nullable = false, columnDefinition = "INT default 2880")
 	private Integer s_order_end;
 
+	//平台对订单的抽成
 	@Column(name = "order_pull", length = 10, nullable = false, columnDefinition = "INT default 0")
 	private Integer order_pull;
 
@@ -58,6 +59,7 @@ public class SystemSetInfo implements Serializable {
 
 	@Column(name = "s_default_coment", length = 1000)
 	private String s_default_coment;
+
 	@Column(name = "c_default_coment", length = 1000)
 	private String c_default_coment;
 
@@ -85,8 +87,10 @@ public class SystemSetInfo implements Serializable {
 
 	@Column(name = "advertisement_url",  length = 1000)
 	private String advertisement_url;
+
 	@Column(name = "creward_amount", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")
 	private BigDecimal crewardamount;
+
 	@Column(name = "oreward_amount", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")
 	private BigDecimal orewardamount;
 
