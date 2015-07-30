@@ -399,8 +399,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			List<Integer> cids = new ArrayList<Integer>();
 			for (CaddAddressInfo info : addresslist) {
 				cids.add(info.getCoachid());
-				if(info.getCoachid()==157)
-					System.out.println(info.getCoachid());
+//				if(info.getCoachid()==157)
+//					System.out.println(info.getCoachid());
 			}
 			List<CuserInfo> cuserlist = (List<CuserInfo>) dataDao.getObjectsViaParam(hqlCoach.toString(), paramsCoach, cids, now, now, now, now, now);
 			if (cuserlist != null && cuserlist.size() > 0) {
@@ -588,11 +588,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		String failtimes = "";// 不能预订的时间点集合
 		int successorderid = 0;// 预订成功的第一个订单的ID
-		String hql1 = "from CscheduleInfo where coachid =:coachid and date = :date and hour =:hour";
-		String params1[] = { "coachid", "date", "hour" };
 
-		String hql2 = "from CBookTimeInfo where coachid =:coachid and bookedtime =:bookedtime and date =:date";
-		String params2[] = { "coachid", "bookedtime", "date" };
 
 		String hql3 = "from CaddAddressInfo where coachid =:coachid and iscurrent = 1";
 		String params3[] = { "coachid" };
@@ -612,7 +608,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		// 首先查询出订单相关的几个时间配置
 		String hqlset = "from SystemSetInfo where 1 = 1";
 		SystemSetInfo setInfo = (SystemSetInfo) dataDao.getFirstObjectViaParam(hqlset, null);
-		String holidays = "";// 距离订单结束之后可以确认下车的时间默认60分钟
+		String holidays = "";
 		int systemOrderPull = 0;
 		int schoolOrderPull = 0;
 		int defaultPrice = 100;
@@ -620,13 +616,13 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		if (setInfo != null) {
 			if (CommonUtils.isEmptyString(setInfo.getHolidays()))
 				holidays = setInfo.getHolidays();
-			if (setInfo.getOrder_pull() != null && setInfo.getOrder_pull() != 0)
+			if (setInfo.getOrder_pull() != null && setInfo.getOrder_pull() != 0)//平台提成
 				systemOrderPull = setInfo.getOrder_pull();
-			if (setInfo.getCoach_default_price() != null && setInfo.getCoach_default_price() != 0) {
+			if (setInfo.getCoach_default_price() != null && setInfo.getCoach_default_price() != 0) {//默认价格
 				defaultPrice = setInfo.getCoach_default_price();
 			}
 
-			if (setInfo.getCoach_default_subject() != null && setInfo.getCoach_default_subject() != 0) {
+			if (setInfo.getCoach_default_subject() != null && setInfo.getCoach_default_subject() != 0) {//默认科目
 				defaultSubjectID = setInfo.getCoach_default_subject();
 			}
 		}
@@ -640,11 +636,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		}
 
 
-		// 订单的提醒设置
-		String hqlnoti = "from OrderNotiSetInfo where 1 = 1";
-		List<OrderNotiSetInfo> orderNotiList = (List<OrderNotiSetInfo>) dataDao.getObjectsViaParam(hqlnoti, null);
 
-		CsubjectInfo sub = dataDao.getObjectById(CsubjectInfo.class, defaultSubjectID);
+		CsubjectInfo sub = dataDao.getObjectById(CsubjectInfo.class, defaultSubjectID);//设置默认科目
 		if (sub == null) {
 			String hql5 = "from CsubjectInfo where 1=1";
 			sub = (CsubjectInfo) dataDao.getFirstObjectViaParam(hql5, null);
@@ -682,6 +675,10 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				String latitude = null;
 				// 详细地址
 				String detail = null;
+
+				String hql1 = "from CscheduleInfo where coachid =:coachid and date = :date and hour =:hour";
+				String params1[] = { "coachid", "date", "hour" };
+
 				int cancel = -1;// 订单是否可以取消 默认 为0 可以取消
 				// 判断时间是否还可以预订
 				// 首先查询当天的全天休息情况
@@ -714,6 +711,9 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					}
 					canOrder = false;
 				} else {
+
+
+
 					// 查看时间是否被预订或者是休息的
 					for (int j = 0; j < times.length(); j++) {
 						String hour = times.get(j).toString();
@@ -724,6 +724,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						if (j == times.length() - 1) {
 							end = hour;
 						}
+						String hql2 = "from CBookTimeInfo where coachid =:coachid and bookedtime =:bookedtime and date =:date";
+						String params2[] = { "coachid", "bookedtime", "date" };
 						List<CBookTimeInfo> booktimeList = (List<CBookTimeInfo>) dataDao.getObjectsViaParam(hql2, params2, CommonUtils.parseInt(coachid, 0), hour, date1);
 						if (booktimeList != null && booktimeList.size() > 0) {// 被预订
 							if (failtimes.length() == 0) {
@@ -957,8 +959,12 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				}
 			}
 
+
 			if (!hasError) {
 				if (orderList.size() > 0) {
+					// 订单的提醒设置
+					String hqlnoti = "from OrderNotiSetInfo where 1 = 1";
+					List<OrderNotiSetInfo> orderNotiList = (List<OrderNotiSetInfo>) dataDao.getObjectsViaParam(hqlnoti, null);
 					BigDecimal total = new BigDecimal(0);
 					for (int m = 0; m < orderList.size(); m++) {
 						dataDao.addObject(orderList.get(m).mOrderInfo);
