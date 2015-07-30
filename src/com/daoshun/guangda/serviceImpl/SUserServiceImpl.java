@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import com.daoshun.guangda.pojo.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,17 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alipay.config.AlipayConfig;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.QueryResult;
-import com.daoshun.guangda.pojo.BalanceStudentInfo;
-import com.daoshun.guangda.pojo.CoachStudentInfo;
-import com.daoshun.guangda.pojo.CouponInfo;
-import com.daoshun.guangda.pojo.CouponRecord;
-import com.daoshun.guangda.pojo.CuserInfo;
-import com.daoshun.guangda.pojo.RechargeRecordInfo;
-import com.daoshun.guangda.pojo.StudentApplyInfo;
-import com.daoshun.guangda.pojo.StudentCheckInfo;
-import com.daoshun.guangda.pojo.SuserInfo;
-import com.daoshun.guangda.pojo.SystemSetInfo;
-import com.daoshun.guangda.pojo.VerifyCodeInfo;
 import com.daoshun.guangda.service.ISUserService;
 
 @Service("suserService")
@@ -742,5 +732,22 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
  		dataDao.updateObjectsViaParam(suserhql.toString(), params, Integer.parseInt(newCoachId), Integer.parseInt(oldCoachId), Integer.parseInt(studentId));
 		return 1;
 	}
+
+
+	@Override
+	public int getCanUseCoinnum(String coachid, String studentid) {
+		HashMap<String, Object> result = new HashMap<String, Object>();
+
+			String countinhql = "select sum(coinnum) from CoinRecordInfo where (receiverid ="+studentid+" and receivertype=3 and ownertype=2 and ownerid="+coachid+")";
+			long totalin = (Long) dataDao.getFirstObjectViaParam(countinhql, null);
+
+
+		String countouthql = "select sum(coinnum) from CoinRecordInfo where (payerid ="+studentid+" and payertype=3 and ownertype=2 and ownerid="+coachid+")";
+		long totalout = (Long) dataDao.getFirstObjectViaParam(countouthql, null);
+
+
+		return (int) (totalin-totalout);
+	}
+
 
 }

@@ -1062,6 +1062,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
                         }
                         total = total.add(orderList.get(m).mOrderInfo.getTotal());// 总价中增加订单的总价
                         total = total.subtract(new BigDecimal(orderList.get(m).mOrderInfo.getDelmoney()));// 减去小巴券中抵掉的金额
+
                         // 小巴券
                         if (orderList.get(m).mOrderInfo.getCouponrecordid() != null && orderList.get(m).mOrderInfo.getCouponrecordid().length() > 0) {
 

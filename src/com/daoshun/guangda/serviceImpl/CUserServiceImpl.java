@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import com.daoshun.guangda.pojo.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,28 +16,6 @@ import com.daoshun.common.ApplePushUtil;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
 import com.daoshun.common.QueryResult;
-import com.daoshun.guangda.pojo.AdminInfo;
-import com.daoshun.guangda.pojo.BalanceCoachInfo;
-import com.daoshun.guangda.pojo.BalanceStudentInfo;
-import com.daoshun.guangda.pojo.CApplyCashInfo;
-import com.daoshun.guangda.pojo.CaddAddressInfo;
-import com.daoshun.guangda.pojo.CoachLevelInfo;
-import com.daoshun.guangda.pojo.ComplaintSetInfo;
-import com.daoshun.guangda.pojo.CouponCoach;
-import com.daoshun.guangda.pojo.CsubjectInfo;
-import com.daoshun.guangda.pojo.CuserInfo;
-import com.daoshun.guangda.pojo.DriveSchoolInfo;
-import com.daoshun.guangda.pojo.ModelsInfo;
-import com.daoshun.guangda.pojo.OrderInfo;
-import com.daoshun.guangda.pojo.PermissionSetInfo;
-import com.daoshun.guangda.pojo.RechargeRecordInfo;
-import com.daoshun.guangda.pojo.RecommendInfo;
-import com.daoshun.guangda.pojo.SchoolBalance;
-import com.daoshun.guangda.pojo.SuserInfo;
-import com.daoshun.guangda.pojo.SystemSetInfo;
-import com.daoshun.guangda.pojo.TeachcarInfo;
-import com.daoshun.guangda.pojo.UserPushInfo;
-import com.daoshun.guangda.pojo.VerifyCodeInfo;
 import com.daoshun.guangda.service.ICUserService;
 
 /**
@@ -873,6 +852,29 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 		}
 		return result;
 	}
+
+
+	@Override
+	public HashMap<String, Object> getCoinRecordList(String coachid) {
+		HashMap<String, Object> result = new HashMap<String, Object>();
+		CuserInfo user = dataDao.getObjectById(CuserInfo.class, CommonUtils.parseInt(coachid, 0));
+		if (user != null) {
+			result.put("coinnum", user.getCoinnum());
+			String hql = "from CoinRecordInfo where (receiverid =:receiverid and receivertype=2) or (payerid =:payerid and payertype=2)  order by addtime desc";
+			String[] params = { "receiverid" };
+			List<CoinRecordInfo> list = (List<CoinRecordInfo>) dataDao.getObjectsViaParam(hql, params, CommonUtils.parseInt(coachid, 0));
+			if (list != null) {
+				result.put("recordlist", list);
+			}
+
+		} else {
+			result.put("code", 2);
+			result.put("message", "用户不存在");
+		}
+		return result;
+	}
+
+
 
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)

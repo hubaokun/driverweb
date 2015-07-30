@@ -86,6 +86,9 @@ public interface ICUserService {
 	/******* 获取教练的充值历史和余额 ******/
 	public abstract HashMap<String, Object> getBalanceList(String coachid);
 
+	/******* 获取教练的小巴币记录 ******/
+	public abstract HashMap<String, Object> getCoinRecordList(String coachid);
+
 	/*********************************************** ACTION ************************************************/
 	/** id找教练 **/
 	public abstract CuserInfo getCoachByid(int id);

@@ -104,7 +104,10 @@ public class Constant {
 
 	// 获取账户余额信息
 	public static final String GETMYBALANCEINFO = "GETMYBALANCEINFO";
-	
+
+	// 获取账户小巴币信息
+	public static final String GETMYCOINRECORD = "GETMYCOINRECORD";
+
 	//获取学员钱包页面所需的附加信息：券的张数，小巴币的
 	public static final String GETSTUDENTWALLETINFO="GETSTUDENTWALLETINFO";
 	
@@ -323,6 +326,11 @@ public class Constant {
 
 	// 获取可以使用的小巴券列表
 	public static final String GETCANUSECOUPONLIST = "GETCANUSECOUPONLIST";
+
+	// 获取可以使用的小巴币个数
+	public static final String GETCANUSECOINSUM = "GETCANUSECOINSUM";
+
+
 	// 获取所有驾校信息
 	public static final String CGETALLSCHOOL = "GETALLSCHOOL";
 	// 设置支付宝账户

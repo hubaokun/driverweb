@@ -47,8 +47,11 @@ public class SbookServlet extends BaseServlet {
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
 		try {
 			String action = getAction(request);
+			String version=getRequestParamter(request, "version");
+			String token = getRequestParamter(request, "token");
 
-			if (Constant.BOOKCOACH.equals(action) || Constant.GETCOUPONLIST.equals(action) || Constant.GETHISCOUPONLIST.equals(action) || Constant.GETCANUSECOUPONLIST.equals(action)) {
+			if (Constant.BOOKCOACH.equals(action) || Constant.GETCOUPONLIST.equals(action) || Constant.GETHISCOUPONLIST.equals(action) ||
+					Constant.GETCANUSECOUPONLIST.equals(action)||Constant.REFRESHCOACHSCHEDULE.equals(action)) {
 				if (!checkSession(request, action, resultMap)) {
 					setResult(response, resultMap);
 					return;
@@ -78,6 +81,8 @@ public class SbookServlet extends BaseServlet {
 				getHisCouponList(request, resultMap);
 			} else if (Constant.GETCANUSECOUPONLIST.equals(action)) {
 				getCanUseCouponList(request, resultMap);
+			} else if (Constant.GETCANUSECOINSUM.equals(action)) {
+				getCanUseCoinSum(request, resultMap);
 			} else {
 				throw new ErrException();
 			}
@@ -162,41 +167,56 @@ public class SbookServlet extends BaseServlet {
 
 			} else {
 				SuserInfo suser = suserService.getUserById(userid);
-				if (suser != null) {
-					String token = getRequestParamter(request, "token");
-					if (!CommonUtils.isEmptyString(token)) {
-						// 时间获取
-						if (token.equals(suser.getToken())) {
-							int login_vcode_time = 15;// 默认十五天
-							SystemSetInfo systemSet = systemService.getSystemSet();
-							if (systemSet != null && systemSet.getLogin_vcode_time() != null && systemSet.getLogin_vcode_time() != 0) {
-								login_vcode_time = systemSet.getLogin_vcode_time();
-							}
+				String version=getRequestParamter(request, "version");
+				String token = getRequestParamter(request, "token");
+				if(suser== null )
+				{
+					resultMap.put(Constant.CODE, 99);
+					resultMap.put(Constant.MESSAGE, "用户参数错误!");
+					return false;
+				}
+				else if ( CommonUtils.isEmptyString(version))
+				{
+					resultMap.put(Constant.CODE, -1);
+					resultMap.put(Constant.MESSAGE, "版本太低,请升级!");
+					return false;
+				}else if ( CommonUtils.isEmptyString(token))
+				{
+					resultMap.put(Constant.CODE, -1);
+					resultMap.put(Constant.MESSAGE, "您必须升级才能下订单!");
+					return false;
+				}
 
-							Calendar now = Calendar.getInstance();
-							Calendar tokenTime = Calendar.getInstance();
-							tokenTime.setTime(suser.getToken_time());
-							tokenTime.add(Calendar.DAY_OF_YEAR, login_vcode_time);
-							if (now.after(tokenTime)) {
-								resultMap.put(Constant.CODE, 95);
-								resultMap.put(Constant.MESSAGE, "您的登录信息已经过期,请重新登录.");
-								return false;
-							} else {
-								return true;
-							}
-						} else {
+
+				if (!CommonUtils.isEmptyString(token)) {
+					// 时间获取
+					if (token.equals(suser.getToken())) {
+						int login_vcode_time = 15;// 默认十五天
+						SystemSetInfo systemSet = systemService.getSystemSet();
+						if (systemSet != null && systemSet.getLogin_vcode_time() != null && systemSet.getLogin_vcode_time() != 0) {
+							login_vcode_time = systemSet.getLogin_vcode_time();
+						}
+
+						Calendar now = Calendar.getInstance();
+						Calendar tokenTime = Calendar.getInstance();
+						tokenTime.setTime(suser.getToken_time());
+						tokenTime.add(Calendar.DAY_OF_YEAR, login_vcode_time);
+						if (now.after(tokenTime)) {
 							resultMap.put(Constant.CODE, 95);
 							resultMap.put(Constant.MESSAGE, "您的登录信息已经过期,请重新登录.");
 							return false;
+						} else {
+							return true;
 						}
 					} else {
-						return true;
+						resultMap.put(Constant.CODE, 95);
+						resultMap.put(Constant.MESSAGE, "您的登录信息已经过期,请重新登录.");
+						return false;
 					}
 				} else {
-					resultMap.put(Constant.CODE, 99);
-					resultMap.put(Constant.MESSAGE, "用户参数错误");
-					return false;
+					return true;
 				}
+
 			}
 		} else {
 			resultMap.put(Constant.CODE, 99);
@@ -299,10 +319,28 @@ public class SbookServlet extends BaseServlet {
 		String coachid = getRequestParamter(request, "coachid");
 		String studentid = getRequestParamter(request, "studentid");
 		String date = getRequestParamter(request, "date");
-		CommonUtils.validateEmpty(coachid);
-		CommonUtils.validateEmpty(studentid);
-		CommonUtils.validateEmpty(date);
+		String paytype = getRequestParamter(request, "paytype");
+		String version=getRequestParamter(request, "version");
+		if (paytype == null || paytype.length() == 0)
+		{
+			resultMap.put("code", 3);
+			resultMap.put("message", "请选择支付方式");
+			return;
+		}
+
+		if (version == null || version.length() == 0)
+		{
+			resultMap.put("code", 4);
+			resultMap.put("message", "您的app版本太低,请退出app并重新进入,将自动检测更新");
+			return;
+		}
+
+
 		try {
+			CommonUtils.validateEmpty(coachid);
+			CommonUtils.validateEmpty(studentid);
+			CommonUtils.validateEmpty(date);
+			CommonUtils.validateEmpty(paytype);
 			resultMap.putAll(sbookService.bookCoach(coachid, studentid, date));
 		} catch (Exception e) {
 			resultMap.put("code", 2);
@@ -373,6 +411,23 @@ public class SbookServlet extends BaseServlet {
 		resultMap.put("couponlist", list);
 		resultMap.put("canUseDiff", canUseDiff);
 		resultMap.put("canUseMaxCount", canUseMaxCount);
+	}
+
+
+
+	/**
+	 * 获取可以使用的小巴券列表 条件:未过期，未使用过,且满足平台、驾校、教练规则
+	 *
+	 * @param request
+	 * @throws ErrException
+	 */
+	public void getCanUseCoinSum(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String studentid = getRequestParamter(request, "studentid");// 学员ID
+		String coachid = getRequestParamter(request, "coachid");// 预订的教练ID
+		CommonUtils.validateEmpty(studentid);
+		CommonUtils.validateEmpty(coachid);
+		int coinnum = suserService.getCanUseCoinnum(coachid,studentid);
+		resultMap.put("coinnum", coinnum);
 	}
 
 }
