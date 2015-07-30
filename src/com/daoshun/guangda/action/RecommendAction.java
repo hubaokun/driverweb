@@ -48,7 +48,7 @@ public class RecommendAction extends BaseAction {
 	private int displayflag=0;
 	private String searchname;
 	private String searchphone;
-	private int resultstring=0;
+	private int resultstring=1;
 	List<RecommendInfo> mp=new ArrayList<RecommendInfo>();
 	@Action(value = "/getRecommendList", results = { @Result(name = SUCCESS, location = "/recommendlist.jsp") })
 	public String getRecommendList()
@@ -84,8 +84,7 @@ public class RecommendAction extends BaseAction {
 		}
 		return SUCCESS;
 	}
-	@Action(value = "/offerReward", results = { @Result(name = SUCCESS, location = "/getRecommendDetail.do?coachid=${coachid}&inviteCount=${invitecount}&checkPastCount=${checkmancount}&earnCount=${totalreward}&orderCount=${ordercount}&index=9&change_id=0&pageIndex=${pageIndex}",type = "redirect")
-	                                           , @Result(name=ERROR,location="/recommenddetail.jsp")})
+	@Action(value = "/offerReward", results = { @Result(name = SUCCESS, location = "/getRecommendDetail.do?coachid=${coachid}&inviteCount=${invitecount}&checkPastCount=${checkmancount}&earnCount=${totalreward}&orderCount=${ordercount}&index=9&change_id=0&pageIndex=${pageIndex}&resultstring=${resultstring}",type = "redirect")})
 	public String offerReward()
 	{
 		HttpSession session = ServletActionContext.getRequest().getSession();
