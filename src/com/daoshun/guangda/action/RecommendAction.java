@@ -18,8 +18,11 @@ import org.springframework.stereotype.Controller;
 
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.QueryResult;
+import com.daoshun.guangda.model.InviteReport;
 import com.daoshun.guangda.pojo.RecommendInfo;
+import com.daoshun.guangda.service.ICUserService;
 import com.daoshun.guangda.service.IRecommendService;
+import com.daoshun.guangda.service.ISBookService;
 
 @ParentPackage("default")
 @Controller
@@ -28,7 +31,9 @@ public class RecommendAction extends BaseAction {
 
 	@Resource
 	private IRecommendService recommendService;
-
+	@Resource
+	private ISBookService sbookService;
+	
 
 
 
@@ -44,12 +49,13 @@ public class RecommendAction extends BaseAction {
 	private int index;
 	private int change_id;
 	private long total;
-	private RecommendInfo rinfo;
+	//private RecommendInfo rinfo;
 	private int displayflag=0;
-	private String searchname;
-	private String searchphone;
+	private String realname;
+	private String phone;
 	private int resultstring=1;
 	List<RecommendInfo> mp=new ArrayList<RecommendInfo>();
+	List<InviteReport>  ip=new ArrayList<InviteReport>();
 	@Action(value = "/getRecommendList", results = { @Result(name = SUCCESS, location = "/recommendlist.jsp") })
 	public String getRecommendList()
 	{
@@ -88,7 +94,8 @@ public class RecommendAction extends BaseAction {
 	public String offerReward()
 	{
 		HttpSession session = ServletActionContext.getRequest().getSession();
-	    resultstring=recommendService.offeredReward(coachid.toString(), invitedcoachid.toString(),typestyle);
+		HashMap<String, Object> resultmap=(HashMap<String, Object>)sbookService.getCoachList("","", "", "", "", "", "", "", "", "", "", "");
+	    resultstring=recommendService.offeredReward(coachid.toString(), invitedcoachid.toString(),typestyle,resultmap);
 		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
 		QueryResult<RecommendInfo> qresult=recommendService.getInvitedDetailsForServer(coachid.toString(),pageIndex,pagesize);
 		mp=qresult.getDataList();
@@ -107,7 +114,7 @@ public class RecommendAction extends BaseAction {
 	{
 		HttpSession session = ServletActionContext.getRequest().getSession();
 		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
-		QueryResult<RecommendInfo> qresult=recommendService.getRecommonedInfoByKeyWord(searchname, searchphone, pageIndex, pagesize);
+		QueryResult<RecommendInfo> qresult=recommendService.getRecommonedInfoByKeyWord(realname, phone);
 		total=qresult.getTotal();
 	    mp=qresult.getDataList();
 		pageCount = ((int) total + pagesize - 1) / pagesize;
@@ -137,6 +144,25 @@ public class RecommendAction extends BaseAction {
 		}
 		return SUCCESS;
 	}
+	@Action(value = "/getRecommendReport", results = { @Result(name = SUCCESS, location = "/recommendreport.jsp")})
+    public String getRecommendReport()
+    {
+		HttpSession session = ServletActionContext.getRequest().getSession();
+		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
+		QueryResult<InviteReport> qresult=recommendService.getRecommenReport(pagesize, pageIndex);
+		ip=qresult.getDataList();
+		total=qresult.getTotal();
+		pageCount = ((int) total + pagesize - 1) / pagesize;
+		if (pageIndex > 1) {
+			if (ip == null || ip.size() == 0) {
+				pageIndex--;
+				getRecommendReport();
+			}
+		}
+		return SUCCESS;
+    }
+	
+	
 	public Integer getPageIndex() {
 		return pageIndex;
 	}
@@ -204,12 +230,12 @@ public class RecommendAction extends BaseAction {
 	public void setChange_id(int change_id) {
 		this.change_id = change_id;
 	}
-	public RecommendInfo getRinfo() {
-		return rinfo;
-	}
-	public void setRinfo(RecommendInfo rinfo) {
-		this.rinfo = rinfo;
-	}
+//	public RecommendInfo getRinfo() {
+//		return rinfo;
+//	}
+//	public void setRinfo(RecommendInfo rinfo) {
+//		this.rinfo = rinfo;
+//	}
 	public int getDisplayflag() {
 		return displayflag;
 	}
@@ -228,23 +254,30 @@ public class RecommendAction extends BaseAction {
 	public void setTypestyle(int typestyle) {
 		this.typestyle = typestyle;
 	}
-	public String getSearchname() {
-		return searchname;
+	
+	public String getRealname() {
+		return realname;
 	}
-	public void setSearchname(String searchname) {
-		this.searchname = searchname;
+	public void setRealname(String realname) {
+		this.realname = realname;
 	}
-	public String getSearchphone() {
-		return searchphone;
+	public String getPhone() {
+		return phone;
 	}
-	public void setSearchphone(String searchphone) {
-		this.searchphone = searchphone;
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 	public int getResultstring() {
 		return resultstring;
 	}
 	public void setResultstring(int resultstring) {
 		this.resultstring = resultstring;
+	}
+	public List<InviteReport> getIp() {
+		return ip;
+	}
+	public void setIp(List<InviteReport> ip) {
+		this.ip = ip;
 	}
 
 

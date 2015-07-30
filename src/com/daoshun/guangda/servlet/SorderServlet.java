@@ -148,7 +148,7 @@ public class SorderServlet extends BaseServlet {
 			usertype = getRequestParamter(request, "type");
 		} else if (Constant.CANCELORDER.equals(action)) {
 			// 取消订单
-			userid = getRequestParamter(request, "userid");
+			userid = getRequestParamter(request, "studentid");
 			usertype = "2";
 		} else if (Constant.CANCELORDERAGREE.equals(action)) {
 			// 教练同意取消订单

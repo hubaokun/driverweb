@@ -72,8 +72,8 @@ public class CscheduleServlet extends BaseServlet {
 			}
 
 			if (Constant.CGETSCHEDULE.equals(action)) {
-				// 获取教练的今天的日程安排
-				getScheduleByToday(request, resultMap);
+				// 获取教练的日程安排
+				getSchedule(request, resultMap);
 			}else if (Constant.CGETSCHEDULEBYDATE.equals(action)) {
 				// 根据日期获取教练的日程安排
 				getScheduleByDate(request, resultMap);
@@ -438,10 +438,6 @@ public class CscheduleServlet extends BaseServlet {
 			Calendar now = Calendar.getInstance();
 			//今天的年月日字符串
 			//String todayStr=CommonUtils.getTimeFormat(now.getTime(), "yyyy-MM-dd");
-			
-			
-			
-			
 			List<CscheduleInfo> schedulelist = new ArrayList<CscheduleInfo>();
 			// 日期循环
 			for (int i = 0; i < maxDays; i++) {
@@ -469,13 +465,13 @@ public class CscheduleServlet extends BaseServlet {
 					allDaySet.setDate(newnow);
 					allDaySet.setHour("0");
 					allDaySet.setState(0);
+					allDaySet.setIsrest(0);
 					allDaySet.setCancelstate(cscheduleService.getDefaultCancelBydate(newnow));
 				}
 				schedulelist.add(allDaySet);
 				// 时间点循环
 				if(i==0){
 						for (int k = 5; k < 24; k++) {
-							long start3=System.currentTimeMillis();
 							CscheduleInfo info = null;
 							// 先寻找数据库中是否有该时间点的设置
 							for (CscheduleInfo cscheduleInfo : dayist) {

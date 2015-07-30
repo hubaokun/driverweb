@@ -1,17 +1,15 @@
 package com.daoshun.guangda.service;
 
 import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.daoshun.common.QueryResult;
+import com.daoshun.guangda.model.InviteReport;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.RecommendInfo;
-/**
- *  @author wjr 
- */
-import com.daoshun.guangda.pojo.SuserInfo;
 public interface IRecommendService{
 	/**
 	 * 获取推荐人员详细内容
@@ -111,7 +109,7 @@ public interface IRecommendService{
 	 * @param invitedcoachid 被推荐教练的ID
 	 * @param type 奖励类型 0=认证奖励 1=开单奖励
 	 */
-	public abstract int offeredReward(String coachid,String invitedcoachid,int type);
+	public abstract int offeredReward(String coachid,String invitedcoachid,int type,HashMap<String, Object> resultmap);
 	/**
 	 * 更行推荐表信息
 	 */
@@ -125,13 +123,40 @@ public interface IRecommendService{
 	 * @param searchname 查询姓名
 	 * @param searchphone 查询电话号码
 	 */
-	public abstract QueryResult<RecommendInfo> getRecommonedInfoByKeyWord(String searchname,String searchphone,Integer pageIndex,Integer pagesize);
+	public abstract QueryResult<RecommendInfo> getRecommonedInfoByKeyWord(String searchname,String searchphone);
     /**
      * 判断这个教练是否开课过
      */
-	public abstract int judgeTeacheOrNot(String coachid);
+	public abstract int judgeTeacheOrNot(String coachid,HashMap<String, Object> resultmap);
 	/**
 	 *  删除邀请
 	 */
 	public abstract void deleteRecommonedInfo(String coachid,String invitedcoachid);
+	/**
+	 * 获取推荐日报
+	 */
+	public abstract QueryResult<InviteReport> getRecommenReport(Integer pageSize,Integer pageIndex);
+	/**
+	 * 根据日期获取这一天的邀请总人数
+	 */
+	public abstract int getInviteCount(Date addtime);
+	/**
+	 * 根据日期获取这一天的认证总人数
+	 */
+	public abstract int getCheckPassCount(Date addtime);
+	/**
+	 * 根据日期获取这一天的开单总人数
+	 */
+	public abstract int getOrderPassCount(Date addtime);
+	/**
+	 * 根据日期获取这一天的奖励总金额
+	 */
+	public abstract BigDecimal getRewardCount(Date addtime);
+	/**
+	 * 根据搜索条件搜索被推荐教练信息
+	 * @param searchname 查询姓名
+	 * @param searchphone 查询电话号码
+	 * @param coachid    推荐教练ID
+	 */
+	public abstract QueryResult<RecommendInfo> getRecommonedInfoByKeyWord(String searchname,String searchphone,String coachid);
 } 

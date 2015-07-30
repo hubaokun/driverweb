@@ -2,13 +2,10 @@ package com.daoshun.guangda.serviceImpl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -17,9 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
 import com.daoshun.common.QueryResult;
-import com.daoshun.guangda.pojo.AdminInfo;
+import com.daoshun.guangda.model.InviteReport;
 import com.daoshun.guangda.pojo.BalanceCoachInfo;
-import com.daoshun.guangda.pojo.CscheduleInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.OrderInfo;
 import com.daoshun.guangda.pojo.RecommendInfo;
@@ -299,7 +295,7 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 	}
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-	public int offeredReward(String coachid,String invitedcoachid,int type) {
+	public int offeredReward(String coachid,String invitedcoachid,int type,HashMap<String, Object> resultmap) {
 		String queryString="from CuserInfo where coachid =:coachid";
 		String queryString1="from RecommendInfo where coachid =:coachid and invitedcoachid=:invitedcoachid";
 		String[] params={"coachid"};
@@ -317,7 +313,7 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 		    BalanceCoachInfo tempBalanceCoachInfo=new BalanceCoachInfo();
 			if(type==0)
 			{
-				if(judgeTeacheOrNot(invitedcoachid)==1)
+				if(judgeTeacheOrNot(invitedcoachid,resultmap)==1)
 				{
 					Balanceplus=systemSetInfo.getCrewardamount();
 			        tempRecommendInfo.setCflag(2);
@@ -371,55 +367,70 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 		return tempRecommendInfo;
 	}
 	@Override
-	public QueryResult<RecommendInfo> getRecommonedInfoByKeyWord(String searchname, String searchphone, Integer pageIndex,Integer pagesize) 
+	public QueryResult<RecommendInfo> getRecommonedInfoByKeyWord(String searchname, String searchphone) 
 	{
-		String queryString="from RecommendInfo where coachname like '%coachname%' or coachtelphone like '%coachtelphone%' group by coachid order by coachid";
-		String[] params={"coachname"};
-		List<RecommendInfo> listr=(List<RecommendInfo>)dataDao.pageQueryViaParam(queryString.toString(), pagesize, pageIndex, params);
-		for(RecommendInfo temp:listr)
+		StringBuffer queryString=new StringBuffer("from RecommendInfo where 1=1"); 
+		String[] params=new String[2];
+		int count=0;
+		if(!searchname.equals(""))
+		{
+			queryString.append(" and coachname like :coachname ");
+			params[count++]="coachname";
+			
+		}
+		if(!searchphone.equals(""))
+		{
+			queryString.append("and coachtelphone like :coachtelphone ");
+			params[count++]="coachtelphone";
+		}
+		queryString.append("group by coachid order by coachid");
+		
+		
+	
+		String querys="SELECT count(*)"+queryString.toString();
+		List<RecommendInfo> listr=new ArrayList<RecommendInfo>();
+		List countlist=new ArrayList();
+	    if(!searchname.equals("") && searchphone.equals(""))
+	    {
+			listr=(List<RecommendInfo>)dataDao.getObjectsViaParam(queryString.toString(), params,"%"+searchname+"%");
+	 		countlist=(List)dataDao.getObjectsViaParam(querys, params,"%"+searchname+"%");
+	    }
+	    else if(searchname.equals("") && !searchphone.equals(""))
+	    {
+	    	listr=(List<RecommendInfo>)dataDao.getObjectsViaParam(queryString.toString(), params,"%"+searchphone+"%");
+	 		countlist=(List)dataDao.getObjectsViaParam(querys, params,"%"+searchphone+"%");
+	    }
+	    else if(!searchname.equals("") && !searchphone.equals(""))
+	    {
+	    	listr=(List<RecommendInfo>)dataDao.getObjectsViaParam(queryString.toString(), params,"%"+searchname+"%","%"+searchphone+"%");
+	 		countlist=(List)dataDao.getObjectsViaParam(querys, params,"%"+searchname+"%","%"+searchphone+"%");
+	    }
+	    else
+	    {
+	    	listr=(List<RecommendInfo>)dataDao.getObjectsViaParam(queryString.toString(), params);
+	    	countlist=(List)dataDao.getObjectsViaParam(querys, params);
+	    }
+ 		for(RecommendInfo temp:listr)
 		{
 			temp.setInvitecount(getRecommendCount(String.valueOf(temp.getCoachid())));
 			temp.setCheckmancount(getCheckManCount(temp.getCoachid()));
 			temp.setOrdercount(getOrderCount(temp.getCoachid()));
 			temp.setTotalreward(getReward(String.valueOf(temp.getCoachid())));
 		}
-		String querys="SELECT count(*)"+queryString;
- 		List countlist=(List)dataDao.getObjectsViaParam(querys, params);
  		long total=	countlist.size();
         return new  QueryResult<RecommendInfo>(listr,total);
 	}
 	@Override
-	public int judgeTeacheOrNot(String coachid) {
-		String[] params={"coachid"};
-		//查找 hour=0 并且state=1的开课记录
-		List<CscheduleInfo> tempCscheduleInfo=(List<CscheduleInfo>)dataDao.getObjectsViaParam("from CscheduleInfo where coachid=:coachid and hour='0' and state=1 order by date desc", params,CommonUtils.parseInt(coachid, 0));
-		for(CscheduleInfo c:tempCscheduleInfo)
-		 {
-			 //根据教练开课日期查找当天开课记录数
-			 String[] params1={"coachid","date"};
-			 List<CscheduleInfo> tempCscheduleInfo1=(List<CscheduleInfo>)dataDao.getObjectsViaParam("from CscheduleInfo where coachid=:coachid and date=:date and isrest=0", params1,CommonUtils.parseInt(coachid, 0),c.getDate());
-				if(tempCscheduleInfo1!=null &&tempCscheduleInfo1.size()>1)
-				  {
-					    StringBuffer cuserhql1 = new StringBuffer();
-						cuserhql1.append("from RecommendInfo where invitedcoachid = :invitedcoachid");
-						String[] params2 = { "invitedcoachid" };
-						RecommendInfo tempRecommendInfo = (RecommendInfo) dataDao.getFirstObjectViaParam(cuserhql1.toString(), params2, CommonUtils.parseInt(coachid, 0));
-						if(tempRecommendInfo!=null)
-						{
-							if(tempRecommendInfo.getCflag()!=2)
-							{
-						      	tempRecommendInfo.setCflag(1);
-						      	updateRecommendInfo(tempRecommendInfo);
-						      	return 1;
-							}
-				        }
-				  }
-		 }
+	public int judgeTeacheOrNot(String coachid,HashMap<String, Object> resultmap) {
+		List<CuserInfo> coachlist=(List<CuserInfo>) resultmap.get("coachlist");
+		for(CuserInfo c:coachlist)
+		{
+			if(coachid.equals(c.getCoachid()))
+			{
+				return 1;
+			}
+		}
 		 return 0;
-	
-
-		
-		
 	}
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override
@@ -429,6 +440,64 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 		RecommendInfo tempRecommendInfo=(RecommendInfo)dataDao.getFirstObjectViaParam(queryString, params,CommonUtils.parseInt(coachid, 0),CommonUtils.parseInt(invitedcoachid, 0));
 		dataDao.deleteObject(tempRecommendInfo);
 	}
-	
+	@Override
+	public QueryResult<InviteReport> getRecommenReport(Integer pageSize,Integer pageIndex) {
+	    StringBuffer querysb=new StringBuffer();
+	    querysb.append("select DATE(addtime) from RecommendInfo group by DATE(addtime) order by addtime desc");
+	    String querystring="select count(*) from RecommendInfo group by DATE(addtime) order by addtime desc";
+	    String[] params={""};
+	    List dateRecommendInfo=(List)dataDao.pageQueryViaParam(querysb.toString(), pageSize, pageIndex, params);
+	    List<RecommendInfo> tempRecommendInfo=(List<RecommendInfo>) dataDao.getObjectsViaParam(querystring, params);
+	    long total=tempRecommendInfo.size();
+	    List<InviteReport> resultInviteReport=new ArrayList<InviteReport>();
+	    for(int i=0;i<dateRecommendInfo.size();i++)
+        {
+	    	InviteReport temInviteReport=new InviteReport();
+	    	temInviteReport.setAddtime((Date) dateRecommendInfo.get(i));
+	    	Date tempdate=(Date) dateRecommendInfo.get(i);
+	    	temInviteReport.setInviteCount(getInviteCount(tempdate));
+	    	temInviteReport.setCheckPassCount(getCheckPassCount(tempdate));
+	    	temInviteReport.setOrderPassCount(getOrderPassCount(tempdate));
+	    	temInviteReport.setRewardCount(getRewardCount(tempdate));
+	    	resultInviteReport.add(temInviteReport);
+        }
+		return new QueryResult<InviteReport>(resultInviteReport,total);
+	}
+	@Override
+	public int getInviteCount(Date addtime) {
+		String querystring="select count(*) from RecommendInfo where Date(addtime)=:addtime";
+		String[] params={"addtime"};
+		long result=(Long)dataDao.getFirstObjectViaParam(querystring, params,addtime);
+		return (int) result;
+	}
+	@Override
+	public int getCheckPassCount(Date addtime) {
+		String querystring="select count(*) from RecommendInfo where Date(addtime)=:addtime and ischecked=1";
+		String[] params={"addtime"};
+		long result=(Long)dataDao.getFirstObjectViaParam(querystring, params,addtime);
+		return (int) result;
+	}
+	@Override
+	public int getOrderPassCount(Date addtime) {
+		String querystring="select count(*) from RecommendInfo where Date(addtime)=:addtime and isorder=1";
+		String[] params={"addtime"};
+		long result=(Long)dataDao.getFirstObjectViaParam(querystring, params,addtime);
+		return (int) result;
+	}
+	@Override
+	public BigDecimal getRewardCount(Date addtime) {
+		String querystring="select sum(reward) from RecommendInfo where Date(addtime)=:addtime";
+		String[] params={"addtime"};
+		BigDecimal result=(BigDecimal)dataDao.getFirstObjectViaParam(querystring, params,addtime);
+		return result;
+
+	}
+	@Override
+	public QueryResult<RecommendInfo> getRecommonedInfoByKeyWord(String searchname, String searchphone,
+			String coachid) {
+	      
+		return null;
+	}
+    
 	
 }
