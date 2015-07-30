@@ -309,6 +309,7 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 		StringBuffer cuserhql = new StringBuffer();
 		cuserhql.append("from SystemSetInfo");
 		SystemSetInfo systemSetInfo = (SystemSetInfo) dataDao.getFirstObjectViaParam(cuserhql.toString(), null);
+		int result=1;
 		if(tempCuserInfo!=null && tempRecommendInfo!=null)
 	    {    	
 		    BigDecimal Balance=tempCuserInfo.getMoney();
@@ -321,10 +322,9 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 					Balanceplus=systemSetInfo.getCrewardamount();
 			        tempRecommendInfo.setCflag(2);
 			    	tempBalanceCoachInfo.setType(4);
-			    	return 1;
 				}
 				else
-					return 0;
+					result=0;
 			}
 			else
 			{
@@ -343,10 +343,10 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 			dataDao.updateObject(tempRecommendInfo);
 			dataDao.updateObject(tempCuserInfo);
 			dataDao.addObject(tempBalanceCoachInfo);
-			return 1;
 	    }
 		else
-			return 0;
+			result=0;
+		return result;
 	}
 
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
@@ -397,7 +397,7 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 		 {
 			 //根据教练开课日期查找当天开课记录数
 			 String[] params1={"coachid","date"};
-			 List<CscheduleInfo> tempCscheduleInfo1=(List<CscheduleInfo>)dataDao.getObjectsViaParam("from CscheduleInfo where coachid=:coachid and date=:date", params1,CommonUtils.parseInt(coachid, 0),c.getDate());
+			 List<CscheduleInfo> tempCscheduleInfo1=(List<CscheduleInfo>)dataDao.getObjectsViaParam("from CscheduleInfo where coachid=:coachid and date=:date and isrest=0", params1,CommonUtils.parseInt(coachid, 0),c.getDate());
 				if(tempCscheduleInfo1!=null &&tempCscheduleInfo1.size()>1)
 				  {
 					    StringBuffer cuserhql1 = new StringBuffer();

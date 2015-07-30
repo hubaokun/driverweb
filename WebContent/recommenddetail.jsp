@@ -22,6 +22,12 @@ $(function(){
 	$("#left_list_"+index).show();
 	var j = $("#change_id").val();
 	$("#change_"+j+index).addClass('left_list_mask');
+	var resultstring=$("#resultstring").val();
+	 if(resultstring==0)
+     {
+		 alert("发放奖励失败");
+		 $("#resultstring").val("1");
+    }
 });
  function showconfirm(coachid,invitedcoachid,types)
  { 
