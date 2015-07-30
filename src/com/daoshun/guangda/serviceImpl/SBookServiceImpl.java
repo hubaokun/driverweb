@@ -414,11 +414,14 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 	}
 
 	@Override
-	public HashMap<String, Object> getCoachList(String condition1, String condition2, String condition3, String condition4, String condition5, String condition6, String condition8, String condition9,
+	public HashMap<String, Object> getCoachList(String cityid,String condition1, String condition2, String condition3, String condition4, String condition5, String condition6, String condition8, String condition9,
 			String condition10, String condition11, String pagenum) {
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		StringBuffer cuserhql = new StringBuffer();
 		cuserhql.append("select getTeachAddress(u.coachid) as address,getCoachOrderCount(u.coachid) as drive_schoolid, u.*  from t_user_coach u where state = 2 and id_cardexptime > curdate() and coach_cardexptime > curdate() and drive_cardexptime > curdate() and car_cardexptime > curdate() and (select count(*) from t_teach_address a where u.coachid = a.coachid and iscurrent = 1) > 0");
+		if (!CommonUtils.isEmptyString(cityid)) {
+			cuserhql.append(" and cityid = " + cityid);
+		}
 		// 真实姓名和教练所属驾校
 		if (!CommonUtils.isEmptyString(condition1)) {
 			cuserhql.append(" and (realname like '%" + condition1 + "%' or drive_school like '%" + condition1 + "%' or drive_schoolid in (select schoolid from t_drive_school_info where name like  '%"

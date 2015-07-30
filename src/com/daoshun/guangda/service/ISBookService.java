@@ -65,7 +65,7 @@ public interface ISBookService {
 	 * @param condition2
 	 * @return
 	 */
-	public abstract HashMap<String, Object> getCoachList(String condition1, String condition2, String condition3, String condition4, String condition5, String condition6, String condition8,
+	public abstract HashMap<String, Object> getCoachList(String cityid,String condition1, String condition2, String condition3, String condition4, String condition5, String condition6, String condition8,
 			String condition9, String condition10, String condition11, String pagenum);
 
 	/**
