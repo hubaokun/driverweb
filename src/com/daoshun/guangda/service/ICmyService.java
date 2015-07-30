@@ -28,6 +28,9 @@ public interface ICmyService {
 
 	public abstract HashMap<String, Object> applyCoupon(String coachid, String recordids);
 
+	/** //申请兑现小巴币 **/
+	public abstract HashMap<String, Object> applyCoin(String coachid, Integer applyCoinNum);
+
 	public abstract List<CouponCoach> getCouponCoachList(String coachid);
 
 	public abstract HashMap<String, Object> updateAliAccount(String userid, String type, String alicount,String cashtype);
@@ -52,6 +55,8 @@ public interface ICmyService {
 
 	/** 增加申请提现信息 **/
 	public abstract void addApplyCash(CApplyCashInfo applycash);
+
+
 
 	/** 分页根据coachid找到属于他的所有的通知 **/
 	public abstract List<NoticesInfo> getNoticesInfoByuserid(String userid, int page, int count);

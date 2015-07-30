@@ -48,10 +48,11 @@ public class SbookServlet extends BaseServlet {
 		try {
 			String action = getAction(request);
 			String version=getRequestParamter(request, "version");
-			String token = getRequestParamter(request, "token");
+//			String token = getRequestParamter(request, "token");
 
-			if (Constant.BOOKCOACH.equals(action) || Constant.GETCOUPONLIST.equals(action) || Constant.GETHISCOUPONLIST.equals(action) ||
-					Constant.GETCANUSECOUPONLIST.equals(action)||Constant.REFRESHCOACHSCHEDULE.equals(action)) {
+			if (Constant.BOOKCOACH.equals(action) || Constant.GETCOUPONLIST.equals(action) || Constant.GETHISCOUPONLIST.equals(action)
+//					||Constant.GETCANUSECOUPONLIST.equals(action)||Constant.REFRESHCOACHSCHEDULE.equals(action)
+					) {
 				if (!checkSession(request, action, resultMap)) {
 					setResult(response, resultMap);
 					return;
@@ -180,7 +181,8 @@ public class SbookServlet extends BaseServlet {
 					resultMap.put(Constant.CODE, -1);
 					resultMap.put(Constant.MESSAGE, "版本太低,请升级!");
 					return false;
-				}else if ( CommonUtils.isEmptyString(token))
+				}
+				else if ( CommonUtils.isEmptyString(token))
 				{
 					resultMap.put(Constant.CODE, -1);
 					resultMap.put(Constant.MESSAGE, "您必须升级才能下订单!");

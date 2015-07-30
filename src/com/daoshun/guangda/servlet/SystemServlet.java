@@ -238,6 +238,7 @@ public class SystemServlet extends BaseServlet {
 				resultMap.put("money", cuser.getMoney());
 				resultMap.put("fmoney", cuser.getFmoney());
 				resultMap.put("gmoney", cuser.getGmoney());
+				resultMap.put("coinnum", cuser.getCoinnum());
 				// 这里需要把教练总共的小巴券时间返回
 				int allhour = cuserService.getCoachAllCouponTime(cuser.getCoachid());
 				resultMap.put("couponhour", allhour);
@@ -247,6 +248,7 @@ public class SystemServlet extends BaseServlet {
 			if (suser != null) {// 学员
 				resultMap.put("money", suser.getMoney());
 				resultMap.put("fmoney", suser.getFmoney());
+				resultMap.put("coinnum", suser.getCoinnum());
 				resultMap.put("gmoney", 0);
 			}
 		}

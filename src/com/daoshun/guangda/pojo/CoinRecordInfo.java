@@ -128,4 +128,19 @@ public class CoinRecordInfo implements Serializable {
 
 	}
 
+	public int getPayertype() {
+		return payertype;
+	}
+
+	public void setPayertype(int payertype) {
+		this.payertype = payertype;
+	}
+
+	public int getReceivertype() {
+		return receivertype;
+	}
+
+	public void setReceivertype(int receivertype) {
+		this.receivertype = receivertype;
+	}
 }

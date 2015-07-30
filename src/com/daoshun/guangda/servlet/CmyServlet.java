@@ -18,21 +18,8 @@ import com.daoshun.common.Constant;
 import com.daoshun.common.ErrException;
 import com.daoshun.guangda.NetData.ComplaintNetData;
 import com.daoshun.guangda.NetData.EvaluationNetData;
-import com.daoshun.guangda.pojo.CApplyCashInfo;
-import com.daoshun.guangda.pojo.CaddAddressInfo;
-import com.daoshun.guangda.pojo.CouponCoach;
-import com.daoshun.guangda.pojo.CsubjectInfo;
-import com.daoshun.guangda.pojo.CuserInfo;
-import com.daoshun.guangda.pojo.DriveSchoolInfo;
-import com.daoshun.guangda.pojo.NoticesInfo;
-import com.daoshun.guangda.pojo.NoticesUserInfo;
-import com.daoshun.guangda.pojo.SuserInfo;
-import com.daoshun.guangda.pojo.SystemSetInfo;
-import com.daoshun.guangda.pojo.TeachcarInfo;
-import com.daoshun.guangda.service.ICUserService;
-import com.daoshun.guangda.service.ICmyService;
-import com.daoshun.guangda.service.ISUserService;
-import com.daoshun.guangda.service.ISystemService;
+import com.daoshun.guangda.pojo.*;
+import com.daoshun.guangda.service.*;
 
 @WebServlet("/cmy")
 public class CmyServlet extends BaseServlet {
@@ -46,6 +33,7 @@ public class CmyServlet extends BaseServlet {
 	private ICUserService cuserService;
 	private ISystemService systemService;
 	private ISUserService suserService;
+	private ICoinRecordService coinRecordService;
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -66,7 +54,7 @@ public class CmyServlet extends BaseServlet {
 					|| Constant.CAPPLYCASH.equals(action) || Constant.CGETNOTICES.equals(action) || Constant.CDELNOTICE.equals(action) || Constant.CGETCOMPLAINTTOMY.equals(action)
 					|| Constant.CGETMYCOMPLAINT.equals(action) || Constant.CGETEVALUATIONTOMY.equals(action) || Constant.CGETMYEVALUATION.equals(action) || Constant.CGETMESSAGECOUNT.equals(action)
 					|| Constant.CHANGEALIACCOUNT.equals(action) || Constant.GETALLCOUPON.equals(action) || Constant.APPLYCOUPON.equals(action) || Constant.GETMYALLSTUDENT.equals(action)
-					|| Constant.DELALIACCOUNT.equals(action) || Constant.CHANGEAPPLYTYPE.equals(action)) {
+					|| Constant.DELALIACCOUNT.equals(action) || Constant.CHANGEAPPLYTYPE.equals(action)||Constant.APPLYCOIN.equals(action)) {
 				if (!checkSession(request, action, resultMap)) {
 					setResult(response, resultMap);
 					return;
@@ -124,7 +112,10 @@ public class CmyServlet extends BaseServlet {
 				getAllCoupon(request, resultMap);
 			} else if (Constant.APPLYCOUPON.equals(action)) {
 				applyCoupon(request, resultMap);
-			} else if (Constant.GETMYALLSTUDENT.equals(action)) {
+			} else if (Constant.APPLYCOIN.equals(action)) {
+				applyCoin(request, resultMap);
+			}
+			else if (Constant.GETMYALLSTUDENT.equals(action)) {
 				getMyAllStudent(request, resultMap);
 			} else if (Constant.DELALIACCOUNT.equals(action)) {
 				delAliAccount(request, resultMap);
@@ -221,6 +212,11 @@ public class CmyServlet extends BaseServlet {
 			userid = getRequestParamter(request, "coachid");// 用户ID
 			usertype = "1";
 		}
+		else if (Constant.APPLYCOIN.equals(action)) {
+			userid = getRequestParamter(request, "coachid");
+			usertype = "1";
+		}
+
 
 		if (!CommonUtils.isEmptyString(userid) && !CommonUtils.isEmptyString(usertype)) {
 			if (CommonUtils.parseInt(usertype, 0) == 1) {
@@ -375,7 +371,14 @@ public class CmyServlet extends BaseServlet {
 		} else if (Constant.APPLYCOUPON.equals(action)) {
 			userid = getRequestParamter(request, "coachid");
 			usertype = "1";
-		} else if (Constant.GETMYALLSTUDENT.equals(action)) {
+		}
+
+		else if (Constant.APPLYCOIN.equals(action)) {
+			userid = getRequestParamter(request, "coachid");
+			usertype = "1";
+		}
+
+		else if (Constant.GETMYALLSTUDENT.equals(action)) {
 			userid = getRequestParamter(request, "coachid");
 			usertype = "1";
 		} else if (Constant.DELALIACCOUNT.equals(action)) {
@@ -853,11 +856,24 @@ public class CmyServlet extends BaseServlet {
 		String recordids = getRequestParamter(request, "recordids");
 		CommonUtils.validateEmpty(coachid);
 		CommonUtils.validateEmpty(recordids);
-
 		HashMap<String, Object> result = cmyService.applyCoupon(coachid, recordids);
-
 		resultMap.putAll(result);
 	}
+
+
+
+	//申请兑现小巴币
+	public void applyCoin(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String coachid = getRequestParamter(request, "coachid");// 用户ID
+		String applycoinnum = getRequestParamter(request, "coinnum");
+		CommonUtils.validateEmpty(coachid);
+		CommonUtils.validateEmpty(applycoinnum);
+		HashMap<String, Object> result =cmyService.applyCoin(coachid,Integer.parseInt(applycoinnum));
+		resultMap.putAll(result);
+	}
+
+
+
 
 	public void getMyAllStudent(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");// 用户ID
