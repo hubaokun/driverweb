@@ -159,7 +159,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		String[] parms={"studentid"};
 		List<SuserState> susersta = (List<SuserState>)dataDao.pageQueryViaParam(suserhql.toString(),10, 1, parms,CommonUtils.parseInt(studentid, 0));
 		String counthql = " select count(*) " + suserhql.toString();
-		long total = (long) dataDao.getFirstObjectViaParam(counthql, parms,CommonUtils.parseInt(studentid, 0));
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, parms,CommonUtils.parseInt(studentid, 0));
 	
 		return new QueryResult<SuserState>(susersta, total);
 	}
@@ -264,7 +264,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		suserhql.append("from SuserInfo where state=1");
 		List<SuserInfo> suserInfolist = (List<SuserInfo>) dataDao.pageQueryViaParam(suserhql.toString() + " order by studentid asc", pagesize, pageIndex, null);
 		String counthql = " select count(*) " + suserhql.toString();
-		long total = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<SuserInfo>(suserInfolist, total);
 	}
 	
@@ -276,7 +276,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		suserhql.append("from SuserInfo where state=2");
 		List<SuserInfo> suserInfolist = (List<SuserInfo>) dataDao.pageQueryViaParam(suserhql.toString() + " order by studentid asc", pagesize, pageIndex, null);
 		String counthql = " select count(*) " + suserhql.toString();
-		long total = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<SuserInfo>(suserInfolist, total);
 	}
 	
@@ -288,7 +288,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			suserhql.append("from SuserInfo where state=6");
 			List<SuserInfo> suserInfolist = (List<SuserInfo>) dataDao.pageQueryViaParam(suserhql.toString() + " order by studentid asc", pagesize, pageIndex, null);
 			String counthql = " select count(*) " + suserhql.toString();
-			long total = (long) dataDao.getFirstObjectViaParam(counthql, null);
+			long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 			return new QueryResult<SuserInfo>(suserInfolist, total);
 		}
 	
@@ -390,7 +390,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		}
 		List<SuserInfo> suserInfolist = (List<SuserInfo>) dataDao.pageQueryViaParam(cuserhql.toString() + " order by studentid asc", pagesize, pageIndex, null);
 		String counthql = " select count(*) " + cuserhql.toString();
-		long total = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<SuserInfo>(suserInfolist, total);
 	}
 	
@@ -431,7 +431,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		}
 		List<SuserInfo> suserInfolist = (List<SuserInfo>) dataDao.pageQueryViaParam(cuserhql.toString() + " order by studentid asc", pagesize, pageIndex, null);
 		String counthql = " select count(*) " + cuserhql.toString();
-		long total = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<SuserInfo>(suserInfolist, total);
 	}
 	
@@ -445,7 +445,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		String[] parms={"studentid"};
 		List<SuserState> susersta = (List<SuserState>)dataDao.pageQueryViaParam(cuserhql.toString(), 10, 1, parms,CommonUtils.parseInt(studentid, 0));
 		String counthql = " select count(*) " + cuserhql.toString();
-		long total = (long) dataDao.getFirstObjectViaParam(counthql, parms,CommonUtils.parseInt(studentid, 0));
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, parms,CommonUtils.parseInt(studentid, 0));
 	
 		return new QueryResult<SuserState>(susersta, total);
 
@@ -490,7 +490,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		}
 		List<SuserInfo> suserInfolist = (List<SuserInfo>) dataDao.pageQueryViaParam(cuserhql.toString() + " order by studentid asc", pagesize, pageIndex, null);
 		String counthql = " select count(*) " + cuserhql.toString();
-		long total = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<SuserInfo>(suserInfolist, total);
 	}
 	
@@ -1001,5 +1001,29 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		return (int) (totalin-totalout);
 	}
 
+
+
+	@Override
+	public HashMap<String, Object> getCoinRecordList(String studentid) {
+		HashMap<String, Object> result = new HashMap<String, Object>();
+		SuserInfo user = dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
+		if (user != null) {
+			result.put("coinnum", user.getCoinnum());
+			String hql = "from CoinRecordInfo where (receiverid =:receiverid and receivertype="+ UserType.STUDENT+" ) or (payerid =:payerid and payertype="+ UserType.STUDENT+")  order by addtime desc";
+			String[] params = {"receiverid", "payerid"};
+
+			Integer cid = CommonUtils.parseInt(studentid, 0);
+			List<CoinRecordInfo> list = (List<CoinRecordInfo>) dataDao.getObjectsViaParam(hql, params, cid, cid);
+			if (list != null) {
+				result.put("recordlist", list);
+			}
+
+		}
+		else {
+			result.put("code", 2);
+			result.put("message", "用户不存在");
+		}
+		return result;
+	}
 
 }
