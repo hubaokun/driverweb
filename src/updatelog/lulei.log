@@ -1,0 +1,26 @@
+2015-07-29
+1 修改学员取消订单操作：当学员取消订单时，只修改订单表t_order的studentstate为4，不做其他操作，并且向此订单关联的
+      教练推送消息，提示让他同意取消此订单
+     相关影响：SorderServlet类：修改cancelOrder方法
+2 添加教练同意的取消订单操作，执行流程和原来操作相同
+      相关影响：SorderServlet类：新增cancelOrderAgree方法
+3 getNowTask 新增返回agreecancel字段，表示是否有需要教练同意取消操作的
+2015-07-30
+1 SBookServiceImpl.java getNearByCoach方法
+2 SOrderServiceImpl类getUnCompleteOrder 为完成订单
+3 SBookServiceImpl getCoachList 完善教练列表中开课教练查询条件
+  开课条件：
+  select * from t_coach_schedule where hour = 0 and state = 1  并且 count（相同date中同一个教练是否存在hour不为0的记录  并且  isrest=0）>0
+  教练端 任务列表
+  GetSchedule
+  getCoachList 学员端显示教练列表
+  学员未完成订单列表：GetUnCompleteOrder
+http://192.168.1.113:8080/xb/sorder?action=GETUNCOMPLETEORDER&studentid=19262
+2015-07-31
+1 CuserAction 类editSingleCoach方法添加接收省市区id
+  singlecoach.jsp的教练详细页面添加设置教练的省市区功能
+  SbookServlet类getCanUseCouponList方法添加返回
+  resultMap.put("coinnum", num);//可用小巴币
+		resultMap.put("money", suser.getMoney()==null?0:suser.getMoney());
+		
+		SUserServiceImpl类的getCanUseCoinnum方法获得可用小巴币
