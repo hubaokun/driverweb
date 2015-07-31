@@ -45,7 +45,7 @@ public class DriveSchoolServiceImpl extends BaseServiceImpl implements IDriveSch
 			schoolbalance.setDriveschool(driveschool);
 		}
 		String counthql = " select count(*) " + schoolbalancehql.toString();
-		long count = (long) dataDao.getFirstObjectViaParam(counthql,null);
+		long count = (Long) dataDao.getFirstObjectViaParam(counthql,null);
 		QueryResult<SchoolBalance> result = new QueryResult<SchoolBalance>(schoolbalancelist, count);
 		return result;
 	}

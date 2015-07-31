@@ -555,12 +555,41 @@ function edittime_cancel_num(){
 		});
 	}
 }
-
+//修改分享奖励设置值
+function edit_reward_num(){
+	var dataid=$("#systemxiaobaid_rew").val();
+	var editvalue=$("#diffxiaoba_rew").val();
+	var colname=$("#xiaobaname_rew").val();
+	if (confirm("是否修改？")) {
+		$.ajax({
+			type : "POST",
+			url : "editValue.do",
+			data : {
+				dataid : dataid,
+				editvalue : editvalue,
+				colname: colname
+			},
+			success : function(data) {
+				if (data == "error") {
+					alert("修改失败");
+					return;
+				}
+				if (data == "success") {
+					alert("修改成功！");
+					window.location.reload();
+				}
+				if (data == "error1") {
+					alert("修改后的名称已存在");
+					return;
+				}
+			}
+		});
+	}
+}
 //修改是否可以使用不同小巴券
 function updatexiaoba(){
 	var dataid=$("#systemxiaobaid").val();
 	var editvalue=$("#diffxiaoba").val();
-	alert(editvalue);
 	var colname=$("#xiaobaname").val();
 	if (confirm("是否修改？")) {
 		$.ajax({
@@ -588,6 +617,42 @@ function updatexiaoba(){
 		});
 	}
 }
+
+
+//修改是否可启用广告图片
+function updateadv(){
+	var dataid=$("#advid").val();
+	var editvalue=$("#diffadv").val();
+//	alert(editvalue);
+	var colname=$("#advflag").val();
+	if (confirm("是否修改？")) {
+		$.ajax({
+			type : "POST",
+			url : "editValue.do",
+			data : {
+				dataid : dataid,
+				editvalue : editvalue,
+				colname: colname
+			},
+			success : function(data) {
+				if (data == "error") {
+					alert("修改失败");
+					return;
+				}
+				if (data == "success") {
+					alert("修改成功！");
+					window.location.reload();
+				}
+				if (data == "error1") {
+					alert("修改后的名称已存在");
+					return;
+				}
+			}
+		});
+	}
+}
+
+
 
 
 
@@ -712,7 +777,8 @@ function showedittimecancel(dataid,oldvalue,colname){
 		$("#level").show();
 		$("#level_sec").show();
 		$("#level_last").show();
-	}else{
+	}
+	else{
 		$("#editvalue").val('');
 		$("#systemid").val(dataid);
 		$("#oldvalue").val('当前值:  '+oldvalue);
@@ -721,6 +787,15 @@ function showedittimecancel(dataid,oldvalue,colname){
 		$("#edit_sec").show();
 		$("#edit_last").show();
 	}
+}
+//设置分享奖励金额
+function showeditreward(dataid,oldvalue,colname){
+	$("#systemxiaobaid_rew").val(dataid);
+	$("#xiaobaoldvalue_rew").val('当前值:  '+oldvalue);
+	$("#xiaobaname_rew").val(colname);
+	$("#maskreward").show();
+	$("#mask_rew").show();
+	$("#mask_lastrew").show();
 }
 
 // 设置订单是否可以使用不同小巴券
@@ -737,12 +812,33 @@ function showdiffxiaoba(dataid,oldvalue,colname){
 	$("#mask_last").show();
 }
 
+
+//设置是否启用广告
+function showdiffadv(dataid,oldvalue,colname){
+	$("#advid").val(dataid);
+	if(oldvalue==0){
+		$("#advoldvalue").val('当前值: 不启用 ');
+	}else{
+		$("#advoldvalue").val('当前值: 启用 ');
+	}
+	$("#advflag").val(colname);
+	$("#maskadv").show();
+	$("#mask_adv").show();
+	$("#adv_last").show();
+}
+
+
+
 function unshowisnum() {
 	$("#level").hide();
 	$("#level_sec").hide();
 	$("#level_last").hide();
 }
-
+function hide_reward_num() {
+	$("#maskreward").hide();
+	$("#mask_rew").hide();
+	$("#mask_lastrew").hide();
+}
 function unshowedittimecancel() {
 	$("#edit").hide();
 	$("#edit_sec").hide();
@@ -754,6 +850,14 @@ function unupdatexiaoba() {
 	$("#mask_sec").hide();
 	$("#mask_last").hide();
 }
+
+
+function unupdateadv() {
+	$("#maskadv").hide();
+	$("#mask_adv").hide();
+	$("#adv_last").hide();
+}
+
 
 
 function timeIsNum(){

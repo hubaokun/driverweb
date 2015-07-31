@@ -19,7 +19,7 @@ import com.daoshun.guangda.service.ISendOrderNotice;
 public class SendOrderNoticeImpl extends BaseServiceImpl implements ISendOrderNotice {
 
 	/**
-	 * 每小时执行一次
+	 * 每分执行一次
 	 */
 	@Transactional(readOnly = false)
 	@Scheduled(cron = "0 * * * * ?")

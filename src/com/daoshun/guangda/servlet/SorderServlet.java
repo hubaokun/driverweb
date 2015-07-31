@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
-import com.daoshun.exception.NullParameterException;
+import com.daoshun.common.ErrException;
 import com.daoshun.guangda.NetData.ComplaintNetData;
 import com.daoshun.guangda.pojo.ComplaintInfo;
 import com.daoshun.guangda.pojo.ComplaintSetInfo;
@@ -54,13 +54,13 @@ public class SorderServlet extends BaseServlet {
 
 			if (Constant.GETCOMPLAINTTOMY.equals(action) || Constant.GETMYCOMPLAINT.equals(action) || Constant.GETWAITEVALUATIONORDER.equals(action) || Constant.GETUNCOMPLETEORDER.equals(action)
 					|| Constant.GETCOMPLETEORDER.equals(action) || Constant.GETORDERDETAIL.equals(action) || Constant.COMPLAINT.equals(action) || Constant.CANCELORDER.equals(action)
-					|| Constant.CANCELCOMPLAINT.equals(action) || Constant.CONFIRMON.equals(action) || Constant.CONFIRMDOWN.equals(action)) {
+					|| Constant.CANCELCOMPLAINT.equals(action) || Constant.CONFIRMON.equals(action) || Constant.CONFIRMDOWN.equals(action) || Constant.CANCELORDERAGREE.equals(action)) {
 				if (!checkSession(request, action, resultMap)) {
 					setResult(response, resultMap);
 					return;
 				}
 			}
-
+			//System.out.println(action+"##########");
 			if (Constant.GETCOMPLAINTTOMY.equals(action)) {
 				// 获取被投诉列表
 				getComplaintToMy(request, resultMap);
@@ -88,6 +88,9 @@ public class SorderServlet extends BaseServlet {
 			} else if (Constant.CANCELORDER.equals(action)) {
 				// 取消订单
 				cancelOrder(request, resultMap);
+			} else if (Constant.CANCELORDERAGREE.equals(action)) {
+				// 取消订单教练同意
+				cancelOrderAgree(request, resultMap);
 			} else if (Constant.CANCELCOMPLAINT.equals(action)) {
 				// 取消订单投诉
 				CancelComplaint(request, resultMap);
@@ -98,7 +101,7 @@ public class SorderServlet extends BaseServlet {
 				// 确认下车
 				confirmDown(request, resultMap);
 			} else {
-				throw new NullParameterException();
+				throw new ErrException();
 			}
 
 			recordUserAction(request, action);
@@ -109,7 +112,7 @@ public class SorderServlet extends BaseServlet {
 		setResult(response, resultMap);
 	}
 
-	private boolean checkSession(HttpServletRequest request, String action, HashMap<String, Object> resultMap) throws NullParameterException {
+	private boolean checkSession(HttpServletRequest request, String action, HashMap<String, Object> resultMap) throws ErrException {
 		String userid = "";// 1.教练 2.学员
 		String usertype = "";
 
@@ -145,8 +148,12 @@ public class SorderServlet extends BaseServlet {
 			usertype = getRequestParamter(request, "type");
 		} else if (Constant.CANCELORDER.equals(action)) {
 			// 取消订单
-			userid = getRequestParamter(request, "userid");
+			userid = getRequestParamter(request, "studentid");
 			usertype = "2";
+		} else if (Constant.CANCELORDERAGREE.equals(action)) {
+			// 教练同意取消订单
+			userid = request.getParameter("coachid");
+			usertype = "1";
 		} else if (Constant.CANCELCOMPLAINT.equals(action)) {
 			// 取消订单投诉
 			userid = getRequestParamter(request, "studentid");
@@ -181,6 +188,7 @@ public class SorderServlet extends BaseServlet {
 							tokenTime.add(Calendar.DAY_OF_YEAR, login_vcode_time);
 							if (now.after(tokenTime)) {
 								resultMap.put(Constant.CODE, 95);
+//								System.out.print("SorderServlet cuser != null checkSession-----111111111");
 								resultMap.put(Constant.MESSAGE, "您的登录信息已经过期,请重新登录.");
 								return false;
 							} else {
@@ -188,6 +196,7 @@ public class SorderServlet extends BaseServlet {
 							}
 						} else {
 							resultMap.put(Constant.CODE, 95);
+//							System.out.print("SorderServlet checkSession-----222222222");
 							resultMap.put(Constant.MESSAGE, "您的登录信息已经过期,请重新登录.");
 							return false;
 						}
@@ -219,6 +228,7 @@ public class SorderServlet extends BaseServlet {
 							tokenTime.add(Calendar.DAY_OF_YEAR, login_vcode_time);
 							if (now.after(tokenTime)) {
 								resultMap.put(Constant.CODE, 95);
+//								System.out.print("SorderServlet suser != null checkSession-----111111111");
 								resultMap.put(Constant.MESSAGE, "您的登录信息已经过期,请重新登录.");
 								return false;
 							} else {
@@ -226,6 +236,9 @@ public class SorderServlet extends BaseServlet {
 							}
 						} else {
 							resultMap.put(Constant.CODE, 95);
+							System.out.println(token.toString());
+							System.out.println(suser.getToken().toString());
+//							System.out.print("SorderServlet 2user != null checkSession-----22222222");
 							resultMap.put(Constant.MESSAGE, "您的登录信息已经过期,请重新登录.");
 							return false;
 						}
@@ -283,7 +296,11 @@ public class SorderServlet extends BaseServlet {
 			// 取消订单
 			userid = getRequestParamter(request, "userid");
 			usertype = "2";
-		} else if (Constant.CANCELCOMPLAINT.equals(action)) {
+		} else if (Constant.CANCELORDERAGREE.equals(action)) {
+			// 教练同意取消订单
+			userid = request.getParameter("coachid");
+			usertype = "1";
+		}else if (Constant.CANCELCOMPLAINT.equals(action)) {
 			// 取消订单投诉
 			userid = getRequestParamter(request, "studentid");
 			usertype = "2";
@@ -302,7 +319,7 @@ public class SorderServlet extends BaseServlet {
 		}
 	}
 
-	public void getComplaintToMy(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getComplaintToMy(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
 		String pagenum = getRequestParamter(request, "pagenum");
 		CommonUtils.validateEmpty(studentid);
@@ -312,7 +329,7 @@ public class SorderServlet extends BaseServlet {
 		resultMap.put("complaintlist", complaintlist);
 	}
 
-	public void getMyComplaint(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getMyComplaint(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
 		String pagenum = getRequestParamter(request, "pagenum");
 		CommonUtils.validateEmpty(studentid);
@@ -326,9 +343,9 @@ public class SorderServlet extends BaseServlet {
 	 * 取得待评价订单列表
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void getWaitEvaluationOrder(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getWaitEvaluationOrder(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
 		String pagenum = getRequestParamter(request, "pagenum");
 		CommonUtils.validateEmpty(studentid);
@@ -342,9 +359,9 @@ public class SorderServlet extends BaseServlet {
 	 * 取得未完成订单列表
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void getUnCompleteOrder(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getUnCompleteOrder(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
 		String pagenum = getRequestParamter(request, "pagenum");
 		CommonUtils.validateEmpty(studentid);
@@ -358,9 +375,9 @@ public class SorderServlet extends BaseServlet {
 	 * 取得已完成订单列表
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void getCompleteOrder(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getCompleteOrder(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
 		String pagenum = getRequestParamter(request, "pagenum");
 		CommonUtils.validateEmpty(studentid);
@@ -370,7 +387,7 @@ public class SorderServlet extends BaseServlet {
 		resultMap.put("orderlist", orderlist);
 	}
 
-	public void getOrderDetail(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getOrderDetail(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String orderid = getRequestParamter(request, "orderid");
 		CommonUtils.validateEmpty(orderid);
 		OrderInfo orderinfo = sorderService.getCompleteOrder(orderid);
@@ -382,14 +399,14 @@ public class SorderServlet extends BaseServlet {
 		}
 	}
 
-	public void getComplaintReason(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getComplaintReason(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String type = getRequestParamter(request, "type");
 		CommonUtils.validateEmpty(type);
 		List<ComplaintSetInfo> reasonlist = sorderService.getComplaintReason(type);
 		resultMap.put("reasonlist", reasonlist);
 	}
 
-	public void complaint(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void complaint(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String userid = getRequestParamter(request, "userid");
 		String orderid = getRequestParamter(request, "orderid");
 		String type = getRequestParamter(request, "type");
@@ -403,12 +420,13 @@ public class SorderServlet extends BaseServlet {
 		sorderService.addComplaint(userid, orderid, type, reason, content);
 	}
 
-	public void cancelOrder(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void cancelOrder(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
 		String orderid = getRequestParamter(request, "orderid");
 		CommonUtils.validateEmpty(studentid);
 		CommonUtils.validateEmpty(orderid);
-		int code = sorderService.cancelOrder(studentid, orderid);
+		//int code = sorderService.cancelOrder(studentid, orderid);
+		int code = sorderService.cancelOrderByStudent(studentid, orderid);
 		if (code == -1) {
 			resultMap.put("code", 3);
 			resultMap.put("message", "取消订单失败,订单不存在");
@@ -419,8 +437,26 @@ public class SorderServlet extends BaseServlet {
 			return;
 		}
 	}
+	/**
+	 * 教练同意取消订单
+	 * @param request
+	 * @param resultMap
+	 * @throws ErrException
+	 */
+	public void cancelOrderAgree(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String agree = getRequestParamter(request, "agree");
+		String orderid = getRequestParamter(request, "orderid");
+		CommonUtils.validateEmpty(agree);
+		CommonUtils.validateEmpty(orderid);
+		int code = sorderService.cancelOrderByCoach(orderid,agree);
+		if (code == -1) {
+			resultMap.put("code", 3);
+			resultMap.put("message", "取消订单失败,订单不存在");
+			return;
+		} 
+	}
 
-	public void CancelComplaint(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void CancelComplaint(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
 		String orderid = getRequestParamter(request, "orderid");
 		CommonUtils.validateEmpty(studentid);
@@ -428,7 +464,7 @@ public class SorderServlet extends BaseServlet {
 		sorderService.CancelComplaint(studentid, orderid);
 	}
 
-	public void confirmOn(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void confirmOn(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
 		String orderid = getRequestParamter(request, "orderid");
 		String lon = getRequestParamter(request, "lon");
@@ -479,7 +515,7 @@ public class SorderServlet extends BaseServlet {
 		}
 	}
 
-	public void confirmDown(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void confirmDown(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
 		String orderid = getRequestParamter(request, "orderid");
 		String lon = getRequestParamter(request, "lon");

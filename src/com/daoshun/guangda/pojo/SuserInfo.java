@@ -37,6 +37,12 @@ public class SuserInfo implements Serializable {
 	@Column(name = "phone", length = 20, unique = true)
 	private String phone;
 
+	//邀请码
+	@Column(name = "invitecode", length = 20, unique = true)
+	private String invitecode;
+	
+
+
 	// 头像id
 	@Column(name = "avatar", length = 10, columnDefinition = "INT default 0")
 	private Integer avatar = 0;
@@ -70,8 +76,8 @@ public class SuserInfo implements Serializable {
 	private Integer id_cardpicb = 0;
 
 	// 城市
-	@Column(name = "city")
-	private String city;
+	@Column(name = "cityid")
+	private String cityid;
 
 	// 地址
 	@Column(name = "address")
@@ -104,6 +110,10 @@ public class SuserInfo implements Serializable {
 	// 账户余额
 	@Column(name = "money", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")
 	private BigDecimal money;
+
+	//小巴币个数
+	@Column(name = "coinnum", length = 10, columnDefinition = "INT default 0")
+	private Integer coinnum;
 
 	// 注册时间
 	@Temporal(TemporalType.TIMESTAMP)
@@ -200,6 +210,27 @@ public class SuserInfo implements Serializable {
 	// 认证教练信息
 	@Transient
 	private CuserInfo cuser;
+	
+	@Column(name = "provinceid", length = 100)
+	private String provinceid;
+	
+	/*@Column(name = "city", length = 100)
+	private String city;*/
+	
+	
+	@Column(name = "areaid", length = 100)
+	private String areaid;
+	
+	@Transient
+	private String locationname;
+	
+	public String getLocationname() {
+		return locationname;
+	}
+
+	public void setLocationname(String locationname) {
+		this.locationname = locationname;
+	}
 
 	public int getStudentid() {
 		return studentid;
@@ -433,12 +464,30 @@ public class SuserInfo implements Serializable {
 		this.score = score;
 	}
 
-	public String getCity() {
-		return city;
+	
+
+	public String getCityid() {
+		return cityid;
 	}
 
-	public void setCity(String city) {
-		this.city = city;
+	public void setCityid(String cityid) {
+		this.cityid = cityid;
+	}
+
+	public String getProvinceid() {
+		return provinceid;
+	}
+
+	public void setProvinceid(String provinceid) {
+		this.provinceid = provinceid;
+	}
+
+	public String getAreaid() {
+		return areaid;
+	}
+
+	public void setAreaid(String areaid) {
+		this.areaid = areaid;
 	}
 
 	public String getAddress() {
@@ -560,5 +609,20 @@ public class SuserInfo implements Serializable {
 	public void setToken_time(Date token_time) {
 		this.token_time = token_time;
 	}
+	public String getInvitecode() {
+		return invitecode;
+	}
 
+	public void setInvitecode(String invitecode) {
+		this.invitecode = invitecode;
+	}
+
+
+	public Integer getCoinnum() {
+		return coinnum;
+	}
+
+	public void setCoinnum(Integer coinnum) {
+		this.coinnum = coinnum;
+	}
 }

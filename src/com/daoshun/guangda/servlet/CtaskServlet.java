@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
-import com.daoshun.exception.NullParameterException;
+import com.daoshun.common.ErrException;
 import com.daoshun.guangda.pojo.CaddAddressInfo;
 import com.daoshun.guangda.pojo.ComplaintInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
@@ -68,7 +68,7 @@ public class CtaskServlet extends BaseServlet {
 					return;
 				}
 			}
-
+			System.out.println(action+"@@@@@@@@@@@@");
 			if (Constant.CGETNOWTASK.equals(action)) {
 				// 获得未进行的列表
 				getNowTask(request, resultMap);
@@ -88,7 +88,7 @@ public class CtaskServlet extends BaseServlet {
 				// 教练确认学生
 				studentCheck(request, resultMap);
 			} else {
-				throw new NullParameterException();
+				throw new ErrException();
 			}
 
 			recordUserAction(request, action);
@@ -99,7 +99,7 @@ public class CtaskServlet extends BaseServlet {
 		setResult(response, resultMap);
 	}
 
-	private boolean checkSession(HttpServletRequest request, String action, HashMap<String, Object> resultMap) throws NullParameterException {
+	private boolean checkSession(HttpServletRequest request, String action, HashMap<String, Object> resultMap) throws ErrException {
 		String userid = "";// 1.教练 2.学员
 		String usertype = "";
 
@@ -252,9 +252,9 @@ public class CtaskServlet extends BaseServlet {
 	 * 获得未进行的任务列表
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void getNowTask(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getNowTask(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = request.getParameter("coachid");
 		CommonUtils.validateEmpty(coachid);
 		String page = request.getParameter("pagenum");
@@ -297,6 +297,12 @@ public class CtaskServlet extends BaseServlet {
 						orderInfolist.get(i).setState(3);
 					}
 				}
+				//如果
+				if(orderInfolist.get(i).getStudentstate()==4 && orderInfolist.get(i).getCoachstate()!=4){
+					orderInfolist.get(i).setAgreecancel(0);
+				}else{
+					orderInfolist.get(i).setAgreecancel(1);
+				}
 				// 将学生信息保存到list中
 				SuserInfo suser = suserService.getUserById(String.valueOf(orderInfolist.get(i).getStudentid()));
 				if (suser != null) {
@@ -320,9 +326,9 @@ public class CtaskServlet extends BaseServlet {
 	 * 分页获得历史列表
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void getHisTask(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getHisTask(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = request.getParameter("coachid");
 		CommonUtils.validateEmpty(coachid);
 		String page = request.getParameter("pagenum");
@@ -366,9 +372,9 @@ public class CtaskServlet extends BaseServlet {
 	 * 教练确认上车
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void confirmOn(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void confirmOn(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = request.getParameter("coachid");
 		CommonUtils.validateEmpty(coachid);
 		String orderid = String.valueOf(request.getParameter("orderid"));
@@ -435,9 +441,9 @@ public class CtaskServlet extends BaseServlet {
 	 * 教练确认下车
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void confirmDown(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void confirmDown(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = request.getParameter("coachid");
 		CommonUtils.validateEmpty(coachid);
 		String orderid = String.valueOf(request.getParameter("orderid"));
@@ -489,9 +495,9 @@ public class CtaskServlet extends BaseServlet {
 	 * 评价任务
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void evaluationTask(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void evaluationTask(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String userid = request.getParameter("userid");
 		CommonUtils.validateEmpty(userid);
 		String type = request.getParameter("type");
@@ -603,9 +609,9 @@ public class CtaskServlet extends BaseServlet {
 	 * 教练认证学生
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void studentCheck(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void studentCheck(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String idcardf = String.valueOf(request.getAttribute("idcardf"));
 		CommonUtils.validateEmpty(idcardf);
 		String idcardb = String.valueOf(request.getAttribute("idcardb"));

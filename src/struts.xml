@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
-    "http://struts.apache.org/dtds/struts-2.0.dtd">
+		"http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
 
 	<constant name="struts.objectFactory.spring.autoWire" value="type"></constant>
 	<!-- 指定由spring负责action对象的创建  -->
-	<constant name="struts.objectFactory" value="spring"></constant>	
+	<constant name="struts.objectFactory" value="spring"></constant>
 	<!-- struts配置文件改动后，是否重新加载(开发时设置为true,发布到生产环境后设置为false) -->
 	<constant name="struts.configuration.xml.reload" value="false"></constant>
 	<!-- 是否启用开发模式(开发时设置为true,发布到生产环境后设置为false) -->
@@ -28,35 +28,35 @@
 	<constant name="struts.multipart.saveDir" value="/tmpupload"></constant>
 	<!-- 访问action的后缀 -->
 	<constant name="struts.action.extension" value="do" />
-	
+
 	<!-- 所有匹配*.action的请求都由struts2处理 -->
 	<!-- <constant name="struts.action.extension" value="action"></constant> -->
 	<!-- 让struts2支持动态方法调用,使用叹号访问方法 -->
 	<!-- <constant name="struts.enable.DynamicMethodInvocation" value="true"></constant> -->
 
-	<!--     定义全局package -->  
-	<package name="default" extends="struts-default">  
-		<interceptors>  
-	    	<interceptor-stack name="defStack">  
-	    	<interceptor-ref name="defaultStack"></interceptor-ref>  
-			<!--把自己的拦截器添加到定义的拦截器栈里面-->  
-	   		<interceptor-ref name="sessionNull"></interceptor-ref>  
-	    </interceptor-stack>  
-		<!--定义自己的拦截器-->  
-	  	<interceptor name="sessionNull" class="com.daoshun.guangda.action.SessionInterceptorAction" />  
-	  	</interceptors>  
-		<!--调用拦截器-->  
-	 	<default-interceptor-ref name="defStack" />  
-	<!--定义全局结果集-->  
-	 	<global-results>  
-	 		<result name="sessionnull" type="redirectAction">  
-	    		<param name="actionName">./login</param> 
-	    		<param name="issession">1</param>
-	        </result>    
-	   	</global-results>  
-	 </package>  
-	
-    <!-- Struts Annotation -->
-    <constant name="actionPackages" value="com.daoshun.guangda.action"/>
+	<!--     定义全局package -->
+	<package name="default" extends="struts-default">
+		<interceptors>
+			<interceptor-stack name="defStack">
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+				<!--把自己的拦截器添加到定义的拦截器栈里面-->
+				<interceptor-ref name="sessionNull"></interceptor-ref>
+			</interceptor-stack>
+			<!--定义自己的拦截器-->
+			<interceptor name="sessionNull" class="com.daoshun.guangda.action.SessionInterceptorAction" />
+		</interceptors>
+		<!--调用拦截器-->
+		<default-interceptor-ref name="defStack" />
+		<!--定义全局结果集-->
+		<global-results>
+			<result name="sessionnull" type="redirectAction">
+				<param name="actionName">./login</param>
+				<param name="issession">1</param>
+			</result>
+		</global-results>
+	</package>
+
+	<!-- Struts Annotation -->
+	<constant name="actionPackages" value="com.daoshun.guangda.action"/>
 
 </struts>

@@ -2,9 +2,12 @@ package com.daoshun.guangda.serviceImpl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import com.daoshun.common.UserType;
+import com.daoshun.guangda.pojo.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,18 +17,6 @@ import com.daoshun.common.Constant;
 import com.daoshun.guangda.NetData.ComplaintNetData;
 import com.daoshun.guangda.NetData.EvaluationNetData;
 import com.daoshun.guangda.model.StudentInfo;
-import com.daoshun.guangda.pojo.CApplyCashInfo;
-import com.daoshun.guangda.pojo.CaddAddressInfo;
-import com.daoshun.guangda.pojo.CoachStudentInfo;
-import com.daoshun.guangda.pojo.ComplaintInfo;
-import com.daoshun.guangda.pojo.CouponCoach;
-import com.daoshun.guangda.pojo.CsubjectInfo;
-import com.daoshun.guangda.pojo.CuserInfo;
-import com.daoshun.guangda.pojo.EvaluationInfo;
-import com.daoshun.guangda.pojo.NoticesInfo;
-import com.daoshun.guangda.pojo.NoticesUserInfo;
-import com.daoshun.guangda.pojo.OrderInfo;
-import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.service.ICmyService;
 
 /**
@@ -421,7 +412,7 @@ public class CmyServiceImpl extends BaseServiceImpl implements ICmyService {
 	@Override
 	public List<CouponCoach> getCouponCoachList(String coachid) {
 		List<CouponCoach> list = new ArrayList<CouponCoach>();
-		String hql = "from CouponCoach where coachid = :coachid and state = 1 order by gettime desc";
+		String hql = "from CouponCoach where coachid = :coachid and (state = 1 or state=2) order by state asc,gettime desc";
 		String[] params = { "coachid" };
 		list.addAll((List<CouponCoach>) dataDao.getObjectsViaParam(hql, params, CommonUtils.parseInt(coachid, 0)));
 		return list;
@@ -464,6 +455,42 @@ public class CmyServiceImpl extends BaseServiceImpl implements ICmyService {
 		return result;
 	}
 
+
+
+	//申请兑现小巴币
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	@Override
+	public HashMap<String, Object> applyCoin(String coachid, Integer applyCoinNum) {
+		HashMap<String, Object> result = new HashMap<String, Object>();
+
+		CoinRecordInfo c = new CoinRecordInfo();
+		c.setCoinnum(applyCoinNum);
+		c.setAddtime(new Date());
+		c.setPayerid(Integer.parseInt(coachid));
+		c.setPayertype(UserType.COAH);//3代表教练
+		c.setOwnertype(UserType.COAH);//3代表教练
+		c.setReceiverid(1);//1平台id
+		c.setReceivertype(UserType.PLATFORM);//1代表平台
+		c.setOwnerid(Integer.parseInt(coachid));//1平台id
+
+			CuserInfo cuser = dataDao.getObjectById(CuserInfo.class, CommonUtils.parseInt(coachid, 0));
+
+			if (cuser != null) {
+				cuser.setCoinnum(cuser.getCoinnum()-applyCoinNum);
+				dataDao.updateObject(cuser);
+				dataDao.addObject(c);
+				result.put("code", 1);
+				result.put("message", "申请提交成功");
+			} else {
+				result.put("code", 3);
+				result.put("message", "用户不存在");
+			}
+		return result;
+	}
+
+
+
+
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override
 	public void setAllMessageReaded(String coachid) {
@@ -489,7 +516,7 @@ public class CmyServiceImpl extends BaseServiceImpl implements ICmyService {
 			StudentInfo studentInfo = new StudentInfo();
 			studentInfo.setAvatar(getFilePathById(suserInfo.getAvatar()));
 			studentInfo.setCoachstate(suserInfo.getCoachstate());
-			studentInfo.setPhone(suserInfo.getSecondphone());
+			studentInfo.setPhone(suserInfo.getPhone());
 			studentInfo.setRealname(suserInfo.getRealname());
 			studentInfo.setStudent_cardnum(suserInfo.getStudent_cardnum());
 			studentInfo.setStudentid(suserInfo.getStudentid());

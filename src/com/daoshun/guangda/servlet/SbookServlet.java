@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
-import com.daoshun.exception.NullParameterException;
+import com.daoshun.common.ErrException;
 import com.daoshun.guangda.pojo.CouponRecord;
 import com.daoshun.guangda.pojo.CscheduleInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
@@ -47,8 +47,12 @@ public class SbookServlet extends BaseServlet {
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
 		try {
 			String action = getAction(request);
+			String version=getRequestParamter(request, "version");
+//			String token = getRequestParamter(request, "token");
 
-			if (Constant.BOOKCOACH.equals(action) || Constant.GETCOUPONLIST.equals(action) || Constant.GETHISCOUPONLIST.equals(action) || Constant.GETCANUSECOUPONLIST.equals(action)) {
+			if (Constant.BOOKCOACH.equals(action) || Constant.GETCOUPONLIST.equals(action) || Constant.GETHISCOUPONLIST.equals(action)
+//					||Constant.GETCANUSECOUPONLIST.equals(action)||Constant.REFRESHCOACHSCHEDULE.equals(action)
+					) {
 				if (!checkSession(request, action, resultMap)) {
 					setResult(response, resultMap);
 					return;
@@ -78,8 +82,10 @@ public class SbookServlet extends BaseServlet {
 				getHisCouponList(request, resultMap);
 			} else if (Constant.GETCANUSECOUPONLIST.equals(action)) {
 				getCanUseCouponList(request, resultMap);
+			} else if (Constant.GETCANUSECOINSUM.equals(action)) {
+				getCanUseCoinSum(request, resultMap);
 			} else {
-				throw new NullParameterException();
+				throw new ErrException();
 			}
 
 			recordUserAction(request, action);
@@ -90,7 +96,7 @@ public class SbookServlet extends BaseServlet {
 		setResult(response, resultMap);
 	}
 
-	private boolean checkSession(HttpServletRequest request, String action, HashMap<String, Object> resultMap) throws NullParameterException {
+	private boolean checkSession(HttpServletRequest request, String action, HashMap<String, Object> resultMap) throws ErrException {
 		String userid = "";// 1.教练 2.学员
 		String usertype = "";
 
@@ -162,41 +168,57 @@ public class SbookServlet extends BaseServlet {
 
 			} else {
 				SuserInfo suser = suserService.getUserById(userid);
-				if (suser != null) {
-					String token = getRequestParamter(request, "token");
-					if (!CommonUtils.isEmptyString(token)) {
-						// 时间获取
-						if (token.equals(suser.getToken())) {
-							int login_vcode_time = 15;// 默认十五天
-							SystemSetInfo systemSet = systemService.getSystemSet();
-							if (systemSet != null && systemSet.getLogin_vcode_time() != null && systemSet.getLogin_vcode_time() != 0) {
-								login_vcode_time = systemSet.getLogin_vcode_time();
-							}
+				String version=getRequestParamter(request, "version");
+				String token = getRequestParamter(request, "token");
+				if(suser== null )
+				{
+					resultMap.put(Constant.CODE, 99);
+					resultMap.put(Constant.MESSAGE, "用户参数错误!");
+					return false;
+				}
+				else if ( CommonUtils.isEmptyString(version))
+				{
+					resultMap.put(Constant.CODE, -1);
+					resultMap.put(Constant.MESSAGE, "版本太低,请升级!");
+					return false;
+				}
+				else if ( CommonUtils.isEmptyString(token))
+				{
+					resultMap.put(Constant.CODE, -1);
+					resultMap.put(Constant.MESSAGE, "您必须升级才能下订单!");
+					return false;
+				}
 
-							Calendar now = Calendar.getInstance();
-							Calendar tokenTime = Calendar.getInstance();
-							tokenTime.setTime(suser.getToken_time());
-							tokenTime.add(Calendar.DAY_OF_YEAR, login_vcode_time);
-							if (now.after(tokenTime)) {
-								resultMap.put(Constant.CODE, 95);
-								resultMap.put(Constant.MESSAGE, "您的登录信息已经过期,请重新登录.");
-								return false;
-							} else {
-								return true;
-							}
-						} else {
+
+				if (!CommonUtils.isEmptyString(token)) {
+					// 时间获取
+					if (token.equals(suser.getToken())) {
+						int login_vcode_time = 15;// 默认十五天
+						SystemSetInfo systemSet = systemService.getSystemSet();
+						if (systemSet != null && systemSet.getLogin_vcode_time() != null && systemSet.getLogin_vcode_time() != 0) {
+							login_vcode_time = systemSet.getLogin_vcode_time();
+						}
+
+						Calendar now = Calendar.getInstance();
+						Calendar tokenTime = Calendar.getInstance();
+						tokenTime.setTime(suser.getToken_time());
+						tokenTime.add(Calendar.DAY_OF_YEAR, login_vcode_time);
+						if (now.after(tokenTime)) {
 							resultMap.put(Constant.CODE, 95);
 							resultMap.put(Constant.MESSAGE, "您的登录信息已经过期,请重新登录.");
 							return false;
+						} else {
+							return true;
 						}
 					} else {
-						return true;
+						resultMap.put(Constant.CODE, 95);
+						resultMap.put(Constant.MESSAGE, "您的登录信息已经过期,请重新登录.");
+						return false;
 					}
 				} else {
-					resultMap.put(Constant.CODE, 99);
-					resultMap.put(Constant.MESSAGE, "用户参数错误");
-					return false;
+					return true;
 				}
+
 			}
 		} else {
 			resultMap.put(Constant.CODE, 99);
@@ -241,14 +263,14 @@ public class SbookServlet extends BaseServlet {
 		}
 	}
 
-	public void getCoachDetail(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getCoachDetail(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		CuserInfo cuser = sbookService.getCoachDetail(coachid);
 		resultMap.put("coachinfo", cuser);
 	}
 
-	public void refreshCoachSchedule(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void refreshCoachSchedule(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		String studentid = getRequestParamter(request, "studentid");
 		String date = getRequestParamter(request, "date");
@@ -258,7 +280,7 @@ public class SbookServlet extends BaseServlet {
 		resultMap.put("datelist", datelist);
 	}
 
-	public void getNearByCoach(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getNearByCoach(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String pointcenter = getRequestParamter(request, "pointcenter");
 		String radius = getRequestParamter(request, "radius");
 		CommonUtils.validateEmpty(pointcenter);
@@ -279,7 +301,7 @@ public class SbookServlet extends BaseServlet {
 		resultMap.put("coachlist", coachlist);
 	}
 
-	public void getCoachList(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getCoachList(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String pagenum = getRequestParamter(request, "pagenum");
 		String condition1 = getRequestParamter(request, "condition1");// 关键字
 		String condition2 = getRequestParamter(request, "condition2");// 星级的下限
@@ -291,19 +313,46 @@ public class SbookServlet extends BaseServlet {
 		String condition9 = getRequestParamter(request, "condition9");// 价格上限
 		String condition10 = getRequestParamter(request, "condition10");// 车型 0.表示不限
 		String condition11 = getRequestParamter(request, "condition11");// 准教车型
-
-		HashMap<String, Object> result = sbookService.getCoachList(condition1, condition2, condition3, condition4, condition5, condition6, condition8, condition9, condition10, condition11, pagenum);
+		//接收经纬度和城市名称
+		String longitude = getRequestParamter(request, "longitude");//经纬度
+		String latitude = getRequestParamter(request, "latitude");
+		String cityid = getRequestParamter(request, "cityid");//城市ID
+		
+		/*CommonUtils.validateEmpty(longitude);
+		CommonUtils.validateEmpty(latitude);
+		CommonUtils.validateEmpty(cityid);*/
+		//HashMap<String, Object> result = sbookService.getCoachList(condition1, condition2, condition3, condition4, condition5, condition6, condition8, condition9, condition10, condition11, pagenum);
+		
+		HashMap<String, Object> result = sbookService.getCoachList2(cityid,condition1, condition2, condition3, condition4, condition5, condition6, condition8, condition9, condition10, condition11, pagenum);
 		resultMap.putAll(result);
 	}
 
-	public void bookCoach(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void bookCoach(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		String studentid = getRequestParamter(request, "studentid");
 		String date = getRequestParamter(request, "date");
-		CommonUtils.validateEmpty(coachid);
-		CommonUtils.validateEmpty(studentid);
-		CommonUtils.validateEmpty(date);
+		String paytype = getRequestParamter(request, "paytype");
+		String version=getRequestParamter(request, "version");
+		if (paytype == null || paytype.length() == 0)
+		{
+			resultMap.put("code", 3);
+			resultMap.put("message", "请选择支付方式");
+			return;
+		}
+
+		if (version == null || version.length() == 0)
+		{
+			resultMap.put("code", 4);
+			resultMap.put("message", "您的app版本太低,请退出app并重新进入,将自动检测更新");
+			return;
+		}
+
+
 		try {
+			CommonUtils.validateEmpty(coachid);
+			CommonUtils.validateEmpty(studentid);
+			CommonUtils.validateEmpty(date);
+			CommonUtils.validateEmpty(paytype);
 			resultMap.putAll(sbookService.bookCoach(coachid, studentid, date));
 		} catch (Exception e) {
 			resultMap.put("code", 2);
@@ -312,7 +361,7 @@ public class SbookServlet extends BaseServlet {
 		}
 	}
 
-	public void getCoachComments(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getCoachComments(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		// String studentid = getRequestParamter(request, "studentid");
 		String pagenum = getRequestParamter(request, "pagenum");
@@ -324,9 +373,9 @@ public class SbookServlet extends BaseServlet {
 	 * 获取学员小巴券列表
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void getCouponList(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getCouponList(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");// 学员ID
 		CommonUtils.validateEmpty(studentid);
 		List<CouponRecord> list = sbookService.getcouponList(studentid);
@@ -337,9 +386,9 @@ public class SbookServlet extends BaseServlet {
 	 * 获取学员历史小巴券列表
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void getHisCouponList(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getHisCouponList(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");// 学员ID
 		CommonUtils.validateEmpty(studentid);
 		List<CouponRecord> list = sbookService.getHisCouponList(studentid);
@@ -350,9 +399,9 @@ public class SbookServlet extends BaseServlet {
 	 * 获取可以使用的小巴券列表 条件:未过期，未使用过,且满足平台、驾校、教练规则
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void getCanUseCouponList(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getCanUseCouponList(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");// 学员ID
 		String coachid = getRequestParamter(request, "coachid");// 预订的教练ID
 		CommonUtils.validateEmpty(studentid);
@@ -374,6 +423,23 @@ public class SbookServlet extends BaseServlet {
 		resultMap.put("couponlist", list);
 		resultMap.put("canUseDiff", canUseDiff);
 		resultMap.put("canUseMaxCount", canUseMaxCount);
+	}
+
+
+
+	/**
+	 * 获取可以使用的小巴券列表 条件:未过期，未使用过,且满足平台、驾校、教练规则
+	 *
+	 * @param request
+	 * @throws ErrException
+	 */
+	public void getCanUseCoinSum(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String studentid = getRequestParamter(request, "studentid");// 学员ID
+		String coachid = getRequestParamter(request, "coachid");// 预订的教练ID
+		CommonUtils.validateEmpty(studentid);
+		CommonUtils.validateEmpty(coachid);
+		int coinnum = suserService.getCanUseCoinnum(coachid,studentid);
+		resultMap.put("coinnum", coinnum);
 	}
 
 }

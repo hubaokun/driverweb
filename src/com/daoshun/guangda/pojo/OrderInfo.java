@@ -151,6 +151,7 @@ public class OrderInfo implements Serializable {
 	// 订单时间段价格记录
 	@Transient
 	private List<OrderPrice> orderprice;
+	
 
 	// 是否有投诉
 	// @Transient
@@ -171,6 +172,18 @@ public class OrderInfo implements Serializable {
 	// 订单距离开始小时数
 	@Transient
 	private int hours;
+	
+	//0 教练未同意取消  1 教练已同意取消
+	@Transient
+	private int agreecancel;
+	
+	public int getAgreecancel() {
+		return agreecancel;
+	}
+
+	public void setAgreecancel(int agreecancel) {
+		this.agreecancel = agreecancel;
+	}
 
 	public int getOrderid() {
 		return orderid;

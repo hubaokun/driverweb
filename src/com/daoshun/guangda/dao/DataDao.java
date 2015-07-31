@@ -1,7 +1,6 @@
 package com.daoshun.guangda.dao;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -12,7 +11,6 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.daoshun.guangda.NetData.SchoolDailyData;
 
 @Repository("dataDao")
 public class DataDao {
@@ -211,9 +209,34 @@ public class DataDao {
 		}
 		return query.list();
 	}
-	
+	public List<?> SqlQuery(String sql,Class<?> cl){
+		Query query = getSession().createSQLQuery(sql).addEntity(cl);
+		return query.list();
+	}
 	public List<?> SqlPageQuery(String sql , final Integer pageSize, final Integer page, final Object... p){
 		Query query = getSession().createSQLQuery(sql);
+		if (p != null) {
+			for (int i = 0; i < p.length; i++) {
+				query.setParameter(i, p[i]);
+			}
+		}
+		if (pageSize != null && pageSize > 0 && page != null && page > 0) {
+			query.setFirstResult((page - 1) * pageSize).setMaxResults(pageSize);
+		}
+		return query.list();
+	}
+	/**
+	 * sql分页条件查询  
+	 * @param sql   sql语句
+	 * @param pageSize 每页条数
+	 * @param page  页数
+	 * @param cl 实体类Class
+	 * @param p  条件值
+	 * @return 检索结果数据集
+	 * @author 卢磊
+	 */
+	public List<?> SqlPageQuery(String sql , final Integer pageSize, final Integer page,Class<?> cl, final Object... p){
+		Query query = getSession().createSQLQuery(sql).addEntity(cl);
 		if (p != null) {
 			for (int i = 0; i < p.length; i++) {
 				query.setParameter(i, p[i]);
@@ -312,6 +335,27 @@ public class DataDao {
 		query.executeUpdate();
 	}
 	
+	public void updateBySql(String sql) {
+		SQLQuery query = getSession().createSQLQuery(sql);
+		System.out.println(sql);
+		int code =query.executeUpdate();
+	}
+
+
+
+
+	public void updateObjectsViaParam(String hql, String[] params, Object... p) {
+		Query query = getSession().createQuery(hql);
+		if (p != null) {
+			for (int i = 0; i < p.length; i++) {
+				query.setParameter(params[i], p[i]);
+			}
+		}
+		query.executeUpdate();
+	}
+
+
+
 	public List<Object> callSyetem(String addtime){
 		Session session=this.getSession();
 		SQLQuery query= session.createSQLQuery("{Call systemDaliy(?)}");

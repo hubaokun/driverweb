@@ -6,7 +6,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -16,24 +15,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
-import com.daoshun.exception.NullParameterException;
+import com.daoshun.common.ErrException;
 import com.daoshun.guangda.NetData.ComplaintNetData;
 import com.daoshun.guangda.NetData.EvaluationNetData;
-import com.daoshun.guangda.pojo.CApplyCashInfo;
-import com.daoshun.guangda.pojo.CaddAddressInfo;
-import com.daoshun.guangda.pojo.CouponCoach;
-import com.daoshun.guangda.pojo.CsubjectInfo;
-import com.daoshun.guangda.pojo.CuserInfo;
-import com.daoshun.guangda.pojo.DriveSchoolInfo;
-import com.daoshun.guangda.pojo.NoticesInfo;
-import com.daoshun.guangda.pojo.NoticesUserInfo;
-import com.daoshun.guangda.pojo.SuserInfo;
-import com.daoshun.guangda.pojo.SystemSetInfo;
-import com.daoshun.guangda.pojo.TeachcarInfo;
-import com.daoshun.guangda.service.ICUserService;
-import com.daoshun.guangda.service.ICmyService;
-import com.daoshun.guangda.service.ISUserService;
-import com.daoshun.guangda.service.ISystemService;
+import com.daoshun.guangda.pojo.*;
+import com.daoshun.guangda.service.*;
 
 @WebServlet("/cmy")
 public class CmyServlet extends BaseServlet {
@@ -47,6 +33,7 @@ public class CmyServlet extends BaseServlet {
 	private ICUserService cuserService;
 	private ISystemService systemService;
 	private ISUserService suserService;
+	private ICoinRecordService coinRecordService;
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -67,7 +54,7 @@ public class CmyServlet extends BaseServlet {
 					|| Constant.CAPPLYCASH.equals(action) || Constant.CGETNOTICES.equals(action) || Constant.CDELNOTICE.equals(action) || Constant.CGETCOMPLAINTTOMY.equals(action)
 					|| Constant.CGETMYCOMPLAINT.equals(action) || Constant.CGETEVALUATIONTOMY.equals(action) || Constant.CGETMYEVALUATION.equals(action) || Constant.CGETMESSAGECOUNT.equals(action)
 					|| Constant.CHANGEALIACCOUNT.equals(action) || Constant.GETALLCOUPON.equals(action) || Constant.APPLYCOUPON.equals(action) || Constant.GETMYALLSTUDENT.equals(action)
-					|| Constant.DELALIACCOUNT.equals(action) || Constant.CHANGEAPPLYTYPE.equals(action)) {
+					|| Constant.DELALIACCOUNT.equals(action) || Constant.CHANGEAPPLYTYPE.equals(action)||Constant.APPLYCOIN.equals(action)) {
 				if (!checkSession(request, action, resultMap)) {
 					setResult(response, resultMap);
 					return;
@@ -125,14 +112,17 @@ public class CmyServlet extends BaseServlet {
 				getAllCoupon(request, resultMap);
 			} else if (Constant.APPLYCOUPON.equals(action)) {
 				applyCoupon(request, resultMap);
-			} else if (Constant.GETMYALLSTUDENT.equals(action)) {
+			} else if (Constant.APPLYCOIN.equals(action)) {
+				applyCoin(request, resultMap);
+			}
+			else if (Constant.GETMYALLSTUDENT.equals(action)) {
 				getMyAllStudent(request, resultMap);
 			} else if (Constant.DELALIACCOUNT.equals(action)) {
 				delAliAccount(request, resultMap);
 			} else if (Constant.CHANGEAPPLYTYPE.equals(action)) {
 				changeApplyType(request, resultMap);
 			} else {
-				throw new NullParameterException();
+				throw new ErrException();
 			}
 			
 			recordUserAction(request, action);
@@ -143,7 +133,7 @@ public class CmyServlet extends BaseServlet {
 		setResult(response, resultMap);
 	}
 
-	private boolean checkSession(HttpServletRequest request, String action, HashMap<String, Object> resultMap) throws NullParameterException {
+	private boolean checkSession(HttpServletRequest request, String action, HashMap<String, Object> resultMap) throws ErrException {
 		String userid = "";// 1.教练 2.学员
 		String usertype = "";
 
@@ -222,6 +212,11 @@ public class CmyServlet extends BaseServlet {
 			userid = getRequestParamter(request, "coachid");// 用户ID
 			usertype = "1";
 		}
+		else if (Constant.APPLYCOIN.equals(action)) {
+			userid = getRequestParamter(request, "coachid");
+			usertype = "1";
+		}
+
 
 		if (!CommonUtils.isEmptyString(userid) && !CommonUtils.isEmptyString(usertype)) {
 			if (CommonUtils.parseInt(usertype, 0) == 1) {
@@ -376,7 +371,14 @@ public class CmyServlet extends BaseServlet {
 		} else if (Constant.APPLYCOUPON.equals(action)) {
 			userid = getRequestParamter(request, "coachid");
 			usertype = "1";
-		} else if (Constant.GETMYALLSTUDENT.equals(action)) {
+		}
+
+		else if (Constant.APPLYCOIN.equals(action)) {
+			userid = getRequestParamter(request, "coachid");
+			usertype = "1";
+		}
+
+		else if (Constant.GETMYALLSTUDENT.equals(action)) {
 			userid = getRequestParamter(request, "coachid");
 			usertype = "1";
 		} else if (Constant.DELALIACCOUNT.equals(action)) {
@@ -396,9 +398,9 @@ public class CmyServlet extends BaseServlet {
 	 * 设置教练单价
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void setPrice(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void setPrice(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		String price = getRequestParamter(request, "price");
@@ -419,9 +421,9 @@ public class CmyServlet extends BaseServlet {
 	 * 增加地址
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void addAddress(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void addAddress(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		String longitude = getRequestParamter(request, "longitude");
@@ -455,9 +457,9 @@ public class CmyServlet extends BaseServlet {
 	 * 删除地址
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void delAddress(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void delAddress(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		String addressid = getRequestParamter(request, "addressid");
@@ -481,9 +483,9 @@ public class CmyServlet extends BaseServlet {
 	 * 设置地址为当前使用地址
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void setCurrentAddress(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void setCurrentAddress(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		String addressid = getRequestParamter(request, "addressid");
@@ -515,9 +517,9 @@ public class CmyServlet extends BaseServlet {
 	 * 根据coachid找到所有的地址
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void getAllAddress(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getAllAddress(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		List<CaddAddressInfo> cadds = cmyService.getAddressInfosByCoachid(coachid);
@@ -528,9 +530,9 @@ public class CmyServlet extends BaseServlet {
 	 * 申请提现
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void applyCash(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void applyCash(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		String count = getRequestParamter(request, "count");
@@ -569,9 +571,9 @@ public class CmyServlet extends BaseServlet {
 	 * 根据coachid分页得到对他的通知列表
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void getNotices(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getNotices(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		String pagenum = getRequestParamter(request, "pagenum");
@@ -594,9 +596,9 @@ public class CmyServlet extends BaseServlet {
 	 * 删除通知
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void delNotice(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void delNotice(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		String noticeid = getRequestParamter(request, "noticeid");
@@ -618,9 +620,9 @@ public class CmyServlet extends BaseServlet {
 	 * 取得我的投诉列表
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void getComplaintToMy(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getComplaintToMy(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		String pagenum = getRequestParamter(request, "pagenum");
@@ -638,9 +640,9 @@ public class CmyServlet extends BaseServlet {
 	 * 取得我投诉的列表
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void getMyCompliant(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getMyCompliant(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		String pagenum = getRequestParamter(request, "pagenum");
@@ -658,9 +660,9 @@ public class CmyServlet extends BaseServlet {
 	 * 得到评价我的列表
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void getEvaluationToMy(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getEvaluationToMy(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		String pagenum = getRequestParamter(request, "pagenum");
@@ -679,9 +681,9 @@ public class CmyServlet extends BaseServlet {
 	 * 获得我的评价列表
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void getMyEvaluation(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getMyEvaluation(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		String pagenum = getRequestParamter(request, "pagenum");
@@ -698,9 +700,9 @@ public class CmyServlet extends BaseServlet {
 	// /**
 	// * 设置消息提醒设置
 	// * @param request
-	// * @throws NullParameterException
+	// * @throws ErrException
 	// */
-	// public void changeSet(HttpServletRequest request) throws NullParameterException {
+	// public void changeSet(HttpServletRequest request) throws ErrException {
 	// String coachid = getRequestParamter(request, "coachid");
 	// CommonUtils.validateEmpty(coachid);
 	// String newtasknoti = getRequestParamter(request, "newtasknoti");
@@ -718,9 +720,9 @@ public class CmyServlet extends BaseServlet {
 	 * 获取我的消息的数量
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void getMessageCount(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getMessageCount(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		CuserInfo cuser = cuserService.getCuserByCoachid(coachid);
@@ -750,9 +752,9 @@ public class CmyServlet extends BaseServlet {
 	 * 设置教练默认的教学科目
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void setSubject(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void setSubject(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		String subjectid = getRequestParamter(request, "subjectid");
@@ -779,9 +781,9 @@ public class CmyServlet extends BaseServlet {
 	 * 获得所有的教学科目信息
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void getAllSubject(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getAllSubject(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		CuserInfo cuserInfo = null;
 		if (!CommonUtils.isEmptyString(coachid)) {
@@ -807,9 +809,9 @@ public class CmyServlet extends BaseServlet {
 	 * 获得所有教学用车车型
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void getAllTeachCarModel(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getAllTeachCarModel(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		List<TeachcarInfo> teachcarlist = cuserService.getTeachcarInfolist();
 		resultMap.put("teachcarlist", teachcarlist);
 	}
@@ -818,14 +820,14 @@ public class CmyServlet extends BaseServlet {
 	 * 获取所有驾校信息
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void getAllSchool(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getAllSchool(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		List<DriveSchoolInfo> driveschoollist = cuserService.getDriveSchoolInfo();
 		resultMap.put("schoollist", driveschoollist);
 	}
 
-	public void changeAliAccount(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void changeAliAccount(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String userid = getRequestParamter(request, "userid");// 用户ID
 		String type = getRequestParamter(request, "type");// 类型 1教练 2学员
 		String aliaccount = getRequestParamter(request, "aliaccount");// 支付宝账户
@@ -838,7 +840,7 @@ public class CmyServlet extends BaseServlet {
 		resultMap.putAll(cmyService.updateAliAccount(userid, type, aliaccount, cashtype));
 	}
 
-	public void getAllCoupon(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getAllCoupon(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");// 用户ID
 		CommonUtils.validateEmpty(coachid);
 
@@ -849,18 +851,31 @@ public class CmyServlet extends BaseServlet {
 		resultMap.put("couponlist", list);
 	}
 
-	public void applyCoupon(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void applyCoupon(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");// 用户ID
 		String recordids = getRequestParamter(request, "recordids");
 		CommonUtils.validateEmpty(coachid);
 		CommonUtils.validateEmpty(recordids);
-
 		HashMap<String, Object> result = cmyService.applyCoupon(coachid, recordids);
-
 		resultMap.putAll(result);
 	}
 
-	public void getMyAllStudent(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+
+
+	//申请兑现小巴币
+	public void applyCoin(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String coachid = getRequestParamter(request, "coachid");// 用户ID
+		String applycoinnum = getRequestParamter(request, "coinnum");
+		CommonUtils.validateEmpty(coachid);
+		CommonUtils.validateEmpty(applycoinnum);
+		HashMap<String, Object> result =cmyService.applyCoin(coachid,Integer.parseInt(applycoinnum));
+		resultMap.putAll(result);
+	}
+
+
+
+
+	public void getMyAllStudent(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");// 用户ID
 		String pageNum = getRequestParamter(request, "pageNum");
 		CommonUtils.validateEmpty(coachid);
@@ -869,7 +884,7 @@ public class CmyServlet extends BaseServlet {
 		resultMap.putAll(result);
 	}
 
-	public void delAliAccount(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void delAliAccount(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String userid = getRequestParamter(request, "userid");// 用户ID
 		String type = getRequestParamter(request, "type");
 		CommonUtils.validateEmpty(userid);
@@ -880,7 +895,7 @@ public class CmyServlet extends BaseServlet {
 
 	}
 
-	public void changeApplyType(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void changeApplyType(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");// 教练ID
 		String setvalue = getRequestParamter(request, "setvalue");// 修改类型
 		

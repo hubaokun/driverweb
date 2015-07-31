@@ -105,6 +105,15 @@ public class Constant {
 	// 获取账户余额信息
 	public static final String GETMYBALANCEINFO = "GETMYBALANCEINFO";
 
+	// 获取账户小巴币信息
+	public static final String GETMYCOINRECORD = "GETMYCOINRECORD";
+
+	//获取学员钱包页面所需的附加信息：券的张数，小巴币的
+	public static final String GETSTUDENTWALLETINFO="GETSTUDENTWALLETINFO";
+	
+	//获取学员小巴券列表
+	public static final String GETSTUDENTCOUPONLIST="GETSTUDENTCOUPONLIST";
+
 	// 申请提现
 	public static final String APPLYCASH = "APPLYCASH";
 
@@ -161,6 +170,9 @@ public class Constant {
 
 	// 取消订单
 	public static final String CANCELORDER = "CANCELORDER";
+	
+	// 教练同意取消订单
+	public static final String CANCELORDERAGREE = "CANCELORDERAGREE";
 
 	// 获取教练详细
 	public static final String GETCOACHDETAIL = "GETCOACHDETAIL";
@@ -250,9 +262,12 @@ public class Constant {
 	// 获取消息条数
 	public static final String CGETMESSAGECOUNT = "GETMESSAGECOUNT";
 
-	// 取得教练日程安排
+	// 取得教练今天日程安排
 	public static final String CGETSCHEDULE = "GETSCHEDULE";
-
+	
+	// 根据日期取得教练日程安排
+	public static final String CGETSCHEDULEBYDATE = "GETSCHEDULEBYDATE";
+	
 	// 修改某天的休息时间
 	public static final String CSETDATETIME = "SETDATETIME";
 
@@ -296,6 +311,8 @@ public class Constant {
 	public static final String UPDATEUSERLOCATION = "UPDATEUSERLOCATION";
 
 	public static final String CHECKVERSION = "CHECKVERSION";
+	
+	public static final String CHECKCONFIG = "CHECKCONFIG";
 
 	// 获取教练教学用车车型
 	public static final String CGETALLTEACHCARMODEL = "GETALLTEACHCARMODEL";
@@ -309,6 +326,11 @@ public class Constant {
 
 	// 获取可以使用的小巴券列表
 	public static final String GETCANUSECOUPONLIST = "GETCANUSECOUPONLIST";
+
+	// 获取可以使用的小巴币个数
+	public static final String GETCANUSECOINSUM = "GETCANUSECOINSUM";
+
+
 	// 获取所有驾校信息
 	public static final String CGETALLSCHOOL = "GETALLSCHOOL";
 	// 设置支付宝账户
@@ -318,15 +340,51 @@ public class Constant {
 	// 教练申请小巴券套现
 	public static final String APPLYCOUPON = "APPLYCOUPON";
 
+	// 教练申请小巴币套现
+	public static final String APPLYCOIN = "APPLYCOIN";
+
 	public static final String GETMYALLSTUDENT = "GETMYALLSTUDENT";
 	
 	public static final String DELALIACCOUNT = "DELALIACCOUNT";
 	
 	public static final String CHANGEAPPLYTYPE = "CHANGEAPPLYTYPE";
+
+    //获取推荐人员列表
+	public static final String CGETRECOMMENDLIST = "CGETRECOMMENDLIST";
+	//增加推荐人员
+	public static final String CHEAKINVITECODE ="CHEAKINVITECODE";
+    //自动获取当前省市区信息
+	public static final String GETAUTOPOSITION="GETAUTOPOSITION";
+
+
+		//小巴服务接口
+	public static final String XIAOBASERVICE ="XIAOBASERVICE";
+
+
 	/**************************** 默认属性设置 ********************************/
 	/************ 默认全天状态 ************/
 	public static final int STATE_DEF = 0;
 	/****************** 短信配置 ********************/
 	public static final String SMS_USER = "6799";
 	public static final String SMS_PWD = "yjia@6799yz";
+	
+	/******************省市区查询常量 ********************/
+	/**获取省信息**/
+	public static final String GETPROVINCE = "GETPROVINCE";
+	/**通过省id获取市信息**/
+	public static final String GETCITYBYPROID = "GETCITYBYPROID";
+	/**通过热键获取市信息**/
+	public static final String GETCITYBYHOTKEY = "GETCITYBYHOTKEY";
+	/**通过城市名称获取市信息**/
+	public static final String GETCITYBYCNAME = "GETCITYBYCNAME";
+	
+	
+	/**按城市ID获取区信息**/
+	public static final String GETAREABYCITYID = "GETAREABYCITYID";
+	/**按区ID获取区信息**/
+	public static final String GETAREABYAREAID = "GETAREABYAREAID";
+	
+	/**按区ID获取区信息**/
+	public static final String GETPROCITYAREA = "GETPROCITYAREA"; 
+	
 }

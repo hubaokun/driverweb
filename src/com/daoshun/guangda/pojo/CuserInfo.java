@@ -44,6 +44,11 @@ public class CuserInfo implements Serializable {
 	@Column(name = "phone", length = 20, unique = true)
 	private String phone;
 
+	//邀请码
+	@Column(name = "invitecode", length = 20, unique = true)
+	private String invitecode;
+
+
 	// 教练联系电话(默认是为phone)
 	@Column(name = "telphone", length = 20)
 	private String telphone;
@@ -141,8 +146,8 @@ public class CuserInfo implements Serializable {
 	private String birthday;
 
 	// 教练所属城市
-	@Column(name = "city", length = 100)
-	private String city;
+	@Column(name = "cityid", length = 100)
+	private String cityid;
 
 	// 教练联系地址
 	@Column(name = "address")
@@ -179,6 +184,10 @@ public class CuserInfo implements Serializable {
 	// 冻结金额
 	@Column(name = "fmoney", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")
 	private BigDecimal fmoney;
+
+	//小巴币个数
+	@Column(name = "coinnum", length = 10, columnDefinition = "INT default 0")
+	private Integer coinnum;
 
 	// 教练教车单价
 	@Column(name = "price", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")
@@ -331,6 +340,76 @@ public class CuserInfo implements Serializable {
 	//教练等级
 	@Transient
 	private String levelname;
+	
+	@Column(name = "provinceid", length = 100)
+	private String provinceid;
+	
+	/*@Column(name = "city", length = 100)
+	private String city;*/
+	
+	@Column(name = "areaid", length = 100)
+	private String areaid;
+	
+	//总订单数量
+	@Transient
+	private Long sumnum;
+	
+	//完成的订单数量
+	@Transient
+	private Long overnum;
+	
+	//取消的订单数量
+	@Transient
+	private Long cancelnum;
+	
+	//待完成的订单数量
+	@Transient
+	private Long waitnum;
+
+	
+	@Transient
+	private String locationname;//省市区全称
+	
+
+	public String getLocationname() {
+		return locationname;
+	}
+
+	public void setLocationname(String locationname) {
+		this.locationname = locationname;
+	}
+
+	public Long getSumnum() {
+		return sumnum;
+	}
+
+	public void setSumnum(Long sumnum) {
+		this.sumnum = sumnum;
+	}
+
+	public Long getOvernum() {
+		return overnum;
+	}
+
+	public void setOvernum(Long overnum) {
+		this.overnum = overnum;
+	}
+
+	public Long getCancelnum() {
+		return cancelnum;
+	}
+
+	public void setCancelnum(Long cancelnum) {
+		this.cancelnum = cancelnum;
+	}
+
+	public Long getWaitnum() {
+		return waitnum;
+	}
+
+	public void setWaitnum(Long waitnum) {
+		this.waitnum = waitnum;
+	}
 
 	public int getCoachid() {
 		return coachid;
@@ -524,12 +603,30 @@ public class CuserInfo implements Serializable {
 		this.birthday = birthday;
 	}
 
-	public String getCity() {
-		return city;
+	
+
+	public String getCityid() {
+		return cityid;
 	}
 
-	public void setCity(String city) {
-		this.city = city;
+	public void setCityid(String cityid) {
+		this.cityid = cityid;
+	}
+
+	public String getProvinceid() {
+		return provinceid;
+	}
+
+	public void setProvinceid(String provinceid) {
+		this.provinceid = provinceid;
+	}
+
+	public String getAreaid() {
+		return areaid;
+	}
+
+	public void setAreaid(String areaid) {
+		this.areaid = areaid;
 	}
 
 	public String getAddress() {
@@ -939,5 +1036,21 @@ public class CuserInfo implements Serializable {
 	public void setLevelname(String levelname) {
 		this.levelname = levelname;
 	}
+	public String getInvitecode() {
+		return invitecode;
+	}
 
+	public void setInvitecode(String invitecode) {
+		this.invitecode = invitecode;
+	}
+
+
+
+	public Integer getCoinnum() {
+		return coinnum;
+	}
+
+	public void setCoinnum(Integer coinnum) {
+		this.coinnum = coinnum;
+	}
 }

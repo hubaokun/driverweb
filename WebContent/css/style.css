@@ -250,17 +250,17 @@ select {
 }
 
 .border_right_bottom {
-	border-left: 0px;
+	border-left: 1px solid #eaeff2;
 	border-bottom: 1px solid #eaeff2;
-	border-top: 0px;
+	border-top: 1px solid #eaeff2;
 	border-right: 1px solid #eaeff2;
 }
 
 .border_noright_bottom {
-	border-left: 0px;
+	border-left: 1px solid #eaeff2;
 	border-bottom: 1px solid #eaeff2;
-	border-top: 0px;
-	border-right: 0px;
+	border-top: 1px solid #eaeff2;
+	border-right: 1px solid #eaeff2;
 }
 
 .table_del_button {

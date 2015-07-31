@@ -135,6 +135,8 @@ public class DailyAction extends BaseAction {
 	private List<XiaoBaDaily> xiaobadaily;
 
 	private List<DriveSchoolInfo> driveSchoollist;
+	
+	private List<Object> cuserinfolist;//驾校报表list
 
 	/**
 	 * 系统日报
@@ -150,7 +152,7 @@ public class DailyAction extends BaseAction {
 		List<Object> object = dailyService.getSystemdatal(addtime);
 		for (Object object2 : object) {
 			Object[] obj = (Object[]) object2;
-			if ((int) obj[0] == 1) {
+			if ((Integer) obj[0] == 1) {
 				if (obj[1] != null) {
 					usertotal_today_regirect = obj[1].toString();
 				}
@@ -164,7 +166,7 @@ public class DailyAction extends BaseAction {
 				} else {
 					usertotal_happy = obj[3].toString();
 				}
-			} else if ((int) obj[0] == 2) {
+			} else if ((Integer) obj[0] == 2) {
 				if (obj[1] == null) {
 					susercount_total = "0";
 				} else {
@@ -180,7 +182,7 @@ public class DailyAction extends BaseAction {
 				} else {
 					susercount_happy = obj[3].toString();
 				}
-			} else if ((int) obj[0] == 3) {
+			} else if ((Integer) obj[0] == 3) {
 				if (obj[1] == null) {
 					usercocal_today_regirect = "0";
 				} else {
@@ -196,7 +198,7 @@ public class DailyAction extends BaseAction {
 				} else {
 					usercocal_happy = obj[3].toString();
 				}
-			} else if ((int) obj[0] == 4) {
+			} else if ((Integer) obj[0] == 4) {
 				if (obj[1] == null) {
 					creart_order_today = "0";
 				} else {
@@ -212,7 +214,7 @@ public class DailyAction extends BaseAction {
 				} else {
 					total_order = obj[3].toString();
 				}
-			} else if ((int) obj[0] == 5) {
+			} else if ((Integer) obj[0] == 5) {
 				if (obj[1] == null) {
 					str_creart_order_today = "0";
 				} else {
@@ -250,14 +252,14 @@ public class DailyAction extends BaseAction {
 		// 第二步，在webbook中添加一个sheet,对应Excel文件中的sheet
 		HSSFSheet sheet = wb.createSheet("系统日报表");
 		// 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
-		HSSFRow row = sheet.createRow((int) 0);
+		HSSFRow row = sheet.createRow((Integer) 0);
 		// 第四步，创建单元格，并设置值表头 设置表头居中
 		HSSFCellStyle style = wb.createCellStyle();
 		style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
 		HSSFCell cell = row.createCell((short) 0);
 		cell.setCellValue(addtime + "系统日报");
 		cell.setCellStyle(style);
-		row = sheet.createRow((int) 1);
+		row = sheet.createRow((Integer) 1);
 		cell = row.createCell((short) 0);
 		cell.setCellValue("序号");
 		cell.setCellStyle(style);
@@ -276,7 +278,7 @@ public class DailyAction extends BaseAction {
 		List<Object> object = dailyService.getSystemdatal(addtime);
 		for (Object object2 : object) {
 			Object[] obj = (Object[]) object2;
-			if ((int) obj[0] == 1) {
+			if ((Integer) obj[0] == 1) {
 				if (obj[1] != null) {
 					usertotal_today_regirect = obj[1].toString();
 				}
@@ -290,7 +292,7 @@ public class DailyAction extends BaseAction {
 				} else {
 					usertotal_happy = obj[3].toString();
 				}
-			} else if ((int) obj[0] == 2) {
+			} else if ((Integer) obj[0] == 2) {
 				if (obj[1] == null) {
 					susercount_total = "0";
 				} else {
@@ -306,7 +308,7 @@ public class DailyAction extends BaseAction {
 				} else {
 					susercount_happy = obj[3].toString();
 				}
-			} else if ((int) obj[0] == 3) {
+			} else if ((Integer) obj[0] == 3) {
 				if (obj[1] == null) {
 					usercocal_today_regirect = "0";
 				} else {
@@ -322,7 +324,7 @@ public class DailyAction extends BaseAction {
 				} else {
 					usercocal_happy = obj[3].toString();
 				}
-			} else if ((int) obj[0] == 4) {
+			} else if ((Integer) obj[0] == 4) {
 				if (obj[1] == null) {
 					creart_order_today = "0";
 				} else {
@@ -338,7 +340,7 @@ public class DailyAction extends BaseAction {
 				} else {
 					total_order = obj[3].toString();
 				}
-			} else if ((int) obj[0] == 5) {
+			} else if ((Integer) obj[0] == 5) {
 				if (obj[1] == null) {
 					str_creart_order_today = "0";
 				} else {
@@ -356,25 +358,25 @@ public class DailyAction extends BaseAction {
 				}
 			}
 		}
-		row = sheet.createRow((int) 2);
+		row = sheet.createRow((Integer) 2);
 		row.createCell((short) 0).setCellValue(1);
 		row.createCell((short) 1).setCellValue("用户总数");
 		row.createCell((short) 2).setCellValue(usertotal_today_regirect);
 		row.createCell((short) 3).setCellValue(usertotal_regirect);
 		row.createCell((short) 4).setCellValue(usertotal_happy);
-		row = sheet.createRow((int) 3);
+		row = sheet.createRow((Integer) 3);
 		row.createCell((short) 0).setCellValue(2);
 		row.createCell((short) 1).setCellValue("教练端");
 		row.createCell((short) 2).setCellValue(usercocal_today_regirect);
 		row.createCell((short) 3).setCellValue(usercocal_regirect);
 		row.createCell((short) 4).setCellValue(usercocal_happy);
-		row = sheet.createRow((int) 4);
+		row = sheet.createRow((Integer) 4);
 		row.createCell((short) 0).setCellValue(3);
 		row.createCell((short) 1).setCellValue("学员端");
 		row.createCell((short) 2).setCellValue(susercount_total);
 		row.createCell((short) 3).setCellValue(susercount_regirect);
 		row.createCell((short) 4).setCellValue(susercount_happy);
-		row = sheet.createRow((int) 5);
+		row = sheet.createRow((Integer) 5);
 		cell = row.createCell((short) 0);
 		cell.setCellValue("序号");
 		cell.setCellStyle(style);
@@ -390,19 +392,19 @@ public class DailyAction extends BaseAction {
 		cell = row.createCell((short) 4);
 		cell.setCellValue("累计未完成订单数");
 		cell.setCellStyle(style);
-		row = sheet.createRow((int) 6);
+		row = sheet.createRow((Integer) 6);
 		row.createCell((short) 0).setCellValue(1);
 		row.createCell((short) 1).setCellValue("教练端");
 		row.createCell((short) 2).setCellValue(creart_order_today);
 		row.createCell((short) 3).setCellValue(finish_order_today);
 		row.createCell((short) 4).setCellValue(total_order);
-		row = sheet.createRow((int) 7);
+		row = sheet.createRow((Integer) 7);
 		row.createCell((short) 0).setCellValue(2);
 		row.createCell((short) 1).setCellValue("学员端");
 		row.createCell((short) 2).setCellValue(str_creart_order_today);
 		row.createCell((short) 3).setCellValue(finish_order_today);
 		row.createCell((short) 4).setCellValue(total_order);
-		row = sheet.createRow((int) 8);
+		row = sheet.createRow((Integer) 8);
 		cell = row.createCell((short) 0);
 		cell.setCellValue("序号");
 		cell.setCellStyle(style);
@@ -418,13 +420,13 @@ public class DailyAction extends BaseAction {
 		cell = row.createCell((short) 4);
 		cell.setCellValue("累计未完成学时数");
 		cell.setCellStyle(style);
-		row = sheet.createRow((int) 9);
+		row = sheet.createRow((Integer) 9);
 		row.createCell((short) 0).setCellValue(1);
 		row.createCell((short) 1).setCellValue("教练端");
 		row.createCell((short) 2).setCellValue(str_creart_order_today);
 		row.createCell((short) 3).setCellValue(str_finish_order_today);
 		row.createCell((short) 4).setCellValue(str_total_order);
-		row = sheet.createRow((int) 10);
+		row = sheet.createRow((Integer) 10);
 		row.createCell((short) 0).setCellValue(2);
 		row.createCell((short) 1).setCellValue("学员端");
 		row.createCell((short) 2).setCellValue(str_creart_order_today);
@@ -470,42 +472,42 @@ public class DailyAction extends BaseAction {
 					schooldaily.setCoachname(array[2].toString());
 				}
 				if (array[3] != null) {
-					schooldaily.setUnfinishorder((int) array[3]);
+					schooldaily.setUnfinishorder((Integer) array[3]);
 				} else {
 					schooldaily.setUnfinishorder(0);
 				}
 				if (array[4] != null) {
-					schooldaily.setCreateorder((int) array[4]);
+					schooldaily.setCreateorder((Integer) array[4]);
 				} else {
 					schooldaily.setCreateorder(0);
 				}
 				if (array[5] != null) {
-					schooldaily.setFinishorder((int) array[5]);
+					schooldaily.setFinishorder((Integer) array[5]);
 				} else {
 					schooldaily.setFinishorder(0);
 				}
 				if (array[6] != null) {
-					schooldaily.setAllunfinishorder((int) array[6]);
+					schooldaily.setAllunfinishorder((Integer) array[6]);
 				} else {
 					schooldaily.setAllunfinishorder(0);
 				}
 				if (array[7] != null) {
-					schooldaily.setOrderhour((int) array[7]);
+					schooldaily.setOrderhour((Integer) array[7]);
 				} else {
 					schooldaily.setOrderhour(0);
 				}
 				if (array[8] != null) {
-					schooldaily.setDayorderhour((int) array[8]);
+					schooldaily.setDayorderhour((Integer) array[8]);
 				} else {
 					schooldaily.setDayorderhour(0);
 				}
 				if (array[9] != null) {
-					schooldaily.setFinishhour((int) array[9]);
+					schooldaily.setFinishhour((Integer) array[9]);
 				} else {
 					schooldaily.setFinishhour(0);
 				}
 				if (array[10] != null) {
-					schooldaily.setAllunfinishhour((int) array[10]);
+					schooldaily.setAllunfinishhour((Integer) array[10]);
 				} else {
 					schooldaily.setAllunfinishhour(0);
 				}
@@ -533,7 +535,7 @@ public class DailyAction extends BaseAction {
 		// 以下开始输出到EXCEL
 		String newfilename = "";
 		// 定义输出流，以便打开保存对话框begin
-		newfilename += CommonUtils.getTimeFormat(new Date(), "yyyyMMddhhmmssSSS") + "_" + (int) (Math.random() * 100) + ".xls";
+		newfilename += CommonUtils.getTimeFormat(new Date(), "yyyyMMddhhmmssSSS") + "_" + (Math.random() * 100) + ".xls";
 		String filename = CommonUtils.properties.get("uploadFilePath") + newfilename;
 		File file = new File(filename);
 		if (!file.exists()) {
@@ -545,14 +547,14 @@ public class DailyAction extends BaseAction {
 		HSSFSheet sheet = wb.createSheet("教校日报表");
 		// 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
 		int index = 0;
-		HSSFRow row = sheet.createRow((int) index++);
+		HSSFRow row = sheet.createRow((Integer) index++);
 		// 第四步，创建单元格，并设置值表头 设置表头居中
 		HSSFCellStyle style = wb.createCellStyle();
 		style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
 		HSSFCell cell = row.createCell((short) 0);
 		cell.setCellValue(addtime + "教校日报");
 		cell.setCellStyle(style);
-		row = sheet.createRow((int) index++);
+		row = sheet.createRow((Integer) index++);
 		cell = row.createCell((short) 0);
 		cell.setCellValue("序号");
 		cell.setCellStyle(style);
@@ -602,47 +604,47 @@ public class DailyAction extends BaseAction {
 					schooldaily.setCoachname(array[2].toString());
 				}
 				if (array[3] != null) {
-					schooldaily.setUnfinishorder((int) array[3]);
+					schooldaily.setUnfinishorder((Integer) array[3]);
 				} else {
 					schooldaily.setUnfinishorder(0);
 				}
 				if (array[4] != null) {
-					schooldaily.setCreateorder((int) array[4]);
+					schooldaily.setCreateorder((Integer) array[4]);
 				} else {
 					schooldaily.setCreateorder(0);
 				}
 				if (array[5] != null) {
-					schooldaily.setFinishorder((int) array[5]);
+					schooldaily.setFinishorder((Integer) array[5]);
 				} else {
 					schooldaily.setFinishorder(0);
 				}
 				if (array[6] != null) {
-					schooldaily.setAllunfinishorder((int) array[6]);
+					schooldaily.setAllunfinishorder((Integer) array[6]);
 				} else {
 					schooldaily.setAllunfinishorder(0);
 				}
 				if (array[7] != null) {
-					schooldaily.setOrderhour((int) array[7]);
+					schooldaily.setOrderhour((Integer) array[7]);
 				} else {
 					schooldaily.setOrderhour(0);
 				}
 				if (array[8] != null) {
-					schooldaily.setDayorderhour((int) array[8]);
+					schooldaily.setDayorderhour((Integer) array[8]);
 				} else {
 					schooldaily.setDayorderhour(0);
 				}
 				if (array[9] != null) {
-					schooldaily.setFinishhour((int) array[9]);
+					schooldaily.setFinishhour((Integer) array[9]);
 				} else {
 					schooldaily.setFinishhour(0);
 				}
 				if (array[10] != null) {
-					schooldaily.setAllunfinishhour((int) array[10]);
+					schooldaily.setAllunfinishhour((Integer) array[10]);
 				} else {
 					schooldaily.setAllunfinishhour(0);
 				}
 				if (array[11] != null) {
-					schooldaily.setMoney(new BigDecimal((double) array[11]));
+					schooldaily.setMoney(new BigDecimal((Double) array[11]));
 				} else {
 					schooldaily.setMoney(new BigDecimal(0));
 				}
@@ -651,7 +653,7 @@ public class DailyAction extends BaseAction {
 		}
 		if (schooldailylist != null && schooldailylist.size() > 0) {
 			for (int i = 0; i < schooldailylist.size(); i++) {
-				row = sheet.createRow((int) index++);
+				row = sheet.createRow((Integer) index++);
 				SchoolDailyData schooldaily = schooldailylist.get(i);
 				row.createCell((short) 0).setCellValue(i + 1);
 				if (schooldaily.getSchoolname() != null) {
@@ -804,14 +806,14 @@ public class DailyAction extends BaseAction {
 		HSSFSheet sheet = wb.createSheet("教练日报表");
 		// 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
 		int index = 0;
-		HSSFRow row = sheet.createRow((int) index++);
+		HSSFRow row = sheet.createRow((Integer) index++);
 		// 第四步，创建单元格，并设置值表头 设置表头居中
 		HSSFCellStyle style = wb.createCellStyle();
 		style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
 		HSSFCell cell = row.createCell((short) 0);
 		cell.setCellValue(addtime + "教练日报");
 		cell.setCellStyle(style);
-		row = sheet.createRow((int) index++);
+		row = sheet.createRow((Integer) index++);
 		cell = row.createCell((short) 0);
 		cell.setCellValue("序号");
 		cell.setCellStyle(style);
@@ -910,7 +912,7 @@ public class DailyAction extends BaseAction {
 		}
 		if (coachdailylist != null && coachdailylist.size() > 0) {
 			for (int i = 0; i < coachdailylist.size(); i++) {
-				row = sheet.createRow((int) index++);
+				row = sheet.createRow((Integer) index++);
 				CoachDailyData coachdaily = coachdailylist.get(i);
 				row.createCell((short) 0).setCellValue(i + 1);
 				if (coachdaily.getCoachname() != null) {
@@ -1040,14 +1042,14 @@ public class DailyAction extends BaseAction {
 		HSSFSheet sheet = wb.createSheet("学生当日提现日报表");
 		// 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
 		int index = 0;
-		HSSFRow row = sheet.createRow((int) index++);
+		HSSFRow row = sheet.createRow((Integer) index++);
 		// 第四步，创建单元格，并设置值表头 设置表头居中
 		HSSFCellStyle style = wb.createCellStyle();
 		style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
 		HSSFCell cell = row.createCell((short) 0);
 		cell.setCellValue(addtime + "学生当日提现日报");
 		cell.setCellStyle(style);
-		row = sheet.createRow((int) index++);
+		row = sheet.createRow((Integer) index++);
 		cell = row.createCell((short) 0);
 		cell.setCellValue("序号");
 		cell.setCellStyle(style);
@@ -1108,7 +1110,7 @@ public class DailyAction extends BaseAction {
 		}
 		if (studentapplylist != null && studentapplylist.size() > 0) {
 			for (int i = 0; i < studentapplylist.size(); i++) {
-				row = sheet.createRow((int) index++);
+				row = sheet.createRow((Integer) index++);
 				StudentApplyDailyData studentapply = studentapplylist.get(i);
 				row.createCell((short) 0).setCellValue(i + 1);
 				if (studentapply.getName() != null) {
@@ -1226,14 +1228,14 @@ public class DailyAction extends BaseAction {
 		HSSFSheet sheet = wb.createSheet("教练当日提现日报表");
 		// 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
 		int index = 0;
-		HSSFRow row = sheet.createRow((int) index++);
+		HSSFRow row = sheet.createRow((Integer) index++);
 		// 第四步，创建单元格，并设置值表头 设置表头居中
 		HSSFCellStyle style = wb.createCellStyle();
 		style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
 		HSSFCell cell = row.createCell((short) 0);
 		cell.setCellValue(addtime + "教练当日提现日报");
 		cell.setCellStyle(style);
-		row = sheet.createRow((int) index++);
+		row = sheet.createRow((Integer) index++);
 		cell = row.createCell((short) 0);
 		cell.setCellValue("序号");
 		cell.setCellStyle(style);
@@ -1300,7 +1302,7 @@ public class DailyAction extends BaseAction {
 		}
 		if (coachapplylist != null && coachapplylist.size() > 0) {
 			for (int i = 0; i < coachapplylist.size(); i++) {
-				row = sheet.createRow((int) index++);
+				row = sheet.createRow((Integer) index++);
 				CoachApplyDailyData studentapply = coachapplylist.get(i);
 				row.createCell((short) 0).setCellValue(i + 1);
 				if (studentapply.getName() != null) {
@@ -1353,47 +1355,47 @@ public class DailyAction extends BaseAction {
 		Object[] obj = (Object[]) object;
 		studentaccountdaily = new StudentAccountDaily();
 		if (obj[0] != null) {
-			studentaccountdaily.setBeginbalance((int) obj[0]);
+			studentaccountdaily.setBeginbalance((Integer) obj[0]);
 		} else {
 			studentaccountdaily.setBeginbalance(0);
 		}
 		if (obj[1] != null) {
-			studentaccountdaily.setRechargemoney((int) obj[1]);
+			studentaccountdaily.setRechargemoney((Integer) obj[1]);
 		} else {
 			studentaccountdaily.setRechargemoney(0);
 		}
 		if (obj[2] != null) {
-			studentaccountdaily.setAskformoney((int) obj[2]);
+			studentaccountdaily.setAskformoney((Integer) obj[2]);
 		} else {
 			studentaccountdaily.setAskformoney(0);
 		}
 		if (obj[3] != null) {
-			studentaccountdaily.setFreezemoney((int) obj[3]);
+			studentaccountdaily.setFreezemoney((Integer) obj[3]);
 		} else {
 			studentaccountdaily.setFreezemoney(0);
 		}
 		if (obj[4] != null) {
-			studentaccountdaily.setEndbalance((int) obj[4]);
+			studentaccountdaily.setEndbalance((Integer) obj[4]);
 		} else {
 			studentaccountdaily.setEndbalance(0);
 		}
 		if (obj[5] != null) {
-			studentaccountdaily.setBeginfreezemoney((int) obj[5]);
+			studentaccountdaily.setBeginfreezemoney((Integer) obj[5]);
 		} else {
 			studentaccountdaily.setBeginfreezemoney(0);
 		}
 		if (obj[6] != null) {
-			studentaccountdaily.setDayfreezemoney((int) obj[6]);
+			studentaccountdaily.setDayfreezemoney((Integer) obj[6]);
 		} else {
 			studentaccountdaily.setDayfreezemoney(0);
 		}
 		if (obj[7] != null) {
-			studentaccountdaily.setThawmoney((int) obj[7]);
+			studentaccountdaily.setThawmoney((Integer) obj[7]);
 		} else {
 			studentaccountdaily.setThawmoney(0);
 		}
 		if (obj[8] != null) {
-			studentaccountdaily.setPaymoney((int) obj[8]);
+			studentaccountdaily.setPaymoney((Integer) obj[8]);
 		} else {
 			studentaccountdaily.setPaymoney(0);
 		}
@@ -1422,14 +1424,14 @@ public class DailyAction extends BaseAction {
 		// 第二步，在webbook中添加一个sheet,对应Excel文件中的sheet
 		HSSFSheet sheet = wb.createSheet("学生账户日报表");
 		// 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
-		HSSFRow row = sheet.createRow((int) 0);
+		HSSFRow row = sheet.createRow((Integer) 0);
 		// 第四步，创建单元格，并设置值表头 设置表头居中
 		HSSFCellStyle style = wb.createCellStyle();
 		style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
 		HSSFCell cell = row.createCell((short) 0);
 		cell.setCellValue(addtime + "学生账户日报");
 		cell.setCellStyle(style);
-		row = sheet.createRow((int) 1);
+		row = sheet.createRow((Integer) 1);
 		cell = row.createCell((short) 0);
 		cell.setCellValue("期初余额");
 		cell.setCellStyle(style);
@@ -1464,52 +1466,52 @@ public class DailyAction extends BaseAction {
 		Object[] obj = (Object[]) object;
 		studentaccountdaily = new StudentAccountDaily();
 		if (obj[0] != null) {
-			studentaccountdaily.setBeginbalance((int) obj[0]);
+			studentaccountdaily.setBeginbalance((Integer) obj[0]);
 		} else {
 			studentaccountdaily.setBeginbalance(0);
 		}
 		if (obj[1] != null) {
-			studentaccountdaily.setRechargemoney((int) obj[1]);
+			studentaccountdaily.setRechargemoney((Integer) obj[1]);
 		} else {
 			studentaccountdaily.setRechargemoney(0);
 		}
 		if (obj[2] != null) {
-			studentaccountdaily.setAskformoney((int) obj[2]);
+			studentaccountdaily.setAskformoney((Integer) obj[2]);
 		} else {
 			studentaccountdaily.setAskformoney(0);
 		}
 		if (obj[3] != null) {
-			studentaccountdaily.setFreezemoney((int) obj[3]);
+			studentaccountdaily.setFreezemoney((Integer) obj[3]);
 		} else {
 			studentaccountdaily.setFreezemoney(0);
 		}
 		if (obj[4] != null) {
-			studentaccountdaily.setEndbalance((int) obj[4]);
+			studentaccountdaily.setEndbalance((Integer) obj[4]);
 		} else {
 			studentaccountdaily.setEndbalance(0);
 		}
 		if (obj[5] != null) {
-			studentaccountdaily.setBeginfreezemoney((int) obj[5]);
+			studentaccountdaily.setBeginfreezemoney((Integer) obj[5]);
 		} else {
 			studentaccountdaily.setBeginfreezemoney(0);
 		}
 		if (obj[6] != null) {
-			studentaccountdaily.setDayfreezemoney((int) obj[6]);
+			studentaccountdaily.setDayfreezemoney((Integer) obj[6]);
 		} else {
 			studentaccountdaily.setDayfreezemoney(0);
 		}
 		if (obj[7] != null) {
-			studentaccountdaily.setThawmoney((int) obj[7]);
+			studentaccountdaily.setThawmoney((Integer) obj[7]);
 		} else {
 			studentaccountdaily.setThawmoney(0);
 		}
 		if (obj[8] != null) {
-			studentaccountdaily.setPaymoney((int) obj[8]);
+			studentaccountdaily.setPaymoney((Integer) obj[8]);
 		} else {
 			studentaccountdaily.setPaymoney(0);
 		}
 		if (studentaccountdaily != null) {
-			row = sheet.createRow((int) 2);
+			row = sheet.createRow((Integer) 2);
 			row.createCell((short) 0).setCellValue(studentaccountdaily.getBeginbalance());
 			row.createCell((short) 1).setCellValue(studentaccountdaily.getRechargemoney());
 			row.createCell((short) 2).setCellValue(studentaccountdaily.getAskformoney());
@@ -1548,47 +1550,47 @@ public class DailyAction extends BaseAction {
 		Object[] obj = (Object[]) object;
 		coachaccountdaily = new CoachAccountDaily();
 		if (obj[0] != null) {
-			coachaccountdaily.setBeginbalance((int) obj[0]);
+			coachaccountdaily.setBeginbalance((Integer) obj[0]);
 		} else {
 			coachaccountdaily.setBeginbalance(0);
 		}
 		if (obj[1] != null) {
-			coachaccountdaily.setRechargemoney((int) obj[1]);
+			coachaccountdaily.setRechargemoney((Integer) obj[1]);
 		} else {
 			coachaccountdaily.setRechargemoney(0);
 		}
 		if (obj[2] != null) {
-			coachaccountdaily.setAskformoney((int) obj[2]);
+			coachaccountdaily.setAskformoney((Integer) obj[2]);
 		} else {
 			coachaccountdaily.setAskformoney(0);
 		}
 		if (obj[3] != null) {
-			coachaccountdaily.setSystembalance((int) obj[3]);
+			coachaccountdaily.setSystembalance((Integer) obj[3]);
 		} else {
 			coachaccountdaily.setSystembalance(0);
 		}
 		if (obj[4] != null) {
-			coachaccountdaily.setGmoney((int) obj[4]);
+			coachaccountdaily.setGmoney((Integer) obj[4]);
 		} else {
 			coachaccountdaily.setGmoney(0);
 		}
 		if (obj[5] != null) {
-			coachaccountdaily.setCanusemoney((int) (obj[5]));
+			coachaccountdaily.setCanusemoney((Integer) (obj[5]));
 		} else {
 			coachaccountdaily.setCanusemoney(0);
 		}
 		if (obj[6] != null) {
-			coachaccountdaily.setUnfinishordermoney((int) obj[6]);
+			coachaccountdaily.setUnfinishordermoney((Integer) obj[6]);
 		} else {
 			coachaccountdaily.setUnfinishordermoney(0);
 		}
 		if (obj[7] != null) {
-			coachaccountdaily.setJiesuanmoney((int) obj[7]);
+			coachaccountdaily.setJiesuanmoney((Integer) obj[7]);
 		} else {
 			coachaccountdaily.setJiesuanmoney(0);
 		}
 		if (obj[8] != null) {
-			coachaccountdaily.setDrawbackmoney((int) obj[8]);
+			coachaccountdaily.setDrawbackmoney((Integer) obj[8]);
 		} else {
 			coachaccountdaily.setDrawbackmoney(0);
 		}
@@ -1627,14 +1629,14 @@ public class DailyAction extends BaseAction {
 		// 第二步，在webbook中添加一个sheet,对应Excel文件中的sheet
 		HSSFSheet sheet = wb.createSheet("教练账户日报表");
 		// 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
-		HSSFRow row = sheet.createRow((int) 0);
+		HSSFRow row = sheet.createRow((Integer) 0);
 		// 第四步，创建单元格，并设置值表头 设置表头居中
 		HSSFCellStyle style = wb.createCellStyle();
 		style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
 		HSSFCell cell = row.createCell((short) 0);
 		cell.setCellValue(addtime + "教练账户日报");
 		cell.setCellStyle(style);
-		row = sheet.createRow((int) 1);
+		row = sheet.createRow((Integer) 1);
 		cell = row.createCell((short) 0);
 		cell.setCellValue("期初余额");
 		cell.setCellStyle(style);
@@ -1675,47 +1677,47 @@ public class DailyAction extends BaseAction {
 		Object[] obj = (Object[]) object;
 		coachaccountdaily = new CoachAccountDaily();
 		if (obj[0] != null) {
-			coachaccountdaily.setBeginbalance((int) obj[0]);
+			coachaccountdaily.setBeginbalance((Integer) obj[0]);
 		} else {
 			coachaccountdaily.setBeginbalance(0);
 		}
 		if (obj[1] != null) {
-			coachaccountdaily.setRechargemoney((int) obj[1]);
+			coachaccountdaily.setRechargemoney((Integer) obj[1]);
 		} else {
 			coachaccountdaily.setRechargemoney(0);
 		}
 		if (obj[2] != null) {
-			coachaccountdaily.setAskformoney((int) obj[2]);
+			coachaccountdaily.setAskformoney((Integer) obj[2]);
 		} else {
 			coachaccountdaily.setAskformoney(0);
 		}
 		if (obj[3] != null) {
-			coachaccountdaily.setSystembalance((int) obj[3]);
+			coachaccountdaily.setSystembalance((Integer) obj[3]);
 		} else {
 			coachaccountdaily.setSystembalance(0);
 		}
 		if (obj[4] != null) {
-			coachaccountdaily.setGmoney((int) obj[4]);
+			coachaccountdaily.setGmoney((Integer) obj[4]);
 		} else {
 			coachaccountdaily.setGmoney(0);
 		}
 		if (obj[5] != null) {
-			coachaccountdaily.setCanusemoney((int) (obj[5]));
+			coachaccountdaily.setCanusemoney((Integer) (obj[5]));
 		} else {
 			coachaccountdaily.setCanusemoney(0);
 		}
 		if (obj[6] != null) {
-			coachaccountdaily.setUnfinishordermoney((int) obj[6]);
+			coachaccountdaily.setUnfinishordermoney((Integer) obj[6]);
 		} else {
 			coachaccountdaily.setUnfinishordermoney(0);
 		}
 		if (obj[7] != null) {
-			coachaccountdaily.setJiesuanmoney((int) obj[7]);
+			coachaccountdaily.setJiesuanmoney((Integer) obj[7]);
 		} else {
 			coachaccountdaily.setJiesuanmoney(0);
 		}
 		if (obj[8] != null) {
-			coachaccountdaily.setDrawbackmoney((int) obj[8]);
+			coachaccountdaily.setDrawbackmoney((Integer) obj[8]);
 		} else {
 			coachaccountdaily.setDrawbackmoney(0);
 		}
@@ -1730,7 +1732,7 @@ public class DailyAction extends BaseAction {
 			coachaccountdaily.setFinishmoney(new BigDecimal(0));
 		}
 		if (coachaccountdaily != null) {
-			row = sheet.createRow((int) 2);
+			row = sheet.createRow((Integer) 2);
 			row.createCell((short) 0).setCellValue(coachaccountdaily.getBeginbalance());
 			row.createCell((short) 1).setCellValue(coachaccountdaily.getRechargemoney());
 			row.createCell((short) 2).setCellValue(coachaccountdaily.getAskformoney());
@@ -1924,21 +1926,21 @@ public class DailyAction extends BaseAction {
 		HSSFSheet sheet = wb.createSheet("教校对账单表");
 		// 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
 		int index = 0;
-		HSSFRow row = sheet.createRow((int) index++);
+		HSSFRow row = sheet.createRow((Integer) index++);
 		// 第四步，创建单元格，并设置值表头 设置表头居中
 		HSSFCellStyle style = wb.createCellStyle();
 		style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
 		HSSFCell cell = row.createCell((short) 0);
 		cell.setCellValue(schoolname + "对账单");
 		cell.setCellStyle(style);
-		row = sheet.createRow((int) index++);
+		row = sheet.createRow((Integer) index++);
 		cell = row.createCell((short) 0);
 		cell.setCellValue("对账单时间:");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 1);
 		cell.setCellValue(starttime + "至" + addtime);
 		cell.setCellStyle(style);
-		row = sheet.createRow((int) index++);
+		row = sheet.createRow((Integer) index++);
 		cell = row.createCell((short) 0);
 		cell.setCellValue("序号");
 		cell.setCellStyle(style);
@@ -2119,7 +2121,7 @@ public class DailyAction extends BaseAction {
 		}
 		if (schoolbilldaily != null && schoolbilldaily.size() > 0) {
 			for (int i = 0; i < schoolbilldaily.size(); i++) {
-				row = sheet.createRow((int) index++);
+				row = sheet.createRow((Integer) index++);
 				SchoolBillDaily schoolbill = schoolbilldaily.get(i);
 				row.createCell((short) 0).setCellValue(i + 1);
 				if (schoolbill.getSchoolname() != null) {
@@ -2233,92 +2235,92 @@ public class DailyAction extends BaseAction {
 					xiaoba.setName(array[2].toString());
 				}
 				if (array[3] != null) {
-					xiaoba.setBeginpublishnum((int) array[3]);
+					xiaoba.setBeginpublishnum((Integer) array[3]);
 				} else {
 					xiaoba.setBeginpublishnum(0);
 				}
 				if (array[4] != null) {
-					xiaoba.setBeginpublishmoney((int) array[4]);
+					xiaoba.setBeginpublishmoney((Integer) array[4]);
 				} else {
 					xiaoba.setBeginpublishmoney(0);
 				}
 				if (array[5] != null) {
-					xiaoba.setPublishnum((int) array[5]);
+					xiaoba.setPublishnum((Integer) array[5]);
 				} else {
 					xiaoba.setPublishnum(0);
 				}
 				if (array[6] != null) {
-					xiaoba.setPublishmoney((int) array[6]);
+					xiaoba.setPublishmoney((Integer) array[6]);
 				} else {
 					xiaoba.setPublishmoney(0);
 				}
 				if (array[7] != null) {
-					xiaoba.setEndpublishnum((int) array[7]);
+					xiaoba.setEndpublishnum((Integer) array[7]);
 				} else {
 					xiaoba.setEndpublishnum(0);
 				}
 				if (array[8] != null) {
-					xiaoba.setEndpublishmoney((int) array[8]);
+					xiaoba.setEndpublishmoney((Integer) array[8]);
 				} else {
 					xiaoba.setEndpublishmoney(0);
 				}
 				if (array[9] != null) {
-					xiaoba.setBeginwaitnum((int) array[9]);
+					xiaoba.setBeginwaitnum((Integer) array[9]);
 				} else {
 					xiaoba.setBeginwaitnum(0);
 				}
 				if (array[10] != null) {
-					xiaoba.setBeginwaitmoney((int) array[10]);
+					xiaoba.setBeginwaitmoney((Integer) array[10]);
 				} else {
 					xiaoba.setBeginwaitmoney(0);
 				}
 				if (array[11] != null) {
-					xiaoba.setGetnum((int) array[11]);
+					xiaoba.setGetnum((Integer) array[11]);
 				} else {
 					xiaoba.setGetnum(0);
 				}
 				if (array[12] != null) {
-					xiaoba.setGetmoney((int) array[12]);
+					xiaoba.setGetmoney((Integer) array[12]);
 				} else {
 					xiaoba.setGetmoney(0);
 				}
 				if (array[13] != null) {
-					xiaoba.setEndwaitnum((int) array[13]);
+					xiaoba.setEndwaitnum((Integer) array[13]);
 				} else {
 					xiaoba.setEndwaitnum(0);
 				}
 				if (array[14] != null) {
-					xiaoba.setEndwaitmoney((int) array[14]);
+					xiaoba.setEndwaitmoney((Integer) array[14]);
 				} else {
 					xiaoba.setEndwaitmoney(0);
 				}
 				if (array[15] != null) {
-					xiaoba.setUsenum((int) array[15]);
+					xiaoba.setUsenum((Integer) array[15]);
 				} else {
 					xiaoba.setUsenum(0);
 				}
 				if (array[16] != null) {
-					xiaoba.setUsemoney((int) array[16]);
+					xiaoba.setUsemoney((Integer) array[16]);
 				} else {
 					xiaoba.setUsemoney(0);
 				}
 				if (array[17] != null) {
-					xiaoba.setUnusenum((int) array[17]);
+					xiaoba.setUnusenum((Integer) array[17]);
 				} else {
 					xiaoba.setUnusenum(0);
 				}
 				if (array[18] != null) {
-					xiaoba.setUnusemoney((int) array[18]);
+					xiaoba.setUnusemoney((Integer) array[18]);
 				} else {
 					xiaoba.setUnusemoney(0);
 				}
 				if (array[19] != null) {
-					xiaoba.setEndunusenum((int) array[19]);
+					xiaoba.setEndunusenum((Integer) array[19]);
 				} else {
 					xiaoba.setEndunusenum(0);
 				}
 				if (array[20] != null) {
-					xiaoba.setEndunusemoney((int) array[20]);
+					xiaoba.setEndunusemoney((Integer) array[20]);
 				} else {
 					xiaoba.setEndunusemoney(0);
 				}
@@ -2353,21 +2355,21 @@ public class DailyAction extends BaseAction {
 		HSSFSheet sheet = wb.createSheet("小巴券日报表");
 		// 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
 		int index = 0;
-		HSSFRow row = sheet.createRow((int) index++);
+		HSSFRow row = sheet.createRow((Integer) index++);
 		// 第四步，创建单元格，并设置值表头 设置表头居中
 		HSSFCellStyle style = wb.createCellStyle();
 		style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
 		HSSFCell cell = row.createCell((short) 0);
 		cell.setCellValue("小巴券日报");
 		cell.setCellStyle(style);
-		row = sheet.createRow((int) index++);
+		row = sheet.createRow((Integer) index++);
 		cell = row.createCell((short) 0);
 		cell.setCellValue("日期区间:");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 1);
 		cell.setCellValue(starttime + "至" + addtime);
 		cell.setCellStyle(style);
-		row = sheet.createRow((int) index++);
+		row = sheet.createRow((Integer) index++);
 		cell = row.createCell((short) 0);
 		cell.setCellValue("序号");
 		cell.setCellStyle(style);
@@ -2444,92 +2446,92 @@ public class DailyAction extends BaseAction {
 					xiaoba.setName(array[2].toString());
 				}
 				if (array[3] != null) {
-					xiaoba.setBeginpublishnum((int) array[3]);
+					xiaoba.setBeginpublishnum((Integer) array[3]);
 				} else {
 					xiaoba.setBeginpublishnum(0);
 				}
 				if (array[4] != null) {
-					xiaoba.setBeginpublishmoney((int) array[4]);
+					xiaoba.setBeginpublishmoney((Integer) array[4]);
 				} else {
 					xiaoba.setBeginpublishmoney(0);
 				}
 				if (array[5] != null) {
-					xiaoba.setPublishnum((int) array[5]);
+					xiaoba.setPublishnum((Integer) array[5]);
 				} else {
 					xiaoba.setPublishnum(0);
 				}
 				if (array[6] != null) {
-					xiaoba.setPublishmoney((int) array[6]);
+					xiaoba.setPublishmoney((Integer) array[6]);
 				} else {
 					xiaoba.setPublishmoney(0);
 				}
 				if (array[7] != null) {
-					xiaoba.setEndpublishnum((int) array[7]);
+					xiaoba.setEndpublishnum((Integer) array[7]);
 				} else {
 					xiaoba.setEndpublishnum(0);
 				}
 				if (array[8] != null) {
-					xiaoba.setEndpublishmoney((int) array[8]);
+					xiaoba.setEndpublishmoney((Integer) array[8]);
 				} else {
 					xiaoba.setEndpublishmoney(0);
 				}
 				if (array[9] != null) {
-					xiaoba.setBeginwaitnum((int) array[9]);
+					xiaoba.setBeginwaitnum((Integer) array[9]);
 				} else {
 					xiaoba.setBeginwaitnum(0);
 				}
 				if (array[10] != null) {
-					xiaoba.setBeginwaitmoney((int) array[10]);
+					xiaoba.setBeginwaitmoney((Integer) array[10]);
 				} else {
 					xiaoba.setBeginwaitmoney(0);
 				}
 				if (array[11] != null) {
-					xiaoba.setGetnum((int) array[11]);
+					xiaoba.setGetnum((Integer) array[11]);
 				} else {
 					xiaoba.setGetnum(0);
 				}
 				if (array[12] != null) {
-					xiaoba.setGetmoney((int) array[12]);
+					xiaoba.setGetmoney((Integer) array[12]);
 				} else {
 					xiaoba.setGetmoney(0);
 				}
 				if (array[13] != null) {
-					xiaoba.setEndwaitnum((int) array[13]);
+					xiaoba.setEndwaitnum((Integer) array[13]);
 				} else {
 					xiaoba.setEndwaitnum(0);
 				}
 				if (array[14] != null) {
-					xiaoba.setEndwaitmoney((int) array[14]);
+					xiaoba.setEndwaitmoney((Integer) array[14]);
 				} else {
 					xiaoba.setEndwaitmoney(0);
 				}
 				if (array[15] != null) {
-					xiaoba.setUsenum((int) array[15]);
+					xiaoba.setUsenum((Integer) array[15]);
 				} else {
 					xiaoba.setUsenum(0);
 				}
 				if (array[16] != null) {
-					xiaoba.setUsemoney((int) array[16]);
+					xiaoba.setUsemoney((Integer) array[16]);
 				} else {
 					xiaoba.setUsemoney(0);
 				}
 				if (array[17] != null) {
-					xiaoba.setUnusenum((int) array[17]);
+					xiaoba.setUnusenum((Integer) array[17]);
 				} else {
 					xiaoba.setUnusenum(0);
 				}
 				if (array[18] != null) {
-					xiaoba.setUnusemoney((int) array[18]);
+					xiaoba.setUnusemoney((Integer) array[18]);
 				} else {
 					xiaoba.setUnusemoney(0);
 				}
 				if (array[19] != null) {
-					xiaoba.setEndunusenum((int) array[19]);
+					xiaoba.setEndunusenum((Integer) array[19]);
 				} else {
 					xiaoba.setEndunusenum(0);
 				}
 				if (array[20] != null) {
-					xiaoba.setEndunusemoney((int) array[20]);
+					xiaoba.setEndunusemoney((Integer) array[20]);
 				} else {
 					xiaoba.setEndunusemoney(0);
 				}
@@ -2538,7 +2540,7 @@ public class DailyAction extends BaseAction {
 		}
 		if (xiaobadaily != null && xiaobadaily.size() > 0) {
 			for (int i = 0; i < xiaobadaily.size(); i++) {
-				row = sheet.createRow((int) index++);
+				row = sheet.createRow((Integer) index++);
 				XiaoBaDaily xiaoba = xiaobadaily.get(i);
 				row.createCell((short) 0).setCellValue(i + 1);
 				if (xiaoba.getType() != null) {
@@ -2871,4 +2873,15 @@ public class DailyAction extends BaseAction {
 		this.driveSchoollist = driveSchoollist;
 	}
 
+	public List<Object> getCuserinfolist() {
+		return cuserinfolist;
+	}
+
+	public void setCuserinfolist(List<Object> cuserinfolist) {
+		this.cuserinfolist = cuserinfolist;
+	}
+
+	
+	
+	
 }

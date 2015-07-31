@@ -5,26 +5,24 @@ package com.daoshun.common;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.security.MessageDigest;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.Stack;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import jxl.Workbook;
 import jxl.format.Alignment;
@@ -37,8 +35,6 @@ import jxl.write.WritableCellFormat;
 import jxl.write.WritableFont;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
-
-import com.daoshun.exception.NullParameterException;
 
 /**
  * @author wangcl
@@ -109,12 +105,29 @@ public class CommonUtils {
 	 * 判断参数是否为空
 	 * 
 	 */
-	public static void validateEmpty(String value) throws NullParameterException {
+	public static void validateEmpty(String value) throws ErrException {
 		if (value == null || value.length() == 0) {
-			throw new NullParameterException();
+			System.out.println("参数为空");
+			throw new ErrException();
 		}
 	}
-
+	
+	/**
+	 * 判断字符是否是合法的日期格式
+	 * @param str  日期字符串
+	 * @return true 是  false 否
+	 * @author 卢磊
+	 */
+	public static boolean validDateFormat(String str) throws ErrException{
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+	    try{
+	        Date date = (Date)formatter.parse(str);
+	        return str.equals(formatter.format(date));
+	    }catch(Exception e){
+	       System.out.println("日期格式有误!");
+	       throw new ErrException();
+	    }
+	}
 	/**
 	 * 判断String是否为空
 	 * 
@@ -517,5 +530,66 @@ public class CommonUtils {
 		}
 		return path;
 	}
+	
+	
+	/** 
+     * 将数转为24进制 
+     * @param num 
+     * @param base 
+     * @return 
+     */  
+    public static String to24Base(long num){  
+    	
+    	int base= 24;
+        StringBuffer str = new StringBuffer("");  
+        String digths = "ABCDEFGHJKLMNPQRSTUVWXYZ";  
+        Stack<Character> s = new Stack<Character>();  
+        
+        while(num > base){  
+        	int idx=(int)(num%base);
+            s.push(digths.charAt(idx));  
+            num/=base;  
+        }  
+        while(!s.isEmpty()){  
+            str.append(s.pop());  
+        }  
+        return str.toString();  
+    } 
+    
+    public static String getInviteCode(String phone)
+    {
+    	  	
+    	String first=phone.substring(0, 3);
+    	Integer index=Integer.parseInt(first);
+    	List<String> list = Arrays.asList("130","131","132","133","134","135","136","137","138","139","150","151","152","153","154","155","156","157","158","159","170","171","172","173","174","175","176","177","178","179","180","181","182","183","184","185","186","187","188","189");
+    	 Iterator<String> iter = list.iterator();  
+    	 
+    	Integer end=Integer.parseInt(phone.substring(3, 11));
+    	int i=0;
+    	
+    	for (String elem : list)
+    	{
+    		 if(elem.equals(first))
+    		 {    		
+    			 break;
+    		 }
+    		 else
+    		 {
+    			 i++;
+    		 } 
+    	}
+    	
+    	 long num=((long)i+1)*100000000+end;   	 
+    	String code=to24Base(num);
+//    	System.out.println("to24Base:"+phone+"-->"+code);
+    	return code;
+    }
 
+    
+    public static void main(String[] args) { 
+    	String phone="18758234668";
+    	String code=CommonUtils.getInviteCode(phone);
+    	System.out.print(code);
+    }
+    
 }

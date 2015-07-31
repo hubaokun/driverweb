@@ -6,7 +6,7 @@
 	<menu-item name="用户管理" iconURL="" authority="1">
 		<sub-item name="所有教练" authority="3" action="getCoachlist.do"/>
 		<sub-item name="待审核教练" authority="3" action="getCoachTobeChecked.do"/>
-		<sub-item name="所有学员" authority="4" action="getStudentlist.do"/>
+		<sub-item name="所有学员" authority="4" action="getStudentlist.do"/>		
 		<sub-item name="教练学员关系" authority="5" action="getCoachStudent.do"/>
 		<sub-item name="教练余额管理" authority="6" action="getCoachBalance.do"/>
 		<sub-item name="学员余额管理" authority="7" action="getStudentBalance.do"/>
@@ -28,6 +28,7 @@
 		<sub-item name="教练车型设置" authority="7" action="getTeachcarModellist.do"/>
 		<sub-item name="教学科目设置" authority="8" action="getSubjectlists.do"/>
 		<sub-item name="节假日设置" authority="8" action="getHolidays.do"/>
+		<sub-item name="省市区" authority="9" action="getProvince.do"/>
 	</menu-item>
 	<menu-item name="系统通知" iconURL="" authority="1">
 		<sub-item name="通知列表" authority="3" action="getNoticeList.do"/>
@@ -44,6 +45,11 @@
 	<menu-item name="小巴券管理" iconURL="" authority="1">
 		<sub-item name="小巴券列表" authority="1" action="getCouponList.do"/>
 		<sub-item name="小巴券领取记录" authority="2" action="getCouponRecordList.do"/>
+		<!--<sub-item name="小巴币查询" authority="2" action="#"/>-->
+		<sub-item name="发放小巴币" authority="2" action="goGrantCoinRecord.do"/>
+	</menu-item>
+	<menu-item name="邀请管理" iconURL="" authority="1">
+		<sub-item name="教练邀请教练" authority="1" action="getRecommendList.do"/>
 	</menu-item>
 	<menu-item name="其他" iconURL="" authority="1">
 		<sub-item name="意见反馈" authority="3" action="getFeedback.do"/>
@@ -53,11 +59,13 @@
 		<sub-item name="系统日报" authority="3" action="systemdaily.do"/>
 		<sub-item name="驾校日报" authority="3" action="schooldaily.do"/>
 		<sub-item name="教练日报" authority="3" action="coachdaily.do"/>
+		<sub-item name="教练报表" authority="3" action="coachreport.do"/>
 		<sub-item name="学生账户日报" authority="3" action="studentaccountdaily.do"/>
 		<sub-item name="教练账户日报" authority="3" action="coachaccountdaily.do"/>
 		<sub-item name="学生提现日报" authority="3" action="studentapply.do"/>
 		<sub-item name="教练提现日报" authority="3" action="coachapply.do"/>
 		<sub-item name="驾校对账单" authority="3" action="schoolbilldaily.do"/>
 		<sub-item name="小巴券日报" authority="3" action="xiaobadaily.do"/>
+	    <sub-item name="邀请日报" authority="2" action="getRecommendReport.do"/>
 	</menu-item>
 </menu-list>

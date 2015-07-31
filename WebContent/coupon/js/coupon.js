@@ -34,7 +34,7 @@ function delcoupon(id){
 	$.ajax({
 		url:"./delcoupon.do",
 		type:"post",
-		data:{"couponid":id,},
+		data:{"couponid":id},
 		success:function(msg){
 			alert("删除成功!");
 			window.location.reload();
@@ -48,7 +48,7 @@ function cancelcoupon(id){
 	$.ajax({
 		url:"./cancelcoupon.do",
 		type:"post",
-		data:{"recordid":id,},
+		data:{"recordid":id},
 		success:function(msg){
 			alert("作废成功!");
 			window.location.reload();
@@ -85,7 +85,7 @@ function changeserachdiv(){
 		$("#textareaid").css("margin-top","30px");
 		$("#somestudent").show();
 		$("#exslfile").css("display","block");
-		
+
 	}
 	else if(givingtype==4){
 		var html = "";
@@ -99,7 +99,7 @@ function changeserachdiv(){
 		$("#somestudent").hide();
 		$("#exslfile").css("display","none");
 		$("#bigsearch").remove();
-		
+
 	}
 	else{
 		var html = "";

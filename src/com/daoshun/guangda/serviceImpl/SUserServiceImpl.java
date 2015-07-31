@@ -1,12 +1,10 @@
 package com.daoshun.guangda.serviceImpl;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
+import com.daoshun.common.UserType;
+import com.daoshun.guangda.pojo.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,15 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alipay.config.AlipayConfig;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.QueryResult;
-import com.daoshun.guangda.pojo.BalanceStudentInfo;
-import com.daoshun.guangda.pojo.CoachStudentInfo;
-import com.daoshun.guangda.pojo.CuserInfo;
-import com.daoshun.guangda.pojo.RechargeRecordInfo;
-import com.daoshun.guangda.pojo.StudentApplyInfo;
-import com.daoshun.guangda.pojo.StudentCheckInfo;
-import com.daoshun.guangda.pojo.SuserInfo;
-import com.daoshun.guangda.pojo.SystemSetInfo;
-import com.daoshun.guangda.pojo.VerifyCodeInfo;
 import com.daoshun.guangda.service.ISUserService;
 
 @Service("suserService")
@@ -198,7 +187,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		suserhql.append("from SuserInfo");
 		List<SuserInfo> suserInfolist = (List<SuserInfo>) dataDao.pageQueryViaParam(suserhql.toString() + " order by id desc", pagesize, pageIndex, null);
 		String counthql = " select count(*) " + suserhql.toString();
-		long total = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<SuserInfo>(suserInfolist, total);
 	}
 
@@ -219,7 +208,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			}
 		}
 		String counthql = " select count(*) " + cuserhql.toString();
-		long total = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<StudentApplyInfo>(studentApplyList, total);
 	}
 
@@ -258,7 +247,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		}
 		List<SuserInfo> suserInfolist = (List<SuserInfo>) dataDao.pageQueryViaParam(cuserhql.toString() + " order by id desc", pagesize, pageIndex, null);
 		String counthql = " select count(*) " + cuserhql.toString();
-		long total = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<SuserInfo>(suserInfolist, total);
 	}
 
@@ -335,7 +324,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			}
 		}
 		String counthql = " select count(*) " + cuserhql.toString();
-		long total = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<StudentApplyInfo>(applycashlist, total);
 	}
 
@@ -355,7 +344,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			}
 		}
 		String counthql = " select count(*) " + cuserhql.toString();
-		long total = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<BalanceStudentInfo>(balancecoachlist, total);
 	}
 
@@ -375,7 +364,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			}
 		}
 		String counthql = " select count(*) " + cuserhql.toString();
-		long total = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<BalanceStudentInfo>(balancecoachlist, total);
 	}
 
@@ -436,7 +425,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			}
 		}
 		String counthql = " select count(*) " + cuserhql.toString();
-		long total = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<BalanceStudentInfo>(applycashlist, total);
 	}
 
@@ -540,7 +529,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			}
 		}
 		String counthql = " select count(*) " + cuserhql.toString();
-		long total = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<BalanceStudentInfo>(applycashlist, total);
 	}
 
@@ -559,6 +548,8 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 
 		SuserInfo user1 = new SuserInfo();
 		user1.setPhone(phone);
+		String code="S"+CommonUtils.getInviteCode(phone);
+		user1.setInvitecode(code);
 		user1.setSecondphone(phone);
 		user1.setMoney(S_register_money);
 		user1.setAddtime(new Date());
@@ -589,7 +580,8 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			login_vcode_time = setInfo.getLogin_vcode_time();
 		}
 
-		String content = content = vercode.toString() + "(小巴学车验证码," + login_vcode_time + "天登陆有效)";
+		String content = content ="【小巴科技】"+ vercode.toString() + "(小巴学车验证码," + login_vcode_time + "天登陆有效)";
+		System.out.print(content);
 		String result = CommonUtils.sendSms(phone, content);
 
 		if (vCode != null) {
@@ -655,7 +647,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		StringBuffer suserhql = new StringBuffer();
 		suserhql.append(" select year(now())-year(birthday) as age  from SuserInfo where studentid = :studentid");
 		String[] params = { "studentid" };
-		int count = (int) dataDao.getFirstObjectViaParam(suserhql.toString(), params, id);
+		int count = (Integer) dataDao.getFirstObjectViaParam(suserhql.toString(), params, id);
 		return count;
 	}
 
@@ -694,7 +686,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			}
 		}
 		String counthql = " select count(*) " + cuserhql.toString();
-		long total = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<CoachStudentInfo>(coachstudentlist, total);
 	}
 
@@ -706,10 +698,55 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		CoachStudentInfo coachstudent = (CoachStudentInfo) dataDao.getFirstObjectViaParam(suserhql.toString(), params, coachid, studentid);
 		return coachstudent;
 	}
+	
+
+	
+	@Override
+	public int getCouponSum(int studentid) {
+		StringBuffer suserhql = new StringBuffer();
+		suserhql.append(" from CouponRecord where state=0 and  userid ="+studentid);			
+		String counthql = " select count(*) " + suserhql.toString();
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
+		return (int)total;		
+//		return couponList;
+	}
+	
 
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override
 	public void addCoachStudent(CoachStudentInfo coachstudent) {
 		dataDao.addObject(coachstudent);
 	}
+
+
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	@Override
+	public  int changeCoach(String studentId,String oldCoachId,String newCoachId)
+	{
+		StringBuffer suserhql = new StringBuffer();
+		suserhql.append(" update CouponRecord set ownerid=:newCoachId where state=0 and ownertype=2 and ownerid=:oldCoachId  and userid =:studentId");
+		String[] params = { "newCoachId", "oldCoachId","studentId" };
+ 		dataDao.updateObjectsViaParam(suserhql.toString(), params, Integer.parseInt(newCoachId), Integer.parseInt(oldCoachId), Integer.parseInt(studentId));
+		return 1;
+	}
+
+
+	@Override
+	public int getCanUseCoinnum(String coachid, String studentid) {
+		HashMap<String, Object> result = new HashMap<String, Object>();
+
+			String countinhql = "select sum(coinnum) from CoinRecordInfo where (receiverid ="+studentid+" and receivertype="+ UserType.STUDENT+"and ownertype="+UserType.COAH+" and ownerid="+coachid+")";
+			Object in= dataDao.getFirstObjectViaParam(countinhql, null);
+			int totalin= in==null?0:CommonUtils.parseInt(in.toString(), 0);
+
+
+		String countouthql = "select sum(coinnum) from CoinRecordInfo where (payerid ="+studentid+" and payertype="+ UserType.STUDENT+" and ownertype="+UserType.COAH+"  and ownerid="+coachid+")";
+		Object out= dataDao.getFirstObjectViaParam(countouthql, null);
+		int totalout = (out==null) ? 0: CommonUtils.parseInt(out.toString(),0);
+
+
+		return (int) (totalin-totalout);
+	}
+
+
 }

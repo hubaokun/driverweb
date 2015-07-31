@@ -15,16 +15,22 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
-import com.daoshun.exception.NullParameterException;
+import com.daoshun.common.ErrException;
+import com.daoshun.guangda.pojo.AreaInfo;
 import com.daoshun.guangda.pojo.CaddAddressInfo;
+import com.daoshun.guangda.pojo.CityInfo;
 import com.daoshun.guangda.pojo.CsubjectInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.DriveSchoolInfo;
 import com.daoshun.guangda.pojo.ModelsInfo;
+import com.daoshun.guangda.pojo.ProvinceInfo;
+import com.daoshun.guangda.pojo.RecommendInfo;
 import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.pojo.SystemSetInfo;
 import com.daoshun.guangda.pojo.TeachcarInfo;
 import com.daoshun.guangda.service.ICUserService;
+import com.daoshun.guangda.service.ILocationService;
+import com.daoshun.guangda.service.IRecommendService;
 import com.daoshun.guangda.service.ISUserService;
 import com.daoshun.guangda.service.ISystemService;
 
@@ -46,6 +52,9 @@ public class CuserServlet extends BaseServlet {
 	private ICUserService cuserService;
 	private ISystemService systemService;
 	private ISUserService suserService;
+    private IRecommendService recommendService;
+    private ILocationService locationService;
+
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -53,6 +62,8 @@ public class CuserServlet extends BaseServlet {
 		cuserService = (ICUserService) applicationContext.getBean("cuserService");
 		systemService = (ISystemService) applicationContext.getBean("systemService");
 		suserService = (ISUserService) applicationContext.getBean("suserService");
+		recommendService=(IRecommendService) applicationContext.getBean("recommendService");
+		locationService=(ILocationService) applicationContext.getBean("locationService");
 	}
 
 	@Override
@@ -62,7 +73,7 @@ public class CuserServlet extends BaseServlet {
 			String action = getAction(request);
 
 			if (Constant.CPERFECTACCOUNTINFO.equals(action) || Constant.CCHANGEAVATAR.equals(action) || Constant.CPERFECTPERSONINFO.equals(action) || Constant.CPERFECTCOACHINFO.equals(action)
-					|| Constant.RECHARGE.equals(action) || Constant.GETMYBALANCEINFO.equals(action)) {
+					|| Constant.RECHARGE.equals(action) || Constant.GETMYBALANCEINFO.equals(action) || Constant.GETMYCOINRECORD.equals(action)) {
 				if (!checkSession(request, action, resultMap)) {
 					setResult(response, resultMap);
 					return;
@@ -93,8 +104,12 @@ public class CuserServlet extends BaseServlet {
 			} else if (Constant.GETMYBALANCEINFO.equals(action)) {
 				// 获取账户余额信息
 				getMyBalanceInfo(request, resultMap);
-			} else {
-				throw new NullParameterException();
+			} else if (Constant.GETMYCOINRECORD.equals(action)) {
+				// 获取账户余额信息
+				getMyCoinRecord(request, resultMap);
+			}
+			else {
+				throw new ErrException();
 			}
 
 			recordUserAction(request, action);
@@ -105,7 +120,7 @@ public class CuserServlet extends BaseServlet {
 		setResult(response, resultMap);
 	}
 
-	private boolean checkSession(HttpServletRequest request, String action, HashMap<String, Object> resultMap) throws NullParameterException {
+	private boolean checkSession(HttpServletRequest request, String action, HashMap<String, Object> resultMap) throws ErrException {
 		String userid = "";// 1.教练 2.学员
 		String usertype = "";
 
@@ -129,11 +144,17 @@ public class CuserServlet extends BaseServlet {
 		} else if (Constant.GETMYBALANCEINFO.equals(action)) {
 			userid = getRequestParamter(request, "coachid");
 			usertype = "1";
+		}else if (Constant.GETMYCOINRECORD.equals(action)) {
+			userid = getRequestParamter(request, "coachid");
+			usertype = "1";
 		}
 
 		if (!CommonUtils.isEmptyString(userid) && !CommonUtils.isEmptyString(usertype)) {
+			System.out.println("usertype:"+usertype);//教练端
 			if (CommonUtils.parseInt(usertype, 0) == 1) {
+				System.out.println("userid"+userid);
 				CuserInfo cuser = cuserService.getCoachByid(CommonUtils.parseInt(userid, 0));
+				System.out.println("cuser="+cuser);
 				if (cuser != null) {
 					String token = getRequestParamter(request, "token");
 					if (!CommonUtils.isEmptyString(token)) {
@@ -170,7 +191,7 @@ public class CuserServlet extends BaseServlet {
 					return false;
 				}
 
-			} else {
+			} else {//学员端
 				SuserInfo suser = suserService.getUserById(userid);
 				if (suser != null) {
 					String token = getRequestParamter(request, "token");
@@ -260,9 +281,9 @@ public class CuserServlet extends BaseServlet {
 	 * 注册
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void register(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void register(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String phone = getRequestParamter(request, "phone");
 		CommonUtils.validateEmpty(phone);
 		String realname = getRequestParamter(request, "realname");
@@ -290,9 +311,9 @@ public class CuserServlet extends BaseServlet {
 	 * 登录
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void login(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void login(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String loginid = getRequestParamter(request, "loginid");// 电话号码
 		CommonUtils.validateEmpty(loginid);
 		String password = getRequestParamter(request, "password");// 验证码
@@ -303,13 +324,14 @@ public class CuserServlet extends BaseServlet {
 		if (result == 1) {// 可以登录
 			String token = request.getSession().getId().toLowerCase();
 			CuserInfo cuser = cuserService.getCuserByPhone(loginid);
-			if (cuser == null) {
+			if (cuser == null) {				
 				cuser = cuserService.registerUser(loginid, token);// 注册
 				cuser.setPassword(password);
 				resultMap.put("isregister", 1);
 			} else {
 				cuser.setToken(token);
 				cuser.setToken_time(new Date());
+				cuser.setInvitecode("C"+CommonUtils.getInviteCode(cuser.getPhone()));
 				cuserService.updateCuser(cuser);
 				cuser.setCar_cardpicfurl(cuserService.backUrl(cuser.getCar_cardpicf())); // 行驶证正面照
 				cuser.setCar_cardpicburl(cuserService.backUrl(cuser.getCar_cardpicb())); // 行驶证反面照
@@ -377,8 +399,30 @@ public class CuserServlet extends BaseServlet {
 				cuser.setCouponhour(cuserService.getCoachAllCouponTime(cuser.getCoachid()));
 				resultMap.put("isregister", 0);
 			}
+			//根据省市区ID查询对应的名称
+			if(cuser.getProvinceid()!=null && cuser.getCityid()!=null && cuser.getAreaid()!=null){
+				ProvinceInfo pro=locationService.getProvincesById(cuser.getProvinceid());
+				//System.out.println("----"+pro.getProvince());
+				CityInfo city=locationService.getCityById(cuser.getCityid());
+				//System.out.println("----"+pro.getProvince()+city.getCity());
+				AreaInfo area=locationService.getAreaById(cuser.getAreaid());
+				//System.out.println("----"+pro.getProvince()+city.getCity()+area.getArea());
+				String locationname=pro.getProvince()+"-"+city.getCity()+"-"+area.getArea();
 
+				cuser.setLocationname(locationname);
+			}
 			resultMap.put("UserInfo", cuser);
+			int rflag=recommendService.checkRecommendinfo(String.valueOf(cuser.getCoachid()));
+			if(rflag==0)
+				//返回0代表已经存在记录了
+				resultMap.put("isInvited", 0);
+			else
+				//返回1代表没有记录
+				resultMap.put("isInvited", 1);
+			 SystemSetInfo systemSetInfo=cuserService.getSystemSetInfo();
+			 resultMap.put("crewardamount", systemSetInfo.getCrewardamount());
+			 resultMap.put("orewardamount", systemSetInfo.getOrewardamount());
+			
 		} else if (result == 0) {
 			resultMap.put("code", 2);
 			resultMap.put("message", "验证码错误,请重新输入");
@@ -392,9 +436,9 @@ public class CuserServlet extends BaseServlet {
 	 * 完善账号信息
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void perfectAccountInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void perfectAccountInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		String realname = getRequestParamter(request, "realname");
@@ -432,15 +476,30 @@ public class CuserServlet extends BaseServlet {
 
 			cuserService.updateCuser(cuserFir);
 		}
+		List<RecommendInfo> tempList=recommendService.getRecommondInviteInfoByCoachid(coachid, realname);
+		RecommendInfo temp=recommendService.getRecommondInvitedInfoByCoachid(coachid, realname);
+		if(tempList.size()!=0)
+		{
+			for(RecommendInfo r:tempList)
+			{
+				r.setCoachname(realname);
+				recommendService.updateRecommendInfo(r);
+			}
+		}
+		if(temp!=null)
+		{
+			temp.setInvitedpeoplename(realname);
+			recommendService.updateRecommendInfo(temp);
+		}
 	}
 
 	/**
 	 * 修改头像
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void changeAvatar(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void changeAvatar(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		CuserInfo cuser = cuserService.getCuserByCoachid(coachid);
@@ -458,9 +517,9 @@ public class CuserServlet extends BaseServlet {
 	 * 得到所有准教车型
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void getCarModel(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getCarModel(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		List<ModelsInfo> modellist = cuserService.getAllModelInfo();
 		resultMap.put("modellist", modellist);
 	}
@@ -469,13 +528,15 @@ public class CuserServlet extends BaseServlet {
 	 * 完善教练个人资料信息
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void perfectPersonInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void perfectPersonInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		String birthday = getRequestParamter(request, "birthday"); // 生日
-		String city = getRequestParamter(request, "city"); // 城市
+		String cityid = getRequestParamter(request, "cityid"); // 城市
+		String provinceid = getRequestParamter(request, "provinceid"); // 省份
+		String areaid = getRequestParamter(request, "areaid"); // 地区
 		String address = getRequestParamter(request, "address"); // 住址
 		String urgentperson = getRequestParamter(request, "urgentperson"); // 紧急联系人
 		String urgentphone = getRequestParamter(request, "urgentphone"); // 紧急联系人电话
@@ -490,8 +551,14 @@ public class CuserServlet extends BaseServlet {
 			if (!CommonUtils.isEmptyString(birthday)) {
 				cuser.setBirthday(birthday);
 			}
-			if (!CommonUtils.isEmptyString(city)) {
-				cuser.setCity(city);
+			if (!CommonUtils.isEmptyString(cityid)) {
+				cuser.setCityid(cityid);
+			}
+			if (!CommonUtils.isEmptyString(provinceid)) {
+				cuser.setProvinceid(provinceid);
+			}
+			if (!CommonUtils.isEmptyString(areaid)) {
+				cuser.setAreaid(areaid);
 			}
 			if (!CommonUtils.isEmptyString(address)) {
 				cuser.setAddress(address);
@@ -516,9 +583,9 @@ public class CuserServlet extends BaseServlet {
 	 * 找回原密码
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void findPsw(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void findPsw(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String phone = getRequestParamter(request, "phone");
 		CommonUtils.validateEmpty(phone);
 		String newpassword = getRequestParamter(request, "newpassword");
@@ -539,9 +606,9 @@ public class CuserServlet extends BaseServlet {
 	 * 修改密码验证原密码
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void varifyPsw(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void varifyPsw(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		String password = getRequestParamter(request, "password");
@@ -560,9 +627,9 @@ public class CuserServlet extends BaseServlet {
 	 * 修改密码
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void changePsw(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void changePsw(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		String password = getRequestParamter(request, "password");
@@ -581,9 +648,9 @@ public class CuserServlet extends BaseServlet {
 	 * 完善教练资格资料
 	 * 
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void perfectCoachInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void perfectCoachInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		String idnum = getRequestParamter(request, "idnum"); // 身份证号码
@@ -708,7 +775,7 @@ public class CuserServlet extends BaseServlet {
 	}
 
 	// 账户充值
-	public void recharge(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void recharge(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");// 教练ID
 		String amount = getRequestParamter(request, "amount");// 充值金额
 		CommonUtils.validateEmpty(coachid);
@@ -719,11 +786,20 @@ public class CuserServlet extends BaseServlet {
 	}
 
 	// 获取账户余额 和充值记录
-	public void getMyBalanceInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void getMyBalanceInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");// 教练ID
 
 		HashMap<String, Object> balanceResult = cuserService.getBalanceList(coachid);
 		resultMap.putAll(balanceResult);
+	}
+
+
+	// 获取账户小巴币记录
+	public void getMyCoinRecord(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String coachid = getRequestParamter(request, "coachid");// 教练ID
+
+		HashMap<String, Object> coinRecordResult = cuserService.getCoinRecordList(coachid);
+		resultMap.putAll(coinRecordResult);
 	}
 
 }

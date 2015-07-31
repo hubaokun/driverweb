@@ -4,12 +4,14 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.daoshun.guangda.pojo.*;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.WorkbookSettings;
@@ -24,11 +26,6 @@ import org.springframework.stereotype.Controller;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.QueryResult;
 import com.daoshun.guangda.NetData.StudentInfoForExcel;
-import com.daoshun.guangda.pojo.BalanceStudentInfo;
-import com.daoshun.guangda.pojo.CuserInfo;
-import com.daoshun.guangda.pojo.StudentApplyInfo;
-import com.daoshun.guangda.pojo.StudentCheckInfo;
-import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.service.IBaseService;
 import com.daoshun.guangda.service.ICUserService;
 import com.daoshun.guangda.service.ISUserService;
@@ -93,6 +90,7 @@ public class SuserAction extends BaseAction {
 
 	private Integer pageCount = 0;
 
+
 	
 	//添加新学员
 	private String  newstudentphone;
@@ -124,6 +122,10 @@ public class SuserAction extends BaseAction {
 	
 	//编辑学员个人资料
 	private String editrealname;
+
+	private String editphone;
+	
+	
 
 	private Integer editgender;
 
@@ -162,6 +164,11 @@ public class SuserAction extends BaseAction {
 	private String[] checkbox;
 	
 	private BigDecimal money;
+
+	private String oldcoachid;
+
+	private String newcoachid;
+
 	/**
 	 * 得到学员列表
 	 * 
@@ -216,13 +223,35 @@ public class SuserAction extends BaseAction {
 		return SUCCESS;
 	}
 
-	
 
-	
+	/**
+	 * 前往学员更换教练页面
+	 * @return
+	 */
+	@Action(value = "goChangeCoach", results = { @Result(name = SUCCESS, location = "/changeCoach.jsp") })
+	public String goChangeCoach() {
+		return SUCCESS;
+	}
 
-/**
+
+	/**
+	 * 学员更换教练
+	 * @return
+	 */
+	@Action(value = "changeCoach")
+	public void changeCoach() {
+		suserService.changeCoach(studentid.toString(),oldcoachid.toString(),newcoachid.toString());
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("code", 1);
+		strToJson(map);
+
+	}
+
+
+
+	/**
  * 通过手机号码得到一个学员的详情
- * 
+ * enroll
  * @return
  */
 @Action(value = "/getStudentDetailByPhone", results = { @Result(name = SUCCESS, location = "/singlestudent.jsp") })
@@ -620,7 +649,7 @@ public String getStudentDetailByPhone() {
 					String student_cardnum = null;
 					String student_card_creat = null;
 					String id_cardnum = null;
-					String city = null;
+					String cityid = null;
 					String address = null;
 					Integer gender = 0;
 					String birthday = null;
@@ -650,7 +679,7 @@ public String getStudentDetailByPhone() {
 						}else if(title.equals("学员证制证时间")){
 							student_card_creat = sheet.getCell(j, i).getContents().replaceAll("/", "-");
 						}else if(title.equals("城市")){
-							city = sheet.getCell(j, i).getContents();
+							cityid = sheet.getCell(j, i).getContents();
 						}else if(title.equals("地址")){
 							address = sheet.getCell(j, i).getContents();
 						}else if(title.equals("性别(1:男  2:女)")){
@@ -721,10 +750,10 @@ public String getStudentDetailByPhone() {
 								continue;
 							}
 						}
-						if(city==null){
-							student1.setCity(student1.getCity());
+						if(cityid==null){
+							student1.setCityid(student1.getCityid());
 						}else{
-							student1.setCity(city);
+							student1.setCityid(cityid);
 						}
 						if(address==null){
 							student1.setAddress(student1.getAddress());
@@ -822,7 +851,7 @@ public String getStudentDetailByPhone() {
 						continue;
 					}
 					student.setStudent_card_creat(student_card_creat);
-					student.setCity(city);
+					student.setCityid(cityid);
 					student.setAddress(address);
 					student.setGender(gender);
 					student.setBirthday(birthday);
@@ -876,7 +905,7 @@ public String getStudentDetailByPhone() {
 				}else if(data[i].equals("1")){
 					studentexcel.setStudent_card_creat(student.getStudent_card_creat());
 				}else if(data[i].equals("2")){
-					studentexcel.setCity(student.getCity());
+					studentexcel.setCity(student.getCityid());
 				}else if(data[i].equals("3")){
 					studentexcel.setAddress(student.getAddress());
 				}else if(data[i].equals("4")){
@@ -917,11 +946,18 @@ public String getStudentDetailByPhone() {
 
 	
 	@Action(value = "/editsinglestudent", results = { @Result(name = SUCCESS, location = "/getStudentDetail.do?studentid=${studentid}&index=${index}&change_id=${change_id}",type="redirect") })
+
+//	@Action(value = "/editsinglestudent", results = { @Result(name = SUCCESS, location = "/getStudentlist.do?studentid=${studentid}&index=${index}&change_id=${change_id}",type="redirect") })
+	
 	public String editSingleStudent(){
 		suser = suserService.getUserById(String.valueOf(studentid));
 		//修改姓名
 		if (!CommonUtils.isEmptyString(editrealname)) {
 			suser.setRealname(editrealname);
+		}
+		
+		if (!CommonUtils.isEmptyString(editphone)) {
+			suser.setPhone(editphone);
 		}
 		//修改性别
 		if (editgender!=null) {
@@ -933,7 +969,7 @@ public String getStudentDetailByPhone() {
 		}
 		//修改城市
 		if(!CommonUtils.isEmptyString(editcity)){
-			suser.setCity(editcity);
+			suser.setCityid(editcity);
 		}
 		//修改地址
 		if(!CommonUtils.isEmptyString(editaddress)){
@@ -1459,5 +1495,30 @@ public String getStudentDetailByPhone() {
 
 	public void setNewstudentname(String newstudentname) {
 		this.newstudentname = newstudentname;
+	}
+	
+
+	public String getEditphone() {
+		return editphone;
+	}
+
+	public void setEditphone(String editphone) {
+		this.editphone = editphone;
+	}
+
+	public String getOldcoachid() {
+		return oldcoachid;
+	}
+
+	public void setOldcoachid(String oldcoachid) {
+		this.oldcoachid = oldcoachid;
+	}
+
+	public String getNewcoachid() {
+		return newcoachid;
+	}
+
+	public void setNewcoachid(String newcoachid) {
+		this.newcoachid = newcoachid;
 	}
 }

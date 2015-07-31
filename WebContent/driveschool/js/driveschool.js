@@ -16,29 +16,116 @@ function showaddschool() {
 	$("#mask").show();
 	$("#mask_sec").show();
 	$("#mask_last").show();
-
+	var params = {};
+	jQuery.post("getProvinceToJson.do", params, showProvince, 'json');
 }
-
+//显示省信息
+function showProvince(obj)
+{
+         document.getElementById("province").length=0;
+         for(var i=0;i<obj.length;i++)
+         {
+         	var o=new Option(obj[i].province,obj[i].provinceid);
+         	document.getElementById("province").add(o);
+         }
+         document.getElementById("province1").length=0;
+         for(var i=0;i<obj.length;i++)
+         {
+         	var o=new Option(obj[i].province,obj[i].provinceid);
+         	document.getElementById("province1").add(o);
+         }
+}
 function unshowaddschool() {
 	$("#mask").hide();
 	$("#mask_sec").hide();
 	$("#mask_last").hide();
 }
-
+var citysid;
+var areasid;
 //修改驾校信息
-function showeditschool(schoolname,schoolphone,schoolcontact,alipay,order_pull) {
+function showeditschool(schoolname,schoolphone,schoolcontact,alipay,order_pull,provinceid,cityid,areaid) {
 	$("#oldschoolname").val("原驾校名："+schoolname);
 	$("#oldschoolphone").val("原联系电话："+schoolphone);
 	$("#oldschoolcontact").val("原联系人姓名："+schoolcontact);
 	$("#oldalipay_account").val("原支付宝账号："+alipay);
 	$("#oldorder_pull").val("原订单抽成： "+order_pull+"%");
 	$("#name").val(schoolname);
+	citysid=cityid;
+	areasid=areaid;
+	//填充省选项,并且选中原来的省选项
+	var params = {};
+	jQuery.post("getProvinceToJson.do", params, function(obj){
+			 //填充省选项
+		    document.getElementById("province1").length=0;
+	        for(var i=0;i<obj.length;i++)
+	        {
+	        	var o=new Option(obj[i].province,obj[i].provinceid);
+	        	document.getElementById("province1").add(o);
+	        }
+			//选中省
+			var objSelect= $("#province1").get(0);
+			for(var i=0;i<objSelect.options.length;i++) {  
+		        if(objSelect.options[i].value == provinceid) {  
+		            objSelect.options[i].selected = true;  
+		            break;  
+		        }  
+		    }  
+	    }, 'json');
+	//填充市，设置选中市选项
+	var params = {provinceid:provinceid};
+	jQuery.post("getCityByProvinceId.do", params, showEditCity,'json');
+	
 	$("#edit").show();
 	$("#edit_sec").show();
 	$("#edit_last").show();
 
 }
+//设置修改的区内容
+function setAreainfo(citysid,area)
+{
+	//填充区，设置选中区选项
+	var params = {cityid:citysid};
+	jQuery.post("getAreaByCityId.do", params, function(obj){
+		//填充区
+		document.getElementById("area1").length=0;
+        for(var i=0;i<obj.length;i++)
+        {
+        	var o=new Option(obj[i].area,obj[i].areaid);
+        	document.getElementById("area1").add(o);
+        }
+        //选中区
+		var objSelect= $("#area1").get(0);
+		for(var i=0;i<objSelect.options.length;i++) {  
+	        if(objSelect.options[i].value == areasid) { 
+	        	//cityid=objSelect.options[i].value;//
+	            objSelect.options[i].selected = true;  
+	            break;  
+	        }  
+	    }  
+	}, 'json');
 
+}
+//设置修改页面的城市内容
+function showEditCity(obj)
+{
+	//填充市
+	document.getElementById("city1").length=0;
+    for(var i=0;i<obj.length;i++)
+    {
+    	var o=new Option(obj[i].city,obj[i].cityid);
+    	document.getElementById("city1").add(o);
+    }
+    //选中市
+	var objSelect= $("#city1").get(0);
+	for(var i=0;i<objSelect.options.length;i++) {  
+        if(objSelect.options[i].value == citysid) { 
+            objSelect.options[i].selected = true; 
+           // var citysid=objSelect.options[i].value;//
+            setAreainfo(citysid,areasid)
+            break;
+        }  
+    }  
+}
 function unshoweditschool() {
 	$("#edit").hide();
 	$("#edit_sec").hide();
@@ -65,6 +152,17 @@ function addshcool(){
 	var schoolcontact=$("#schoolcontact").val();
 	var alipay_account=$("#alipay_account").val();
 	var order_pull=$("#order_pull").val();
+	var provinceid=$("#province").val();
+	var cityid=$("#city").val();
+	var areaid=$("#area").val();
+	if(city==""){
+		alert("请选择 市");
+		return;
+	}
+	if(area=="" || area=="市辖区"){
+		alert("请选择 区");
+		return;
+	}
 	if (confirm("是否添加驾校信息？")) {
 		$.ajax({
 			type : "POST",
@@ -74,7 +172,10 @@ function addshcool(){
 				schoolphone:schoolphone,
 				schoolcontact:schoolcontact,
 				alipay_account:alipay_account,
-				order_pull:order_pull
+				order_pull:order_pull,
+				provinceid:provinceid,
+				cityid:cityid,
+				areaid:areaid
 			},
 			success : function(data) {
 				if (data == "error") {
@@ -129,6 +230,10 @@ function editschool(){
 	var editschoolcontact=$("#editschoolcontact").val();
 	var editalipay_account=$("#editalipay_account").val();
 	var editorder_pull=$("#editorder_pull").val();
+	
+	var provinceid=$("#province1").val();
+	var cityid=$("#city1").val();
+	var areaid=$("#area1").val();
 	if(editorder_pull!=0){
 		var re =/^(?:0|[1-9][0-9]?|100)$/;   //判断字符串是否为数字     //判断正整数 /^[1-9]+[0-9]*]*$/  
 		   if (!re.test(editorder_pull))
@@ -148,7 +253,10 @@ function editschool(){
 				editschoolphone:editschoolphone,
 				editschoolcontact:editschoolcontact,
 				editalipay_account:editalipay_account,
-				editorder_pull:editorder_pull
+				editorder_pull:editorder_pull,
+				provinceid:provinceid,
+				cityid:cityid,
+				areaid:areaid
 			},
 			success : function(data) {
 				if (data == "error") {

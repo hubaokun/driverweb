@@ -22,7 +22,7 @@ public class DailyServiceImpl extends BaseServiceImpl implements IDailyService {
 			systemhql.append(" and addtime <= '" + addtime + "'");
 		}
 		systemhql.insert(0, "select count(*)");
-		count = (long) dataDao.getFirstObjectViaParam(systemhql.toString(), null);
+		count = (Long) dataDao.getFirstObjectViaParam(systemhql.toString(), null);
 		return (int) count;
 	}
 
@@ -35,7 +35,7 @@ public class DailyServiceImpl extends BaseServiceImpl implements IDailyService {
 			systemhql.append(" and addtime <= '" + addtime + "'");
 		}
 		systemhql.insert(0, "select count(*)");
-		count = (long) dataDao.getFirstObjectViaParam(systemhql.toString(), null);
+		count = (Long) dataDao.getFirstObjectViaParam(systemhql.toString(), null);
 		return (int) count;
 	}
 

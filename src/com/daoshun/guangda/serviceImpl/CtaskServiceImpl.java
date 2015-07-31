@@ -25,6 +25,7 @@ import com.daoshun.guangda.pojo.NoticesInfo;
 import com.daoshun.guangda.pojo.NoticesUserInfo;
 import com.daoshun.guangda.pojo.OrderInfo;
 import com.daoshun.guangda.pojo.OrderRecordInfo;
+import com.daoshun.guangda.pojo.RecommendInfo;
 import com.daoshun.guangda.pojo.StudentCheckInfo;
 import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.pojo.SystemSetInfo;
@@ -277,7 +278,7 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 		}
 		List<NoticesInfo> noticesInfolist = (List<NoticesInfo>) dataDao.pageQueryViaParam(ctaskhql.toString(), pagesize, pageIndex, null);
 		String counthql = " select count(*) " + ctaskhql.toString();
-		long total = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<NoticesInfo>(noticesInfolist, total);
 	}
 
@@ -326,7 +327,7 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 		}
 		List<NoticesInfo> noticesInfolist = (List<NoticesInfo>) dataDao.pageQueryViaParam(ctaskhql.toString(), pagesize, pageIndex, null);
 		String counthql = " select count(*) " + ctaskhql.toString();
-		long total = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<NoticesInfo>(noticesInfolist, total);
 	}
 
@@ -382,7 +383,7 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 		StringBuffer ctaskhql = new StringBuffer();
 		ctaskhql.append("select count(*) from ComplaintInfo where orderid = :orderid ");
 		String[] params = { "orderid" };
-		int count = (int) dataDao.getFirstObjectViaParam(ctaskhql.toString(), params, id);
+		int count = (Integer) dataDao.getFirstObjectViaParam(ctaskhql.toString(), params, id);
 		return count;
 	}
 
@@ -693,6 +694,18 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 						}
 					}
 				}
+				//修改分享表中的开单标识位
+				StringBuffer cuserhql = new StringBuffer();
+				cuserhql.append("from RecommendInfo where invitedcoachid = :invitedcoachid");
+				String[] params1 = { "invitedcoachid" };
+				RecommendInfo tempRecommendInfo = (RecommendInfo) dataDao.getFirstObjectViaParam(cuserhql.toString(), params1, order.getCoachid());
+				if(tempRecommendInfo!=null)
+				{
+					tempRecommendInfo.setIsorder(1);
+					if(tempRecommendInfo.getOflag()!=2)
+					tempRecommendInfo.setOflag(1);
+					dataDao.updateObject(tempRecommendInfo);
+				}
 			}
 		}
 	}
@@ -739,7 +752,7 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 		ctaskhql.append(" order by addtime");
 		List<FeedBackInfo> list = (List<FeedBackInfo>) dataDao.pageQueryViaParam(ctaskhql.toString(), pageSize, pageIndex, null);
 		String counthql = " select count(*) " + ctaskhql.toString();
-		long count = (long) dataDao.getFirstObjectViaParam(counthql, null);
+		long count = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		QueryResult<FeedBackInfo> result = new QueryResult<FeedBackInfo>(list, count);
 		return result;
 	}

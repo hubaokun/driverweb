@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
-import com.daoshun.exception.NullParameterException;
+import com.daoshun.common.ErrException;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.pojo.SystemSetInfo;
@@ -62,8 +62,11 @@ public class SystemServlet extends BaseServlet {
 				updateUserLocation(request, resultMap);
 			} else if (Constant.CHECKVERSION.equals(action)) {
 				checkVersion(request, resultMap);
-			} else {
-				throw new NullParameterException();
+			} else if (Constant.CHECKCONFIG.equals(action)) {
+				checkconfig(request, resultMap);
+			} 
+			else {
+				throw new ErrException();
 			}
 
 			recordUserAction(request, action);
@@ -74,7 +77,7 @@ public class SystemServlet extends BaseServlet {
 		setResult(response, resultMap);
 	}
 
-	private boolean checkSession(HttpServletRequest request, String action, HashMap<String, Object> resultMap) throws NullParameterException {
+	private boolean checkSession(HttpServletRequest request, String action, HashMap<String, Object> resultMap) throws ErrException {
 		String userid = getRequestParamter(request, "userid");// 1.教练 2.学员
 		String usertype = getRequestParamter(request, "usertype");
 
@@ -172,9 +175,9 @@ public class SystemServlet extends BaseServlet {
 
 	/**
 	 * @param request
-	 * @throws NullParameterException
+	 * @throws ErrException
 	 */
-	public void updatePushInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void updatePushInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String userid = getRequestParamter(request, "userid");
 		String usertype = getRequestParamter(request, "usertype");
 		String devicetype = getRequestParamter(request, "devicetype");
@@ -224,7 +227,7 @@ public class SystemServlet extends BaseServlet {
 		}
 	}
 
-	public void refreshUserMoney(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void refreshUserMoney(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String userid = getRequestParamter(request, "userid");
 		String usertype = getRequestParamter(request, "usertype");
 		CommonUtils.validateEmpty(userid);
@@ -235,6 +238,7 @@ public class SystemServlet extends BaseServlet {
 				resultMap.put("money", cuser.getMoney());
 				resultMap.put("fmoney", cuser.getFmoney());
 				resultMap.put("gmoney", cuser.getGmoney());
+				resultMap.put("coinnum", cuser.getCoinnum());
 				// 这里需要把教练总共的小巴券时间返回
 				int allhour = cuserService.getCoachAllCouponTime(cuser.getCoachid());
 				resultMap.put("couponhour", allhour);
@@ -244,12 +248,13 @@ public class SystemServlet extends BaseServlet {
 			if (suser != null) {// 学员
 				resultMap.put("money", suser.getMoney());
 				resultMap.put("fmoney", suser.getFmoney());
+				resultMap.put("coinnum", suser.getCoinnum());
 				resultMap.put("gmoney", 0);
 			}
 		}
 	}
 
-	public void updateUserLocation(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void updateUserLocation(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String openid = getRequestParamter(request, "openid");
 		String devicetype = getRequestParamter(request, "devicetype");
 		String usertype = getRequestParamter(request, "usertype");
@@ -266,7 +271,20 @@ public class SystemServlet extends BaseServlet {
 		systemService.updateUserLocation(openid, devicetype, usertype, appversion, province, city, area);
 	}
 
-	public void checkVersion(HttpServletRequest request, HashMap<String, Object> resultMap) throws NullParameterException {
+	public void checkconfig(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String userid = getRequestParamter(request, "userid");
+		String usertype = getRequestParamter(request, "usertype");
+		String devicetype = getRequestParamter(request, "devicetype");
+		String version = getRequestParamter(request, "version");
+		SystemSetInfo sinf= systemService.getSystemSet();
+		resultMap.put("config", sinf);
+		
+//		HashMap<String, Object> result = 
+	}
+
+
+
+	public void checkVersion(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String userid = getRequestParamter(request, "userid");
 		String usertype = getRequestParamter(request, "usertype");
 		String devicetype = getRequestParamter(request, "devicetype");

@@ -19,10 +19,12 @@ import com.daoshun.common.CommonUtils;
 import com.daoshun.common.QueryResult;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.DriveSchoolInfo;
+import com.daoshun.guangda.pojo.ProvinceInfo;
 import com.daoshun.guangda.pojo.SchoolBalance;
 import com.daoshun.guangda.service.ICUserService;
 import com.daoshun.guangda.service.ICtaskService;
 import com.daoshun.guangda.service.IDriveSchoolService;
+import com.daoshun.guangda.serviceImpl.LocationServiceImpl;
 
 @ParentPackage("default")
 @Controller
@@ -100,6 +102,15 @@ public class DriveSchoolAction extends BaseAction {
 	private String coachnamekeyword;
 	
 	private int changetype;
+	
+	@Resource
+	private  LocationServiceImpl locationService;//省市区的业务对象
+	
+	private String provinceid;//省ID
+	private String cityid;//市ID
+	private String areaid;//区ID
+	
+	
 	
 	/**
 	 * 得到驾校列表
@@ -229,6 +240,9 @@ public class DriveSchoolAction extends BaseAction {
 			}
 			driveSchoolInfo.setMoney(new BigDecimal(0));
 			driveSchoolInfo.setAddtime(new Date());
+			driveSchoolInfo.setProvinceid(provinceid);
+			driveSchoolInfo.setCityid(cityid);
+			driveSchoolInfo.setAreaid(areaid);
 			cuserService.addObject(driveSchoolInfo);
 			setResponseStr("success");
 		}
@@ -270,13 +284,27 @@ public class DriveSchoolAction extends BaseAction {
 				if (!CommonUtils.isEmptyString(editalipay_account)) {
 					driveSchoolInfo.setAlipay_account(editalipay_account);
 				}
+				
 				if(editorder_pull!=null){
 					driveSchoolInfo.setOrder_pull(editorder_pull);
 				}
-				if (CommonUtils.isEmptyString(editschoolphone) && CommonUtils.isEmptyString(editschoolcontact) && CommonUtils.isEmptyString(editalipay_account)&&editorder_pull==null) {
+				if (CommonUtils.isEmptyString(editschoolphone) && CommonUtils.isEmptyString(editschoolcontact) 
+						&& CommonUtils.isEmptyString(editalipay_account)&&editorder_pull==null
+						&& driveSchoolInfo.getProvinceid().equals(provinceid) && driveSchoolInfo.getCityid().equals(cityid)
+						&& driveSchoolInfo.getAreaid().equals(areaid)
+						) {
 					setResponseStr("error2");
 					return;
 				} else {
+					if (!CommonUtils.isEmptyString(provinceid)) {
+						driveSchoolInfo.setProvinceid(provinceid);
+					}
+					if (!CommonUtils.isEmptyString(cityid)) {
+						driveSchoolInfo.setCityid(cityid);
+					}
+					if (!CommonUtils.isEmptyString(areaid)) {
+						driveSchoolInfo.setAreaid(areaid);
+					}
 					cuserService.updateObject(driveSchoolInfo);
 					setResponseStr("success");
 				}
@@ -295,6 +323,15 @@ public class DriveSchoolAction extends BaseAction {
 					}
 					if(editorder_pull!=null){
 						driveSchoolInfo.setOrder_pull(editorder_pull);
+					}
+					if (!CommonUtils.isEmptyString(provinceid)) {
+						driveSchoolInfo.setProvinceid(provinceid);
+					}
+					if (!CommonUtils.isEmptyString(cityid)) {
+						driveSchoolInfo.setCityid(cityid);
+					}
+					if (!CommonUtils.isEmptyString(areaid)) {
+						driveSchoolInfo.setAreaid(areaid);
 					}
 					cuserService.updateObject(driveSchoolInfo);
 					setResponseStr("success");
@@ -566,4 +603,30 @@ public class DriveSchoolAction extends BaseAction {
 		this.changetype = changetype;
 	}
 
+	public String getProvinceid() {
+		return provinceid;
+	}
+
+	public void setProvinceid(String provinceid) {
+		this.provinceid = provinceid;
+	}
+
+	public String getCityid() {
+		return cityid;
+	}
+
+	public void setCityid(String cityid) {
+		this.cityid = cityid;
+	}
+
+	public String getAreaid() {
+		return areaid;
+	}
+
+	public void setAreaid(String areaid) {
+		this.areaid = areaid;
+	}
+
+	
+	
 }

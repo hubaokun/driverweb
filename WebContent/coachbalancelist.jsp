@@ -146,7 +146,7 @@ $(function(){
 			</div>
 			
 			
-			<div id="content_form_top" >
+			<div id="content_form_top2" >
 			
 						<div class="addbutton" style="margin-left: 16px;width: 100px;background: #ff0000;cursor: default;"><b>&nbsp;批量操作按钮:</b></div>
 										<div class="addbutton" style="margin-left: 35px;background: #4cc2ff" onclick="addbalance(-1)">添加余额</div>
@@ -329,7 +329,7 @@ $(function(){
 		<input type="hidden" id="gmoney_coachid" value=""/>
 		<input id="morebalance" type="text" style="width: 170px;height: 40px;margin: auto;margin-left: 70px;margin-top: 45px;font-size: 18px;text-align: center;"  placeholder="请输添加金额" onkeyup="value=value.replace(/[^\d]/g,'')"/>
 		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 50px;margin-top: 40px;font-size: 18px" value="确定" onclick="addBalanceSubmit()">
-		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 180x;margin-top: -40px;font-size: 18px" value="取消" onclick="unshowchangegmoney()">
+		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 180px;margin-top: -40px;font-size: 18px" value="取消" onclick="unshowchangegmoney()">
 		<input type="hidden" value="" id="changebalance">
 		</div>
 		</div>
@@ -343,7 +343,7 @@ $(function(){
 		<input type="hidden" id="level_coachid" value=""/>
 		<input id="lessbalance" type="text" style="width: 170px;height: 40px;margin: auto;margin-left: 70px;margin-top: 45px;font-size: 18px;text-align: center;"  placeholder="输入减少金额" onkeyup="value=value.replace(/[^\d]/g,'')"/>
 		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 50px;margin-top: 40px;font-size: 18px" value="确定" onclick="lessenBalanceSubmit()">
-		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 180x;margin-top: -40px;font-size: 18px" value="取消" onclick="unshowchangelevel()">
+		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 180px; margin-top: -40px;font-size: 18px" value="取消" onclick="unshowchangelevel()">
 		<input type="hidden" value="" id="allchangelevel">
 		</div>
 		</div>

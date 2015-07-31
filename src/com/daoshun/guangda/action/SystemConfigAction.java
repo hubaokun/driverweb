@@ -27,7 +27,7 @@ import com.daoshun.guangda.service.ICUserService;
 public class SystemConfigAction extends BaseAction {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -2449919380551492547L;
 
@@ -41,7 +41,7 @@ public class SystemConfigAction extends BaseAction {
 	private List<ComplaintSetInfo> complaintSetInfolist;
 
 	private List<CsubjectInfo> subjectlist;
-	
+
 	private List<TeachcarInfo> teachcarInfolist;
 
 	private ModelsInfo model;
@@ -55,13 +55,13 @@ public class SystemConfigAction extends BaseAction {
 	private CsubjectInfo subjectInfo;
 
 	private CsubjectInfo newsubjectInfo;
-	
+
 	private SystemSetInfo systemSetInfo;
-	
+
 	private TeachcarInfo teachcar;
-	
+
 	private TeachcarInfo newteachcar;
-	
+
 	private Integer pageIndex = 1;
 
 	private Integer pageCount = 0;
@@ -75,7 +75,7 @@ public class SystemConfigAction extends BaseAction {
 
 	// 修改后的车型名称
 	private String editmodelname;
-	
+
 	private String searchname;
 
 	// 等级名称
@@ -115,27 +115,27 @@ public class SystemConfigAction extends BaseAction {
 	private String oldsubjectname;
 
 	private int index;
-	
+
 	private int change_id;
-	
+
 	//新编辑的holidays
 	private String newholidays;
-	
+
 	//点击日期
 	private String clickholiday;
-	
+
 	//数据id
 	private int dataid;
-	
+
 	//编辑值
 	private String editvalue;
-	
+
 	//要修改的列名
 	private String colname;
-	
+
 	/**
 	 * 得到车型列表
-	 * 
+	 *
 	 * @return
 	 */
 	@Action(value = "/getTeachcarModellist", results = { @Result(name = SUCCESS, location = "/coachcar.jsp") })
@@ -143,7 +143,7 @@ public class SystemConfigAction extends BaseAction {
 		teachcarInfolist = cuserService.getTeachcarInfolist();
 		return SUCCESS;
 	}
-	
+
 	/**
 	 * 添加车型
 	 */
@@ -162,8 +162,8 @@ public class SystemConfigAction extends BaseAction {
 			setResponseStr("success");
 		}
 	}
-	
-	
+
+
 	/**
 	 * 删除车型
 	 */
@@ -178,7 +178,7 @@ public class SystemConfigAction extends BaseAction {
 			setResponseStr("success");
 		}
 	}
-	
+
 	/**
 	 * 修改车型
 	 */
@@ -189,19 +189,19 @@ public class SystemConfigAction extends BaseAction {
 		if(newteachcar!=null){
 			setResponseStr("error1");
 		}else{
-		if (teachcar == null) {
-			setResponseStr("error");
-		} else {
-			teachcar.setModelname(editmodelname);
-			cuserService.updateObject(teachcar);
-			setResponseStr("success");
-		}
+			if (teachcar == null) {
+				setResponseStr("error");
+			} else {
+				teachcar.setModelname(editmodelname);
+				cuserService.updateObject(teachcar);
+				setResponseStr("success");
+			}
 		}
 	}
-	
+
 	/**
 	 * 得到准教车型列表
-	 * 
+	 *
 	 * @return
 	 */
 	@Action(value = "/getModellist", results = { @Result(name = SUCCESS, location = "/modellist.jsp") })
@@ -254,28 +254,28 @@ public class SystemConfigAction extends BaseAction {
 		if(model!=null){
 			setResponseStr("error1");
 		}else{
-		if (oldmodel == null) {
-			setResponseStr("error");
-		} else {
-			if(searchname==null){
-				oldmodel.setSearchname(oldmodel.getSearchname());
-			}else{
-				oldmodel.setSearchname(searchname);
+			if (oldmodel == null) {
+				setResponseStr("error");
+			} else {
+				if(searchname==null){
+					oldmodel.setSearchname(oldmodel.getSearchname());
+				}else{
+					oldmodel.setSearchname(searchname);
+				}
+				if(editmodelname==null){
+					oldmodel.setModelname(oldmodel.getModelname());
+				}else{
+					oldmodel.setModelname(editmodelname);
+				}
+				cuserService.updateObject(oldmodel);
+				setResponseStr("success");
 			}
-			if(editmodelname==null){
-				oldmodel.setModelname(oldmodel.getModelname());
-			}else{
-				oldmodel.setModelname(editmodelname);
-			}
-			cuserService.updateObject(oldmodel);
-			setResponseStr("success");
-		}
 		}
 	}
 
 	/**
 	 * 得到教练等级列表
-	 * 
+	 *
 	 * @return
 	 */
 	@Action(value = "/getallLevellist", results = { @Result(name = SUCCESS, location = "/levellist.jsp") })
@@ -333,7 +333,7 @@ public class SystemConfigAction extends BaseAction {
 
 	/**
 	 * 得到投诉原因
-	 * 
+	 *
 	 * @return
 	 */
 	@Action(value = "/getComplaintlist", results = { @Result(name = SUCCESS, location = "/complaintlist.jsp") })
@@ -454,7 +454,7 @@ public class SystemConfigAction extends BaseAction {
 			setResponseStr("error1");
 		}
 	}
-	
+
 	/**
 	 * 获取节假日
 	 * @return
@@ -464,7 +464,7 @@ public class SystemConfigAction extends BaseAction {
 		systemSetInfo=cuserService.getSystemSetInfo();
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "/getHolidaysday")
 	public void getHolidaysday(){
 		String[] nowholiday=newholidays.split(",");
@@ -483,31 +483,31 @@ public class SystemConfigAction extends BaseAction {
 			setResponseStr("error");
 		}
 	}
-	
+
 	/**
 	 * 更新节假日
 	 */
 	@Action(value = "/updateHolidays")
 	public void updateHolidays(){
 		if(!CommonUtils.isEmptyString(newholidays)){
-		systemSetInfo=cuserService.getSystemSetInfoByid(dataid);
-		if(systemSetInfo==null){
-			SystemSetInfo systemSetInfos=new SystemSetInfo();
-			systemSetInfos.setTime_cancel(0);
-			if(!CommonUtils.isEmptyString(newholidays)){
-				systemSetInfos.setHolidays(newholidays);
-			}
-			cuserService.addObject(systemSetInfos);
-			setResponseStr("success");
-		}else{
-			systemSetInfo.setHolidays(newholidays);
-			cuserService.updateObject(systemSetInfo);
-			setResponseStr("success");
-		}}else{
+			systemSetInfo=cuserService.getSystemSetInfoByid(dataid);
+			if(systemSetInfo==null){
+				SystemSetInfo systemSetInfos=new SystemSetInfo();
+				systemSetInfos.setTime_cancel(0);
+				if(!CommonUtils.isEmptyString(newholidays)){
+					systemSetInfos.setHolidays(newholidays);
+				}
+				cuserService.addObject(systemSetInfos);
+				setResponseStr("success");
+			}else{
+				systemSetInfo.setHolidays(newholidays);
+				cuserService.updateObject(systemSetInfo);
+				setResponseStr("success");
+			}}else{
 			setResponseStr("error");
 		}
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -516,9 +516,9 @@ public class SystemConfigAction extends BaseAction {
 		systemSetInfo=cuserService.getSystemSetInfo();
 		return SUCCESS;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Action(value = "/editValue")
 	public void editTime(){
@@ -558,16 +558,22 @@ public class SystemConfigAction extends BaseAction {
 				systemSetInfo.setCan_use_coupon_count(Integer.parseInt(editvalue));
 			else if(colname.equals("can_use_diff_coupon"))
 				systemSetInfo.setCan_use_diff_coupon(Integer.parseInt(editvalue));
+			else if(colname.equals("advertisement_flag"))
+				systemSetInfo.setAdvertisement_flag(Integer.parseInt(editvalue));
+			else if(colname.equals("crewardamount_flag"))
+				systemSetInfo.setCrewardamount(new BigDecimal(editvalue));
+			else if(colname.equals("orewardamount_flag"))
+				systemSetInfo.setOrewardamount(new BigDecimal(editvalue));
 			cuserService.updateObject(systemSetInfo);
 			setResponseStr("success");
 		}
 	}
-	
+
 	@Action(value = "/jumpp", results = { @Result(name = SUCCESS, location = "/newday.jsp") })
 	public String jumpp(){
 		return SUCCESS;
 	}
-	
+
 
 	public ComplaintSetInfo getComplaintSetInfo() {
 		return complaintSetInfo;
@@ -797,83 +803,83 @@ public class SystemConfigAction extends BaseAction {
 		this.newsubjectInfo = newsubjectInfo;
 	}
 
-	
+
 	public SystemSetInfo getSystemSetInfo() {
 		return systemSetInfo;
 	}
 
-	
+
 	public void setSystemSetInfo(SystemSetInfo systemSetInfo) {
 		this.systemSetInfo = systemSetInfo;
 	}
 
-	
+
 	public String getNewholidays() {
 		return newholidays;
 	}
 
-	
+
 	public void setNewholidays(String newholidays) {
 		this.newholidays = newholidays;
 	}
 
-	
+
 	public int getDataid() {
 		return dataid;
 	}
 
-	
+
 	public void setDataid(int dataid) {
 		this.dataid = dataid;
 	}
 
-	
+
 	public String getEditvalue() {
 		return editvalue;
 	}
-	
+
 	public void setEditvalue(String editvalue) {
 		this.editvalue = editvalue.trim();
 	}
 
-	
+
 	public String getClickholiday() {
 		return clickholiday;
 	}
 
-	
+
 	public void setClickholiday(String clickholiday) {
 		this.clickholiday = clickholiday;
 	}
 
 
-	
+
 	public List<TeachcarInfo> getTeachcarInfolist() {
 		return teachcarInfolist;
 	}
 
 
-	
+
 	public void setTeachcarInfolist(List<TeachcarInfo> teachcarInfolist) {
 		this.teachcarInfolist = teachcarInfolist;
 	}
 
-	
+
 	public TeachcarInfo getTeachcar() {
 		return teachcar;
 	}
 
-	
+
 	public void setTeachcar(TeachcarInfo teachcar) {
 		this.teachcar = teachcar;
 	}
 
-	
+
 	public TeachcarInfo getNewteachcar() {
 		return newteachcar;
 	}
 
-	
+
 	public void setNewteachcar(TeachcarInfo newteachcar) {
 		this.newteachcar = newteachcar;
 	}
@@ -901,6 +907,6 @@ public class SystemConfigAction extends BaseAction {
 	public void setSearchname(String searchname) {
 		this.searchname = searchname;
 	}
-	
-	
+
+
 }
