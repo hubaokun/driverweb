@@ -107,7 +107,8 @@ public class CuserServlet extends BaseServlet {
 			} else if (Constant.GETMYCOINRECORD.equals(action)) {
 				// 获取账户余额信息
 				getMyCoinRecord(request, resultMap);
-			}else {
+			}
+			else {
 				throw new ErrException();
 			}
 
@@ -141,6 +142,9 @@ public class CuserServlet extends BaseServlet {
 			userid = getRequestParamter(request, "coachid");
 			usertype = "1";
 		} else if (Constant.GETMYBALANCEINFO.equals(action)) {
+			userid = getRequestParamter(request, "coachid");
+			usertype = "1";
+		}else if (Constant.GETMYCOINRECORD.equals(action)) {
 			userid = getRequestParamter(request, "coachid");
 			usertype = "1";
 		}

@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
@@ -14,10 +13,6 @@ import com.daoshun.common.QueryResult;
 import com.daoshun.guangda.model.InviteReport;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.RecommendInfo;
-/**
- *  @author wjr 
- */
-import com.daoshun.guangda.pojo.SuserInfo;
 public interface IRecommendService{
 	/**
 	 * 获取推荐人员详细内容

@@ -340,6 +340,9 @@ public class Constant {
 	// 教练申请小巴券套现
 	public static final String APPLYCOUPON = "APPLYCOUPON";
 
+	// 教练申请小巴币套现
+	public static final String APPLYCOIN = "APPLYCOIN";
+
 	public static final String GETMYALLSTUDENT = "GETMYALLSTUDENT";
 	
 	public static final String DELALIACCOUNT = "DELALIACCOUNT";

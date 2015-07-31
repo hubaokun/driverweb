@@ -1,12 +1,9 @@
 package com.daoshun.guangda.serviceImpl;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
+import com.daoshun.common.UserType;
 import com.daoshun.guangda.pojo.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -738,12 +735,14 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	public int getCanUseCoinnum(String coachid, String studentid) {
 		HashMap<String, Object> result = new HashMap<String, Object>();
 
-			String countinhql = "select sum(coinnum) from CoinRecordInfo where (receiverid ="+studentid+" and receivertype=3 and ownertype=2 and ownerid="+coachid+")";
-			long totalin = (Long) dataDao.getFirstObjectViaParam(countinhql, null);
+			String countinhql = "select sum(coinnum) from CoinRecordInfo where (receiverid ="+studentid+" and receivertype="+ UserType.STUDENT+"and ownertype="+UserType.COAH+" and ownerid="+coachid+")";
+			Object in= dataDao.getFirstObjectViaParam(countinhql, null);
+			int totalin= in==null?0:CommonUtils.parseInt(in.toString(), 0);
 
 
-		String countouthql = "select sum(coinnum) from CoinRecordInfo where (payerid ="+studentid+" and payertype=3 and ownertype=2 and ownerid="+coachid+")";
-		long totalout = (Long) dataDao.getFirstObjectViaParam(countouthql, null);
+		String countouthql = "select sum(coinnum) from CoinRecordInfo where (payerid ="+studentid+" and payertype="+ UserType.STUDENT+" and ownertype="+UserType.COAH+"  and ownerid="+coachid+")";
+		Object out= dataDao.getFirstObjectViaParam(countouthql, null);
+		int totalout = (out==null) ? 0: CommonUtils.parseInt(out.toString(),0);
 
 
 		return (int) (totalin-totalout);

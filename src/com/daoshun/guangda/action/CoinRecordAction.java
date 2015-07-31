@@ -1,6 +1,7 @@
 package com.daoshun.guangda.action;
 
 import com.daoshun.common.CommonUtils;
+import com.daoshun.common.UserType;
 import com.daoshun.guangda.pojo.CoinRecordInfo;
 import com.daoshun.guangda.pojo.CouponInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
@@ -146,7 +147,8 @@ public class CoinRecordAction extends BaseAction{
 
         CoinRecordInfo coinRecordInfo = new CoinRecordInfo ();
         coinRecordInfo.setReceiverid(receiverid);
-        if(ownertype==0)//平台发放
+        coinRecordInfo.setReceivertype(UserType.STUDENT);//代表学员
+        if(ownertype==UserType.PLATFORM)//平台发放
         {
             coinRecordInfo.setOwnerid(0);
             coinRecordInfo.setPayerid(0);
