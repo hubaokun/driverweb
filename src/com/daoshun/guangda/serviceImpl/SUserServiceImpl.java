@@ -1024,6 +1024,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			List<CoinRecordInfo> list = (List<CoinRecordInfo>) dataDao.getObjectsViaParam(hql, params, cid, cid);
 			if (list != null) {
 				result.put("recordlist", list);
+				result.put("hasmore", 0);
 			}
 
 		}
