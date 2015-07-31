@@ -871,6 +871,25 @@ function enrolledstudentsearch() {
 			+ endtime + "&index=" + index + "&change_id=" + j;
 }
 
+//已删除学员条件搜索
+function deletestudentsearch() {
+	var j = $("#change_id").val();
+	var index = $("#index").val();
+	var realname = $("#realname").val();
+	var phone = $("#phone").val();
+	var starttime = $("#starttime").val();
+	var endtime = $("#endtime").val();
+	if(starttime!=''&&endtime!=''){
+		if(starttime>endtime){
+			alert("结束时间必须大于开始时间！");
+			return;
+		}
+	}
+	window.location = "getDeleteStudentByKeyword.do?searchname=" + realname
+			+ "&searchphone=" + phone + "&minsdate=" + starttime + "&maxsdate="
+			+ endtime + "&index=" + index + "&change_id=" + j;
+}
+
 // 学员条件搜索
 function studentsearch() {
 	var j = $("#change_id").val();
