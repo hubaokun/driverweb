@@ -94,7 +94,7 @@ public class RecommendAction extends BaseAction {
 	public String offerReward()
 	{
 		HttpSession session = ServletActionContext.getRequest().getSession();
-		HashMap<String, Object> resultmap=(HashMap<String, Object>)sbookService.getCoachList("","", "", "", "", "", "", "", "", "", "", "");
+		HashMap<String, Object> resultmap=(HashMap<String, Object>)sbookService.getCoachList2("","", "", "", "", "", "", "", "", "", "", "");
 	    resultstring=recommendService.offeredReward(coachid.toString(), invitedcoachid.toString(),typestyle,resultmap);
 		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
 		QueryResult<RecommendInfo> qresult=recommendService.getInvitedDetailsForServer(coachid.toString(),pageIndex,pagesize);

@@ -323,7 +323,7 @@ public class SbookServlet extends BaseServlet {
 		CommonUtils.validateEmpty(cityid);*/
 		//HashMap<String, Object> result = sbookService.getCoachList(condition1, condition2, condition3, condition4, condition5, condition6, condition8, condition9, condition10, condition11, pagenum);
 		
-		HashMap<String, Object> result = sbookService.getCoachList(cityid,condition1, condition2, condition3, condition4, condition5, condition6, condition8, condition9, condition10, condition11, pagenum);
+		HashMap<String, Object> result = sbookService.getCoachList2(cityid,condition1, condition2, condition3, condition4, condition5, condition6, condition8, condition9, condition10, condition11, pagenum);
 		resultMap.putAll(result);
 	}
 
