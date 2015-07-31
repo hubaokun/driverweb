@@ -26,6 +26,12 @@ import org.springframework.stereotype.Controller;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.QueryResult;
 import com.daoshun.guangda.NetData.StudentInfoForExcel;
+import com.daoshun.guangda.pojo.BalanceStudentInfo;
+import com.daoshun.guangda.pojo.CuserInfo;
+import com.daoshun.guangda.pojo.StudentApplyInfo;
+import com.daoshun.guangda.pojo.StudentCheckInfo;
+import com.daoshun.guangda.pojo.SuserInfo;
+import com.daoshun.guangda.pojo.SuserState;
 import com.daoshun.guangda.service.IBaseService;
 import com.daoshun.guangda.service.ICUserService;
 import com.daoshun.guangda.service.ISUserService;
@@ -52,8 +58,11 @@ public class SuserAction extends BaseAction {
 	private StudentCheckInfo studentcheck;
 	private SuserInfo suser;
 	private CuserInfo cuser;
+	private SuserState suserSta = null;
 
 	private List<SuserInfo> suserlist;
+	
+	private List<SuserState> suserstalist;
 
 	// 学员提现申请列表
 	private List<StudentApplyInfo> stuApplyList;
@@ -97,6 +106,9 @@ public class SuserAction extends BaseAction {
 	
 	private String  newstudentname;
 	
+	//添加新跟进记录
+	private String addcontent;
+	
 	// 学员提现申请id
 	private int applyid;
 
@@ -107,6 +119,8 @@ public class SuserAction extends BaseAction {
 	private Integer state;
 
 	private Integer studentid;
+	
+	private Integer dealpeopleid;
 
 	private double studentmoney;
 
@@ -165,6 +179,14 @@ public class SuserAction extends BaseAction {
 	
 	private BigDecimal money;
 
+
+	//编辑学员跟进状态
+	private String editdealpeople;
+	private int editdealpeopleid;
+	private Date editdealtime;
+	private String editcontent;
+
+
 	private String oldcoachid;
 
 	private String newcoachid;
@@ -187,6 +209,128 @@ public class SuserAction extends BaseAction {
 				suserlist.get(i).setAge(age);
 			}
 		}
+		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
+		if (pageIndex > 1) {
+			if (suserlist == null || suserlist.size() == 0) {
+				pageIndex--;
+				suserlist();
+			}
+		}
+		return SUCCESS;
+	}
+	
+	
+	/**
+	 * 得到报名学员列表
+	 * 
+	 * @return
+	 */
+	@Action(value = "/getEnrollStudentlist", results = { @Result(name = SUCCESS, location = "/enrollstudentdetail.jsp") })
+	public String enrollsuserlist() {
+		HttpSession session = ServletActionContext.getRequest().getSession();
+		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
+		QueryResult<SuserInfo> result = suserService.getEnrollSuserInfos(pageIndex, pagesize);
+		total = result.getTotal();
+		suserlist = result.getDataList();
+		for (int i = 0; i < suserlist.size(); i++) {
+			if (!CommonUtils.isEmptyString(suserlist.get(i).getBirthday())) {
+				int age = suserService.getSuserAgeByid(suserlist.get(i).getStudentid());
+				suserlist.get(i).setAge(age);
+			}
+		}
+		//添加城市
+		for (int i = 0; i < suserlist.size(); i++) {
+			if (!CommonUtils.isEmptyString(String.valueOf(suserlist.get(i).getCityid()))) {
+				//int age = suserService.getSuserAgeByid(suserlist.get(i).getStudentid());
+				String city ="";
+				if(!CommonUtils.isEmptyString(suserlist.get(i).getCityid())){
+					city = suserService.getCityByCityid(Integer.parseInt(suserlist.get(i).getCityid()));
+				}
+				suserlist.get(i).setCity(city);;
+			}
+		}
+		
+		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
+		if (pageIndex > 1) {
+			if (suserlist == null || suserlist.size() == 0) {
+				pageIndex--;
+				suserlist();
+			}
+		}
+		return SUCCESS;
+	}
+	
+	
+	/**
+	 * 得到已报名学员列表
+	 * 
+	 * @return
+	 */
+	@Action(value = "/getEnrolledStudentlist", results = { @Result(name = SUCCESS, location = "/enrolledstudentdetail.jsp") })
+	public String enrolledsuserlist() {
+		HttpSession session = ServletActionContext.getRequest().getSession();
+		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
+		QueryResult<SuserInfo> result = suserService.getEnrolledSuserInfos(pageIndex, pagesize);
+		total = result.getTotal();
+		suserlist = result.getDataList();
+		for (int i = 0; i < suserlist.size(); i++) {
+			if (!CommonUtils.isEmptyString(suserlist.get(i).getBirthday())) {
+				int age = suserService.getSuserAgeByid(suserlist.get(i).getStudentid());
+				suserlist.get(i).setAge(age);
+			}
+		}
+		//添加城市
+		for (int i = 0; i < suserlist.size(); i++) {
+			if (!CommonUtils.isEmptyString(String.valueOf(suserlist.get(i).getCityid()))) {
+				//int age = suserService.getSuserAgeByid(suserlist.get(i).getStudentid());
+				String city ="";
+				if(!CommonUtils.isEmptyString(suserlist.get(i).getCityid())){
+					city = suserService.getCityByCityid(Integer.parseInt(suserlist.get(i).getCityid()));
+				}
+				suserlist.get(i).setCity(city);;
+			}
+		}
+		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
+		if (pageIndex > 1) {
+			if (suserlist == null || suserlist.size() == 0) {
+				pageIndex--;
+				suserlist();
+			}
+		}
+		return SUCCESS;
+	}
+	
+	
+	/**
+	 * 得到已删除学员列表
+	 * 
+	 * @return
+	 */
+	@Action(value = "/getdeleteStudent", results = { @Result(name = SUCCESS, location = "/deletestudentdetail.jsp") })
+	public String getdeleteStudent() {
+		HttpSession session = ServletActionContext.getRequest().getSession();
+		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
+		QueryResult<SuserInfo> result = suserService.getDeleteSuserInfos(pageIndex, pagesize);
+		total = result.getTotal();
+		suserlist = result.getDataList();
+		for (int i = 0; i < suserlist.size(); i++) {
+			if (!CommonUtils.isEmptyString(suserlist.get(i).getBirthday())) {
+				int age = suserService.getSuserAgeByid(suserlist.get(i).getStudentid());
+				suserlist.get(i).setAge(age);
+			}
+		}
+		
+		//添加城市
+		for (int i = 0; i < suserlist.size(); i++) {
+			if (!CommonUtils.isEmptyString(String.valueOf(suserlist.get(i).getCityid()))) {
+				String city ="";
+				if(!CommonUtils.isEmptyString(suserlist.get(i).getCityid())){
+					city = suserService.getCityByCityid(Integer.parseInt(suserlist.get(i).getCityid()));
+				}
+				suserlist.get(i).setCity(city);;
+			}
+		}
+		
 		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
 		if (pageIndex > 1) {
 			if (suserlist == null || suserlist.size() == 0) {
@@ -222,6 +366,53 @@ public class SuserAction extends BaseAction {
 
 		return SUCCESS;
 	}
+	
+	
+	/**
+	 * 添加报名学员
+	 */
+	@Action(value = "/addEnrollStudentByPhone", results = { @Result(name = SUCCESS, location = "/getStudentDetailByPhone.do?newstudentphone=${newstudentphone}", type = "redirect") })
+	public String addEnrollStudentByPhone() {
+
+		SuserInfo suser = new SuserInfo();
+		suser.setRealname(newstudentname);
+		suser.setPhone(newstudentphone);
+//		suser.setTotaltime(0);
+		suser.setPassword("");
+//		suser.setState(Constant.suser_UNCOMPLETE); // 设置状态
+		suser.setAddtime(new Date()); // 设置添加时间
+//		suser.setNewtasknoti(0); // 设置消息默认提醒
+//		suser.setCancancel(0); // 设置是否可以取消订单
+		suser.setFmoney(new BigDecimal(0)); // 冻结金额
+		suser.setMoney(new BigDecimal(0)); // 金额
+		
+		suser.setState(1);
+		suserService.addSuserInfo(suser);
+
+		return SUCCESS;
+	}
+
+
+	/**
+	 * 添加跟进记录
+ 	 */
+	@Action(value = "/addContent", results = { @Result(name = SUCCESS, location = "/getUserState.do?studentid=${studentid}", type = "redirect") })
+	public String addContent() {
+		//System.out.print("已跳转到添加");
+		
+		SuserState suserSta = new SuserState();
+		suserSta.setContent(addcontent);
+		suserSta.setDealtime(new Date()); // 设置添加时间
+		suserSta.setStudentid(studentid);
+		suserSta.setDealpeopleid(dealpeopleid);
+		
+		suserService.addSuserState(suserSta);
+
+		return SUCCESS;
+	}
+
+
+
 
 
 	/**
@@ -289,6 +480,11 @@ public String getStudentDetailByPhone() {
 			int age = suserService.getSuserAgeByid(suser.getStudentid());
 			suser.setAge(age);
 		}
+		if(!CommonUtils.isEmptyString(suser.getCityid())){
+			String city ="";
+			city = suserService.getCityByCityid(Integer.parseInt(suser.getCityid()));
+			suser.setCity(city);
+		}
 		if(suser.getCoachstate()==1){
 			studentcheck=suserService.getcoachbycheck(suser.getStudentid());
 			if(studentcheck!=null){
@@ -298,7 +494,70 @@ public String getStudentDetailByPhone() {
 				}
 			}
 		}
+		return SUCCESS;
+	}
+
+	
+	/**
+	 * 得到跟进详情
+	 * 
+	 * @return
+	 */
+	@Action(value = "/getUserState", results = { @Result(name = SUCCESS, location = "/userstate.jsp") })
+	public String getUserState() {
+		suser = suserService.getUserById(String.valueOf(studentid));
 		
+		HttpSession session = ServletActionContext.getRequest().getSession();
+		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
+		QueryResult<SuserState> result = suserService.getStateByStuid(String.valueOf(studentid),pageIndex, pagesize);
+		total = result.getTotal();
+		suserstalist = result.getDataList();
+		
+		//获得ID对应的处理人姓名
+		for (int i = 0; i < suserstalist.size(); i++) {
+			if (!CommonUtils.isEmptyString(String.valueOf(suserstalist.get(i).getDealpeopleid()))) {
+				//suserstalist.get(i).setDealpeople((suserService.getDealpeopleById(String.valueOf(suserstalist.get(i).getDealpeopleid()))).getDealpeoplename());
+				suserstalist.get(i).setDealpeople((suserService.getDealpeopleById(String.valueOf(suserstalist.get(i).getDealpeopleid()))).getRealname());
+				
+			}
+		}
+		
+		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
+		if (pageIndex > 1) {
+			if (suserstalist == null || suserstalist.size() == 0) {
+				pageIndex--;
+				//suserstalist();
+			}
+		}
+		
+		return SUCCESS;
+	}
+
+	
+	/**
+	 * 删除某个报名学员
+	 * 
+	 * @return
+	 */
+	@Action(value = "/deleteUser", results = { @Result(name = SUCCESS, location = "/getEnrollStudentlist.do", type = "redirect") })
+	public String deleteUser() {
+		suser = suserService.getUserById(String.valueOf(studentid));
+		suser.setState(6);
+		suserService.updateUserInfo(suser);
+		
+		return SUCCESS;
+	}
+	
+	/**
+	 * 恢复某个已删除学员
+	 * 
+	 * @return
+	 */
+	@Action(value = "/recoverUser", results = { @Result(name = SUCCESS, location = "/getdeleteStudent.do", type = "redirect") })
+	public String recoverUser() {
+		suser = suserService.getUserById(String.valueOf(studentid));
+		suser.setState(1);
+		suserService.updateUserInfo(suser);
 		
 		return SUCCESS;
 	}
@@ -387,6 +646,154 @@ public String getStudentDetailByPhone() {
 		}
 		return SUCCESS;
 	}
+	
+	/**
+	 * 根据关键字筛选报名学员信息
+	 * 
+	 * @return
+	 */
+	@Action(value = "/getEnrollStudentByKeyword", results = { @Result(name = SUCCESS, location = "/enrollstudentdetail.jsp") })
+	public String getEnrollStudentByKeyword() {
+		HttpSession session = ServletActionContext.getRequest().getSession();
+		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
+		QueryResult<SuserInfo> result = suserService.getEnrollStudentByKeyword(searchname, searchphone, minsdate, maxsdate, pageIndex, pagesize);
+		total = result.getTotal();
+		suserlist = result.getDataList();
+		for (int i = 0; i < suserlist.size(); i++) {
+			if (!CommonUtils.isEmptyString(suserlist.get(i).getBirthday())) {
+				int age = suserService.getSuserAgeByid(suserlist.get(i).getStudentid());
+				suserlist.get(i).setAge(age);
+			}
+		}
+		
+		//添加城市
+				for (int i = 0; i < suserlist.size(); i++) {
+					if (!CommonUtils.isEmptyString(String.valueOf(suserlist.get(i).getCityid()))) {
+						String city ="";
+						if(!CommonUtils.isEmptyString(suserlist.get(i).getCityid())){
+							city = suserService.getCityByCityid(Integer.parseInt(suserlist.get(i).getCityid()));
+						}
+						suserlist.get(i).setCity(city);;
+					}
+				}
+		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
+		if (pageIndex > 1) {
+			if (suserlist == null || suserlist.size() == 0) {
+				pageIndex--;
+				getStudentByKeyword();
+			}
+		}
+		return SUCCESS;
+	}
+	
+	
+	/**
+	 * 根据关键字筛选已报名学员信息
+	 * 
+	 * @return
+	 */
+	@Action(value = "/getEnrolledStudentByKeyword", results = { @Result(name = SUCCESS, location = "/enrolledstudentdetail.jsp") })
+	public String getEnrolledStudentByKeyword() {
+		HttpSession session = ServletActionContext.getRequest().getSession();
+		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
+		QueryResult<SuserInfo> result = suserService.getEnrolledStudentByKeyword(searchname, searchphone, minsdate, maxsdate, pageIndex, pagesize);
+		total = result.getTotal();
+		suserlist = result.getDataList();
+		for (int i = 0; i < suserlist.size(); i++) {
+			if (!CommonUtils.isEmptyString(suserlist.get(i).getBirthday())) {
+				int age = suserService.getSuserAgeByid(suserlist.get(i).getStudentid());
+				suserlist.get(i).setAge(age);
+			}
+		}
+		
+		//添加城市
+				for (int i = 0; i < suserlist.size(); i++) {
+					if (!CommonUtils.isEmptyString(String.valueOf(suserlist.get(i).getCityid()))) {
+						String city ="";
+						if(!CommonUtils.isEmptyString(suserlist.get(i).getCityid())){
+							city = suserService.getCityByCityid(Integer.parseInt(suserlist.get(i).getCityid()));
+						}
+						suserlist.get(i).setCity(city);;
+					}
+				}
+		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
+		if (pageIndex > 1) {
+			if (suserlist == null || suserlist.size() == 0) {
+				pageIndex--;
+				getStudentByKeyword();
+			}
+		}
+		return SUCCESS;
+	}
+	
+	
+	/**
+	 * 根据关键字筛选已删除学员信息
+	 * 
+	 * @return
+	 */
+	@Action(value = "/getDeleteStudentByKeyword", results = { @Result(name = SUCCESS, location = "/deletestudentdetail.jsp") })
+	public String getDeleteStudentByKeyword() {
+		HttpSession session = ServletActionContext.getRequest().getSession();
+		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
+		QueryResult<SuserInfo> result = suserService.getDeleteStudentByKeyword(searchname, searchphone, minsdate, maxsdate, pageIndex, pagesize);
+		total = result.getTotal();
+		suserlist = result.getDataList();
+		for (int i = 0; i < suserlist.size(); i++) {
+			if (!CommonUtils.isEmptyString(suserlist.get(i).getBirthday())) {
+				int age = suserService.getSuserAgeByid(suserlist.get(i).getStudentid());
+				suserlist.get(i).setAge(age);
+			}
+		}
+		
+		//添加城市
+				for (int i = 0; i < suserlist.size(); i++) {
+					if (!CommonUtils.isEmptyString(String.valueOf(suserlist.get(i).getCityid()))) {
+						String city ="";
+						if(!CommonUtils.isEmptyString(suserlist.get(i).getCityid())){
+							city = suserService.getCityByCityid(Integer.parseInt(suserlist.get(i).getCityid()));
+						}
+						suserlist.get(i).setCity(city);;
+					}
+				}
+		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
+		if (pageIndex > 1) {
+			if (suserlist == null || suserlist.size() == 0) {
+				pageIndex--;
+				getStudentByKeyword();
+			}
+		}
+		return SUCCESS;
+	}
+	
+	
+	
+	
+	/**
+	 * 根据关键字筛选学员跟进信息
+	 * 
+	 * @return
+	 */
+	@Action(value = "/getStudentstateByKeyword", results = { @Result(name = SUCCESS, location = "/userstate.jsp") })
+	public String getStudentstateByKeyword() {
+		HttpSession session = ServletActionContext.getRequest().getSession();
+		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 5);
+		QueryResult<SuserState> result = suserService.getStudentstateByKeyword(String.valueOf(studentid), pageIndex, pagesize);
+		total = result.getTotal();
+		suserstalist = result.getDataList();
+		
+		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
+		if (pageIndex > 1) {
+			if (suserstalist == null || suserstalist.size() == 0) {
+				pageIndex--;
+				getStudentstateByKeyword();
+			}
+		}
+		return SUCCESS;
+	}
+	
+	
+	
 	
 	/**
 	 * 获取学员余额列表
@@ -1052,6 +1459,58 @@ public String getStudentDetailByPhone() {
 	}
 	
 	
+	//修改跟进内容
+	@Action(value = "/editsuserstate", results = { @Result(name = SUCCESS, location = "/getUserState.do?studentid=${studentid}&index=${index}&change_id=${change_id}",type="redirect") })
+	public String editsuserstate(){
+		//suser = suserService.getUserById(String.valueOf(studentid));
+		//suserSta = suserService.getStateByStuid(String.valueOf(studentid));
+		//修改处理人
+		if (editdealpeople!=null) {
+			//suserSta.setRealname(editrealname);
+			//suserSta.setDealpeople(editdealpeople);
+			//suserSta.setDealpeopleid(editdealpeopleid);
+		}
+		//修改处理时间
+		if (editdealtime!=null) {
+			suserSta.setDealtime(editdealtime);
+		}
+		//修改跟进内容
+		if (!CommonUtils.isEmptyString(editcontent)) {
+			suserSta.setContent(editcontent);
+		}
+		
+		suserService.updateUserState(suserSta);
+		return SUCCESS;
+	}
+	
+	
+	
+//修改跟进状态
+	@Action(value = "/changestate", results = { @Result(name = SUCCESS, location = "/getUserState.do?studentid=${studentid}&index=${index}&change_id=${change_id}",type="redirect") })
+	public String changestate(){
+		suser = suserService.getUserById(String.valueOf(studentid));
+		//suserSta = suserService.getStateByStuid(String.valueOf(studentid));
+		
+		suser.setState(2);
+		
+		if(addcontent.equals("")){
+			addcontent = "报名完成";
+		}
+		
+		//添加跟进内容
+		SuserState suserSta = new SuserState();
+		suserSta.setContent(addcontent);
+		suserSta.setDealtime(new Date()); // 设置添加时间
+		suserSta.setStudentid(studentid);
+		suserSta.setDealpeopleid(dealpeopleid);
+		
+		suserService.addSuserState(suserSta);
+		suserService.updateUserInfo(suser);
+		return SUCCESS;
+	}
+	
+	
+	
 	
 	
 	public Integer getPageCount() {
@@ -1077,6 +1536,27 @@ public String getStudentDetailByPhone() {
 	public void setSuserlist(List<SuserInfo> suserlist) {
 		this.suserlist = suserlist;
 	}
+	
+
+	public Integer getDealpeopleid() {
+		return dealpeopleid;
+	}
+
+
+	public void setDealpeopleid(Integer dealpeopleid) {
+		this.dealpeopleid = dealpeopleid;
+	}
+
+
+	public List<SuserState> getSuserstalist() {
+		return suserstalist;
+	}
+
+
+	public void setSuserstalist(List<SuserState> suserstalist) {
+		this.suserstalist = suserstalist;
+	}
+
 
 	public double getStudentmoney() {
 		return studentmoney;
@@ -1093,6 +1573,17 @@ public String getStudentDetailByPhone() {
 	public void setSuser(SuserInfo suser) {
 		this.suser = suser;
 	}
+	
+//Susersta的get和set方法
+	public SuserState getSuserSta() {
+		return suserSta;
+	}
+
+
+	public void setSuserSta(SuserState suserSta) {
+		this.suserSta = suserSta;
+	}
+
 
 	public int getStudentid() {
 		return studentid;
@@ -1233,6 +1724,38 @@ public String getStudentDetailByPhone() {
 	public void setState(Integer state) {
 		this.state = state;
 	}
+
+	
+	
+	public String getEditdealpeople() {
+		return editdealpeople;
+	}
+
+
+	public void setEditdealpeople(String editdealpeople) {
+		this.editdealpeople = editdealpeople;
+	}
+
+
+	public Date getEditdealtime() {
+		return editdealtime;
+	}
+
+
+	public void setEditdealtime(Date editdealtime) {
+		this.editdealtime = editdealtime;
+	}
+
+
+	public String getEditcontent() {
+		return editcontent;
+	}
+
+
+	public void setEditcontent(String editcontent) {
+		this.editcontent = editcontent;
+	}
+
 
 	public File getAddVersion() {
 		return addVersion;
@@ -1488,6 +2011,18 @@ public String getStudentDetailByPhone() {
 	public void setNewstudentphone(String newstudentphone) {
 		this.newstudentphone = newstudentphone;
 	}
+
+	
+	
+	public String getAddcontent() {
+		return addcontent;
+	}
+
+
+	public void setAddcontent(String addcontent) {
+		this.addcontent = addcontent;
+	}
+
 
 	public String getNewstudentname() {
 		return newstudentname;

@@ -218,6 +218,10 @@ public class SuserInfo implements Serializable {
 	private String city;*/
 	
 	
+	// 城市
+	@Transient
+	private String city;
+	
 	@Column(name = "areaid", length = 100)
 	private String areaid;
 	
@@ -625,4 +629,13 @@ public class SuserInfo implements Serializable {
 	public void setCoinnum(Integer coinnum) {
 		this.coinnum = coinnum;
 	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+	
 }

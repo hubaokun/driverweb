@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.daoshun.common.QueryResult;
+import com.daoshun.guangda.pojo.AdminInfo;
 import com.daoshun.guangda.pojo.BalanceStudentInfo;
 import com.daoshun.guangda.pojo.CoachStudentInfo;
 import com.daoshun.guangda.pojo.CouponInfo;
@@ -13,6 +14,7 @@ import com.daoshun.guangda.pojo.NoticesInfo;
 import com.daoshun.guangda.pojo.StudentApplyInfo;
 import com.daoshun.guangda.pojo.StudentCheckInfo;
 import com.daoshun.guangda.pojo.SuserInfo;
+import com.daoshun.guangda.pojo.SuserState;
 import com.daoshun.guangda.pojo.VerifyCodeInfo;
 
 public interface ISUserService {
@@ -55,6 +57,15 @@ public interface ISUserService {
 	 * @return
 	 */
 	public abstract void addSuserInfo(SuserInfo user);
+	
+	/**
+	 * 添加用户跟进
+	 * 
+	 * @param user
+	 * @return
+	 */
+	public abstract void addSuserState(SuserState usersta);
+
 
 	/**
 	 * 根据qq账号搜索用户
@@ -86,6 +97,13 @@ public interface ISUserService {
 	 * @param user
 	 */
 	public abstract void updateUserInfo(SuserInfo user);
+	
+	/**
+	 * 修改用户跟进状态
+	 * 
+	 * @param user
+	 */
+	public abstract void updateUserState(SuserState userstate);
 
 	/**
 	 * 根据id搜索用户
@@ -98,6 +116,23 @@ public interface ISUserService {
 	public abstract SuserInfo getUserByStudent_cardnum(String student_cardnum);
 
 	public abstract SuserInfo getUserById_cardnum(String id_cardnum);
+	
+	/**
+	 * 根据studentid搜索用户状态跟进
+	 * 
+	 * @param studentid
+	 * @return
+	 */
+	public abstract QueryResult<SuserState> getStateByStuid(String studentid,Integer pageIndex, int pagesize);
+	
+	/**
+	 * 根据dealpeopleid搜索处理人信息
+	 * 
+	 * @param dealpeopleid
+	 * @return
+	 */
+	public abstract AdminInfo getDealpeopleById(String dealpeopleid);
+
 
 	
 	/**
@@ -127,9 +162,26 @@ public interface ISUserService {
 
 	/** 得到所有学员信息 **/
 	public abstract QueryResult<SuserInfo> getAllSuserInfos(Integer pageIndex, int pagesize);
+	
+	/** 得到所有报名学员信息 **/
+	public abstract QueryResult<SuserInfo> getEnrollSuserInfos(Integer pageIndex, int pagesize);
+	
+	/** 得到所有已报名学员信息 **/
+	public abstract QueryResult<SuserInfo> getEnrolledSuserInfos(Integer pageIndex, int pagesize);
+	
+	/** 得到所有已删除学员信息 **/
+	public abstract QueryResult<SuserInfo> getDeleteSuserInfos(Integer pageIndex, int pagesize);
 
 	public QueryResult<SuserInfo> getStudentByKeyword(String searchname, String searchphone, String minsdate, String maxsdate, Integer pageIndex, int pagesize);
+	
+	public QueryResult<SuserInfo> getEnrollStudentByKeyword(String searchname, String searchphone, String minsdate, String maxsdate, Integer pageIndex, int pagesize);
+	
+	public QueryResult<SuserInfo> getEnrolledStudentByKeyword(String searchname, String searchphone, String minsdate, String maxsdate, Integer pageIndex, int pagesize);
+	
+	public QueryResult<SuserInfo> getDeleteStudentByKeyword(String searchname, String searchphone, String minsdate, String maxsdate, Integer pageIndex, int pagesize);
 
+	public QueryResult<SuserState> getStudentstateByKeyword(String studentid, Integer pageIndex, int pagesize);
+	
 	/**
 	 * 根据手机获取验证码
 	 * 
@@ -224,6 +276,8 @@ public interface ISUserService {
 	public abstract List<SuserInfo> getUserCount();
 
 	public abstract int getSuserAgeByid(int id);
+	
+	public abstract String getCityByCityid(int id);
 
 	public abstract StudentCheckInfo getcoachbycheck(int studentid);
 
@@ -238,5 +292,10 @@ public interface ISUserService {
 	public abstract int changeCoach(String studentId,String oldCoachId,String newCoachId);
 
 	public int getCanUseCoinnum(String coachid, String studentid) ;
+<<<<<<< HEAD
 	public int getSumCoinnum( String studentid);
+=======
+
+	public HashMap<String, Object> getCoinRecordList(String studentid);
+>>>>>>> 23cac953dbf9e5663b2ca852920b9284de57e4e8
 }

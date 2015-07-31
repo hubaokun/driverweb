@@ -114,6 +114,9 @@ public class Constant {
 	//获取学员小巴券列表
 	public static final String GETSTUDENTCOUPONLIST="GETSTUDENTCOUPONLIST";
 
+	//获取学员小巴币变动记录
+	public static final String GETSTUDENTCOINRECORDLIST="GETSTUDENTCOINRECORDLIST";
+
 	// 申请提现
 	public static final String APPLYCASH = "APPLYCASH";
 

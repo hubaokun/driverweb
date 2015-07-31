@@ -209,11 +209,11 @@
 							</td>
 							<td style="width: 150px;" class="border_right_bottom"><s:if
 									test="ownertype==0">
-平台发放
+平台发行
 </s:if> <s:elseif test="ownertype==1">
-驾校发放:${schoolname }
+驾校发行:${schoolname }
 </s:elseif> <s:elseif test="ownertype==2">
-教练发放:${cusername }
+教练发行:${cusername }
 </s:elseif></td>
 							<td style="width: 200px;" class="border_right_bottom"><s:date
 									name="gettime" format="yyyy-MM-dd HH:mm:ss" /></td>

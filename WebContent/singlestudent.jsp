@@ -57,7 +57,7 @@ $(function(){
 
 <form action="" id="singlestudentForm" enctype="multipart/form-data" method="post">
 <input type="hidden" id="index" value="1"  name="index"/>
-<input type="hidden" id="change_id" value="2" name="change_id"/>
+<input type="hidden" id="change_id" value="${change_id }" name="change_id"/>
 <input type="hidden" value="${pageCount }" id="pageSize" />
 <input type="hidden" value="${pageIndex }" id="pageIndex" />
 <div id="content_form_top">
@@ -100,7 +100,7 @@ $(function(){
 </td>
 </s:else>
 <td  style="width:80px;min-width:150px;" class="border_right_bottom"><input name="editbirthday" value="${suser.birthday }" style="text-align: center;width:150px;height: 35px;font-size:18px" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})"/></td>
-<td  style="width:150px;min-width: 150px" class="border_right_bottom"><input name="editcity" value="${suser.cityid }" style="text-align: center;width:90px;height: 35px;font-size:18px"  /></td>
+<td  style="width:150px;min-width: 150px" class="border_right_bottom"><input name="editcity" value="${suser.city}" style="text-align: center;width:90px;height: 35px;font-size:18px"  /></td>
 </tr>
 
 

@@ -12,6 +12,19 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alipay.config.AlipayConfig;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.QueryResult;
+import com.daoshun.guangda.pojo.AdminInfo;
+import com.daoshun.guangda.pojo.BalanceStudentInfo;
+import com.daoshun.guangda.pojo.CoachStudentInfo;
+import com.daoshun.guangda.pojo.CouponInfo;
+import com.daoshun.guangda.pojo.CouponRecord;
+import com.daoshun.guangda.pojo.CuserInfo;
+import com.daoshun.guangda.pojo.RechargeRecordInfo;
+import com.daoshun.guangda.pojo.StudentApplyInfo;
+import com.daoshun.guangda.pojo.StudentCheckInfo;
+import com.daoshun.guangda.pojo.SuserInfo;
+import com.daoshun.guangda.pojo.SuserState;
+import com.daoshun.guangda.pojo.SystemSetInfo;
+import com.daoshun.guangda.pojo.VerifyCodeInfo;
 import com.daoshun.guangda.service.ISUserService;
 
 @Service("suserService")
@@ -41,6 +54,12 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	@Override
 	public void addSuserInfo(SuserInfo user) {
 		dataDao.addObject(user);
+	}
+	
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	@Override
+	public void addSuserState(SuserState usersta){
+		dataDao.addObject(usersta);
 	}
 
 	@Override
@@ -105,6 +124,12 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	public void updateUserInfo(SuserInfo user) {
 		dataDao.updateObject(user);
 	}
+	
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	@Override
+	public void updateUserState(SuserState userstate) {
+		dataDao.updateObject(userstate);
+	}
 
 	@Override
 	public SuserInfo getUserById(String studentid) {
@@ -123,6 +148,46 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 
 		return suserInfo;
 	}
+	
+	//获得学员的跟进状态
+	@SuppressWarnings("unchecked")
+	@Override
+	public QueryResult<SuserState> getStateByStuid(String studentid,Integer pageIndex, int pagesize) {
+		
+		StringBuffer suserhql = new StringBuffer();
+		suserhql.append("from SuserState where studentid=:studentid order by stateid desc");
+		String[] parms={"studentid"};
+		List<SuserState> susersta = (List<SuserState>)dataDao.pageQueryViaParam(suserhql.toString(),10, 1, parms,CommonUtils.parseInt(studentid, 0));
+		String counthql = " select count(*) " + suserhql.toString();
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, parms,CommonUtils.parseInt(studentid, 0));
+	
+		return new QueryResult<SuserState>(susersta, total);
+	}
+	
+	//根据处理人的id获取处理人信息
+	@Override
+	public AdminInfo getDealpeopleById(String dealpeopleid){
+	AdminInfo dealpeople;
+	if(Integer.parseInt(dealpeopleid) != -1){
+		dealpeople = dataDao.getObjectById(AdminInfo.class, CommonUtils.parseInt(dealpeopleid, 0));
+		
+		if (dealpeople != null) {
+			
+			dataDao.updateObject(dealpeople);
+		}else{
+			System.out.print("dealpeople对象为空");
+		}
+	}
+	else{
+		dealpeople = new AdminInfo();
+		dealpeople.setRealname("");;
+		dataDao.updateObject(dealpeople);
+		System.out.print("未获取到dealpeople对象");
+	}
+		
+		return dealpeople;
+	}
+	
 
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override
@@ -190,6 +255,45 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<SuserInfo>(suserInfolist, total);
 	}
+	
+	//实现显示报名学员列表的函数接口
+	@SuppressWarnings("unchecked")
+	@Override
+	public QueryResult<SuserInfo> getEnrollSuserInfos(Integer pageIndex, int pagesize) {
+		StringBuffer suserhql = new StringBuffer();
+		suserhql.append("from SuserInfo where state=1");
+		List<SuserInfo> suserInfolist = (List<SuserInfo>) dataDao.pageQueryViaParam(suserhql.toString() + " order by studentid asc", pagesize, pageIndex, null);
+		String counthql = " select count(*) " + suserhql.toString();
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
+		return new QueryResult<SuserInfo>(suserInfolist, total);
+	}
+	
+	//实现显示已报名学员列表的函数接口
+	@SuppressWarnings("unchecked")
+	@Override
+	public QueryResult<SuserInfo> getEnrolledSuserInfos(Integer pageIndex, int pagesize) {
+		StringBuffer suserhql = new StringBuffer();
+		suserhql.append("from SuserInfo where state=2");
+		List<SuserInfo> suserInfolist = (List<SuserInfo>) dataDao.pageQueryViaParam(suserhql.toString() + " order by studentid asc", pagesize, pageIndex, null);
+		String counthql = " select count(*) " + suserhql.toString();
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
+		return new QueryResult<SuserInfo>(suserInfolist, total);
+	}
+	
+	//获取已删除学员
+		@SuppressWarnings("unchecked")
+		@Override
+		public QueryResult<SuserInfo> getDeleteSuserInfos(Integer pageIndex, int pagesize) {
+			StringBuffer suserhql = new StringBuffer();
+			suserhql.append("from SuserInfo where state=6");
+			List<SuserInfo> suserInfolist = (List<SuserInfo>) dataDao.pageQueryViaParam(suserhql.toString() + " order by studentid asc", pagesize, pageIndex, null);
+			String counthql = " select count(*) " + suserhql.toString();
+			long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
+			return new QueryResult<SuserInfo>(suserInfolist, total);
+		}
+	
+	
+
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -250,6 +354,146 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<SuserInfo>(suserInfolist, total);
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public QueryResult<SuserInfo> getEnrollStudentByKeyword(String searchname, String searchphone, String minsdate, String maxsdate, Integer pageIndex, int pagesize) {
+		StringBuffer cuserhql = new StringBuffer();
+		cuserhql.append("from SuserInfo where state=1");
+		if (!CommonUtils.isEmptyString(searchname)) {
+			cuserhql.append(" and realname like '%" + searchname + "%'");
+		}
+		if (!CommonUtils.isEmptyString(searchphone)) {
+			cuserhql.append(" and phone like '%" + searchphone + "%'");
+		}
+		if (!CommonUtils.isEmptyString(maxsdate)) {
+			Date newmaxsdate = CommonUtils.getDateFormat(maxsdate, "yyyy-MM-dd");
+			Calendar latertime = Calendar.getInstance();
+			latertime.setTime(newmaxsdate);
+			latertime.set(Calendar.HOUR_OF_DAY, 23);
+			latertime.set(Calendar.MINUTE, 59);
+			latertime.set(Calendar.SECOND, 59);
+			Date timelater = latertime.getTime();
+			String newtimelater = CommonUtils.getTimeFormat(timelater, "yyyy-MM-dd");
+			cuserhql.append(" and addtime <= '" + newtimelater + "'");
+		}
+		if (!CommonUtils.isEmptyString(minsdate)) {
+			Date newminsdate = CommonUtils.getDateFormat(minsdate, "yyyy-MM-dd");
+			Calendar nowtime = Calendar.getInstance();
+			nowtime.setTime(newminsdate);
+			nowtime.set(Calendar.HOUR_OF_DAY, 0);
+			nowtime.set(Calendar.MINUTE, 0);
+			nowtime.set(Calendar.SECOND, 0);
+			Date starttime = nowtime.getTime();
+			String newtoday = CommonUtils.getTimeFormat(starttime, "yyyy-MM-dd");
+			cuserhql.append(" and addtime >= '" + newtoday + "'");
+		}
+		List<SuserInfo> suserInfolist = (List<SuserInfo>) dataDao.pageQueryViaParam(cuserhql.toString() + " order by studentid asc", pagesize, pageIndex, null);
+		String counthql = " select count(*) " + cuserhql.toString();
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
+		return new QueryResult<SuserInfo>(suserInfolist, total);
+	}
+	
+	
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public QueryResult<SuserInfo> getDeleteStudentByKeyword(String searchname, String searchphone, String minsdate, String maxsdate, Integer pageIndex, int pagesize) {
+		StringBuffer cuserhql = new StringBuffer();
+		cuserhql.append("from SuserInfo where state=6");
+		if (!CommonUtils.isEmptyString(searchname)) {
+			cuserhql.append(" and realname like '%" + searchname + "%'");
+		}
+		if (!CommonUtils.isEmptyString(searchphone)) {
+			cuserhql.append(" and phone like '%" + searchphone + "%'");
+		}
+		if (!CommonUtils.isEmptyString(maxsdate)) {
+			Date newmaxsdate = CommonUtils.getDateFormat(maxsdate, "yyyy-MM-dd");
+			Calendar latertime = Calendar.getInstance();
+			latertime.setTime(newmaxsdate);
+			latertime.set(Calendar.HOUR_OF_DAY, 23);
+			latertime.set(Calendar.MINUTE, 59);
+			latertime.set(Calendar.SECOND, 59);
+			Date timelater = latertime.getTime();
+			String newtimelater = CommonUtils.getTimeFormat(timelater, "yyyy-MM-dd");
+			cuserhql.append(" and addtime <= '" + newtimelater + "'");
+		}
+		if (!CommonUtils.isEmptyString(minsdate)) {
+			Date newminsdate = CommonUtils.getDateFormat(minsdate, "yyyy-MM-dd");
+			Calendar nowtime = Calendar.getInstance();
+			nowtime.setTime(newminsdate);
+			nowtime.set(Calendar.HOUR_OF_DAY, 0);
+			nowtime.set(Calendar.MINUTE, 0);
+			nowtime.set(Calendar.SECOND, 0);
+			Date starttime = nowtime.getTime();
+			String newtoday = CommonUtils.getTimeFormat(starttime, "yyyy-MM-dd");
+			cuserhql.append(" and addtime >= '" + newtoday + "'");
+		}
+		List<SuserInfo> suserInfolist = (List<SuserInfo>) dataDao.pageQueryViaParam(cuserhql.toString() + " order by studentid asc", pagesize, pageIndex, null);
+		String counthql = " select count(*) " + cuserhql.toString();
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
+		return new QueryResult<SuserInfo>(suserInfolist, total);
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public QueryResult<SuserState> getStudentstateByKeyword(String studentid, Integer pageIndex, int pagesize) {
+		StringBuffer cuserhql = new StringBuffer();
+		cuserhql.append("from SuserState where studentid=:studentid order by stateid desc");
+		
+		String[] parms={"studentid"};
+		List<SuserState> susersta = (List<SuserState>)dataDao.pageQueryViaParam(cuserhql.toString(), 10, 1, parms,CommonUtils.parseInt(studentid, 0));
+		String counthql = " select count(*) " + cuserhql.toString();
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, parms,CommonUtils.parseInt(studentid, 0));
+	
+		return new QueryResult<SuserState>(susersta, total);
+
+	}
+	
+	
+	
+	
+	//已报名学员
+	@SuppressWarnings("unchecked")
+	@Override
+	public QueryResult<SuserInfo> getEnrolledStudentByKeyword(String searchname, String searchphone, String minsdate, String maxsdate, Integer pageIndex, int pagesize) {
+		StringBuffer cuserhql = new StringBuffer();
+		cuserhql.append("from SuserInfo where state=2 ");
+		if (!CommonUtils.isEmptyString(searchname)) {
+			cuserhql.append(" and realname like '%" + searchname + "%'");
+		}
+		if (!CommonUtils.isEmptyString(searchphone)) {
+			cuserhql.append(" and phone like '%" + searchphone + "%'");
+		}
+		if (!CommonUtils.isEmptyString(maxsdate)) {
+			Date newmaxsdate = CommonUtils.getDateFormat(maxsdate, "yyyy-MM-dd");
+			Calendar latertime = Calendar.getInstance();
+			latertime.setTime(newmaxsdate);
+			latertime.set(Calendar.HOUR_OF_DAY, 23);
+			latertime.set(Calendar.MINUTE, 59);
+			latertime.set(Calendar.SECOND, 59);
+			Date timelater = latertime.getTime();
+			String newtimelater = CommonUtils.getTimeFormat(timelater, "yyyy-MM-dd");
+			cuserhql.append(" and addtime <= '" + newtimelater + "'");
+		}
+		if (!CommonUtils.isEmptyString(minsdate)) {
+			Date newminsdate = CommonUtils.getDateFormat(minsdate, "yyyy-MM-dd");
+			Calendar nowtime = Calendar.getInstance();
+			nowtime.setTime(newminsdate);
+			nowtime.set(Calendar.HOUR_OF_DAY, 0);
+			nowtime.set(Calendar.MINUTE, 0);
+			nowtime.set(Calendar.SECOND, 0);
+			Date starttime = nowtime.getTime();
+			String newtoday = CommonUtils.getTimeFormat(starttime, "yyyy-MM-dd");
+			cuserhql.append(" and addtime >= '" + newtoday + "'");
+		}
+		List<SuserInfo> suserInfolist = (List<SuserInfo>) dataDao.pageQueryViaParam(cuserhql.toString() + " order by studentid asc", pagesize, pageIndex, null);
+		String counthql = " select count(*) " + cuserhql.toString();
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
+		return new QueryResult<SuserInfo>(suserInfolist, total);
+	}
+	
 
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override
@@ -650,6 +894,15 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		int count = (Integer) dataDao.getFirstObjectViaParam(suserhql.toString(), params, id);
 		return count;
 	}
+	
+	@Override
+	public String getCityByCityid(int id) {
+		StringBuffer suserhql = new StringBuffer();
+		suserhql.append(" select city  from CityInfo where cityid = :cityid");
+		String[] params = { "cityid" };
+		String ct = (String)dataDao.getFirstObjectViaParam(suserhql.toString(), params, id);
+		return ct;
+	}
 
 	@Override
 	public StudentCheckInfo getcoachbycheck(int studentid) {
@@ -756,5 +1009,29 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		return (int) totalin;
 	}
 
+
+
+	@Override
+	public HashMap<String, Object> getCoinRecordList(String studentid) {
+		HashMap<String, Object> result = new HashMap<String, Object>();
+		SuserInfo user = dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
+		if (user != null) {
+			result.put("coinnum", user.getCoinnum());
+			String hql = "from CoinRecordInfo where (receiverid =:receiverid and receivertype="+ UserType.STUDENT+" ) or (payerid =:payerid and payertype="+ UserType.STUDENT+")  order by addtime desc";
+			String[] params = {"receiverid", "payerid"};
+
+			Integer cid = CommonUtils.parseInt(studentid, 0);
+			List<CoinRecordInfo> list = (List<CoinRecordInfo>) dataDao.getObjectsViaParam(hql, params, cid, cid);
+			if (list != null) {
+				result.put("recordlist", list);
+			}
+
+		}
+		else {
+			result.put("code", 2);
+			result.put("message", "用户不存在");
+		}
+		return result;
+	}
 
 }

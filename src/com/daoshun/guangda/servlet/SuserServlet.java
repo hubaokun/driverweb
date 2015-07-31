@@ -51,7 +51,7 @@ public class SuserServlet extends BaseServlet {
 			String action = getAction(request);
 
 			if (Constant.PERFECTACCOUNTINFO.equals(action) || Constant.CHANGEAVATAR.equals(action) || Constant.PERFECTSTUDENTINFO.equals(action) || Constant.PERFECTPERSONINFO.equals(action)
-					|| Constant.GETMYBALANCEINFO.equals(action) || Constant.APPLYCASH.equals(action)  || Constant.GETSTUDENTWALLETINFO.equals(action) || Constant.GETSTUDENTCOUPONLIST.equals(action) 
+					|| Constant.GETMYBALANCEINFO.equals(action) || Constant.APPLYCASH.equals(action)  || Constant.GETSTUDENTWALLETINFO.equals(action) || Constant.GETSTUDENTCOINRECORDLIST.equals(action) || Constant.GETSTUDENTCOUPONLIST.equals(action)
 					||Constant.SENROLL.equals(action)|| Constant.RECHARGE.equals(action)) {
 				if (!checkSession(request, action, resultMap)) {
 					setResult(response, resultMap);
@@ -98,7 +98,11 @@ public class SuserServlet extends BaseServlet {
 			}  else if (Constant.GETSTUDENTWALLETINFO.equals(action)) {
 				// 
 				getWalletInfo(request, resultMap);
-			} 
+			}
+			else if (Constant.GETSTUDENTCOINRECORDLIST.equals(action)) {
+				// 账户充值
+				getMyCoinRecord(request, resultMap);
+			}
 			else {
 				throw new ErrException();
 			}
@@ -128,7 +132,7 @@ public class SuserServlet extends BaseServlet {
 		} else if (Constant.RECHARGE.equals(action)) {
 			userid = getRequestParamter(request, "studentid");
 		}
-		else if (Constant.GETSTUDENTWALLETINFO.equals(action)) {
+		else if (Constant.GETSTUDENTWALLETINFO.equals(action)||Constant.GETSTUDENTCOINRECORDLIST.equals(action)) {
 			userid = getRequestParamter(request, "studentid");
 		}
 		else if (Constant.SENROLL.equals(action)) {
@@ -707,7 +711,6 @@ public class SuserServlet extends BaseServlet {
 		String amount = getRequestParamter(request, "amount");// 充值金额
 		CommonUtils.validateEmpty(studentid);
 		CommonUtils.validateEmpty(amount);
-
 		HashMap<String, Object> rechargeResult = suserService.recharge(studentid, amount);
 		resultMap.putAll(rechargeResult);
 	}
@@ -728,6 +731,14 @@ public class SuserServlet extends BaseServlet {
 		}
 		resultMap.put("couponsum", sum);
 		resultMap.put("coinsum", coinsum);
+	}
+
+
+	// 获取账户小巴币记录
+	public void getMyCoinRecord(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String studentid = getRequestParamter(request, "studentid");// 教练ID
+		HashMap<String, Object> coinRecordResult = suserService.getCoinRecordList(studentid);
+		resultMap.putAll(coinRecordResult);
 	}
 
 }
