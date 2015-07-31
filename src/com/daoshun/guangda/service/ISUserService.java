@@ -292,10 +292,9 @@ public interface ISUserService {
 	public abstract int changeCoach(String studentId,String oldCoachId,String newCoachId);
 
 	public int getCanUseCoinnum(String coachid, String studentid) ;
-<<<<<<< HEAD
+
 	public int getSumCoinnum( String studentid);
-=======
 
 	public HashMap<String, Object> getCoinRecordList(String studentid);
->>>>>>> 23cac953dbf9e5663b2ca852920b9284de57e4e8
+
 }
