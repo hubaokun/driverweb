@@ -480,6 +480,11 @@ public String getStudentDetailByPhone() {
 			int age = suserService.getSuserAgeByid(suser.getStudentid());
 			suser.setAge(age);
 		}
+		if(!CommonUtils.isEmptyString(suser.getCityid())){
+			String city ="";
+			city = suserService.getCityByCityid(Integer.parseInt(suser.getCityid()));
+			suser.setCity(city);
+		}
 		if(suser.getCoachstate()==1){
 			studentcheck=suserService.getcoachbycheck(suser.getStudentid());
 			if(studentcheck!=null){
