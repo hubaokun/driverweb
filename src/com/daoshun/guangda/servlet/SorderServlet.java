@@ -435,6 +435,10 @@ public class SorderServlet extends BaseServlet {
 			resultMap.put("code", 2);
 			resultMap.put("message", "取消订单失败,您必须在订单开始" + code / 60 + "小时前取消订单");
 			return;
+		}else if (code == 0) {
+			resultMap.put("code", 1);
+			resultMap.put("message", "取消成功");
+			return;
 		}
 	}
 	/**

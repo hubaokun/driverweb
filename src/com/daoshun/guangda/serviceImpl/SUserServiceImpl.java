@@ -747,6 +747,14 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 
 		return (int) (totalin-totalout);
 	}
+	//获取学员总的小巴币数量
+	public int getSumCoinnum( String studentid ) {
+			String countinhql = "select sum(coinnum) from CoinRecordInfo where  receivertype=3 and receiverid ="+studentid;
+			Object in= dataDao.getFirstObjectViaParam(countinhql, null);
+			int totalin= in==null?0:CommonUtils.parseInt(in.toString(), 0);
+
+		return (int) totalin;
+	}
 
 
 }

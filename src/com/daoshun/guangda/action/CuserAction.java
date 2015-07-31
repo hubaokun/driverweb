@@ -1465,12 +1465,24 @@ public class CuserAction extends BaseAction {
 			cuser.setBirthday(editbirthday);
 		}
 		// 修改城市
-		if (!CommonUtils.isEmptyString(editcity)) {
+		/*if (!CommonUtils.isEmptyString(editcity)) {
 			cuser.setCityid(editcity);
-		}
+		}*/
 		// 修改地址
 		if (!CommonUtils.isEmptyString(editaddress)) {
 			cuser.setAddress(editaddress);
+		}
+		//修改省
+		if (!CommonUtils.isEmptyString(provinceid)) {
+			cuser.setProvinceid(provinceid);
+		}
+		//修改市
+		if (!CommonUtils.isEmptyString(cityid)) {
+			cuser.setCityid(cityid);
+		}
+		//修改区
+		if (!CommonUtils.isEmptyString(areaid)) {
+			cuser.setAreaid(areaid);
 		}
 		// 修改紧急联系人
 		if (!CommonUtils.isEmptyString(editurgent_person)) {

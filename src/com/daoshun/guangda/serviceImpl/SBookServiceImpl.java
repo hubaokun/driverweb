@@ -1163,30 +1163,34 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						}
 						total = total.add(orderList.get(m).mOrderInfo.getTotal());// 总价中增加订单的总价
 						total = total.subtract(new BigDecimal(orderList.get(m).mOrderInfo.getDelmoney()));// 减去小巴券中抵掉的金额
-						// 小巴券
-						if (orderList.get(m).mOrderInfo.getCouponrecordid() != null && orderList.get(m).mOrderInfo.getCouponrecordid().length() > 0) {
-
-							String[] recordidArray = orderList.get(m).mOrderInfo.getCouponrecordid().split(",");
-							for (int i = 0; i < recordidArray.length; i++) {
-								int cid = CommonUtils.parseInt(recordidArray[i], 0);
-								CouponRecord record = dataDao.getObjectById(CouponRecord.class, cid);
-								if (record != null) {
-									record.setState(1);// 学员的状态修改为已经使用
-									dataDao.updateObject(record);
-									if (record.getCoupontype() == 1) {// 时间
-									} else {// 钱
-										// 只需要修改为已经使用,
+						// 小巴券，判断，如果 2 
+						
+							if (orderList.get(m).mOrderInfo.getCouponrecordid() != null && orderList.get(m).mOrderInfo.getCouponrecordid().length() > 0) {
+	
+								String[] recordidArray = orderList.get(m).mOrderInfo.getCouponrecordid().split(",");
+								for (int i = 0; i < recordidArray.length; i++) {
+									int cid = CommonUtils.parseInt(recordidArray[i], 0);
+									CouponRecord record = dataDao.getObjectById(CouponRecord.class, cid);
+									if (record != null) {
+										record.setState(1);// 学员的状态修改为已经使用
+										dataDao.updateObject(record);
+										if (record.getCoupontype() == 1) {// 时间
+										} else {// 钱
+											// 只需要修改为已经使用,
+										}
 									}
 								}
 							}
-						}
+						
 					}
-					// 修改用户的余额
+					// 修改用户的余额，如果是paytype是1 余额  2 小巴卷 3 小巴币  如果1 ，2 
 
 					if (student != null) {
+						
+						//  判断 1 或者 3  1 扣余额  2 扣小巴币
 						student.setFmoney(student.getFmoney().add(total));
 						student.setMoney(student.getMoney().subtract(total));
-
+						//如果是小巴币，直接扣除  ，如果是余额，
 						if (student.getMoney().doubleValue() < 0 || student.getFmoney().doubleValue() < 0) {
 							result.put("failtimes", failtimes);
 							result.put("successorderid", successorderid);
@@ -1249,7 +1253,555 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		}
 		return result;
 	}
+	
+	
+	@Transactional(readOnly = false, propagation = Propagation.SUPPORTS)
+	public HashMap<String, Object> bookCoach2(String coachid, String studentid, String date) {
+		HashMap<String, Object> result = new HashMap<String, Object>();
+		String failtimes = "";// 不能预订的时间点集合
+		int successorderid = 0;// 预订成功的第一个订单的ID
+		String hql1 = "from CscheduleInfo where coachid =:coachid and date = :date and hour =:hour";
+		String params1[] = { "coachid", "date", "hour" };
 
+		String hql2 = "from CBookTimeInfo where coachid =:coachid and bookedtime =:bookedtime and date =:date";
+		String params2[] = { "coachid", "bookedtime", "date" };
+
+		String hql3 = "from CaddAddressInfo where coachid =:coachid and iscurrent = 1";
+		String params3[] = { "coachid" };
+
+		SuserInfo student = dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
+		if(student.getMoney().doubleValue()<0.0)// 余额不够
+		{
+			//版本需要更新
+			result.put("failtimes",11);
+			result.put("successorderid", 11);
+			result.put("coachauth", 11);
+			result.put("message", "您当前处于欠费状态,无法生成订单!");
+			result.put("code", 11);//app应当提示"您当前处于欠费状态,无法生成订单
+			return result;
+		}
+
+		// 首先查询出订单相关的几个时间配置
+		String hqlset = "from SystemSetInfo where 1 = 1";
+		SystemSetInfo setInfo = (SystemSetInfo) dataDao.getFirstObjectViaParam(hqlset, null);
+		String holidays = "";// 距离订单结束之后可以确认下车的时间默认60分钟
+		int systemOrderPull = 0;
+		int schoolOrderPull = 0;
+		int defaultPrice = 100;
+		int defaultSubjectID = 1;
+		if (setInfo != null) {
+			if (CommonUtils.isEmptyString(setInfo.getHolidays()))
+				holidays = setInfo.getHolidays();
+			if (setInfo.getOrder_pull() != null && setInfo.getOrder_pull() != 0)
+				systemOrderPull = setInfo.getOrder_pull();
+			if (setInfo.getCoach_default_price() != null && setInfo.getCoach_default_price() != 0) {
+				defaultPrice = setInfo.getCoach_default_price();
+			}
+
+			if (setInfo.getCoach_default_subject() != null && setInfo.getCoach_default_subject() != 0) {
+				defaultSubjectID = setInfo.getCoach_default_subject();
+			}
+		}
+
+		CuserInfo cuser = dataDao.getObjectById(CuserInfo.class, CommonUtils.parseInt(coachid, 0));
+		if (cuser != null && cuser.getDrive_schoolid() != null && cuser.getDrive_schoolid() != 0) {
+			DriveSchoolInfo school = dataDao.getObjectById(DriveSchoolInfo.class, cuser.getDrive_schoolid());
+			if (school != null && school.getOrder_pull() != null && school.getOrder_pull() != 0) {
+				schoolOrderPull = school.getOrder_pull();
+			}
+		}
+
+
+		// 订单的提醒设置
+		String hqlnoti = "from OrderNotiSetInfo where 1 = 1";
+		List<OrderNotiSetInfo> orderNotiList = (List<OrderNotiSetInfo>) dataDao.getObjectsViaParam(hqlnoti, null);
+
+		CsubjectInfo sub = dataDao.getObjectById(CsubjectInfo.class, defaultSubjectID);
+		if (sub == null) {
+			String hql5 = "from CsubjectInfo where 1=1";
+			sub = (CsubjectInfo) dataDao.getFirstObjectViaParam(hql5, null);
+		}
+
+		try {
+			List<OrderModel> orderList = new ArrayList<OrderModel>();
+			JSONArray json = new JSONArray(date);
+			// 教练信息
+			CuserInfo cUser = dataDao.getObjectById(CuserInfo.class, CommonUtils.parseInt(coachid, 0));
+			boolean hasError = false;
+			for (int i = 0; i < json.length(); i++) {// 每个循环是一个订单
+				boolean canOrder = true;
+				JSONObject array = json.getJSONObject(i);
+				JSONArray times = array.getJSONArray("time");// 订单的时间点数组
+				
+				String date1 = array.getString("date");// 订单的日期
+				String paytype = array.getString("paytype");// 订单的日期
+				if (paytype == null || paytype.length() == 0)
+				{
+					result.put("code", 3);
+					result.put("message", "请选择支付方式");
+					break;
+				}
+				String recordid="";
+				int delmoney=0;
+				if("1".equals(paytype)){
+					delmoney= array.getInt("delmoney");
+				}else if("2".equals(paytype)){
+					recordid= array.getString("recordid");
+					if((recordid.lastIndexOf(',')==recordid.length()-1)|| recordid.split(",").length>times.length())
+					{
+						//版本需要更新
+						result.put("failtimes", -1);
+						result.put("successorderid", -1);
+						result.put("coachauth", -1);
+						result.put("code", -1);
+						return result;
+					}
+					delmoney= array.getInt("delmoney");
+				}else if("3".equals(paytype)){
+					delmoney= array.getInt("delmoney");
+				}
+				
+				
+				
+				
+				String start = "", end = "";// 订单的开始时间和结束时间
+				
+				BigDecimal total = new BigDecimal(0);// 订单的总价
+				String longitude = null;
+				// 纬度
+				String latitude = null;
+				// 详细地址
+				String detail = null;
+				int cancel = -1;// 订单是否可以取消 默认 为0 可以取消
+				// 判断时间是否还可以预订
+				// 首先查询当天的全天休息情况
+				List<CscheduleInfo> scheduleinfoList = (List<CscheduleInfo>) dataDao.getObjectsViaParam(hql1, params1, CommonUtils.parseInt(coachid, 0), date1, "0");
+				int state = 0;
+				if (scheduleinfoList != null && scheduleinfoList.size() > 0) {
+					state = scheduleinfoList.get(0).getState();
+					cancel = scheduleinfoList.get(0).getCancelstate();
+				}
+
+				
+				// 如果是用了小巴券,但是又没有传delmoney的话,订单预订失败
+				if("2".equals(paytype)){
+				
+					if (!CommonUtils.isEmptyString(recordid) && delmoney == 0 && recordid.length()>2 ) {//
+						for (int j = 0; j < times.length(); j++) {
+							if (failtimes.length() == 0) {
+								failtimes = date1 + times.get(j).toString() + "点";
+							} else {
+								failtimes += "," + date1 + times.get(j).toString() + "点";
+							}
+						}
+						canOrder = false;
+					}
+				
+				}
+				if (state == 0) {// 当天休息的情况
+					for (int j = 0; j < times.length(); j++) {
+						if (failtimes.length() == 0) {
+							failtimes = date1 + times.get(j).toString() + "点";
+						} else {
+							failtimes += "," + date1 + times.get(j).toString() + "点";
+						}
+					}
+					canOrder = false;
+				} else {
+					// 查看时间是否被预订或者是休息的
+					for (int j = 0; j < times.length(); j++) {
+						String hour = times.get(j).toString();
+						if (j == 0) {
+							start = hour;
+						}
+
+						if (j == times.length() - 1) {
+							end = hour;
+						}
+						List<CBookTimeInfo> booktimeList = (List<CBookTimeInfo>) dataDao.getObjectsViaParam(hql2, params2, CommonUtils.parseInt(coachid, 0), hour, date1);
+						if (booktimeList != null && booktimeList.size() > 0) {// 被预订
+							if (failtimes.length() == 0) {
+								failtimes = date1 + hour + "点";
+							} else {
+								failtimes += "," + date1 + hour + "点";
+							}
+							canOrder = false;
+						} else {
+							List<CscheduleInfo> scheduleinfoList2 = (List<CscheduleInfo>) dataDao.getObjectsViaParam(hql1, params1, CommonUtils.parseInt(coachid, 0), date1, hour);
+							if (scheduleinfoList2 != null && scheduleinfoList2.size() > 0) {
+								if (scheduleinfoList2.get(0).getIsrest() == 1) {
+									if (failtimes.length() == 0) {// 休息
+										failtimes = date1 + hour + "点";
+									} else {
+										failtimes += "," + date1 + hour + "点";
+									}
+									canOrder = false;
+								} else {// 时间点不休息的话,总价增加这个时间点的价格
+									total = total.add(scheduleinfoList2.get(0).getPrice());
+									if (CommonUtils.isEmptyString(latitude) || CommonUtils.isEmptyString(longitude) || CommonUtils.isEmptyString(detail)) {
+										CaddAddressInfo address = dataDao.getObjectById(CaddAddressInfo.class, scheduleinfoList2.get(0).getAddressid());
+										if (address != null) {
+											latitude = address.getLatitude();
+											longitude = address.getLongitude();
+											detail = address.getDetail();
+										}
+									}
+								}
+							} else {
+								// 获取教练是否有默认设置
+								int isrest = getDefaultRest(coachid, hour);
+								if (isrest == -1) {// 默认没有设置
+									if (CommonUtils.parseInt(hour, 0) == 5 || CommonUtils.parseInt(hour, 0) == 6 || CommonUtils.parseInt(hour, 0) == 12 || CommonUtils.parseInt(hour, 0) == 18) {
+										if (failtimes.length() == 0) {// 休息
+											failtimes = date1 + hour + "点";
+										} else {
+											failtimes += "," + date1 + hour + "点";
+										}
+										canOrder = false;
+									} else {
+										// 采用默认的价格设置
+										BigDecimal price = getDefaultPrice(coachid, hour);
+										if (price != null) {
+											total = total.add(price);
+										} else {
+											total = total.add(new BigDecimal(defaultPrice));
+										}
+
+										if (CommonUtils.isEmptyString(latitude) || CommonUtils.isEmptyString(longitude) || CommonUtils.isEmptyString(detail)) {
+											List<CaddAddressInfo> address = (List<CaddAddressInfo>) dataDao.getObjectsViaParam(hql3, params3, CommonUtils.parseInt(coachid, 0));
+											if (address != null && address.size() > 0) {
+												latitude = address.get(0).getLatitude();
+												longitude = address.get(0).getLongitude();
+												detail = address.get(0).getDetail();
+											}
+										}
+									}
+								} else if (isrest == 1) {
+									if (failtimes.length() == 0) {// 休息
+										failtimes = date1 + hour + "点";
+									} else {
+										failtimes += "," + date1 + hour + "点";
+									}
+									canOrder = false;
+								} else {
+									// 采用默认的价格设置
+									BigDecimal price = getDefaultPrice(coachid, hour);
+									if (price != null) {
+										total = total.add(price);
+									} else {
+										total = total.add(new BigDecimal(defaultPrice));
+									}
+
+									if (CommonUtils.isEmptyString(latitude) || CommonUtils.isEmptyString(longitude) || CommonUtils.isEmptyString(detail)) {
+										List<CaddAddressInfo> address = (List<CaddAddressInfo>) dataDao.getObjectsViaParam(hql3, params3, CommonUtils.parseInt(coachid, 0));
+										if (address != null && address.size() > 0) {
+											latitude = address.get(0).getLatitude();
+											longitude = address.get(0).getLongitude();
+											detail = address.get(0).getDetail();
+										}
+									}
+								}
+
+							}
+						}
+					}
+
+					if (CommonUtils.isEmptyString(latitude) || CommonUtils.isEmptyString(longitude) || CommonUtils.isEmptyString(detail)) {
+						List<CaddAddressInfo> address = (List<CaddAddressInfo>) dataDao.getObjectsViaParam(hql3, params3, CommonUtils.parseInt(coachid, 0));
+						if (address != null && address.size() > 0) {
+							latitude = address.get(0).getLatitude();
+							longitude = address.get(0).getLongitude();
+							detail = address.get(0).getDetail();
+						}
+					}
+
+					if (canOrder) {// 这个订单是OK的,可以生成订单的
+						OrderModel orderModel = new OrderModel();
+						OrderInfo order = new OrderInfo();
+						order.setCoachid(CommonUtils.parseInt(coachid, 0));// 教练ID
+						order.setStudentid(CommonUtils.parseInt(studentid, 0));// 学员ID
+						order.setCreat_time(new Date());// 添加时间
+						order.setDate(date1);// 预订日期
+						order.setCouponrecordid(recordid);
+						order.setDelmoney(delmoney);
+						order.setPaytype(CommonUtils.parseInt(paytype, 0));
+
+						Date startTime = CommonUtils.getDateFormat(date1, "yyyy-MM-dd");
+						Calendar startC = Calendar.getInstance();
+						startC.setTime(startTime);
+						startC.set(Calendar.HOUR_OF_DAY, CommonUtils.parseInt(start, 0));
+						startC.set(Calendar.MINUTE, 0);
+						startC.set(Calendar.SECOND, 0);
+						order.setStart_time(startC.getTime());// 开始时间
+
+						Date endTime = CommonUtils.getDateFormat(date1, "yyyy-MM-dd");
+						Calendar endC = Calendar.getInstance();
+						endC.setTime(endTime);
+						endC.set(Calendar.HOUR_OF_DAY, CommonUtils.parseInt(end, 0) + 1);
+						endC.set(Calendar.MINUTE, 0);
+						endC.set(Calendar.SECOND, 0);
+						order.setEnd_time(endC.getTime());// 结束时间
+
+						order.setTime(CommonUtils.parseInt(end, 0) - CommonUtils.parseInt(start, 0) + 1);// 订单的时长
+
+						// 订单总价格
+						order.setTotal(total);
+						order.setStudentstate(0);// 学生端订单状态
+						order.setCoachstate(0);// 教练段任务状态
+						// 地址相关
+						order.setLatitude(latitude);
+						order.setLongitude(longitude);
+						order.setDetail(detail);
+
+						// 订单是否可以被取消
+						// if (cancel != -1) {
+						// order.setCancancel(cancel);
+						// } else {
+						// // 首先判断是否是节假日或者是星期天
+						// Calendar calBookDate = Calendar.getInstance();
+						// calBookDate.setTime(startTime);
+						// int dayOfWeek = calBookDate.get(Calendar.DAY_OF_WEEK);
+						// if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) {
+						// order.setCancancel(1);
+						// } else {
+						// String dateCheck = CommonUtils.getTimeFormat(startTime, "yyyy年MM月dd日");
+						// if (holidays.contains(dateCheck)) {
+						// order.setCancancel(1);
+						// } else {
+						// order.setCancancel(0);
+						// }
+						// }
+						// }
+						order.setCancancel(1);// 目前所有订单不可以取消
+
+						order.setPrice_out1(new BigDecimal(0d));
+						order.setPrice_out2(new BigDecimal(0d));
+						// 订单的抽成相关
+						order.setOrder_pull1(systemOrderPull);
+						order.setOrder_pull2(schoolOrderPull);
+
+						orderModel.mOrderInfo = order;
+
+						for (int j = 0; j < times.length(); j++) {// 记录时间被预订
+																	// 和时间点的价格等信息
+							String hour = times.get(j).toString();
+							OrderPrice orderprice = new OrderPrice();
+							orderprice.setOrderid(order.getOrderid());// 所属订单
+							orderprice.setHour(hour);// 时间
+
+							List<CscheduleInfo> scheduleinfoList2 = (List<CscheduleInfo>) dataDao.getObjectsViaParam(hql1, params1, CommonUtils.parseInt(coachid, 0), date1, hour);
+							if (scheduleinfoList2 != null && scheduleinfoList2.size() > 0) {
+								CaddAddressInfo address = dataDao.getObjectById(CaddAddressInfo.class, scheduleinfoList2.get(0).getAddressid());
+								if (address != null) {
+									orderprice.setDetail(address.getDetail());
+									orderprice.setLatitude(address.getLatitude());
+									orderprice.setLongitude(address.getLongitude());
+								} else {
+									orderprice.setDetail(detail);
+									orderprice.setLatitude(latitude);
+									orderprice.setLongitude(longitude);
+								}
+								orderprice.setPrice(scheduleinfoList2.get(0).getPrice());
+
+								CsubjectInfo subject = dataDao.getObjectById(CsubjectInfo.class, scheduleinfoList2.get(0).getSubjectid());
+								if (subject != null) {
+									orderprice.setSubject(subject.getSubjectname());
+								} else {
+									orderprice.setSubject(sub.getSubjectname());
+								}
+							} else {
+								List<CaddAddressInfo> address = (List<CaddAddressInfo>) dataDao.getObjectsViaParam(hql3, params3, CommonUtils.parseInt(coachid, 0));
+								if (address != null && address.size() > 0) {
+									orderprice.setDetail(address.get(0).getDetail());
+									orderprice.setLatitude(address.get(0).getLatitude());
+									orderprice.setLongitude(address.get(0).getLongitude());
+								}
+
+								BigDecimal price = getDefaultPrice(coachid, hour);
+								if (price != null) {
+									orderprice.setPrice(price);
+								} else {
+									orderprice.setPrice(new BigDecimal(defaultPrice));
+								}
+
+								orderprice.setSubject(sub.getSubjectname());
+							}
+
+							if (orderModel.OrderPriceList == null) {
+								orderModel.OrderPriceList = new ArrayList<OrderPrice>();
+							}
+							orderModel.OrderPriceList.add(orderprice);
+
+							CBookTimeInfo booktime = new CBookTimeInfo();
+							booktime.setCoachid(CommonUtils.parseInt(coachid, 0));
+							booktime.setDate(date1);
+							booktime.setBookedtime(hour);
+
+							List<CBookTimeInfo> booktimeList = (List<CBookTimeInfo>) dataDao.getFirstObjectViaParam(hql1, params1, CommonUtils.parseInt(coachid, 0), hour, date1);
+							if (booktimeList == null || booktimeList.size() == 0) {
+								if (orderModel.CBookTimeInfoList == null) {
+									orderModel.CBookTimeInfoList = new ArrayList<CBookTimeInfo>();
+								}
+								orderModel.CBookTimeInfoList.add(booktime);
+							}
+						}
+						orderList.add(orderModel);
+					} else {
+						hasError = true;
+					}
+				}
+			}
+
+			if (!hasError) {
+				if (orderList.size() > 0) {
+					BigDecimal total = new BigDecimal(0);
+					for (int m = 0; m < orderList.size(); m++) {
+						dataDao.addObject(orderList.get(m).mOrderInfo);
+						// 查看订单的提醒设置
+						if (orderNotiList != null && orderNotiList.size() > 0) {
+							for (OrderNotiSetInfo setInfo1 : orderNotiList) {
+								int minute = setInfo1.getBeforeminute();
+								int type = setInfo1.getType();
+								if (minute == 0)
+									continue;
+								Calendar start = Calendar.getInstance();
+								start.setTime(orderList.get(m).mOrderInfo.getStart_time());
+								start.add(Calendar.MINUTE, -minute);
+								OrderNotiRecord record = new OrderNotiRecord();
+								record.setAddtime(new Date());
+								record.setBeforeminute(minute);
+								record.setOrderid(orderList.get(m).mOrderInfo.getOrderid());
+								record.setSendtime(start.getTime());
+								record.setType(type);
+								record.setCoachid(orderList.get(m).mOrderInfo.getCoachid());
+								record.setStudentid(orderList.get(m).mOrderInfo.getStudentid());
+								dataDao.addObject(record);
+							}
+						}
+
+						if (successorderid == 0)
+							successorderid = orderList.get(m).mOrderInfo.getOrderid();
+						if (orderList.get(m).CBookTimeInfoList != null) {
+							for (CBookTimeInfo booktime : orderList.get(m).CBookTimeInfoList) {
+								dataDao.addObject(booktime);
+							}
+						}
+
+						if (orderList.get(m).OrderPriceList != null) {
+							for (OrderPrice mOrderPrice : orderList.get(m).OrderPriceList) {
+								mOrderPrice.setOrderid(orderList.get(m).mOrderInfo.getOrderid());
+								dataDao.addObject(mOrderPrice);
+							}
+						}
+						total = total.add(orderList.get(m).mOrderInfo.getTotal());// 总价中增加订单的总价
+						
+						
+						// 小巴券，判断，如果 2 
+						if(2==orderList.get(m).mOrderInfo.getPaytype()){
+							total = total.subtract(new BigDecimal(orderList.get(m).mOrderInfo.getDelmoney()));// 减去小巴券中抵掉的金额
+								if (orderList.get(m).mOrderInfo.getCouponrecordid() != null && orderList.get(m).mOrderInfo.getCouponrecordid().length() > 0) {
+									String[] recordidArray = orderList.get(m).mOrderInfo.getCouponrecordid().split(",");
+									for (int i = 0; i < recordidArray.length; i++) {
+										int cid = CommonUtils.parseInt(recordidArray[i], 0);
+										CouponRecord record = dataDao.getObjectById(CouponRecord.class, cid);
+										if (record != null) {
+											record.setState(1);// 学员的状态修改为已经使用
+											dataDao.updateObject(record);
+											if (record.getCoupontype() == 1) {// 时间
+											} else {// 钱
+												// 只需要修改为已经使用,
+											}
+										}
+									}
+								}
+						}
+						
+						// 修改用户的余额，如果是paytype是1 余额  2 小巴卷 3 小巴币  如果1 ，2 
+
+						if (student != null) {
+							//  判断 1 或者 3  1 扣余额  2 扣小巴币 如果是小巴币，直接扣除  ，如果是余额，
+							if(1==orderList.get(m).mOrderInfo.getPaytype()){
+								student.setFmoney(student.getFmoney().add(total));
+								student.setMoney(student.getMoney().subtract(total));
+								
+								if (student.getMoney().doubleValue() < 0 || student.getFmoney().doubleValue() < 0) {
+									result.put("failtimes", failtimes);
+									result.put("successorderid", successorderid);
+									result.put("coachauth", student.getCoachstate());
+									if (failtimes.length() == 0) {
+										result.put("code", 1);
+									} else {
+										result.put("code", 2);
+									}
+									return result;
+								}
+							}else if(3==orderList.get(m).mOrderInfo.getPaytype()){
+								BigDecimal cnum = new BigDecimal(student.getCoinnum());
+								double dc=cnum.subtract(total).doubleValue();
+								//小巴币大于0，并且剩余小巴币余额减去支付额大于等于0，表示余额购，否则余额不足
+								if(dc>=0){
+									student.setCoinnum((int)dc);
+								}else{
+									//不足
+									result.put("code", 6);
+									result.put("message", "小巴币余额不足!");
+									return result;
+								}
+								
+							}
+							dataDao.updateObject(student);
+						}
+					}
+				
+
+					// 推送通知教练有新的订单
+					String hql5 = "from UserPushInfo where userid =:userid and usertype = 1";
+					String params5[] = { "userid" };
+					UserPushInfo userpush = (UserPushInfo) dataDao.getFirstObjectViaParam(hql5, params5, CommonUtils.parseInt(coachid, 0));
+					if (userpush != null) {
+						if (userpush.getType() == 0 && !CommonUtils.isEmptyString(userpush.getJpushid())) {// 安卓
+							PushtoSingle pushsingle = new PushtoSingle();
+							pushsingle.pushsingle(userpush.getJpushid(), 1, "{\"message\":\"" + "您有新的订单哦" + "\",\"type\":\"1\"}");
+						} else if (userpush.getType() == 1 && !CommonUtils.isEmptyString(userpush.getDevicetoken())) {
+							ApplePushUtil.sendpush(userpush.getDevicetoken(), "{\"aps\":{\"alert\":\"" + "您有新的订单哦" + "\",\"sound\":\"default\"},\"userid\":" + coachid + "}", 1, 1);
+						}
+					}
+					
+					// 增加学员与教练的关系
+					String coachStudentHql = "from CoachStudentInfo where coachid = :coachid and studentid = :studentid";
+					String[] params8 = { "coachid", "studentid" };
+					CoachStudentInfo info = (CoachStudentInfo) dataDao.getFirstObjectViaParam(coachStudentHql, params8, CommonUtils.parseInt(coachid, 0), CommonUtils.parseInt(studentid, 0));
+					if (info == null) {
+						info = new CoachStudentInfo();
+						info.setCoachid(CommonUtils.parseInt(coachid, 0));
+						info.setHour(0);
+						info.setMoney(new BigDecimal(0));
+						info.setStudentid(CommonUtils.parseInt(studentid, 0));
+						dataDao.addObject(info);
+					}
+				}
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+			//版本需要更新
+			result.put("failtimes", -1);
+			result.put("successorderid", -1);
+			result.put("coachauth", -1);
+			result.put("code", -1);
+			return result;
+			
+		}
+		result.put("failtimes", failtimes);
+		result.put("successorderid", successorderid);
+		result.put("coachauth", student.getCoachstate());
+		if (failtimes.length() == 0) {
+			result.put("code", 1);
+		} else {
+			result.put("code", 2);
+		}
+		return result;
+	}
+	
 	@Override
 	public HashMap<String, Object> getCoachComments(String coachid, String pagenum) {
 		HashMap<String, Object> result = new HashMap<String, Object>();

@@ -176,12 +176,12 @@ public class SbookServlet extends BaseServlet {
 					resultMap.put(Constant.MESSAGE, "用户参数错误!");
 					return false;
 				}
-				else if ( CommonUtils.isEmptyString(version))
+				/*else if ( CommonUtils.isEmptyString(version))
 				{
 					resultMap.put(Constant.CODE, -1);
 					resultMap.put(Constant.MESSAGE, "版本太低,请升级!");
 					return false;
-				}
+				}*/
 				else if ( CommonUtils.isEmptyString(token))
 				{
 					resultMap.put(Constant.CODE, -1);
@@ -331,15 +331,9 @@ public class SbookServlet extends BaseServlet {
 		String coachid = getRequestParamter(request, "coachid");
 		String studentid = getRequestParamter(request, "studentid");
 		String date = getRequestParamter(request, "date");
-		String paytype = getRequestParamter(request, "paytype");
+		//String paytype = getRequestParamter(request, "paytype");
 		String version=getRequestParamter(request, "version");
-		if (paytype == null || paytype.length() == 0)
-		{
-			resultMap.put("code", 3);
-			resultMap.put("message", "请选择支付方式");
-			return;
-		}
-
+		
 		if (version == null || version.length() == 0)
 		{
 			resultMap.put("code", 4);
@@ -352,8 +346,8 @@ public class SbookServlet extends BaseServlet {
 			CommonUtils.validateEmpty(coachid);
 			CommonUtils.validateEmpty(studentid);
 			CommonUtils.validateEmpty(date);
-			CommonUtils.validateEmpty(paytype);
-			resultMap.putAll(sbookService.bookCoach(coachid, studentid, date));
+			//CommonUtils.validateEmpty(paytype);
+			resultMap.putAll(sbookService.bookCoach2(coachid, studentid, date));
 		} catch (Exception e) {
 			resultMap.put("code", 2);
 			resultMap.put("message", "预约失败");
@@ -419,8 +413,11 @@ public class SbookServlet extends BaseServlet {
 			if (info.getCan_use_coupon_count() != null && info.getCan_use_coupon_count() != 0)
 				canUseMaxCount = info.getCan_use_coupon_count();
 		}
-
+		int num=suserService.getCanUseCoinnum(coachid,studentid);//获取可用小巴币
+		SuserInfo suser=suserService.getUserById(studentid);//获取余额
 		resultMap.put("couponlist", list);
+		resultMap.put("coinnum", num);//可用小巴币
+		resultMap.put("money", suser.getMoney()==null?0:suser.getMoney());
 		resultMap.put("canUseDiff", canUseDiff);
 		resultMap.put("canUseMaxCount", canUseMaxCount);
 	}

@@ -246,6 +246,8 @@ public class DataDao {
 	}
 	
 	
+	
+	
 	/**
 	 * 按条件查询单条数据
 	 * 

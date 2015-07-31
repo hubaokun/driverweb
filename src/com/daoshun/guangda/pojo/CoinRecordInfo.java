@@ -24,6 +24,9 @@ public class CoinRecordInfo implements Serializable {
 	// 小巴币的支付者id
 	@Column(name = "payerid", length = 10, nullable = false, columnDefinition = "INT default 0")
 	private Integer payerid;
+	
+	@Column(name = "payername", length = 150, nullable = true)
+	private String payername;
 
 	// 支付者类型 0:平台 1:驾校 2:教练
 	@Column(name = "payertype", nullable = false, columnDefinition = "TINYINT default 0")
@@ -32,8 +35,11 @@ public class CoinRecordInfo implements Serializable {
 	// 小巴币的接受者id
 	@Column(name = "receiverid", length = 10, nullable = false, columnDefinition = "INT default 0")
 	private Integer receiverid;
+	
+	@Column(name = "receivername", length = 150, nullable = true)
+	private String receivername;
 
-	// 接受者类型 0:平台 1:驾校 2:教练
+	// 接受者类型 0:平台 1:驾校 2:教练 3 学员
 	@Column(name = "receivertype", nullable = false, columnDefinition = "TINYINT default 0")
 	private int receivertype;
 	
@@ -53,9 +59,37 @@ public class CoinRecordInfo implements Serializable {
 	@Column(name = "ownerid", length = 10, nullable = false, columnDefinition = "INT default 0")
 	private Integer ownerid;
 	
+	@Column(name = "ownername", length = 150, nullable = true)
+	private String ownername;
+	
 	// 添加时间
 	@Column(name = "addtime", columnDefinition = "TIMESTAMP default CURRENT_TIMESTAMP")
 	private Date addtime;
+	
+	
+	public String getPayername() {
+		return payername;
+	}
+
+	public void setPayername(String payername) {
+		this.payername = payername;
+	}
+
+	public String getReceivername() {
+		return receivername;
+	}
+
+	public void setReceivername(String receivername) {
+		this.receivername = receivername;
+	}
+
+	public String getOwnername() {
+		return ownername;
+	}
+
+	public void setOwnername(String ownername) {
+		this.ownername = ownername;
+	}
 
 	public Integer getCoinrecordid() {
 		return coinrecordid;

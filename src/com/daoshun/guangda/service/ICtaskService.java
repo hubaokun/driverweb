@@ -31,6 +31,10 @@ public interface ICtaskService {
 	
 	/** 根据教练id分页获取订单信息 **/
 	public abstract List<OrderInfo> getOrderInfoListBycoachid(String coachid, int page, int count);
+	/*
+	 * 根据教练ID查询过滤掉教练已经同意取消的所有订单
+	 */
+	public List<OrderInfo> getOrderNoExistAgreeInfoListBycoachid(String coachid, int page, int count) ;
 
 	/** 根据教练任务的状态查找订单 **/
 	public abstract List<OrderInfo> getOrderInfoListBycoach(int coachstate, int coachid);
