@@ -833,6 +833,44 @@ function allstudentsearch() {
 			+ endtime + "&index=" + index + "&change_id=" + j;
 }
 
+//报名学员条件搜索
+function enrollstudentsearch() {
+	var j = $("#change_id").val();
+	var index = $("#index").val();
+	var realname = $("#realname").val();
+	var phone = $("#phone").val();
+	var starttime = $("#starttime").val();
+	var endtime = $("#endtime").val();
+	if(starttime!=''&&endtime!=''){
+		if(starttime>endtime){
+			alert("结束时间必须大于开始时间！");
+			return;
+		}
+	}
+	window.location = "getEnrollStudentByKeyword.do?searchname=" + realname
+			+ "&searchphone=" + phone + "&minsdate=" + starttime + "&maxsdate="
+			+ endtime + "&index=" + index + "&change_id=" + j;
+}
+
+//已报名学员条件搜索
+function enrolledstudentsearch() {
+	var j = $("#change_id").val();
+	var index = $("#index").val();
+	var realname = $("#realname").val();
+	var phone = $("#phone").val();
+	var starttime = $("#starttime").val();
+	var endtime = $("#endtime").val();
+	if(starttime!=''&&endtime!=''){
+		if(starttime>endtime){
+			alert("结束时间必须大于开始时间！");
+			return;
+		}
+	}
+	window.location = "getEnrolledStudentByKeyword.do?searchname=" + realname
+			+ "&searchphone=" + phone + "&minsdate=" + starttime + "&maxsdate="
+			+ endtime + "&index=" + index + "&change_id=" + j;
+}
+
 // 学员条件搜索
 function studentsearch() {
 	var j = $("#change_id").val();
@@ -889,6 +927,13 @@ function gobacksuser() {
 	var pageSize = $("#pageSize").val();
 	var pageIndex = $("#pageIndex").val();
 	window.location.href = "getStudentlist.do?index=1&change_id=1&pageSize="
+			+ pageSize + "&pageIndex=" + pageIndex;
+}
+
+function gobackuserstate() {
+	var pageSize = $("#pageSize").val();
+	var pageIndex = $("#pageIndex").val();
+	window.location.href = "getEnrollStudentlist.do?index=1&change_id=3&pageSize="
 			+ pageSize + "&pageIndex=" + pageIndex;
 }
 
@@ -1272,6 +1317,61 @@ function addstudent() {
 		$("#form_submit").submit();
 	}
 }
+
+//添加跟进记录
+function addcontent(){
+	var addcontent=$("#addcontent").val();
+	var studentid=$("#studentid").val();
+	var dealpeopleid=$("dealpeopleid").val();
+	
+	if(addcontent==""){
+		alert("跟进信息不能为空");
+		return;
+	}else{
+		$("#contentform_submit").submit();
+	}
+	
+}
+
+
+//修改跟进完成
+function changestate(){
+	var addcontent=$("#addcontent").val();
+	var studentid=$("#studentid").val();
+	var dealpeopleid=$("dealpeopleid").val();
+	
+	if(addcontent==""){
+		alert("跟进信息填写为空，默认信息为报名完成！");
+	}
+	
+	
+	$("#contentform_submit").attr("action", "changestate.do").submit();
+
+	
+}
+
+//显示报名学员
+function getEnrollStudent() {
+	window.location.href = "getEnrollStudentlist.do";
+}
+
+//显示已报名学员
+function getEnrolledStudent() {
+	window.location.href = "getEnrolledStudentlist.do";
+}
+
+//显示已删除学员
+function getdeleteStudent() {
+	window.location.href = "getdeleteStudent.do";
+}
+
+//返回到报名学员页面
+function returnEnrollStudent() {
+	window.location.href = "getEnrollStudentlist.do";
+}
+
+
+
 
 
 
