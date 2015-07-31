@@ -2,6 +2,7 @@ package com.daoshun.guangda.serviceImpl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -572,10 +573,46 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 	@Override
 	public QueryResult<RecommendInfo> getRecommoneddetailInfoByKeyWord(String searchname, String searchphone,
 			String coachid) {
-		// TODO Auto-generated method stub
-		return null;
+		 StringBuffer querystring=new StringBuffer();
+		 querystring.append("from RecommendInfo where coachid=:coachid");
+		 String[] params=new String[3];
+		 int count=0;
+		 params[count++]="coachid";
+			if(!searchname.equals(""))
+			{
+				querystring.append(" and invitedpeoplename like :invitedpeoplename ");
+				params[count++]="invitedpeoplename";
+				
+			}
+			if(!searchphone.equals(""))
+			{
+				querystring.append(" and invitedpeopletelphone like :invitedpeopletelphone ");
+				params[count++]="invitedpeopletelphone";
+			}
+			String querys="SELECT count(*)"+querystring.toString();
+		 List countlist=new ArrayList();
+		 List<RecommendInfo> templist=new ArrayList<RecommendInfo>();
+		    if(!searchname.equals("") && searchphone.equals(""))
+		    {
+		    	templist=(List<RecommendInfo>)dataDao.getObjectsViaParam(querystring.toString(), params,CommonUtils.parseInt(coachid, 0),"%"+searchname+"%");
+		 		countlist=(List)dataDao.getObjectsViaParam(querys, params,CommonUtils.parseInt(coachid, 0),"%"+searchname+"%");
+		    }
+		    else if(searchname.equals("") && !searchphone.equals(""))
+		    {
+		    	templist=(List<RecommendInfo>)dataDao.getObjectsViaParam(querystring.toString(), params,CommonUtils.parseInt(coachid, 0),"%"+searchphone+"%");
+		 		countlist=(List)dataDao.getObjectsViaParam(querys, params,CommonUtils.parseInt(coachid, 0),"%"+searchphone+"%");
+		    }
+		    else if(!searchname.equals("") && !searchphone.equals(""))
+		    {
+		    	templist=(List<RecommendInfo>)dataDao.getObjectsViaParam(querystring.toString(), params,CommonUtils.parseInt(coachid, 0),"%"+searchname+"%","%"+searchphone+"%");
+		 		countlist=(List)dataDao.getObjectsViaParam(querys, params,CommonUtils.parseInt(coachid, 0),"%"+searchname+"%","%"+searchphone+"%");
+		    }
+		    else
+		    {
+		    	templist=(List<RecommendInfo>)dataDao.getObjectsViaParam(querystring.toString(), params,CommonUtils.parseInt(coachid, 0));
+		    	countlist=(List)dataDao.getObjectsViaParam(querys, params,CommonUtils.parseInt(coachid, 0));
+		    }
+ 		  long total=countlist.size();
+        return new  QueryResult<RecommendInfo>(templist,total);
 	}
-
-    
-	
 }

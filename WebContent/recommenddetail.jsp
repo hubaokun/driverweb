@@ -55,7 +55,7 @@ function goback()
 }
 function searchbegin()
 {
-	
+	$("#offeredForm").attr("action","SearchRecommoneddetail.do").submit();
 }
 </script>
 <style type="text/css">
@@ -109,6 +109,7 @@ function searchbegin()
 		<jsp:include page="left.jsp" />
 		<div id="content_form">
 			<div id="content_form_top">
+			<form action="" id="offeredForm" method="post">
 			<div class="serchcontentdiv" style="float: left; margin-left: 50px; width: 156px" >
 						<input  type="text" class="searchdiv" style="width: 50px;text-align: center;font-family: 微软雅黑;" value="被邀请人姓名" readonly="readonly">
 						<input id="realname" name="realname" type="text" class="searchdiv" style="width:100px;font-family: 微软雅黑;" value="${searchname}"/>
@@ -129,7 +130,7 @@ function searchbegin()
 					
 			</div> 
 			<input type="hidden" value="${resultstring}" id="resultstring" />
-			<form action="" id="offeredForm" method="post">
+			
 
 			<div id="content_form_table">
 				<table border="0" cellspacing="0" cellpadding="0"
