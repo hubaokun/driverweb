@@ -30,6 +30,19 @@
 			$("#clevel").val(level);
 
 		})
+		$(document).ready(function(){
+			var pid='${cuser.provinceid }';//省ID
+			var cid='${cuser.cityid }';//市ID
+			var aid='${cuser.areaid }';//区ID
+			if(pid=='' || pid==0){
+				pid="0";
+			}
+			//pid="330000";
+			//cid="330400";
+			//aid="330481";
+			initProvinceCityArea(pid,cid,aid);
+		});  
+
 	</script>
 
 	<style type="text/css">
@@ -233,8 +246,14 @@
 						<td><input name="coachid" id="coachid" value="${cuser.coachid }"  readonly="readonly"></td>
 						<td>教龄：</td>
 						<td><input name="edityears" id="years" value="${cuser.years }" ></td>
-						<td>出生日期：</td>
-						<td><input name="editbirthday" value="${cuser.birthday }"  onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})" realvalue=""></td>
+						<td>省市区：</td>
+						<td>
+						省
+						<select  id="province" 
+						  onchange="tofindCity(this.value)" name="provinceid"></select><br>
+						 市<select id="city" name="cityid"  onchange="tofindArea(this.value)"></select>
+						 区<select id="area" name="areaid"  ></select>
+						</td>
 					</tr>
 					<tr>
 						<td>真实姓名：</td>
@@ -242,10 +261,9 @@
 						<td>所属驾校：</td>
 						<td><input value="${cuser.drive_school }"  readonly="readonly">
 							<span onclick="showchangeschool()" value="修改">修改</span>
-
 						</td>
-						<td>城市：</td>
-						<td><input name="editcity" value="${cuser.cityid}" /></td>
+						<td></td>
+						<td></td>
 					</tr>
 					<tr>
 						<td>电话号码：</td>
@@ -279,7 +297,7 @@
 						</s:else>
 						<td>综合评分：</td>
 						<td><input name="editscore" value="${cuser.score }" onpaste="return false" ondragenter="return false" oncontextmenu="return false;" onkeyup="this.value=this.value.replace(/[\u4e00-\u9fa5]/g,'')" onkeydown="myKeyDown(this.value, event)"></td>
-						<td>注册时间：</td>
+						<td>注册时间3232：</td>
 						<td><input name="editaddtime" value="<s:date name="cuser.addtime" format="yyyy-MM-dd HH:mm:ss" />" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})"/></td>
 					</tr>
 					<tr>
@@ -289,6 +307,14 @@
 						<td><input name="editurgent_phone" onkeyup="value=value.replace(/[^\d]/g,'')" value="${cuser.urgent_phone }" ></td>
 						<td>自我评价：</td>
 						<td><input name="editselfval" type="text" value="${cuser.selfeval }" /></td>
+					</tr>
+					<tr>
+						<td>出生日期：</td>
+						<td><input name="editbirthday" value="${cuser.birthday }"  onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})" realvalue=""></td>
+						<td>注册时间：</td>
+						<td><input name="editaddtime" value="<s:date name="cuser.addtime" format="yyyy-MM-dd HH:mm:ss" />" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})"/></td>
+						<td></td>
+						<td></td>
 					</tr>
 				</table>
 
