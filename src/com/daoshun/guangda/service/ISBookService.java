@@ -66,8 +66,7 @@ public interface ISBookService {
 	 * @return
 	 */
 	public abstract HashMap<String, Object> getCoachList(String cityid,String condition1, String condition2, String condition3, String condition4, String condition5, String condition6, String condition8,
-			String condition9, String condition10, String condition11, String pagenum);
-
+														 String condition9, String condition10, String condition11, String pagenum);
 	/**
 	 * 预定教练
 	 * 

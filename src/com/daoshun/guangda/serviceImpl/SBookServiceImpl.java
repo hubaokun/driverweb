@@ -412,10 +412,9 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		}
 		return coachlist;
 	}
-
 	@Override
 	public HashMap<String, Object> getCoachList(String cityid,String condition1, String condition2, String condition3, String condition4, String condition5, String condition6, String condition8, String condition9,
-			String condition10, String condition11, String pagenum) {
+												String condition10, String condition11, String pagenum) {
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		StringBuffer cuserhql = new StringBuffer();
 		cuserhql.append("select getTeachAddress(u.coachid) as address,getCoachOrderCount(u.coachid) as drive_schoolid, u.*  from t_user_coach u where state = 2 and id_cardexptime > curdate() and coach_cardexptime > curdate() and drive_cardexptime > curdate() and car_cardexptime > curdate() and (select count(*) from t_teach_address a where u.coachid = a.coachid and iscurrent = 1) > 0");
@@ -577,6 +576,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		//System.out.println("总耗时："+(endtime-starttime));
 		return result;
 	}
+
 
 	class OrderModel {
 		OrderInfo mOrderInfo;
