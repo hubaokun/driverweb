@@ -1,3 +1,124 @@
+//初始化省下拉列表
+var cityid;
+var areaid;
+		function initProvinceCityArea(provinceid,cid,aid)
+		{
+			cityid=cid;
+			areaid=aid;
+			//填充省选项,并且选中原来的省选项
+			var params = {};
+			jQuery.post("getProvinceToJson.do", params, function(obj){
+					 //填充省选项
+				    document.getElementById("province").length=0;
+				    var o1=new Option('请选择','0');
+		        	document.getElementById("province").add(o1);
+			        for(var i=0;i<obj.length;i++)
+			        {
+			        	var o=new Option(obj[i].province,obj[i].provinceid);
+			        	document.getElementById("province").add(o);
+			        }
+					//选中省
+					var objSelect= $("#province").get(0);
+					for(var i=0;i<objSelect.options.length;i++) {  
+				        if(objSelect.options[i].value == provinceid) {  
+				            objSelect.options[i].selected = true;  
+				            break;  
+				        }  
+				    }  
+			    }, 'json');
+			//填充市，设置选中市选项
+			var params = {provinceid:provinceid};
+			jQuery.post("getCityByProvinceId.do", params, showEditCity,'json');
+		}
+		//设置修改页面的城市内容
+function showEditCity(obj)
+		{
+			//填充市
+			document.getElementById("city").length=0;
+		    for(var i=0;i<obj.length;i++)
+		    {
+		    	var o=new Option(obj[i].city,obj[i].cityid);
+		    	document.getElementById("city").add(o);
+		    }
+		    //选中市
+			var objSelect= $("#city").get(0);
+			for(var i=0;i<objSelect.options.length;i++) {  
+		        if(objSelect.options[i].value == cityid) { 
+		            objSelect.options[i].selected = true; 
+		           // var citysid=objSelect.options[i].value;//
+		            setAreainfo(cityid,areaid)
+		            break;
+		        }  
+		    }  
+		}
+
+//设置修改的区内容
+function setAreainfo(citysid,areaid)
+{
+	//填充区，设置选中区选项
+	var params = {cityid:citysid};
+	jQuery.post("getAreaByCityId.do", params, function(obj){
+		//填充区
+		document.getElementById("area").length=0;
+        for(var i=0;i<obj.length;i++)
+        {
+        	var o=new Option(obj[i].area,obj[i].areaid);
+        	document.getElementById("area").add(o);
+        }
+        //选中区
+		var objSelect= $("#area").get(0);
+		for(var i=0;i<objSelect.options.length;i++) {  
+	        if(objSelect.options[i].value == areaid) { 
+	        	//cityid=objSelect.options[i].value;//
+	            objSelect.options[i].selected = true;  
+	            break;  
+	        }  
+	    }  
+	}, 'json');
+
+}
+
+function tofindCity(v)
+{
+	//发送异步请求
+	
+	var params = {provinceid:v};
+	jQuery.post("getCityByProvinceId.do", params, showCity, 'json');
+}
+
+function showCity(obj)
+{	
+	
+		var citys=document.getElementById("city");
+		citys.length=0;
+		for(var i=0;i<obj.length;i++)
+         {
+        	var o=new Option(obj[i].city,obj[i].cityid);
+         	document.getElementById("city").add(o);
+         	
+         }
+         var cityOneId=obj[0].cityid;//得到第一个城市的ID
+         tofindArea(cityOneId);
+	
+}
+function tofindArea(v)
+{
+	//发送异步请求
+	var params = {cityid:v};
+	jQuery.post("getAreaByCityId.do", params, showArea, 'json');
+}
+
+function showArea(obj)
+{
+		 var areas=document.getElementById("area");
+			 areas.length=0;
+			 for(var i=0;i<obj.length;i++)
+	         {
+	         	var o=new Option(obj[i].area,obj[i].areaid);
+	         	areas.add(o);
+	         }
+		 
+}
 //列表审核通过
 function checkpass(index, coachid, wherecheck) {
 	if (confirm("确认审核通过？")) {
