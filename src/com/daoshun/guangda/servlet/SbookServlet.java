@@ -176,18 +176,18 @@ public class SbookServlet extends BaseServlet {
 					resultMap.put(Constant.MESSAGE, "用户参数错误!");
 					return false;
 				}
-//				else if ( CommonUtils.isEmptyString(version))
-//				{
-//					resultMap.put(Constant.CODE, -1);
-//					resultMap.put(Constant.MESSAGE, "版本太低,请升级!");
-//					return false;
-//				}
-//				else if ( CommonUtils.isEmptyString(token))
-//				{
-//					resultMap.put(Constant.CODE, -1);
-//					resultMap.put(Constant.MESSAGE, "您必须升级才能下订单!");
-//					return false;
-//				}
+				else if ( CommonUtils.isEmptyString(version))
+				{
+					resultMap.put(Constant.CODE, -1);
+					resultMap.put(Constant.MESSAGE, "版本太低,请升级!");
+					return false;
+				}
+				else if ( CommonUtils.isEmptyString(token))
+				{
+					resultMap.put(Constant.CODE, -1);
+					resultMap.put(Constant.MESSAGE, "您必须升级才能下订单!");
+					return false;
+				}
 
 
 				if (!CommonUtils.isEmptyString(token)) {
@@ -313,13 +313,19 @@ public class SbookServlet extends BaseServlet {
 		String condition9 = getRequestParamter(request, "condition9");// 价格上限
 		String condition10 = getRequestParamter(request, "condition10");// 车型 0.表示不限
 		String condition11 = getRequestParamter(request, "condition11");// 准教车型
-		String cityid=getRequestParamter(request, "cityid");// 所在城市id
-		HashMap<String, Object> result=new HashMap<String, Object> () ;
-
-		result = sbookService.getCoachList(cityid,condition1, condition2, condition3, condition4, condition5, condition6, condition8, condition9, condition10, condition11, pagenum);
+		//接收经纬度和城市名称
+		String longitude = getRequestParamter(request, "longitude");//经纬度
+		String latitude = getRequestParamter(request, "latitude");
+		String cityid = getRequestParamter(request, "cityid");//城市ID
+		
+		/*CommonUtils.validateEmpty(longitude);
+		CommonUtils.validateEmpty(latitude);
+		CommonUtils.validateEmpty(cityid);*/
+		//HashMap<String, Object> result = sbookService.getCoachList(condition1, condition2, condition3, condition4, condition5, condition6, condition8, condition9, condition10, condition11, pagenum);
+		
+		HashMap<String, Object> result = sbookService.getCoachList2(cityid,condition1, condition2, condition3, condition4, condition5, condition6, condition8, condition9, condition10, condition11, pagenum);
 		resultMap.putAll(result);
 	}
-
 
 	public void bookCoach(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
