@@ -68,7 +68,7 @@ public class CtaskServlet extends BaseServlet {
 					return;
 				}
 			}
-			System.out.println(action+"@@@@@@@@@@@@");
+			//System.out.println(action+"@@@@@@@@@@@@");
 			if (Constant.CGETNOWTASK.equals(action)) {
 				// 获得未进行的列表
 				getNowTask(request, resultMap);
@@ -261,7 +261,8 @@ public class CtaskServlet extends BaseServlet {
 		// Date nowtime = new Date();
 		// String newtime=CommonUtils.getTimeFormat(nowtime, "yyyy-MM-dd");
 		// 得到未完成订单
-		List<OrderInfo> orderInfolist = ctaskService.getOrderInfoListBycoachid(coachid, CommonUtils.parseInt(page, 0), Constant.COUNT_NUM);
+		//List<OrderInfo> orderInfolist = ctaskService.getOrderInfoListBycoachid(coachid, CommonUtils.parseInt(page, 0), Constant.COUNT_NUM);
+		List<OrderInfo> orderInfolist = ctaskService.getOrderNoExistAgreeInfoListBycoachid(coachid, CommonUtils.parseInt(page, 0), Constant.COUNT_NUM);
 		// 得到coachstate为1的订单
 		List<OrderInfo> orderlist = ctaskService.getOrderInfoListBycoach(1, CommonUtils.parseInt(coachid, 0));
 		if (orderInfolist != null) {

@@ -5,14 +5,41 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import com.daoshun.common.*;
-import com.daoshun.guangda.pojo.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alipay.config.AlipayConfig;
+import com.daoshun.common.ApplePushUtil;
+import com.daoshun.common.CommonUtils;
+import com.daoshun.common.Constant;
+import com.daoshun.common.QueryResult;
+import com.daoshun.common.UserType;
+import com.daoshun.guangda.pojo.AdminInfo;
+import com.daoshun.guangda.pojo.BalanceCoachInfo;
+import com.daoshun.guangda.pojo.BalanceStudentInfo;
+import com.daoshun.guangda.pojo.CApplyCashInfo;
+import com.daoshun.guangda.pojo.CaddAddressInfo;
+import com.daoshun.guangda.pojo.CoachLevelInfo;
+import com.daoshun.guangda.pojo.CoinRecordInfo;
+import com.daoshun.guangda.pojo.ComplaintSetInfo;
+import com.daoshun.guangda.pojo.CouponCoach;
+import com.daoshun.guangda.pojo.CsubjectInfo;
+import com.daoshun.guangda.pojo.CuserInfo;
+import com.daoshun.guangda.pojo.DriveSchoolInfo;
+import com.daoshun.guangda.pojo.ModelsInfo;
+import com.daoshun.guangda.pojo.OrderInfo;
+import com.daoshun.guangda.pojo.PermissionSetInfo;
+import com.daoshun.guangda.pojo.RechargeRecordInfo;
+import com.daoshun.guangda.pojo.RecommendInfo;
+import com.daoshun.guangda.pojo.SchoolBalance;
+import com.daoshun.guangda.pojo.SuserInfo;
+import com.daoshun.guangda.pojo.SystemSetInfo;
+import com.daoshun.guangda.pojo.TeachcarInfo;
+import com.daoshun.guangda.pojo.UserPushInfo;
+import com.daoshun.guangda.pojo.VerifyCodeInfo;
 import com.daoshun.guangda.service.ICUserService;
 
 /**
@@ -856,13 +883,14 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
     }
 
 
-    @Override
-    public HashMap<String, Object> getCoinRecordList(String coachid) {
+    
+    public HashMap<String, Object> getCoinRecordList2(String coachid) {
         HashMap<String, Object> result = new HashMap<String, Object>();
         CuserInfo user = dataDao.getObjectById(CuserInfo.class, CommonUtils.parseInt(coachid, 0));
         if (user != null) {
             result.put("coinnum", user.getCoinnum());
-            String hql = "from CoinRecordInfo where (receiverid =:receiverid and receivertype="+ UserType.COAH+" ) or (payerid =:payerid and payertype="+ UserType.COAH+")  order by addtime desc";
+            String hql = "from CoinRecordInfo  where (receiverid =:receiverid and receivertype="+ UserType.COAH+" ) or (payerid =:payerid and payertype="+ UserType.COAH+")  order by addtime desc";
+            //String hql = "from CoinRecordInfo a left join SuserInfo b on a.payerid=b.studentid   where (receiverid =:receiverid and receivertype="+ UserType.COAH+" ) or (payerid =:payerid and payertype="+ UserType.COAH+")  order by addtime desc";
             String[] params = {"receiverid", "payerid"};
 
             Integer cid = CommonUtils.parseInt(coachid, 0);
@@ -871,6 +899,47 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
                 result.put("recordlist", list);
             }
 
+        }
+        else {
+            result.put("code", 2);
+            result.put("message", "用户不存在");
+        }
+        return result;
+    }
+    
+    
+    public HashMap<String, Object> getCoinRecordList(String coachid) {
+        HashMap<String, Object> result = new HashMap<String, Object>();
+        CuserInfo user = dataDao.getObjectById(CuserInfo.class, CommonUtils.parseInt(coachid, 0));
+        if (user != null) {
+            result.put("coinnum", user.getCoinnum());
+            Integer cid = CommonUtils.parseInt(coachid, 0);
+            String hql = "from CoinRecordInfo  where (receiverid =:receiverid and receivertype="+ UserType.COAH+" ) or (payerid =:payerid and payertype="+ UserType.COAH+")  order by addtime desc";
+            //String hql = "select a.*,b.realname as studentname from t_coin_record  a left join t_user_student b on a.payerid=b.studentid  where (receiverid ="+cid+" and receivertype="+ UserType.COAH+" ) or (payerid ="+cid+" and payertype="+ UserType.COAH+")  order by addtime desc";
+            System.out.println(hql);
+            String[] params = {"receiverid", "payerid"};
+            
+            List<CoinRecordInfo> list = (List<CoinRecordInfo>) dataDao.getObjectsViaParam(hql, params, cid, cid);
+           /* String sids="(0";
+            for (CoinRecordInfo co : list) {
+				sids+=","+co.getPayerid();
+			}
+            sids+=")";
+            
+            String hql2="from SuserInfo where studentid  in "+sids;
+            List<SuserInfo> list2 = (List<SuserInfo>) dataDao.getObjectsViaParam(hql2, null);
+            Map<Integer,String> map=new HashMap<Integer,String>();
+            for (SuserInfo suserInfo : list2) {
+				map.put(suserInfo.getStudentid(), "ffff");
+			}
+            
+            for (CoinRecordInfo co : list) {
+            	co.setStudentname(map.get(co.getPayerid()));
+			}*/
+            
+            if (list != null) {
+                result.put("recordlist", list);
+            }
         }
         else {
             result.put("code", 2);

@@ -96,7 +96,7 @@ public class SuserServlet extends BaseServlet {
 				// 账户充值
 				recharge(request, resultMap);
 			}  else if (Constant.GETSTUDENTWALLETINFO.equals(action)) {
-				// 账户充值
+				// 
 				getWalletInfo(request, resultMap);
 			}
 			else if (Constant.GETSTUDENTCOINRECORDLIST.equals(action)) {
@@ -722,9 +722,15 @@ public class SuserServlet extends BaseServlet {
 		String studentid = getRequestParamter(request, "studentid");// 教练ID
 		CommonUtils.validateEmpty(studentid);	
 		int sum= suserService.getCouponSum(Integer.parseInt(studentid));
-		
+		//查询总的小巴币数量
+		//int coinsum= suserService.getSumCoinnum(studentid);
+		SuserInfo su=suserService.getUserById(studentid);
+		int coinsum=0;
+		if(su!=null){
+			coinsum=su.getCoinnum();
+		}
 		resultMap.put("couponsum", sum);
-		resultMap.put("coinsum", sum);
+		resultMap.put("coinsum", coinsum);
 	}
 
 

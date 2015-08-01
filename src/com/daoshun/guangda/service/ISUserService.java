@@ -293,5 +293,8 @@ public interface ISUserService {
 
 	public int getCanUseCoinnum(String coachid, String studentid) ;
 
+	public int getSumCoinnum( String studentid);
+
 	public HashMap<String, Object> getCoinRecordList(String studentid);
+
 }

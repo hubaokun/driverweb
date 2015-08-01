@@ -172,7 +172,18 @@ public class OrderInfo implements Serializable {
 	// 订单距离开始小时数
 	@Transient
 	private int hours;
+	@Transient
+	private int paytype;
 	
+	
+	public int getPaytype() {
+		return paytype;
+	}
+
+	public void setPaytype(int paytype) {
+		this.paytype = paytype;
+	}
+
 	//0 教练未同意取消  1 教练已同意取消
 	@Transient
 	private int agreecancel;

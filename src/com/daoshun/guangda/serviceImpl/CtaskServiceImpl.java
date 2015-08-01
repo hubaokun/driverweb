@@ -50,6 +50,14 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 		List<OrderInfo> orderInfolist = (List<OrderInfo>) dataDao.pageQueryViaParam(ctaskhql.toString(), count, page + 1, params, CommonUtils.parseInt(coachid, 0));
 		return orderInfolist;
 	}
+	public List<OrderInfo> getOrderNoExistAgreeInfoListBycoachid(String coachid, int page, int count) {
+		StringBuffer ctaskhql = new StringBuffer();
+		ctaskhql.append("from OrderInfo where coachid = :coachid and (coachstate = 1 or coachstate = 0) and (studentstate!=4 and coachstate!=4)");
+		ctaskhql.append("order by start_time asc");
+		String[] params = { "coachid" };
+		List<OrderInfo> orderInfolist = (List<OrderInfo>) dataDao.pageQueryViaParam(ctaskhql.toString(), count, page + 1, params, CommonUtils.parseInt(coachid, 0));
+		return orderInfolist;
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override

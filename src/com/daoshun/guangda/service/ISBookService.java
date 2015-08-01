@@ -86,6 +86,8 @@ public interface ISBookService {
 	 * @return
 	 */
 	public abstract HashMap<String, Object> bookCoach(String coachid, String studentid, String date);
+	//新增不同支付处理
+	public HashMap<String, Object> bookCoach2(String coachid, String studentid, String date);
 
 	/**
 	 * 获取教练的评论数量

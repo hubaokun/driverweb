@@ -151,13 +151,16 @@ public class CoinRecordAction extends BaseAction{
         if(ownertype==UserType.PLATFORM)//平台发放
         {
             coinRecordInfo.setOwnerid(0);
-            coinRecordInfo.setPayerid(0);
+            //coinRecordInfo.setPayerid(0);
         }
         else//教练发放
         {
             coinRecordInfo.setOwnerid(ownerid);
-            coinRecordInfo.setPayerid(ownerid);
+            
+           
         }
+        coinRecordInfo.setPayerid(0);
+        coinRecordInfo.setType(UserType.PLATFORM);
         coinRecordInfo.setOwnertype(ownertype);
         coinRecordInfo.setCoinnum(coinnum);
         coinRecordInfo.setType(1);
