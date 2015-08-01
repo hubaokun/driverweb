@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 //初始化省下拉列表
 var cityid;
 var areaid;
@@ -1448,7 +1448,7 @@ function checkStudentExistance() {
 
 
 
-=======
+
 //列表审核通过
 function checkpass(index, coachid, wherecheck) {
 	if (confirm("确认审核通过？")) {
@@ -2895,5 +2895,3 @@ function checkStudentExistance() {
 }
 
 
-
->>>>>>> 23cac953dbf9e5663b2ca852920b9284de57e4e8
