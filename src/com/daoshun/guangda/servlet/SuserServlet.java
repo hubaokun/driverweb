@@ -144,7 +144,7 @@ public class SuserServlet extends BaseServlet {
 			if (suser != null) {
 				String token = getRequestParamter(request, "token");
 				if (!CommonUtils.isEmptyString(token)) {
-					// 时间获取
+					// 时间获取3
 					if (token.equals(suser.getToken())) {
 						int login_vcode_time = 15;// 默认十五天
 						SystemSetInfo systemSet = systemService.getSystemSet();
@@ -159,7 +159,7 @@ public class SuserServlet extends BaseServlet {
 						if (now.after(tokenTime)) {
 							resultMap.put(Constant.CODE, 95);
 //							System.out.print("SuserServlet checkSession-----1111111111");
-							resultMap.put(Constant.MESSAGE, "SuserServlet checkSession您的登录信息已经过期,请重新登录111.");
+							resultMap.put(Constant.MESSAGE, "您的登录信息已经过期,请重新登录.");
 							return false;
 						} else {
 							return true;
@@ -167,7 +167,7 @@ public class SuserServlet extends BaseServlet {
 					} else {
 						resultMap.put(Constant.CODE, 95);
 //						System.out.print("SuserServlet checkSession-----222222222");
-						resultMap.put(Constant.MESSAGE, "checkSession您的登录信息已经过期,请重新登录222.");
+						resultMap.put(Constant.MESSAGE, "您的登录信息已经过期,请重新登录.");
 						return false;
 					}
 				} else {
