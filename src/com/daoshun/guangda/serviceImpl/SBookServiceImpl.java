@@ -21,9 +21,11 @@ import com.daoshun.common.ApplePushUtil;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
 import com.daoshun.common.PushtoSingle;
+import com.daoshun.common.UserType;
 import com.daoshun.guangda.pojo.CBookTimeInfo;
 import com.daoshun.guangda.pojo.CaddAddressInfo;
 import com.daoshun.guangda.pojo.CoachStudentInfo;
+import com.daoshun.guangda.pojo.CoinRecordInfo;
 import com.daoshun.guangda.pojo.CouponRecord;
 import com.daoshun.guangda.pojo.CscheduleInfo;
 import com.daoshun.guangda.pojo.CsubjectInfo;
@@ -1654,8 +1656,9 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 
 			if (!hasError) {
 				if (orderList.size() > 0) {
-					BigDecimal total = new BigDecimal(0);
+					
 					for (int m = 0; m < orderList.size(); m++) {
+						BigDecimal total = new BigDecimal(0);
 						dataDao.addObject(orderList.get(m).mOrderInfo);
 						// 查看订单的提醒设置
 						if (orderNotiList != null && orderNotiList.size() > 0) {
@@ -1719,8 +1722,15 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						// 修改用户的余额，如果是paytype是1 余额  2 小巴卷 3 小巴币  如果1 ，2 
 
 						if (student != null) {
+							
 							//  判断 1 或者 3  1 扣余额  2 扣小巴币 如果是小巴币，直接扣除  ，如果是余额，
 							if(1==orderList.get(m).mOrderInfo.getPaytype()){
+								if(student.getMoney().subtract(total).doubleValue()<0){
+									result.put("code", 4);
+									result.put("message", "账户余额不足！");
+									return result;
+									
+								}
 								student.setFmoney(student.getFmoney().add(total));
 								student.setMoney(student.getMoney().subtract(total));
 								
@@ -1733,6 +1743,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 									} else {
 										result.put("code", 2);
 									}
+									result.put("message", "账户余额不足！");
 									return result;
 								}
 							}else if(3==orderList.get(m).mOrderInfo.getPaytype()){
@@ -1740,7 +1751,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 								double dc=cnum.subtract(total).doubleValue();
 								//小巴币大于0，并且剩余小巴币余额减去支付额大于等于0，表示余额购，否则余额不足
 								if(dc>=0){
-									student.setCoinnum((int)dc);
+									student.setCoinnum((int)dc); //学员小巴币数量减少
 								}else{
 									//不足
 									result.put("code", 6);
@@ -1748,6 +1759,31 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 									return result;
 								}
 								
+								//教练小巴币数量增加
+								//int coachid=orderList.get(m).mOrderInfo.getCoachid();
+								if(cuser!=null){
+									cuser.setCoinnum(cuser.getCoinnum()+total.intValue());
+									dataDao.updateObject(cuser);
+									//System.out.println("教练获取小巴币成功"+total.intValue());
+								}else{
+									//System.out.println("教练获取小巴币失败"+total.intValue());
+								}
+								//向小巴币记录表中插入数据
+								/////////////////////////////////////////////
+								 CoinRecordInfo coinRecordInfo = new CoinRecordInfo ();
+							        coinRecordInfo.setReceiverid(cuser.getCoachid());
+							        coinRecordInfo.setReceivertype(UserType.COAH);//代表学员
+							        coinRecordInfo.setReceivername(cuser.getRealname());
+							        coinRecordInfo.setOwnerid(cuser.getCoachid());
+							        coinRecordInfo.setPayerid(student.getStudentid());
+							        coinRecordInfo.setPayertype(UserType.STUDENT);
+							        coinRecordInfo.setPayername(student.getRealname());
+							        coinRecordInfo.setType(UserType.PLATFORM);
+							        coinRecordInfo.setOwnertype(2);
+							        coinRecordInfo.setCoinnum(total.intValue());
+							        coinRecordInfo.setAddtime(new Date());
+							        dataDao.addObject(coinRecordInfo);
+								///////////////////////////////////////////
 							}
 							dataDao.updateObject(student);
 						}

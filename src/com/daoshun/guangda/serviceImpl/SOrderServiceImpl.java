@@ -15,12 +15,13 @@ import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
 import com.daoshun.common.PushtoSingle;
 import com.daoshun.common.QueryResult;
+import com.daoshun.common.UserType;
 import com.daoshun.guangda.NetData.ComplaintNetData;
 import com.daoshun.guangda.pojo.BalanceCoachInfo;
 import com.daoshun.guangda.pojo.BalanceStudentInfo;
 import com.daoshun.guangda.pojo.CBookTimeInfo;
-import com.daoshun.guangda.pojo.CaddAddressInfo;
 import com.daoshun.guangda.pojo.CoachStudentInfo;
+import com.daoshun.guangda.pojo.CoinRecordInfo;
 import com.daoshun.guangda.pojo.ComplaintBookInfo;
 import com.daoshun.guangda.pojo.ComplaintInfo;
 import com.daoshun.guangda.pojo.ComplaintSetInfo;
@@ -935,6 +936,7 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 		if(order!=null){
 			studentid=String.valueOf(order.getStudentid());
 		}
+		CuserInfo cuser;
 		SuserInfo student = dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
 		String hql = "from SystemSetInfo where 1=1";
 		SystemSetInfo system = (SystemSetInfo) dataDao.getFirstObjectViaParam(hql, null);
@@ -950,7 +952,7 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 		if (order != null) {
 			//if (order.getStart_time().after(c.getTime())) {
 			
-
+			cuser=dataDao.getObjectById(CuserInfo.class, order.getCoachid());
 				if (student != null) {
 					if(order.getDelmoney()>0 && order.getCouponrecordid().length()>1)
 					{
@@ -984,6 +986,9 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				Calendar end = Calendar.getInstance();
 				end.setTime(order.getEnd_time());
 				int endhour = end.get(Calendar.HOUR_OF_DAY);
+				if(endhour==0){
+					endhour=24;
+				}
 
 				String hqlCoach = "from CBookTimeInfo where bookedtime in (:bookedtimes) and date = :date and coachid = :coachid";
 				String[] paramsCoach = { "bookedtimes", "date", "coachid" };
@@ -1017,6 +1022,29 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				orderRecord.setOrderid(CommonUtils.parseInt(orderid, 0));
 				orderRecord.setUserid(CommonUtils.parseInt(studentid, 0));
 				dataDao.addObject(orderRecord);
+				//向小巴币记录表中插入数据
+				/////////////////////////////////////////////
+				 CoinRecordInfo coinRecordInfo = new CoinRecordInfo ();
+			        coinRecordInfo.setReceiverid(student.getStudentid());
+			        coinRecordInfo.setReceivertype(UserType.STUDENT);//代表学员
+			        coinRecordInfo.setReceivername(student.getRealname());
+			        coinRecordInfo.setOwnerid(cuser.getCoachid());
+			        coinRecordInfo.setPayerid(cuser.getCoachid());
+			        coinRecordInfo.setPayertype(UserType.COAH);
+			        coinRecordInfo.setPayername(cuser.getRealname());
+			        coinRecordInfo.setType(UserType.PLATFORM);
+			        coinRecordInfo.setOwnertype(2);
+			        coinRecordInfo.setCoinnum(order.getTotal().intValue());
+			       
+			        coinRecordInfo.setAddtime(new Date());
+			        dataDao.addObject(coinRecordInfo);
+				//学员+  教练-
+			    cuser.setCoinnum(cuser.getCoinnum()-order.getTotal().intValue());    
+			    dataDao.updateObject(cuser);
+			    student.setCoinnum(student.getCoinnum()+order.getTotal().intValue());
+			    dataDao.updateObject(cuser);
+				
+				
 				//给学员推送消息
 				String pushMsg="教练已同意您取消"+order.getStart_time()+"的学车课程，支付的金额已退回到小巴账户余额。";
 				//给此订单关联的教练推送消息，提示让他同意取消订单

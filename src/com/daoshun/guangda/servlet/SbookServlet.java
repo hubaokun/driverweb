@@ -413,10 +413,10 @@ public class SbookServlet extends BaseServlet {
 			if (info.getCan_use_coupon_count() != null && info.getCan_use_coupon_count() != 0)
 				canUseMaxCount = info.getCan_use_coupon_count();
 		}
-		int num=suserService.getCanUseCoinnum(coachid,studentid);//获取可用小巴币
+		//int num=suserService.getCanUseCoinnum(coachid,studentid);//获取可用小巴币
 		SuserInfo suser=suserService.getUserById(studentid);//获取余额
 		resultMap.put("couponlist", list);
-		resultMap.put("coinnum", num);//可用小巴币
+		resultMap.put("coinnum", suser.getCoinnum());//可用小巴币
 		resultMap.put("money", suser.getMoney()==null?0:suser.getMoney());
 		resultMap.put("canUseDiff", canUseDiff);
 		resultMap.put("canUseMaxCount", canUseMaxCount);

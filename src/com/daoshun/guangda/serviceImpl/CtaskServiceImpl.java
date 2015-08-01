@@ -50,12 +50,26 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 		List<OrderInfo> orderInfolist = (List<OrderInfo>) dataDao.pageQueryViaParam(ctaskhql.toString(), count, page + 1, params, CommonUtils.parseInt(coachid, 0));
 		return orderInfolist;
 	}
-	public List<OrderInfo> getOrderNoExistAgreeInfoListBycoachid(String coachid, int page, int count) {
+	public List<OrderInfo> getOrderNoExistAgreeInfoListBycoachid2(String coachid, int page, int count) {
 		StringBuffer ctaskhql = new StringBuffer();
 		ctaskhql.append("from OrderInfo where coachid = :coachid and (coachstate = 1 or coachstate = 0) and (studentstate!=4 and coachstate!=4)");
 		ctaskhql.append("order by start_time asc");
 		String[] params = { "coachid" };
 		List<OrderInfo> orderInfolist = (List<OrderInfo>) dataDao.pageQueryViaParam(ctaskhql.toString(), count, page + 1, params, CommonUtils.parseInt(coachid, 0));
+		return orderInfolist;
+	}
+	public List<OrderInfo> getOrderNoExistAgreeInfoListBycoachid(String coachid, int page, int count) {
+		StringBuffer ctaskhql = new StringBuffer();
+		ctaskhql.append("select t.* from t_order t where coachid=");
+		ctaskhql.append(coachid);
+		ctaskhql.append(" and (coachstate = 1 or coachstate = 0)");
+		ctaskhql.append(" and orderid not in (select orderid from t_order where studentstate=4 and coachstate=4 and coachid=");
+		ctaskhql.append(coachid);
+		ctaskhql.append(" )");
+		ctaskhql.append(" order by start_time asc");
+		System.out.println(ctaskhql.toString());
+		//String[] params = { "coachid" };
+		List<OrderInfo> orderInfolist = (List<OrderInfo>) dataDao.SqlPageQuery(ctaskhql.toString(), count, page + 1,OrderInfo.class, null);
 		return orderInfolist;
 	}
 

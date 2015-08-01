@@ -357,7 +357,7 @@ public class SuserServlet extends BaseServlet {
 				ProvinceInfo pro=locationService.getProvincesById(user.getProvinceid());
 				CityInfo city=locationService.getCityById(user.getCityid());
 				AreaInfo area=locationService.getAreaById(user.getAreaid());
-				String locationname=pro.getProvince()+city.getCity()+area.getArea();
+				String locationname=pro.getProvince()+"-"+city.getCity()+"-"+area.getArea();
 				user.setLocationname(locationname);
 			}
 			resultMap.put("UserInfo", user);
@@ -726,10 +726,13 @@ public class SuserServlet extends BaseServlet {
 		//int coinsum= suserService.getSumCoinnum(studentid);
 		SuserInfo su=suserService.getUserById(studentid);
 		int coinsum=0;
+		double money=0;
 		if(su!=null){
 			coinsum=su.getCoinnum();
+			money=su.getMoney().doubleValue();
 		}
 		resultMap.put("couponsum", sum);
+		resultMap.put("money", money);
 		resultMap.put("coinsum", coinsum);
 	}
 

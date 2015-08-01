@@ -65,6 +65,9 @@ public class CoinRecordInfo implements Serializable {
 	// 添加时间
 	@Column(name = "addtime", columnDefinition = "TIMESTAMP default CURRENT_TIMESTAMP")
 	private Date addtime;
+	//教练姓名
+	@Transient
+	private String coachname;
 	
 	
 	public String getPayername() {
@@ -177,4 +180,13 @@ public class CoinRecordInfo implements Serializable {
 	public void setReceivertype(int receivertype) {
 		this.receivertype = receivertype;
 	}
+
+	public String getCoachname() {
+		return coachname;
+	}
+
+	public void setCoachname(String coachname) {
+		this.coachname = coachname;
+	}
+	
 }

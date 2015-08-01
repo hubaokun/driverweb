@@ -1019,14 +1019,20 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			result.put("coinnum", user.getCoinnum());
 			String hql = "from CoinRecordInfo where (receiverid =:receiverid and receivertype="+ UserType.STUDENT+" ) or (payerid =:payerid and payertype="+ UserType.STUDENT+")  order by addtime desc";
 			String[] params = {"receiverid", "payerid"};
-
+            
 			Integer cid = CommonUtils.parseInt(studentid, 0);
-			List<CoinRecordInfo> list = (List<CoinRecordInfo>) dataDao.getObjectsViaParam(hql, params, cid, cid);
-			if (list != null) {
+			String chql="from CuserInfo where coachid=:coachid";
+			String[] params1={"coachid"};
+			List<CoinRecordInfo> list = (List<CoinRecordInfo>)dataDao.getObjectsViaParam(hql, params, cid, cid);
+			
+
+			if (list != null && list.size()>0) {
+				CuserInfo tempCuserInfo=(CuserInfo)dataDao.getFirstObjectViaParam(chql, params1,list.get(0).getOwnerid());
+				if(tempCuserInfo!=null)
+				   result.put("coachname", tempCuserInfo.getRealname());
 				result.put("recordlist", list);
 				result.put("hasmore", 0);
 			}
-
 		}
 		else {
 			result.put("code", 2);
