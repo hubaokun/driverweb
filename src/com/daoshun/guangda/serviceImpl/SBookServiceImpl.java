@@ -763,13 +763,13 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		String params3[] = { "coachid" };
 
 		SuserInfo student = dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
-		if(student.getMoney().doubleValue()<0.0)// 余额不够
+		if(student.getMoney().doubleValue()<0.0||student.getFmoney().doubleValue()<0.0||student.getCoinnum()<0)// 余额不够
 		{
 			//版本需要更新
 			result.put("failtimes",11);
 			result.put("successorderid", 11);
 			result.put("coachauth", 11);
-			result.put("message", "您当前处于欠费状态,无法生成订单!");
+			result.put("message", "您当前处于欠费状态,无法生成订单,如信息有误,请于客服联系!");
 			result.put("code", 11);//app应当提示"您当前处于欠费状态,无法生成订单
 			return result;
 		}
