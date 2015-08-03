@@ -50,6 +50,10 @@ public class BalanceStudentInfo implements Serializable {
 	// 电话
 	@Transient
 	private String phone;
+	
+	// 充值账号
+	@Transient
+	private String buyer_email;
 
 	public int getRecordid() {
 		return recordid;
@@ -106,5 +110,15 @@ public class BalanceStudentInfo implements Serializable {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
+
+	public String getBuyer_email() {
+		return buyer_email;
+	}
+
+	public void setBuyer_email(String buyer_email) {
+		this.buyer_email = buyer_email;
+	}
+	
+	
 
 }
