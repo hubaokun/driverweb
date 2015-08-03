@@ -25,17 +25,28 @@ http://192.168.1.113:8080/xb/sorder?action=GETUNCOMPLETEORDER&studentid=19262
 		
 		SUserServiceImpl类的getCanUseCoinnum方法获得可用小巴币
 2015-08-03
-t_coin_record 下巴币记录表 表字段说明
+////////////////////////////////////////////////
+t_coin_record 小巴币记录表 表字段说明
 receiverid  接收者id
 receivertype 接收者类型   2 教练  3 学员
 receivername  接收者姓名 
-
 payerid  支付者id
 payertype 支付者类型   2 教练  3 学员
 payername  支付者姓名
 coinnum  小巴币个数
-ownerid  
-ownertype 
-ownername
+ownerid  只能使用谁,目前都是教练的ID
+ownertype 使用的人的类型，目前是2
+ownername 使用人的姓名
+
+
+冻结教练订单总额的小巴币，直到双方互评后取消冻结，已防止在为评价前教练提现
+http://localhost:8080/xb/sbook?action=GETCOACHLIST&condition1=13336048913  按手机号码筛选教练
+
+http://localhost:8080/xb/sbook?action=GETNEARBYCOACH&radius=1000&condition1=13958164555
+新增功能：学员的获取教练列表及附近的教练接口新增按教练手机号码筛选功能，客户端教练筛选的搜索框中添加一下 手机号 提示  
+修复的问题：
+1 新增学员在地图附近列表中的教练详情中的订单总数，响应给客户端的值为sumnum
+2 省市区中添加百度地图的ID  值为baiduid
+3 学员使用小巴币预约教练成功后，转入给教练的小巴币会被冻结，直到双方互评结算后，冻结的小巴币数量才取消
 
 
