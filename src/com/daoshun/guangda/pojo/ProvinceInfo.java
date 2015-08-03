@@ -25,6 +25,9 @@ public class ProvinceInfo {
 	@Column(name = "provinceid", length =20, nullable = false)
 	private Integer provinceid;
 	
+	@Column(name = "baiduid", length =11, nullable = true)
+	private Integer baiduid;
+	
 	@Column(name = "province", length = 100, nullable = false)
 	private String province;
 	
@@ -33,6 +36,16 @@ public class ProvinceInfo {
 	
 	@Transient
 	List<CityInfo> cities;
+	
+	
+	
+	public Integer getBaiduid() {
+		return baiduid;
+	}
+
+	public void setBaiduid(Integer baiduid) {
+		this.baiduid = baiduid;
+	}
 
 	public List<CityInfo> getCities() {
 		return cities;

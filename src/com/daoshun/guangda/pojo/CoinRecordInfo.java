@@ -48,7 +48,8 @@ public class CoinRecordInfo implements Serializable {
 	private Integer coinnum;
 
 	// 支付类型,由2位数构成，便于将来状态扩展；10~19:驾校或教练发给学员；20~29学员订单支付;30~39教练兑换；40~49退款
-	@Column(name = "type", length = 2, nullable = false, columnDefinition = "TINYINT default 0")
+	//type  1 发放给学员    2 学员支付    3 退款    4 教练兑换	
+	@Column(name = "type", length = 2,  nullable = false, columnDefinition = "TINYINT default 0" )
 	private int type;
 
 	// 发行者类型 0:平台发行 1:驾校发行 2:教练发行
@@ -65,11 +66,24 @@ public class CoinRecordInfo implements Serializable {
 	// 添加时间
 	@Column(name = "addtime", columnDefinition = "TIMESTAMP default CURRENT_TIMESTAMP")
 	private Date addtime;
+	
+	//小巴币的记录所属的订单ID
+	@Column(name = "orderid", length = 10, nullable = false, columnDefinition = "INT default 0")
+	private Integer orderid;
+	
 	//教练姓名
 	@Transient
 	private String coachname;
 	
 	
+	public Integer getOrderid() {
+		return orderid;
+	}
+
+	public void setOrderid(Integer orderid) {
+		this.orderid = orderid;
+	}
+
 	public String getPayername() {
 		return payername;
 	}

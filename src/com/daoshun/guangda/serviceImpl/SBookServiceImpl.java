@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.daoshun.common.ApplePushUtil;
+import com.daoshun.common.CoinType;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
 import com.daoshun.common.PushtoSingle;
@@ -38,7 +39,6 @@ import com.daoshun.guangda.pojo.OrderInfo;
 import com.daoshun.guangda.pojo.OrderNotiRecord;
 import com.daoshun.guangda.pojo.OrderNotiSetInfo;
 import com.daoshun.guangda.pojo.OrderPrice;
-import com.daoshun.guangda.pojo.RecommendInfo;
 import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.pojo.SystemSetInfo;
 import com.daoshun.guangda.pojo.UserPushInfo;
@@ -414,6 +414,185 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		}
 		return coachlist;
 	}
+	
+	public List<CuserInfo> getNearByCoach2(String pointcenter, String radius, String condition1, String condition2, String condition3, String condition4, String condition5, String condition6,
+			String condition8, String condition9, String condition10, String condition11) {
+		List<CuserInfo> coachlist = new ArrayList<CuserInfo>();
+		// 取得中心点经纬度
+		/*String[] centers = pointcenter.split(",");
+		String longitude = centers[0].trim();
+		String latitude = centers[1].trim();*/
+		//120.048943   30.329578
+		String longitude="120.048943";
+		String latitude="30.329578";
+		
+		// 获得符合条件的地址
+		StringBuffer cuserhql = new StringBuffer();
+		cuserhql.append("from CaddAddressInfo where getdistance(:longitude,:latitude, longitude ,latitude)<=:radius and iscurrent = 1");
+		String[] params = { "longitude", "latitude", "radius" };
+		List<CaddAddressInfo> addresslist = (List<CaddAddressInfo>) dataDao.getObjectsViaParam(cuserhql.toString(), params, CommonUtils.parseDouble(longitude, 0),
+				CommonUtils.parseDouble(latitude, 0), CommonUtils.parseDouble(radius, 0));
+		// 当前时间 <2015-04-25>
+		String now = CommonUtils.getTimeFormat(new Date(), "yyyy-MM-dd");
+		if (addresslist != null && addresslist.size() > 0) {
+			
+			StringBuffer cs=new StringBuffer("(0");
+			//List<Integer> cids = new ArrayList<Integer>();
+			for (CaddAddressInfo info : addresslist) {
+				//cids.add(info.getCoachid());
+				cs.append(",").append(info.getCoachid());
+			}
+			cs.append(")");
+			
+			// 根据地址列表查询出教练,且教练需要设置了价格、默认科目、且教练不休息、证件时间未过期
+			StringBuffer hqlCoach = new StringBuffer();
+			hqlCoach.append("select getTeachAddress(u.coachid) as address,getCoachOrderCount(u.coachid) as drive_schoolid, u.*  from t_user_coach u where coachid in "+
+							cs.toString()+" and state = 2 and id_cardexptime > curdate() and coach_cardexptime > curdate() "
+					+ " and drive_cardexptime > curdate() and car_cardexptime > curdate() and money >= gmoney and isquit = 0");
+
+			// 真实姓名和教练所属驾校
+			if (!CommonUtils.isEmptyString(condition1)) {
+				//如果是手机号码
+				if(CommonUtils.isNumber(condition1) && condition1.trim().length()==11){
+					hqlCoach.append(" and phone = '").append(condition1).append("' ");
+				}else{
+					hqlCoach.append(" and (realname like '%" + condition1 + "%' or drive_school like '%" + condition1 + "%' or drive_schoolid in (select schoolid from t_drive_school_info where name like  '%"
+						+ condition1 + "%')) ");
+				}
+			}
+			// 星级
+			if (!CommonUtils.isEmptyString(condition2)) {
+				hqlCoach.append(" and score >= " + condition2);
+			}
+			// 开始时间和结束时间
+			if (!CommonUtils.isEmptyString(condition3)) {
+
+				int subjectid = CommonUtils.parseInt(condition6, 0);
+
+				Date start = null;
+				if(condition3.length() == 10){
+					start = CommonUtils.getDateFormat(condition3, "yyyy-MM-dd");
+				}else if(condition3.length() == 19){
+					start = CommonUtils.getDateFormat(condition3, "yyyy-MM-dd HH:mm:ss");
+				}
+
+				if (start != null) {
+					Calendar startCal = Calendar.getInstance();
+					startCal.setTime(start);
+
+					int starthour = startCal.get(Calendar.HOUR_OF_DAY);
+					int datecount = 1;
+					hqlCoach.append(" and getcoachstate(u.coachid," + datecount + ",'" + CommonUtils.getTimeFormat(start, "yyyy-MM-dd") + "'," + starthour + "," + 23 + "," + subjectid + ") = 1");
+
+				}
+			} else {
+				int subjectid = CommonUtils.parseInt(condition6, 0);
+				Calendar c = Calendar.getInstance();
+
+				hqlCoach.append(" and getcoachstate(u.coachid," + 10 + ",'" + CommonUtils.getTimeFormat(c.getTime(), "yyyy-MM-dd") + "'," + 5 + "," + 23 + "," + subjectid + ") = 1");
+			}
+
+			if (!CommonUtils.isEmptyString(condition11)) {
+				hqlCoach.append(" and modelid like '%" + condition11 + "%'");
+			}
+
+			// if (!CommonUtils.isEmptyString(condition3) && !CommonUtils.isEmptyString(condition4)) {
+			//
+			// int subjectid = CommonUtils.parseInt(condition6, 0);
+			//
+			// Date start = CommonUtils.getDateFormat(condition3, "yyyy-MM-dd HH:mm:ss");
+			// Date end = CommonUtils.getDateFormat(condition4, "yyyy-MM-dd HH:mm:ss");
+			// if (start != null && end != null) {
+			// Calendar startCal = Calendar.getInstance();
+			// startCal.setTime(start);
+			// Calendar endCal = Calendar.getInstance();
+			// endCal.setTime(end);
+			//
+			// if (startCal.compareTo(endCal) <= 0) {
+			// int starthour = startCal.get(Calendar.HOUR_OF_DAY);
+			// int endhour = endCal.get(Calendar.HOUR_OF_DAY);
+			// int datecount = 1;
+			// int startmonth = startCal.get(Calendar.MONTH);
+			// int endmonth = endCal.get(Calendar.MONTH);
+			// int startday = startCal.get(Calendar.DAY_OF_MONTH);
+			// int endday = endCal.get(Calendar.DAY_OF_MONTH);
+			// if (startmonth == endmonth) {
+			// datecount = endday - startday + 1;
+			// } else {
+			// startCal.set(Calendar.DATE, 1);
+			// startCal.roll(Calendar.DATE, -1);
+			// int maxday = startCal.get(Calendar.DAY_OF_MONTH);
+			// datecount = maxday - startday + 1;
+			//
+			// if (startmonth + 1 == endmonth) {
+			// datecount += endday;
+			// } else {
+			// Calendar c = Calendar.getInstance();
+			// c.set(Calendar.YEAR, startCal.get(Calendar.YEAR));
+			// c.set(Calendar.MONTH, 1);
+			// c.set(Calendar.DATE, 1);
+			// c.roll(Calendar.DATE, -1);
+			// datecount += c.get(Calendar.DAY_OF_MONTH) + endday;
+			// }
+			// }
+			//
+			// hqlCoach.append(" and getcoachstate(u.coachid," + datecount + ",'" + CommonUtils.getTimeFormat(start, "yyyy-MM-dd") + "'," + starthour + "," + endhour + "," + subjectid
+			// + ") = 1");
+			// }
+			// }
+			// }
+
+			// if (CommonUtils.parseInt(condition5, 0) != 0) {
+			// hqlCoach.append(" and gender = " + condition5);
+			// }
+			//
+			// if (CommonUtils.parseInt(condition8, 0) != 0 && CommonUtils.parseInt(condition9, 0) != 0 && CommonUtils.parseInt(condition8, 0) <= CommonUtils.parseInt(condition9, 0)) {
+			// hqlCoach.append(" and price >= " + condition8 + " and price <= " + condition9);
+			// }
+			//
+			// if (CommonUtils.parseInt(condition10, 0) != 0 && CommonUtils.parseInt(condition10, 0) != -1) {
+			// hqlCoach.append(" and carmodelid = " + condition10);
+			// } else if (CommonUtils.parseInt(condition10, 0) == -1) {
+			// hqlCoach.append(" and length(carmodel) > 0");
+			// }
+
+			//String[] paramsCoach = { "cids", "now", "now", "now", "now", "now" };
+
+			/*List<Integer> cids = new ArrayList<Integer>();
+			for (CaddAddressInfo info : addresslist) {
+				cids.add(info.getCoachid());
+				if(info.getCoachid()==157)
+					System.out.println(info.getCoachid());
+			}*/
+			//System.out.println(hqlCoach.toString());
+			List<CuserInfo> cuserlist = (List<CuserInfo>) dataDao.SqlPageQuery(hqlCoach.toString(), null, null,CuserInfo.class, null);
+			//List<CuserInfo> cuserlist = (List<CuserInfo>) dataDao.getObjectsViaParam(hqlCoach.toString(), paramsCoach, cids, now, now, now, now, now);
+			if (cuserlist != null && cuserlist.size() > 0) {
+				for (CuserInfo cuser : cuserlist) {
+					if (cuser.getMoney().doubleValue() > cuser.getGmoney().doubleValue()) {
+						coachlist.add(cuser);
+					}
+					if(cuser.getDrive_schoolid()!=null){
+						//设置教练的订单总数
+						cuser.setSumnum(new Long(cuser.getDrive_schoolid()));
+					}
+					
+				}
+			}
+			// 查询教练其它信息
+			for (int i = 0; i < coachlist.size(); i++) {
+				for (CaddAddressInfo address : addresslist) {// 设置地址信息 教练的默认上车地址
+					if (address.getCoachid() == coachlist.get(i).getCoachid()) {
+						coachlist.get(i).setLongitude(address.getLongitude());
+						coachlist.get(i).setLatitude(address.getLatitude());
+						coachlist.get(i).setDetail(address.getDetail());
+						coachlist.get(i).setAvatarurl(getFilePathById(coachlist.get(i).getAvatar()));
+					}
+				}
+			}
+		}
+		return coachlist;
+	}
 
 	@Override
 	public HashMap<String, Object> getCoachList(String condition1, String condition2, String condition3, String condition4, String condition5, String condition6, String condition8, String condition9,
@@ -587,8 +766,14 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		}
 		// 真实姓名和教练所属驾校
 		if (!CommonUtils.isEmptyString(condition1)) {
-			cuserhql.append(" and (realname like '%" + condition1 + "%' or drive_school like '%" + condition1 + "%' or drive_schoolid in (select schoolid from t_drive_school_info where name like  '%"
-					+ condition1 + "%')) ");
+			//如果是手机号码
+			if(CommonUtils.isNumber(condition1) && condition1.trim().length()==11){
+				cuserhql.append(" and phone = '").append(condition1).append("' ");
+			}else{
+				cuserhql.append(" and (realname like '%" + condition1 + "%' or drive_school like '%" + condition1 + "%' or drive_schoolid in (select schoolid from t_drive_school_info where name like  '%"
+						+ condition1 + "%') or phone like '%"+condition1+"%') ");
+			}
+			
 		}
 		// 星级
 		if (!CommonUtils.isEmptyString(condition2)) {
@@ -1758,17 +1943,18 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 									result.put("message", "小巴币余额不足!");
 									return result;
 								}
-								
 								//教练小巴币数量增加
 								//int coachid=orderList.get(m).mOrderInfo.getCoachid();
 								if(cuser!=null){
 									cuser.setCoinnum(cuser.getCoinnum()+total.intValue());
+									//并且冻结教练订单总额的小巴币，直到双方互评后取消冻结，已防止在为评价前教练提现
+									cuser.setFcoinnum(cuser.getFcoinnum()+total.intValue());
 									dataDao.updateObject(cuser);
 									//System.out.println("教练获取小巴币成功"+total.intValue());
 								}else{
 									//System.out.println("教练获取小巴币失败"+total.intValue());
 								}
-								//向小巴币记录表中插入数据
+								//向小巴币记录表中插入数据 已修改，
 								/////////////////////////////////////////////
 								 CoinRecordInfo coinRecordInfo = new CoinRecordInfo ();
 							        coinRecordInfo.setReceiverid(cuser.getCoachid());
@@ -1778,7 +1964,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 							        coinRecordInfo.setPayerid(student.getStudentid());
 							        coinRecordInfo.setPayertype(UserType.STUDENT);
 							        coinRecordInfo.setPayername(student.getRealname());
-							        coinRecordInfo.setType(UserType.PLATFORM);
+							        coinRecordInfo.setType(CoinType.STUDENT_PAY);//学员支付
 							        coinRecordInfo.setOwnertype(2);
 							        coinRecordInfo.setCoinnum(total.intValue());
 							        coinRecordInfo.setAddtime(new Date());

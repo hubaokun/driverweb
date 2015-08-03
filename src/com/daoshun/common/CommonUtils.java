@@ -111,7 +111,25 @@ public class CommonUtils {
 			throw new ErrException();
 		}
 	}
-	
+	/**
+	 * 判断字符串是否为数字
+	 * @param number
+	 * @return
+	 */
+	public static boolean isNumber(String number)  
+    {  
+        if(number!=null){
+        	for (int i = 0; i < number.length(); i++)  
+            {  
+                if(Character.isDigit(number.charAt(i)))  
+                {  
+                    return true;  
+                }  
+            }  
+        }
+		
+        return false;  
+    }  
 	/**
 	 * 判断字符是否是合法的日期格式
 	 * @param str  日期字符串

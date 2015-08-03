@@ -22,6 +22,9 @@ public class AreaInfo {
 	@Column(name = "areaid", length =20, nullable = false)
 	private Integer areaid;
 	
+	@Column(name = "baiduid", length =11, nullable = true)
+	private Integer baiduid;
+	
 	@Column(name = "area", length = 100, nullable = false)
 	private String area;
 	

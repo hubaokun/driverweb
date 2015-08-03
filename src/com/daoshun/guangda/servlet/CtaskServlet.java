@@ -573,7 +573,7 @@ public class CtaskServlet extends BaseServlet {
 							ctaskService.SettlementOrder(orderInfo.getOrderid());
 						}
 					}
-
+					
 					EvaluationInfo evaluation = new EvaluationInfo();
 					evaluation.setScore1(CommonUtils.parseFloat(score1, 0));
 					evaluation.setScore2(CommonUtils.parseFloat(score2, 0));

@@ -188,6 +188,11 @@ public class CuserInfo implements Serializable {
 	//小巴币个数
 	@Column(name = "coinnum", length = 10, columnDefinition = "INT default 0")
 	private Integer coinnum;
+	
+	//冻结的小巴币个数
+	@Column(name = "fcoinnum", length = 10, columnDefinition = "INT default 0")
+	private Integer fcoinnum;
+	
 
 	// 教练教车单价
 	@Column(name = "price", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")
@@ -370,6 +375,14 @@ public class CuserInfo implements Serializable {
 	@Transient
 	private String locationname;//省市区全称
 	
+	
+	public Integer getFcoinnum() {
+		return fcoinnum;
+	}
+
+	public void setFcoinnum(Integer fcoinnum) {
+		this.fcoinnum = fcoinnum;
+	}
 
 	public String getLocationname() {
 		return locationname;

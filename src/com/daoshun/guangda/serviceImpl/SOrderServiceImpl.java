@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.daoshun.common.ApplePushUtil;
+import com.daoshun.common.CoinType;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
 import com.daoshun.common.PushtoSingle;
@@ -1032,7 +1033,7 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 			        coinRecordInfo.setPayerid(cuser.getCoachid());
 			        coinRecordInfo.setPayertype(UserType.COAH);
 			        coinRecordInfo.setPayername(cuser.getRealname());
-			        coinRecordInfo.setType(UserType.PLATFORM);
+			        coinRecordInfo.setType(CoinType.REFUND);//退款
 			        coinRecordInfo.setOwnertype(2);
 			        coinRecordInfo.setCoinnum(order.getTotal().intValue());
 			       
@@ -1042,9 +1043,12 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 			    cuser.setCoinnum(cuser.getCoinnum()-order.getTotal().intValue());    
 			    dataDao.updateObject(cuser);
 			    student.setCoinnum(student.getCoinnum()+order.getTotal().intValue());
+			    //如果在订单还未双方评价结算，教练的小巴币是有冻结的，需要把冻结的小巴币数量取消
+			    if(order.getStudentstate()!=3 && order.getStudentstate()!=4){
+			    	cuser.setFcoinnum(cuser.getFcoinnum()-order.getTotal().intValue());
+			    }
+			    
 			    dataDao.updateObject(cuser);
-				
-				
 				//给学员推送消息
 				String pushMsg="教练已同意您取消"+order.getStart_time()+"的学车课程，支付的金额已退回到小巴账户余额。";
 				//给此订单关联的教练推送消息，提示让他同意取消订单

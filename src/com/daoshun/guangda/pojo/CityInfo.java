@@ -25,6 +25,9 @@ public class CityInfo {
 	@Column(name = "cityid",  nullable = false)
 	private Integer cityid;
 	
+	@Column(name = "baiduid", length =11, nullable = true)
+	private Integer baiduid;
+	
 	@Column(name = "city", length = 100, nullable = false)
 	private String city;
 	

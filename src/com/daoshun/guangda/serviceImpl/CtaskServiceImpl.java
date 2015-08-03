@@ -11,9 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.QueryResult;
+import com.daoshun.common.UserType;
 import com.daoshun.guangda.pojo.BalanceCoachInfo;
 import com.daoshun.guangda.pojo.BalanceStudentInfo;
 import com.daoshun.guangda.pojo.CoachStudentInfo;
+import com.daoshun.guangda.pojo.CoinRecordInfo;
 import com.daoshun.guangda.pojo.ComplaintInfo;
 import com.daoshun.guangda.pojo.CouponCoach;
 import com.daoshun.guangda.pojo.CouponRecord;
@@ -474,8 +476,12 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 
 					cuser.setMoney(cuser.getMoney().add(addToCoach));
 					cuser.setTotaltime(cuser.getTotaltime() + order.getTime());
+					//取消教练的冻结小巴币
+					if(cuser.getFcoinnum()-order.getTotal().intValue()>=0){
+						cuser.setFcoinnum(cuser.getFcoinnum()-order.getTotal().intValue());
+					}
 					dataDao.updateObject(cuser);
-
+					
 					// 教练的余额流水
 					BalanceCoachInfo balanceCoach = new BalanceCoachInfo();
 					balanceCoach.setAddtime(new Date());
@@ -485,6 +491,9 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 					balanceCoach.setType(1);
 					balanceCoach.setUserid(order.getCoachid());
 					dataDao.addObject(balanceCoach);
+					
+					
+					
 				}
 
 				// 学员金额的修改
@@ -520,7 +529,10 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 					info.setStudentid(order.getStudentid());
 					dataDao.addObject(info);
 				}
+				
 			}
+			
+			
 			dataDao.updateObject(order);
 		}
 	}

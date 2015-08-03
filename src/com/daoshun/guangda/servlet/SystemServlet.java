@@ -235,11 +235,13 @@ public class SystemServlet extends BaseServlet {
 		//int coinnum=suserService.getSumCoinnum(userid);
 		if (CommonUtils.parseInt(usertype, 0) == 1) {// 教练
 			CuserInfo cuser = cuserService.getCuserByCoachid(userid);
+			//教练小巴币个数=总的个数-冻结的个数
+			int coinnum=cuser.getCoinnum()-cuser.getFcoinnum();
 			if (cuser != null) {
 				resultMap.put("money", cuser.getMoney());
 				resultMap.put("fmoney", cuser.getFmoney());
 				resultMap.put("gmoney", cuser.getGmoney());
-				resultMap.put("coinnum", cuser.getCoinnum());
+				resultMap.put("coinnum", coinnum);
 				// 这里需要把教练总共的小巴券时间返回
 				int allhour = cuserService.getCoachAllCouponTime(cuser.getCoachid());
 				resultMap.put("couponhour", allhour);
