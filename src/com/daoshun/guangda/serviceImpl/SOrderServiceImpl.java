@@ -14,6 +14,7 @@ import com.daoshun.common.ApplePushUtil;
 import com.daoshun.common.CoinType;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
+import com.daoshun.common.PayType;
 import com.daoshun.common.PushtoSingle;
 import com.daoshun.common.QueryResult;
 import com.daoshun.common.UserType;
@@ -415,7 +416,7 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 		now.add(Calendar.MINUTE, -s_can_down);
 		StringBuffer cuserhql = new StringBuffer();
 
-		cuserhql.append("from OrderInfo a where a.studentid =:studentid and a.studentstate = 0 and ((select count(*) as ccount from ComplaintInfo c where c.order_id"
+		cuserhql.append("from OrderInfo a where a.studentid =:studentid and (a.studentstate in (0,4) and a.coachstate!=4) and ((select count(*) as ccount from ComplaintInfo c where c.order_id"
 				+ " = a.orderid and c.type = 1 and state = 0) > 0 or ((select count(*) as ccount from ComplaintInfo c where c.order_id"
 				+ " = a.orderid and c.type = 1 and state = 0) = 0 and  a.end_time > :now)) order by start_time asc");
 		String[] params = { "studentid", "now" };
@@ -928,15 +929,31 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 	@Override
 	public int cancelOrderByCoach(String orderid,String agree) {
 		OrderInfo order = dataDao.getObjectById(OrderInfo.class, CommonUtils.parseInt(orderid, 0));
-		if(order!=null && "1".equals(agree)){//教练不同意
-			order.setStudentstate(0);
-			dataDao.updateObject(order);
-			return 0;
-		}
 		String studentid="";
 		if(order!=null){
 			studentid=String.valueOf(order.getStudentid());
 		}
+		if(order!=null && "1".equals(agree)){//教练不同意
+			//推送消息给学员
+			order.setStudentstate(0);
+			dataDao.updateObject(order);
+			//给学员推送消息
+			String pushMsg="教练不同意您取消"+order.getStart_time()+"的学车课程";
+			//给此订单关联的教练推送消息，提示让他同意取消订单
+			String hql5 = "from UserPushInfo where userid =:userid and usertype = 1";
+			String params5[] = { "userid" };
+			UserPushInfo userPushInfo = (UserPushInfo) dataDao.getFirstObjectViaParam(hql5, params5,CommonUtils.parseInt(studentid, 0));
+			if (userPushInfo != null && userPushInfo.getDevicetoken() != null) {
+				if (userPushInfo.getType() == 0 && !CommonUtils.isEmptyString(userPushInfo.getJpushid())) {
+					PushtoSingle push = new PushtoSingle();
+					push.pushsingle(userPushInfo.getJpushid(), 2, "{\"message\":\"" + pushMsg + "\",\"type\":\"5\"}");
+				} else if (userPushInfo.getType() == 1 && !CommonUtils.isEmptyString(userPushInfo.getDevicetoken())) {
+					ApplePushUtil.sendpush(userPushInfo.getDevicetoken(), "{\"aps\":{\"alert\":\"" + pushMsg + "\",\"sound\":\"default\"},\"userid\":" + studentid + "}", 1, 2);
+				}
+			}
+			return 0;
+		}
+		
 		CuserInfo cuser;
 		SuserInfo student = dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
 		String hql = "from SystemSetInfo where 1=1";
@@ -952,28 +969,26 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 		}
 		if (order != null) {
 			//if (order.getStart_time().after(c.getTime())) {
-			
 			cuser=dataDao.getObjectById(CuserInfo.class, order.getCoachid());
-				if (student != null) {
-					if(order.getDelmoney()>0 && order.getCouponrecordid().length()>1)
-					{
-						String coupongetrecordids=order.getCouponrecordid();
-						if(coupongetrecordids.lastIndexOf(',')== coupongetrecordids.length()-1)
-						{
-							System.out.println("old: "+coupongetrecordids);
-							coupongetrecordids = coupongetrecordids.substring(0, coupongetrecordids.length()-2);
-							System.out.println("now :"+coupongetrecordids);
-						}
-					dataDao.updateBySql(" update t_couponget_record set state=0 where recordid in("+coupongetrecordids+") ");
-						
-					}
-					else
-					{
-						student.setMoney(student.getMoney().add(order.getTotal()));
-						student.setFmoney(student.getFmoney().subtract(order.getTotal()));
-						dataDao.updateObject(student);
-					}
+			
+			if(order.getPaytype()==PayType.MONEY){
+				student.setFmoney(student.getFmoney().subtract(order.getTotal()));
+				student.setMoney(student.getMoney().add(order.getTotal()));
+			}else if(order.getPaytype()==PayType.COUPON){
+				String coupongetrecordids=order.getCouponrecordid();
+				if(coupongetrecordids.lastIndexOf(',')== coupongetrecordids.length()-1)
+				{
+					coupongetrecordids = coupongetrecordids.substring(0, coupongetrecordids.length()-2);
 				}
+				dataDao.updateBySql(" update t_couponget_record set state=0 where recordid in("+coupongetrecordids+") ");
+				//dataDao.deleteBySql("delete from t_coupon_coach where couponrecordid in ("+coupongetrecordids+") ");
+				
+			}else if(order.getPaytype()==PayType.COIN){
+				student.setFcoinnum(student.getFcoinnum().subtract(order.getTotal()));
+				student.setCoinnum(student.getCoinnum()+order.getTotal().intValue());
+			}
+			
+				
 
 				//order.setStudentstate(4);//学员取消
 				order.setCoachstate(4);//教练取消
@@ -1023,32 +1038,6 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				orderRecord.setOrderid(CommonUtils.parseInt(orderid, 0));
 				orderRecord.setUserid(CommonUtils.parseInt(studentid, 0));
 				dataDao.addObject(orderRecord);
-				//向小巴币记录表中插入数据
-				/////////////////////////////////////////////
-				 CoinRecordInfo coinRecordInfo = new CoinRecordInfo ();
-			        coinRecordInfo.setReceiverid(student.getStudentid());
-			        coinRecordInfo.setReceivertype(UserType.STUDENT);//代表学员
-			        coinRecordInfo.setReceivername(student.getRealname());
-			        coinRecordInfo.setOwnerid(cuser.getCoachid());
-			        coinRecordInfo.setPayerid(cuser.getCoachid());
-			        coinRecordInfo.setPayertype(UserType.COAH);
-			        coinRecordInfo.setPayername(cuser.getRealname());
-			        coinRecordInfo.setType(CoinType.REFUND);//退款
-			        coinRecordInfo.setOwnertype(2);
-			        coinRecordInfo.setCoinnum(order.getTotal().intValue());
-			        coinRecordInfo.setOrderid(order.getOrderid());//设置小巴币所属的订单的ID
-			        coinRecordInfo.setAddtime(new Date());
-			        dataDao.addObject(coinRecordInfo);
-				//学员+  教练-
-			    cuser.setCoinnum(cuser.getCoinnum()-order.getTotal().intValue());    
-			    dataDao.updateObject(cuser);
-			    student.setCoinnum(student.getCoinnum()+order.getTotal().intValue());
-			    //如果在订单还未双方评价结算，教练的小巴币是有冻结的，需要把冻结的小巴币数量取消
-			    if(order.getStudentstate()!=3 && order.getStudentstate()!=4){
-			    	cuser.setFcoinnum(cuser.getFcoinnum()-order.getTotal().intValue());
-			    }
-			    
-			    dataDao.updateObject(cuser);
 				//给学员推送消息
 				String pushMsg="教练已同意您取消"+order.getStart_time()+"的学车课程，支付的金额已退回到小巴账户余额。";
 				//给此订单关联的教练推送消息，提示让他同意取消订单

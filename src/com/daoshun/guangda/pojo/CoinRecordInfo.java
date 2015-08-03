@@ -68,7 +68,7 @@ public class CoinRecordInfo implements Serializable {
 	private Date addtime;
 	
 	//小巴币的记录所属的订单ID
-	@Column(name = "orderid", length = 10, nullable = false, columnDefinition = "INT default 0")
+	@Column(name = "orderid", length = 10, nullable = true, columnDefinition = "INT default 0")
 	private Integer orderid;
 	
 	//教练姓名

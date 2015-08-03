@@ -59,7 +59,16 @@ public class CouponRecord implements Serializable {
 
 	@Column(name = "money_value", nullable = false, columnDefinition = "INT default 0")
 	private int money_value;
-
+	
+	//使用时间
+	@Column(name = "usetime", nullable = true,columnDefinition = "TIMESTAMP")
+	private Date usetime;
+	
+	//订单ID
+	@Column(name = "orderid", nullable = true, columnDefinition = "INT default 0")
+	private int orderid;
+	
+	
 	@Transient
 	private String usernick;
 
@@ -71,6 +80,24 @@ public class CouponRecord implements Serializable {
 
 	@Transient
 	private String title;
+	
+	
+	
+	public Date getUsetime() {
+		return usetime;
+	}
+
+	public void setUsetime(Date usetime) {
+		this.usetime = usetime;
+	}
+
+	public int getOrderid() {
+		return orderid;
+	}
+
+	public void setOrderid(int orderid) {
+		this.orderid = orderid;
+	}
 
 	public Integer getRecordid() {
 		return recordid;

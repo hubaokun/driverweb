@@ -279,6 +279,7 @@ public class CouponAction extends BaseAction {
 						couponrecord.setOwnerid(coupon.getOwnerid());
 						couponrecord.setCoupontype(coupon.getCoupontype());
 						couponrecord.setEnd_time(coupon.getEnd_time());
+						couponrecord.setUsetime(null);
 						couponService.addCouponRecord(couponrecord);
 						coupon.setRest_count(coupon.getRest_count() - 1);
 						couponService.updateCouponInfo(coupon);
@@ -349,6 +350,7 @@ public class CouponAction extends BaseAction {
 								couponrecord.setOwnerid(coupon.getOwnerid());
 								couponrecord.setCoupontype(coupon.getCoupontype());
 								couponrecord.setEnd_time(coupon.getEnd_time());
+								couponrecord.setUsetime(null);
 								couponService.addCouponRecord(couponrecord);
 								coupon.setRest_count(coupon.getRest_count() - 1);
 								couponService.updateCouponInfo(coupon);
@@ -411,6 +413,7 @@ public class CouponAction extends BaseAction {
 								couponrecord.setOwnerid(coupon.getOwnerid());
 								couponrecord.setCoupontype(coupon.getCoupontype());
 								couponrecord.setEnd_time(coupon.getEnd_time());
+								couponrecord.setUsetime(null);
 								couponService.addCouponRecord(couponrecord);
 								coupon.setRest_count(coupon.getRest_count() - 1);
 								couponService.updateCouponInfo(coupon);
@@ -477,6 +480,7 @@ public class CouponAction extends BaseAction {
 					couponrecord.setCoupontype(coupon.getCoupontype());
 					couponrecord.setEnd_time(coupon.getEnd_time());
 					couponService.addCouponRecord(couponrecord);
+					couponrecord.setUsetime(null);
 					coupon.setRest_count(coupon.getRest_count() - 1);
 					couponService.updateCouponInfo(coupon);
 				}

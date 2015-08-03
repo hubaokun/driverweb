@@ -283,7 +283,7 @@ public class SbookServlet extends BaseServlet {
 	public void getNearByCoach(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String pointcenter = getRequestParamter(request, "pointcenter");
 		String radius = getRequestParamter(request, "radius");
-		CommonUtils.validateEmpty(pointcenter);
+		//CommonUtils.validateEmpty(pointcenter);
 		CommonUtils.validateEmpty(radius);
 		String condition1 = getRequestParamter(request, "condition1");// 关键字
 		String condition2 = getRequestParamter(request, "condition2");// 星级的下限

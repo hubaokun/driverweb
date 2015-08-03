@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.daoshun.common.CommonUtils;
+import com.daoshun.common.PayType;
 import com.daoshun.common.QueryResult;
 import com.daoshun.common.UserType;
 import com.daoshun.guangda.pojo.BalanceCoachInfo;
@@ -427,7 +428,11 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 		DriveSchoolInfo driveschool = dataDao.getObjectById(DriveSchoolInfo.class, schoolid);
 		return driveschool;
 	}
-
+	/**
+	 * 订单结算分为两种情况
+		1、自动结算时间未到，此时学员评价和教练确认下车的后完成的动作触发订单结算
+		2、自动结算时间已过，只要教练确认下车，系统就会自动结算，如果没确认下车，就会一直等到确认下车后才会结算
+	 */
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override
 	public void SettlementOrder(int orderid) {
@@ -436,79 +441,91 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 		OrderRecordInfo recordinfo = (OrderRecordInfo) dataDao.getFirstObjectViaParam(hql, params, orderid);
 
 		OrderInfo order = dataDao.getObjectById(OrderInfo.class, orderid);
+		SuserInfo student = dataDao.getObjectById(SuserInfo.class, order.getStudentid());
+		CuserInfo cuser = dataDao.getObjectById(CuserInfo.class, order.getCoachid());
 		if (order != null) {
+			
 			order.setStudentstate(3);// 设置订单状态为已结算
 			if (recordinfo != null) {// 如果教练确认下车过的话
 				// 教练金额的修改
 				order.setOver_time(new Date());
-				CuserInfo cuser = dataDao.getObjectById(CuserInfo.class, order.getCoachid());
+				
 				if (cuser != null) {
-					// 查询订单中使用的优惠券的情况
-					String couponrecord = order.getCouponrecordid();
-					BigDecimal couponTotal = new BigDecimal(0);
-					if (!CommonUtils.isEmptyString(couponrecord)) {
-						String[] cids = couponrecord.split(",");
-						for (int i = 0; i < cids.length; i++) {
-							CouponRecord crecord = dataDao.getObjectById(CouponRecord.class, CommonUtils.parseInt(cids[i], 0));
-							if (crecord != null) {
-								int couponType = crecord.getCoupontype();
-								if (couponType == 1) {// 时间券
-									// 把券增加到教练那边去
-									CouponCoach mCouponCoach = new CouponCoach();
-									mCouponCoach.setCoachid(order.getCoachid());
-									mCouponCoach.setCouponid(crecord.getCouponid());
-									mCouponCoach.setGettime(new Date());
-									mCouponCoach.setMoney_value(crecord.getMoney_value());
-									mCouponCoach.setOwnerid(crecord.getOwnerid());
-									mCouponCoach.setOwnertype(crecord.getOwnertype());
-									mCouponCoach.setState(1);
-									mCouponCoach.setValue(crecord.getValue());
-									dataDao.addObject(mCouponCoach);
-								} else {// 直接把钱增加到教练的余额
-									couponTotal = couponTotal.add(new BigDecimal(crecord.getValue()));
+					if(order.getPaytype()==PayType.MONEY){
+						BigDecimal b1=new BigDecimal(order.getTotal().intValue());
+						//设置学员冻结金额为
+						student.setFmoney(student.getFmoney().subtract(b1));
+						b1.add(cuser.getMoney());
+						cuser.setMoney(b1);
+					}else if(order.getPaytype()==PayType.COUPON){
+						// 查询订单中使用的优惠券的情况
+						String couponrecord = order.getCouponrecordid();
+						//BigDecimal couponTotal = new BigDecimal(0);
+						if (!CommonUtils.isEmptyString(couponrecord)) {
+							String[] cids = couponrecord.split(",");
+							for (int i = 0; i < cids.length; i++) {
+								CouponRecord crecord = dataDao.getObjectById(CouponRecord.class, CommonUtils.parseInt(cids[i], 0));
+								if (crecord != null) {
+									int couponType = crecord.getCoupontype();
+									if (couponType == 1) {// 时间券
+										// 把券增加到教练那边去
+										CouponCoach mCouponCoach = new CouponCoach();
+										mCouponCoach.setCoachid(order.getCoachid());
+										mCouponCoach.setCouponid(crecord.getCouponid());
+										mCouponCoach.setGettime(new Date());
+										mCouponCoach.setMoney_value(crecord.getMoney_value());
+										mCouponCoach.setOwnerid(crecord.getOwnerid());
+										mCouponCoach.setOwnertype(crecord.getOwnertype());
+										mCouponCoach.setState(1);
+										mCouponCoach.setValue(crecord.getValue());
+										mCouponCoach.setCouponrecordid(crecord.getCouponid());
+										dataDao.addObject(mCouponCoach);
+									} else {// 直接把钱增加到教练的余额
+										//现金券，已弃用
+										//couponTotal = couponTotal.add(new BigDecimal(crecord.getValue()));
+									}
 								}
 							}
 						}
+						/*BigDecimal addToCoach = order.getTotal();
+						addToCoach = addToCoach.subtract(new BigDecimal(order.getDelmoney()));
+						addToCoach = addToCoach.add(couponTotal);
+						cuser.setMoney(cuser.getMoney().add(addToCoach));
+						*/
+					}else if(order.getPaytype()==PayType.COIN){
+						BigDecimal b1=new BigDecimal(order.getTotal().intValue());
+						//设置学员冻结金额为
+						student.setFcoinnum(student.getFcoinnum().subtract(b1));
+						b1.add(new BigDecimal(cuser.getCoinnum()));
+						cuser.setCoinnum(b1.intValue());
 					}
-					BigDecimal addToCoach = order.getTotal();
-					addToCoach = addToCoach.subtract(new BigDecimal(order.getDelmoney()));
-					addToCoach = addToCoach.add(couponTotal);
-
-					cuser.setMoney(cuser.getMoney().add(addToCoach));
 					cuser.setTotaltime(cuser.getTotaltime() + order.getTime());
-					//取消教练的冻结小巴币
-					if(cuser.getFcoinnum()-order.getTotal().intValue()>=0){
-						cuser.setFcoinnum(cuser.getFcoinnum()-order.getTotal().intValue());
-					}
-					dataDao.updateObject(cuser);
+					student.setLearn_time(student.getLearn_time() + order.getTime());
 					
-					// 教练的余额流水
+					//取消教练的冻结小巴币
+					/*if(cuser.getFcoinnum()-order.getTotal().intValue()>=0){
+						cuser.setFcoinnum(cuser.getFcoinnum()-order.getTotal().intValue());
+					}*/
+					dataDao.updateObject(cuser);
+					dataDao.updateObject(student);
+				}
+				if(cuser!=null){
+					// 教练的流水修改
 					BalanceCoachInfo balanceCoach = new BalanceCoachInfo();
 					balanceCoach.setAddtime(new Date());
-					balanceCoach.setAmount(addToCoach);
+					balanceCoach.setAmount(order.getTotal().subtract(new BigDecimal(order.getDelmoney())));
 					balanceCoach.setAmount_out1(order.getPrice_out1());
 					balanceCoach.setAmount_out2(order.getPrice_out2());
-					balanceCoach.setType(1);
+					balanceCoach.setType(1);//学员支付
 					balanceCoach.setUserid(order.getCoachid());
 					dataDao.addObject(balanceCoach);
-					
-					
-					
 				}
-
-				// 学员金额的修改
-				SuserInfo student = dataDao.getObjectById(SuserInfo.class, order.getStudentid());
+				// 学员流水的修改
 				if (student != null) {
-					BigDecimal subToStudent = order.getTotal();
-					subToStudent = subToStudent.subtract(new BigDecimal(order.getDelmoney()));
-					student.setFmoney(student.getFmoney().subtract(subToStudent));
-					student.setLearn_time(student.getLearn_time() + order.getTime());
-					dataDao.updateObject(student);
-
 					BalanceStudentInfo balanceStudent = new BalanceStudentInfo();
 					balanceStudent.setAddtime(new Date());
-					balanceStudent.setAmount(subToStudent);
-					balanceStudent.setType(3);
+					balanceStudent.setAmount(order.getTotal().subtract(new BigDecimal(order.getDelmoney())));
+					balanceStudent.setType(3);//3表示学员订单支付
 					balanceStudent.setUserid(student.getStudentid());
 					dataDao.addObject(balanceStudent);
 				}
@@ -536,14 +553,17 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 			dataDao.updateObject(order);
 		}
 	}
-
+	/**
+	 * 订单结算分为两种情况
+		1、自动结算时间未到，此时学员评价和教练确认下车的后完成的动作触发订单结算
+		2、自动结算时间已过，只要教练确认下车，系统就会自动结算，如果没确认下车，就会一直等到确认下车后才会结算
+	 */
 	// 在教练确认下车的时候去结算订单
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override
 	public void SettlementOrderWhenCoachDown(int orderid) {
 		OrderInfo order = dataDao.getObjectById(OrderInfo.class, orderid);
 		if (order != null) {
-
 			// 首先查询出订单相关的几个时间配置
 			String hqlset = "from SystemSetInfo where 1 = 1";
 			SystemSetInfo setInfo = (SystemSetInfo) dataDao.getFirstObjectViaParam(hqlset, null);
@@ -567,169 +587,19 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 			List<ComplaintInfo> compList = (List<ComplaintInfo>) dataDao.getObjectsViaParam(hql, params, orderid);
 			if (compList == null || compList.size() == 0) {// 无投诉的情况下
 				// 时间是否已经过去订单的over时间
-				if (now.after(c)) {// 结算时间已经过去
+				if (now.after(c)) {// 系统自动结算时间已过
 					// 教练金额的修改
 					order.setOver_time(new Date());
 					order.setStudentstate(3);
 					dataDao.updateObject(order);
-					CuserInfo cuser = dataDao.getObjectById(CuserInfo.class, order.getCoachid());
-					if (cuser != null) {
-						// 查询订单中使用的优惠券的情况
-						String couponrecord = order.getCouponrecordid();
-						BigDecimal couponTotal = new BigDecimal(0);
-						if (!CommonUtils.isEmptyString(couponrecord)) {
-							String[] cids = couponrecord.split(",");
-							for (int i = 0; i < cids.length; i++) {
-								CouponRecord crecord = dataDao.getObjectById(CouponRecord.class, CommonUtils.parseInt(cids[i], 0));
-								if (crecord != null) {
-									int couponType = crecord.getCoupontype();
-									if (couponType == 1) {// 时间券
-										// 把券增加到教练那边去
-										CouponCoach mCouponCoach = new CouponCoach();
-										mCouponCoach.setCoachid(order.getCoachid());
-										mCouponCoach.setCouponid(crecord.getCouponid());
-										mCouponCoach.setGettime(new Date());
-										mCouponCoach.setMoney_value(crecord.getMoney_value());
-										mCouponCoach.setOwnerid(crecord.getOwnerid());
-										mCouponCoach.setOwnertype(crecord.getOwnertype());
-										mCouponCoach.setState(1);
-										mCouponCoach.setValue(crecord.getValue());
-										dataDao.addObject(mCouponCoach);
-									} else {// 直接把钱增加到教练的余额
-										couponTotal = couponTotal.add(new BigDecimal(crecord.getValue()));
-									}
-								}
-							}
-						}
-						BigDecimal addToCoach = order.getTotal();
-						addToCoach = addToCoach.subtract(new BigDecimal(order.getDelmoney()));
-						addToCoach = addToCoach.add(couponTotal);
-
-						cuser.setMoney(cuser.getMoney().add(addToCoach));
-						cuser.setTotaltime(cuser.getTotaltime() + order.getTime());
-						//取消教练的冻结小巴币
-						if(cuser.getFcoinnum()-order.getTotal().intValue()>=0){
-							cuser.setFcoinnum(cuser.getFcoinnum()-order.getTotal().intValue());
-						}
-						dataDao.updateObject(cuser);
-
-						// 教练的余额流水
-						BalanceCoachInfo balanceCoach = new BalanceCoachInfo();
-						balanceCoach.setAddtime(new Date());
-						balanceCoach.setAmount(addToCoach);
-						balanceCoach.setAmount_out1(order.getPrice_out1());
-						balanceCoach.setAmount_out2(order.getPrice_out2());
-						balanceCoach.setType(1);
-						balanceCoach.setUserid(order.getCoachid());
-						dataDao.addObject(balanceCoach);
-					}
-
-					// 学员金额的修改
-					SuserInfo student = dataDao.getObjectById(SuserInfo.class, order.getStudentid());
-					if (student != null) {
-						BigDecimal subToStudent = order.getTotal();
-						subToStudent = subToStudent.subtract(new BigDecimal(order.getDelmoney()));
-						student.setFmoney(student.getFmoney().subtract(subToStudent));
-						student.setLearn_time(student.getLearn_time() + order.getTime());
-						dataDao.updateObject(student);
-
-						BalanceStudentInfo balanceStudent = new BalanceStudentInfo();
-						balanceStudent.setAddtime(new Date());
-						balanceStudent.setAmount(subToStudent);
-						balanceStudent.setType(3);
-						balanceStudent.setUserid(student.getStudentid());
-						dataDao.addObject(balanceStudent);
-					}
-
-					// 增加教练以及学员的学时数量,并且修改教练与学员的关系表
-					String hqlCoachStudent = "from CoachStudentInfo where coachid = :coachid and studentid = :studentid";
-					String[] params8 = { "coachid", "studentid" };
-					CoachStudentInfo info = (CoachStudentInfo) dataDao.getFirstObjectViaParam(hqlCoachStudent, params8, order.getCoachid(), order.getStudentid());
-					if (info != null) {
-						info.setMoney(info.getMoney().add(order.getTotal()));
-						info.setHour(info.getHour() + order.getTime());
-						dataDao.updateObject(info);
-					} else {
-						info = new CoachStudentInfo();
-						info.setCoachid(order.getCoachid());
-						info.setHour(order.getTime());
-						info.setMoney(order.getTotal());
-						info.setStudentid(order.getStudentid());
-						dataDao.addObject(info);
-					}
+					SettlementOrder(orderid);
 				} else {
 					// 是否已经评论
 					String eHql = "from EvaluationInfo where order_id = :order_id and type = 1";
 					String[] eParams = { "order_id" };
 					EvaluationInfo eList = (EvaluationInfo) dataDao.getFirstObjectViaParam(eHql, eParams, orderid);
 					if (eList != null) {
-						// 教练金额的修改
-						order.setOver_time(new Date());
-						dataDao.updateObject(order);
-						CuserInfo cuser = dataDao.getObjectById(CuserInfo.class, order.getCoachid());
-						if (cuser != null) {
-							// 查询订单中使用的优惠券的情况
-							String couponrecord = order.getCouponrecordid();
-							BigDecimal couponTotal = new BigDecimal(0);
-							if (!CommonUtils.isEmptyString(couponrecord)) {
-								String[] cids = couponrecord.split(",");
-								for (int i = 0; i < cids.length; i++) {
-									CouponRecord crecord = dataDao.getObjectById(CouponRecord.class, CommonUtils.parseInt(cids[i], 0));
-									if (crecord != null) {
-										int couponType = crecord.getCoupontype();
-										if (couponType == 1) {// 时间券
-											// 把券增加到教练那边去
-											CouponCoach mCouponCoach = new CouponCoach();
-											mCouponCoach.setCoachid(order.getCoachid());
-											mCouponCoach.setCouponid(crecord.getCouponid());
-											mCouponCoach.setGettime(new Date());
-											mCouponCoach.setMoney_value(crecord.getMoney_value());
-											mCouponCoach.setOwnerid(crecord.getOwnerid());
-											mCouponCoach.setOwnertype(crecord.getOwnertype());
-											mCouponCoach.setState(1);
-											mCouponCoach.setValue(crecord.getValue());
-											dataDao.addObject(mCouponCoach);
-										} else {// 直接把钱增加到教练的余额
-											couponTotal = couponTotal.add(new BigDecimal(crecord.getValue()));
-										}
-									}
-								}
-							}
-							BigDecimal addToCoach = order.getTotal();
-							addToCoach = addToCoach.subtract(new BigDecimal(order.getDelmoney()));
-							addToCoach = addToCoach.add(couponTotal);
-
-							cuser.setMoney(cuser.getMoney().add(addToCoach));
-							dataDao.updateObject(cuser);
-						}
-
-						// 学员金额的修改
-						SuserInfo student = dataDao.getObjectById(SuserInfo.class, order.getStudentid());
-						if (student != null) {
-							BigDecimal subToStudent = order.getTotal();
-							subToStudent = subToStudent.subtract(new BigDecimal(order.getDelmoney()));
-							student.setMoney(student.getFmoney().subtract(subToStudent));
-							student.setFmoney(student.getFmoney().subtract(subToStudent));
-							student.setLearn_time(student.getLearn_time() + order.getTime());
-							dataDao.updateObject(student);
-						}
-
-						// 增加教练以及学员的学时数量,并且修改教练与学员的关系表
-						String hqlCoachStudent = "from CoachStudentInfo where coachid = :coachid and studentid = :studentid";
-						String[] params8 = { "coachid", "studentid" };
-						CoachStudentInfo info = (CoachStudentInfo) dataDao.getFirstObjectViaParam(hqlCoachStudent, params8, order.getCoachid(), order.getStudentid());
-						if (info != null) {
-							info.setMoney(info.getMoney().add(order.getTotal()));
-							info.setHour(info.getHour() + order.getTime());
-							dataDao.updateObject(info);
-						} else {
-							info = new CoachStudentInfo();
-							info.setCoachid(order.getCoachid());
-							info.setHour(order.getTime());
-							info.setMoney(order.getTotal());
-							info.setStudentid(order.getStudentid());
-							dataDao.addObject(info);
-						}
+						SettlementOrder(orderid);
 					}
 				}
 				//修改分享表中的开单标识位

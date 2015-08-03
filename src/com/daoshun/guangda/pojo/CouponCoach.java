@@ -37,9 +37,19 @@ public class CouponCoach implements Serializable {
 	private int state;
 	@Column(name = "ownerid", length = 10, nullable = false, columnDefinition = "INT default 0")
 	private Integer ownerid;
-
+	
+	@Column(name = "couponrecordid", length = 10, nullable = false)
+	private Integer couponrecordid;
 	public Integer getRecordid() {
 		return recordid;
+	}
+	
+	public Integer getCouponrecordid() {
+		return couponrecordid;
+	}
+
+	public void setCouponrecordid(Integer couponrecordid) {
+		this.couponrecordid = couponrecordid;
 	}
 
 	public void setRecordid(Integer recordid) {

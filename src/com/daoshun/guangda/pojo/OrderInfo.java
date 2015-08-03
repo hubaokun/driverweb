@@ -63,7 +63,7 @@ public class OrderInfo implements Serializable {
 	private Date over_time;
 
 	// 预定小时数
-	@Column(name = "time", length = 1, nullable = false, columnDefinition = "INt default 0")
+	@Column(name = "time", length = 1, nullable = false, columnDefinition = "INT default 0")
 	private Integer time = 0;
 
 	// 订单总价格
@@ -86,14 +86,14 @@ public class OrderInfo implements Serializable {
 	private Integer delmoney;
 
 	// 学生订单状态
-	@Column(name = "studentstate", length = 1, nullable = false, columnDefinition = "INt default 0")
+	@Column(name = "studentstate", length = 1, nullable = false, columnDefinition = "INT default 0")
 	private Integer studentstate = 0;
 
 	// 教练订单状态
-	@Column(name = "coachstate", length = 1, nullable = false, columnDefinition = "INt default 0")
+	@Column(name = "coachstate", length = 1, nullable = false, columnDefinition = "INT default 0")
 	private Integer coachstate = 0;
 
-	@Column(name = "cancancel", length = 1, nullable = false, columnDefinition = "INt default 0")
+	@Column(name = "cancancel", length = 1, nullable = false, columnDefinition = "INT default 0")
 	private Integer cancancel;
 	// 经度
 	@Column(name = "longitude", length = 50, nullable = false)
@@ -109,6 +109,8 @@ public class OrderInfo implements Serializable {
 	@Column(name = "couponrecordid", length = 50, nullable = false)
 	private String couponrecordid;
 	
+	@Column(name = "paytype", length = 11, nullable = true, columnDefinition = "INT default 0")
+	private int paytype;
 	// 学生的详细信息
 	@Transient
 	private SuserInfo studentinfo;
@@ -173,8 +175,7 @@ public class OrderInfo implements Serializable {
 	// 订单距离开始小时数
 	@Transient
 	private int hours;
-	@Transient
-	private int paytype;
+	
 	
 	
 	

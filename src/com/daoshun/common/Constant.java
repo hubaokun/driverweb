@@ -36,7 +36,7 @@ public class Constant {
 
 	/****************** 后台分页查询 *******************/
 	public static final int USERLIST_SIZE = 10;
-	public static final int ORDERLIST_SIZE = 5;// 订单每页条数
+	public static final int ORDERLIST_SIZE = 10;// 订单每页条数
 
 	/****************** 后台分页查询 *******************/
 

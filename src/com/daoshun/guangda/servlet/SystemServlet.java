@@ -236,7 +236,7 @@ public class SystemServlet extends BaseServlet {
 		if (CommonUtils.parseInt(usertype, 0) == 1) {// 教练
 			CuserInfo cuser = cuserService.getCuserByCoachid(userid);
 			//教练小巴币个数=总的个数-冻结的个数
-			int coinnum=cuser.getCoinnum()-cuser.getFcoinnum();
+			int coinnum=cuser.getCoinnum();
 			if (cuser != null) {
 				resultMap.put("money", cuser.getMoney());
 				resultMap.put("fmoney", cuser.getFmoney());

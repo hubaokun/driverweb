@@ -419,12 +419,12 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			String condition8, String condition9, String condition10, String condition11) {
 		List<CuserInfo> coachlist = new ArrayList<CuserInfo>();
 		// 取得中心点经纬度
-		String[] centers = pointcenter.split(",");
+		/*String[] centers = pointcenter.split(",");
 		String longitude = centers[0].trim();
-		String latitude = centers[1].trim();
+		String latitude = centers[1].trim();*/
 		//120.048943   30.329578
-		/*String longitude="120.048943";
-		String latitude="30.329578";*/
+		String longitude="120.048943";
+		String latitude="30.329578";
 		
 		// 获得符合条件的地址
 		StringBuffer cuserhql = new StringBuffer();
@@ -564,7 +564,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				if(info.getCoachid()==157)
 					System.out.println(info.getCoachid());
 			}*/
-			//System.out.println(hqlCoach.toString());
+			System.out.println(hqlCoach.toString());
 			List<CuserInfo> cuserlist = (List<CuserInfo>) dataDao.SqlPageQuery(hqlCoach.toString(), null, null,CuserInfo.class, null);
 			//List<CuserInfo> cuserlist = (List<CuserInfo>) dataDao.getObjectsViaParam(hqlCoach.toString(), paramsCoach, cids, now, now, now, now, now);
 			if (cuserlist != null && cuserlist.size() > 0) {
@@ -1522,6 +1522,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				
 				String date1 = array.getString("date");// 订单的日期
 				String paytype = array.getString("paytype");// 订单的日期
+				
 				if (paytype == null || paytype.length() == 0)
 				{
 					result.put("code", 3);
@@ -1533,6 +1534,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				if("1".equals(paytype)){
 					delmoney= array.getInt("delmoney");
 				}else if("2".equals(paytype)){
+					delmoney= array.getInt("delmoney");
 					recordid= array.getString("recordid");
 					//1.早期版本券的id尾巴上多了一个逗号,2.券的张数跟课时数不匹配,3.传了券id,但没传入delmoney的值
 					if((recordid.lastIndexOf(',')==recordid.length()-1)|| recordid.split(",").length>times.length()||(recordid.length()>0&& delmoney<=0))
@@ -1544,11 +1546,16 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						result.put("code", -1);
 						return result;
 					}
-					delmoney= array.getInt("delmoney");
+					
 				}else if("3".equals(paytype)){
 					delmoney= array.getInt("delmoney");
 				}
-				
+				System.out.println("##############################################");
+				System.out.println("paytype="+paytype);
+				System.out.println("date1="+date1);
+				System.out.println("delmoney="+delmoney);
+				System.out.println("recordid="+recordid);
+				System.out.println("##############################################");
 				String start = "", end = "";// 订单的开始时间和结束时间
 				
 				BigDecimal total = new BigDecimal(0);// 订单的总价
@@ -1885,10 +1892,6 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						// 小巴券，判断，如果 2 
 						if(2==orderList.get(m).mOrderInfo.getPaytype()){
 							
-							
-
-							
-							
 							total = total.subtract(new BigDecimal(orderList.get(m).mOrderInfo.getDelmoney()));// 减去小巴券中抵掉的金额
 								if (orderList.get(m).mOrderInfo.getCouponrecordid() != null && orderList.get(m).mOrderInfo.getCouponrecordid().length() > 0) {
 									String[] recordidArray = orderList.get(m).mOrderInfo.getCouponrecordid().split(",");
@@ -1897,6 +1900,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 										CouponRecord record = dataDao.getObjectById(CouponRecord.class, cid);
 										if (record != null) {
 											record.setState(1);// 学员的状态修改为已经使用
+											record.setUsetime(new Date());//使用时间
+											record.setOrderid(orderList.get(m).mOrderInfo.getOrderid());//订单号
 											dataDao.updateObject(record);
 											if (record.getCoupontype() == 1) {// 时间
 											} else {// 钱
@@ -1921,7 +1926,10 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 								}
 								student.setFmoney(student.getFmoney().add(total));
 								student.setMoney(student.getMoney().subtract(total));
-								
+								/*
+								 * 学员下订单时，订单价格为M，此时学员的余额减M，冻结金额加M,教练的账户金额不变
+									取消订单时，学员的冻结金额减去M,学员的余额加M,教练的账户金额不变
+								 */
 								if (student.getMoney().doubleValue() < 0 || student.getFmoney().doubleValue() < 0) {
 									result.put("failtimes", failtimes);
 									result.put("successorderid", successorderid);
@@ -2159,10 +2167,10 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 	@Override
 	public List<CouponRecord> getCanUseCouponList(String studentid, String coachid) {
 		List<CouponRecord> result = new ArrayList<CouponRecord>();
-		String hql = "from CouponRecord c where c.userid =:userid and c.end_time > :now and c.state = 0 and ";
+		String hql = "from CouponRecord c where c.userid =:userid and c.end_time > now() and c.state = 0 and ";
 		hql += "(c.ownertype = 0 or (c.ownertype = 2 and c.ownerid = :coachid) or c.ownertype = 1)";
-		String[] params = { "userid", "now", "coachid", "coachid" };
-		result.addAll((List<CouponRecord>) dataDao.getObjectsViaParam(hql, params, CommonUtils.parseInt(studentid, 0), new Date(), CommonUtils.parseInt(coachid, 0), CommonUtils.parseInt(coachid, 0)));
+		String[] params = { "userid", "coachid", "coachid" };
+		result.addAll((List<CouponRecord>) dataDao.getObjectsViaParam(hql, params, CommonUtils.parseInt(studentid, 0), CommonUtils.parseInt(coachid, 0), CommonUtils.parseInt(coachid, 0)));
 
 		Iterator<CouponRecord> iter = result.iterator();
 		while (iter.hasNext()) {

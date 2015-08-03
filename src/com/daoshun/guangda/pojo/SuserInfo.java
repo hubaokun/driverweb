@@ -74,6 +74,7 @@ public class SuserInfo implements Serializable {
 	// 身份证反面照id
 	@Column(name = "id_cardpicb", length = 10, columnDefinition = "INT default 0")
 	private Integer id_cardpicb = 0;
+	
 
 	// 城市
 	@Column(name = "cityid")
@@ -106,6 +107,9 @@ public class SuserInfo implements Serializable {
 	// 冻结金额
 	@Column(name = "fmoney", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")
 	private BigDecimal fmoney;
+	
+	@Column(name = "fcoinnum", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")
+	private BigDecimal fcoinnum;
 
 	// 账户余额
 	@Column(name = "money", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")
@@ -238,6 +242,14 @@ public class SuserInfo implements Serializable {
 
 	public int getStudentid() {
 		return studentid;
+	}
+	
+	public BigDecimal getFcoinnum() {
+		return fcoinnum;
+	}
+
+	public void setFcoinnum(BigDecimal fcoinnum) {
+		this.fcoinnum = fcoinnum;
 	}
 
 	public void setStudentid(int studentid) {

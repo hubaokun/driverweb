@@ -165,13 +165,19 @@ public class CoinRecordAction extends BaseAction{
         coinRecordInfo.setCoinnum(coinnum);
         coinRecordInfo.setType(1);
         coinRecordInfo.setAddtime(new Date());
-
+        
         coinRecordService.addCoinRecord(coinRecordInfo);
 
         SuserInfo suser =suserService.getUserById(receiverid.toString());
-        int num = suser.getCoinnum()+coinnum;
-        suser.setCoinnum(num);
-        suserService.updateUserInfo(suser);
+        if(suser!=null){
+        	 if(suser.getCoinnum()==null){
+        		 suser.setCoinnum(coinnum);
+        	 }else{
+        		 suser.setCoinnum(suser.getCoinnum()+coinnum);
+        	 }
+             suserService.updateUserInfo(suser);
+        }
+       
 
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("code", 1);
