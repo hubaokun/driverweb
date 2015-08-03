@@ -136,13 +136,12 @@ public class LocationServlet extends BaseServlet{
 	}
 	/**
 	 * 自动获取省市区
-	 * @throws UnsupportedEncodingException 
+	 * @throws UnsupportedEncodingException
 	 */
 	public void getAutoPosition(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException, UnsupportedEncodingException {
-		String pname=getRequestParamter(request,"pname");
-		String cname=getRequestParamter(request,"cname");
-		String aname=getRequestParamter(request,"aname");
-		AutoPositionInfo tempAutoPositionInfo=locationService.getAutoPositionInfo(pname, cname, aname);
-		resultMap.put("autoposition", tempAutoPositionInfo);
+		String cityid=getRequestParamter(request,"cityid");
+		AutoPositionInfo tempAutoPositionInfo=locationService.getAutoPositionInfo(cityid);
+		resultMap.put("simulateUrl", tempAutoPositionInfo.getSimulateexamurl());
+		resultMap.put("bookreceptionUrl", tempAutoPositionInfo.getBookreceptionurl());
 	}
 }

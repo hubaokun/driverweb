@@ -190,7 +190,12 @@ public class SuserAction extends BaseAction {
 	private String oldcoachid;
 
 	private String newcoachid;
+	
+	private String rphone;
+	
+	private int rtype;
 
+	private int flagresult;
 	/**
 	 * 得到学员列表
 	 * 
@@ -1508,9 +1513,18 @@ public String getStudentDetailByPhone() {
 		suserService.updateUserInfo(suser);
 		return SUCCESS;
 	}
-	
-	
-	
+  //后台重置验证码
+	@Action(value = "/gotoresetVerCode", results = { @Result(name = SUCCESS, location = "/resetVerCode.jsp") })
+	public String gotoresetVerCode(){
+		return SUCCESS;
+	}
+  //后台重置验证码
+	@Action(value = "/resetVerCode", results = { @Result(name = SUCCESS, location = "/gotoresetVerCode.do?flagresult=${flagresult}",type="redirect")})
+	public String resetVerCode(){
+	    flagresult=suserService.resetVerCode(rphone, rtype);
+		return SUCCESS;
+	}
+		
 	
 	
 	public Integer getPageCount() {
@@ -2056,4 +2070,35 @@ public String getStudentDetailByPhone() {
 	public void setNewcoachid(String newcoachid) {
 		this.newcoachid = newcoachid;
 	}
+
+
+	public String getRphone() {
+		return rphone;
+	}
+
+
+	public void setRphone(String rphone) {
+		this.rphone = rphone;
+	}
+
+
+	public int getRtype() {
+		return rtype;
+	}
+
+
+	public void setRtype(int rtype) {
+		this.rtype = rtype;
+	}
+
+
+	public int getFlagresult() {
+		return flagresult;
+	}
+
+
+	public void setFlagresult(int flagresult) {
+		this.flagresult = flagresult;
+	}
+	
 }

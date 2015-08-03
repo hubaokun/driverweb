@@ -1040,5 +1040,30 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		}
 		return result;
 	}
+    @Transactional(readOnly=false,propagation=Propagation.REQUIRED)
+	@Override
+	public int resetVerCode(String phone,int type) {
+		StringBuffer querystring=new StringBuffer();
+		querystring.append("from VerifyCodeInfo where phone = :phone and totype=:totype");
+		String[] params={"phone","totype"};
+		VerifyCodeInfo tempVerifyCodeInfo = (VerifyCodeInfo) dataDao.getFirstObjectViaParam(querystring.toString(), params, phone,type);
+		String newvcode=phone.substring(5, 11);
+		if(tempVerifyCodeInfo!=null)
+		{
+			tempVerifyCodeInfo.setCode(newvcode);
+			tempVerifyCodeInfo.setAddtime(new Date());
+            dataDao.updateObject(tempVerifyCodeInfo);
+		}
+		else
+		{
+			VerifyCodeInfo vc=new VerifyCodeInfo();
+			vc.setAddtime(new Date());
+			vc.setCode(newvcode);
+			vc.setTotype(type);
+			vc.setPhone(phone);
+			dataDao.addObject(vc);
+		}
+		return 1;
+	}
 
 }

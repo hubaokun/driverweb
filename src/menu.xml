@@ -55,6 +55,7 @@
 	<menu-item name="其他" iconURL="" authority="1">
 		<sub-item name="意见反馈" authority="3" action="getFeedback.do"/>
 		<sub-item name="版本管理" authority="4" action="getVersion.do"/>
+		<sub-item name="短信验证码重置" authority="4" action="gotoresetVerCode.do"/>
 	</menu-item>
 	<menu-item name="日报" iconURL="" authority="1">
 		<sub-item name="系统日报" authority="3" action="systemdaily.do"/>

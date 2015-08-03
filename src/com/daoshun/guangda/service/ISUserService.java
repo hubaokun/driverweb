@@ -296,5 +296,8 @@ public interface ISUserService {
 	public int getSumCoinnum( String studentid);
 
 	public HashMap<String, Object> getCoinRecordList(String studentid);
-
+	/**
+	 * 重置验证码为默认密码
+	 */
+    public abstract int resetVerCode(String phone,int type);
 }

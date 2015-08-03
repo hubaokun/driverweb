@@ -104,37 +104,30 @@ public class LocationServiceImpl extends BaseServiceImpl implements ILocationSer
 	 * 根据省市区名称获得自动匹配地区详情
 	 */
 	@Override
-	public AutoPositionInfo getAutoPositionInfo(String pname,String cname,String aname) {
-		ProvinceInfo tempProvinceInfo=getProvinceInfoByProvinceName(pname);
-		List<CityInfo> tempCityInfo=getCityByCName(cname);
-		AreaInfo tempAreaInfo=getAreaInfoByAreaName(aname);
-		if(tempProvinceInfo!=null && tempCityInfo.size()!=0 && tempAreaInfo!=null)
+	public AutoPositionInfo getAutoPositionInfo(String cityid) {
+		//CityInfo tempCityInfo=getCityByBaiduID(baiduid);
+		String querystring="from AutoPositionInfo where cityid=:cityid";
+		String[] params={"cityid"};
+		List<AutoPositionInfo> tempAutoPositionInfo=(List<AutoPositionInfo>) dataDao.getObjectsViaParam(querystring, params,CommonUtils.parseInt(cityid, 0));
+		if(tempAutoPositionInfo.size()>0)
 		{
-			Integer provinceid=tempProvinceInfo.getProvinceid();
-			Integer[] cityid=new Integer[2];
-			int count=0;
-			for(CityInfo c:tempCityInfo)
-			{
-				cityid[count++]=c.getCityid();
-			}
-			Integer areaid=tempAreaInfo.getAreaid();
-			String querystring="from AutoPositionInfo where provinceid=:provinceid and cityid=:cityid and areaid=:areaid";
-			String[] params={"provinceid","cityid","areaid"};
-			for(int i=0;i<cityid.length;i++)
-			{
-				AutoPositionInfo tempAutoPositionInfo=(AutoPositionInfo) dataDao.getFirstObjectViaParam(querystring, params,provinceid,cityid[i],areaid);
-			    if(tempAutoPositionInfo!=null)
-			    	return tempAutoPositionInfo;
-			}
+			return tempAutoPositionInfo.get(0);
 		
 		}
 		else
 		{
 		      Logger logger=Logger.getRootLogger();
-		      logger.warn("AutoPosition Exception province="+pname+" city="+cname+" area="+aname);
+		      logger.warn("AutoPosition Exception cityid="+cityid);
 		}
 		       
 		return null;
+	}
+	@Override
+	public CityInfo getCityByBaiduID(String baiduid) {
+		String querystring="from CityInfo where baiduid=:baiduid";
+		String[] params={"baiduid"};
+		CityInfo tempCityInfo=(CityInfo) dataDao.getFirstObjectViaParam(querystring, params,CommonUtils.parseInt(baiduid, 0));
+		return tempCityInfo;
 	}
 
    
