@@ -24,3 +24,18 @@ http://192.168.1.113:8080/xb/sorder?action=GETUNCOMPLETEORDER&studentid=19262
 		resultMap.put("money", suser.getMoney()==null?0:suser.getMoney());
 		
 		SUserServiceImpl类的getCanUseCoinnum方法获得可用小巴币
+2015-08-03
+t_coin_record 下巴币记录表 表字段说明
+receiverid  接收者id
+receivertype 接收者类型   2 教练  3 学员
+receivername  接收者姓名 
+
+payerid  支付者id
+payertype 支付者类型   2 教练  3 学员
+payername  支付者姓名
+coinnum  小巴币个数
+ownerid  
+ownertype 
+ownername
+
+
