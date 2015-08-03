@@ -1904,7 +1904,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 								}
 						}
 						
-						// 修改用户的余额，如果是paytype是1 余额  2 小巴卷 3 小巴币  如果1 ，2 
+						// 修改用户的余额，如果是paytype是1 余额  2 小巴卷 3 小巴币   
 
 						if (student != null) {
 							
@@ -1958,7 +1958,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 								/////////////////////////////////////////////
 								 CoinRecordInfo coinRecordInfo = new CoinRecordInfo ();
 							        coinRecordInfo.setReceiverid(cuser.getCoachid());
-							        coinRecordInfo.setReceivertype(UserType.COAH);//代表学员
+							        coinRecordInfo.setReceivertype(UserType.COAH);
 							        coinRecordInfo.setReceivername(cuser.getRealname());
 							        coinRecordInfo.setOwnerid(cuser.getCoachid());
 							        coinRecordInfo.setPayerid(student.getStudentid());
@@ -1968,6 +1968,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 							        coinRecordInfo.setOwnertype(2);
 							        coinRecordInfo.setCoinnum(total.intValue());
 							        coinRecordInfo.setAddtime(new Date());
+							        coinRecordInfo.setOrderid(orderList.get(m).mOrderInfo.getOrderid());//设置小巴币所属的订单的ID
 							        dataDao.addObject(coinRecordInfo);
 								///////////////////////////////////////////
 							}

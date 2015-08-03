@@ -1036,7 +1036,7 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 			        coinRecordInfo.setType(CoinType.REFUND);//退款
 			        coinRecordInfo.setOwnertype(2);
 			        coinRecordInfo.setCoinnum(order.getTotal().intValue());
-			       
+			        coinRecordInfo.setOrderid(order.getOrderid());//设置小巴币所属的订单的ID
 			        coinRecordInfo.setAddtime(new Date());
 			        dataDao.addObject(coinRecordInfo);
 				//学员+  教练-
