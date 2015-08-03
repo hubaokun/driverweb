@@ -1272,7 +1272,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		String params3[] = { "coachid" };
 
 		SuserInfo student = dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
-		if(student.getMoney().doubleValue()<0.0)// 余额不够
+		if(student.getMoney().doubleValue()<0.0||student.getFmoney().doubleValue()<0.0||student.getCoinnum()<0)// 余额不够
 		{
 			//版本需要更新
 			result.put("failtimes",11);
@@ -1349,7 +1349,9 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					delmoney= array.getInt("delmoney");
 				}else if("2".equals(paytype)){
 					recordid= array.getString("recordid");
-					if((recordid.lastIndexOf(',')==recordid.length()-1)|| recordid.split(",").length>times.length())
+					delmoney= array.getInt("delmoney");
+					//1.早起版本券的id尾巴上多了一个逗号,2.券的张数跟课时数不匹配,3.传了券id,但没传入delmoney的值
+					if((recordid.lastIndexOf(',')==recordid.length()-1)|| recordid.split(",").length>times.length()||(recordid.length()>0&& delmoney<=0))
 					{
 						//版本需要更新
 						result.put("failtimes", -1);
@@ -1358,7 +1360,6 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						result.put("code", -1);
 						return result;
 					}
-					delmoney= array.getInt("delmoney");
 				}else if("3".equals(paytype)){
 					delmoney= array.getInt("delmoney");
 				}
