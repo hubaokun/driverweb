@@ -607,6 +607,10 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 
 						cuser.setMoney(cuser.getMoney().add(addToCoach));
 						cuser.setTotaltime(cuser.getTotaltime() + order.getTime());
+						//取消教练的冻结小巴币
+						if(cuser.getFcoinnum()-order.getTotal().intValue()>=0){
+							cuser.setFcoinnum(cuser.getFcoinnum()-order.getTotal().intValue());
+						}
 						dataDao.updateObject(cuser);
 
 						// 教练的余额流水
