@@ -80,7 +80,7 @@ $(function(){
 						<th>真实姓名</th>
 						<th>电话号码</th>
 						<th>充值金额</th>
-						<th>账户</th>
+						<th>充值账号</th>
 						<th>申请处理时间</th>
 					</tr>
 					<s:iterator value="balanceStudentList" var="cuser" status="st">

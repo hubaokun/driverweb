@@ -606,6 +606,27 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 					balanceCoach.setPhone(coach.getPhone());
 				}
 			}
+			//获取学员充值账号(type=2并且state=1)
+			for (BalanceStudentInfo balanceCoach : balancecoachlist) {
+				//RechargeRecordInfo user = dataDao.getObjectById(RechargeRecordInfo.class, balanceCoach.getUserid());
+				
+				
+				Date addtime = balanceCoach.getAddtime();
+				StringBuffer suserhql = new StringBuffer();
+				suserhql.append("from RechargeRecordInfo where updatetime=:addtime order by userid asc");
+				String[] parms={"addtime"};
+				List<RechargeRecordInfo> users = (List<RechargeRecordInfo>)dataDao.pageQueryViaParam(suserhql.toString(),10, 1, parms,addtime);
+				String counthql = " select count(*) " + suserhql.toString();
+				long total = (long) dataDao.getFirstObjectViaParam(counthql, parms,addtime);
+	
+				QueryResult<RechargeRecordInfo> result = new QueryResult<RechargeRecordInfo>(users, total);
+				List<RechargeRecordInfo> userinfo= result.getDataList();
+				RechargeRecordInfo user = userinfo.get(0);
+				
+				if (user.getType()==2 && user.getState()==1) {
+					balanceCoach.setBuyer_email(user.getBuyer_email());
+				}
+			}
 		}
 		String counthql = " select count(*) " + cuserhql.toString();
 		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
