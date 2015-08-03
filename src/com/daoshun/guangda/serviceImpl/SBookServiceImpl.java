@@ -1534,7 +1534,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					delmoney= array.getInt("delmoney");
 				}else if("2".equals(paytype)){
 					recordid= array.getString("recordid");
-					if((recordid.lastIndexOf(',')==recordid.length()-1)|| recordid.split(",").length>times.length())
+					//1.早期版本券的id尾巴上多了一个逗号,2.券的张数跟课时数不匹配,3.传了券id,但没传入delmoney的值
+					if((recordid.lastIndexOf(',')==recordid.length()-1)|| recordid.split(",").length>times.length()||(recordid.length()>0&& delmoney<=0))
 					{
 						//版本需要更新
 						result.put("failtimes", -1);
@@ -1547,9 +1548,6 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				}else if("3".equals(paytype)){
 					delmoney= array.getInt("delmoney");
 				}
-				
-				
-				
 				
 				String start = "", end = "";// 订单的开始时间和结束时间
 				
@@ -1886,6 +1884,11 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						
 						// 小巴券，判断，如果 2 
 						if(2==orderList.get(m).mOrderInfo.getPaytype()){
+							
+							
+
+							
+							
 							total = total.subtract(new BigDecimal(orderList.get(m).mOrderInfo.getDelmoney()));// 减去小巴券中抵掉的金额
 								if (orderList.get(m).mOrderInfo.getCouponrecordid() != null && orderList.get(m).mOrderInfo.getCouponrecordid().length() > 0) {
 									String[] recordidArray = orderList.get(m).mOrderInfo.getCouponrecordid().split(",");
