@@ -389,9 +389,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			List<Integer> cids = new ArrayList<Integer>();
 			for (CaddAddressInfo info : addresslist) {
 				cids.add(info.getCoachid());
-				if(info.getCoachid()==157)
-					System.out.println(info.getCoachid());
-			}
+				}
 			//System.out.println(hqlCoach.toString());
 			List<CuserInfo> cuserlist = (List<CuserInfo>) dataDao.getObjectsViaParam(hqlCoach.toString(), paramsCoach, cids, now, now, now, now, now);
 			if (cuserlist != null && cuserlist.size() > 0) {
@@ -565,7 +563,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				if(info.getCoachid()==157)
 					System.out.println(info.getCoachid());
 			}*/
-			System.out.println(hqlCoach.toString());
+			//System.out.println(hqlCoach.toString());
 			List<CuserInfo> cuserlist = (List<CuserInfo>) dataDao.SqlPageQuery(hqlCoach.toString(), null, null,CuserInfo.class, null);
 			//List<CuserInfo> cuserlist = (List<CuserInfo>) dataDao.getObjectsViaParam(hqlCoach.toString(), paramsCoach, cids, now, now, now, now, now);
 			if (cuserlist != null && cuserlist.size() > 0) {
@@ -1551,12 +1549,12 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				}else if("3".equals(paytype)){
 					delmoney= array.getInt("delmoney");
 				}
-				System.out.println("##############################################");
+			/*	System.out.println("##############################################");
 				System.out.println("paytype="+paytype);
 				System.out.println("date1="+date1);
 				System.out.println("delmoney="+delmoney);
 				System.out.println("recordid="+recordid);
-				System.out.println("##############################################");
+				System.out.println("##############################################");*/
 				String start = "", end = "";// 订单的开始时间和结束时间
 				
 				BigDecimal total = new BigDecimal(0);// 订单的总价
@@ -1967,9 +1965,9 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 								}else{
 									//System.out.println("教练获取小巴币失败"+total.intValue());
 								}
-								//向小巴币记录表中插入数据 已修改，
+								//向小巴币记录表中插入数据 已修改，移动到结算方法中
 								/////////////////////////////////////////////
-								 CoinRecordInfo coinRecordInfo = new CoinRecordInfo ();
+								/* CoinRecordInfo coinRecordInfo = new CoinRecordInfo ();
 							        coinRecordInfo.setReceiverid(cuser.getCoachid());
 							        coinRecordInfo.setReceivertype(UserType.COAH);
 							        coinRecordInfo.setReceivername(cuser.getRealname());
@@ -1982,7 +1980,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 							        coinRecordInfo.setCoinnum(total.intValue());
 							        coinRecordInfo.setAddtime(new Date());
 							        coinRecordInfo.setOrderid(orderList.get(m).mOrderInfo.getOrderid());//设置小巴币所属的订单的ID
-							        dataDao.addObject(coinRecordInfo);
+							        dataDao.addObject(coinRecordInfo);*/
 								///////////////////////////////////////////
 							}
 							dataDao.updateObject(student);

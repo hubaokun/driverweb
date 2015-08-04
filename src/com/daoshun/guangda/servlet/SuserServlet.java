@@ -727,13 +727,16 @@ public class SuserServlet extends BaseServlet {
 		SuserInfo su=suserService.getUserById(studentid);
 		int coinsum=0;
 		double money=0;
+		int fcoinsum=0;
 		if(su!=null){
 			coinsum=su.getCoinnum();
 			money=su.getMoney().doubleValue();
+			fcoinsum=su.getFcoinnum().intValue();
 		}
 		resultMap.put("couponsum", sum);
 		resultMap.put("money", money);
 		resultMap.put("coinsum", coinsum);
+		resultMap.put("fcoinsum", fcoinsum);//冻结的小巴币
 	}
 
 

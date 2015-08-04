@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.daoshun.common.CoinType;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.PayType;
 import com.daoshun.common.QueryResult;
@@ -495,6 +496,24 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 						student.setFcoinnum(student.getFcoinnum().subtract(b1));
 						b1=b1.add(new BigDecimal(cuser.getCoinnum()));
 						cuser.setCoinnum(b1.intValue());
+						CoinRecordInfo coinRecordInfo = new CoinRecordInfo ();
+				        coinRecordInfo.setReceiverid(cuser.getCoachid());
+				        coinRecordInfo.setReceivertype(UserType.COAH);
+				        coinRecordInfo.setReceivername(cuser.getRealname());
+				       
+				        coinRecordInfo.setPayerid(student.getStudentid());
+				        coinRecordInfo.setPayertype(UserType.STUDENT);
+				        coinRecordInfo.setPayername(student.getRealname());
+				        coinRecordInfo.setType(CoinType.STUDENT_PAY);//学员支付
+				        
+				        coinRecordInfo.setOwnerid(cuser.getCoachid());
+				        coinRecordInfo.setOwnertype(2);
+				        coinRecordInfo.setOwnername(cuser.getRealname());
+				        
+				        coinRecordInfo.setCoinnum(order.getTotal().intValue());
+				        coinRecordInfo.setAddtime(new Date());
+				        coinRecordInfo.setOrderid(order.getOrderid());//设置小巴币所属的订单的ID
+				        dataDao.addObject(coinRecordInfo);
 					}
 					cuser.setTotaltime(cuser.getTotaltime() + order.getTime());
 					student.setLearn_time(student.getLearn_time() + order.getTime());
@@ -506,6 +525,10 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 					dataDao.updateObject(cuser);
 					dataDao.updateObject(student);
 				}
+				 	
+				
+				
+				
 				if(cuser!=null){
 					// 教练的流水修改
 					BalanceCoachInfo balanceCoach = new BalanceCoachInfo();
