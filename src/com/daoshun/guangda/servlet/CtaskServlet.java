@@ -563,7 +563,8 @@ public class CtaskServlet extends BaseServlet {
 			EvaluationInfo evaluationInfo = ctaskService.getEvaluationInfo(CommonUtils.parseInt(orderid, 0), CommonUtils.parseInt(userid, 0), 1);
 			if (evaluationInfo == null) {
 				OrderInfo orderInfo = (OrderInfo) ctaskService.getOrderInfo(CommonUtils.parseInt(orderid, 0));
-
+				CuserInfo cuser = ctaskService.getCoachInfoById(orderInfo.getCoachid());
+				SuserInfo student = ctaskService.getSuserInfoBysuserid(orderInfo.getStudentid());
 				if (orderInfo != null) {
 					List<ComplaintInfo> coplaint = ctaskService.getComplaintInfoByorderid(orderInfo.getOrderid());
 					if (coplaint != null && coplaint.size() > 0) {// 有投诉的话,无需处理
@@ -586,7 +587,7 @@ public class CtaskServlet extends BaseServlet {
 					evaluation.setAddtime(new Date());
 					ctaskService.addEvaluationInfo(evaluation, 2);
 
-					CuserInfo cuser = ctaskService.getCoachInfoById(orderInfo.getCoachid());
+					//CuserInfo cuser = ctaskService.getCoachInfoById(orderInfo.getCoachid());
 					if (cuser != null) {
 						List<EvaluationInfo> list = ctaskService.getEvaluationList(CommonUtils.parseInt(userid, 0), 1);
 						int count = 0;

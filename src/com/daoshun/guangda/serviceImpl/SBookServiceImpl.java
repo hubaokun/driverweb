@@ -21,6 +21,7 @@ import com.daoshun.common.ApplePushUtil;
 import com.daoshun.common.CoinType;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
+import com.daoshun.common.PayType;
 import com.daoshun.common.PushtoSingle;
 import com.daoshun.common.UserType;
 import com.daoshun.guangda.pojo.CBookTimeInfo;
@@ -1942,12 +1943,13 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 									result.put("message", "账户余额不足！");
 									return result;
 								}
-							}else if(3==orderList.get(m).mOrderInfo.getPaytype()){
+							}else if(PayType.COIN==orderList.get(m).mOrderInfo.getPaytype()){
 								BigDecimal cnum = new BigDecimal(student.getCoinnum());
 								double dc=cnum.subtract(total).doubleValue();
 								//小巴币大于0，并且剩余小巴币余额减去支付额大于等于0，表示余额购，否则余额不足
 								if(dc>=0){
 									student.setCoinnum((int)dc); //学员小巴币数量减少
+									student.setFcoinnum(student.getFcoinnum().add(total));
 								}else{
 									//不足
 									result.put("code", 6);

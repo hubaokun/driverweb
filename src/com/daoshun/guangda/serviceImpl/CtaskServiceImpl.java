@@ -455,7 +455,7 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 						BigDecimal b1=new BigDecimal(order.getTotal().intValue());
 						//设置学员冻结金额为
 						student.setFmoney(student.getFmoney().subtract(b1));
-						b1.add(cuser.getMoney());
+						b1=b1.add(cuser.getMoney());
 						cuser.setMoney(b1);
 					}else if(order.getPaytype()==PayType.COUPON){
 						// 查询订单中使用的优惠券的情况
@@ -496,7 +496,7 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 						BigDecimal b1=new BigDecimal(order.getTotal().intValue());
 						//设置学员冻结金额为
 						student.setFcoinnum(student.getFcoinnum().subtract(b1));
-						b1.add(new BigDecimal(cuser.getCoinnum()));
+						b1=b1.add(new BigDecimal(cuser.getCoinnum()));
 						cuser.setCoinnum(b1.intValue());
 					}
 					cuser.setTotaltime(cuser.getTotaltime() + order.getTime());

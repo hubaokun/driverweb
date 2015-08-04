@@ -617,7 +617,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 				String[] parms={"addtime"};
 				List<RechargeRecordInfo> users = (List<RechargeRecordInfo>)dataDao.pageQueryViaParam(suserhql.toString(),10, 1, parms,addtime);
 				String counthql = " select count(*) " + suserhql.toString();
-				long total = (long) dataDao.getFirstObjectViaParam(counthql, parms,addtime);
+				long total = (Long) dataDao.getFirstObjectViaParam(counthql, parms,addtime);
 	
 				QueryResult<RechargeRecordInfo> result = new QueryResult<RechargeRecordInfo>(users, total);
 				List<RechargeRecordInfo> userinfo= result.getDataList();
