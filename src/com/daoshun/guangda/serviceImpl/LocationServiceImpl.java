@@ -104,11 +104,11 @@ public class LocationServiceImpl extends BaseServiceImpl implements ILocationSer
 	 * 根据省市区名称获得自动匹配地区详情
 	 */
 	@Override
-	public AutoPositionInfo getAutoPositionInfo(String cityid) {
+	public AutoPositionInfo getAutoPositionInfo(String cityid,String provinceid) {
 		//CityInfo tempCityInfo=getCityByBaiduID(baiduid);
-		String querystring="from AutoPositionInfo where cityid=:cityid";
-		String[] params={"cityid"};
-		List<AutoPositionInfo> tempAutoPositionInfo=(List<AutoPositionInfo>) dataDao.getObjectsViaParam(querystring, params,CommonUtils.parseInt(cityid, 0));
+		String querystring="from AutoPositionInfo where cityid=:cityid and provinceid=:provinceid";
+		String[] params={"cityid","provinceid"};
+		List<AutoPositionInfo> tempAutoPositionInfo=(List<AutoPositionInfo>) dataDao.getObjectsViaParam(querystring, params,CommonUtils.parseInt(cityid, 0),CommonUtils.parseInt(provinceid, 0));
 		if(tempAutoPositionInfo.size()>0)
 		{
 			return tempAutoPositionInfo.get(0);
