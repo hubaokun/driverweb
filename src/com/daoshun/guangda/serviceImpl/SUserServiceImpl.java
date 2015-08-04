@@ -821,6 +821,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		user1.setFmoney(new BigDecimal(0));
 		user1.setToken(token);
 		user1.setToken_time(new Date());
+		user1.setFcoinnum(new BigDecimal(0));
 		dataDao.addObject(user1);
 		return user1;
 	}
