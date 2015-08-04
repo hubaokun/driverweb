@@ -50,3 +50,5 @@ http://localhost:8080/xb/sbook?action=GETNEARBYCOACH&radius=1000&condition1=1395
 3 学员使用小巴币预约教练成功后，转入给教练的小巴币会被冻结，直到双方互评结算后，冻结的小巴币数量才取消
 
 学员评价完订单后，就开始结算，并且把冻结的金额取消
+
+getWalletInfo 学员端 获取余额接口
