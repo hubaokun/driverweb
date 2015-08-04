@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : 小巴测试服数据库
-Source Server Version : 50543
-Source Host           : 120.25.236.228:3306
-Source Database       : db_guangda
+Source Server         : xiaoba
+Source Server Version : 50625
+Source Host           : localhost:3306
+Source Database       : driver
 
 Target Server Type    : MYSQL
-Target Server Version : 50543
+Target Server Version : 50625
 File Encoding         : 65001
 
-Date: 2015-08-04 16:58:34
+Date: 2015-08-04 18:04:37
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -815,25 +815,25 @@ INSERT INTO `t_autoposition` VALUES ('779', '231283', null, '231200', null, '230
 INSERT INTO `t_autoposition` VALUES ('780', '232721', null, '232700', null, '230000', null);
 INSERT INTO `t_autoposition` VALUES ('781', '232722', null, '232700', null, '230000', null);
 INSERT INTO `t_autoposition` VALUES ('782', '232723', null, '232700', null, '230000', null);
-INSERT INTO `t_autoposition` VALUES ('783', '310101', null, '310100', null, '310000', null);
-INSERT INTO `t_autoposition` VALUES ('784', '310103', null, '310100', null, '310000', null);
-INSERT INTO `t_autoposition` VALUES ('785', '310104', null, '310100', null, '310000', null);
-INSERT INTO `t_autoposition` VALUES ('786', '310105', null, '310100', null, '310000', null);
-INSERT INTO `t_autoposition` VALUES ('787', '310106', null, '310100', null, '310000', null);
-INSERT INTO `t_autoposition` VALUES ('788', '310107', null, '310100', null, '310000', null);
-INSERT INTO `t_autoposition` VALUES ('789', '310108', null, '310100', null, '310000', null);
-INSERT INTO `t_autoposition` VALUES ('790', '310109', null, '310100', null, '310000', null);
-INSERT INTO `t_autoposition` VALUES ('791', '310110', null, '310100', null, '310000', null);
-INSERT INTO `t_autoposition` VALUES ('792', '310112', null, '310100', null, '310000', null);
-INSERT INTO `t_autoposition` VALUES ('793', '310113', null, '310100', null, '310000', null);
-INSERT INTO `t_autoposition` VALUES ('794', '310114', null, '310100', null, '310000', null);
-INSERT INTO `t_autoposition` VALUES ('795', '310115', null, '310100', null, '310000', null);
-INSERT INTO `t_autoposition` VALUES ('796', '310116', null, '310100', null, '310000', null);
-INSERT INTO `t_autoposition` VALUES ('797', '310117', null, '310100', null, '310000', null);
-INSERT INTO `t_autoposition` VALUES ('798', '310118', null, '310100', null, '310000', null);
-INSERT INTO `t_autoposition` VALUES ('799', '310119', null, '310100', null, '310000', null);
-INSERT INTO `t_autoposition` VALUES ('800', '310120', null, '310100', null, '310000', null);
-INSERT INTO `t_autoposition` VALUES ('801', '310230', null, '310200', null, '310000', null);
+INSERT INTO `t_autoposition` VALUES ('783', '310101', null, '310000', null, '310000', null);
+INSERT INTO `t_autoposition` VALUES ('784', '310103', null, '310000', null, '310000', null);
+INSERT INTO `t_autoposition` VALUES ('785', '310104', null, '310000', null, '310000', null);
+INSERT INTO `t_autoposition` VALUES ('786', '310105', null, '310000', null, '310000', null);
+INSERT INTO `t_autoposition` VALUES ('787', '310106', null, '310000', null, '310000', null);
+INSERT INTO `t_autoposition` VALUES ('788', '310107', null, '310000', null, '310000', null);
+INSERT INTO `t_autoposition` VALUES ('789', '310108', null, '310000', null, '310000', null);
+INSERT INTO `t_autoposition` VALUES ('790', '310109', null, '310000', null, '310000', null);
+INSERT INTO `t_autoposition` VALUES ('791', '310110', null, '310000', null, '310000', null);
+INSERT INTO `t_autoposition` VALUES ('792', '310112', null, '310000', null, '310000', null);
+INSERT INTO `t_autoposition` VALUES ('793', '310113', null, '310000', null, '310000', null);
+INSERT INTO `t_autoposition` VALUES ('794', '310114', null, '310000', null, '310000', null);
+INSERT INTO `t_autoposition` VALUES ('795', '310115', null, '310000', null, '310000', null);
+INSERT INTO `t_autoposition` VALUES ('796', '310116', null, '310000', null, '310000', null);
+INSERT INTO `t_autoposition` VALUES ('797', '310117', null, '310000', null, '310000', null);
+INSERT INTO `t_autoposition` VALUES ('798', '310118', null, '310000', null, '310000', null);
+INSERT INTO `t_autoposition` VALUES ('799', '310119', null, '310000', null, '310000', null);
+INSERT INTO `t_autoposition` VALUES ('800', '310120', null, '310000', null, '310000', null);
+INSERT INTO `t_autoposition` VALUES ('801', '310230', null, '310000', null, '310000', null);
 INSERT INTO `t_autoposition` VALUES ('802', '320101', null, '320100', null, '320000', null);
 INSERT INTO `t_autoposition` VALUES ('803', '320102', null, '320100', null, '320000', null);
 INSERT INTO `t_autoposition` VALUES ('804', '320103', null, '320100', null, '320000', null);
@@ -2250,46 +2250,46 @@ INSERT INTO `t_autoposition` VALUES ('2214', '469036', null, '469000', null, '46
 INSERT INTO `t_autoposition` VALUES ('2215', '469037', null, '469000', null, '460000', null);
 INSERT INTO `t_autoposition` VALUES ('2216', '469038', null, '469000', null, '460000', null);
 INSERT INTO `t_autoposition` VALUES ('2217', '469039', null, '469000', null, '460000', null);
-INSERT INTO `t_autoposition` VALUES ('2218', '500101', null, '500100', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2219', '500102', null, '500100', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2220', '500103', null, '500100', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2221', '500104', null, '500100', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2222', '500105', null, '500100', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2223', '500106', null, '500100', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2224', '500107', null, '500100', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2225', '500108', null, '500100', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2226', '500109', null, '500100', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2227', '500110', null, '500100', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2228', '500111', null, '500100', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2229', '500112', null, '500100', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2230', '500113', null, '500100', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2231', '500114', null, '500100', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2232', '500115', null, '500100', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2233', '500222', null, '500200', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2234', '500223', null, '500200', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2235', '500224', null, '500200', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2236', '500225', null, '500200', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2237', '500226', null, '500200', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2238', '500227', null, '500200', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2239', '500228', null, '500200', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2240', '500229', null, '500200', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2241', '500230', null, '500200', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2242', '500231', null, '500200', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2243', '500232', null, '500200', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2244', '500233', null, '500200', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2245', '500234', null, '500200', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2246', '500235', null, '500200', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2247', '500236', null, '500200', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2248', '500237', null, '500200', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2249', '500238', null, '500200', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2250', '500240', null, '500200', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2251', '500241', null, '500200', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2252', '500242', null, '500200', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2253', '500243', null, '500200', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2254', '500381', null, '500300', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2255', '500382', null, '500300', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2256', '500383', null, '500300', null, '500000', null);
-INSERT INTO `t_autoposition` VALUES ('2257', '500384', null, '500300', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2218', '500101', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2219', '500102', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2220', '500103', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2221', '500104', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2222', '500105', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2223', '500106', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2224', '500107', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2225', '500108', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2226', '500109', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2227', '500110', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2228', '500111', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2229', '500112', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2230', '500113', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2231', '500114', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2232', '500115', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2233', '500222', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2234', '500223', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2235', '500224', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2236', '500225', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2237', '500226', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2238', '500227', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2239', '500228', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2240', '500229', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2241', '500230', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2242', '500231', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2243', '500232', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2244', '500233', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2245', '500234', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2246', '500235', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2247', '500236', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2248', '500237', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2249', '500238', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2250', '500240', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2251', '500241', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2252', '500242', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2253', '500243', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2254', '500381', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2255', '500382', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2256', '500383', null, '500000', null, '500000', null);
+INSERT INTO `t_autoposition` VALUES ('2257', '500384', null, '500000', null, '500000', null);
 INSERT INTO `t_autoposition` VALUES ('2258', '510101', null, '510100', null, '510000', null);
 INSERT INTO `t_autoposition` VALUES ('2259', '510104', null, '510100', null, '510000', null);
 INSERT INTO `t_autoposition` VALUES ('2260', '510105', null, '510100', null, '510000', null);
