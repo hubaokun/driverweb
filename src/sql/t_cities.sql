@@ -104,7 +104,6 @@ INSERT INTO `t_cities` VALUES ('71', '231000', '牡丹江市', '230000', 'M', '4
 INSERT INTO `t_cities` VALUES ('72', '231100', '黑河市', '230000', 'H', '39');
 INSERT INTO `t_cities` VALUES ('73', '231200', '绥化市', '230000', 'S', '44');
 INSERT INTO `t_cities` VALUES ('74', '232700', '大兴安岭地区', '230000', 'D', '38');
-INSERT INTO `t_cities` VALUES ('76', '310200', '县', '310000', 'X', '289');
 INSERT INTO `t_cities` VALUES ('77', '320100', '南京市', '320000', 'N', '315');
 INSERT INTO `t_cities` VALUES ('78', '320200', '无锡市', '320000', 'W', '317');
 INSERT INTO `t_cities` VALUES ('79', '320300', '徐州市', '320000', 'X', '316');
