@@ -63,13 +63,10 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 	}
 	public List<OrderInfo> getOrderNoExistAgreeInfoListBycoachid(String coachid, int page, int count) {
 		StringBuffer ctaskhql = new StringBuffer();
-		ctaskhql.append("select t.* from t_order t where coachid=");
+		ctaskhql.append("select t.* from t_order t where t.coachid=");
 		ctaskhql.append(coachid);
-		ctaskhql.append(" and (coachstate = 1 or coachstate = 0)");
-		ctaskhql.append(" and orderid not in (select orderid from t_order where studentstate=4 and coachstate=4 and coachid=");
-		ctaskhql.append(coachid);
-		ctaskhql.append(" )");
-		ctaskhql.append(" order by start_time asc");
+		ctaskhql.append(" and t.coachstate != 4 ");
+		ctaskhql.append(" order by t.start_time asc");
 		System.out.println(ctaskhql.toString());
 		//String[] params = { "coachid" };
 		List<OrderInfo> orderInfolist = (List<OrderInfo>) dataDao.SqlPageQuery(ctaskhql.toString(), count, page + 1,OrderInfo.class, null);

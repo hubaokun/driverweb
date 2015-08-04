@@ -211,7 +211,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			if (!CommonUtils.isEmptyString(studentid)) {
 				String timeString = date + " " + (i < 10 ? "0" + i : i) + ":00:00";
 				Date checkDate = CommonUtils.getDateFormat(timeString, "yyyy-MM-dd HH:mm:ss");
-				String hql3 = "from OrderInfo where studentid = :studentid and start_time <= :timeString and end_time > :timeString and studentstate <> 4";
+				String hql3 = "from OrderInfo where studentid = :studentid and start_time <= :timeString and end_time > :timeString and coachstate <>4";//教练的状态是4表示学员取消的订单已经被教练同意
 				String[] params3 = { "studentid", "timeString", "timeString" };
 				OrderInfo orderlist = (OrderInfo) dataDao.getFirstObjectViaParam(hql3, params3, CommonUtils.parseInt(studentid, 0), checkDate, checkDate);
 				if (orderlist != null) {
@@ -1918,7 +1918,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						if (student != null) {
 							
 							//  判断 1 或者 3  1 扣余额  2 扣小巴币 如果是小巴币，直接扣除  ，如果是余额，
-							if(1==orderList.get(m).mOrderInfo.getPaytype()){
+							if(PayType.MONEY==orderList.get(m).mOrderInfo.getPaytype()){
 								if(student.getMoney().subtract(total).doubleValue()<0){
 									result.put("code", 4);
 									result.put("message", "账户余额不足！");
@@ -1959,10 +1959,10 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 								//教练小巴币数量增加
 								//int coachid=orderList.get(m).mOrderInfo.getCoachid();
 								if(cuser!=null){
-									cuser.setCoinnum(cuser.getCoinnum()+total.intValue());
+									//cuser.setCoinnum(cuser.getCoinnum()+total.intValue());
 									//并且冻结教练订单总额的小巴币，直到双方互评后取消冻结，已防止在为评价前教练提现
-									cuser.setFcoinnum(cuser.getFcoinnum()+total.intValue());
-									dataDao.updateObject(cuser);
+									//cuser.setFcoinnum(cuser.getFcoinnum()+total.intValue());
+									//dataDao.updateObject(cuser);
 									//System.out.println("教练获取小巴币成功"+total.intValue());
 								}else{
 									//System.out.println("教练获取小巴币失败"+total.intValue());

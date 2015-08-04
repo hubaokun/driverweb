@@ -108,7 +108,7 @@ public class SuserInfo implements Serializable {
 	@Column(name = "fmoney", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")
 	private BigDecimal fmoney;
 	
-	@Column(name = "fcoinnum", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")
+	@Column(name = "fcoinnum", nullable = true, columnDefinition = "Decimal(20,2) default 0.00")
 	private BigDecimal fcoinnum;
 
 	// 账户余额
