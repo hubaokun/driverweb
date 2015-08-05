@@ -107,87 +107,16 @@
 	<div id="content">
 		<jsp:include page="left.jsp" />
 		<div id="content_form">
+			
 			<div id="content_form_top">
-				<form id="searchform" action="getCouponRecordList.do">
 					<div id="content_form_top">
 
-						<div class="searchbutton" onclick="searchfromsubmit();">
-							<img src="imgs/common/searchicon.png" width=22px height=22px
-								style="margin-top: 9px;">
+						<div class="searchbutton" style="width:70px;">
+							<div class="table_button_edit_icon"></div>
+							<div class="table_button_text" style="font-size: 12px;line-height: 38px;"><a href="getCouponRecordInfo.do" style="color:white;text-decoration:none;">返回</a></div>
 						</div>
 
-						<div class="serchcontentdiv"
-							style="float: left; margin-left: 50px; width: 156px">
-							<input type="text" class="searchdiv"
-								style="width: 50px; text-align: center; font-family: 微软雅黑;"
-								value="用户名" readonly="readonly"> <input id="username"
-								type="text" name="username" class="searchdiv"
-								style="width: 100px; font-family: 微软雅黑;" value="${username}"
-								maxlength="11" />
-						</div>
-
-						<div class="serchcontentdiv"
-							style="float: left; margin-left: 50px; width: 175px">
-							<input type="text" class="searchdiv"
-								style="width: 85px; text-align: center; font-family: 微软雅黑;"
-								value="优惠券类型" readonly="readonly"> <select
-								id="searchtype" name="coupontype" class="searchdiv"
-								style="width: 85px;">
-								<option id="searchtype0" value="">全部</option>
-								<option id="searchtype1" value="1">时间券</option>
-								<option id="searchtype2" value="2">抵价券</option>
-							</select> <input type="hidden" id="hiddencoupontype" value="${coupontype}">
-						</div>
-
-						<div class="serchcontentdiv"
-							style="float: left; margin-left: 50px; width: 196px">
-							<select id="ownertype" name="ownertype" class="searchdiv"
-								style="width: 100px;">
-								<option value="" selected="selected">全部</option>
-								<option value="0">平台发放</option>
-								<option value="1">驾校发放</option>
-								<option value="2">教练发放</option>
-							</select> <input type="hidden" id="hiddenownertype" value="${ownertype }">
-							<input id="inputordertotal" type="text" value="${ownerkey }"
-								name="ownerkey" class="searchdiv"
-								style="width: 91px; text-align: center; font-family: 微软雅黑;"
-								value="">
-						</div>
-
-						<div class="serchcontentdiv"
-							style="float: left; margin-left: 50px; width: 405px">
-							<input type="text" class="searchdiv"
-								style="width: 119px; text-align: center; font-family: 微软雅黑;"
-								value="到期时间" readonly="readonly"> <input id="starttime"
-								name="starttime"
-								onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})"
-								type="text" class="searchdiv"
-								style="width: 120px; text-align: center; font-family: 微软雅黑;"
-								value="${starttime}"> <input type="text"
-								class="searchdiv"
-								style="width: 30px; text-align: center; font-family: 微软雅黑;"
-								value="到" readonly="readonly"> <input id="endtime"
-								name="endtime"
-								onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})"
-								type="text" class="searchdiv"
-								style="width: 120px; text-align: center; font-family: 微软雅黑;"
-								value="${endtime}">
-						</div>
-
-						<div class="serchcontentdiv"
-							style="float: left; margin-left: 50px; width: 175px">
-							<input type="text" class="searchdiv"
-								style="width: 85px; text-align: center; font-family: 微软雅黑;"
-								value="优惠券状态" readonly="readonly"> <select id="state"
-								name="state" class="searchdiv" style="width: 85px;">
-								<option id="state0" value="">全部</option>
-								<option id="state0" value="0">未使用</option>
-								<option id="state1" value="1">已使用</option>
-								<option id="state2" value="2">已作废</option>
-							</select> <input type="hidden" id="hiddenstate" value="${state}">
-						</div>
 					</div>
-				</form>
 			</div>
 			<div id="content_form_table">
 				<table border="0" cellspacing="0" cellpadding="0"
@@ -198,6 +127,7 @@
 						<th>发券人</th>
 						<th>领取时间</th>
 						<th>使用状态</th>
+						<th>使用时间</th>
 						<th>使用截止日期</th>
 						<th>操作</th>
 					</tr>
@@ -220,6 +150,8 @@
 							<td style="width: 120px;" class="border_right_bottom"><s:if
 									test="state==0">未使用</s:if> <s:elseif test="state==1">已使用</s:elseif>
 								<s:else>已作废</s:else></td>
+							<td style="width: 200px;" class="border_right_bottom"><s:date
+									name="" format="yyyy-MM-dd HH:mm:ss" /></td>
 							<td style="width: 200px;" class="border_right_bottom"><s:date
 									name="end_time" format="yyyy-MM-dd HH:mm:ss" /></td>
 							<td style="width: 200px;" class="border_noright_bottom"><s:if
@@ -244,6 +176,8 @@
 
 									<input type="hidden" value="${pageCount }" id="pageSize" />
 									<input type="hidden" value="${pageIndex }" id="pageIndex" />
+									<input type="hidden" value="${userid }" id="userid" />
+									
 									<div id="untreatedpage"></div>
 									<script type="text/javascript">
 										//container 容器，count 总页数 pageindex 当前页数
@@ -252,17 +186,7 @@
 											var container = container;
 											var count = parseInt(count);
 											var pageindex = parseInt(pageindex);
-											var username = $("#username").val();
-											var coupontype = $(
-													"#searchtypetype").val();
-											var ownertype = $(
-													"#searchownertype").val();
-											var ownerkey = $("#inputordertotal")
-													.val();
-											var starttime = $("#starttime")
-													.val();
-											var endtime = $("#endtime").val();
-											var state = $("#hiddenstate").val();
+											var userid = $("#userid").val();
 											var a = [];
 											//总页数少于10 全部显示,大于10 显示前3 后3 中间3 其余....
 											if (pageindex == 1) {
@@ -271,57 +195,21 @@
 											} else {
 												a[a.length] = "<a onclick=\"previousPage("
 														+ pageindex
-														+ ",'getCouponRecordList.do?username="
-														+ username
-														+ "&coupontype="
-														+ coupontype
-														+ "&ownertype="
-														+ ownertype
-														+ "&ownerkey="
-														+ ownerkey
-														+ "&starttime="
-														+ starttime
-														+ "&endtime="
-														+ endtime
-														+ "&state="
-														+ state
+														+ ",'getCouponRecordList.do?userid="
+														+ userid
 														+ "&')\" class=\"page_prev\"></a>";
 											}
 											function setPageList() {
 												if (pageindex == i) {
-													a[a.length] = "<a onclick=\"goPage('getCouponRecordList.do?username="
-															+ username
-															+ "&coupontype="
-															+ coupontype
-															+ "&ownertype="
-															+ ownertype
-															+ "&ownerkey="
-															+ ownerkey
-															+ "&starttime="
-															+ starttime
-															+ "&endtime="
-															+ endtime
-															+ "&state="
-															+ state
+													a[a.length] = "<a onclick=\"goPage('getCouponRecordList.do?userid="
+															+ userid
 															+ "&',"
 															+ i
 															+ ")\" class=\"on\">"
 															+ i + "</a>";
 												} else {
-													a[a.length] = "<a onclick=\"goPage('getCouponRecordList.do?username="
-															+ username
-															+ "&coupontype="
-															+ coupontype
-															+ "&ownertype="
-															+ ownertype
-															+ "&ownerkey="
-															+ ownerkey
-															+ "&starttime="
-															+ starttime
-															+ "&endtime="
-															+ endtime
-															+ "&state="
-															+ state
+													a[a.length] = "<a onclick=\"goPage('getCouponRecordList.do?userid="
+															+ userid
 															+ "&',"
 															+ i
 															+ ")\">"
@@ -341,77 +229,29 @@
 													for ( var i = 1; i <= 5; i++) {
 														setPageList();
 													}
-													a[a.length] = "...<a onclick=\"goPage('getCouponRecordList.do?username="
-															+ username
-															+ "&coupontype="
-															+ coupontype
-															+ "&ownertype="
-															+ ownertype
-															+ "&ownerkey="
-															+ ownerkey
-															+ "&starttime="
-															+ starttime
-															+ "&endtime="
-															+ endtime
-															+ "&state="
-															+ state
+													a[a.length] = "...<a onclick=\"goPage('getCouponRecordList.do?userid="
+															+ userid
 															+ "&',"
 															+ count
 															+ ")\">"
 															+ count + "</a>";
 												} else if (pageindex >= count - 3) {
-													a[a.length] = "<a onclick=\"goPage('getCouponRecordList.do?username="
-															+ username
-															+ "&coupontype="
-															+ coupontype
-															+ "&ownertype="
-															+ ownertype
-															+ "&ownerkey="
-															+ ownerkey
-															+ "&starttime="
-															+ starttime
-															+ "&endtime="
-															+ endtime
-															+ "&state="
-															+ state
+													a[a.length] = "<a onclick=\"goPage('getCouponRecordList.do?userid="
+															+ userid
 															+ "&',1)\">1</a>...";
 													for ( var i = count - 4; i <= count; i++) {
 														setPageList();
 													}
 													;
 												} else { //当前页在中间部分
-													a[a.length] = "<a onclick=\"goPage('getCouponRecordList.do?username="
-															+ username
-															+ "&coupontype="
-															+ coupontype
-															+ "&ownertype="
-															+ ownertype
-															+ "&ownerkey="
-															+ ownerkey
-															+ "&starttime="
-															+ starttime
-															+ "&endtime="
-															+ endtime
-															+ "&state="
-															+ state
+													a[a.length] = "<a onclick=\"goPage('getCouponRecordList.do?userid="
+															+ userid
 															+ "&',1)\">1</a>...";
 													for ( var i = pageindex - 2; i <= pageindex + 2; i++) {
 														setPageList();
 													}
-													a[a.length] = "...<a onclick=\"goPage('getCouponRecordList.do?username="
-															+ username
-															+ "&coupontype="
-															+ coupontype
-															+ "&ownertype="
-															+ ownertype
-															+ "&ownerkey="
-															+ ownerkey
-															+ "&starttime="
-															+ starttime
-															+ "&endtime="
-															+ endtime
-															+ "&state="
-															+ state
+													a[a.length] = "...<a onclick=\"goPage('getCouponRecordList.do?userid="
+															+ userid
 															+ "&',"
 															+ count
 															+ ")\">"
@@ -423,20 +263,8 @@
 														+ count
 														+ "页  到第  "
 														+ "<input type=\"text\" class=\"jump_num\" id=\"topage\"/> 页"
-														+ "<a class=\"jump_btn\" onclick=\"gotoPage('getCouponRecordList.do?username="
-														+ username
-														+ "&coupontype="
-														+ coupontype
-														+ "&ownertype="
-														+ ownertype
-														+ "&ownerkey="
-														+ ownerkey
-														+ "&starttime="
-														+ starttime
-														+ "&endtime="
-														+ endtime
-														+ "&state="
-														+ state
+														+ "<a class=\"jump_btn\" onclick=\"gotoPage('getCouponRecordList.do?userid="
+														+ userid
 														+ "&',"
 														+ $("#pageSize").val()
 														+ ")\")\">"
@@ -444,39 +272,15 @@
 											} else {
 												a[a.length] = "<a onclick=\"nextPage("
 														+ $("#pageIndex").val()
-														+ ",'getCouponRecordList.do?username="
-														+ username
-														+ "&coupontype="
-														+ coupontype
-														+ "&ownertype="
-														+ ownertype
-														+ "&ownerkey="
-														+ ownerkey
-														+ "&starttime="
-														+ starttime
-														+ "&endtime="
-														+ endtime
-														+ "&state="
-														+ state
+														+ ",'getCouponRecordList.do?userid="
+														+ userid
 														+ "&')\" "
 														+ "class=\"page_next\"></a> 共"
 														+ count
 														+ "页 到第 "
 														+ "<input type=\"text\" class=\"jump_num\" id=\"topage\"/> 页"
-														+ "<a class=\"jump_btn\" onclick=\"gotoPage('getCouponRecordList.do?username="
-														+ username
-														+ "&coupontype="
-														+ coupontype
-														+ "&ownertype="
-														+ ownertype
-														+ "&ownerkey="
-														+ ownerkey
-														+ "&starttime="
-														+ starttime
-														+ "&endtime="
-														+ endtime
-														+ "&state="
-														+ state
+														+ "<a class=\"jump_btn\" onclick=\"gotoPage('getCouponRecordList.do?userid="
+														+ userid
 														+ "&',"
 														+ $("#pageSize").val()
 														+ ")\">"
@@ -486,8 +290,7 @@
 											container.innerHTML = a.join("");
 										}
 										setPage(
-												document
-														.getElementById("untreatedpage"),
+												document.getElementById("untreatedpage"),
 												parseInt($("#pageSize").val()),
 												parseInt($("#pageIndex").val()));
 									</script>
