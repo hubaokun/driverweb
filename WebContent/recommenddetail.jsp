@@ -102,8 +102,8 @@ function searchbegin()
 </style>
 <title>邀请详情</title>
 </head>
-<input type="hidden" id="index" value="9" />
-<input type="hidden" id="change_id" value="0"/>
+<input type="hidden" id="index" value="1" />
+<input type="hidden" id="change_id" value="5"/>
 <body onload="getTop()" style="min-width: 1500px">
 	<div id="content">
 		<jsp:include page="left.jsp" />
