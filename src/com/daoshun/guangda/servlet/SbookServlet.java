@@ -296,9 +296,19 @@ public class SbookServlet extends BaseServlet {
 		String condition9 = getRequestParamter(request, "condition9");// 价格上限
 		String condition10 = getRequestParamter(request, "condition10");// 车型 0.表示不限
 		String condition11 = getRequestParamter(request, "condition11");// 准教车型
-
+		String studentid = getRequestParamter(request, "studentid");// 准教车型
+		
 		List<CuserInfo> coachlist = sbookService.getNearByCoach2(pointcenter, radius, condition1, condition2, condition3, condition4, condition5, condition6, condition8, condition9, condition10,
 				condition11);
+		
+			if(studentid==null || !"18".equals(studentid)){
+				for (CuserInfo cuserInfo : coachlist) {
+					if(cuserInfo.getCoachid()==13){
+						coachlist.remove(cuserInfo);
+						break;
+					}
+				}
+			}
 		resultMap.put("coachlist", coachlist);
 	}
 
@@ -319,7 +329,7 @@ public class SbookServlet extends BaseServlet {
 		String longitude = getRequestParamter(request, "longitude");//经纬度
 		String latitude = getRequestParamter(request, "latitude");
 		String cityid = getRequestParamter(request, "cityid");//城市ID
-		
+		String studentid = getRequestParamter(request, "studentid");//
 		/*CommonUtils.validateEmpty(longitude);
 		CommonUtils.validateEmpty(latitude);
 		CommonUtils.validateEmpty(cityid);*/
@@ -327,6 +337,15 @@ public class SbookServlet extends BaseServlet {
 		//HashMap<String, Object> result = sbookService.getCoachList(condition1, condition2, condition3, condition4, condition5, condition6, condition8, condition9, condition10, condition11, pagenum);
 		
 		HashMap<String, Object> result = sbookService.getCoachList2(cityid,condition1, condition2, condition3, condition4, condition5, condition6, condition8, condition9, condition10, condition11, pagenum);
+		List<CuserInfo> list=(List<CuserInfo>) result.get("coachlist");
+		if(studentid==null || !"18".equals(studentid)){
+			for (CuserInfo cuserInfo : list) {
+				if(cuserInfo.getCoachid()==13){
+					list.remove(cuserInfo);
+					break;
+				}
+			}
+		}
 		resultMap.putAll(result);
 	}
 

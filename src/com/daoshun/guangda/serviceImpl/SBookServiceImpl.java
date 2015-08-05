@@ -883,6 +883,9 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		cuserhql.append(" and money >= gmoney and isquit = 0 and state=2 order by score desc,drive_schoolid desc ");
 		//System.out.println(cuserhql.toString());
 		List<CuserInfo> coachlist = (List<CuserInfo>) dataDao.SqlPageQuery(cuserhql.toString(), Constant.USERLIST_SIZE+1, CommonUtils.parseInt(pagenum, 0) + 1,CuserInfo.class, null);
+		
+		
+		
 		//System.out.println(cuserhql.toString());
 		//String[] params = { "now", "now", "now", "now" };
 		//String now = CommonUtils.getTimeFormat(new Date(), "yyyy-MM-dd");
