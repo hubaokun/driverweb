@@ -417,6 +417,11 @@ public class SbookServlet extends BaseServlet {
 		}
 		//int num=suserService.getCanUseCoinnum(coachid,studentid);//获取可用小巴币
 		SuserInfo suser=suserService.getUserById(studentid);//获取余额
+		if(suser==null){
+				resultMap.put(Constant.CODE, 2);
+				resultMap.put(Constant.MESSAGE, "根据studentid查询不到此学员");
+				return;
+		}
 		resultMap.put("couponlist", list);
 		resultMap.put("coinnum", suser.getCoinnum());//可用小巴币
 		resultMap.put("money", suser.getMoney()==null?0:suser.getMoney());
