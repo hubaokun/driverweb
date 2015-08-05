@@ -350,7 +350,7 @@ public class SorderServlet extends BaseServlet {
 		String pagenum = getRequestParamter(request, "pagenum");
 		CommonUtils.validateEmpty(studentid);
 		List<OrderInfo> orderlist = sorderService.getWaitEvaluationOrder(studentid, pagenum);
-		int hasmore = sorderService.getWaitEvaluationOrderMore(studentid, pagenum + 1);
+		int hasmore = sorderService.getWaitEvaluationOrderMore(studentid, String.valueOf(CommonUtils.parseInt(pagenum, 0)+ 1));
 		resultMap.put("hasmore", hasmore);
 		resultMap.put("orderlist", orderlist);
 	}
@@ -382,7 +382,7 @@ public class SorderServlet extends BaseServlet {
 		String pagenum = getRequestParamter(request, "pagenum");
 		CommonUtils.validateEmpty(studentid);
 		List<OrderInfo> orderlist = sorderService.getCompleteOrder(studentid, pagenum);
-		int hasmore = sorderService.getCompleteOrderMore(studentid, pagenum + 1);
+		int hasmore = sorderService.getCompleteOrderMore(studentid,String.valueOf(CommonUtils.parseInt(pagenum, 0)+ 1));
 		resultMap.put("hasmore", hasmore);
 		resultMap.put("orderlist", orderlist);
 	}
