@@ -1052,9 +1052,10 @@ public class CscheduleServlet extends BaseServlet {
 				} else if (CommonUtils.parseInt(type, 0) == 2) {
 					cscheduleInfo.setState(0);// 状态为休息
 					cuserService.updateObject(cscheduleInfo);
-				}
+				} 
 			}
-
+			//根据教练当前开课状态来设置教练表中coursestate
+			cscheduleService.getCoachStateByFunction(coachid, 5,day, 5, 23, 0);
 			resultMap.put("code", 1);
 			resultMap.put("message", "设置成功");
 			resultMap.put("type", cscheduleInfo.getState());

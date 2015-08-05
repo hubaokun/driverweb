@@ -1,6 +1,7 @@
 package com.daoshun.guangda.service;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import com.daoshun.guangda.pojo.CBookTimeInfo;
@@ -102,4 +103,9 @@ public interface ICscheduleService {
 	public List<CscheduleInfo> getCscheduleInfoByDatelist(String date, String coachid);
 
 	public CBookTimeInfo getcoachbooktime(String hour, int coachid, String date);
+	
+	/**
+	 * 调用函数来确定教练是否开课
+	 */
+	public void getCoachStateByFunction(String coachid,int datacount,String day,int starthour,int endhour,int subjectid);
 }
