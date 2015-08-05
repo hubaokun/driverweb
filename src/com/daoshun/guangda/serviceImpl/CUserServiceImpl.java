@@ -1238,5 +1238,12 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
         long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
         return new QueryResult<CuserInfo>(cuserInfolist, total);
     }
+    /**
+     * 重置教练开课状态
+     */
+	@Override
+	public void resetCoachCoursestate() {
+		dataDao.callUpdatecoursestate();
+	}
 
 }

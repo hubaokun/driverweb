@@ -1459,7 +1459,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 
 		String hql3 = "from CaddAddressInfo where coachid =:coachid and iscurrent = 1";
 		String params3[] = { "coachid" };
-
+		
+		
 		SuserInfo student = dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
 		if(student.getMoney().doubleValue()<0.0||student.getFmoney().doubleValue()<0.0||student.getCoinnum()<0)// 余额不够
 		{

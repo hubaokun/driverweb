@@ -2,7 +2,9 @@ package com.daoshun.guangda.action;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -516,7 +518,25 @@ public class SystemConfigAction extends BaseAction {
 		systemSetInfo=cuserService.getSystemSetInfo();
 		return SUCCESS;
 	}
-
+	
+	/**显示重置教练开课状态页面
+	 * @return
+	 */
+	@Action(value = "/showResetCoachCoursestate", results = { @Result(name = SUCCESS, location = "/restcoachstate.jsp") })
+	public String showResetCoachCoursestate(){
+		return SUCCESS;
+	}
+	/**重置教练开课状态
+	 * @return
+	 */
+	@Action(value = "/resetCoachCoursestate")
+	public void resetCoachCoursestate(){
+		cuserService.resetCoachCoursestate();
+		Map map=new HashMap();
+		map.put("code", "0");
+		map.put("message", "重置成功!");
+		strToJson(map);
+	}
 	/**
 	 *
 	 */

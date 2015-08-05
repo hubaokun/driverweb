@@ -439,4 +439,12 @@ public class DataDao {
 		List<Object> list = query.list();
 		return list;
 	}
+	/**
+	 * 重置教练开课状态
+	 */
+	public void callUpdatecoursestate(){
+		Session session=this.getSession();
+		SQLQuery query= session.createSQLQuery("{Call updatecoursestate()}");
+		query.executeUpdate();
+	}
 }

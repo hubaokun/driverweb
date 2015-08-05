@@ -211,7 +211,7 @@ public class CuserInfo implements Serializable {
 	private String selfeval;
 
 	// 教练等级
-	@Column(name = "level", length = 1)
+	@Column(name = "level", length = 1, columnDefinition = "INT default 0")
 	private int level;
 
 	// 教练注册时间

@@ -462,25 +462,34 @@ public class CmyServiceImpl extends BaseServiceImpl implements ICmyService {
 	@Override
 	public HashMap<String, Object> applyCoin(String coachid, Integer applyCoinNum) {
 		HashMap<String, Object> result = new HashMap<String, Object>();
-
-		CoinRecordInfo c = new CoinRecordInfo();
-		c.setCoinnum(applyCoinNum);
-		c.setAddtime(new Date());
-		c.setPayerid(Integer.parseInt(coachid));
-		c.setPayertype(UserType.COAH);//3代表教练
-		c.setOwnertype(UserType.COAH);//3代表教练
-		c.setReceiverid(1);//1平台id
-		c.setReceivertype(UserType.PLATFORM);//1代表平台
-		c.setOwnerid(Integer.parseInt(coachid));//1平台id
-
-			CuserInfo cuser = dataDao.getObjectById(CuserInfo.class, CommonUtils.parseInt(coachid, 0));
-
+		CuserInfo cuser = dataDao.getObjectById(CuserInfo.class, CommonUtils.parseInt(coachid, 0));
 			if (cuser != null) {
-				cuser.setCoinnum(cuser.getCoinnum()-applyCoinNum);
-				dataDao.updateObject(cuser);
-				dataDao.addObject(c);
-				result.put("code", 1);
-				result.put("message", "申请提交成功");
+				if(cuser.getCoinnum()<applyCoinNum){
+					result.put("code", 4);
+					result.put("message", "小巴币余额不足兑换");
+				}else{
+					cuser.setCoinnum(cuser.getCoinnum()-applyCoinNum);
+					dataDao.updateObject(cuser);
+					CoinRecordInfo c = new CoinRecordInfo();
+					c.setCoinnum(applyCoinNum);
+					c.setAddtime(new Date());
+					
+					c.setPayerid(Integer.parseInt(coachid));
+					c.setPayertype(UserType.COAH);//3代表教练
+					c.setPayername(cuser.getRealname());
+					
+					c.setOwnerid(Integer.parseInt(coachid));//1平台id
+					c.setOwnertype(UserType.COAH);//3代表教练
+					c.setOwnername(cuser.getRealname());
+					
+					c.setReceiverid(1);//1平台id
+					c.setReceivertype(UserType.PLATFORM);//1代表平台
+					c.setReceivername("平台");
+					
+					dataDao.addObject(c);
+					result.put("code", 1);
+					result.put("message", "申请提交成功");
+				}
 			} else {
 				result.put("code", 3);
 				result.put("message", "用户不存在");

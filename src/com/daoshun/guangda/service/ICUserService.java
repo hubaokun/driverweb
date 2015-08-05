@@ -186,6 +186,8 @@ public interface ICUserService {
 
 	/** 得到系统配置的信息 **/
 	public abstract SystemSetInfo getSystemSetInfo();
+	/** 重置教练开课状态**/
+	public abstract void resetCoachCoursestate();
 
 	/** 根据id找到系统配置信息 **/
 	public abstract SystemSetInfo getSystemSetInfoByid(int dateid);
