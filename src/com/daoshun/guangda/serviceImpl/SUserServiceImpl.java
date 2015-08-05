@@ -336,7 +336,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			latertime.set(Calendar.SECOND, 59);
 			Date timelater = latertime.getTime();
 			String newtimelater = CommonUtils.getTimeFormat(timelater, "yyyy-MM-dd");
-			cuserhql.append(" and addtime <= '" + newtimelater + "'");
+			cuserhql.append(" and DATE(addtime) <= '" + newtimelater + "'");
 		}
 		if (!CommonUtils.isEmptyString(minsdate)) {
 			Date newminsdate = CommonUtils.getDateFormat(minsdate, "yyyy-MM-dd");
@@ -347,7 +347,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			nowtime.set(Calendar.SECOND, 0);
 			Date starttime = nowtime.getTime();
 			String newtoday = CommonUtils.getTimeFormat(starttime, "yyyy-MM-dd");
-			cuserhql.append(" and addtime >= '" + newtoday + "'");
+			cuserhql.append(" and DATE(addtime) >= '" + newtoday + "'");
 		}
 		List<SuserInfo> suserInfolist = (List<SuserInfo>) dataDao.pageQueryViaParam(cuserhql.toString() + " order by id desc", pagesize, pageIndex, null);
 		String counthql = " select count(*) " + cuserhql.toString();
