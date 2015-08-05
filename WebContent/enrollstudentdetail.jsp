@@ -306,7 +306,7 @@ function dataExport(){
 	
 	<!-- 数据导出弹框 -->
 	<div id="alertbox" class="alertbox"></div>
-	<div id="alertbox_sec" style="position: fixed; width: 100%; height: 500px;z-index: 300;">
+	<div id="alertbox_sec" style="position: fixed; width: 85%;left:15% height: 500px;z-index: 300;">
 		<div id="alertbox_last" class="alertbox_last">
 		<div style="position: fixed; width: 500px; height: 250px;background: #4cc2ff;margin-left: 50px;margin-top: 50px;">
 		<div style="font-size: 15px;width: 110px;margin: auto;">请选择导出信息</div>
