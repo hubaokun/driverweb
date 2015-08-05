@@ -79,6 +79,8 @@ public class CouponAction extends BaseAction {
 	private String endtime;
 
 	private Integer value;
+	
+	private int userid;
 
 	private Integer valuetype;
 
@@ -144,7 +146,7 @@ public class CouponAction extends BaseAction {
 		QueryResult<CouponInfo> result = couponService.getCouponListByPage(pageIndex, 15, coupontype, starttime, endtime, value, valuetype, ownertype, ownerkey);
 		couponlist = result.getDataList();
 		total = (int) result.getTotal();
-		pageCount = (total + 9) / 15;
+		pageCount = (total + 14) / 15;
 		if (pageIndex > 1) {
 			if (couponlist == null || couponlist.size() == 0) {
 				pageIndex--;
@@ -161,10 +163,10 @@ public class CouponAction extends BaseAction {
 	 */
 	@Action(value = "getCouponRecordList", results = { @Result(name = SUCCESS, location = "/couponrecordlist.jsp") })
 	public String getCouponRecordList() {
-		QueryResult<CouponRecord> result = couponService.getCouponReecordListByPage(pageIndex, 15, username, coupontype, starttime, endtime, value, valuetype, ownertype, ownerkey, state);
+		QueryResult<CouponRecord> result = couponService.getCouponReecordListByPage(pageIndex, 15, username, coupontype, starttime, endtime, value, valuetype, ownertype, ownerkey, state,userid);
 		couponrecordlist = result.getDataList();
 		total = (int) result.getTotal();
-		pageCount = (total + 9) / 15;
+		pageCount = (total + 14) / 15;
 		if (pageIndex > 1) {
 			if (couponrecordlist == null || couponrecordlist.size() == 0) {
 				pageIndex--;
@@ -173,6 +175,28 @@ public class CouponAction extends BaseAction {
 		}
 		return SUCCESS;
 	}
+	
+	
+	/**
+	 * 得到小巴券领取记录
+	 * 
+	 * @return
+	 */
+	@Action(value = "getCouponRecordInfo", results = { @Result(name = SUCCESS, location = "/couponrecordInfo.jsp") })
+	public String getCouponRecordInfo() {
+		QueryResult<CouponRecord> result = couponService.getCouponReecordInfoByPage(pageIndex, 15, username, coupontype, starttime, endtime, value, valuetype, ownertype, ownerkey, state);
+		couponrecordlist = result.getDataList();
+		total = (int) result.getTotal();
+		pageCount = (total + 14) / 15;
+		if (pageIndex > 1) {
+			if (couponrecordlist == null || couponrecordlist.size() == 0) {
+				pageIndex--;
+				getCouponRecordList();
+			}
+		}
+		return SUCCESS;
+	}
+
 
 	// /**
 	// * 得到作废的优惠券列表
@@ -824,4 +848,14 @@ public class CouponAction extends BaseAction {
 	public void setState(Integer state) {
 		this.state = state;
 	}
+
+	public int getUserid() {
+		return userid;
+	}
+
+	public void setUserid(int userid) {
+		this.userid = userid;
+	}
+	
+	
 }

@@ -31,6 +31,9 @@ public interface ICouponService {
 	public abstract void addCouponRecord(CouponRecord couponrecord);
 
 	public abstract QueryResult<CouponRecord> getCouponReecordListByPage(int pageIndex, int pageSize, String name, Integer coupontype, String starttime, String endtime, Integer value,
+			Integer valuetype, Integer ownertype, String ownerkey, Integer state,int userid);
+	
+	public abstract QueryResult<CouponRecord> getCouponReecordInfoByPage(int pageIndex, int pageSize, String name, Integer coupontype, String starttime, String endtime, Integer value,
 			Integer valuetype, Integer ownertype, String ownerkey, Integer state);
 
 	public abstract QueryResult<CouponRecord> getCancelCouponReecordListByPage(int pageIndex, int pageSize, String name, Integer coupontype, String starttime, String endtime, Integer value,

@@ -124,12 +124,16 @@ public class CouponServiceImpl extends BaseServiceImpl implements ICouponService
 	@SuppressWarnings("unchecked")
 	@Override
 	public QueryResult<CouponRecord> getCouponReecordListByPage(int pageIndex, int pageSize, String name, Integer coupontype, String starttime, String endtime, Integer value, Integer valuetype,
-			Integer ownertype, String ownerkey, Integer state) {
+			Integer ownertype, String ownerkey, Integer state,int userid) {
 		StringBuffer couponhql = new StringBuffer();
 		if(state != null){
 			couponhql.append(" from CouponRecord where state = " + state);
 		}else{
 			couponhql.append(" from CouponRecord where 1 = 1");
+		}
+		
+		if (!CommonUtils.isEmptyString(String.valueOf(userid))){
+			couponhql.append(" and userid="+userid);
 		}
 		
 		if (!CommonUtils.isEmptyString(name)) {
@@ -194,6 +198,110 @@ public class CouponServiceImpl extends BaseServiceImpl implements ICouponService
 		}
 		String counthql = couponhql.insert(0, " select count(*)").toString();
 		long count = (Long) dataDao.getFirstObjectViaParam(counthql, null);
+		//System.out.print(count);
+		QueryResult<CouponRecord> result = new QueryResult<CouponRecord>(CouponRecordlist, count);
+		return result;
+	}
+	
+//获得小巴券领取记录
+	@SuppressWarnings("unchecked")
+	@Override
+	public QueryResult<CouponRecord> getCouponReecordInfoByPage(int pageIndex, int pageSize, String name, Integer coupontype, String starttime, String endtime, Integer value, Integer valuetype,
+			Integer ownertype, String ownerkey, Integer state) {
+		StringBuffer couponhql = new StringBuffer();
+		
+		
+		//couponhql.append("from CouponRecord cr group by cr.userid");
+		
+		if(state != null){
+			couponhql.append(" from CouponRecord cr  where state = " + state);
+		}else{
+			couponhql.append(" from CouponRecord cr  where 1 = 1");
+		}
+		
+		if (!CommonUtils.isEmptyString(name)) {
+			couponhql.append(" and userid in ( select studentid from SuserInfo where realname like '%" + name + "%' or phone like '%" + name + "%')");
+		}
+		if (coupontype != null) {
+			couponhql.append(" and coupontype = " + coupontype);
+		}
+		if (!CommonUtils.isEmptyString(starttime)) {
+			starttime = starttime + " 00:00:00";
+			couponhql.append(" and end_time > '" + starttime + "'");
+		}
+
+		if (!CommonUtils.isEmptyString(endtime)) {
+			endtime = endtime + " 23:59:59";
+			couponhql.append(" and end_time <= '" + endtime + "'");
+		}
+		if (ownertype != null) {
+			couponhql.append(" and ownertype = " + ownertype);
+			if (ownertype == 1) {
+				if (!CommonUtils.isEmptyString(ownerkey)) {
+					couponhql.append(" and ownerid in ( select schoolid from DriveSchoolInfo where name like '%" + ownerkey + "%')");
+				}
+			} else if (ownertype == 2) {
+				if (!CommonUtils.isEmptyString(ownerkey)) {
+					couponhql.append(" and ownerid in ( select coachid from CuserInfo where realname like '%" + ownerkey + "%')");
+				}
+			}
+		}
+		if (value != null) {
+			if (valuetype == 1) {
+				couponhql.append(" and value >" + value);
+			} else if (valuetype == 2) {
+				couponhql.append(" and value =" + value);
+			} else if (valuetype == 3) {
+				couponhql.append(" and value <" + value);
+			}
+		}
+		
+		couponhql.append(" group by cr.userid,cr.ownerid order by userid desc");
+	
+		List<CouponRecord> CouponRecordlist = (List<CouponRecord>) dataDao.pageQueryViaParam(couponhql.toString(), pageSize, pageIndex, null);
+		
+		for (CouponRecord couponrecord : CouponRecordlist) {
+			SuserInfo suserinfo = dataDao.getObjectById(SuserInfo.class, couponrecord.getUserid());
+			if (suserinfo != null) {
+				if (CommonUtils.isEmptyString(suserinfo.getRealname())) {
+					couponrecord.setUsernick("未设置:" + suserinfo.getPhone());
+				} else {
+					couponrecord.setUsernick(suserinfo.getRealname() + ":" + suserinfo.getPhone());
+				}
+			}
+			if (couponrecord.getOwnertype() == 1) {
+				DriveSchoolInfo driveschool = dataDao.getObjectById(DriveSchoolInfo.class, couponrecord.getOwnerid());
+				if (driveschool != null) {
+					couponrecord.setSchoolname(driveschool.getName());
+				}
+			}
+			if (couponrecord.getOwnertype() == 2) {
+				CuserInfo cuserinfo = dataDao.getObjectById(CuserInfo.class, couponrecord.getOwnerid());
+				if (cuserinfo != null) {
+					couponrecord.setCusername(cuserinfo.getRealname());
+				}
+			}
+			
+			//获取每个用户小巴券总张数
+			String counthql2 = "select count(*) from CouponRecord where userid="+couponrecord.getUserid()+"and ownerid="+couponrecord.getOwnerid();
+			long totalcount = (Long) dataDao.getFirstObjectViaParam(counthql2, null);
+			int tcount = (int)totalcount;
+			couponrecord.setTotalcount(tcount);
+			//获取每个用户小巴券使用张数
+			String counthql3 = "select count(*) from CouponRecord where state=1 and userid="+couponrecord.getUserid()+"and ownerid="+couponrecord.getOwnerid();
+			long usecount = (Long) dataDao.getFirstObjectViaParam(counthql3, null);
+			int ucount = (int)usecount;
+			couponrecord.setUsecount(ucount);
+			
+			
+		}
+		
+		
+		//查询分组后的所有结果，以便获得分组后的总条数count
+		//String cthql = "from CouponRecord cr group by cr.userid,cr.ownerid";
+		List<CouponRecord> Crlist = (List<CouponRecord>) dataDao.getObjectsViaParam(couponhql.toString(),null);
+		long count = Crlist.size();
+		//System.out.print(count);
 		QueryResult<CouponRecord> result = new QueryResult<CouponRecord>(CouponRecordlist, count);
 		return result;
 	}
