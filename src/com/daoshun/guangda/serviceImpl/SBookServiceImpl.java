@@ -799,8 +799,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 
 				int starthour = startCal.get(Calendar.HOUR_OF_DAY);
 				int datecount = 1;
-
-				cuserhql.append(" and getcoachstate(u.coachid," + datecount + ",'" + CommonUtils.getTimeFormat(start, "yyyy-MM-dd") + "'," + starthour + "," + 23 + "," + subjectid + ") = 1");
+				cuserhql.append(" and  coursestate = 1");
+				//cuserhql.append(" and getcoachstate(u.coachid," + datecount + ",'" + CommonUtils.getTimeFormat(start, "yyyy-MM-dd") + "'," + starthour + "," + 23 + "," + subjectid + ") = 1");
 
 			}
 		} else {
@@ -808,7 +808,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			Calendar c = Calendar.getInstance();
 			cuserhql.append(" and  coursestate = 1");
 
-//			cuserhql.append(" and getcoachstate(u.coachid," + 10 + ",'" + CommonUtils.getTimeFormat(c.getTime(), "yyyy-MM-dd") + "'," + 5 + "," + 23 + "," + subjectid + ") = 1");
+			//cuserhql.append(" and getcoachstate(u.coachid," + 10 + ",'" + CommonUtils.getTimeFormat(c.getTime(), "yyyy-MM-dd") + "'," + 5 + "," + 23 + "," + subjectid + ") = 1");
 		}
 
 		if (!CommonUtils.isEmptyString(condition11)) {
@@ -880,7 +880,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		//String now = CommonUtils.getTimeFormat(new Date(), "yyyy-MM-dd");
 		//System.out.println(cuserhql.toString());
 		cuserhql.append(" and money >= gmoney and isquit = 0 and state=2 order by score desc,drive_schoolid desc ");
-		//System.out.println(cuserhql.toString());
+		System.out.println(cuserhql.toString());
 		List<CuserInfo> coachlist = (List<CuserInfo>) dataDao.SqlPageQuery(cuserhql.toString(), Constant.USERLIST_SIZE+1, CommonUtils.parseInt(pagenum, 0) + 1,CuserInfo.class, null);
 		//System.out.println(cuserhql.toString());
 		//String[] params = { "now", "now", "now", "now" };
