@@ -338,7 +338,7 @@ public class DataDao {
 	
 	public void updateBySql(String sql) {
 		SQLQuery query = getSession().createSQLQuery(sql);
-		System.out.println(sql);
+		//System.out.println(sql);
 		int code =query.executeUpdate();
 	}
 
