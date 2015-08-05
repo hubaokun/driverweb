@@ -366,7 +366,7 @@ public class SorderServlet extends BaseServlet {
 		String pagenum = getRequestParamter(request, "pagenum");
 		CommonUtils.validateEmpty(studentid);
 		List<OrderInfo> orderlist = sorderService.getUnCompleteOrder(studentid, pagenum);
-		int hasmore = sorderService.getUnCompleteOrderMore(studentid, pagenum + 1);
+		int hasmore = sorderService.getUnCompleteOrderMore(studentid, String.valueOf(CommonUtils.parseInt(pagenum, 0) + 1));
 		resultMap.put("hasmore", hasmore);
 		resultMap.put("orderlist", orderlist);
 	}
