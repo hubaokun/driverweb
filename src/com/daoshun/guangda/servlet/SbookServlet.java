@@ -1,6 +1,7 @@
 package com.daoshun.guangda.servlet;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -416,14 +417,22 @@ public class SbookServlet extends BaseServlet {
 				canUseMaxCount = info.getCan_use_coupon_count();
 		}
 		int num=suserService.getCanUseCoinnum(coachid,studentid);//获取可用小巴币
+		
 		SuserInfo suser=suserService.getUserById(studentid);//获取余额
 		if(suser==null){
 				resultMap.put(Constant.CODE, 2);
 				resultMap.put(Constant.MESSAGE, "根据studentid查询不到此学员");
 				return;
 		}
+		int coinnum=0;
+		if(suser.getFcoinnum()==null){
+			suser.setFcoinnum(new BigDecimal(0));
+		}
+		if(num>=suser.getFcoinnum().intValue()){//可用余额减去冻结小巴币
+			coinnum=num-suser.getFcoinnum().intValue();
+		}
 		resultMap.put("couponlist", list);
-		resultMap.put("coinnum", num);//可用小巴币
+		resultMap.put("coinnum", coinnum);//可用小巴币
 		resultMap.put("money", suser.getMoney()==null?0:suser.getMoney());
 		resultMap.put("canUseDiff", canUseDiff);
 		resultMap.put("canUseMaxCount", canUseMaxCount);
