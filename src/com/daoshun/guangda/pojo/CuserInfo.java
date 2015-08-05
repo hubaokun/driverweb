@@ -264,6 +264,12 @@ public class CuserInfo implements Serializable {
 	@Column(name = "isquit", nullable = false, length = 1, columnDefinition = "INT default 0")
 	private Integer isquit = 0;
 
+
+
+	// 教练是否开课,此字段决定学员是否能在列表中看见教练
+	@Column(name = "coursestate", nullable = false, length = 1, columnDefinition = "INT default 0")
+	private Integer coursestate = 0;
+
 	// 冻结结束时间
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "quittime")
@@ -1065,5 +1071,13 @@ public class CuserInfo implements Serializable {
 
 	public void setCoinnum(Integer coinnum) {
 		this.coinnum = coinnum;
+	}
+
+	public Integer getCoursestate() {
+		return coursestate;
+	}
+
+	public void setCoursestate(Integer coursestate) {
+		this.coursestate = coursestate;
 	}
 }
