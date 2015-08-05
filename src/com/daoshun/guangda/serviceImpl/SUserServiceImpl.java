@@ -175,7 +175,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			
 			dataDao.updateObject(dealpeople);
 		}else{
-			System.out.print("dealpeople对象为空");
+			//System.out.print("dealpeople对象为空");
 		}
 	}
 	else{

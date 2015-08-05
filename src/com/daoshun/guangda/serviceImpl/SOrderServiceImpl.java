@@ -806,9 +806,9 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 						String coupongetrecordids=order.getCouponrecordid();
 						if(coupongetrecordids.lastIndexOf(',')== coupongetrecordids.length()-1)
 						{
-							System.out.println("old: "+coupongetrecordids);
+							//System.out.println("old: "+coupongetrecordids);
 							coupongetrecordids = coupongetrecordids.substring(0, coupongetrecordids.length()-2);
-							System.out.println("now :"+coupongetrecordids);
+							//System.out.println("now :"+coupongetrecordids);
 						}
 					dataDao.updateBySql(" update t_couponget_record set state=0 where recordid in("+coupongetrecordids+") ");
 						

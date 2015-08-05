@@ -545,7 +545,7 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 
 		
 		cuserhql.append(" and money >= gmoney and isquit = 0 and state=2 order by score desc,drive_schoolid desc ");
-		System.out.println(cuserhql.toString());
+		//System.out.println(cuserhql.toString());
 		List<CuserInfo> coachlist = (List<CuserInfo>) dataDao.SqlQuery(cuserhql.toString(),CuserInfo.class);
 		
 		if (coachlist != null && coachlist.size() > 0) {
