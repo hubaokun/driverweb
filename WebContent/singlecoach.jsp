@@ -311,8 +311,12 @@
 					<tr>
 						<td>出生日期：</td>
 						<td><input name="editbirthday" value="${cuser.birthday }"  onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})" realvalue=""></td>
-						<td>注册时间：</td>
-						<td><input name="editaddtime" value="<s:date name="cuser.addtime" format="yyyy-MM-dd HH:mm:ss" />" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})"/></td>
+						<td>
+							<%--注册时间：--%>
+						</td>
+						<td>
+							<%--<input name="editaddtime" value="<s:date name="cuser.addtime" format="yyyy-MM-dd HH:mm:ss" />" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})"/>--%>
+						</td>
 						<td></td>
 						<td></td>
 					</tr>
