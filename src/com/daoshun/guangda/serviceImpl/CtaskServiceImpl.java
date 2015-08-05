@@ -66,7 +66,7 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 		StringBuffer ctaskhql = new StringBuffer();
 		ctaskhql.append("select t.* from t_order t where t.coachid=");
 		ctaskhql.append(coachid);
-		ctaskhql.append(" and t.coachstate != 4 ");
+		ctaskhql.append(" and t.coachstate != 4 and t.coachstate !=2");
 		ctaskhql.append(" order by t.start_time asc");
 		System.out.println(ctaskhql.toString());
 		//String[] params = { "coachid" };
