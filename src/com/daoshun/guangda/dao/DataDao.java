@@ -448,6 +448,7 @@ public class DataDao {
 		SQLQuery query= session.createSQLQuery("{Call updatecoursestate()}");
 		query.executeUpdate();
 	}
+
 		public List getCoachState(String coachid, int datacount, Date startdate, int starthour, int endhour,
 			int subjectid){
 		Session session=this.getSession();
