@@ -33,7 +33,7 @@ public class CoinRecordServiceImpl extends BaseServiceImpl implements ICoinRecor
     public  QueryResult<CoinRecordInfo> getCoinRecordListByPage(int pageIndex, int pageSize, String starttime, String endtime,  Integer ownertype,  String ownerid)
     {
         StringBuffer coinsql = new StringBuffer();
-        coinsql.append(" from CouponInfo where 1=1 ");
+        coinsql.append(" from CoinRecordInfo where 1=1 ");
         if (!CommonUtils.isEmptyString(starttime)) {
             coinsql.append(" and addtime > '" + starttime + "'");
         }

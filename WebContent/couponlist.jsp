@@ -151,6 +151,7 @@ function searchfromsubmit(){
 <th>类型</th>
 <th>发券人类型</th>
 <th>发放数量</th>
+<th>发放时间</th>
 <th>剩余数量</th>
 <th>到期时间</th>
 <th>操作</th>
@@ -180,6 +181,8 @@ function searchfromsubmit(){
 </s:elseif>
 </td>
 <td  style="width:200px;" class="border_right_bottom">${pub_count }</td>
+<td  style="width:200px;" class="border_right_bottom">
+<s:date name="addtime"  format="yyyy-MM-dd HH:mm:ss" /></td>
 <td  style="width:100px;" class="border_right_bottom">${rest_count}</td>
 <td  style="width:200px;" class="border_right_bottom">
 <s:date name="end_time"  format="yyyy-MM-dd HH:mm:ss" /></td>
