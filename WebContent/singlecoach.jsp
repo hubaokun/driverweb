@@ -413,20 +413,20 @@
 						<td><p>操作</p>
 							<div class="table_edit_button" style="width: 80px;background:#1bbc9b">
 								<div class="table_button_edit_icon"></div>
-								<div class="table_button_text" onclick="checkpass(2,771,1)">审核通过</div>
+								<div class="table_button_text" onclick="checkpass(2,${cuser.coachid},1)">审核通过</div>
 							</div>
 							<div class="table_edit_button" style="width: 90px;background:#f83a22">
 								<div class="table_button_edit_icon"></div>
-								<div class="table_button_text" onclick="checknopass(3,771,1)">审核不通过</div>
+								<div class="table_button_text" onclick="checknopass(3,${cuser.coachid},1)">审核不通过</div>
 							</div>
 							<div class="clear-fix"></div>
 							<div class="table_edit_button" style="width: 90px; margin-top:10px;">
 								<div class="table_button_edit_icon"></div>
-								<div class="table_button_text" onclick="showchangegmoney(771)">设置保证金</div>
+								<div class="table_button_text" onclick="showchangegmoney(${cuser.coachid})">设置保证金</div>
 							</div>
 							<div class="table_edit_button" style="width: 110px;background:#1bbc9b; margin-top:10px;">
 								<div class="table_button_edit_icon"></div>
-								<div class="table_button_text" onclick="changecancancel(1,771)">订单可以取消</div>
+								<div class="table_button_text" onclick="changecancancel(1,${cuser.coachid})">订单可以取消</div>
 							</div></td>
 					</tr>
 				</table>
@@ -444,6 +444,8 @@
 		<div style="position: fixed; width: 300px; height: 200px;background: #4cc2ff;margin-left: 100px;margin-top: 50px;">
 			<form  action="" id="changeModelForm" enctype="multipart/form-data" method="post">
 				<input type="hidden" name="coachid" value="${cuser.coachid }"/>
+				<table>
+				<tr>
 				<s:iterator value="modellist" status="list">
 					<s:if test="list.index3%==2">
 						<div style="clean:both; float:left;"><input name="coachmodelid" id="coachmodelid" type="radio" value="${modelid}" />${modelname}</div>
@@ -452,9 +454,18 @@
 						<div style="float:left;"><input name="coachmodelid" id="coachmodelid" type="radio" value="${modelid}" />${modelname}</div>
 					</s:else>
 				</s:iterator>
+				</tr>	
+				<td>
+				<input type="button" style="width: 100px;height: 40px;margin-left: 0px; margin-top: 100px;font-size: 18px" value="确定" onclick="changeModel()">
+				</td>
+				<td>
+				<input type="button" style="width: 100px;height: 40px;margin-left: 0px;margin-top: 100px;font-size: 18px" value="取消" onclick="unshowchangegmoney()">
+				</td>
+				</table>
+				
 			</form>
-			<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 50px;margin-right:22px; margin-top: 100px;font-size: 18px" value="确定" onclick="changeModel()">
-			<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 180px;margin-top: -40px;font-size: 18px" value="取消" onclick="unshowchangegmoney()">
+			
+
 		</div>
 	</div>
 </div>
@@ -513,16 +524,22 @@
 <div id="frozen_sec" style="position: fixed; width: 100%; height: 300px;z-index: 300">
 	<div id="frozen_last" class="frozen_last">
 		<div style="position: fixed; width: 300px; height: 200px;background: #4cc2ff;margin-left: 100px;margin-top: 50px;">
-			<s:iterator value="teachcarlist" var="driveSchool" status="list">
+		<table>
+		<tr>
+		<s:iterator value="teachcarlist" var="driveSchool" status="list">
 				<s:if test="list.index3%==2">
 					<div style="clean:both; float:left;"><input name="teachcarid" id="teachcarid" type="radio" value="${modelid}" />${modelname}</div>
 				</s:if>
 				<s:else>
 					<div style="float:left;"><input name="teachcarid" id="teachcarid" type="radio" value="${modelid}" />${modelname}</div>
 				</s:else>
-			</s:iterator>
-			<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 50px;margin-right:20px; margin-top: 100px;font-size: 18px" value="确定" onclick="changeTeachCar()">
-			<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 180px;margin-top: -40px;font-size: 18px" value="取消" onclick="unshowfrozen()">
+			</s:iterator></tr>
+			<td><input type="button" style="width: 120px;height: 40px;margin-left: 0px;margin-top: 100px;font-size: 18px" value="确定" onclick="changeTeachCar()">
+			</td>
+			<td>
+			<input type="button" style="width: 120px;height: 40px;margin-left:0px;margin-top: 100px;font-size: 18px" value="取消" onclick="unshowfrozen()"></td>
+			
+		</table>
 		</div>
 	</div>
 </div>

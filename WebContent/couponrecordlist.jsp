@@ -148,8 +148,8 @@
 							<td style="width: 200px;" class="border_right_bottom"><s:date
 									name="gettime" format="yyyy-MM-dd HH:mm:ss" /></td>
 							<td style="width: 120px;" class="border_right_bottom"><s:if
-									test="state==0">未使用</s:if> <s:elseif test="state==1">已使用</s:elseif>
-								<s:else>已作废</s:else></td>
+									test="state==0">未使用</s:if> <s:elseif test="state==1"><div style="color:blue;">已使用</div></s:elseif>
+								<s:else><div style="color:gray;">已作废</div></s:else></td>
 							<td style="width: 200px;" class="border_right_bottom"><s:date
 									name="" format="yyyy-MM-dd HH:mm:ss" /></td>
 							<td style="width: 200px;" class="border_right_bottom"><s:date
