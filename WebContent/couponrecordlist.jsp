@@ -109,14 +109,57 @@
 		<div id="content_form">
 			
 			<div id="content_form_top">
+			<form id="searchform" action="getCouponRecordList.do">
 					<div id="content_form_top">
+					
+						<div class="searchbutton" onclick="searchfromsubmit();">
+							<img src="imgs/common/searchicon.png" width=22px height=22px
+								style="margin-top: 9px;">
+						</div>
 
 						<div class="searchbutton" style="width:70px;">
 							<div class="table_button_edit_icon"></div>
 							<div class="table_button_text" style="font-size: 12px;line-height: 38px;"><a href="getCouponRecordInfo.do" style="color:white;text-decoration:none;">返回</a></div>
 						</div>
+						 
+						<div class="serchcontentdiv"
+							style="float: left; margin-left: 50px; width: 175px">
+							<input type="text" class="searchdiv"
+								style="width: 85px; text-align: center; font-family: 微软雅黑;"
+								value="小巴券状态" readonly="readonly"> <select id="state"
+								name="state" class="searchdiv" style="width: 85px;">
+								<option id="state0" value="">全部</option>
+								<option id="state0" value="0">未使用</option>
+								<option id="state1" value="1">已使用</option>
+								<option id="state2" value="2">已作废</option>
+							</select> <input type="hidden" id="hiddenstate" value="${state}">
+						</div>
+						<div class="serchcontentdiv"
+							style="float: left; margin-left: 50px; width: 405px">
+							<input type="text" class="searchdiv"
+								style="width: 119px; text-align: center; font-family: 微软雅黑;"
+								value="使用时间" readonly="readonly"> <input id="starttime"
+								name="starttime"
+								onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})"
+								type="text" class="searchdiv"
+								style="width: 120px; text-align: center; font-family: 微软雅黑;"
+								value="${starttime}"> <input type="text"
+								class="searchdiv"
+								style="width: 30px; text-align: center; font-family: 微软雅黑;"
+								value="到" readonly="readonly"> <input id="endtime"
+								name="endtime"
+								onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})"
+								type="text" class="searchdiv"
+								style="width: 120px; text-align: center; font-family: 微软雅黑;"
+								value="${endtime}">
+						</div>
+						
+						<div>
+							<input id="userid" type="hidden" name="userid" value="${userid}"/>
+						</div>
 
 					</div>
+				</form>
 			</div>
 			<div id="content_form_table">
 				<table border="0" cellspacing="0" cellpadding="0"
@@ -151,7 +194,7 @@
 									test="state==0">未使用</s:if> <s:elseif test="state==1"><div style="color:blue;">已使用</div></s:elseif>
 								<s:else><div style="color:gray;">已作废</div></s:else></td>
 							<td style="width: 200px;" class="border_right_bottom"><s:date
-									name="" format="yyyy-MM-dd HH:mm:ss" /></td>
+									name="usetime" format="yyyy-MM-dd HH:mm:ss" /></td>
 							<td style="width: 200px;" class="border_right_bottom"><s:date
 									name="end_time" format="yyyy-MM-dd HH:mm:ss" /></td>
 							<td style="width: 200px;" class="border_noright_bottom"><s:if
@@ -187,6 +230,9 @@
 											var count = parseInt(count);
 											var pageindex = parseInt(pageindex);
 											var userid = $("#userid").val();
+											var starttime = $("#starttime").val();
+											var endtime = $("#endtime").val();
+											var state = $("#hiddenstate").val();
 											var a = [];
 											//总页数少于10 全部显示,大于10 显示前3 后3 中间3 其余....
 											if (pageindex == 1) {
@@ -197,12 +243,24 @@
 														+ pageindex
 														+ ",'getCouponRecordList.do?userid="
 														+ userid
+														+ "&starttime="
+														+ starttime
+														+ "&endtime="
+														+ endtime
+														+ "&state="
+														+ state
 														+ "&')\" class=\"page_prev\"></a>";
 											}
 											function setPageList() {
 												if (pageindex == i) {
 													a[a.length] = "<a onclick=\"goPage('getCouponRecordList.do?userid="
 															+ userid
+															+ "&starttime="
+															+ starttime
+															+ "&endtime="
+															+ endtime
+															+ "&state="
+															+ state
 															+ "&',"
 															+ i
 															+ ")\" class=\"on\">"
@@ -210,6 +268,12 @@
 												} else {
 													a[a.length] = "<a onclick=\"goPage('getCouponRecordList.do?userid="
 															+ userid
+															+ "&starttime="
+															+ starttime
+															+ "&endtime="
+															+ endtime
+															+ "&state="
+															+ state
 															+ "&',"
 															+ i
 															+ ")\">"
@@ -231,6 +295,12 @@
 													}
 													a[a.length] = "...<a onclick=\"goPage('getCouponRecordList.do?userid="
 															+ userid
+															+ "&starttime="
+															+ starttime
+															+ "&endtime="
+															+ endtime
+															+ "&state="
+															+ state
 															+ "&',"
 															+ count
 															+ ")\">"
@@ -238,6 +308,12 @@
 												} else if (pageindex >= count - 3) {
 													a[a.length] = "<a onclick=\"goPage('getCouponRecordList.do?userid="
 															+ userid
+															+ "&starttime="
+															+ starttime
+															+ "&endtime="
+															+ endtime
+															+ "&state="
+															+ state
 															+ "&',1)\">1</a>...";
 													for ( var i = count - 4; i <= count; i++) {
 														setPageList();
@@ -246,12 +322,24 @@
 												} else { //当前页在中间部分
 													a[a.length] = "<a onclick=\"goPage('getCouponRecordList.do?userid="
 															+ userid
+															+ "&starttime="
+															+ starttime
+															+ "&endtime="
+															+ endtime
+															+ "&state="
+															+ state
 															+ "&',1)\">1</a>...";
 													for ( var i = pageindex - 2; i <= pageindex + 2; i++) {
 														setPageList();
 													}
 													a[a.length] = "...<a onclick=\"goPage('getCouponRecordList.do?userid="
 															+ userid
+															+ "&starttime="
+															+ starttime
+															+ "&endtime="
+															+ endtime
+															+ "&state="
+															+ state
 															+ "&',"
 															+ count
 															+ ")\">"
@@ -265,6 +353,12 @@
 														+ "<input type=\"text\" class=\"jump_num\" id=\"topage\"/> 页"
 														+ "<a class=\"jump_btn\" onclick=\"gotoPage('getCouponRecordList.do?userid="
 														+ userid
+														+ "&starttime="
+														+ starttime
+														+ "&endtime="
+														+ endtime
+														+ "&state="
+														+ state
 														+ "&',"
 														+ $("#pageSize").val()
 														+ ")\")\">"
@@ -274,6 +368,12 @@
 														+ $("#pageIndex").val()
 														+ ",'getCouponRecordList.do?userid="
 														+ userid
+														+ "&starttime="
+														+ starttime
+														+ "&endtime="
+														+ endtime
+														+ "&state="
+														+ state
 														+ "&')\" "
 														+ "class=\"page_next\"></a> 共"
 														+ count
@@ -281,6 +381,12 @@
 														+ "<input type=\"text\" class=\"jump_num\" id=\"topage\"/> 页"
 														+ "<a class=\"jump_btn\" onclick=\"gotoPage('getCouponRecordList.do?userid="
 														+ userid
+														+ "&starttime="
+														+ starttime
+														+ "&endtime="
+														+ endtime
+														+ "&state="
+														+ state
 														+ "&',"
 														+ $("#pageSize").val()
 														+ ")\">"
