@@ -74,16 +74,16 @@ function dataExport(){
 		<div class="daily_second">
 			<div class="daily_second_center" style="width: 10%;">2</div>
 			<div class="daily_second_center" style="width: 19%;">教练端</div>
-			<div class="daily_second_center" style="width: 20%;">${usercocal_today_regirect }</div>
-			<div class="daily_second_center" style="width: 25%;">${usercocal_regirect }</div>
-			<div class="daily_second_right" style="width: 25%;">${usercocal_happy }</div>
+			<div class="daily_second_center" style="width: 20%;">${susercount_total }</div>
+			<div class="daily_second_center" style="width: 25%;">${susercount_regirect }</div>
+			<div class="daily_second_right" style="width: 25%;">${susercount_happy }</div>
 		</div>
 		<div class="daily_second">
 			<div class="daily_second_center" style="width: 10%;">3</div>
 			<div class="daily_second_center" style="width: 19%;">学员端</div>
-			<div class="daily_second_center" style="width: 20%;">${susercount_total }</div>
-			<div class="daily_second_center" style="width: 25%;">${susercount_regirect }</div>
-			<div class="daily_second_right" style="width: 25%;">${susercount_happy }</div>
+			<div class="daily_second_center" style="width: 20%;">${usercocal_today_regirect }</div>
+			<div class="daily_second_center" style="width: 25%;">${usercocal_regirect }</div>
+			<div class="daily_second_right" style="width: 25%;">${usercocal_happy }</div>
 		</div>
 		<div class="daily_top">
 			<div class="daily_top_center" style="width: 10%;">序号</div>
