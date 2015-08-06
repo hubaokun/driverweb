@@ -394,7 +394,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			List<CuserInfo> cuserlist = (List<CuserInfo>) dataDao.getObjectsViaParam(hqlCoach.toString(), paramsCoach, cids, now, now, now, now, now);
 			if (cuserlist != null && cuserlist.size() > 0) {
 				for (CuserInfo cuser : cuserlist) {
-					if (cuser.getMoney().doubleValue() > cuser.getGmoney().doubleValue()) {
+					if (cuser.getMoney().doubleValue() >= cuser.getGmoney().doubleValue()) {
 						coachlist.add(cuser);
 					}
 				}
@@ -569,7 +569,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			//List<CuserInfo> cuserlist = (List<CuserInfo>) dataDao.getObjectsViaParam(hqlCoach.toString(), paramsCoach, cids, now, now, now, now, now);
 			if (cuserlist != null && cuserlist.size() > 0) {
 				for (CuserInfo cuser : cuserlist) {
-					if (cuser.getMoney().doubleValue() > cuser.getGmoney().doubleValue()) {
+					if (cuser.getMoney().doubleValue() >= cuser.getGmoney().doubleValue()) {
 						coachlist.add(cuser);
 					}
 					if(cuser.getDrive_schoolid()!=null){
