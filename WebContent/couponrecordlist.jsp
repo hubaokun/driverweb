@@ -110,7 +110,7 @@
 			
 			<div id="content_form_top">
 			<form id="searchform" action="getCouponRecordList.do">
-					<div id="content_form_top">
+					<div id="content_form_top2">
 					
 						<div class="searchbutton" onclick="searchfromsubmit();">
 							<img src="imgs/common/searchicon.png" width=22px height=22px
@@ -129,9 +129,9 @@
 								value="小巴券状态" readonly="readonly"> <select id="state"
 								name="state" class="searchdiv" style="width: 85px;">
 								<option id="state0" value="">全部</option>
-								<option id="state0" value="0">未使用</option>
-								<option id="state1" value="1">已使用</option>
-								<option id="state2" value="2">已作废</option>
+								<option id="state1" value="0">未使用</option>
+								<option id="state2" value="1">已使用</option>
+								<option id="state3" value="2">已作废</option>
 							</select> <input type="hidden" id="hiddenstate" value="${state}">
 						</div>
 						<div class="serchcontentdiv"
@@ -219,7 +219,7 @@
 
 									<input type="hidden" value="${pageCount }" id="pageSize" />
 									<input type="hidden" value="${pageIndex }" id="pageIndex" />
-									<input type="hidden" value="${userid }" id="userid" />
+									<%--<input type="hidden" value="${userid }" id="userid" />--%>
 									
 									<div id="untreatedpage"></div>
 									<script type="text/javascript">
