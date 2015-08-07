@@ -56,6 +56,20 @@ function cancelcoupon(id){
 	});
 	}
 }
+//作废所有未使用优惠券
+function cancelallcoupon(id){
+	if(confirm("确认作废该用户所有未使用优惠券?")){
+	$.ajax({
+		url:"./cancelallcoupon.do",
+		type:"post",
+		data:{"userid":id},
+		success:function(msg){
+			alert("作废成功!");
+			window.location.reload();
+		}
+	});
+	}
+}
 
 //限制用户输入数字
 function IsNum(e) {

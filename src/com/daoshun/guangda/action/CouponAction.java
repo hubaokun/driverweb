@@ -37,6 +37,7 @@ import com.daoshun.guangda.service.ICUserService;
 import com.daoshun.guangda.service.ICouponService;
 import com.daoshun.guangda.service.IDriveSchoolService;
 import com.daoshun.guangda.service.ISUserService;
+import com.sun.net.httpserver.Authenticator.Success;
 
 @ParentPackage("default")
 @Controller
@@ -234,6 +235,16 @@ public class CouponAction extends BaseAction {
 	public void cancelcoupon() {
 		couponService.cancelcoupon(recordid);
 	}
+	
+	//作废所有未使用优惠券
+	@Action(value = "cancelallcoupon", results = { @Result(name = SUCCESS, location = "/couponrecordlist.jsp") })
+	public String cancelallcoupon() {
+		couponService.cancelallcoupon(userid);
+		return SUCCESS;
+	}
+	
+	
+	
 
 	@Action(value = "searchSuser")
 	public void searchSuser() {
