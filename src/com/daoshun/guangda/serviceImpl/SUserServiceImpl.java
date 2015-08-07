@@ -979,7 +979,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	@Override
 	public int getCouponSum(int studentid) {
 		StringBuffer suserhql = new StringBuffer();
-		suserhql.append(" from CouponRecord where state=0 and  userid ="+studentid);			
+		suserhql.append(" from CouponRecord where state=0 end_time>=now() and  userid ="+studentid);			
 		String counthql = " select count(*) " + suserhql.toString();
 		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return (int)total;		

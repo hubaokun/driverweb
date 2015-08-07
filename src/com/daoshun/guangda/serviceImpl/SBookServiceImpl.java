@@ -418,12 +418,12 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			String condition8, String condition9, String condition10, String condition11) {
 		List<CuserInfo> coachlist = new ArrayList<CuserInfo>();
 		// 取得中心点经纬度
-		/*String[] centers = pointcenter.split(",");
+		String[] centers = pointcenter.split(",");
 		String longitude = centers[0].trim();
-		String latitude = centers[1].trim();*/
+		String latitude = centers[1].trim();
 		//120.048943   30.329578
-		String longitude="120.048943";
-		String latitude="30.329578";
+		/*String longitude="120.048943";
+		String latitude="30.329578";*/
 		
 		// 获得符合条件的地址
 		StringBuffer cuserhql = new StringBuffer();
@@ -491,7 +491,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				hqlCoach.append(" and getcoachstate(u.coachid," + 10 + ",'" + CommonUtils.getTimeFormat(c.getTime(), "yyyy-MM-dd") + "'," + 5 + "," + 23 + "," + subjectid + ") = 1");
 			}
 
-			if (!CommonUtils.isEmptyString(condition11)) {
+			if (!CommonUtils.isEmptyString(condition11)) {//C1手动挡 接收到17 ，C2自动挡接收到18
 				hqlCoach.append(" and modelid like '%" + condition11 + "%'");
 			}
 

@@ -916,7 +916,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
             Integer cid = CommonUtils.parseInt(coachid, 0);
             String hql = "from CoinRecordInfo  where (receiverid =:receiverid and receivertype="+ UserType.COAH+" ) or (payerid =:payerid and payertype="+ UserType.COAH+")  order by addtime desc";
             //String hql = "select a.*,b.realname as studentname from t_coin_record  a left join t_user_student b on a.payerid=b.studentid  where (receiverid ="+cid+" and receivertype="+ UserType.COAH+" ) or (payerid ="+cid+" and payertype="+ UserType.COAH+")  order by addtime desc";
-            System.out.println(hql);
+           // System.out.println(hql);
             String[] params = {"receiverid", "payerid"};
             
             List<CoinRecordInfo> list = (List<CoinRecordInfo>) dataDao.getObjectsViaParam(hql, params, cid, cid);

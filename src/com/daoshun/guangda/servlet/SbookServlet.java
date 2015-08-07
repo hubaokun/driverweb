@@ -423,7 +423,7 @@ public class SbookServlet extends BaseServlet {
 				return;
 		}
 		resultMap.put("couponlist", list);
-		resultMap.put("coinnum", suser.getCoinnum());//可用小巴币
+		resultMap.put("coinnum", suser.getCoinnum()==null?0:suser.getCoinnum());//可用小巴币
 		resultMap.put("money", suser.getMoney()==null?0:suser.getMoney());
 		resultMap.put("canUseDiff", canUseDiff);
 		resultMap.put("canUseMaxCount", canUseMaxCount);
@@ -432,7 +432,7 @@ public class SbookServlet extends BaseServlet {
 
 
 	/**
-	 * 获取可以使用的小巴券列表 条件:未过期，未使用过,且满足平台、驾校、教练规则
+	 * 获取可以使用的小巴币个数
 	 *
 	 * @param request
 	 * @throws ErrException
