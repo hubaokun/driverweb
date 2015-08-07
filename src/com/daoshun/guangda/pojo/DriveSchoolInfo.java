@@ -69,6 +69,10 @@ public class DriveSchoolInfo implements Serializable {
 	//区
 	@Column(name = "areaid")
 	private String areaid;
+	
+	//是否签约
+	@Column(name = "iscontract ",length = 1, nullable = false,columnDefinition = "INT default 0")
+	private Integer iscontract;
 
 	public String getProvinceid() {
 		return provinceid;
@@ -157,4 +161,13 @@ public class DriveSchoolInfo implements Serializable {
 	public void setMoney(BigDecimal money) {
 		this.money = money;
 	}
+
+	public Integer getIscontract() {
+		return iscontract;
+	}
+
+	public void setIscontract(Integer iscontract) {
+		this.iscontract = iscontract;
+	}
+	
 }
