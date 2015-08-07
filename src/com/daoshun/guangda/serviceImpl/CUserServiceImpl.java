@@ -867,7 +867,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
             result.put("balance", user.getMoney());
             result.put("fmoney", user.getFmoney());
             result.put("gmoney", user.getGmoney());
-            String hql = "from BalanceCoachInfo where userid =:userid order by addtime desc";
+            String hql = "from BalanceCoachInfo where userid =:userid and amount>0 order by addtime desc";
             String[] params = {"userid"};
             List<BalanceCoachInfo> list = (List<BalanceCoachInfo>) dataDao.getObjectsViaParam(hql, params, CommonUtils.parseInt(coachid, 0));
             if (list != null) {

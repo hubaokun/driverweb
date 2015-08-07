@@ -154,7 +154,7 @@ public class CuserServlet extends BaseServlet {
 			if (CommonUtils.parseInt(usertype, 0) == 1) {
 				System.out.println("userid"+userid);
 				CuserInfo cuser = cuserService.getCoachByid(CommonUtils.parseInt(userid, 0));
-				System.out.println("cuser="+cuser);
+				//System.out.println("cuser="+cuser);
 				if (cuser != null) {
 					String token = getRequestParamter(request, "token");
 					if (!CommonUtils.isEmptyString(token)) {

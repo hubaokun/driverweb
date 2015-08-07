@@ -202,7 +202,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	@Override
 	public List<BalanceStudentInfo> getMyBalanceList(String studentid) {
 		StringBuffer cuserhql = new StringBuffer();
-		cuserhql.append(" from BalanceStudentInfo where userid = :studentid order by addtime desc");
+		cuserhql.append(" from BalanceStudentInfo where userid = :studentid and amount>0 order by addtime desc");
 		String[] params = { "studentid" };
 
 		List<BalanceStudentInfo> recordlist = (List<BalanceStudentInfo>) dataDao.getObjectsViaParam(cuserhql.toString(), params, CommonUtils.parseInt(studentid, 0));
