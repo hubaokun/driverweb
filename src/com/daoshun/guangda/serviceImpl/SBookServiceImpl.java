@@ -77,6 +77,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				cuser.setModellist(list);
 			}
 
+
 			// 教练默认的上车地址
 			String hqladd = "from CaddAddressInfo where coachid = :coachid and iscurrent = 1";
 			String[] paramsadd = { "coachid" };
