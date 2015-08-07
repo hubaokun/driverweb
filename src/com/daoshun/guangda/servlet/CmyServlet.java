@@ -542,7 +542,13 @@ public class CmyServlet extends BaseServlet {
 			// 提示用户不存在
 			resultMap.put("code", 2);
 			resultMap.put("message", "用户不存在");
-		} else if (cuser.getMoney().doubleValue() < CommonUtils.parseFloat(count, 0)) {
+		}
+		else if(cuser.getMoney().doubleValue()<0 || cuser.getFmoney().doubleValue()<0 || CommonUtils.parseFloat(count, 0)<0)
+		{
+			resultMap.put("code", 6);
+			resultMap.put("message", "数据异常");
+		}
+		else if (cuser.getMoney().doubleValue() < CommonUtils.parseFloat(count, 0)) {
 			// 余额不足 无法提现
 			resultMap.put("code", 3);
 			resultMap.put("message", "您的余额不足");

@@ -697,11 +697,19 @@ public class SuserServlet extends BaseServlet {
 			resultMap.put("code", 2);
 			resultMap.put("message", "该用户不存在");
 			return;
-		} else if ((student.getMoney().doubleValue()) < CommonUtils.parseDouble(count, 0)) {
+		}
+		else if(student.getMoney().doubleValue()<0 || student.getFmoney().doubleValue()<0 || CommonUtils.parseDouble(count, 0)<0)
+		{
+			resultMap.put("code", 6);
+			resultMap.put("message", "数据异常");
+			return;
+		}
+		else if ((student.getMoney().doubleValue()) < CommonUtils.parseDouble(count, 0)) {
 			resultMap.put("code", 3);
 			resultMap.put("message", "账户余额不足");
 			return;
 		}
+		
 		suserService.applyCash(studentid, count);
 	}
 
