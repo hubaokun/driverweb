@@ -71,7 +71,7 @@ public class DriveSchoolInfo implements Serializable {
 	private String areaid;
 	
 	//是否签约
-	@Column(name = "iscontract ",length = 1, nullable = false,columnDefinition = "INT default 0")
+	@Column(name = "iscontract",length = 1, nullable = false,columnDefinition = "INT default 0")
 	private Integer iscontract;
 
 	public String getProvinceid() {
