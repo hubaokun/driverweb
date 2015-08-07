@@ -68,7 +68,7 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 		ctaskhql.append(coachid);
 		ctaskhql.append(" and t.coachstate != 4 and t.coachstate !=2");
 		ctaskhql.append(" order by t.start_time asc");
-		System.out.println(ctaskhql.toString());
+		//System.out.println(ctaskhql.toString());
 		//String[] params = { "coachid" };
 		List<OrderInfo> orderInfolist = (List<OrderInfo>) dataDao.SqlPageQuery(ctaskhql.toString(), count, page + 1,OrderInfo.class, null);
 		return orderInfolist;
