@@ -121,11 +121,6 @@
 							<div class="table_button_edit_icon"></div>
 							<div class="table_button_text" style="font-size: 12px;line-height: 38px;"><a href="getCouponRecordInfo.do" style="color:white;text-decoration:none;">返回</a></div>
 						</div>
-						
-						<div class="searchbutton" style="width:100px;" onclick="cancelallcoupon('${userid}')">
-							<div class="table_button_del_icon"></div>
-							<div class="table_button_text" style="font-size: 12px;line-height: 38px;">未使用券作废</div>
-						</div>
 						 
 						<div class="serchcontentdiv"
 							style="float: left; margin-left: 50px; width: 175px">
@@ -134,9 +129,9 @@
 								value="小巴券状态" readonly="readonly"> <select id="state"
 								name="state" class="searchdiv" style="width: 85px;">
 								<option id="state0" value="">全部</option>
-								<option id="state0" value="0">未使用</option>
-								<option id="state1" value="1">已使用</option>
-								<option id="state2" value="2">已作废</option>
+								<option id="state1" value="0">未使用</option>
+								<option id="state2" value="1">已使用</option>
+								<option id="state3" value="2">已作废</option>
 							</select> <input type="hidden" id="hiddenstate" value="${state}">
 						</div>
 						<div class="serchcontentdiv"
@@ -224,6 +219,7 @@
 
 									<input type="hidden" value="${pageCount }" id="pageSize" />
 									<input type="hidden" value="${pageIndex }" id="pageIndex" />
+									<%--<input type="hidden" value="${userid }" id="userid" />--%>
 									
 									<div id="untreatedpage"></div>
 									<script type="text/javascript">
