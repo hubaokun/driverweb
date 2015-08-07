@@ -45,6 +45,8 @@ import com.daoshun.guangda.pojo.SystemSetInfo;
 import com.daoshun.guangda.pojo.UserPushInfo;
 import com.daoshun.guangda.service.ISBookService;
 
+import net.sf.ehcache.statistics.beans.StringBeanProxy;
+
 @Service("sbookService")
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
@@ -426,6 +428,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		String latitude="30.329578";*/
 		
 		// 获得符合条件的地址
+		//radius="8";//设置查询半径值
 		StringBuffer cuserhql = new StringBuffer();
 		cuserhql.append("from CaddAddressInfo where getdistance(:longitude,:latitude, longitude ,latitude)<=:radius and iscurrent = 1");
 		String[] params = { "longitude", "latitude", "radius" };
@@ -882,6 +885,9 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		//System.out.println(cuserhql.toString());
 		cuserhql.append(" and money >= gmoney and isquit = 0 and state=2 order by score desc,drive_schoolid desc ");
 		//System.out.println(cuserhql.toString());
+		StringBuffer s=new StringBuffer("");
+		s.append("select getTeachAddress(u.coachid) as address,getCoachOrderCount(u.coachid) as drive_schoolid, u.*  from t_user_coach u where state = 2 and phone='15397128850'");
+		System.out.println(cuserhql.toString());
 		List<CuserInfo> coachlist = (List<CuserInfo>) dataDao.SqlPageQuery(cuserhql.toString(), Constant.USERLIST_SIZE+1, CommonUtils.parseInt(pagenum, 0) + 1,CuserInfo.class, null);
 		
 		
@@ -1464,7 +1470,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		String hql3 = "from CaddAddressInfo where coachid =:coachid and iscurrent = 1";
 		String params3[] = { "coachid" };
 		
-		
+		 
 		SuserInfo student = dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
 		if(student.getMoney().doubleValue()<0.0||student.getFmoney().doubleValue()<0.0||student.getCoinnum()<0)// 余额不够
 		{

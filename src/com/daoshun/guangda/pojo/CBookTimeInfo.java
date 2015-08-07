@@ -28,7 +28,7 @@ public class CBookTimeInfo implements Serializable {
 	private int coachid;
 	
 	//被预定时间的集合
-	@Column(name="bookedtime",length=500,nullable=false)
+	@Column(name="bookedtime",length=100,nullable=false)
 	private String bookedtime;
 	
 	//日期
@@ -55,17 +55,17 @@ public class CBookTimeInfo implements Serializable {
 		this.coachid = coachid;
 	}
 
-	
+
 	public String getBookedtime() {
 		return bookedtime;
 	}
 
-	
+
 	public void setBookedtime(String bookedtime) {
 		this.bookedtime = bookedtime;
 	}
 
-	
+
 	public String getDate() {
 		return date;
 	}
