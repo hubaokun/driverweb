@@ -98,6 +98,24 @@ public class CscheduleServiceImpl extends BaseServiceImpl implements ICscheduleS
 		CBookTimeInfo cBookTimeInfo = (CBookTimeInfo) dataDao.getFirstObjectViaParam(cschehql.toString(), params, hour, coachid, date);
 		return cBookTimeInfo;
 	}
+	/**
+	 * 教练是否在这个时间能预约
+	 * @param hour 小时数
+	 * @param coachid 教练ID
+	 * @param date 日期
+	 * @return
+	 */
+	public boolean getIsbookedBybooktime(String hour, int coachid, String date) {
+		StringBuffer cschehql = new StringBuffer();
+		cschehql.append("select count(*) from CBookTimeInfo where bookedtime = :hour and coachid = :coachid and date = :date");
+		String[] params = { "hour", "coachid", "date" };
+		Long n = (Long) dataDao.getFirstObjectViaParam(cschehql.toString(), params, hour, coachid, date);
+		if(n>0){
+			return true;
+		}else{
+			return false;
+		}
+	}
 
 	@Override
 	public boolean isSetSchedule(String coachid, String day) {

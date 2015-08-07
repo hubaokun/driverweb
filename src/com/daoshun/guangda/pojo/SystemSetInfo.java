@@ -87,6 +87,13 @@ public class SystemSetInfo implements Serializable {
 
 	@Column(name = "advertisement_url",  length = 1000)
 	private String advertisement_url;
+	
+	//学员广告位标示
+	@Column(name = "student_advertisement_flag", length = 2, columnDefinition = "TINYINT default 0")
+	private Integer student_advertisement_flag;
+	//学员广告位url
+	@Column(name = "student_advertisement_url",  length = 1000)
+	private String student_advertisement_url;
 
 	@Column(name = "creward_amount", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")
 	private BigDecimal crewardamount;

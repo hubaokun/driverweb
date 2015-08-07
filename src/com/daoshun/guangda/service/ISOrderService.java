@@ -1,5 +1,6 @@
 package com.daoshun.guangda.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.daoshun.common.QueryResult;
@@ -162,7 +163,7 @@ public interface ISOrderService {
 	 * @return
 	 */
 	public abstract QueryResult<OrderInfo> getOrderList(String coachphone, String studentphone, String startminsdate, String startmaxsdate, String endminsdate, String endmaxsdate, Integer state,
-			Integer ordertotal, String inputordertotal, Integer ishavacomplaint, Integer pageIndex, int pagesize);
+			Integer ordertotal, String inputordertotal, Integer ishavacomplaint,Integer paytype, Integer pageIndex, int pagesize);
 
 	/**
 	 * 获取投诉列表
@@ -335,4 +336,10 @@ public interface ISOrderService {
 	 * @return
 	 */
 	public int cancelOrderByCoach(String orderid,String agree);
+	/**
+	 * 根据日期获取orderlist
+	 * @param startdate 开始时间
+	 * @param enddate 结束时间
+	 */
+	public List<OrderInfo> getOrderBydate(String startdate,String enddate);
 }

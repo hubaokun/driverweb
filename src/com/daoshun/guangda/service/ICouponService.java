@@ -40,4 +40,5 @@ public interface ICouponService {
 			Integer valuetype, Integer ownertype, String ownerkey);
 
 	public abstract void cancelcoupon(int recordid);
+	public abstract void cancelallcoupon(int userid);
 }
