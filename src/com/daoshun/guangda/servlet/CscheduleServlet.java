@@ -514,9 +514,9 @@ public class CscheduleServlet extends BaseServlet {
 						}*/
 						boolean isbooked = cscheduleService.getIsbookedBybooktime(String.valueOf(k), CommonUtils.parseInt(coachid, 0), newnow);
 						if (isbooked) {
-							info.setHasbooked(0);
-						} else {
 							info.setHasbooked(1);
+						} else {
+							info.setHasbooked(0);
 						}
 						schedulelist.add(info);
 					} else {// 数据库中没有时间点的设置
