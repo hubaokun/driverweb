@@ -110,7 +110,7 @@ public class DriveSchoolAction extends BaseAction {
 	private String cityid;//市ID
 	private String areaid;//区ID
 	
-	
+	private Integer iscontract;
 	
 	/**
 	 * 得到驾校列表
@@ -243,6 +243,7 @@ public class DriveSchoolAction extends BaseAction {
 			driveSchoolInfo.setProvinceid(provinceid);
 			driveSchoolInfo.setCityid(cityid);
 			driveSchoolInfo.setAreaid(areaid);
+			driveSchoolInfo.setIscontract(iscontract);
 			cuserService.addObject(driveSchoolInfo);
 			setResponseStr("success");
 		}
@@ -305,6 +306,7 @@ public class DriveSchoolAction extends BaseAction {
 					if (!CommonUtils.isEmptyString(areaid)) {
 						driveSchoolInfo.setAreaid(areaid);
 					}
+					driveSchoolInfo.setIscontract(iscontract);
 					cuserService.updateObject(driveSchoolInfo);
 					setResponseStr("success");
 				}
@@ -333,6 +335,7 @@ public class DriveSchoolAction extends BaseAction {
 					if (!CommonUtils.isEmptyString(areaid)) {
 						driveSchoolInfo.setAreaid(areaid);
 					}
+					driveSchoolInfo.setIscontract(iscontract);
 					cuserService.updateObject(driveSchoolInfo);
 					setResponseStr("success");
 				} else {
@@ -625,6 +628,14 @@ public class DriveSchoolAction extends BaseAction {
 
 	public void setAreaid(String areaid) {
 		this.areaid = areaid;
+	}
+
+	public Integer getIscontract() {
+		return iscontract;
+	}
+
+	public void setIscontract(Integer iscontract) {
+		this.iscontract = iscontract;
 	}
 
 	

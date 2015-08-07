@@ -1143,7 +1143,7 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 
 	@Override
 	public QueryResult<OrderInfo> getOrderList(String coachphone, String studentphone, String startminsdate, String startmaxsdate, String endminsdate, String endmaxsdate, Integer state,
-			Integer ordertotal, String inputordertotal, Integer ishavacomplaint, Integer pageIndex, int pagesize) {
+			Integer ordertotal, String inputordertotal, Integer ishavacomplaint,Integer paytype, Integer pageIndex, int pagesize) {
 		StringBuffer cuserhql = new StringBuffer();
 		cuserhql.append("from OrderInfo where 1=1");
 		if (!CommonUtils.isEmptyString(coachphone)) {
@@ -1203,6 +1203,11 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 			if (ishavacomplaint == 2) {
 				cuserhql.append(" and orderid not in (select orderid from OrderRecordInfo where operation in(7,9))");
 			}
+		}
+		if(paytype!=null)
+		{
+			if(paytype!=0)
+				cuserhql.append(" and paytype ="+paytype);
 		}
 		cuserhql.append(" order by creat_time desc");
 		List<OrderInfo> orderlist = (List<OrderInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), pagesize, pageIndex, null);
@@ -1741,6 +1746,14 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 	@Override
 	public List<OrderInfo> getAllOrder() {
 		List<OrderInfo> orderlist = dataDao.getAllObject(OrderInfo.class);
+		return orderlist;
+	}
+
+	@Override
+	public List<OrderInfo> getOrderBydate(String startdate, String enddate) {
+		String hql="from OrderInfo where DATE(start_time)>=:start_time and DATE(end_time)<=:end_time";
+		String[] params={"start_time","end_time"};
+		List<OrderInfo> orderlist = (List<OrderInfo>) dataDao.getObjectsViaParam(hql, params,CommonUtils.getDateFormat(startdate, "yyyy-MM-dd"),CommonUtils.getDateFormat(enddate, "yyyy-MM-dd"));
 		return orderlist;
 	}
 }

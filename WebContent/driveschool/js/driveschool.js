@@ -43,12 +43,17 @@ function unshowaddschool() {
 var citysid;
 var areasid;
 //修改驾校信息
-function showeditschool(schoolname,schoolphone,schoolcontact,alipay,order_pull,provinceid,cityid,areaid) {
+function showeditschool(schoolname,schoolphone,schoolcontact,alipay,order_pull,provinceid,cityid,areaid,iscontract) {
 	$("#oldschoolname").val("原驾校名："+schoolname);
 	$("#oldschoolphone").val("原联系电话："+schoolphone);
 	$("#oldschoolcontact").val("原联系人姓名："+schoolcontact);
 	$("#oldalipay_account").val("原支付宝账号："+alipay);
 	$("#oldorder_pull").val("原订单抽成： "+order_pull+"%");
+	$("#oldflage_contract").val("原签约信息："+(iscontract==1?"已签约":"未签约"));
+//    if(iscontract==1)
+//		$("#editflag_contract").find("option:[text='已签约']").Attr("select",true);
+//	else
+//		$("#editflag_contract").find("option:[text='未签约']").Attr("select",true);
 	$("#name").val(schoolname);
 	citysid=cityid;
 	areasid=areaid;
@@ -155,6 +160,7 @@ function addshcool(){
 	var provinceid=$("#province").val();
 	var cityid=$("#city").val();
 	var areaid=$("#area").val();
+	var iscontract=$("#flag_contract").val();
 	if(city==""){
 		alert("请选择 市");
 		return;
@@ -175,7 +181,8 @@ function addshcool(){
 				order_pull:order_pull,
 				provinceid:provinceid,
 				cityid:cityid,
-				areaid:areaid
+				areaid:areaid,
+				iscontract:iscontract
 			},
 			success : function(data) {
 				if (data == "error") {
@@ -234,6 +241,7 @@ function editschool(){
 	var provinceid=$("#province1").val();
 	var cityid=$("#city1").val();
 	var areaid=$("#area1").val();
+	var iscontract=$("#editflag_contract").val();
 	if(editorder_pull!=0){
 		var re =/^(?:0|[1-9][0-9]?|100)$/;   //判断字符串是否为数字     //判断正整数 /^[1-9]+[0-9]*]*$/  
 		   if (!re.test(editorder_pull))
@@ -256,7 +264,8 @@ function editschool(){
 				editorder_pull:editorder_pull,
 				provinceid:provinceid,
 				cityid:cityid,
-				areaid:areaid
+				areaid:areaid,
+				iscontract:iscontract
 			},
 			success : function(data) {
 				if (data == "error") {

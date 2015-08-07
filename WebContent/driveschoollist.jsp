@@ -98,34 +98,35 @@ $(function(){
 	display: none;
 }
 
-.mask_last {
-	position: fixed;
-	background: #fff;
-	width: 600px;
-	height: 500px;
-	margin: 0 auto;
-		display: none;
-}
-.edit {
-	position: fixed;
-	top: 0px;
-	bottom: 0px;
-	left: 0px;
-	right: 0px;
-	background: #707070;
-	opacity: 0.3;
-	display: none;
-}
+		.mask_last {
+			position: fixed;
+			background: #fff;
+			width: 600px;
+			height: 500px;
+			margin: 0 auto;
+			display: none;
+		}
+		.edit {
+			position: fixed;
+			top: 0px;
+			bottom: 0px;
+			left: 0px;
+			right: 0px;
+			background: #707070;
+			opacity: 0.3;
+			display: none;
+		}
 
-.edit_last {
-	position: fixed;
-	background: #fff;
-	width: 500px;
-	height: 700px;
-	margin: 0 auto;
-	display: none;
-}
-</style>
+		.edit_last {
+			position: fixed;
+			background: #fff;
+			width: 500px;
+			height: 700px;
+			margin: 0 auto;
+			display: none;
+			overflow: scroll;
+		}
+	</style>
 
 <title>驾校列表</title>
 </head>
@@ -147,6 +148,7 @@ $(function(){
 <th>驾校联系人</th>
 <th>联系人支付宝</th>
 <th>驾校联系电话</th>
+<th>是否签约</th>
 <th>驾校订单抽成</th>
 <th>添加时间</th>
 <th>操作</th>
@@ -158,6 +160,7 @@ $(function(){
 <td  style="width:150px;" class="border_right_bottom">${contact }</td>
 <td  style="width:200px;" class="border_right_bottom">${alipay_account}</td>
 <td  style="width:200px;" class="border_right_bottom">${telphone }</td>
+<td  style="width:200px;" class="border_right_bottom">${iscontract==1?"已签约":"未签约"}</td>
 <td  style="width:100px;" class="border_right_bottom">${order_pull}&nbsp;%</td>
 <td  style="width:200px;" class="border_right_bottom">
 <s:date name="addtime"  format="yyyy-MM-dd HH:mm:ss" /></td>
@@ -171,7 +174,7 @@ $(function(){
 <div class="table_edit_button">
 <div class="table_button_edit_icon"></div>
 <div class="table_button_text" 
-onclick="showeditschool('${name}','${telphone }','${contact }','${alipay_account }','${order_pull}','${provinceid}','${cityid}','${areaid}')">修改</div>
+onclick="showeditschool('${name}','${telphone }','${contact }','${alipay_account }','${order_pull}','${provinceid}','${cityid}','${areaid}','${iscontract}')">修改</div>
 </div>
 
 
@@ -265,20 +268,44 @@ onclick="showeditschool('${name}','${telphone }','${contact }','${alipay_account
 	<div id="mask" class="mask"></div>
 	<div id="mask_sec" style="position: fixed; width: 100%; height: 300px;z-index: 300;">
 		<div id="mask_last" class="mask_last">
-		<div style="position: fixed; width: 450px; height: 490px;background: #4cc2ff;margin-left: 100px;margin-top: 10px;">
-		<input id="schoolname" type="text" style="width: 240px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;"  placeholder="请输入要添加的驾校名称"/>
-		<input id="schoolphone" type="text" style="width: 240px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;"  placeholder="请输入要驾校联系电话" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="11"/>
-		<input id="schoolcontact" type="text" style="width: 240px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;"  placeholder="请输入驾校联系人姓名"/>
-		<input id="alipay_account" type="text" style="width: 240px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;"  placeholder="请输入联系人支付宝账号"/>
-		<input id="order_pull" type="text" style="width: 240px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;"  placeholder="请设置驾校提成" onkeyup="value=value.replace(/[^\d]/g,'')"/>
-		<br>
+		<div style="position: fixed; width: 450px; height: 600px;background: #4cc2ff;margin-left: 100px;margin-top: 10px;">
+		<table>
+		<tr>
+		  <td><input id="schoolname" type="text" style="width: 240px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;"  placeholder="请输入要添加的驾校名称"/></td>
+		 </tr>
+		 <tr>
+		  <td><input id="schoolphone" type="text" style="width: 240px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;"  placeholder="请输入要驾校联系电话" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="11"/></td>
+		</tr>
+		<tr>
+		  <td><input id="schoolcontact" type="text" style="width: 240px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;"  placeholder="请输入驾校联系人姓名"/></td>
+		  </tr>
+		  <tr>
+		  <td><input id="alipay_account" type="text" style="width: 240px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;"  placeholder="请输入联系人支付宝账号"/></td>
+		  </tr>
+		  <tr>
+		  <td><input id="order_pull" type="text" style="width: 240px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;"  placeholder="请设置驾校提成" onkeyup="value=value.replace(/[^\d]/g,'')"/></td>
+		  </tr>
+		  <tr align="center">
+		  <td >是否签约:
+		<select id="flag_contract">
+		     <option value="1">已签约</option>
+		     <option value="2" selected="selected">未签约</option>
+		</select>
+		</td>
+	</tr>	
+		<tr align="center">
+		  <td>
 		省
 		<select  id="province" 
-						 style="width: 80px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;" onchange="tofindCity(this.value)"></select><br>
-						
+						 style="width: 80px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;" onchange="tofindCity(this.value)"></select>
+					</td></tr>
+					<tr align="center"><td>
 						 市<select id="city" name="city" style="width: 80px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;" onchange="tofindArea(this.value)"></select>
-						 
+						 </td></tr>
+					<tr align="center"> <td>
 						 区<select id="area" name="area" style="width: 80px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;"  ></select>
+						 </td></tr>
+						 </table>
 <!-- 		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 100px;margin-top: 25px;font-size: 18px" value="确定" onclick="addshcool()">
 		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-top: -40px;font-size: 18px" value="取消" onclick="unshowaddschool()"> -->
 		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 125px;margin-top: 15px;font-size: 18px" value="确定" onclick="addshcool()">
@@ -289,31 +316,35 @@ onclick="showeditschool('${name}','${telphone }','${contact }','${alipay_account
 	</div>
 	
 <!-- 	修改驾校信息 -->
-	<div id="edit" class="edit"></div>
-	<div id="edit_sec" style="position: fixed; width: 100%; height: 300px;z-index: 300;">
-		<div id="edit_last" class="edit_last">
-		<div style="position: fixed; width: 450px; height: 800px;background: #4cc2ff;margin-left: 25px;margin-top: 25px;">
-		<input type="hidden" value=""  id="name">
-		<input id="oldschoolname" type="text" style="width: 300px;height: 40px;margin: auto;margin-left: 75px;margin-top: 15px;font-size: 18px;text-align: center;" disabled="disabled"/>
-		<input id="editschoolname" type="text" style="width: 300px;height: 40px;margin: auto;margin-left: 75px;margin-top: 18px;font-size: 18px;text-align: center;" placeholder="请输入修改驾校名" />
-		<input id="oldschoolphone" type="text" style="width: 300px;height: 40px;margin: auto;margin-left: 75px;margin-top: 18px;font-size: 18px;text-align: center;" disabled="disabled"/>
-		<input id="editschoolphone" type="text" style="width: 300px;height: 40px;margin: auto;margin-left: 75px;margin-top: 18px;font-size: 18px;text-align: center;" placeholder="请输入修改联系电话" onchange="editschoolphoneIsNum()"/>
-		<input id="oldschoolcontact" type="text" style="width: 300px;height: 40px;margin: auto;margin-left: 75px;margin-top: 18px;font-size: 18px;text-align: center;" disabled="disabled"/>
-		<input id="editschoolcontact" type="text" style="width: 300px;height: 40px;margin: auto;margin-left: 75px;margin-top: 18px;font-size: 18px;text-align: center;" placeholder="请输入修改驾校联系人姓名" />
-		<input id="oldalipay_account" type="text" style="width: 300px;height: 40px;margin: auto;margin-left: 75px;margin-top: 18px;font-size: 18px;text-align: center;" disabled="disabled"/>
-		<input id="editalipay_account" type="text" style="width: 300px;height: 40px;margin: auto;margin-left: 75px;margin-top: 18px;font-size: 18px;text-align: center;" placeholder="请输入修改联系人支付宝账号" />
-		<input id="oldorder_pull" type="text" style="width: 300px;height: 40px;margin: auto;margin-left: 75px;margin-top: 18px;font-size: 18px;text-align: center;" disabled="disabled"/>
-		<input id="editorder_pull" type="text" style="width: 300px;height: 40px;margin: auto;margin-left: 75px;margin-top: 18px;font-size: 18px;text-align: center;" placeholder="请输入修改驾校订单提成" />
-		省
-		<select  id="province1" 
-						 style="width: 80px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;" onchange="tofindCity(this.value)"></select><br>
-						
-						 市<select id="city1" name="city" style="width: 80px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;" onchange="tofindArea(this.value)"></select>
-						 
-						 区<select id="area1" name="area" style="width: 80px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;"  ></select>
-		
-		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 125px;margin-top: 15px;font-size: 18px" value="确定" onclick="editschool()">
-		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-top: -40px;font-size: 15px" value="取消" onclick="unshoweditschool()">
+<div id="edit" class="edit"></div>
+<div id="edit_sec" style="position: fixed; width: 100%; height: 300px;z-index: 300;">
+	<div id="edit_last" class="edit_last">
+		<div style=" width: 450px; height: 1200px;background: #4cc2ff;margin-left: 25px;margin-top: 25px;">
+			<input type="hidden" value=""  id="name">
+			<input id="oldschoolname" type="text" style="width: 300px;height: 40px;margin: auto;margin-left: 75px;margin-top: 15px;font-size: 18px;text-align: center;" disabled="disabled"/>
+			<input id="editschoolname" type="text" style="width: 300px;height: 40px;margin: auto;margin-left: 75px;margin-top: 18px;font-size: 18px;text-align: center;" placeholder="请输入修改驾校名" />
+			<input id="oldschoolphone" type="text" style="width: 300px;height: 40px;margin: auto;margin-left: 75px;margin-top: 18px;font-size: 18px;text-align: center;" disabled="disabled"/>
+			<input id="editschoolphone" type="text" style="width: 300px;height: 40px;margin: auto;margin-left: 75px;margin-top: 18px;font-size: 18px;text-align: center;" placeholder="请输入修改联系电话" onchange="editschoolphoneIsNum()"/>
+			<input id="oldschoolcontact" type="text" style="width: 300px;height: 40px;margin: auto;margin-left: 75px;margin-top: 18px;font-size: 18px;text-align: center;" disabled="disabled"/>
+			<input id="editschoolcontact" type="text" style="width: 300px;height: 40px;margin: auto;margin-left: 75px;margin-top: 18px;font-size: 18px;text-align: center;" placeholder="请输入修改驾校联系人姓名" />
+			<input id="oldalipay_account" type="text" style="width: 300px;height: 40px;margin: auto;margin-left: 75px;margin-top: 18px;font-size: 18px;text-align: center;" disabled="disabled"/>
+			<input id="editalipay_account" type="text" style="width: 300px;height: 40px;margin: auto;margin-left: 75px;margin-top: 18px;font-size: 18px;text-align: center;" placeholder="请输入修改联系人支付宝账号" />
+			<input id="oldorder_pull" type="text" style="width: 300px;height: 40px;margin: auto;margin-left: 75px;margin-top: 18px;font-size: 18px;text-align: center;" disabled="disabled"/>
+			<input id="editorder_pull" type="text" style="width: 300px;height: 40px;margin: auto;margin-left: 75px;margin-top: 18px;font-size: 18px;text-align: center;" placeholder="请输入修改驾校订单提成" />
+		   <input id=oldflage_contract type="text" style="width: 300px;height: 40px;margin: auto;margin-left: 75px;margin-top: 15px;font-size: 18px;text-align: center;" disabled="disabled"/>
+		 <br>  <select id="editflag_contract" style="width:80px;text-align:center;">
+		      <option value="1">已签约</option>
+		      <option value="2" selected="selected">未签约</option>
+		   </select>
+		   <br>
+			省
+			<select  id="province1" style="width: 80px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;" onchange="tofindCity(this.value)"></select>
+			市<select id="city1" name="city" style="width: 80px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;" onchange="tofindArea(this.value)"></select>区<select id="area1" name="area" style="width: 80px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;"  ></select>
+<br/>
+			<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 125px;margin-top: 15px;font-size: 18px" value="确定" onclick="editschool()">
+			<input type="button" style="width: 100px;height: 40px;margin: auto;font-size: 15px" value="取消" onclick="unshoweditschool()">
+
+
 		</div>
 		</div>
 	</div>

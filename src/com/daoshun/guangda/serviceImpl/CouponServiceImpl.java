@@ -331,6 +331,27 @@ public class CouponServiceImpl extends BaseServiceImpl implements ICouponService
 			dataDao.updateObject(couponRecord);
 		}
 	}
+	
+	
+	// 作废所有未使用优惠券
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public void cancelallcoupon(int userid) {
+		
+		String couponhql = "from CouponRecord  where state = 0 and userid="+userid;
+		List<CouponRecord> Crlist = (List<CouponRecord>) dataDao.getObjectsViaParam(couponhql.toString(),null);
+
+		for (CouponRecord couponrecord : Crlist) {
+			if (couponrecord != null) {
+				couponrecord.setState(2);
+				couponrecord.setGettime(new Date());// 更新作废时间
+				dataDao.updateObject(couponrecord);
+			}
+			
+		}
+		
+	}
+	
 
 	@Override
 	public QueryResult<CouponRecord> getCancelCouponReecordListByPage(int pageIndex, int pageSize, String name, Integer coupontype, String starttime, String endtime, Integer value, Integer valuetype,

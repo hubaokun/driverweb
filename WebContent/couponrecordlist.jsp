@@ -110,7 +110,7 @@
 			
 			<div id="content_form_top">
 			<form id="searchform" action="getCouponRecordList.do">
-					<div id="content_form_top">
+					<div id="content_form_top2">
 					
 						<div class="searchbutton" onclick="searchfromsubmit();">
 							<img src="imgs/common/searchicon.png" width=22px height=22px
@@ -120,6 +120,11 @@
 						<div class="searchbutton" style="width:70px;">
 							<div class="table_button_edit_icon"></div>
 							<div class="table_button_text" style="font-size: 12px;line-height: 38px;"><a href="getCouponRecordInfo.do" style="color:white;text-decoration:none;">返回</a></div>
+						</div>
+						
+						<div class="searchbutton" style="width:100px;" onclick="cancelallcoupon('${userid}')">
+							<div class="table_button_del_icon"></div>
+							<div class="table_button_text" style="font-size: 12px;line-height: 38px;">未使用券作废</div>
 						</div>
 						 
 						<div class="serchcontentdiv"
@@ -219,7 +224,6 @@
 
 									<input type="hidden" value="${pageCount }" id="pageSize" />
 									<input type="hidden" value="${pageIndex }" id="pageIndex" />
-									<input type="hidden" value="${userid }" id="userid" />
 									
 									<div id="untreatedpage"></div>
 									<script type="text/javascript">

@@ -1,5 +1,6 @@
 package com.daoshun.guangda.action;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -20,6 +21,7 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.convention.annotation.Results;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -87,6 +89,11 @@ public class OrderAction extends BaseAction {
 	
 	private Integer ishavacomplaint;
 	
+	private String datastartdate;
+	
+	private String dataenddate;
+	
+	private Integer t_paytype;
 	/**
 	 * 获取教练任务列表
 	 * @return
@@ -95,7 +102,7 @@ public class OrderAction extends BaseAction {
 	public String getOrderList() {
 		HttpSession session = ServletActionContext.getRequest().getSession();
 		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
-		QueryResult<OrderInfo> result = orderService.getOrderList(coachphone,studentphone,startminsdate,startmaxsdate,endminsdate,endmaxsdate,state,ordertotal,inputordertotal,ishavacomplaint, pageIndex, pagesize);
+		QueryResult<OrderInfo> result = orderService.getOrderList(coachphone,studentphone,startminsdate,startmaxsdate,endminsdate,endmaxsdate,state,ordertotal,inputordertotal,ishavacomplaint,t_paytype, pageIndex, pagesize);
 		total = result.getTotal();
 		orderlist = result.getDataList();
 		for(int i=0; i< orderlist.size();i++)
@@ -243,7 +250,7 @@ public class OrderAction extends BaseAction {
 	        cell.setCellValue("详细地址");
 	        cell.setCellStyle(style);
 	        index++;
-	        orderlist = orderService.getAllOrder();
+	        orderlist = orderService.getOrderBydate(datastartdate,dataenddate);
 	        if(orderlist!=null&&orderlist.size()>0){
 	        	for(int i = 0;i<orderlist.size();i++){
 	                row = sheet.createRow((int) index++);
@@ -379,8 +386,11 @@ public class OrderAction extends BaseAction {
 	        try  
 	        {  
 	            FileOutputStream fout = new FileOutputStream(file);  
-	            wb.write(fout);  
-	            fout.close();  
+	            BufferedOutputStream bos=new BufferedOutputStream(fout);
+	            wb.write(bos);  
+	            bos.flush();
+	            fout.close();
+	            bos.close();  
 	        }  
 	        catch (Exception e)  
 	        {  
@@ -390,7 +400,13 @@ public class OrderAction extends BaseAction {
 		HttpServletResponse response = ServletActionContext.getResponse();
 		CommonUtils.downloadExcel(filename, "小巴订单信息表", response);
 	}
-
+	@Action(value = "/jumptodowanload",results = { @Result(name = SUCCESS, location = "/downloadorder.jsp") })
+	public String jumptodowanload() throws IOException {
+      
+	   return SUCCESS;
+	}
+	
+	
 	public long getTotal() {
 		return total;
 	}
@@ -565,6 +581,30 @@ public class OrderAction extends BaseAction {
 
 	public void setChange_id(int change_id) {
 		this.change_id = change_id;
+	}
+
+	public String getDatastartdate() {
+		return datastartdate;
+	}
+
+	public void setDatastartdate(String datastartdate) {
+		this.datastartdate = datastartdate;
+	}
+
+	public String getDataenddate() {
+		return dataenddate;
+	}
+
+	public void setDataenddate(String dataenddate) {
+		this.dataenddate = dataenddate;
+	}
+
+	public Integer getT_paytype() {
+		return t_paytype;
+	}
+
+	public void setT_paytype(Integer t_paytype) {
+		this.t_paytype = t_paytype;
 	}
 	
 	
