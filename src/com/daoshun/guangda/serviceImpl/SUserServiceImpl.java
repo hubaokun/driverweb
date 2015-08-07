@@ -522,7 +522,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	public QueryResult<StudentApplyInfo> getCoachApplyBySearch(String searchname, String searchphone, String amount, String inputamount, Integer state, String minsdate, String maxsdate,
 			Integer pageIndex, int pagesize) {
 		StringBuffer cuserhql = new StringBuffer();
-		cuserhql.append("from StudentApplyInfo where 1=1");
+		cuserhql.append("from StudentApplyInfo where state = 0");
 		if (!CommonUtils.isEmptyString(searchname)) {
 			cuserhql.append(" and userid in (select studentid from SuserInfo where realname like '%" + searchname + "%')");
 		}
@@ -564,6 +564,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 				if (student != null) {
 					capplyCash.setRealname(student.getRealname());
 					capplyCash.setPhone(student.getPhone());
+					capplyCash.setAlipay_account(student.getAlipay_account());
 				}
 			}
 		}
@@ -793,6 +794,29 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 				}
 			}
 		}
+		
+		//获取学员充值账号(type=2并且state=1)
+		for (BalanceStudentInfo balanceCoach : applycashlist) {
+			//RechargeRecordInfo user = dataDao.getObjectById(RechargeRecordInfo.class, balanceCoach.getUserid());
+			
+			
+			Date addtime = balanceCoach.getAddtime();
+			StringBuffer suserhql = new StringBuffer();
+			suserhql.append("from RechargeRecordInfo where updatetime=:addtime order by userid asc");
+			String[] parms={"addtime"};
+			List<RechargeRecordInfo> users = (List<RechargeRecordInfo>)dataDao.pageQueryViaParam(suserhql.toString(),10, 1, parms,addtime);
+			String counthql = " select count(*) " + suserhql.toString();
+			long total = (Long) dataDao.getFirstObjectViaParam(counthql, parms,addtime);
+
+			QueryResult<RechargeRecordInfo> result = new QueryResult<RechargeRecordInfo>(users, total);
+			List<RechargeRecordInfo> userinfo= result.getDataList();
+			RechargeRecordInfo user = userinfo.get(0);
+			
+			if (user.getType()==2 && user.getState()==1) {
+				balanceCoach.setBuyer_email(user.getBuyer_email());
+			}
+		}
+		
 		String counthql = " select count(*) " + cuserhql.toString();
 		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<BalanceStudentInfo>(applycashlist, total);
