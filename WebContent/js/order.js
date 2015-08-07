@@ -38,6 +38,7 @@ function searchOrder(){
 	var ishavacomplaint = $("#ishavacomplaint").val();
 	var index = $("#index").val();
 	var change_id = $("#change_id").val();
+	var t_paytype=$("#t_paytype").val();
 	window.location.href="getOrderList.do?coachphone="+coachphone+"&studentphone="+studentphone+"&startminsdate="+startminsdate+"&startmaxsdate="+startmaxsdate+
-	"&endminsdate="+endminsdate+"&endmaxsdate="+endmaxsdate+"&state="+state+"&ordertotal="+ordertotal+"&inputordertotal="+inputordertotal+"&ishavacomplaint="+ishavacomplaint+"&index="+index+"&change_id="+change_id;
+	"&endminsdate="+endminsdate+"&endmaxsdate="+endmaxsdate+"&state="+state+"&ordertotal="+ordertotal+"&inputordertotal="+inputordertotal+"&ishavacomplaint="+ishavacomplaint+"&t_paytype="+t_paytype+"&index="+index+"&change_id="+change_id;
 }

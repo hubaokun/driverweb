@@ -8,7 +8,6 @@ public class ErrException extends NullParameterException {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
 	public String getMessage() {
 		return "{\"message\":\"请升级到最新版本\",\"code\":99}";
 	}

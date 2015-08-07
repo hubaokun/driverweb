@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.type.descriptor.sql.VarcharTypeDescriptor;
+
 /**
  * @author liukn
  *
@@ -50,7 +52,7 @@ public class CaddAddressInfo implements Serializable {
 	private String area;
 	
 	//地址详细
-	@Column(name = "detail",length=500,nullable = false)
+	@Column(name = "detail", length=400,nullable = false)
 	private String detail;
 
 	
