@@ -407,8 +407,10 @@ public class CuserServlet extends BaseServlet {
 				//System.out.println("----"+pro.getProvince()+city.getCity());
 				AreaInfo area=locationService.getAreaById(cuser.getAreaid());
 				//System.out.println("----"+pro.getProvince()+city.getCity()+area.getArea());
-				String locationname=pro.getProvince()+"-"+city.getCity()+"-"+area.getArea();
-
+				String locationname="";
+				if(pro!=null){
+					locationname=pro.getProvince()+"-"+city.getCity()+"-"+area.getArea();
+				}
 				cuser.setLocationname(locationname);
 			}
 			resultMap.put("UserInfo", cuser);
