@@ -1,6 +1,7 @@
 package com.daoshun.guangda.servlet;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -235,7 +236,20 @@ public class SystemServlet extends BaseServlet {
 		//int coinnum=suserService.getSumCoinnum(userid);
 		if (CommonUtils.parseInt(usertype, 0) == 1) {// 教练
 			CuserInfo cuser = cuserService.getCuserByCoachid(userid);
-			//教练小巴币个数=总的个数-冻结的个数
+			if(cuser==null){
+				resultMap.put(Constant.CODE, 2);
+				resultMap.put(Constant.MESSAGE, "教练找不到");
+				return;
+			}
+			if(cuser.getCoinnum()==null){
+				cuser.setCoinnum(0);
+			}
+			if(cuser.getMoney()==null){
+				cuser.setMoney(new BigDecimal(0));
+			}
+			if(cuser.getFmoney()==null){
+				cuser.setFmoney(new BigDecimal(0));
+			}
 			int coinnum=cuser.getCoinnum();
 			if (cuser != null) {
 				resultMap.put("money", cuser.getMoney());
@@ -248,11 +262,25 @@ public class SystemServlet extends BaseServlet {
 			}
 		} else {
 			SuserInfo suser = suserService.getUserById(userid);
+			if(suser.getCoinnum()==null){
+				suser.setCoinnum(0);
+			}
+			if(suser.getMoney()==null){
+				suser.setMoney(new BigDecimal(0));
+			}
+			if(suser.getFmoney()==null){
+				suser.setFmoney(new BigDecimal(0));
+			}
 			if (suser != null) {// 学员
 				resultMap.put("money", suser.getMoney());
 				resultMap.put("fmoney", suser.getFmoney());
 				resultMap.put("coinnum", suser.getCoinnum());
 				resultMap.put("gmoney", 0);
+			}else{
+					resultMap.put(Constant.CODE, 2);
+					resultMap.put(Constant.MESSAGE, "学员找不到");
+					return;
+				
 			}
 		}
 	}

@@ -984,6 +984,8 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
         cuser.setPrice(new BigDecimal(0)); // 教练单价
         cuser.setToken(token);
         cuser.setToken_time(new Date());
+        cuser.setCoinnum(0);
+        cuser.setFcoinnum(0);
         dataDao.addObject(cuser);
         return cuser;
     }
