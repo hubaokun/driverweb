@@ -198,10 +198,12 @@ public class RecommendServlet extends BaseServlet {
 	{
 		String coachid=request.getParameter("coachid");
 		String page=request.getParameter("pagenum");
+		String type=request.getParameter("type");
 		CommonUtils.validateEmpty(coachid);
 		CommonUtils.validateEmpty(page);
-		QueryResult<RecommendInfo> qr=recommendService.getRecommendList(coachid, CommonUtils.parseInt(page, 0));
-		int hasmore=recommendService.ifhasmoreRecommendinfo(coachid, CommonUtils.parseInt(page, 0));
+		CommonUtils.validateEmpty(type);
+		QueryResult<RecommendInfo> qr=recommendService.getRecommendList(coachid, CommonUtils.parseInt(page, 0),CommonUtils.parseInt(type, 0));
+		int hasmore=recommendService.ifhasmoreRecommendinfo(coachid, CommonUtils.parseInt(page, 0),CommonUtils.parseInt(type, 0));
 		int rflag=0;
 		if(hasmore==0)
 			resultMap.put("hasmore",0);
@@ -215,7 +217,7 @@ public class RecommendServlet extends BaseServlet {
 			{
 				RecommendInfo temp=(RecommendInfo) list.get(i);
 			}
-			BigDecimal totalreward=recommendService.getReward(coachid);
+			BigDecimal totalreward=recommendService.getReward(coachid,CommonUtils.parseInt(type, 0));
 			rflag=1;
 			resultMap.put("totalreward",totalreward);
 		}
@@ -233,9 +235,11 @@ public class RecommendServlet extends BaseServlet {
 	public void addRecommendInfo(HttpServletRequest request,HashMap<String, Object> resultMap) throws NullParameterException
 	{
 		String inviteid=request.getParameter("InviteCode");
-		String invitedcoachid=request.getParameter("InvitedCoachid");
+		String invitedpeopleid=request.getParameter("InvitedPeopleid");
+		String type=request.getParameter("type");
 		CommonUtils.validateEmpty(inviteid);
-		CommonUtils.validateEmpty(invitedcoachid);
+		CommonUtils.validateEmpty(invitedpeopleid);
+		CommonUtils.validateEmpty(type);
 		//String codetype=inviteid.substring(0, 0).toUpperCase();   邀请码类型，C=教练  S=学员
 		if(inviteid.length()!=8)
 		{
@@ -245,7 +249,7 @@ public class RecommendServlet extends BaseServlet {
 		else
 		{
 			inviteid=inviteid.substring(1, 8).toUpperCase();
-			if((recommendService.addRecommendInfo(inviteid, invitedcoachid))==1)
+			if((recommendService.addRecommendInfo(inviteid, invitedpeopleid,CommonUtils.parseInt(type, 0)))==1)
 				resultMap.put("isRecommended",1);
 			else
 				resultMap.put("isRecommended",0);

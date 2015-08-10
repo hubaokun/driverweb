@@ -245,12 +245,12 @@ public class CscheduleServiceImpl extends BaseServiceImpl implements ICscheduleS
 	}
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override
-	public void getCoachStateByFunction(String coachid, int datacount,String day, int starthour, int endhour,
+	public void getCoachStateByFunction(String coachid, int datacount, int starthour, int endhour,
 			int subjectid) {
 		String querystring="from CuserInfo where coachid=:coachid";
-		String querystring1="from CscheduleInfo where coachid=:coachid and date=:date and hour!=0 and isrest=1";
+		//String querystring1="from CscheduleInfo where coachid=:coachid and date=:date and hour!=0 and isrest=1";
 		String[] params={"coachid"};
-		String[] params1={"coachid","date"};
+	//	String[] params1={"coachid","date"};
 		Date d=new Date();
 		List querylist=dataDao.getCoachState(coachid, datacount,d, starthour, endhour, subjectid);
 		CuserInfo tempCuserInfo=(CuserInfo)dataDao.getFirstObjectViaParam(querystring, params, CommonUtils.parseInt(coachid, 0));
@@ -258,25 +258,8 @@ public class CscheduleServiceImpl extends BaseServiceImpl implements ICscheduleS
 		
 		if(tempCuserInfo!=null)
 		{
-			if(result.equals("1"))
-			{
-				List<CscheduleInfo> tempCscheduleInfolist=(List<CscheduleInfo>) dataDao.getObjectsViaParam(querystring1, params1,CommonUtils.parseInt(coachid, 0),day);
-				if(tempCscheduleInfolist.size()==19)
-				{
-					tempCuserInfo.setCoursestate(0);
-				}
-				else
-				{
-					tempCuserInfo.setCoursestate(Integer.parseInt(result));
-				}
-				dataDao.updateObject(tempCuserInfo);
-			}
-			else
-			{
 				tempCuserInfo.setCoursestate(Integer.parseInt(result));
 				dataDao.updateObject(tempCuserInfo);
-			}
-			
 		}
 	}
 }

@@ -218,6 +218,7 @@ function dataExport(){
 						<th>结束时间</th>
 						<th>总价</th>
 						<th>支付方式</th>
+						<th>老订单支付方式</th>
 						<th>订单状态</th>
 						<th>投诉条数</th>
 						<th>预定时间</th>
@@ -245,6 +246,18 @@ function dataExport(){
 							<s:else>
 							   <td style="width: 60px;" class="border_right_bottom">未知方式</td>
 							</s:else>
+							<s:if test="paytype==0">
+								<s:if test="couponrecordid.length()>0 && delmoney>0 ">
+									<td style="width: 60px;" class="border_right_bottom">小巴券</td>
+								</s:if>
+								<s:else>
+									<td style="width: 60px;" class="border_right_bottom">余额</td>
+								</s:else>
+							</s:if>
+							<s:else>
+									<td style="width: 60px;" class="border_right_bottom">未知</td>
+							</s:else>
+							
 							<s:if test="coachstate==2&&over_time!=null&&studentstate==3">
 								<td style="width: 40px;" class="border_right_bottom">已结算</td>
 							</s:if>
