@@ -606,7 +606,7 @@ public class CscheduleServlet extends BaseServlet {
 			resultMap.put("message", "请先设置默认教学地址");
 		}
 		long end=System.currentTimeMillis();
-		System.out.println("getSchedule总耗时："+(end-start));
+		//System.out.println("getSchedule总耗时："+(end-start));
 	}
 	
 	/**
