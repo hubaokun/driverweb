@@ -78,14 +78,17 @@ $(function(){
 		<input type="text" class="searchdiv" style="width: 30px;text-align: center;font-family: 微软雅黑;" value="到" readonly="readonly">
 		<input id="maxsdate" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})" type="text" class="searchdiv" style="width: 120px;text-align: center;font-family: 微软雅黑;" value="${maxsdate}" >
 	</div>
-<!-- 	<div class="serchcontentdiv"style="float: left; margin-left: 50px; width: 130px"  > -->
-<!-- 	<input type="text" class="searchdiv" style="width: 40px;text-align: center;font-family: 微软雅黑;" value="状态" readonly="readonly"> -->
-<%-- 		<select id="state" class="searchdiv" style="width: 85px;"> --%>
-<!-- 			<option value="0" >不限</option> -->
-<!-- 			<option value="1" >申请中</option> -->
-<!-- 			<option value="2" >申请通过</option> -->
-<%-- 		</select> --%>
-<!-- 	</div> -->
+	<!-- 
+ 	<div class="serchcontentdiv"style="float: left; margin-left: 50px; width: 130px"  > 
+ 	<input type="text" class="searchdiv" style="width: 40px;text-align: center;font-family: 微软雅黑;" value="状态" readonly="readonly"> 
+ 		<select id="state" class="searchdiv" style="width: 85px;"> 
+ 			<option value="0" >不限</option> 
+			<option value="1" >申请中</option> 
+ 			<option value="2" >申请通过</option> 
+ 		</select> 
+ 	</div> 
+ 	-->
+ 	<input type="hidden" id="state" value="${state}" />
 			</div>
 			<div id="content_form_table">
 				<table border="0" cellspacing="0" cellpadding="0"
