@@ -887,7 +887,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		//System.out.println(cuserhql.toString());
 		StringBuffer s=new StringBuffer("");
 		s.append("select getTeachAddress(u.coachid) as address,getCoachOrderCount(u.coachid) as drive_schoolid, u.*  from t_user_coach u where state = 2 and phone='15397128850'");
-		System.out.println(cuserhql.toString());
+		//System.out.println(cuserhql.toString());
 		List<CuserInfo> coachlist = (List<CuserInfo>) dataDao.SqlPageQuery(cuserhql.toString(), Constant.USERLIST_SIZE+1, CommonUtils.parseInt(pagenum, 0) + 1,CuserInfo.class, null);
 		
 		
@@ -1478,7 +1478,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			result.put("failtimes",11);
 			result.put("successorderid", 11);
 			result.put("coachauth", 11);
-			result.put("message", "您当前处于欠费状态,无法生成订单!");
+			result.put("message", "您当前账户余额或冻结金额欠费,无法生成订单!");
 			result.put("code", 11);//app应当提示"您当前处于欠费状态,无法生成订单
 			return result;
 		}
@@ -1528,7 +1528,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			List<OrderModel> orderList = new ArrayList<OrderModel>();
 			JSONArray json = new JSONArray(date);
 			// 教练信息
-			CuserInfo cUser = dataDao.getObjectById(CuserInfo.class, CommonUtils.parseInt(coachid, 0));
+			//CuserInfo cUser = dataDao.getObjectById(CuserInfo.class, CommonUtils.parseInt(coachid, 0));
 			boolean hasError = false;
 			for (int i = 0; i < json.length(); i++) {// 每个循环是一个订单
 				boolean canOrder = true;
@@ -1541,7 +1541,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				if (paytype == null || paytype.length() == 0)
 				{
 					result.put("code", 3);
-					result.put("message", "请选择支付方式");
+					result.put("message", "订单没有提交支付方式");
 					break;
 				}
 				String recordid="";
@@ -1552,13 +1552,16 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					delmoney= array.getInt("delmoney");
 					recordid= array.getString("recordid");
 					//1.早起版本券的id尾巴上多了一个逗号,2.券的张数跟课时数不匹配,3.传了券id,但没传入delmoney的值
-					if((recordid.lastIndexOf(',')==recordid.length()-1)|| recordid.split(",").length>times.length()||(recordid.length()>0&& delmoney<=0))
+					if((recordid.lastIndexOf(',')==recordid.length()-1)||
+							recordid.split(",").length>times.length()||
+							(recordid.length()>0&& delmoney<=0))
 					{
 						//版本需要更新
 						result.put("failtimes", -1);
 						result.put("successorderid", -1);
 						result.put("coachauth", -1);
-						result.put("code", -1);
+						result.put("code", 5);
+						result.put("message", "小巴券数据有误！");
 						return result;
 					}
 
@@ -1590,7 +1593,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				}
 
 				
-				// 如果是用了小巴券,但是又没有传delmoney的话,订单预订失败
+				// 如果使用了小巴券,但是又没有传delmoney的话,订单预订失败
 				if("2".equals(paytype)){
 				
 					if (!CommonUtils.isEmptyString(recordid) && delmoney == 0 && recordid.length()>2 ) {//
@@ -1633,6 +1636,9 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 								failtimes += "," + date1 + hour + "点";
 							}
 							canOrder = false;
+							result.put("message", failtimes+"已经被别人预约了");
+							result.put("code", 10);
+							return result;
 						} else {
 							List<CscheduleInfo> scheduleinfoList2 = (List<CscheduleInfo>) dataDao.getObjectsViaParam(hql1, params1, CommonUtils.parseInt(coachid, 0), date1, hour);
 							if (scheduleinfoList2 != null && scheduleinfoList2.size() > 0) {
@@ -1643,6 +1649,9 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 										failtimes += "," + date1 + hour + "点";
 									}
 									canOrder = false;
+									result.put("message", failtimes+"是休息的，请刷新后再试!");
+									result.put("code", 11);
+									return result;
 								} else {// 时间点不休息的话,总价增加这个时间点的价格
 									total = total.add(scheduleinfoList2.get(0).getPrice());
 									if (CommonUtils.isEmptyString(latitude) || CommonUtils.isEmptyString(longitude) || CommonUtils.isEmptyString(detail)) {
@@ -1665,6 +1674,9 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 											failtimes += "," + date1 + hour + "点";
 										}
 										canOrder = false;
+										result.put("message", "教练没有默认设置");
+										result.put("code", 12);
+										return result;
 									} else {
 										// 采用默认的价格设置
 										BigDecimal price = getDefaultPrice(coachid, hour);
@@ -1690,6 +1702,9 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 										failtimes += "," + date1 + hour + "点";
 									}
 									canOrder = false;
+									result.put("message", failtimes+"是休息，请刷新后再试!");
+									result.put("code", 13);
+									return result;
 								} else {
 									// 采用默认的价格设置
 									BigDecimal price = getDefaultPrice(coachid, hour);
@@ -1950,7 +1965,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 									result.put("successorderid", successorderid);
 									result.put("coachauth", student.getCoachstate());
 									if (failtimes.length() == 0) {
-										result.put("code", 1);
+										result.put("code", 15);
 									} else {
 										result.put("code", 2);
 									}
@@ -2037,6 +2052,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			result.put("failtimes", -1);
 			result.put("successorderid", -1);
 			result.put("coachauth", -1);
+			result.put("message", "预约出错");
 			result.put("code", -1);
 			return result;
 			
@@ -2046,8 +2062,10 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		result.put("coachauth", student.getCoachstate());
 		if (failtimes.length() == 0) {
 			result.put("code", 1);
+			result.put("message", "OK");
 		} else {
 			result.put("code", 2);
+			result.put("message", "预约出错,预约失败的时间"+failtimes);
 		}
 		return result;
 	}
