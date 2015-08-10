@@ -3,6 +3,7 @@ package com.daoshun.guangda.service;
 import java.util.List;
 
 import com.daoshun.common.QueryResult;
+import com.daoshun.guangda.pojo.CouponCoach;
 import com.daoshun.guangda.pojo.CouponInfo;
 import com.daoshun.guangda.pojo.CouponRecord;
 import com.daoshun.guangda.pojo.CuserInfo;
@@ -34,6 +35,9 @@ public interface ICouponService {
 			Integer valuetype, Integer ownertype, String ownerkey, Integer state,int userid);
 	
 	public abstract QueryResult<CouponRecord> getCouponReecordInfoByPage(int pageIndex, int pageSize, String name, Integer coupontype, String starttime, String endtime, Integer value,
+			Integer valuetype, Integer ownertype, String ownerkey, Integer state);
+	
+	public abstract QueryResult<CouponCoach> getCouponCoachInfoByPage(int pageIndex, int pageSize, String name, Integer coupontype, String starttime, String endtime, Integer value,
 			Integer valuetype, Integer ownertype, String ownerkey, Integer state);
 
 	public abstract QueryResult<CouponRecord> getCancelCouponReecordListByPage(int pageIndex, int pageSize, String name, Integer coupontype, String starttime, String endtime, Integer value,

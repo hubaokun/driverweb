@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "t_coupon_coach")
@@ -40,6 +41,16 @@ public class CouponCoach implements Serializable {
 	
 	@Column(name = "couponrecordid", length = 10, nullable = false)
 	private Integer couponrecordid;
+	
+	@Transient
+	private String usernick;
+	
+	@Transient
+	private String schoolname;
+
+	@Transient
+	private String cusername;
+	
 	public Integer getRecordid() {
 		return recordid;
 	}
@@ -120,4 +131,30 @@ public class CouponCoach implements Serializable {
 		this.ownerid = ownerid;
 	}
 
+	
+	public String getUsernick() {
+		return usernick;
+	}
+
+	public void setUsernick(String usernick) {
+		this.usernick = usernick;
+	}
+
+	public String getSchoolname() {
+		return schoolname;
+	}
+
+	public void setSchoolname(String schoolname) {
+		this.schoolname = schoolname;
+	}
+
+	public String getCusername() {
+		return cusername;
+	}
+
+	public void setCusername(String cusername) {
+		this.cusername = cusername;
+	}
+
+	
 }

@@ -24,6 +24,7 @@ import com.daoshun.common.ExslImport;
 import com.daoshun.common.PushtoSingle;
 import com.daoshun.common.QueryResult;
 import com.daoshun.guangda.pojo.CoachStudentInfo;
+import com.daoshun.guangda.pojo.CouponCoach;
 import com.daoshun.guangda.pojo.CouponInfo;
 import com.daoshun.guangda.pojo.CouponRecord;
 import com.daoshun.guangda.pojo.CuserInfo;
@@ -37,6 +38,7 @@ import com.daoshun.guangda.service.ICUserService;
 import com.daoshun.guangda.service.ICouponService;
 import com.daoshun.guangda.service.IDriveSchoolService;
 import com.daoshun.guangda.service.ISUserService;
+import com.sun.net.httpserver.Authenticator.Success;
 
 @ParentPackage("default")
 @Controller
@@ -65,6 +67,8 @@ public class CouponAction extends BaseAction {
 	private List<CouponInfo> couponlist;
 
 	private List<CouponRecord> couponrecordlist;
+	
+	private List<CouponCoach> couponcoachlist;
 
 	private Integer pageIndex = 1;
 
@@ -192,6 +196,27 @@ public class CouponAction extends BaseAction {
 			if (couponrecordlist == null || couponrecordlist.size() == 0) {
 				pageIndex--;
 				getCouponRecordList();
+			}
+		}
+		return SUCCESS;
+	}
+	
+	
+	/**
+	 * 得到教练小巴券兑换记录
+	 * 
+	 * @return
+	 */
+	@Action(value = "getCouponCoachInfo", results = { @Result(name = SUCCESS, location = "/couponcoachInfo.jsp") })
+	public String getCouponCoachInfo() {
+		QueryResult<CouponCoach> result = couponService.getCouponCoachInfoByPage(pageIndex, 15, username, coupontype, starttime, endtime, value, valuetype, ownertype, ownerkey, state);
+		couponcoachlist = result.getDataList();
+		total = (int) result.getTotal();
+		pageCount = (total + 14) / 15;
+		if (pageIndex > 1) {
+			if (couponcoachlist == null || couponcoachlist.size() == 0) {
+				pageIndex--;
+				getCouponcoachlist();
 			}
 		}
 		return SUCCESS;
@@ -745,6 +770,15 @@ public class CouponAction extends BaseAction {
 
 	public void setCouponrecordlist(List<CouponRecord> couponrecordlist) {
 		this.couponrecordlist = couponrecordlist;
+	}
+	
+
+	public List<CouponCoach> getCouponcoachlist() {
+		return couponcoachlist;
+	}
+
+	public void setCouponcoachlist(List<CouponCoach> couponcoachlist) {
+		this.couponcoachlist = couponcoachlist;
 	}
 
 	public int getAddownertype() {
