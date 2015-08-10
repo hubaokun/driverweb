@@ -263,7 +263,7 @@ public class SbookServlet extends BaseServlet {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		CuserInfo cuser = sbookService.getCoachDetail(coachid);
-		if(cuser.getDrive_schoolid()>0 && cuser.getDrive_school().length()>0) {
+		if(cuser.getDrive_schoolid()>0 && cuser.getDrive_school()==null) {
 			DriveSchoolInfo dr = driveSchoolService.getDriveSchoolInfoByid(cuser.getDrive_schoolid());
 			if(dr!=null)
 				cuser.setDrive_school(dr.getName());
