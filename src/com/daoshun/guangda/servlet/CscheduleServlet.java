@@ -1233,7 +1233,78 @@ public class CscheduleServlet extends BaseServlet {
 		CommonUtils.validateEmpty(day);
 		String type = getRequestParamter(request, "type");// 修改的状态1.全天开课 2.全天休息
 		CommonUtils.validateEmpty(type);
-
+		String setjson = getRequestParamter(request, "setjson");
+		CommonUtils.validateEmpty(setjson);
+		if(type.equals("1"))
+		{
+			JSONArray json = null;
+			try {
+				json = new JSONArray(setjson);
+			} catch (JSONException e1) {
+				e1.printStackTrace();
+			}
+	
+			if (json == null) {
+				resultMap.put("code", 2);
+				resultMap.put("message", "设置失败,数据错误");
+				return;
+			} else {
+				for (int i = 0; i < json.length(); i++) {
+					JSONObject nextjson = null;
+					String hour = null;
+					String price = null;
+					String isrest = null;
+					String addressid = null;
+					String subjectid = null;
+					try {
+						nextjson = json.getJSONObject(i);
+						hour = nextjson.getString("hour");
+						price = nextjson.getString("price");
+						isrest = nextjson.getString("isrest");
+						addressid = nextjson.getString("addressid");
+						subjectid = nextjson.getString("subjectid");
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+	
+					if (hour == null || price == null || isrest == null || addressid == null || subjectid == null) {
+						resultMap.put("code", 2);
+						resultMap.put("message", "设置失败,数据错误");
+						return;
+					}
+	
+					CscheduleInfo cscheduleInfo = cscheduleService.getCscheduleByday(coachid, day, hour);// 根据时间教练 找到日程信息
+	
+					if (cscheduleInfo == null) {
+						// 新添加日程
+						CscheduleInfo scheduleInfo = new CscheduleInfo();
+						scheduleInfo.setCoachid(CommonUtils.parseInt(coachid, 0));// 教练id
+						scheduleInfo.setDate(day); // 日期
+						scheduleInfo.setHour(hour); // 设置时间
+	
+						BigDecimal b = new BigDecimal(CommonUtils.parseDouble(price, 0d));
+						scheduleInfo.setPrice(b); // 设置单价
+	
+						scheduleInfo.setIsrest(CommonUtils.parseInt(isrest, 0)); // 设置是否休息
+	
+						scheduleInfo.setAddressid(CommonUtils.parseInt(addressid, 0)); // 设置地址id
+	
+						scheduleInfo.setSubjectid(CommonUtils.parseInt(subjectid, 0));// 设置科目id
+						cscheduleService.addScheduleInfo(scheduleInfo);
+					} else {
+						BigDecimal b = new BigDecimal(CommonUtils.parseDouble(price, 0d));
+						cscheduleInfo.setPrice(b); // 设置单价
+	
+						cscheduleInfo.setIsrest(CommonUtils.parseInt(isrest, 0)); // 设置是否休息
+	
+						cscheduleInfo.setAddressid(CommonUtils.parseInt(addressid, 0)); // 设置地址id
+	
+						cscheduleInfo.setSubjectid(CommonUtils.parseInt(subjectid, 0));// 设置科目id
+						cscheduleService.updateScheduleInfo(cscheduleInfo);
+					}
+				}
+			}
+		}
 		CuserInfo cuser = cuserService.getCuserByCoachid(coachid);
 		CaddAddressInfo addressInfo = cuserService.getcoachaddress(coachid);
 
