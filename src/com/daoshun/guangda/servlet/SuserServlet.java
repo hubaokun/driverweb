@@ -701,7 +701,7 @@ public class SuserServlet extends BaseServlet {
 		else if(student.getMoney().doubleValue()<0 || student.getFmoney().doubleValue()<0 || CommonUtils.parseDouble(count, 0)<0)
 		{
 			resultMap.put("code", 6);
-			resultMap.put("message", "数据异常");
+			resultMap.put("message", "您已欠费");
 			return;
 		}
 		else if ((student.getMoney().doubleValue()) < CommonUtils.parseDouble(count, 0)) {
