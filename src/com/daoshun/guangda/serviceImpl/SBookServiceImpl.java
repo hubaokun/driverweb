@@ -1546,9 +1546,9 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				}
 				String recordid="";
 				int delmoney=0;
-				if("1".equals(paytype)){
+				if(String.valueOf(PayType.MONEY).equals(paytype)){
 					delmoney= array.getInt("delmoney");
-				}else if("2".equals(paytype)){
+				}else if(String.valueOf(PayType.COUPON).equals(paytype)){
 					delmoney= array.getInt("delmoney");
 					recordid= array.getString("recordid");
 					//1.早起版本券的id尾巴上多了一个逗号,2.券的张数跟课时数不匹配,3.传了券id,但没传入delmoney的值
@@ -1565,7 +1565,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						return result;
 					}
 
-				}else if("3".equals(paytype)){
+				}else if(String.valueOf(PayType.COIN).equals(paytype)){
 					delmoney= array.getInt("delmoney");
 				}
 			/*	System.out.println("##############################################");
@@ -1594,7 +1594,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 
 				
 				// 如果使用了小巴券,但是又没有传delmoney的话,订单预订失败
-				if("2".equals(paytype)){
+				if(String.valueOf(PayType.COUPON).equals(paytype)){
 				
 					if (!CommonUtils.isEmptyString(recordid) && delmoney == 0 && recordid.length()>2 ) {//
 						for (int j = 0; j < times.length(); j++) {
