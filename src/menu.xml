@@ -9,7 +9,8 @@
 		<sub-item name="所有学员" authority="4" action="getStudentlist.do"/>	
 		<sub-item name="报名学员" authority="4" action="getEnrollStudentlist.do"/>
 		<sub-item name="更换教练" authority="4" action="goChangeCoach.do"/>
-		<sub-item name="教练邀请教练" authority="1" action="getRecommendList.do"/>
+		<sub-item name="教练邀请教练" authority="1" action="getRecommendList.do?"/>
+		<sub-item name="教练邀请学员" authority="1" action="getRecommendListc2s.do?"/>
 		<sub-item name="教练学员关系" authority="5" action="getCoachStudent.do"/>
 		<sub-item name="教练余额管理" authority="6" action="getCoachBalance.do"/>
 		<sub-item name="学员余额管理" authority="7" action="getStudentBalance.do"/>

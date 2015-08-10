@@ -107,6 +107,6 @@ public interface ICscheduleService {
 	/**
 	 * 调用函数来确定教练是否开课
 	 */
-	public void getCoachStateByFunction(String coachid,int datacount,String day,int starthour,int endhour,int subjectid);
+	public void getCoachStateByFunction(String coachid,int datacount,int starthour,int endhour,int subjectid);
 	public boolean getIsbookedBybooktime(String hour, int coachid, String date) ;
 }

@@ -53,10 +53,10 @@ public class RecommendInfo implements java.io.Serializable{
    @Column(name="type",length=1,nullable=false)
    private int type;
    //被邀请人是否通过认证
-   @Column(name="ischecked",length=1,nullable=false)
+   @Column(name="ischecked",length=1,columnDefinition="INT default 0")
    private int ischecked;
    //被邀请人是否已开单
-   @Column(name="isorder",length=1,nullable=false)
+   @Column(name="isorder",length=1,columnDefinition="INT default 0")
    private int isorder;
    //邀请人姓名
    @Column(name="coachname",length=50)

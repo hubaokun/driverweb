@@ -24,6 +24,7 @@ import com.daoshun.guangda.pojo.OrderRecordInfo;
 import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.pojo.SystemSetInfo;
 import com.daoshun.guangda.service.ICUserService;
+import com.daoshun.guangda.service.ICscheduleService;
 import com.daoshun.guangda.service.ISOrderService;
 import com.daoshun.guangda.service.ISUserService;
 import com.daoshun.guangda.service.ISystemService;
@@ -36,6 +37,7 @@ public class SorderServlet extends BaseServlet {
 	private ISystemService systemService;
 	private ICUserService cuserService;
 	private ISUserService suserService;
+	private ICscheduleService cscheduleService;
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -44,6 +46,7 @@ public class SorderServlet extends BaseServlet {
 		systemService = (ISystemService) applicationContext.getBean("systemService");
 		cuserService = (ICUserService) applicationContext.getBean("cuserService");
 		suserService = (ISUserService) applicationContext.getBean("suserService");
+		cscheduleService = (ICscheduleService) applicationContext.getBean("cscheduleService");
 	}
 
 	@Override
@@ -450,14 +453,21 @@ public class SorderServlet extends BaseServlet {
 	public void cancelOrderAgree(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String agree = getRequestParamter(request, "agree");
 		String orderid = getRequestParamter(request, "orderid");
+		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(agree);
 		CommonUtils.validateEmpty(orderid);
+		CommonUtils.validateEmpty(coachid);
 		int code = sorderService.cancelOrderByCoach(orderid,agree);
 		if (code == -1) {
 			resultMap.put("code", 3);
 			resultMap.put("message", "取消订单失败,订单不存在");
 			return;
 		} 
+		else
+		{
+			//根据教练当前开课状态来设置教练表中coursestate
+			cscheduleService.getCoachStateByFunction(coachid, 5, 5, 23, 0);
+		}
 	}
 
 	public void CancelComplaint(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {

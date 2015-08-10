@@ -19,12 +19,12 @@ public interface IRecommendService{
 	 * @param coachid 教练ID
 	 * @param page   当前页
 	 */
-	public abstract QueryResult<RecommendInfo> getRecommendList(String coachid,int page);	
+	public abstract QueryResult<RecommendInfo> getRecommendList(String coachid,int page,int type);	
 	/**
 	 * 获取推荐获得的总金额
 	 *  @param coachid 教练ID
 	 */
-	public abstract BigDecimal getReward(String coachid);
+	public abstract BigDecimal getReward(String coachid,int type);
 	/**
 	 *  获取所有被推荐人的教练信息
 	 *  @param coachs 教练ID列表
@@ -38,32 +38,33 @@ public interface IRecommendService{
 	/**
 	 *  建立推荐人员信息
 	 *  @param inviteid 邀请码
-	 *  @param invitedcoachid 被邀请教练ID
+	 *  @param invitedpeopleid 被邀请人ID
+	 *   @param type 邀请类型
 	 */
-	public abstract int addRecommendInfo(String inviteid,String invitedcoachid);
+	public abstract int addRecommendInfo(String inviteid,String invitedpeopleid,int type);
 	/**
 	 * 检测推荐人员信息是否存在
 	 *  @param invitedcoachid 被邀请教练ID
 	 */
-	public abstract int checkRecommendinfo(String invitedcoachid);
+	public abstract int checkRecommendinfo(String invitedcoachid,int type);
 	/**
 	 * 检测是否还有推荐记录
 	 *  @param coachid 教练ID
 	 *  @param page    当前页
 	 */
-	public abstract int ifhasmoreRecommendinfo(String coachid,int page);
+	public abstract int ifhasmoreRecommendinfo(String coachid,int page,int type);
 	/**
 	 * 获取教练推荐教练列表（后台）
 	 * @param page 当前页
 	 * @param pagesize  一页数量
 	 */
-	public abstract QueryResult<RecommendInfo> getRecommendListForServer(int page,int pagesize);
+	public abstract QueryResult<RecommendInfo> getRecommendListForServer(int page,int pagesize,int type);
 	
 	/**
 	 * 获取某个教练的总推荐人数
 	 * @param coachid 教练ID
 	 */
-	public abstract int getRecommendCount(String coachid);
+	public abstract int getRecommendCount(String coachid,int type);
 	/**
 	 * 获取某个教练所推荐的人的认证数以及其开单数
 	 * @param coachs 要查询的教练List
@@ -75,7 +76,7 @@ public interface IRecommendService{
     * @param page 当前页
     * @param pagesize 页数
     */
-	public abstract QueryResult<RecommendInfo> getInvitedDetailsForServer(String coachid,int page,int pagesize);
+	public abstract QueryResult<RecommendInfo> getInvitedDetailsForServer(String coachid,int page,int pagesize,int type);
 	/**
 	 * 根据被推荐教练ID获取奖励金额
 	 * @param invitedcoachid 被推荐教练ID
@@ -86,11 +87,7 @@ public interface IRecommendService{
 	 *  @param coachid 教练ID
 	 */
 	public abstract int  checkOrderState(String coachid);
-	/**
-	 * 获取推荐人推荐总数
-	 *  @param coachid 教练ID
-	 */
-	public abstract int getInviteCount(Integer coachid);
+
 	/**
 	 * 获取推荐人开单总数
 	 * @param coachid 教练ID
@@ -100,7 +97,7 @@ public interface IRecommendService{
 	 * 获取推荐人通过审核总人数
 	 * @param coachid 教练ID
 	 */
-	public abstract int getCheckManCount(Integer coachid);
+	public abstract int getCheckManCount(Integer coachid,int type);
 	/**
 	 *  获取被推荐人的审核状况
 	 *  @param coachid 教练ID
@@ -126,7 +123,7 @@ public interface IRecommendService{
 	 * @param searchname 查询姓名
 	 * @param searchphone 查询电话号码
 	 */
-	public abstract QueryResult<RecommendInfo> getRecommonedInfoByKeyWord(String searchname,String searchphone);
+	public abstract QueryResult<RecommendInfo> getRecommonedInfoByKeyWord(String searchname,String searchphone,int type);
     /**
      * 判断这个教练是否开课过
      */
@@ -134,15 +131,15 @@ public interface IRecommendService{
 	/**
 	 *  删除邀请
 	 */
-	public abstract void deleteRecommonedInfo(String coachid,String invitedcoachid);
+	public abstract void deleteRecommonedInfo(String coachid,String invitedid,int type);
 	/**
 	 * 获取推荐日报
 	 */
-	public abstract QueryResult<InviteReport> getRecommenReport(Integer pageSize,Integer pageIndex);
+	public abstract QueryResult<InviteReport> getRecommenReport(Integer pageSize,Integer pageIndex,int type);
 	/**
 	 * 根据日期获取这一天的邀请总人数
 	 */
-	public abstract int getInviteCount(Date addtime);
+	public abstract int getInviteCount(Date addtime,int type);
 	/**
 	 * 根据日期获取这一天的认证总人数
 	 */
@@ -154,14 +151,14 @@ public interface IRecommendService{
 	/**
 	 * 根据日期获取这一天的奖励总金额
 	 */
-	public abstract BigDecimal getRewardCount(Date addtime);
+	public abstract BigDecimal getRewardCount(Date addtime,int type);
 	/**
 	 * 根据搜索条件搜索被推荐教练信息
 	 * @param searchname 查询姓名
 	 * @param searchphone 查询电话号码
 	 * @param coachid    推荐教练ID
 	 */
-	public abstract QueryResult<RecommendInfo> getRecommoneddetailInfoByKeyWord(String searchname,String searchphone,String coachid);
+	public abstract QueryResult<RecommendInfo> getRecommoneddetailInfoByKeyWord(String searchname,String searchphone,String coachid,int type);
 	/**
 	 * 获取正在开课的教练列表
 	 */

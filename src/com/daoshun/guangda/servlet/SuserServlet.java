@@ -23,6 +23,7 @@ import com.daoshun.guangda.pojo.SystemSetInfo;
 import com.daoshun.guangda.pojo.VerifyCodeInfo;
 import com.daoshun.guangda.service.IBaseService;
 import com.daoshun.guangda.service.ILocationService;
+import com.daoshun.guangda.service.IRecommendService;
 import com.daoshun.guangda.service.ISUserService;
 import com.daoshun.guangda.service.ISystemService;
 
@@ -34,6 +35,7 @@ public class SuserServlet extends BaseServlet {
 	private IBaseService baseService;
 	private ISystemService systemService;
 	private ILocationService locationService;
+	private IRecommendService recommendService;
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -42,6 +44,7 @@ public class SuserServlet extends BaseServlet {
 		baseService = (IBaseService) applicationContext.getBean("baseService");
 		systemService = (ISystemService) applicationContext.getBean("systemService");
 		locationService = (ILocationService) applicationContext.getBean("locationService");
+		recommendService=(IRecommendService) applicationContext.getBean("recommendService");
 	}
 
 	@Override
@@ -361,13 +364,20 @@ public class SuserServlet extends BaseServlet {
 				user.setLocationname(locationname);
 			}
 			resultMap.put("UserInfo", user);
+			int rflag=recommendService.checkRecommendinfo(String.valueOf(user.getStudentid()),2);
+			if(rflag==0)
+				//返回0代表已经存在记录了
+				resultMap.put("isInvited", 0);
+			else
+				//返回1代表没有记录
+				resultMap.put("isInvited", 1);
 		} else if (result == 0) {
 			resultMap.put("code", 2);
 			resultMap.put("message", "验证码错误,请重新输入");
 		} else {
-//			System.out.println("-您的登录信息已经过期,请重新获取验证码登录login----:"+result);
+//			System.out.println("-您的登录信息已经过期,请重新获取验证码登录----:"+result);
 			resultMap.put("code", 3);
-			resultMap.put("message", "您的登录信息已经过期,请重新获取验证码登录login");
+			resultMap.put("message", "您的登录信息已经过期,请重新获取验证码登录");
 		}
 	}
 
