@@ -1930,7 +1930,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 										int cid = CommonUtils.parseInt(recordidArray[i], 0);
 										CouponRecord record = dataDao.getObjectById(CouponRecord.class, cid);
 										if (record != null) {
-											record.setState(1);// 学员的状态修改为已经使用
+											record.setState(1);//小巴券的状态修改为已经使用
 											record.setUsetime(new Date());//使用时间
 											record.setOrderid(orderList.get(m).mOrderInfo.getOrderid());//订单号
 											dataDao.updateObject(record);
