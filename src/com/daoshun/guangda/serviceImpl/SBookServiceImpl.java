@@ -78,6 +78,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			}
 
 
+			cuser.setDrive_school("");
 			// 教练默认的上车地址
 			String hqladd = "from CaddAddressInfo where coachid = :coachid and iscurrent = 1";
 			String[] paramsadd = { "coachid" };
@@ -454,7 +455,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					+ " and drive_cardexptime > curdate() and car_cardexptime > curdate() and money >= gmoney and isquit = 0");
 			
 			if (!CommonUtils.isEmptyString(cityid)) {
-				hqlCoach.append(" and cityid = " + cityid);
+//				hqlCoach.append(" and cityid = " + cityid);
 			}
 			// 真实姓名和教练所属驾校
 			if (!CommonUtils.isEmptyString(condition1)) {
@@ -814,7 +815,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		} else {
 			int subjectid = CommonUtils.parseInt(condition6, 0);
 			Calendar c = Calendar.getInstance();
-			cuserhql.append(" and  coursestate = 1");
+//			cuserhql.append(" and  coursestate = 1");
 			//cuserhql.append(" and  drive_schoolid=1");
 			//cuserhql.append(" and getcoachstate(u.coachid," + 10 + ",'" + CommonUtils.getTimeFormat(c.getTime(), "yyyy-MM-dd") + "'," + 5 + "," + 23 + "," + subjectid + ") = 1");
 		}
