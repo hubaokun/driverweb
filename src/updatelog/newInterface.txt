@@ -18,7 +18,8 @@ coachid 教练ID
 pagenum 页号
 返回结果新增：
 hasmore  1 有下一页  0 没有下一页
-count   评论数
+count   评论总数
+studentnum 评论的学员数量
 
 #教练端修改通知状态为已读
 接口名称 /cmy?action=READNOTICE
