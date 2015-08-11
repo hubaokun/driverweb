@@ -541,10 +541,13 @@ public class CscheduleServlet extends BaseServlet {
 						info.setCoachid(CommonUtils.parseInt(coachid, 0));
 						info.setHour(String.valueOf(k));
 						info.setDate(newnow);
-						if(hournow>=k)
-							info.setExpire(1);
-						else
-							info.setExpire(0);
+						if(i==0)//只检查当天的日程信息里是否有过期时间
+						{
+							if(hournow>=k)
+								info.setExpire(1);
+							else
+								info.setExpire(0);
+						}
 						// 默认价格
 						BigDecimal price = cscheduleService.getDefaultPrice(coachid, String.valueOf(k));
 						if (price != null && price.doubleValue() != 0) {

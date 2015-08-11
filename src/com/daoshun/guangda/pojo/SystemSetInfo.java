@@ -81,17 +81,24 @@ public class SystemSetInfo implements Serializable {
 
 	@Column(name = "can_use_coupon_count", length = 2, columnDefinition = "TINYINT default 1")
 	private Integer can_use_coupon_count;
-
+	//教练弹框标示位
 	@Column(name = "advertisement_flag", length = 2, columnDefinition = "TINYINT default 0")
 	private Integer advertisement_flag;
-
+	//教练弹框url
 	@Column(name = "advertisement_url",  length = 1000)
 	private String advertisement_url;
 	
-	//学员广告位标示
+	//教练闪屏标示位
+	@Column(name = "coach_advertisement_flag", length = 2, columnDefinition = "TINYINT default 0")
+	private Integer coach_advertisement_flag;
+	//教练闪屏url
+	@Column(name = "coach_advertisement_url",  length = 1000)
+	private String coach_advertisement_url;
+	
+	//学员弹框标示位
 	@Column(name = "student_advertisement_flag", length = 2, columnDefinition = "TINYINT default 0")
 	private Integer student_advertisement_flag;
-	//学员广告位url
+	//学员弹框url
 	@Column(name = "student_advertisement_url",  length = 1000)
 	private String student_advertisement_url;
 
@@ -305,6 +312,22 @@ public class SystemSetInfo implements Serializable {
 
 	public void setStudent_advertisement_url(String student_advertisement_url) {
 		this.student_advertisement_url = student_advertisement_url;
+	}
+
+	public Integer getCoach_advertisement_flag() {
+		return coach_advertisement_flag;
+	}
+
+	public void setCoach_advertisement_flag(Integer coach_advertisement_flag) {
+		this.coach_advertisement_flag = coach_advertisement_flag;
+	}
+
+	public String getCoach_advertisement_url() {
+		return coach_advertisement_url;
+	}
+
+	public void setCoach_advertisement_url(String coach_advertisement_url) {
+		this.coach_advertisement_url = coach_advertisement_url;
 	}
 	
 }
