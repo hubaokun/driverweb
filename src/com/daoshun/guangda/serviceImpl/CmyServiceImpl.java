@@ -113,6 +113,11 @@ public class CmyServiceImpl extends BaseServiceImpl implements ICmyService {
 	public void delNoticesInfo(NoticesInfo noticeInfo) {
 		dataDao.deleteObject(noticeInfo);
 	}
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	@Override
+	public void updateNoticeState(int userid,int noticeid) {
+		dataDao.updateBySql("update t_notice_user set readstate=1 where userid="+userid+" and noticeid="+noticeid);
+	}
 
 	@Override
 	public NoticesInfo getNoticesInfoByNoiticeid(int noticeid) {

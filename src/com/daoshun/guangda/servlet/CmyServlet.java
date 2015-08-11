@@ -82,6 +82,9 @@ public class CmyServlet extends BaseServlet {
 			} else if (Constant.CDELNOTICE.equals(action)) {
 				// 删除通知
 				delNotice(request, resultMap);
+			} else if (Constant.READNOTICE.equals(action)) {
+				// 修改通知状态为已读
+				setNoticeState(request, resultMap);
 			} else if (Constant.CGETCOMPLAINTTOMY.equals(action)) {
 				// 得到对我的投诉列表
 				getComplaintToMy(request, resultMap);
@@ -165,7 +168,11 @@ public class CmyServlet extends BaseServlet {
 			// 删除通知
 			userid = getRequestParamter(request, "coachid");
 			usertype = "1";
-		} else if (Constant.CGETCOMPLAINTTOMY.equals(action)) {
+		} else if (Constant.READNOTICE.equals(action)) {
+			// 修改通知为已读
+			userid = getRequestParamter(request, "coachid");
+			usertype = "1";
+		}else if (Constant.CGETCOMPLAINTTOMY.equals(action)) {
 			// 得到对我的投诉列表
 			userid = getRequestParamter(request, "coachid");
 			usertype = "1";
@@ -752,6 +759,14 @@ public class CmyServlet extends BaseServlet {
 			resultMap.put("code", 1);
 			resultMap.put("message", "用户不存在");
 		}
+	}
+	//修改通知状态为已读
+	public void setNoticeState(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String coachid = getRequestParamter(request, "coachid");
+		String noticeid = getRequestParamter(request, "noticeid");
+		CommonUtils.validateEmptytoMsg(coachid,"coachid不能为空");
+		CommonUtils.validateEmptytoMsg(noticeid,"noticeid不能为空");
+		cmyService.updateNoticeState(CommonUtils.parseInt(coachid, 0),CommonUtils.parseInt(noticeid, 0));
 	}
 
 	/**

@@ -28,6 +28,7 @@ public interface ISBookService {
 	public abstract CsubjectInfo getDefaultSubject(String coachid, String hour);
 
 	public abstract CaddAddressInfo getDefaultAddress(String coachid, String hour);
+	public HashMap<String, Object> getCommentsFromStudent(String coachid,String studentid, String pagenum);
 
 	/**
 	 * 获取教练详细
@@ -105,6 +106,6 @@ public interface ISBookService {
 	 *            获取页数
 	 * @return
 	 */
-	public abstract HashMap<String, Object> getCoachComments(String coachid, String pagenum);
+	public abstract HashMap<String, Object> getCoachComments(String coachid,String type, String pagenum);
 
 }

@@ -78,7 +78,6 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			}
 
 
-			cuser.setDrive_school("");
 			// 教练默认的上车地址
 			String hqladd = "from CaddAddressInfo where coachid = :coachid and iscurrent = 1";
 			String[] paramsadd = { "coachid" };
@@ -455,7 +454,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					+ " and drive_cardexptime > curdate() and car_cardexptime > curdate() and money >= gmoney and isquit = 0");
 			
 			if (!CommonUtils.isEmptyString(cityid)) {
-//				hqlCoach.append(" and cityid = " + cityid);
+				hqlCoach.append(" and cityid = " + cityid);
 			}
 			// 真实姓名和教练所属驾校
 			if (!CommonUtils.isEmptyString(condition1)) {
@@ -489,14 +488,14 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 
 					int starthour = startCal.get(Calendar.HOUR_OF_DAY);
 					int datecount = 1;
-					hqlCoach.append(" and  coursestate = 1");
+					//hqlCoach.append(" and  coursestate = 1");
 					//hqlCoach.append(" and getcoachstate(u.coachid," + datecount + ",'" + CommonUtils.getTimeFormat(start, "yyyy-MM-dd") + "'," + starthour + "," + 23 + "," + subjectid + ") = 1");
 
 				}
 			} else {
 				int subjectid = CommonUtils.parseInt(condition6, 0);
 				Calendar c = Calendar.getInstance();
-				hqlCoach.append(" and  coursestate = 1");
+				//hqlCoach.append(" and  coursestate = 1");
 				//hqlCoach.append(" and getcoachstate(u.coachid," + 10 + ",'" + CommonUtils.getTimeFormat(c.getTime(), "yyyy-MM-dd") + "'," + 5 + "," + 23 + "," + subjectid + ") = 1");
 			}
 
@@ -573,6 +572,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					System.out.println(info.getCoachid());
 			}*/
 			//System.out.println(hqlCoach.toString());
+			hqlCoach.append("  order by coursestate desc,drive_schoolid desc,score desc");
 			List<CuserInfo> cuserlist = (List<CuserInfo>) dataDao.SqlPageQuery(hqlCoach.toString(), null, null,CuserInfo.class, null);
 			//List<CuserInfo> cuserlist = (List<CuserInfo>) dataDao.getObjectsViaParam(hqlCoach.toString(), paramsCoach, cids, now, now, now, now, now);
 			if (cuserlist != null && cuserlist.size() > 0) {
@@ -808,14 +808,14 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 
 				int starthour = startCal.get(Calendar.HOUR_OF_DAY);
 				int datecount = 1;
-				cuserhql.append(" and  coursestate = 1");
+				//cuserhql.append(" and  coursestate = 1");
 				//cuserhql.append(" and getcoachstate(u.coachid," + datecount + ",'" + CommonUtils.getTimeFormat(start, "yyyy-MM-dd") + "'," + starthour + "," + 23 + "," + subjectid + ") = 1");
 
 			}
 		} else {
 			int subjectid = CommonUtils.parseInt(condition6, 0);
 			Calendar c = Calendar.getInstance();
-//			cuserhql.append(" and  coursestate = 1");
+			//cuserhql.append(" and  coursestate = 1");
 			//cuserhql.append(" and  drive_schoolid=1");
 			//cuserhql.append(" and getcoachstate(u.coachid," + 10 + ",'" + CommonUtils.getTimeFormat(c.getTime(), "yyyy-MM-dd") + "'," + 5 + "," + 23 + "," + subjectid + ") = 1");
 		}
@@ -823,7 +823,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		if (!CommonUtils.isEmptyString(condition11)) {
 			cuserhql.append(" and modelid like '%" + condition11 + "%'");
 		}
-		cuserhql.append(" and money >= gmoney and isquit = 0 and state=2 order by score desc,drive_schoolid desc ");
+		cuserhql.append(" and money >= gmoney and isquit = 0 and state=2 order by coursestate desc,drive_schoolid desc,score desc");
 		//System.out.println(cuserhql.toString());
 		List<CuserInfo> coachlist = (List<CuserInfo>) dataDao.SqlPageQuery(cuserhql.toString(), Constant.USERLIST_SIZE+1, CommonUtils.parseInt(pagenum, 0) + 1,CuserInfo.class, null);
 		
@@ -2014,13 +2014,24 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 	}
 	
 	@Override
-	public HashMap<String, Object> getCoachComments(String coachid, String pagenum) {
+	public HashMap<String, Object> getCoachComments(String coachid,String type, String pagenum) {
 		HashMap<String, Object> result = new HashMap<String, Object>();
-		String hql = "from EvaluationInfo where to_user = :to_user and type = 1 order by addtime desc";
+		String hql="";
+		if("1".equals(type)){ // type=1 过滤重复学员
+			hql = "from EvaluationInfo  where to_user = :to_user and type = 1 group by from_user order by addtime desc";
+		}else if("2".equals(type)){
+			hql = "from EvaluationInfo  where to_user = :to_user and type = 1 order by addtime desc";
+		}
+		
 		String params[] = { "to_user" };
 
-		List<EvaluationInfo> list = (List<EvaluationInfo>) dataDao.pageQueryViaParam(hql, 20, CommonUtils.parseInt(pagenum, 0) + 1, params, CommonUtils.parseInt(coachid, 0));
-
+		List<EvaluationInfo> list = (List<EvaluationInfo>) dataDao.pageQueryViaParam(hql, 5, CommonUtils.parseInt(pagenum, 0) + 1, params, CommonUtils.parseInt(coachid, 0));
+		List<EvaluationInfo> list2 = (List<EvaluationInfo>) dataDao.pageQueryViaParam(hql, 5, CommonUtils.parseInt(pagenum, 0) + 2, params, CommonUtils.parseInt(coachid,0));
+		if(list2!=null && list2.size()>0){
+			result.put("hasmore", 1);
+		}else{
+			result.put("hasmore", 0);
+		}
 		for (EvaluationInfo eva : list) {
 			SuserInfo user = dataDao.getObjectById(SuserInfo.class, eva.getFrom_user());
 			if (user != null) {
@@ -2030,6 +2041,39 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			eva.setScore((eva.getScore1() + eva.getScore2() + eva.getScore3()) / 3);
 		}
 		List<EvaluationInfo> listCount = (List<EvaluationInfo>) dataDao.getObjectsViaParam(hql, params, CommonUtils.parseInt(coachid, 0));
+		result.put("evalist", list);
+		result.put("code", 1);
+		result.put("message", "操作成功");
+		if (listCount != null)
+			result.put("count", listCount.size());
+		else
+			result.put("count", 0);
+		return result;
+	}
+	public HashMap<String, Object> getCommentsFromStudent(String coachid,String studentid, String pagenum) {
+		HashMap<String, Object> result = new HashMap<String, Object>();
+		String hql = "from EvaluationInfo where to_user = :to_user and type = 1 and from_user=:from_user order by addtime desc";
+		String params[] = { "to_user","from_user" };
+
+		List<EvaluationInfo> list = (List<EvaluationInfo>) 
+				dataDao.pageQueryViaParam(hql, 20, CommonUtils.parseInt(pagenum, 0) + 1, params, CommonUtils.parseInt(coachid, 0),CommonUtils.parseInt(studentid,0));
+		
+		List<EvaluationInfo> list2 = (List<EvaluationInfo>) 
+				dataDao.pageQueryViaParam(hql, 20, CommonUtils.parseInt(pagenum, 0) + 2, params, CommonUtils.parseInt(coachid, 0),CommonUtils.parseInt(studentid,0));
+		if(list2!=null && list2.size()>0){
+			result.put("hasmore", 1);
+		}else{
+			result.put("hasmore", 0);
+		}
+		for (EvaluationInfo eva : list) {
+			SuserInfo user = dataDao.getObjectById(SuserInfo.class, eva.getFrom_user());
+			if (user != null) {
+				eva.setNickname(user.getRealname());
+				eva.setAvatarUrl(getFilePathById(user.getAvatar()));
+			}
+			eva.setScore((eva.getScore1() + eva.getScore2() + eva.getScore3()) / 3);
+		}
+		List<EvaluationInfo> listCount = (List<EvaluationInfo>) dataDao.getObjectsViaParam(hql, params, CommonUtils.parseInt(coachid, 0),CommonUtils.parseInt(studentid,0));
 		result.put("evalist", list);
 		result.put("code", 1);
 		result.put("message", "操作成功");

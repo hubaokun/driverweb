@@ -168,6 +168,10 @@ public class SuserInfo implements Serializable {
 	@Column(name = "learn_time", length = 10, columnDefinition = "INT default 0")
 	private int learn_time;
 
+	// 广告标志位
+	@Column(name = "ad_flag", length = 1, columnDefinition = "INT default 0")
+	private int ad_flag;
+	
 	@Column(name = "token", length = 255)
 	private String token;
 
@@ -648,6 +652,14 @@ public class SuserInfo implements Serializable {
 
 	public void setCity(String city) {
 		this.city = city;
+	}
+
+	public int getAd_flag() {
+		return ad_flag;
+	}
+
+	public void setAd_flag(int ad_flag) {
+		this.ad_flag = ad_flag;
 	}
 	
 }

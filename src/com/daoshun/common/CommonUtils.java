@@ -83,11 +83,13 @@ public class CommonUtils {
 	 */
 	public static void checkPath(String path) {
 		String[] paths = null;
-		if (path.contains("/")) {
-			paths = path.split(File.separator);
-		} else {
+		if (path.contains("\\")) {
+			path=path.replace("/", "\\");
 			paths = path.split(File.separator + File.separator);
+		} else {
+			paths = path.split(File.separator);
 		}
+		
 		if (paths == null || paths.length == 0) {
 			return;
 		}
@@ -109,6 +111,16 @@ public class CommonUtils {
 		if (value == null || value.length() == 0) {
 			System.out.println("参数为空");
 			throw new ErrException();
+		}
+	}
+	/**
+	 * 判断参数是否为空
+	 * 
+	 */
+	public static void validateEmptytoMsg(String value,String msg) throws ErrException {
+		if (value == null || value.length() == 0) {
+			System.out.println("参数为空");
+			throw new ErrException(msg);
 		}
 	}
 	/**

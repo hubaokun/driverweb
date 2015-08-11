@@ -63,5 +63,9 @@ getCanUseCoinnumForDriveSchool 查询学员针对某个驾校的小巴币数量
 
 
 
+grantCoinRecord 充值小巴币
 
+getCanUseCouponList  预约时小巴币
 
+GETSTUDENTWALLETINFO  钱包小巴币
+GetMessageCount 
