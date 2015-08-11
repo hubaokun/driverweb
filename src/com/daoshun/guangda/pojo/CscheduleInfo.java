@@ -66,7 +66,11 @@ public class CscheduleInfo implements Serializable {
 	// 科目id
 	@Column(name = "subjectid", length = 10, nullable = false)
 	private int subjectid;
-
+	
+	// 是否过期
+	@Column(name = "expire", length = 10,columnDefinition = "INT default 0")
+	private int expire;
+	
 	// 地址详细
 	@Transient
 	private String addressdetail;
@@ -204,6 +208,14 @@ public class CscheduleInfo implements Serializable {
 	
 	public void setHasbooked(int hasbooked) {
 		this.hasbooked = hasbooked;
+	}
+
+	public int getExpire() {
+		return expire;
+	}
+
+	public void setExpire(int expire) {
+		this.expire = expire;
 	}
 
 }

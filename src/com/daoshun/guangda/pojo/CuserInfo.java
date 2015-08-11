@@ -213,6 +213,10 @@ public class CuserInfo implements Serializable {
 	// 教练等级
 	@Column(name = "level", length = 1, columnDefinition = "INT default 0")
 	private int level;
+	
+	// 广告标志位
+    @Column(name = "ad_flag", length = 1, columnDefinition = "INT default 0")
+	private int ad_flag;
 
 	// 教练注册时间
 	@Temporal(TemporalType.TIMESTAMP)
@@ -1080,4 +1084,13 @@ public class CuserInfo implements Serializable {
 	public void setCoursestate(Integer coursestate) {
 		this.coursestate = coursestate;
 	}
+
+	public int getAd_flag() {
+		return ad_flag;
+	}
+
+	public void setAd_flag(int ad_flag) {
+		this.ad_flag = ad_flag;
+	}
+	
 }
