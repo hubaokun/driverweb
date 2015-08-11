@@ -2021,6 +2021,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			hql = "from EvaluationInfo  where to_user = :to_user and type = 1 group by from_user order by addtime desc";
 		}else if("2".equals(type)){
 			hql = "from EvaluationInfo  where to_user = :to_user and type = 1 order by addtime desc";
+		}else{
+			hql = "from EvaluationInfo  where to_user = :to_user and type = 1 group by from_user order by addtime desc";
 		}
 		
 		String params[] = { "to_user" };
