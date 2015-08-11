@@ -94,6 +94,7 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 										mCouponCoach.setOwnertype(crecord.getOwnertype());
 										mCouponCoach.setState(1);
 										mCouponCoach.setValue(crecord.getValue());
+										mCouponCoach.setCouponrecordid(0);
 										dataDao.addObject(mCouponCoach);
 									} else {// 直接把钱增加到教练的余额
 										couponTotal = couponTotal.add(new BigDecimal(crecord.getValue()));
