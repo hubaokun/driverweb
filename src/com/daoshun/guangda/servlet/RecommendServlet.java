@@ -62,13 +62,13 @@ public class RecommendServlet extends BaseServlet {
 		try
 		{
 			String action=getAction(request);
-			if(action.equals(Constant.CGETRECOMMENDLIST) && action.equals(Constant.CHEAKINVITECODE))
-			{
-				if (!checkSession(request, action, resultMap)) {
-					setResult(response, resultMap);
-					return;
-				}
-			}
+//			if(action.equals(Constant.CGETRECOMMENDLIST) && action.equals(Constant.CHEAKINVITECODE))
+//			{
+//				if (!checkSession(request, action, resultMap)) {
+//					setResult(response, resultMap);
+//					return;
+//				}
+//			}
 			if(action.equals(Constant.CGETRECOMMENDLIST))
 			{
 				getRecommendList(request,resultMap);
