@@ -491,10 +491,17 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 						cuser.setMoney(cuser.getMoney().add(addToCoach));
 						*/
 					}else if(order.getPaytype()==PayType.COIN){
+						//学员冻结小巴币取消
 						BigDecimal b1=new BigDecimal(order.getTotal().intValue());
-						//设置学员冻结金额为
-						student.setFcoinnum(student.getFcoinnum().subtract(b1));
+						if(student.getFcoinnum().intValue()>=b1.intValue()){
+							student.setFcoinnum(student.getFcoinnum().subtract(b1));
+						}else{
+							System.out.println("结算SettlementOrder方法中：小巴币解冻时发现数量小于订单额!停止结算");
+							return;
+						}
+						
 						b1=b1.add(new BigDecimal(cuser.getCoinnum()));
+						//教练小巴币增加
 						cuser.setCoinnum(b1.intValue());
 						CoinRecordInfo coinRecordInfo = new CoinRecordInfo ();
 				        coinRecordInfo.setReceiverid(cuser.getCoachid());

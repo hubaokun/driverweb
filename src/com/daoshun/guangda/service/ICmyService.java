@@ -117,4 +117,5 @@ public interface ICmyService {
 
 	/** 更新教学科目信息 **/
 	public abstract void updateSubject(CsubjectInfo subject);
+	public void updateNoticeState(int userid,int noticeid);
 }

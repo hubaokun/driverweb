@@ -112,6 +112,16 @@ public class CommonUtils {
 		}
 	}
 	/**
+	 * 判断参数是否为空
+	 * 
+	 */
+	public static void validateEmptytoMsg(String value,String msg) throws ErrException {
+		if (value == null || value.length() == 0) {
+			System.out.println("参数为空");
+			throw new ErrException(msg);
+		}
+	}
+	/**
 	 * 判断字符串是否为数字
 	 * @param number
 	 * @return
@@ -143,7 +153,7 @@ public class CommonUtils {
 	        return str.equals(formatter.format(date));
 	    }catch(Exception e){
 	       System.out.println("日期格式有误!");
-	       throw new ErrException();
+	       throw new ErrException("日期格式有误!");
 	    }
 	}
 	/**
