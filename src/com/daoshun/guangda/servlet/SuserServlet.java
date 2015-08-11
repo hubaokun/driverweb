@@ -508,6 +508,15 @@ public class SuserServlet extends BaseServlet {
 			if (realname != null) {
 				user.setRealname(realname);
 			}
+			if (provinceid != null) {
+				user.setProvinceid(provinceid);
+			}
+			if (cityid != null) {
+				user.setCityid(cityid);
+			}
+			if (areaid != null) {
+				user.setAreaid(areaid);
+			}
 			suserService.updateUserInfo(user);
 			List<RecommendInfo> tempList=recommendService.getRecommondInviteInfoByCoachid(studentid, realname);
 			RecommendInfo temp=recommendService.getRecommondInvitedInfoByCoachid(studentid, realname);
