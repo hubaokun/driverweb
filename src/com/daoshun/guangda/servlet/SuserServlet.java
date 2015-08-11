@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -18,6 +19,7 @@ import com.daoshun.guangda.pojo.AreaInfo;
 import com.daoshun.guangda.pojo.CityInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.ProvinceInfo;
+import com.daoshun.guangda.pojo.RecommendInfo;
 import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.pojo.SystemSetInfo;
 import com.daoshun.guangda.pojo.VerifyCodeInfo;
@@ -506,16 +508,22 @@ public class SuserServlet extends BaseServlet {
 			if (realname != null) {
 				user.setRealname(realname);
 			}
-			if (provinceid != null) {
-				user.setProvinceid(provinceid);
-			}
-			if (cityid != null) {
-				user.setCityid(cityid);
-			}
-			if (areaid != null) {
-				user.setAreaid(areaid);
-			}
 			suserService.updateUserInfo(user);
+			List<RecommendInfo> tempList=recommendService.getRecommondInviteInfoByCoachid(studentid, realname);
+			RecommendInfo temp=recommendService.getRecommondInvitedInfoByCoachid(studentid, realname);
+			if(tempList.size()!=0)
+			{
+				for(RecommendInfo r:tempList)
+				{
+					r.setStudentname(realname);
+					recommendService.updateRecommendInfo(r);
+				}
+			}
+			if(temp!=null)
+			{
+				temp.setInvitedpeoplename(realname);
+				recommendService.updateRecommendInfo(temp);
+			}
 		}
 	}
 

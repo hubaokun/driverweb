@@ -165,5 +165,8 @@ public interface IRecommendService{
 	public abstract HashMap<String, Object> getCoachList(String condition1, String condition2, String condition3, String condition4, String condition5, String condition6, String condition8, String condition9,
 			String condition10, String condition11);
 	
-	
+	/** 根据学员id找到学员分享信息 **/
+	public abstract List<RecommendInfo> getRecommondInviteInfoByStudentid(String studentid,String realname);
+	/** 根据学员id找到学员被分享信息 **/
+	public abstract RecommendInfo getRecommondInvitedInfoByStudentid(String studentid,String realname);
 } 
