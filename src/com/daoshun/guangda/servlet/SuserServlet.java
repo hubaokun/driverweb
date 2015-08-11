@@ -119,6 +119,8 @@ public class SuserServlet extends BaseServlet {
 		}
 		setResult(response, resultMap);
 	}
+	
+	
 
 	private boolean checkSession(HttpServletRequest request, String action, HashMap<String, Object> resultMap) throws ErrException {
 		String userid = "";
