@@ -226,6 +226,12 @@ public class DataDao {
 		}
 		return query.list();
 	}
+	
+	public void updateSqlQuery(String sql){
+		Query query = getSession().createSQLQuery(sql);
+		query.executeUpdate();
+		
+	}
 	/**
 	 * sql分页条件查询  
 	 * @param sql   sql语句

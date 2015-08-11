@@ -125,7 +125,7 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 				else
 					return 0;
 			}
-				
+			return 0;
 	    }
 	    else if(type==2)
 	    {
@@ -159,6 +159,7 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 				else
 					return 0;
 			}
+	        return 0;
 	    }
 	    return 0;
 	}

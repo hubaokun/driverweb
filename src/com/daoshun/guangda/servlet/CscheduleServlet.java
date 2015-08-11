@@ -435,6 +435,8 @@ public class CscheduleServlet extends BaseServlet {
 				maxDays = set.getBook_day_max();
 			}
 			Calendar now = Calendar.getInstance();
+			Calendar c1 = Calendar.getInstance();
+			int  hournow=c1.get(c1.HOUR_OF_DAY);
 			//maxDays=5;
 			List<CscheduleInfo> schedulelist = new ArrayList<CscheduleInfo>();
 			// 日期循环
@@ -447,6 +449,21 @@ public class CscheduleServlet extends BaseServlet {
 				// 取得DB中当天的所有日程设置
 				List<CscheduleInfo> dayist = cscheduleService.getCscheduleInfoByDatelist(newnow, coachid);
 				CscheduleInfo allDaySet = null;
+				//查询是否有已过期的日程
+				if (dayist != null) {
+					if(i==0)//只检查当天的日程信息里是否有过期时间
+					{
+						
+						for (CscheduleInfo tempc : dayist) {
+							if(hournow>=CommonUtils.parseInt(tempc.getHour(), 0))
+							{
+								tempc.setExpire(1);
+								cscheduleService.updateScheduleInfo(tempc);
+							}
+							   
+						}
+					}
+				}
 				// 查询是否有全天开课或者全天停课设置
 				if (dayist != null) {
 					for (CscheduleInfo cscheduleInfo : dayist) {
@@ -524,6 +541,10 @@ public class CscheduleServlet extends BaseServlet {
 						info.setCoachid(CommonUtils.parseInt(coachid, 0));
 						info.setHour(String.valueOf(k));
 						info.setDate(newnow);
+						if(hournow>=k)
+							info.setExpire(1);
+						else
+							info.setExpire(0);
 						// 默认价格
 						BigDecimal price = cscheduleService.getDefaultPrice(coachid, String.valueOf(k));
 						if (price != null && price.doubleValue() != 0) {
@@ -1235,6 +1256,8 @@ public class CscheduleServlet extends BaseServlet {
 		CommonUtils.validateEmpty(type);
 		String setjson = getRequestParamter(request, "setjson");
 		CommonUtils.validateEmpty(setjson);
+		Calendar c=Calendar.getInstance();
+		int hournow=c.get(c.HOUR_OF_DAY);
 		if(type.equals("1"))
 		{
 			JSONArray json = null;
@@ -1290,6 +1313,10 @@ public class CscheduleServlet extends BaseServlet {
 						scheduleInfo.setAddressid(CommonUtils.parseInt(addressid, 0)); // 设置地址id
 	
 						scheduleInfo.setSubjectid(CommonUtils.parseInt(subjectid, 0));// 设置科目id
+						if(hournow>=CommonUtils.parseInt(hour, 0) && c.getTime().compareTo(CommonUtils.getDateFormat(day, "yyyy-MM-dd"))==1)//设置过期时间
+							scheduleInfo.setExpire(1);
+						else
+							scheduleInfo.setExpire(0);
 						cscheduleService.addScheduleInfo(scheduleInfo);
 					} else {
 						BigDecimal b = new BigDecimal(CommonUtils.parseDouble(price, 0d));
@@ -1300,6 +1327,11 @@ public class CscheduleServlet extends BaseServlet {
 						cscheduleInfo.setAddressid(CommonUtils.parseInt(addressid, 0)); // 设置地址id
 	
 						cscheduleInfo.setSubjectid(CommonUtils.parseInt(subjectid, 0));// 设置科目id
+						
+						if(hournow>=CommonUtils.parseInt(hour, 0) && c.getTime().compareTo(CommonUtils.getDateFormat(day, "yyyy-MM-dd"))==1)//设置过期时间
+							cscheduleInfo.setExpire(1);
+						else
+							cscheduleInfo.setExpire(0);
 						cscheduleService.updateScheduleInfo(cscheduleInfo);
 					}
 				}

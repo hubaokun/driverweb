@@ -367,6 +367,8 @@ public class Constant {
 		//小巴服务接口
 	public static final String XIAOBASERVICE ="XIAOBASERVICE";
 
+	//广告服务接口
+	public static final String GETADVERTISEMENT ="GETADVERTISEMENT";
 
 	/**************************** 默认属性设置 ********************************/
 	/************ 默认全天状态 ************/

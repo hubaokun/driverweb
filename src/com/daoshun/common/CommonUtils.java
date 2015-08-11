@@ -83,11 +83,13 @@ public class CommonUtils {
 	 */
 	public static void checkPath(String path) {
 		String[] paths = null;
-		if (path.contains("/")) {
-			paths = path.split(File.separator);
-		} else {
+		if (path.contains("\\")) {
+			path=path.replace("/", "\\");
 			paths = path.split(File.separator + File.separator);
+		} else {
+			paths = path.split(File.separator);
 		}
+		
 		if (paths == null || paths.length == 0) {
 			return;
 		}
@@ -153,7 +155,7 @@ public class CommonUtils {
 	        return str.equals(formatter.format(date));
 	    }catch(Exception e){
 	       System.out.println("日期格式有误!");
-	       throw new ErrException("日期格式有误!");
+	       throw new ErrException();
 	    }
 	}
 	/**
