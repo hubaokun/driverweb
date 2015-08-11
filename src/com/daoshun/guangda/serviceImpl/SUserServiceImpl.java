@@ -1091,7 +1091,11 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		SuserInfo user = dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
 		if (user != null) {
-			result.put("coinnum", user.getCoinnum());
+			int coinnum=0;
+			if(user.getCoinnum()!=null){
+				coinnum=user.getCoinnum();
+			}
+			result.put("coinnum", coinnum);
 			String hql = "from CoinRecordInfo where (receiverid =:receiverid and receivertype="+ UserType.STUDENT+" ) or (payerid =:payerid and payertype="+ UserType.STUDENT+")  order by addtime desc";
 			String[] params = {"receiverid", "payerid"};
             

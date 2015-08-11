@@ -488,14 +488,14 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 
 					int starthour = startCal.get(Calendar.HOUR_OF_DAY);
 					int datecount = 1;
-					//hqlCoach.append(" and  coursestate = 1");
+					hqlCoach.append(" and  coursestate = 1");
 					//hqlCoach.append(" and getcoachstate(u.coachid," + datecount + ",'" + CommonUtils.getTimeFormat(start, "yyyy-MM-dd") + "'," + starthour + "," + 23 + "," + subjectid + ") = 1");
 
 				}
 			} else {
 				int subjectid = CommonUtils.parseInt(condition6, 0);
 				Calendar c = Calendar.getInstance();
-				//hqlCoach.append(" and  coursestate = 1");
+				hqlCoach.append(" and  coursestate = 1");
 				//hqlCoach.append(" and getcoachstate(u.coachid," + 10 + ",'" + CommonUtils.getTimeFormat(c.getTime(), "yyyy-MM-dd") + "'," + 5 + "," + 23 + "," + subjectid + ") = 1");
 			}
 

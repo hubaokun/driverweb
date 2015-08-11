@@ -58,10 +58,10 @@ public class SuserServlet extends BaseServlet {
 			if (Constant.PERFECTACCOUNTINFO.equals(action) || Constant.CHANGEAVATAR.equals(action) || Constant.PERFECTSTUDENTINFO.equals(action) || Constant.PERFECTPERSONINFO.equals(action)
 					|| Constant.GETMYBALANCEINFO.equals(action) || Constant.APPLYCASH.equals(action)  || Constant.GETSTUDENTWALLETINFO.equals(action) || Constant.GETSTUDENTCOINRECORDLIST.equals(action) || Constant.GETSTUDENTCOUPONLIST.equals(action)
 					||Constant.SENROLL.equals(action)|| Constant.RECHARGE.equals(action)) {
-				if (!checkSession(request, action, resultMap)) {
+				/*if (!checkSession(request, action, resultMap)) {
 					setResult(response, resultMap);
 					return;
-				}
+				}*/
 			}
 
 			if (Constant.GETVERCODE.equals(action)) {
@@ -782,9 +782,15 @@ public class SuserServlet extends BaseServlet {
 		double money=0;
 		int fcoinsum=0;
 		if(su!=null){
-			coinsum=su.getCoinnum();
-			money=su.getMoney().doubleValue();
-			fcoinsum=su.getFcoinnum().intValue();
+			if(su.getCoinnum()!=null){
+				coinsum=su.getCoinnum();
+			}
+			if(su.getMoney()!=null){
+				money=su.getMoney().doubleValue();
+			}
+			if(su.getFcoinnum()!=null){
+				fcoinsum=su.getFcoinnum().intValue();
+			}
 		}
 		resultMap.put("couponsum", sum);
 		resultMap.put("money", money);
