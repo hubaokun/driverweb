@@ -410,6 +410,21 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 		RecommendInfo tempRecommendInfo=(RecommendInfo)dataDao.getFirstObjectViaParam(querystring1, params1, CommonUtils.parseInt(coachid, 0));
 		return tempRecommendInfo;
 	}
+	@Override
+	public List<RecommendInfo> getRecommondInviteInfoByStudentid(String studentid,String realname) {
+		String querystring="from RecommendInfo where studentid=:studentid";
+		String[] params={"studentid"};
+		List<RecommendInfo> tempRecommendInfoList=(List<RecommendInfo>) dataDao.getObjectsViaParam(querystring, params, CommonUtils.parseInt(studentid, 0));	
+		return tempRecommendInfoList;
+	}
+
+	@Override
+	public RecommendInfo getRecommondInvitedInfoByStudentid(String studentid,String realname) {
+		String querystring1="from RecommendInfo where invitedstudentid=:invitedstudentid";
+		String[] params1={"invitedstudentid"};
+		RecommendInfo tempRecommendInfo=(RecommendInfo)dataDao.getFirstObjectViaParam(querystring1, params1, CommonUtils.parseInt(studentid, 0));
+		return tempRecommendInfo;
+	}
 	@SuppressWarnings("unchecked")
 	@Override
 	public QueryResult<RecommendInfo> getRecommonedInfoByKeyWord(String searchname, String searchphone,int type) 

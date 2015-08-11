@@ -477,22 +477,23 @@ public class CuserServlet extends BaseServlet {
 			}
 
 			cuserService.updateCuser(cuserFir);
-		}
-		List<RecommendInfo> tempList=recommendService.getRecommondInviteInfoByCoachid(coachid, realname);
-		RecommendInfo temp=recommendService.getRecommondInvitedInfoByCoachid(coachid, realname);
-		if(tempList.size()!=0)
-		{
-			for(RecommendInfo r:tempList)
+			List<RecommendInfo> tempList=recommendService.getRecommondInviteInfoByCoachid(coachid, realname);
+			RecommendInfo temp=recommendService.getRecommondInvitedInfoByCoachid(coachid, realname);
+			if(tempList.size()!=0)
 			{
-				r.setCoachname(realname);
-				recommendService.updateRecommendInfo(r);
+				for(RecommendInfo r:tempList)
+				{
+					r.setCoachname(realname);
+					recommendService.updateRecommendInfo(r);
+				}
+			}
+			if(temp!=null)
+			{
+				temp.setInvitedpeoplename(realname);
+				recommendService.updateRecommendInfo(temp);
 			}
 		}
-		if(temp!=null)
-		{
-			temp.setInvitedpeoplename(realname);
-			recommendService.updateRecommendInfo(temp);
-		}
+		
 	}
 
 	/**
