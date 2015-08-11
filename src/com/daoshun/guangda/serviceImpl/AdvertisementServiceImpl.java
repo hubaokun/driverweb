@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.guangda.pojo.AdvertisementInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
+import com.daoshun.guangda.pojo.SystemSetInfo;
 import com.daoshun.guangda.service.IAdvertisementService;
 /**
  * 
@@ -46,8 +47,9 @@ public class AdvertisementServiceImpl extends BaseServiceImpl  implements IAdver
 
 
 	@Override
-	public AdvertisementInfo getAdvertisementcontent() {
-		AdvertisementInfo temp=dataDao.getObjectById(AdvertisementInfo.class, 1);
+	public SystemSetInfo getAdvertisementcontent() {
+		//AdvertisementInfo temp=dataDao.getObjectById(AdvertisementInfo.class, 1);
+		SystemSetInfo temp=dataDao.getObjectById(SystemSetInfo.class, 1);
 		return temp;
 	}
 

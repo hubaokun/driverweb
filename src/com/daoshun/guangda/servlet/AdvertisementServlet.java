@@ -186,7 +186,7 @@ public class AdvertisementServlet  extends BaseServlet{
 
    private void getAdvertiesementcontent(HttpServletRequest request, HashMap<String, Object> resultMap)
    {
-	   String id=getRequestParamter(request, "id");
+	 /*  String id=getRequestParamter(request, "id");
 	   String type=getRequestParamter(request, "type");
 	   if(advertisementService.jugeFlag(type, id)==0)
 	   {
@@ -199,6 +199,14 @@ public class AdvertisementServlet  extends BaseServlet{
 		   AdvertisementInfo resultpojo=new  AdvertisementInfo();
 		   resultMap.put("advertisement",resultpojo);
 		   resultMap.put("isdiplay",1);
-	   }
+	   }*/
+	   SystemSetInfo resultpojo=advertisementService.getAdvertisementcontent();
+	   
+	   resultMap.put("c_img",resultpojo.getAdvertisement_url());
+	   resultMap.put("s_img",resultpojo.getStudent_advertisement_url());
+	   resultMap.put("c_url","http://www.baidu.com");
+	   resultMap.put("s_url","http://www.baidu.com");
+	   resultMap.put("curldisplay",resultpojo.getAdvertisement_flag());
+	   resultMap.put("surldisplay",resultpojo.getStudent_advertisement_flag());
    }
 }

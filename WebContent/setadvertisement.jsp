@@ -34,9 +34,8 @@ function goset()
     
     <td colspan="2">广告图片上传</td>
     <td>
-      <label for="file01">浏览</label>
-	  	<input name="editid_cardpicfurl" type="file" id="file01" style="display:none;"  onchange="change('image01', 'file01')">
-		<img alt="" src="" style="width: 180px;height: 130px;" id="image01" onclick=""></td>
+	  	<input id="ad_img" name="ad_img" type="file">
+		</td>
 	    <td>设置URL路径<input type="text"  id="ad_url" name="ad_url" maxlength="20"/>
 	<div class="addbutton" style="float: left;margin-left: 10px;" onclick="goset()">确认提交</div>
 	</td>					

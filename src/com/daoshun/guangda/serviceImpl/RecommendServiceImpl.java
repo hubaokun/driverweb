@@ -689,4 +689,34 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
  		  long total=countlist.size();
         return new  QueryResult<RecommendInfo>(templist,total);
 	}
+	@Override
+	public int isoversixhour(String id, int type) {
+		Calendar c=Calendar.getInstance();
+		Calendar now=Calendar.getInstance();
+		    if(type==1)
+		    {
+		    	String querystring="from CuserInfo where coachid=:coachid ";
+		    	String[] params={"coachid"};
+		    	CuserInfo temp=(CuserInfo) dataDao.getFirstObjectViaParam(querystring, params,CommonUtils.parseInt(id, 0));
+		    	c.setTime(temp.getAddtime());
+		    	c.add(c.HOUR_OF_DAY,6);
+		    	if(now.getTime().after(c.getTime()))
+		    		return 0;//已经超过6个小时
+		    	else
+		    		return 1;
+		    }
+		    else
+		    {
+		    	String querystring="from SuserInfo where studentid=:studentid ";
+		    	String[] params={"studentid"};
+		    	SuserInfo temp=(SuserInfo) dataDao.getFirstObjectViaParam(querystring, params,CommonUtils.parseInt(id, 0));
+		    	c.setTime(temp.getAddtime());
+		    	c.add(c.HOUR_OF_DAY,6);
+		    	if(now.getTime().after(c.getTime()))
+		    		return 0;//已经超过6个小时
+		    	else
+		    		return 1;
+		    }
+
+	}
 }

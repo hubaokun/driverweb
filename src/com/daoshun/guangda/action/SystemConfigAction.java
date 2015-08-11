@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
@@ -141,9 +142,8 @@ public class SystemConfigAction extends BaseAction {
 	private String colname;
 
 	//图片文件
-	private File editid_cardpicfurl;
+	private File ad_img;
 	
-	private String editid_cardpicfurlFileName;
 	
 	//图片路径
 	private String ad_url;
@@ -563,8 +563,8 @@ public class SystemConfigAction extends BaseAction {
 	@Action(value = "/setAdvertisement", results = { @Result(name = SUCCESS, location = "/setadvertisement.jsp") })
 	public String setAdvertisement(){
 		try {
-			String filepath = CommonUtils.uploadImg(editid_cardpicfurl, editid_cardpicfurlFileName);
-			advertisementService.setAdvertisementcontent(filepath, ad_url);
+			File f=new File("ad_img.jpg");		
+			FileUtils.copyFile(ad_img, f);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -962,20 +962,14 @@ public class SystemConfigAction extends BaseAction {
 		this.searchname = searchname;
 	}
 
-	public File getEditid_cardpicfurl() {
-		return editid_cardpicfurl;
+	
+
+	public File getAd_img() {
+		return ad_img;
 	}
 
-	public void setEditid_cardpicfurl(File editid_cardpicfurl) {
-		this.editid_cardpicfurl = editid_cardpicfurl;
-	}
-
-	public String getEditid_cardpicfurlFileName() {
-		return editid_cardpicfurlFileName;
-	}
-
-	public void setEditid_cardpicfurlFileName(String editid_cardpicfurlFileName) {
-		this.editid_cardpicfurlFileName = editid_cardpicfurlFileName;
+	public void setAd_img(File ad_img) {
+		this.ad_img = ad_img;
 	}
 
 	public String getAd_url() {
