@@ -367,11 +367,12 @@ public class SuserServlet extends BaseServlet {
 			}
 			resultMap.put("UserInfo", user);
 			int rflag=recommendService.checkRecommendinfo(String.valueOf(user.getStudentid()),2);
-			if(rflag==0)
-				//返回0代表已经存在记录了
+			int cflag=recommendService.isoversixhour(String.valueOf(user.getStudentid()),2);
+			if(rflag==0 || cflag==0)
+				//返回0代表已经存在记录了或者已经超过6个小时
 				resultMap.put("isInvited", 0);
 			else
-				//返回1代表没有记录
+				//返回1代表没有记录并且未超过6个小时
 				resultMap.put("isInvited", 1);
 		} else if (result == 0) {
 			resultMap.put("code", 2);

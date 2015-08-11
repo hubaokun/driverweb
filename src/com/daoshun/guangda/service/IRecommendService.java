@@ -169,4 +169,8 @@ public interface IRecommendService{
 	public abstract List<RecommendInfo> getRecommondInviteInfoByStudentid(String studentid,String realname);
 	/** 根据学员id找到学员被分享信息 **/
 	public abstract RecommendInfo getRecommondInvitedInfoByStudentid(String studentid,String realname);
+	/**
+	 * 判断邀请人是否超过注册时间6个小时
+	 */
+	public abstract int isoversixhour(String id,int type);
 } 

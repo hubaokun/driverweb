@@ -100,6 +100,10 @@ public class SystemSetInfo implements Serializable {
 
 	@Column(name = "oreward_amount", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")
 	private BigDecimal orewardamount;
+	
+	@Column(name = "min_version", nullable = false)
+	private String minversion;
+
 
 	public int getDataid() {
 		return dataid;
@@ -278,4 +282,29 @@ public class SystemSetInfo implements Serializable {
 	public void setOrewardamount(BigDecimal orewardamount) {
 		this.orewardamount = orewardamount;
 	}
+
+	public String getMinversion() {
+		return minversion;
+	}
+
+	public void setMinversion(String minversion) {
+		this.minversion = minversion;
+	}
+
+	public Integer getStudent_advertisement_flag() {
+		return student_advertisement_flag;
+	}
+
+	public void setStudent_advertisement_flag(Integer student_advertisement_flag) {
+		this.student_advertisement_flag = student_advertisement_flag;
+	}
+
+	public String getStudent_advertisement_url() {
+		return student_advertisement_url;
+	}
+
+	public void setStudent_advertisement_url(String student_advertisement_url) {
+		this.student_advertisement_url = student_advertisement_url;
+	}
+	
 }
