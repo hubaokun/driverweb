@@ -2025,8 +2025,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		
 		String params[] = { "to_user" };
 
-		List<EvaluationInfo> list = (List<EvaluationInfo>) dataDao.pageQueryViaParam(hql, 20, CommonUtils.parseInt(pagenum, 0) + 1, params, CommonUtils.parseInt(coachid, 0));
-		List<EvaluationInfo> list2 = (List<EvaluationInfo>) dataDao.pageQueryViaParam(hql, 20, CommonUtils.parseInt(pagenum, 0) + 2, params, CommonUtils.parseInt(coachid,0));
+		List<EvaluationInfo> list = (List<EvaluationInfo>) dataDao.pageQueryViaParam(hql, 5, CommonUtils.parseInt(pagenum, 0) + 1, params, CommonUtils.parseInt(coachid, 0));
+		List<EvaluationInfo> list2 = (List<EvaluationInfo>) dataDao.pageQueryViaParam(hql, 5, CommonUtils.parseInt(pagenum, 0) + 2, params, CommonUtils.parseInt(coachid,0));
 		if(list2!=null && list2.size()>0){
 			result.put("hasmore", 1);
 		}else{
