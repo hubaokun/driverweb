@@ -861,7 +861,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override
 	public int sendMessageCode(String phone, String type) {
-
+		
 		String hql = "from VerifyCodeInfo where phone = :phone and totype = :totype";
 		String[] param = { "phone", "totype" };
 		VerifyCodeInfo vCode = (VerifyCodeInfo) dataDao.getFirstObjectViaParam(hql, param, phone, CommonUtils.parseInt(type, 0));
@@ -1040,8 +1040,6 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 
 	@Override
 	public int getCanUseCoinnum(String coachid, String studentid) {
-		HashMap<String, Object> result = new HashMap<String, Object>();
-
 			String countinhql = "select sum(coinnum) from CoinRecordInfo where (receiverid ="+studentid+" and receivertype="+ UserType.STUDENT+"and ownertype="+UserType.COAH+" and ownerid="+coachid+")";
 			Object in= dataDao.getFirstObjectViaParam(countinhql, null);
 			int totalin= in==null?0:CommonUtils.parseInt(in.toString(), 0);
