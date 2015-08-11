@@ -785,6 +785,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						+ condition1 + "%') or phone like '%"+condition1+"%') ");
 			}
 			
+		}else{
+			cuserhql.append(" and  coursestate = 1 ");
 		}
 		// 星级
 		if (!CommonUtils.isEmptyString(condition2)) {
