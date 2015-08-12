@@ -435,6 +435,8 @@ public class CscheduleServlet extends BaseServlet {
 				maxDays = set.getBook_day_max();
 			}
 			Calendar now = Calendar.getInstance();
+			Calendar c1 = Calendar.getInstance();
+			int  hournow=c1.get(c1.HOUR_OF_DAY);
 			//maxDays=5;
 			List<CscheduleInfo> schedulelist = new ArrayList<CscheduleInfo>();
 			// 日期循环
@@ -447,6 +449,21 @@ public class CscheduleServlet extends BaseServlet {
 				// 取得DB中当天的所有日程设置
 				List<CscheduleInfo> dayist = cscheduleService.getCscheduleInfoByDatelist(newnow, coachid);
 				CscheduleInfo allDaySet = null;
+				//查询是否有已过期的日程
+				if (dayist != null) {
+					if(i==0)//只检查当天的日程信息里是否有过期时间
+					{
+						
+						for (CscheduleInfo tempc : dayist) {
+							if(hournow>=CommonUtils.parseInt(tempc.getHour(), 0))
+							{
+								tempc.setExpire(1);
+								cscheduleService.updateScheduleInfo(tempc);
+							}
+							   
+						}
+					}
+				}
 				// 查询是否有全天开课或者全天停课设置
 				if (dayist != null) {
 					for (CscheduleInfo cscheduleInfo : dayist) {
@@ -524,6 +541,13 @@ public class CscheduleServlet extends BaseServlet {
 						info.setCoachid(CommonUtils.parseInt(coachid, 0));
 						info.setHour(String.valueOf(k));
 						info.setDate(newnow);
+						if(i==0)//只检查当天的日程信息里是否有过期时间
+						{
+							if(hournow>=k)
+								info.setExpire(1);
+							else
+								info.setExpire(0);
+						}
 						// 默认价格
 						BigDecimal price = cscheduleService.getDefaultPrice(coachid, String.valueOf(k));
 						if (price != null && price.doubleValue() != 0) {
@@ -1233,7 +1257,89 @@ public class CscheduleServlet extends BaseServlet {
 		CommonUtils.validateEmpty(day);
 		String type = getRequestParamter(request, "type");// 修改的状态1.全天开课 2.全天休息
 		CommonUtils.validateEmpty(type);
-
+		String setjson = getRequestParamter(request, "setjson");
+		CommonUtils.validateEmpty(setjson);
+		Calendar c=Calendar.getInstance();
+		int hournow=c.get(c.HOUR_OF_DAY);
+		if(type.equals("1"))
+		{
+			JSONArray json = null;
+			try {
+				json = new JSONArray(setjson);
+			} catch (JSONException e1) {
+				e1.printStackTrace();
+			}
+	
+			if (json == null) {
+				resultMap.put("code", 2);
+				resultMap.put("message", "设置失败,数据错误");
+				return;
+			} else {
+				for (int i = 0; i < json.length(); i++) {
+					JSONObject nextjson = null;
+					String hour = null;
+					String price = null;
+					String isrest = null;
+					String addressid = null;
+					String subjectid = null;
+					try {
+						nextjson = json.getJSONObject(i);
+						hour = nextjson.getString("hour");
+						price = nextjson.getString("price");
+						isrest = nextjson.getString("isrest");
+						addressid = nextjson.getString("addressid");
+						subjectid = nextjson.getString("subjectid");
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+	
+					if (hour == null || price == null || isrest == null || addressid == null || subjectid == null) {
+						resultMap.put("code", 2);
+						resultMap.put("message", "设置失败,数据错误");
+						return;
+					}
+	
+					CscheduleInfo cscheduleInfo = cscheduleService.getCscheduleByday(coachid, day, hour);// 根据时间教练 找到日程信息
+	
+					if (cscheduleInfo == null) {
+						// 新添加日程
+						CscheduleInfo scheduleInfo = new CscheduleInfo();
+						scheduleInfo.setCoachid(CommonUtils.parseInt(coachid, 0));// 教练id
+						scheduleInfo.setDate(day); // 日期
+						scheduleInfo.setHour(hour); // 设置时间
+	
+						BigDecimal b = new BigDecimal(CommonUtils.parseDouble(price, 0d));
+						scheduleInfo.setPrice(b); // 设置单价
+	
+						scheduleInfo.setIsrest(CommonUtils.parseInt(isrest, 0)); // 设置是否休息
+	
+						scheduleInfo.setAddressid(CommonUtils.parseInt(addressid, 0)); // 设置地址id
+	
+						scheduleInfo.setSubjectid(CommonUtils.parseInt(subjectid, 0));// 设置科目id
+						if(hournow>=CommonUtils.parseInt(hour, 0) && c.getTime().compareTo(CommonUtils.getDateFormat(day, "yyyy-MM-dd"))==1)//设置过期时间
+							scheduleInfo.setExpire(1);
+						else
+							scheduleInfo.setExpire(0);
+						cscheduleService.addScheduleInfo(scheduleInfo);
+					} else {
+						BigDecimal b = new BigDecimal(CommonUtils.parseDouble(price, 0d));
+						cscheduleInfo.setPrice(b); // 设置单价
+	
+						cscheduleInfo.setIsrest(CommonUtils.parseInt(isrest, 0)); // 设置是否休息
+	
+						cscheduleInfo.setAddressid(CommonUtils.parseInt(addressid, 0)); // 设置地址id
+	
+						cscheduleInfo.setSubjectid(CommonUtils.parseInt(subjectid, 0));// 设置科目id
+						
+						if(hournow>=CommonUtils.parseInt(hour, 0) && c.getTime().compareTo(CommonUtils.getDateFormat(day, "yyyy-MM-dd"))==1)//设置过期时间
+							cscheduleInfo.setExpire(1);
+						else
+							cscheduleInfo.setExpire(0);
+						cscheduleService.updateScheduleInfo(cscheduleInfo);
+					}
+				}
+			}
+		}
 		CuserInfo cuser = cuserService.getCuserByCoachid(coachid);
 		CaddAddressInfo addressInfo = cuserService.getcoachaddress(coachid);
 

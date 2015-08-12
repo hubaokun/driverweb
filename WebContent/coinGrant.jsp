@@ -43,7 +43,7 @@
                             <select name="ownertype" id="ownertype" onchange="showsearchowner()" class="searchdiv"
                                     style="  height: 50px;  border: 1px solid #cfd9df;margin-top:10px;">
                                 <option value="0">平台发放</option>
-                                <%--<option value="1">驾校发放</option>--%>
+                                <option value="1">驾校发放</option>
                                 <option value="2">教练发放</option>
                             </select>
                         </div>
@@ -69,8 +69,6 @@
                             <input value="" name="receiverid" id="receiverid" type="hidden">
                         </div>
                         <div class="binding_detail" style="  left: 164px;top:-20px;clear:both;" id="optionalStudent">;
-
-
                         </div>
                     </div>
                     <input type="button"  value="提交" onclick="grantCoinRecord()"

@@ -28,6 +28,7 @@ public interface ISBookService {
 	public abstract CsubjectInfo getDefaultSubject(String coachid, String hour);
 
 	public abstract CaddAddressInfo getDefaultAddress(String coachid, String hour);
+	public HashMap<String, Object> getCommentsFromStudent(String coachid,String studentid, String pagenum);
 
 	/**
 	 * 获取教练详细
@@ -61,7 +62,7 @@ public interface ISBookService {
 	 * 原接口上添加返回教练订单总数
 	 * @return
 	 */
-	public abstract List<CuserInfo> getNearByCoach2(String pointcenter, String radius, String condition1, String condition2, String condition3, String condition4, String condition5, String condition6,
+	public abstract List<CuserInfo> getNearByCoach2(String cityid,String pointcenter, String radius, String condition1, String condition2, String condition3, String condition4, String condition5, String condition6,
 			String condition8, String condition9, String condition10, String condition11);
 
 	/**
@@ -105,6 +106,6 @@ public interface ISBookService {
 	 *            获取页数
 	 * @return
 	 */
-	public abstract HashMap<String, Object> getCoachComments(String coachid, String pagenum);
+	public abstract HashMap<String, Object> getCoachComments(String coachid,String type, String pagenum);
 
 }

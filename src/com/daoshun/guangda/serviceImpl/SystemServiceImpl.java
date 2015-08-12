@@ -91,13 +91,14 @@ public class SystemServiceImpl extends BaseServiceImpl implements ISystemService
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override
 	public void recordUserAction(String userid, String usertype, String sername, String actionname) {
-		ActiveRecord record = new ActiveRecord();
+		//取消向表t_active_record的插入数据操作
+		/*ActiveRecord record = new ActiveRecord();
 		record.setActionname(actionname);
 		record.setAddtime(new Date());
 		record.setServername(sername);
 		record.setUserid(CommonUtils.parseInt(userid, 0));
 		record.setUsertype(CommonUtils.parseInt(usertype, 0));
-		dataDao.addObject(record);
+		dataDao.addObject(record);*/
 	}
 
 	@Override

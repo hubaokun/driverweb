@@ -125,7 +125,7 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 				else
 					return 0;
 			}
-				
+			return 0;
 	    }
 	    else if(type==2)
 	    {
@@ -159,6 +159,7 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 				else
 					return 0;
 			}
+	        return 0;
 	    }
 	    return 0;
 	}
@@ -408,6 +409,21 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 		String querystring1="from RecommendInfo where invitedcoachid=:invitedcoachid";
 		String[] params1={"invitedcoachid"};
 		RecommendInfo tempRecommendInfo=(RecommendInfo)dataDao.getFirstObjectViaParam(querystring1, params1, CommonUtils.parseInt(coachid, 0));
+		return tempRecommendInfo;
+	}
+	@Override
+	public List<RecommendInfo> getRecommondInviteInfoByStudentid(String studentid,String realname) {
+		String querystring="from RecommendInfo where studentid=:studentid";
+		String[] params={"studentid"};
+		List<RecommendInfo> tempRecommendInfoList=(List<RecommendInfo>) dataDao.getObjectsViaParam(querystring, params, CommonUtils.parseInt(studentid, 0));	
+		return tempRecommendInfoList;
+	}
+
+	@Override
+	public RecommendInfo getRecommondInvitedInfoByStudentid(String studentid,String realname) {
+		String querystring1="from RecommendInfo where invitedstudentid=:invitedstudentid";
+		String[] params1={"invitedstudentid"};
+		RecommendInfo tempRecommendInfo=(RecommendInfo)dataDao.getFirstObjectViaParam(querystring1, params1, CommonUtils.parseInt(studentid, 0));
 		return tempRecommendInfo;
 	}
 	@SuppressWarnings("unchecked")
@@ -672,5 +688,35 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 		    }
  		  long total=countlist.size();
         return new  QueryResult<RecommendInfo>(templist,total);
+	}
+	@Override
+	public int isoversixhour(String id, int type) {
+		Calendar c=Calendar.getInstance();
+		Calendar now=Calendar.getInstance();
+		    if(type==1)
+		    {
+		    	String querystring="from CuserInfo where coachid=:coachid ";
+		    	String[] params={"coachid"};
+		    	CuserInfo temp=(CuserInfo) dataDao.getFirstObjectViaParam(querystring, params,CommonUtils.parseInt(id, 0));
+		    	c.setTime(temp.getAddtime());
+		    	c.add(c.HOUR_OF_DAY,6);
+		    	if(now.getTime().after(c.getTime()))
+		    		return 0;//已经超过6个小时
+		    	else
+		    		return 1;
+		    }
+		    else
+		    {
+		    	String querystring="from SuserInfo where studentid=:studentid ";
+		    	String[] params={"studentid"};
+		    	SuserInfo temp=(SuserInfo) dataDao.getFirstObjectViaParam(querystring, params,CommonUtils.parseInt(id, 0));
+		    	c.setTime(temp.getAddtime());
+		    	c.add(c.HOUR_OF_DAY,6);
+		    	if(now.getTime().after(c.getTime()))
+		    		return 0;//已经超过6个小时
+		    	else
+		    		return 1;
+		    }
+
 	}
 }

@@ -113,6 +113,11 @@ public class CmyServiceImpl extends BaseServiceImpl implements ICmyService {
 	public void delNoticesInfo(NoticesInfo noticeInfo) {
 		dataDao.deleteObject(noticeInfo);
 	}
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	@Override
+	public void updateNoticeState(int userid,int noticeid) {
+		dataDao.updateBySql("update t_notice_user set readstate=1 where userid="+userid+" and noticeid="+noticeid);
+	}
 
 	@Override
 	public NoticesInfo getNoticesInfoByNoiticeid(int noticeid) {
@@ -152,7 +157,20 @@ public class CmyServiceImpl extends BaseServiceImpl implements ICmyService {
 				complaint.setCoachid(to_user); // 教练id
 				complaint.setStudentid(userid); // 学员id
 				complaint.setStudentavatar(getFilePathById(suserInfo.getAvatar())); // 学员头像id
+				
+				
+				/*if(suserInfo.getRealname()!=null && suserInfo.getRealname().length()==2){
+					complaint.setName(suserInfo.getRealname().substring(0,1)+"*");
+				}else if(suserInfo.getRealname()!=null && suserInfo.getRealname().length()==3){
+					complaint.setName(suserInfo.getRealname().substring(0,1)+"**");
+				}else if(suserInfo.getRealname()!=null && suserInfo.getRealname().length()>=4){
+					complaint.setName(suserInfo.getRealname().substring(0,2)+"**");
+				}else{
+					complaint.setName(suserInfo.getRealname());
+				}*/
 				complaint.setName(suserInfo.getRealname()); // 学员真是姓名
+				
+				
 				complaint.setPhone(suserInfo.getPhone()); // 学员手机号码
 				complaint.setStudentcardnum(suserInfo.getStudent_cardnum()); // 学员证号
 				if (evaluationInfo == null) {
@@ -246,6 +264,15 @@ public class CmyServiceImpl extends BaseServiceImpl implements ICmyService {
 				EvaluationNetData evaluation = new EvaluationNetData();
 				evaluation.setStudentid(userid); // 学员id
 				evaluation.setStudentavatar(getFilePathById(suserInfo.getAvatar())); // 学员头像id
+				
+				/*if(suserInfo.getRealname()!=null && suserInfo.getRealname().length()==2){
+					evaluation.setName(suserInfo.getRealname().substring(0,1)+"*");
+				}else if(suserInfo.getRealname()!=null && suserInfo.getRealname().length()==3){
+					evaluation.setName(suserInfo.getRealname().substring(0,1)+"**");
+				}else if(suserInfo.getRealname()!=null && suserInfo.getRealname().length()>=4){
+					evaluation.setName(suserInfo.getRealname().substring(0,2)+"**");
+				}*/
+				
 				evaluation.setName(suserInfo.getRealname()); // 学员真是姓名
 				evaluation.setPhone(suserInfo.getPhone()); // 学员手机号码
 				evaluation.setStudentcardnum(suserInfo.getStudent_cardnum()); // 学员证号

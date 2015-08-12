@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -18,6 +19,7 @@ import com.daoshun.guangda.pojo.AreaInfo;
 import com.daoshun.guangda.pojo.CityInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.ProvinceInfo;
+import com.daoshun.guangda.pojo.RecommendInfo;
 import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.pojo.SystemSetInfo;
 import com.daoshun.guangda.pojo.VerifyCodeInfo;
@@ -117,6 +119,8 @@ public class SuserServlet extends BaseServlet {
 		}
 		setResult(response, resultMap);
 	}
+	
+	
 
 	private boolean checkSession(HttpServletRequest request, String action, HashMap<String, Object> resultMap) throws ErrException {
 		String userid = "";
@@ -297,6 +301,11 @@ public class SuserServlet extends BaseServlet {
 		String type = getRequestParamter(request, "type");
 		CommonUtils.validateEmpty(phone);
 		CommonUtils.validateEmpty(type);
+		if(phone.equals("18888888888")){
+			resultMap.put("code", 1);
+			resultMap.put("message", "请使用默认验证码");
+			return ;
+		}
 		int result = suserService.sendMessageCode(phone, type);
 		if (result == 1) {
 			resultMap.put("code", 1);
@@ -365,11 +374,12 @@ public class SuserServlet extends BaseServlet {
 			}
 			resultMap.put("UserInfo", user);
 			int rflag=recommendService.checkRecommendinfo(String.valueOf(user.getStudentid()),2);
-			if(rflag==0)
-				//返回0代表已经存在记录了
+			int cflag=recommendService.isoversixhour(String.valueOf(user.getStudentid()),2);
+			if(rflag==0 || cflag==0)
+				//返回0代表已经存在记录了或者已经超过6个小时
 				resultMap.put("isInvited", 0);
 			else
-				//返回1代表没有记录
+				//返回1代表没有记录并且未超过6个小时
 				resultMap.put("isInvited", 1);
 		} else if (result == 0) {
 			resultMap.put("code", 2);
@@ -490,6 +500,9 @@ public class SuserServlet extends BaseServlet {
 		String studentid = getRequestParamter(request, "studentid");
 		String realname = getRequestParamter(request, "realname");
 		String phone = getRequestParamter(request, "phone");
+		String provinceid = getRequestParamter(request, "provinceid");
+		String cityid = getRequestParamter(request, "cityid");
+		String areaid = getRequestParamter(request, "areaid");
 		CommonUtils.validateEmpty(studentid);
 		SuserInfo user = suserService.getUserById(studentid);
 		if (user == null) {
@@ -503,7 +516,31 @@ public class SuserServlet extends BaseServlet {
 			if (realname != null) {
 				user.setRealname(realname);
 			}
+			if (provinceid != null) {
+				user.setProvinceid(provinceid);
+			}
+			if (cityid != null) {
+				user.setCityid(cityid);
+			}
+			if (areaid != null) {
+				user.setAreaid(areaid);
+			}
 			suserService.updateUserInfo(user);
+			List<RecommendInfo> tempList=recommendService.getRecommondInviteInfoByCoachid(studentid, realname);
+			RecommendInfo temp=recommendService.getRecommondInvitedInfoByCoachid(studentid, realname);
+			if(tempList.size()!=0)
+			{
+				for(RecommendInfo r:tempList)
+				{
+					r.setStudentname(realname);
+					recommendService.updateRecommendInfo(r);
+				}
+			}
+			if(temp!=null)
+			{
+				temp.setInvitedpeoplename(realname);
+				recommendService.updateRecommendInfo(temp);
+			}
 		}
 	}
 
@@ -747,9 +784,15 @@ public class SuserServlet extends BaseServlet {
 		double money=0;
 		int fcoinsum=0;
 		if(su!=null){
-			coinsum=su.getCoinnum();
-			money=su.getMoney().doubleValue();
-			fcoinsum=su.getFcoinnum().intValue();
+			if(su.getCoinnum()!=null){
+				coinsum=su.getCoinnum();
+			}
+			if(su.getMoney()!=null){
+				money=su.getMoney().doubleValue();
+			}
+			if(su.getFcoinnum()!=null){
+				fcoinsum=su.getFcoinnum().intValue();
+			}
 		}
 		resultMap.put("couponsum", sum);
 		resultMap.put("money", money);

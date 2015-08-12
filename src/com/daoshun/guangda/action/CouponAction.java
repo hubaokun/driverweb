@@ -38,7 +38,6 @@ import com.daoshun.guangda.service.ICUserService;
 import com.daoshun.guangda.service.ICouponService;
 import com.daoshun.guangda.service.IDriveSchoolService;
 import com.daoshun.guangda.service.ISUserService;
-import com.sun.net.httpserver.Authenticator.Success;
 
 @ParentPackage("default")
 @Controller

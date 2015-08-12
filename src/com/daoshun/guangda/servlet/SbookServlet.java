@@ -74,7 +74,11 @@ public class SbookServlet extends BaseServlet {
 				// 预定教练
 				bookCoach(request, resultMap);
 			} else if (Constant.GETCOACHCOMMENTS.equals(action)) {
+				//评论总列表
 				getCoachComments(request, resultMap);
+			}else if (Constant.GETCOMMENTSFORSTUDENT.equals(action)) {
+				//某个学员针对一个教练的所有评论列表
+				getCommentsForStudent(request, resultMap);
 			} else if (Constant.GETCOUPONLIST.equals(action)) {
 				getCouponList(request, resultMap);
 			} else if (Constant.GETHISCOUPONLIST.equals(action)) {
@@ -266,12 +270,16 @@ public class SbookServlet extends BaseServlet {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		CuserInfo cuser = sbookService.getCoachDetail(coachid);
-		if(cuser.getDrive_schoolid()>0 && cuser.getDrive_school().length()>0) {
-			DriveSchoolInfo dr = driveSchoolService.getDriveSchoolInfoByid(cuser.getDrive_schoolid());
-			if(dr!=null)
-				cuser.setDrive_school(dr.getName());
+		if(cuser!=null){
+			if(cuser.getDrive_schoolid()!=null && cuser.getDrive_school()!=null){
+				if(cuser.getDrive_schoolid()>0 && cuser.getDrive_school().length()>0) {
+					DriveSchoolInfo dr = driveSchoolService.getDriveSchoolInfoByid(cuser.getDrive_schoolid());
+					if(dr!=null)
+						cuser.setDrive_school(dr.getName());
+				}
+			}
 		}
-
+		
 		resultMap.put("coachinfo", cuser);
 	}
 
@@ -301,8 +309,8 @@ public class SbookServlet extends BaseServlet {
 		String condition10 = getRequestParamter(request, "condition10");// 车型 0.表示不限
 		String condition11 = getRequestParamter(request, "condition11");// 准教车型
 		String studentid = getRequestParamter(request, "studentid");// 准教车型
-		
-		List<CuserInfo> coachlist = sbookService.getNearByCoach2(pointcenter, radius, condition1, condition2, condition3, condition4, condition5, condition6, condition8, condition9, condition10,
+		String cityid = getRequestParamter(request, "cityid");// 准教车型
+		List<CuserInfo> coachlist = sbookService.getNearByCoach2(cityid,pointcenter, radius, condition1, condition2, condition3, condition4, condition5, condition6, condition8, condition9, condition10,
 				condition11);
 		
 			if(studentid==null || !"18".equals(studentid)){
@@ -382,13 +390,28 @@ public class SbookServlet extends BaseServlet {
 			e.printStackTrace();
 		}
 	}
-
+	//显示评论，并且过滤重复学员
 	public void getCoachComments(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
+		String type = getRequestParamter(request, "type");//是否过滤重复的学员 1 过滤  2 不过滤
 		// String studentid = getRequestParamter(request, "studentid");
 		String pagenum = getRequestParamter(request, "pagenum");
 		CommonUtils.validateEmpty(coachid);
-		resultMap.putAll(sbookService.getCoachComments(coachid, pagenum));
+		resultMap.putAll(sbookService.getCoachComments(coachid,type, pagenum));
+		
+	}
+	/**
+	 * 查询某个学员针对一个教练的所有评论列表
+	 * @param request
+	 * @param resultMap
+	 * @throws ErrException
+	 */
+	public void getCommentsForStudent(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String coachid = getRequestParamter(request, "coachid");
+		String studentid = getRequestParamter(request, "studentid");
+		String pagenum = getRequestParamter(request, "pagenum");
+		CommonUtils.validateEmpty(coachid);
+		resultMap.putAll(sbookService.getCommentsFromStudent(coachid, studentid,pagenum));
 	}
 
 	/**
@@ -418,7 +441,8 @@ public class SbookServlet extends BaseServlet {
 	}
 
 	/**
-	 * 获取可以使用的小巴券列表 条件:未过期，未使用过,且满足平台、驾校、教练规则
+	 * 获取可以使用的小巴币，小巴券，余额
+	 * --获取可以使用的小巴券列表 条件:未过期，未使用过,且满足平台、驾校、教练规则
 	 * 
 	 * @param request
 	 * @throws ErrException
@@ -442,7 +466,8 @@ public class SbookServlet extends BaseServlet {
 				canUseMaxCount = info.getCan_use_coupon_count();
 		}
 		int num=suserService.getCanUseCoinnum(coachid,studentid);//获取可用小巴币
-		
+		int numForSchool=suserService.getCanUseCoinnumForDriveSchool(coachid,studentid);//获取驾校可用小巴币
+		num+=numForSchool;
 		SuserInfo suser=suserService.getUserById(studentid);//获取余额
 		if(suser==null){
 				resultMap.put(Constant.CODE, 2);
@@ -476,8 +501,11 @@ public class SbookServlet extends BaseServlet {
 		String coachid = getRequestParamter(request, "coachid");// 预订的教练ID
 		CommonUtils.validateEmpty(studentid);
 		CommonUtils.validateEmpty(coachid);
-		int coinnum = suserService.getCanUseCoinnum(coachid,studentid);
-		resultMap.put("coinnum", coinnum);
+		//对某个教练能使用的小巴币
+		int coinnumForCoach = suserService.getCanUseCoinnum(coachid,studentid);
+		//对某个驾校下所有教练能使用的小巴币
+		int coinnumForSchool = suserService.getCanUseCoinnumForDriveSchool(coachid,studentid);
+		resultMap.put("coinnum", coinnumForCoach+coinnumForSchool);
 	}
 
 }

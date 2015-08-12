@@ -417,7 +417,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		return coachlist;
 	}
 	
-	public List<CuserInfo> getNearByCoach2(String pointcenter, String radius, String condition1, String condition2, String condition3, String condition4, String condition5, String condition6,
+	public List<CuserInfo> getNearByCoach2(String cityid,String pointcenter, String radius, String condition1, String condition2, String condition3, String condition4, String condition5, String condition6,
 			String condition8, String condition9, String condition10, String condition11) {
 		List<CuserInfo> coachlist = new ArrayList<CuserInfo>();
 		// 取得中心点经纬度
@@ -452,7 +452,10 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			hqlCoach.append("select getTeachAddress(u.coachid) as address,getCoachOrderCount(u.coachid) as drive_schoolid, u.*  from t_user_coach u where coachid in "+
 							cs.toString()+" and state = 2 and id_cardexptime > curdate() and coach_cardexptime > curdate() "
 					+ " and drive_cardexptime > curdate() and car_cardexptime > curdate() and money >= gmoney and isquit = 0");
-
+			
+			if (!CommonUtils.isEmptyString(cityid)) {
+				hqlCoach.append(" and cityid = " + cityid);
+			}
 			// 真实姓名和教练所属驾校
 			if (!CommonUtils.isEmptyString(condition1)) {
 				//如果是手机号码
@@ -569,6 +572,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					System.out.println(info.getCoachid());
 			}*/
 			//System.out.println(hqlCoach.toString());
+			hqlCoach.append("  order by coursestate desc,drive_schoolid desc,score desc");
 			List<CuserInfo> cuserlist = (List<CuserInfo>) dataDao.SqlPageQuery(hqlCoach.toString(), null, null,CuserInfo.class, null);
 			//List<CuserInfo> cuserlist = (List<CuserInfo>) dataDao.getObjectsViaParam(hqlCoach.toString(), paramsCoach, cids, now, now, now, now, now);
 			if (cuserlist != null && cuserlist.size() > 0) {
@@ -781,6 +785,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						+ condition1 + "%') or phone like '%"+condition1+"%') ");
 			}
 			
+		}else{
+			cuserhql.append(" and  coursestate = 1 ");
 		}
 		// 星级
 		if (!CommonUtils.isEmptyString(condition2)) {
@@ -804,107 +810,32 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 
 				int starthour = startCal.get(Calendar.HOUR_OF_DAY);
 				int datecount = 1;
-				cuserhql.append(" and  coursestate = 1");
+				//cuserhql.append(" and  coursestate = 1");
 				//cuserhql.append(" and getcoachstate(u.coachid," + datecount + ",'" + CommonUtils.getTimeFormat(start, "yyyy-MM-dd") + "'," + starthour + "," + 23 + "," + subjectid + ") = 1");
 
 			}
 		} else {
 			int subjectid = CommonUtils.parseInt(condition6, 0);
 			Calendar c = Calendar.getInstance();
-			cuserhql.append(" and  coursestate = 1");
-
+			//cuserhql.append(" and  coursestate = 1");
+			//cuserhql.append(" and  drive_schoolid=1");
 			//cuserhql.append(" and getcoachstate(u.coachid," + 10 + ",'" + CommonUtils.getTimeFormat(c.getTime(), "yyyy-MM-dd") + "'," + 5 + "," + 23 + "," + subjectid + ") = 1");
 		}
 
 		if (!CommonUtils.isEmptyString(condition11)) {
 			cuserhql.append(" and modelid like '%" + condition11 + "%'");
 		}
-
-
-		// 开始时间和结束时间
-		// if (!CommonUtils.isEmptyString(condition3) && !CommonUtils.isEmptyString(condition4)) {
-		//
-		// int subjectid = CommonUtils.parseInt(condition6, 0);
-		//
-		// Date start = CommonUtils.getDateFormat(condition3, "yyyy-MM-dd HH:mm:ss");
-		// Date end = CommonUtils.getDateFormat(condition4, "yyyy-MM-dd HH:mm:ss");
-		// if (start != null && end != null) {
-		// Calendar startCal = Calendar.getInstance();
-		// startCal.setTime(start);
-		// Calendar endCal = Calendar.getInstance();
-		// endCal.setTime(end);
-		//
-		// if (startCal.compareTo(endCal) <= 0) {
-		// int starthour = startCal.get(Calendar.HOUR_OF_DAY);
-		// int endhour = endCal.get(Calendar.HOUR_OF_DAY);
-		// int datecount = 1;
-		// int startmonth = startCal.get(Calendar.MONTH);
-		// int endmonth = endCal.get(Calendar.MONTH);
-		// int startday = startCal.get(Calendar.DAY_OF_MONTH);
-		// int endday = endCal.get(Calendar.DAY_OF_MONTH);
-		// if (startmonth == endmonth) {
-		// datecount = endday - startday + 1;
-		// } else {
-		// startCal.set(Calendar.DATE, 1);
-		// startCal.roll(Calendar.DATE, -1);
-		// int maxday = startCal.get(Calendar.DAY_OF_MONTH);
-		// datecount = maxday - startday + 1;
-		//
-		// if (startmonth + 1 == endmonth) {
-		// datecount += endday;
-		// } else {
-		// Calendar c = Calendar.getInstance();
-		// c.set(Calendar.YEAR, startCal.get(Calendar.YEAR));
-		// c.set(Calendar.MONTH, 1);
-		// c.set(Calendar.DATE, 1);
-		// c.roll(Calendar.DATE, -1);
-		// datecount += c.get(Calendar.DAY_OF_MONTH) + endday;
-		// }
-		// }
-		//
-		// cuserhql.append(" and getcoachstate(u.coachid," + datecount + ",'" + CommonUtils.getTimeFormat(start, "yyyy-MM-dd") + "'," + starthour + "," + endhour + "," + subjectid + ") = 1");
-		// }
-		// }
-		// }
-
-		// if (CommonUtils.parseInt(condition5, 0) != 0) {
-		// cuserhql.append(" and gender = " + condition5);
-		// }
-		//
-		// if (CommonUtils.parseInt(condition8, 0) != 0 && CommonUtils.parseInt(condition9, 0) != 0 && CommonUtils.parseInt(condition8, 0) <= CommonUtils.parseInt(condition9, 0)) {
-		// cuserhql.append(" and price >= " + condition8 + " and price <= " + condition9);
-		// }
-		//
-		// if (CommonUtils.parseInt(condition10, 0) != 0 && CommonUtils.parseInt(condition10, 0) != -1) {
-		// cuserhql.append(" and carmodelid = " + condition10);
-		// } else if (CommonUtils.parseInt(condition10, 0) == -1) {
-		// cuserhql.append(" and length(carmodel) > 0");
-		// }
-		//cuserhql.append(" and money >= gmoney and isquit = 0 order by score desc");
-		//String[] params = { "now", "now", "now", "now" };
-		//String now = CommonUtils.getTimeFormat(new Date(), "yyyy-MM-dd");
-		//System.out.println(cuserhql.toString());
-		cuserhql.append(" and money >= gmoney and isquit = 0 and state=2 order by score desc,drive_schoolid desc ");
-		//System.out.println(cuserhql.toString());
-		StringBuffer s=new StringBuffer("");
-		s.append("select getTeachAddress(u.coachid) as address,getCoachOrderCount(u.coachid) as drive_schoolid, u.*  from t_user_coach u where state = 2 and phone='15397128850'");
+		cuserhql.append(" and money >= gmoney and isquit = 0 and state=2 order by coursestate desc,drive_schoolid desc,score desc");
 		//System.out.println(cuserhql.toString());
 		List<CuserInfo> coachlist = (List<CuserInfo>) dataDao.SqlPageQuery(cuserhql.toString(), Constant.USERLIST_SIZE+1, CommonUtils.parseInt(pagenum, 0) + 1,CuserInfo.class, null);
 		
-		
-		
-		//System.out.println(cuserhql.toString());
-		//String[] params = { "now", "now", "now", "now" };
-		//String now = CommonUtils.getTimeFormat(new Date(), "yyyy-MM-dd");
-		//System.out.println(cuserhql.toString());
-		//String t="select getTeachAddress(u.coachid) as address,getCoachOrderCount(u.coachid) as drive_schoolid,u.*  from t_user_coach u";
 		if (coachlist != null && coachlist.size() > 0) {
 			for (CuserInfo coach : coachlist) {
 				//StringBuffer cuserhql1 = new StringBuffer();
 				//cuserhql1.append("from CaddAddressInfo where coachid =:coachid and iscurrent = 1");
 				//String[] params1 = { "coachid" };
 				//CaddAddressInfo address = (CaddAddressInfo) dataDao.getFirstObjectViaParam(cuserhql1.toString(), params1, coach.getCoachid());
-				if(coach.getDrive_schoolid()!=null){
+				if(coach.getDrive_schoolid()!=null){//设置教练的订单总数，其中drive_schoolid字段存放的是自定义函数中获取的订单数，因为非字段别名不能自动封装值，所以先使用drive_schoolid临时存放教练的总订单数
 					coach.setSumnum(new Long(coach.getDrive_schoolid()));
 				}
 				if(coach.getAddress()!=null){
@@ -1547,15 +1478,28 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				}
 				String recordid="";
 				int delmoney=0;
-				if("1".equals(paytype)){
+				if(String.valueOf(PayType.MONEY).equals(paytype)){
 					delmoney= array.getInt("delmoney");
-				}else if("2".equals(paytype)){
+				}else if(String.valueOf(PayType.COUPON).equals(paytype)){
 					delmoney= array.getInt("delmoney");
 					recordid= array.getString("recordid");
+					boolean recordFlag=false;
+					String[] recordidArray = recordid.split(",");
+					if(recordidArray.length>1){
+						recordFlag=true;//一次性传入多张券
+					}
+					
+					for (int recoridn = 0; recoridn < recordidArray.length; recoridn++) {
+						int cid = CommonUtils.parseInt(recordidArray[recoridn], 0);
+						CouponRecord record = dataDao.getObjectById(CouponRecord.class, cid);//该券已经被使用过或者不存在
+						if(record==null || record.getState()==1 ){
+							recordFlag=true;
+						}
+					}
 					//1.早起版本券的id尾巴上多了一个逗号,2.券的张数跟课时数不匹配,3.传了券id,但没传入delmoney的值
 					if((recordid.lastIndexOf(',')==recordid.length()-1)||
 							recordid.split(",").length>times.length()||
-							(recordid.length()>0&& delmoney<=0))
+							(recordid.length()>0&& delmoney<=0) || recordFlag)
 					{
 						//版本需要更新
 						result.put("failtimes", -1);
@@ -1566,7 +1510,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						return result;
 					}
 
-				}else if("3".equals(paytype)){
+				}else if(String.valueOf(PayType.COIN).equals(paytype)){//小巴币支付
 					delmoney= array.getInt("delmoney");
 				}
 			/*	System.out.println("##############################################");
@@ -1595,7 +1539,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 
 				
 				// 如果使用了小巴券,但是又没有传delmoney的话,订单预订失败
-				if("2".equals(paytype)){
+				if(String.valueOf(PayType.COUPON).equals(paytype)){
 				
 					if (!CommonUtils.isEmptyString(recordid) && delmoney == 0 && recordid.length()>2 ) {//
 						for (int j = 0; j < times.length(); j++) {
@@ -1921,7 +1865,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						
 						
 						// 小巴券，判断，如果 2 
-						if(2==orderList.get(m).mOrderInfo.getPaytype()){
+						if(PayType.COUPON==orderList.get(m).mOrderInfo.getPaytype()){
 							
 							total = total.subtract(new BigDecimal(orderList.get(m).mOrderInfo.getDelmoney()));// 减去小巴券中抵掉的金额
 								if (orderList.get(m).mOrderInfo.getCouponrecordid() != null && orderList.get(m).mOrderInfo.getCouponrecordid().length() > 0) {
@@ -1929,8 +1873,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 									for (int i = 0; i < recordidArray.length; i++) {
 										int cid = CommonUtils.parseInt(recordidArray[i], 0);
 										CouponRecord record = dataDao.getObjectById(CouponRecord.class, cid);
-										if (record != null) {
-											record.setState(1);//小巴券的状态修改为已经使用
+										if (record != null && record.getState()==0) {//未被使用
+											record.setState(1);// 小巴券的状态修改为已经使用
 											record.setUsetime(new Date());//使用时间
 											record.setOrderid(orderList.get(m).mOrderInfo.getOrderid());//订单号
 											dataDao.updateObject(record);
@@ -1947,7 +1891,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 
 						if (student != null) {
 							
-							//  判断 1 或者 3  1 扣余额  2 扣小巴币 如果是小巴币，直接扣除  ，如果是余额，
+							//  判断 1 或者 3  1 扣余额
 							if(PayType.MONEY==orderList.get(m).mOrderInfo.getPaytype()){
 								if(student.getMoney().subtract(total).doubleValue()<0){
 									result.put("code", 4);
@@ -2072,22 +2016,89 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 	}
 	
 	@Override
-	public HashMap<String, Object> getCoachComments(String coachid, String pagenum) {
+	public HashMap<String, Object> getCoachComments(String coachid,String type, String pagenum) {
 		HashMap<String, Object> result = new HashMap<String, Object>();
-		String hql = "from EvaluationInfo where to_user = :to_user and type = 1 order by addtime desc";
+		String hql="";
+		if("1".equals(type)){ // type=1 过滤重复学员
+			hql = "from EvaluationInfo  where to_user = :to_user and type = 1 group by from_user order by addtime desc";
+		}else if("2".equals(type)){
+			hql = "from EvaluationInfo  where to_user = :to_user and type = 1 order by addtime desc";
+		}else{
+			hql = "from EvaluationInfo  where to_user = :to_user and type = 1 group by from_user order by addtime desc";
+		}
+		
 		String params[] = { "to_user" };
 
-		List<EvaluationInfo> list = (List<EvaluationInfo>) dataDao.pageQueryViaParam(hql, 20, CommonUtils.parseInt(pagenum, 0) + 1, params, CommonUtils.parseInt(coachid, 0));
-
+		List<EvaluationInfo> list = (List<EvaluationInfo>) dataDao.pageQueryViaParam(hql, 10, CommonUtils.parseInt(pagenum, 0) + 1, params, CommonUtils.parseInt(coachid, 0));
+		List<EvaluationInfo> list2 = (List<EvaluationInfo>) dataDao.pageQueryViaParam(hql, 10, CommonUtils.parseInt(pagenum, 0) + 2, params, CommonUtils.parseInt(coachid,0));
+		if(list2!=null && list2.size()>0){
+			result.put("hasmore", 1);
+		}else{
+			result.put("hasmore", 0);
+		}
 		for (EvaluationInfo eva : list) {
 			SuserInfo user = dataDao.getObjectById(SuserInfo.class, eva.getFrom_user());
 			if (user != null) {
-				eva.setNickname(user.getRealname());
+				if(user.getRealname()!=null && user.getRealname().length()==2){
+					eva.setNickname(user.getRealname().substring(0,1)+"*");
+				}else if(user.getRealname()!=null && user.getRealname().length()==3){
+					eva.setNickname(user.getRealname().substring(0,1)+"**");
+				}else if(user.getRealname()!=null && user.getRealname().length()>=4){
+					eva.setNickname(user.getRealname().substring(0,2)+"**");
+				}
+				
 				eva.setAvatarUrl(getFilePathById(user.getAvatar()));
 			}
 			eva.setScore((eva.getScore1() + eva.getScore2() + eva.getScore3()) / 3);
 		}
-		List<EvaluationInfo> listCount = (List<EvaluationInfo>) dataDao.getObjectsViaParam(hql, params, CommonUtils.parseInt(coachid, 0));
+		//评论的学员数量
+		List<EvaluationInfo> listCount = (List<EvaluationInfo>) dataDao.getObjectsViaParam("from EvaluationInfo  where to_user = :to_user and type = 1 group by from_user order by addtime desc", params, CommonUtils.parseInt(coachid, 0));
+		if (listCount != null)
+			result.put("studentnum", listCount.size());
+		else
+			result.put("studentnum", 0);
+		result.put("evalist", list);
+		result.put("code", 1);
+		result.put("message", "操作成功");
+		//评论的总记录数
+		List<EvaluationInfo> count = (List<EvaluationInfo>) dataDao.getObjectsViaParam("from EvaluationInfo  where to_user = :to_user and type = 1 order by addtime desc", params, CommonUtils.parseInt(coachid, 0));
+		if (listCount != null)
+			result.put("count", count.size());
+		else
+			result.put("count", 0);
+		
+		return result;
+	}
+	public HashMap<String, Object> getCommentsFromStudent(String coachid,String studentid, String pagenum) {
+		HashMap<String, Object> result = new HashMap<String, Object>();
+		String hql = "from EvaluationInfo where to_user = :to_user and type = 1 and from_user=:from_user order by addtime desc";
+		String params[] = { "to_user","from_user" };
+
+		List<EvaluationInfo> list = (List<EvaluationInfo>) 
+				dataDao.pageQueryViaParam(hql, 20, CommonUtils.parseInt(pagenum, 0) + 1, params, CommonUtils.parseInt(coachid, 0),CommonUtils.parseInt(studentid,0));
+		
+		List<EvaluationInfo> list2 = (List<EvaluationInfo>) 
+				dataDao.pageQueryViaParam(hql, 20, CommonUtils.parseInt(pagenum, 0) + 2, params, CommonUtils.parseInt(coachid, 0),CommonUtils.parseInt(studentid,0));
+		if(list2!=null && list2.size()>0){
+			result.put("hasmore", 1);
+		}else{
+			result.put("hasmore", 0);
+		}
+		for (EvaluationInfo eva : list) {
+			SuserInfo user = dataDao.getObjectById(SuserInfo.class, eva.getFrom_user());
+			if (user != null) {
+				if(user.getRealname()!=null && user.getRealname().length()==2){
+					eva.setNickname(user.getRealname().substring(0,1)+"*");
+				}else if(user.getRealname()!=null && user.getRealname().length()==3){
+					eva.setNickname(user.getRealname().substring(0,1)+"**");
+				}else if(user.getRealname()!=null && user.getRealname().length()>=4){
+					eva.setNickname(user.getRealname().substring(0,2)+"**");
+				}
+				eva.setAvatarUrl(getFilePathById(user.getAvatar()));
+			}
+			eva.setScore((eva.getScore1() + eva.getScore2() + eva.getScore3()) / 3);
+		}
+		List<EvaluationInfo> listCount = (List<EvaluationInfo>) dataDao.getObjectsViaParam(hql, params, CommonUtils.parseInt(coachid, 0),CommonUtils.parseInt(studentid,0));
 		result.put("evalist", list);
 		result.put("code", 1);
 		result.put("message", "操作成功");

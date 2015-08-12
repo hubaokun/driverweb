@@ -415,11 +415,12 @@ public class CuserServlet extends BaseServlet {
 			}
 			resultMap.put("UserInfo", cuser);
 			int rflag=recommendService.checkRecommendinfo(String.valueOf(cuser.getCoachid()),1);
-			if(rflag==0)
-				//返回0代表已经存在记录了
+	        int cflag=recommendService.isoversixhour(String.valueOf(cuser.getCoachid()),1);
+			if(rflag==0 || cflag==0)
+				//返回0代表已经存在记录了或者已经超过6个小时
 				resultMap.put("isInvited", 0);
 			else
-				//返回1代表没有记录
+				//返回1代表没有记录并且未超过6个小时
 				resultMap.put("isInvited", 1);
 			 SystemSetInfo systemSetInfo=cuserService.getSystemSetInfo();
 			 resultMap.put("crewardamount", systemSetInfo.getCrewardamount());
@@ -477,22 +478,23 @@ public class CuserServlet extends BaseServlet {
 			}
 
 			cuserService.updateCuser(cuserFir);
-		}
-		List<RecommendInfo> tempList=recommendService.getRecommondInviteInfoByCoachid(coachid, realname);
-		RecommendInfo temp=recommendService.getRecommondInvitedInfoByCoachid(coachid, realname);
-		if(tempList.size()!=0)
-		{
-			for(RecommendInfo r:tempList)
+			List<RecommendInfo> tempList=recommendService.getRecommondInviteInfoByCoachid(coachid, realname);
+			RecommendInfo temp=recommendService.getRecommondInvitedInfoByCoachid(coachid, realname);
+			if(tempList.size()!=0)
 			{
-				r.setCoachname(realname);
-				recommendService.updateRecommendInfo(r);
+				for(RecommendInfo r:tempList)
+				{
+					r.setCoachname(realname);
+					recommendService.updateRecommendInfo(r);
+				}
+			}
+			if(temp!=null)
+			{
+				temp.setInvitedpeoplename(realname);
+				recommendService.updateRecommendInfo(temp);
 			}
 		}
-		if(temp!=null)
-		{
-			temp.setInvitedpeoplename(realname);
-			recommendService.updateRecommendInfo(temp);
-		}
+		
 	}
 
 	/**

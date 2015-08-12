@@ -74,7 +74,7 @@ public class EvaluationInfo implements Serializable {
 	private String nickname;
 	@Transient
 	private String avatarUrl;
-
+	
 	public int getEvaluationid() {
 		return evaluationid;
 	}

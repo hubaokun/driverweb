@@ -1,0 +1,30 @@
+后台新增接口记录
+2015-08-11
+#某个学员针对一个教练的所有评论历史列表
+接口名称：/sbook?action=GETCOMMENTSFORSTUDENT
+参数：
+coachid 教练id
+studentid 学员ID
+pagenum 页号
+返回结果新增：
+hasmore  1 有下一页  0 没有下一页
+
+
+#查询某个教练的评论列表
+接口名称：/sbook?action=GETCOACHCOMMENTS
+参数：
+type  1 过滤重复学员  2 不过滤重复学员
+coachid 教练ID
+pagenum 页号
+返回结果新增：
+hasmore  1 有下一页  0 没有下一页
+count   评论总数
+studentnum 评论的学员数量
+
+#教练端修改通知状态为已读
+接口名称 /cmy?action=READNOTICE
+参数：
+coachid 教练ID
+noticeid 通知的ID
+返回结果：
+code 1 成功 

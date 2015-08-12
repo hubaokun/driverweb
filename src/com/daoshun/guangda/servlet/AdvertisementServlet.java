@@ -1,12 +1,8 @@
 package com.daoshun.guangda.servlet;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -14,43 +10,36 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.alipay.refund.util.httpClient.HttpRequest;
-import com.alipay.refund.util.httpClient.HttpResponse;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
-import com.daoshun.common.QueryResult;
 import com.daoshun.exception.NullParameterException;
+import com.daoshun.guangda.pojo.AdvertisementInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
-import com.daoshun.guangda.pojo.RecommendInfo;
 import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.pojo.SystemSetInfo;
+import com.daoshun.guangda.service.IAdvertisementService;
 import com.daoshun.guangda.service.ICUserService;
-import com.daoshun.guangda.service.ICtaskService;
 import com.daoshun.guangda.service.IRecommendService;
 import com.daoshun.guangda.service.ISUserService;
 import com.daoshun.guangda.service.ISystemService;
+
 /**
- *
- * @author wjr
- *
- */
-@WebServlet("/recomm")
-public class RecommendServlet extends BaseServlet {
+*
+* @author wjr
+*
+*/
+@WebServlet("/adver")
+public class AdvertisementServlet  extends BaseServlet{
 
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = -1262197095863272112L;
-
-
-	private IRecommendService recommendService;
+	private IAdvertisementService advertisementService;
 	private ISUserService suserService;
 	private ICUserService cuserService;
 	private ISystemService systemService;
+
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-		recommendService=(IRecommendService) applicationContext.getBean("recommendService");
+		advertisementService=(IAdvertisementService) applicationContext.getBean("advertisementService");
 		suserService = (ISUserService) applicationContext.getBean("suserService");
 		cuserService = (ICUserService) applicationContext.getBean("cuserService");
 		systemService = (ISystemService) applicationContext.getBean("systemService");
@@ -62,20 +51,16 @@ public class RecommendServlet extends BaseServlet {
 		try
 		{
 			String action=getAction(request);
-//			if(action.equals(Constant.CGETRECOMMENDLIST) && action.equals(Constant.CHEAKINVITECODE))
+//			if(action.equals(Constant.GETADVERTISEMENT))
 //			{
 //				if (!checkSession(request, action, resultMap)) {
 //					setResult(response, resultMap);
 //					return;
 //				}
 //			}
-			if(action.equals(Constant.CGETRECOMMENDLIST))
+			if(action.equals(Constant.GETADVERTISEMENT))
 			{
-				getRecommendList(request,resultMap);
-			}
-			else if(action.equals(Constant.CHEAKINVITECODE))
-			{
-				addRecommendInfo(request,resultMap);
+				getAdvertiesementcontent(request,resultMap);
 			}
 		}
 		catch(Exception ex)
@@ -85,6 +70,7 @@ public class RecommendServlet extends BaseServlet {
 		}
 		setResult(response, resultMap);
 	}
+	
 	private boolean checkSession(HttpServletRequest request, String action, HashMap<String, Object> resultMap) throws NullParameterException {
 		String userid = "";// 1.教练 2.学员
 		String usertype = "";
@@ -197,67 +183,30 @@ public class RecommendServlet extends BaseServlet {
 			return false;
 		}
 	}
-	public <T> void getRecommendList(HttpServletRequest request,HashMap<String, Object> resultMap) throws NullParameterException
-	{
-		String coachid=request.getParameter("coachid");
-		String page=request.getParameter("pagenum");
-		String type=request.getParameter("type");
-		CommonUtils.validateEmpty(coachid);
-		CommonUtils.validateEmpty(page);
-		CommonUtils.validateEmpty(type);
-		QueryResult<RecommendInfo> qr=recommendService.getRecommendList(coachid, CommonUtils.parseInt(page, 0),CommonUtils.parseInt(type, 0));
-		int hasmore=recommendService.ifhasmoreRecommendinfo(coachid, CommonUtils.parseInt(page, 0),CommonUtils.parseInt(type, 0));
-		int rflag=0;
-		if(hasmore==0)
-			resultMap.put("hasmore",0);
-		else
-			resultMap.put("hasmore",1);
-		List<T> list=(List<T>) qr.getDataList();
-		long total=qr.getTotal();
-		if(list.size()!=0)
-		{
-			for(int i=0;i<list.size();i++)
-			{
-				RecommendInfo temp=(RecommendInfo) list.get(i);
-			}
-			BigDecimal totalreward=recommendService.getReward(coachid,CommonUtils.parseInt(type, 0));
-			rflag=1;
-			resultMap.put("totalreward",totalreward);
-		}
-		else
-		{
-			list.add((T) new Object());
-			resultMap.put("totalreward",0);
-		}
-		resultMap.put("rflag", rflag);
-		resultMap.put("RecommendList",list);
-		resultMap.put("total",total);
 
-
-	}
-	public void addRecommendInfo(HttpServletRequest request,HashMap<String, Object> resultMap) throws NullParameterException
-	{
-		String inviteid=request.getParameter("InviteCode");
-		String invitedpeopleid=request.getParameter("InvitedPeopleid");
-		String type=request.getParameter("type");
-		CommonUtils.validateEmpty(inviteid);
-		CommonUtils.validateEmpty(invitedpeopleid);
-		CommonUtils.validateEmpty(type);
-		//String codetype=inviteid.substring(0, 0).toUpperCase();   邀请码类型，C=教练  S=学员
-		if(inviteid.length()!=8)
-		{
-			resultMap.put("inviteCode","0");
-			resultMap.put("isRecommended",0);
-		}
-		else
-		{
-			inviteid=inviteid.substring(1, 8).toUpperCase();
-			if((recommendService.addRecommendInfo(inviteid, invitedpeopleid,CommonUtils.parseInt(type, 0)))==1)
-				resultMap.put("isRecommended",1);
-			else
-				resultMap.put("isRecommended",0);
-			resultMap.put("inviteCode","1");
-		}
-
-	}
+   private void getAdvertiesementcontent(HttpServletRequest request, HashMap<String, Object> resultMap)
+   {
+	 /*  String id=getRequestParamter(request, "id");
+	   String type=getRequestParamter(request, "type");
+	   if(advertisementService.jugeFlag(type, id)==0)
+	   {
+		   AdvertisementInfo resultpojo=advertisementService.getAdvertisementcontent();
+		   resultMap.put("advertisement",resultpojo);
+		   resultMap.put("isdiplay",0);
+	   }
+	   else
+	   {
+		   AdvertisementInfo resultpojo=new  AdvertisementInfo();
+		   resultMap.put("advertisement",resultpojo);
+		   resultMap.put("isdiplay",1);
+	   }*/
+	   SystemSetInfo resultpojo=advertisementService.getAdvertisementcontent();
+	   
+	   resultMap.put("c_img",resultpojo.getCoach_advertisement_url());
+	   resultMap.put("s_img",resultpojo.getStudent_advertisement_url());
+	   resultMap.put("c_url","http://www.xiaobaxueche.com/share.jsp?");
+	   resultMap.put("s_url","http://www.xiaobaxueche.com/share.jsp?");
+	   resultMap.put("curldisplay",resultpojo.getCoach_advertisement_flag());
+	   resultMap.put("surldisplay",resultpojo.getStudent_advertisement_flag());
+   }
 }

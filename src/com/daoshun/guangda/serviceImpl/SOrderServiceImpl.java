@@ -984,7 +984,14 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				//dataDao.deleteBySql("delete from t_coupon_coach where couponrecordid in ("+coupongetrecordids+") ");
 				
 			}else if(order.getPaytype()==PayType.COIN){
-				student.setFcoinnum(student.getFcoinnum().subtract(order.getTotal()));
+				//教练同意时，取消冻结金额。如果冻结金额小于订单额，直接相减后，冻结金额会出现负数，所以判断
+				if(student.getFcoinnum().intValue()>=order.getTotal().intValue()){
+					student.setFcoinnum(student.getFcoinnum().subtract(order.getTotal()));
+				}else{
+					System.out.println("cancelOrderByCoach方法中：小巴币解冻时发现数量小于订单额!停止解冻");
+					return -1;
+				}
+				
 				student.setCoinnum(student.getCoinnum()+order.getTotal().intValue());
 			}
 			

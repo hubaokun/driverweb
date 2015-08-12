@@ -58,9 +58,12 @@ public class RecommendInfo implements java.io.Serializable{
    //被邀请人是否已开单
    @Column(name="isorder",length=1,columnDefinition="INT default 0")
    private int isorder;
-   //邀请人姓名
+   //邀请的教练姓名
    @Column(name="coachname",length=50)
    private String coachname;
+   //邀请的学员姓名
+   @Column(name="studentname",length=50)
+   private String studentname;
    //被邀请人姓名
    @Column(name="invited_peoplename",length=50)
    private String invitedpeoplename;
@@ -217,6 +220,12 @@ public class RecommendInfo implements java.io.Serializable{
    public void setOflag(int oflag) {
       this.oflag = oflag;
    }
+public String getStudentname() {
+	return studentname;
+}
+public void setStudentname(String studentname) {
+	this.studentname = studentname;
+}
 
 
 }

@@ -1,5 +1,6 @@
 package com.daoshun.guangda.action;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
@@ -8,6 +9,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
@@ -21,6 +23,7 @@ import com.daoshun.guangda.pojo.CsubjectInfo;
 import com.daoshun.guangda.pojo.ModelsInfo;
 import com.daoshun.guangda.pojo.SystemSetInfo;
 import com.daoshun.guangda.pojo.TeachcarInfo;
+import com.daoshun.guangda.service.IAdvertisementService;
 import com.daoshun.guangda.service.ICUserService;
 
 @ParentPackage("default")
@@ -36,6 +39,9 @@ public class SystemConfigAction extends BaseAction {
 	@Resource
 	private ICUserService cuserService;
 
+	@Resource
+	private IAdvertisementService advertisementService;
+	
 	private List<ModelsInfo> modelslist;
 
 	private List<CoachLevelInfo> levellist;
@@ -135,6 +141,12 @@ public class SystemConfigAction extends BaseAction {
 	//要修改的列名
 	private String colname;
 
+	//图片文件
+	private File ad_img;
+	
+	
+	//图片路径
+	private String ad_url;
 	/**
 	 * 得到车型列表
 	 *
@@ -537,6 +549,28 @@ public class SystemConfigAction extends BaseAction {
 		map.put("message", "重置成功!");
 		strToJson(map);
 	}
+	/**打开广告设置
+	 * @return
+	 */
+	@Action(value = "/gotosetAdvertisement", results = { @Result(name = SUCCESS, location = "/setadvertisement.jsp") })
+	public String gotosetAdvertisement(){
+		return SUCCESS;
+	}
+	
+	/**进行广告设置
+	 * @return
+	 */
+	@Action(value = "/setAdvertisement", results = { @Result(name = SUCCESS, location = "/setadvertisement.jsp") })
+	public String setAdvertisement(){
+		try {
+			File f=new File("ad_img.jpg");		
+			FileUtils.copyFile(ad_img, f);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return SUCCESS;
+	}
 	/**
 	 *
 	 */
@@ -926,6 +960,24 @@ public class SystemConfigAction extends BaseAction {
 
 	public void setSearchname(String searchname) {
 		this.searchname = searchname;
+	}
+
+	
+
+	public File getAd_img() {
+		return ad_img;
+	}
+
+	public void setAd_img(File ad_img) {
+		this.ad_img = ad_img;
+	}
+
+	public String getAd_url() {
+		return ad_url;
+	}
+
+	public void setAd_url(String ad_url) {
+		this.ad_url = ad_url;
 	}
 
 

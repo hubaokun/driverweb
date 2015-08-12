@@ -129,8 +129,7 @@ public class Constant {
 	// 删除通知
 	public static final String DELNOTICE = "DELNOTICE";
 
-	// 设置已读通知
-	public static final String READNOTICE = "READNOTICE";
+	
 
 	// 获取未读消息条数
 	public static final String GETMESSAGECOUNT = "GETMESSAGECOUNT";
@@ -246,6 +245,9 @@ public class Constant {
 
 	// 删除通知
 	public static final String CDELNOTICE = "DELNOTICE";
+	
+	// 修改通知状态为已读
+	public static final String READNOTICE = "READNOTICE"; 
 
 	// 取的投诉我的列表
 	public static final String CGETCOMPLAINTTOMY = "GETCOMPLAINTTOMY";
@@ -322,6 +324,8 @@ public class Constant {
 
 	// 获取教练评论
 	public static final String GETCOACHCOMMENTS = "GETCOACHCOMMENTS";
+	//学员对某个教练的评论历史记录
+	public static final String GETCOMMENTSFORSTUDENT = "GETCOMMENTSFORSTUDENT";
 	// 获取小巴券列表
 	public static final String GETCOUPONLIST = "GETCOUPONLIST";
 	// 获取历史小巴券列表
@@ -363,6 +367,8 @@ public class Constant {
 		//小巴服务接口
 	public static final String XIAOBASERVICE ="XIAOBASERVICE";
 
+	//广告服务接口
+	public static final String GETADVERTISEMENT ="GETADVERTISEMENT";
 
 	/**************************** 默认属性设置 ********************************/
 	/************ 默认全天状态 ************/
