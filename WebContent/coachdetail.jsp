@@ -298,7 +298,7 @@ function dataToLead(){
 								<div class="table_edit_button" style="width: 80px;background:#1bbc9b">
 									<div class="table_button_edit_icon"></div>
 									<div class="table_button_text"
-										onclick="checkpass(2,${coachid},1)">审核通过</div>
+										onclick="checkpass(2,${coachid},1,${session.userid})">审核通过</div>
 								</div>
 								<div class="table_edit_button" style="width: 90px;background:#f83a22">
 									<div class="table_button_edit_icon"></div>

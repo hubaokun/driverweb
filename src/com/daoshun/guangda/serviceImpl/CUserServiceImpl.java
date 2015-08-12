@@ -29,6 +29,7 @@ import com.daoshun.guangda.pojo.CouponCoach;
 import com.daoshun.guangda.pojo.CsubjectInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.DriveSchoolInfo;
+import com.daoshun.guangda.pojo.LogInfo;
 import com.daoshun.guangda.pojo.ModelsInfo;
 import com.daoshun.guangda.pojo.OrderInfo;
 import com.daoshun.guangda.pojo.PermissionSetInfo;
@@ -267,16 +268,72 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
         long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
         return new QueryResult<CuserInfo>(cuserInfolist, total);
     }
+    
+  //获取查询教练日志  
+    @SuppressWarnings("unchecked")
+    @Override
+    public QueryResult<LogInfo> getCoachLogByKeyword( Integer pageIndex, int pagesize,String username, String formname, String starttime, String endtime) {
+        StringBuffer cuserhql = new StringBuffer();
+        cuserhql.append("from LogInfo where 1=1 ");
+
+        if (!CommonUtils.isEmptyString(username)) {
+            cuserhql.append(" and opuserid in ( select coachid from CuserInfo where realname like '%" + username + "%' or phone like '%" + username + "%')");
+        }
+        if (!CommonUtils.isEmptyString(formname)) {
+            cuserhql.append(" and operateform like '%" + formname + "%'");
+        }
+
+        if (!CommonUtils.isEmptyString(starttime)) {
+			starttime = starttime + " 00:00:00";
+			cuserhql.append(" and operatetime > '" + starttime + "'");
+		}
+
+		if (!CommonUtils.isEmptyString(endtime)) {
+			endtime = endtime + " 23:59:59";
+			cuserhql.append(" and operatetime <= '" + endtime + "'");
+		}
+		
+        List<LogInfo> cuserLogInfolist = (List<LogInfo>) dataDao.pageQueryViaParam(cuserhql.toString() + " order by logid desc ", pagesize, pageIndex, null);
+        for (LogInfo couponlog : cuserLogInfolist) {
+			CuserInfo Cuserinfo = dataDao.getObjectById(CuserInfo.class, couponlog.getOpuserid());
+			if (Cuserinfo != null) {
+				if (CommonUtils.isEmptyString(Cuserinfo.getRealname())) {
+					couponlog.setOpusername("未设置:" + Cuserinfo.getPhone());
+				} else {
+					couponlog.setOpusername(Cuserinfo.getRealname() + ":" + Cuserinfo.getPhone());
+				}
+			}
+			AdminInfo adminInfo = dataDao.getObjectById(AdminInfo.class, couponlog.getOperatorid());
+			if (adminInfo != null) {
+				couponlog.setOperatorname(adminInfo.getRealname());
+			}
+        }
+        
+        String counthql = " select count(*) " + cuserhql.toString();
+        long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
+        return new QueryResult<LogInfo>(cuserLogInfolist, total);
+    }
 
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     @Override
-    public void checkPass(String coachid, int type) {
+    public void checkPass(String coachid, int type,int userid) {
         StringBuffer cuserhql = new StringBuffer();
         cuserhql.append("from CuserInfo where coachid = :coachid");
         String[] params = {"coachid"};
         CuserInfo cuserInfo = (CuserInfo) dataDao.getFirstObjectViaParam(cuserhql.toString(), params, CommonUtils.parseInt(coachid, 0));
         cuserInfo.setState(type);
         dataDao.updateObject(cuserInfo);
+        
+        if(type==2){
+	        LogInfo logInfo = new LogInfo();
+	        logInfo.setOperatorid(userid);
+	        logInfo.setOpuserid(Integer.parseInt(coachid));
+	        logInfo.setOperatecontent("审核通过");
+	        logInfo.setOperatetime(new Date());
+	        logInfo.setOperateform("教练表");
+	        dataDao.addObject(logInfo);
+        }
+        
         StringBuffer cuserhql1 = new StringBuffer();
         cuserhql1.append("from RecommendInfo where invitedcoachid = :invitedcoachid");
         String[] params1 = {"invitedcoachid"};

@@ -121,7 +121,7 @@ function showArea(obj)
 		 
 }
 //列表审核通过
-function checkpass(index, coachid, wherecheck) {
+function checkpass(index, coachid, wherecheck,userid) {
 	if (confirm("确认审核通过？")) {
 		$.ajax({
 			type : "POST",
@@ -129,7 +129,8 @@ function checkpass(index, coachid, wherecheck) {
 			data : {
 				checknum : index,
 				coachid : coachid,
-				wherecheck : wherecheck
+				wherecheck : wherecheck,
+				userid: userid
 			},
 			success : function(data) {
 				if (data == "error") {
@@ -1450,7 +1451,7 @@ function checkStudentExistance() {
 
 
 //列表审核通过
-function checkpass(index, coachid, wherecheck) {
+function checkpass(index, coachid, wherecheck,userid) {
 	if (confirm("确认审核通过？")) {
 		$.ajax({
 			type : "POST",
@@ -1458,7 +1459,8 @@ function checkpass(index, coachid, wherecheck) {
 			data : {
 				checknum : index,
 				coachid : coachid,
-				wherecheck : wherecheck
+				wherecheck : wherecheck,
+				userid: userid
 			},
 			success : function(data) {
 				if (data == "error") {

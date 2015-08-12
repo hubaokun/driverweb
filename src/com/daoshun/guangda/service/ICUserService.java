@@ -14,6 +14,7 @@ import com.daoshun.guangda.pojo.ComplaintSetInfo;
 import com.daoshun.guangda.pojo.CsubjectInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.DriveSchoolInfo;
+import com.daoshun.guangda.pojo.LogInfo;
 import com.daoshun.guangda.pojo.ModelsInfo;
 import com.daoshun.guangda.pojo.PermissionSetInfo;
 import com.daoshun.guangda.pojo.SchoolBalance;
@@ -126,6 +127,9 @@ public interface ICUserService {
 	/****** 筛选教练 *******/
 	public abstract QueryResult<CuserInfo> getCoachByKeyword(String searchname, String searchphone, Integer driveSchoolname, String carlicense, Integer checkstate, Integer pageIndex, int pagesize);
 
+	/****** 筛选教练日志 *******/
+	public abstract QueryResult<LogInfo> getCoachLogByKeyword(Integer pageIndex, int pagesize,String username, String formname, String starttime, String endtime);
+	
 	/** 得到驾校信息 **/
 	public abstract List<DriveSchoolInfo> getDriveSchoolInfo();
 
@@ -134,7 +138,7 @@ public interface ICUserService {
 	public abstract QueryResult<DriveSchoolInfo> getDriveSchoolInfoByPage(int pageIndex, int pageSize);
 
 	/****** 审核通过改变id状态 ******/
-	public abstract void checkPass(String coachid, int type);
+	public abstract void checkPass(String coachid, int type,int userid);
 
 	/****** 设置教练保证金金额 ****/
 	public abstract void setGmoneys(String coachid, BigDecimal gmoney);

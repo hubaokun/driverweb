@@ -60,6 +60,7 @@ public class LoginAction extends BaseAction {
 			@Result(name = "SUCCESS9", location = "/getCouponList.do?index=8", type = "redirect"),
 			@Result(name = "SUCCESS10", location = "/systemdaily.do?index=10", type = "redirect"),
 			@Result(name = "SUCCESS11", location = "/getFeedback.do?index=9", type = "redirect"),
+			@Result(name = "SUCCESS12", location = "/CoachLog.do?index=11", type = "redirect"),
 			@Result(name = ERROR, location = "/login.jsp") })
 	public String login() {
 		if (CommonUtils.parseInt(issession, 0) == 1) {

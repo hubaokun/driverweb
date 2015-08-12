@@ -73,4 +73,8 @@
 		<sub-item name="小巴券日报" authority="3" action="xiaobadaily.do"/>
 	    <sub-item name="邀请日报" authority="2" action="getRecommendReport.do"/>
 	</menu-item>
+	
+	<menu-item name="日志" iconURL="" authority="1">
+		<sub-item name="教练日志" authority="3" action="CoachLog.do"/>
+	</menu-item>
 </menu-list>

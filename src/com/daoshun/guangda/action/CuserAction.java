@@ -17,6 +17,7 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
+import org.hibernate.Session;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -27,8 +28,10 @@ import com.daoshun.guangda.NetData.CoachInfoForExcel;
 import com.daoshun.guangda.pojo.BalanceCoachInfo;
 import com.daoshun.guangda.pojo.CApplyCashInfo;
 import com.daoshun.guangda.pojo.CoachLevelInfo;
+import com.daoshun.guangda.pojo.CouponCoach;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.DriveSchoolInfo;
+import com.daoshun.guangda.pojo.LogInfo;
 import com.daoshun.guangda.pojo.ModelsInfo;
 import com.daoshun.guangda.pojo.ProvinceInfo;
 import com.daoshun.guangda.pojo.TeachcarInfo;
@@ -69,10 +72,14 @@ public class CuserAction extends BaseAction {
 	private List<DriveSchoolInfo> driveSchoollist;
 
 	private List<BalanceCoachInfo> balanceCoachList;
+	
+	private List<LogInfo> logInfoList;
 
 	private CuserInfo cuser;
 
 	private String coachid;
+	
+	private int userid;
 
 	// 教练提现申请id
 	private int applyid;
@@ -268,6 +275,13 @@ public class CuserAction extends BaseAction {
 	private String startdate;//开始日期
 	private String enddate;//结束日期
 	private List<ProvinceInfo> provincelist;//省列表
+	
+	//教练日志搜索
+	private String username;
+	private String oprateform;
+	private String starttime;
+	private String endtime;
+	
 
 	/**
 	 * 得到教练列表
@@ -410,7 +424,7 @@ public class CuserAction extends BaseAction {
 	 */
 	@Action(value = "/listcheckPass")
 	public void checkPass() {
-		cuserService.checkPass(coachid, checknum);
+		cuserService.checkPass(coachid, checknum,userid);
 		CuserInfo cuserInfo = cuserService.getCuserByCoachid(coachid);
 		if (wherecheck == 1) {
 			if (cuserInfo.getState() == checknum) {
@@ -1963,6 +1977,32 @@ public class CuserAction extends BaseAction {
 					}
 					return SUCCESS;
 	}	
+	
+	
+	/**
+	 * 得到教练日志
+	 * 
+	 * @return
+	 */
+	@Action(value = "CoachLog", results = { @Result(name = SUCCESS, location = "/coachlog.jsp") })
+	public String CoachLog() {
+		
+		QueryResult<LogInfo> result = cuserService.getCoachLogByKeyword(pageIndex, 15, username, oprateform, starttime, endtime);
+		logInfoList = result.getDataList();
+		total = (int) result.getTotal();
+		
+		pageCount = ((int)total + 14) / 15;
+		if (pageIndex > 1) {
+			if (logInfoList == null || logInfoList.size() == 0) {
+				pageIndex--;
+				getLogInfoList();
+			}
+		}
+		return SUCCESS;
+	}
+	
+	
+	
 	public int getChecknum() {
 		return checknum;
 	}
@@ -2005,6 +2045,14 @@ public class CuserAction extends BaseAction {
 
 	public void setCoachid(String coachid) {
 		this.coachid = coachid;
+	}
+	
+	public int getUserid() {
+		return userid;
+	}
+
+	public void setUserid(int userid) {
+		this.userid = userid;
 	}
 
 	public String getKeyword() {
@@ -2706,6 +2754,16 @@ public class CuserAction extends BaseAction {
 	public void setBalanceCoachList(List<BalanceCoachInfo> balanceCoachList) {
 		this.balanceCoachList = balanceCoachList;
 	}
+	
+	
+	public List<LogInfo> getLogInfoList() {
+		return logInfoList;
+	}
+
+	public void setLogInfoList(List<LogInfo> logInfoList) {
+		this.logInfoList = logInfoList;
+	}
+
 	public String getStartdate() {
 		return startdate;
 	}
@@ -2761,4 +2819,40 @@ public class CuserAction extends BaseAction {
 	public void setProvincelist(List<ProvinceInfo> provincelist) {
 		this.provincelist = provincelist;
 	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+
+	public String getOprateform() {
+		return oprateform;
+	}
+
+	public void setOprateform(String oprateform) {
+		this.oprateform = oprateform;
+	}
+
+	public String getStarttime() {
+		return starttime;
+	}
+
+	public void setStarttime(String starttime) {
+		this.starttime = starttime;
+	}
+
+	public String getEndtime() {
+		return endtime;
+	}
+
+	public void setEndtime(String endtime) {
+		this.endtime = endtime;
+	}
+	
+	
+	
 }
