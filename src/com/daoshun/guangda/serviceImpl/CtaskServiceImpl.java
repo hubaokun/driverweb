@@ -476,7 +476,7 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 										mCouponCoach.setOwnertype(crecord.getOwnertype());
 										mCouponCoach.setState(1);
 										mCouponCoach.setValue(crecord.getValue());
-										mCouponCoach.setCouponrecordid(crecord.getCouponid());
+										mCouponCoach.setCouponrecordid(crecord.getRecordid());
 										dataDao.addObject(mCouponCoach);
 									} else {// 直接把钱增加到教练的余额
 										//现金券，已弃用
