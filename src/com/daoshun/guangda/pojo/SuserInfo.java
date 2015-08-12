@@ -123,6 +123,11 @@ public class SuserInfo implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "addtime", nullable = false)
 	private Date addtime;
+	
+	// 报名时间
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "enrolltime", nullable = true)
+	private Date enrolltime;
 
 	// 第三方qq登录id
 	@Column(name = "qq_openid")
@@ -410,6 +415,16 @@ public class SuserInfo implements Serializable {
 
 	public void setAddtime(Date addtime) {
 		this.addtime = addtime;
+	}
+	
+	
+
+	public Date getEnrolltime() {
+		return enrolltime;
+	}
+
+	public void setEnrolltime(Date enrolltime) {
+		this.enrolltime = enrolltime;
 	}
 
 	public String getQq_openid() {

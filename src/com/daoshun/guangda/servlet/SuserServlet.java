@@ -706,6 +706,7 @@ public class SuserServlet extends BaseServlet {
 		String studentid = getRequestParamter(request, "studentid");
 		SuserInfo student = suserService.getUserById(studentid);
 		student.setState(1);
+		student.setEnrolltime(new Date());
 		suserService.updateUserInfo(student);
 		resultMap.put("code", 1);
 		resultMap.put("message", "报名成功");
