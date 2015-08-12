@@ -143,6 +143,7 @@ function dataExport(){
 						<th>性别</th>
 						<th>年龄</th>
 						<th>城市</th>
+						<th>报名时间</th>
 						<th>注册时间</th>
 						<th>操作</th>
 
@@ -150,9 +151,9 @@ function dataExport(){
 					<s:iterator value="suserlist" var="suser">
 						<tr class="tr_td">
 							<td style="width: 80px;" class="border_right_bottom">${studentid}</td>
-							<td style="width: 200px;" class="border_right_bottom"><a href="getStudentDetail.do?studentid=${studentid}&index=1&change_id=3"
+							<td style="width: 150px;" class="border_right_bottom"><a href="getStudentDetail.do?studentid=${studentid}&index=1&change_id=3"
 										style="text-decoration: none; cursor: pointer;">${realname}</a></td>
-							<td style="width: 200px;" class="border_right_bottom">${phone}</td>
+							<td style="width: 150px;" class="border_right_bottom">${phone}</td>
 							<s:if test="gender==1">
 							<td style="width: 80px;" class="border_right_bottom">男</td>
 							</s:if>
@@ -162,6 +163,9 @@ function dataExport(){
 							<td style="width: 80px;" class="border_right_bottom">${age}</td>
 							<td style="width: 100px;" class="border_right_bottom">${city}</td>
 							
+							<td style="width: 100px;" class="border_right_bottom">
+							<s:date name="enrolltime" format="yyyy-MM-dd HH:mm:ss" />
+							</td>
 							<td style="width: 100px;" class="border_right_bottom">
 							<s:date name="addtime" format="yyyy-MM-dd HH:mm:ss" />
 							</td>
