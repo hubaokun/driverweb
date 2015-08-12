@@ -1855,6 +1855,10 @@ public class CuserAction extends BaseAction {
 					}
 				}
 			}
+			if(modelid.length()>1 && (modelid.lastIndexOf(',')==modelid.length()-1))
+			{
+				modelid=modelid.substring(0,modelid.length()-1);
+			}
 			cuser.setModelid(modelid);
 			cuserService.updateCuser(cuser);
 		}
