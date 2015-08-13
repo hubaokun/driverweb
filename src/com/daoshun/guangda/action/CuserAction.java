@@ -1316,7 +1316,7 @@ public class CuserAction extends BaseAction {
 		if (driveschoolid != 0) {
 			schoolid = driveschoolid;
 		}
-		QueryResult<BalanceCoachInfo> result = cuserService.getCoachBalanceBySearch(schoolid, searchname, searchphone, amount, inputamount, minsdate, maxsdate, pageIndex, pagesize);
+		QueryResult<BalanceCoachInfo> result = cuserService.getCoachHistoryApplyBySearch(schoolid, searchname, searchphone, amount, inputamount, minsdate, maxsdate, pageIndex, pagesize);
 		total = result.getTotal();
 		balancecoachlist = result.getDataList();
 		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
