@@ -15,15 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
 import com.daoshun.common.ErrException;
-import com.daoshun.guangda.pojo.CouponRecord;
-import com.daoshun.guangda.pojo.CscheduleInfo;
-import com.daoshun.guangda.pojo.CuserInfo;
-import com.daoshun.guangda.pojo.SuserInfo;
-import com.daoshun.guangda.pojo.SystemSetInfo;
-import com.daoshun.guangda.service.ICUserService;
-import com.daoshun.guangda.service.ISBookService;
-import com.daoshun.guangda.service.ISUserService;
-import com.daoshun.guangda.service.ISystemService;
+import com.daoshun.guangda.pojo.*;
+import com.daoshun.guangda.service.*;
 
 @WebServlet("/sbook")
 public class SbookServlet extends BaseServlet {
@@ -33,6 +26,7 @@ public class SbookServlet extends BaseServlet {
 	private ISystemService systemService;
 	private ICUserService cuserService;
 	private ISUserService suserService;
+	private IDriveSchoolService driveSchoolService;
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -41,6 +35,7 @@ public class SbookServlet extends BaseServlet {
 		systemService = (ISystemService) applicationContext.getBean("systemService");
 		cuserService = (ICUserService) applicationContext.getBean("cuserService");
 		suserService = (ISUserService) applicationContext.getBean("suserService");
+		driveSchoolService = (IDriveSchoolService) applicationContext.getBean("driveSchoolService");
 	}
 
 	@Override
@@ -268,6 +263,12 @@ public class SbookServlet extends BaseServlet {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);
 		CuserInfo cuser = sbookService.getCoachDetail(coachid);
+		if(cuser.getDrive_schoolid()>0 && cuser.getDrive_school().length()>0) {
+			DriveSchoolInfo dr = driveSchoolService.getDriveSchoolInfoByid(cuser.getDrive_schoolid());
+			if(dr!=null)
+				cuser.setDrive_school(dr.getName());
+		}
+
 		resultMap.put("coachinfo", cuser);
 	}
 

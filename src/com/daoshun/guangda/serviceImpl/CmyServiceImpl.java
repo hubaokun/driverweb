@@ -467,7 +467,13 @@ public class CmyServiceImpl extends BaseServiceImpl implements ICmyService {
 				if(cuser.getCoinnum()<applyCoinNum){
 					result.put("code", 4);
 					result.put("message", "小巴币余额不足兑换");
-				}else{
+				}
+				else if(cuser.getCoinnum()<0 ||cuser.getFcoinnum()<0 || applyCoinNum<0)
+				{
+					result.put("code", 5);
+					result.put("message", "数据异常");
+				}
+				else{
 					cuser.setCoinnum(cuser.getCoinnum()-applyCoinNum);
 					dataDao.updateObject(cuser);
 					CoinRecordInfo c = new CoinRecordInfo();
