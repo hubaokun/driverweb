@@ -623,6 +623,17 @@ public String getStudentDetailByPhone() {
 		suserService.applyCheckPass(applyid);
 		return SUCCESS;
 	}
+	
+	/**
+	 * 提现申请审核
+	 * 
+	 * @return
+	 */
+	@Action(value = "/studentApplyCheckNoPass", results = { @Result(name = SUCCESS, location = "/getStudentApplyList.do?index=${index}&pageIndex=${pageIndex}", type = "redirect") })
+	public String studentApplyCheckNoPass() {
+		suserService.applyCheckNoPass(applyid);
+		return SUCCESS;
+	}
 
 	/**
 	 * 根据关键字筛选学员信息
@@ -1525,6 +1536,104 @@ public String getStudentDetailByPhone() {
 		return SUCCESS;
 	}
 		
+	/**
+	 * 学员驾校列表
+	 * 
+	 * @return
+	 */
+	@Action(value = "/getStudentSchool", results = { @Result(name = SUCCESS, location = "/studentschool.jsp") })
+	public String getStudentSchool() {
+		HttpSession session = ServletActionContext.getRequest().getSession();
+		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
+		QueryResult<SuserInfo> result = suserService.getStudentSchool(pageIndex, pagesize);
+		total = result.getTotal();
+		suserlist = result.getDataList();
+		for (int i = 0; i < suserlist.size(); i++) {
+			//添加驾校名
+			if ((suserlist.get(i).getDschollid()) != null) {
+				String dschoolname = suserService.getSuserSchoolByid(suserlist.get(i).getDschollid());
+				suserlist.get(i).setDschoolname(dschoolname);
+			}
+			//添加年龄
+			if (!CommonUtils.isEmptyString(suserlist.get(i).getBirthday())) {
+				int age = suserService.getSuserAgeByid(suserlist.get(i).getStudentid());
+				suserlist.get(i).setAge(age);
+			}
+			//添加城市
+			if (!CommonUtils.isEmptyString(String.valueOf(suserlist.get(i).getCityid()))) {
+				String city ="";
+				if(!CommonUtils.isEmptyString(suserlist.get(i).getCityid())){
+					city = suserService.getCityByCityid(Integer.parseInt(suserlist.get(i).getCityid()));
+				}
+				suserlist.get(i).setCity(city);;
+			}
+		}
+		
+		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
+		if (pageIndex > 1) {
+			if (suserlist == null || suserlist.size() == 0) {
+				pageIndex--;
+				suserlist();
+			}
+		}
+		return SUCCESS;
+	}
+	
+	
+	/**
+	 * 学员随机添加驾校
+	 * 
+	 * @return
+	 */
+	@Action(value = "/setStudentSchool", results = { @Result(name = SUCCESS, location = "/studentschool.jsp") })
+	public String setStudentSchool() {
+		HttpSession session = ServletActionContext.getRequest().getSession();
+		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
+		QueryResult<SuserInfo> result = suserService.setStudentSchool(pageIndex, pagesize);
+		total = result.getTotal();
+		suserlist = result.getDataList();
+		for (int i = 0; i < suserlist.size(); i++) {
+			
+			//随机分配驾校
+			if ((suserlist.get(i).getDschollid()) == null) {
+				suser = suserService.getUserById(String.valueOf(suserlist.get(i).getStudentid()));
+				int[] driveschoollist = {1,2,3,4,5,6};
+				int index = (int) (Math.random() * driveschoollist.length);
+				suser.setDschollid(driveschoollist[index]);
+				suserService.updateUserInfo(suser);
+			}
+			//添加驾校名
+			if ((suserlist.get(i).getDschollid()) != null) {
+				String dschoolname = suserService.getSuserSchoolByid(suserlist.get(i).getDschollid());
+				suserlist.get(i).setDschoolname(dschoolname);
+			}
+			//添加年龄
+			if (!CommonUtils.isEmptyString(suserlist.get(i).getBirthday())) {
+				int age = suserService.getSuserAgeByid(suserlist.get(i).getStudentid());
+				suserlist.get(i).setAge(age);
+			}
+			//添加城市
+			if (!CommonUtils.isEmptyString(String.valueOf(suserlist.get(i).getCityid()))) {
+				//int age = suserService.getSuserAgeByid(suserlist.get(i).getStudentid());
+				String city ="";
+				if(!CommonUtils.isEmptyString(suserlist.get(i).getCityid())){
+					city = suserService.getCityByCityid(Integer.parseInt(suserlist.get(i).getCityid()));
+				}
+				suserlist.get(i).setCity(city);;
+			}
+			
+		}
+		
+		
+		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
+		if (pageIndex > 1) {
+			if (suserlist == null || suserlist.size() == 0) {
+				pageIndex--;
+				suserlist();
+			}
+		}
+		return SUCCESS;
+	}
 	
 	
 	public Integer getPageCount() {

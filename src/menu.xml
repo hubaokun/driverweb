@@ -14,6 +14,7 @@
 		<sub-item name="教练学员关系" authority="5" action="getCoachStudent.do"/>
 		<sub-item name="教练余额管理" authority="6" action="getCoachBalance.do"/>
 		<sub-item name="学员余额管理" authority="7" action="getStudentBalance.do"/>
+		<sub-item name="分配学员驾校" authority="7" action="getStudentSchool.do"/>
 	</menu-item>
 	<menu-item name="充值提现管理" iconURL="" authority="1">
 		<sub-item name="教练提现申请" authority="3" action="getCoachApplyBySearch.do"/>

@@ -2898,3 +2898,13 @@ function checkStudentExistance() {
 }
 
 
+
+/**
+* 随机分配学员驾校
+*/
+function addstuschool() {
+	if (confirm("确认给所有报名学员分配驾校？")) {
+		window.location = "setStudentSchool.do";
+	}
+}
+

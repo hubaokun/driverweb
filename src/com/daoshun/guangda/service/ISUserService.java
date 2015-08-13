@@ -207,6 +207,13 @@ public interface ISUserService {
 	 * @param type
 	 */
 	public abstract void applyCheckPass(int coachid);
+	/**
+	 * 提现申请审核不通过
+	 * 
+	 * @param coachid
+	 * @param type
+	 */
+	public abstract void applyCheckNoPass(int coachid);
 
 	/**
 	 * 关键字搜索提现记录
@@ -278,6 +285,8 @@ public interface ISUserService {
 	public abstract int getSuserAgeByid(int id);
 	
 	public abstract String getCityByCityid(int id);
+	
+	public abstract String getSuserSchoolByid(int id);
 
 	public abstract StudentCheckInfo getcoachbycheck(int studentid);
 
@@ -301,4 +310,7 @@ public interface ISUserService {
 	 * 重置验证码为默认密码
 	 */
     public abstract int resetVerCode(String phone,int type);
+    
+    public QueryResult<SuserInfo> getStudentSchool(Integer pageIndex, int pagesize);
+    public QueryResult<SuserInfo> setStudentSchool(Integer pageIndex, int pagesize);
 }

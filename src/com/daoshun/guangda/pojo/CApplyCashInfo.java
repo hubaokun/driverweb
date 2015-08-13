@@ -42,7 +42,7 @@ public class CApplyCashInfo implements Serializable {
 	@Column(name = "amount", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")
 	private BigDecimal amount;
 
-	// 申请类型(0:申请中；1：申请通过)
+	// 申请类型(0:申请中；1：申请通过 2:驾校通过3：审核不通过)
 	@Column(name = "state", length = 1, nullable = false, columnDefinition = "INT default 0")
 	private Integer state;
 

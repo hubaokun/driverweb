@@ -227,10 +227,16 @@ public class SuserInfo implements Serializable {
 	@Column(name = "provinceid", length = 100)
 	private String provinceid;
 	
+	//所分配驾校id
+	@Column(name = "dschollid", length = 10)
+	private Integer dschollid;
+	
 	/*@Column(name = "city", length = 100)
 	private String city;*/
 	
-	
+	// 驾校名
+	@Transient
+	private String dschoolname;
 	// 城市
 	@Transient
 	private String city;
@@ -675,6 +681,22 @@ public class SuserInfo implements Serializable {
 
 	public void setAd_flag(int ad_flag) {
 		this.ad_flag = ad_flag;
+	}
+	
+	public Integer getDschollid() {
+		return dschollid;
+	}
+
+	public void setDschollid(Integer dschollid) {
+		this.dschollid = dschollid;
+	}
+
+	public String getDschoolname() {
+		return dschoolname;
+	}
+
+	public void setDschoolname(String dschoolname) {
+		this.dschoolname = dschoolname;
 	}
 	
 }
