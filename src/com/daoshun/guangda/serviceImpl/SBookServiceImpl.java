@@ -422,11 +422,12 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		List<CuserInfo> coachlist = new ArrayList<CuserInfo>();
 		// 取得中心点经纬度
 		String[] centers = pointcenter.split(",");
-		String longitude = centers[0].trim();
+		String longitude =centers[0].trim();
 		String latitude = centers[1].trim();
 		//120.048943   30.329578
 		/*String longitude="120.048943";
 		String latitude="30.329578";*/
+		radius="20.0";
 		
 		// 获得符合条件的地址
 		//radius="8";//设置查询半径值

@@ -146,6 +146,9 @@ public interface ICUserService {
 	/****** 设置教练等级 ****/
 	public abstract void setLevels(String coachid, int level);
 
+	@SuppressWarnings({"unchecked", "deprecation"})
+	QueryResult<BalanceCoachInfo> getCoachHistoryApplyBySearch(int schoolid, String searchname, String searchphone, String amount, String inputamount, String minsdate, String maxsdate, Integer pageIndex, int pagesize);
+
 	/** 分页得到准教车型列表信息 **/
 	public abstract QueryResult<ModelsInfo> getModellist(Integer pageIndex, int pagesize);
 

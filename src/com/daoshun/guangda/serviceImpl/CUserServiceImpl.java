@@ -545,6 +545,62 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
         return new QueryResult<BalanceCoachInfo>(applycashlist, total);
     }
 
+
+
+    @SuppressWarnings({"unchecked", "deprecation"})
+    @Override
+    public QueryResult<BalanceCoachInfo> getCoachHistoryApplyBySearch(int schoolid, String searchname, String searchphone, String amount, String inputamount, String minsdate, String maxsdate, Integer pageIndex, int pagesize) {
+        StringBuffer cuserhql = new StringBuffer();
+        cuserhql.append("from BalanceCoachInfo where type=2 ");
+        if (schoolid > 0) {
+            cuserhql.append(" and userid in (select coachid from CuserInfo where drive_schoolid = " + schoolid + ")");
+        }
+        if (!CommonUtils.isEmptyString(searchname)) {
+            cuserhql.append(" and userid in (select coachid from CuserInfo where realname like '%" + searchname + "%')");
+        }
+        if (!CommonUtils.isEmptyString(searchphone)) {
+            cuserhql.append(" and userid in (select coachid from CuserInfo where phone like '%" + searchphone + "%')");
+        }
+        if (CommonUtils.parseFloat(inputamount, 0) != 0) {
+            if (CommonUtils.parseInt(amount, -1) == 0) {
+                cuserhql.append("and amount >" + inputamount);
+            }
+            else if (CommonUtils.parseInt(amount, -1) == 1) {
+                cuserhql.append("and amount =" + inputamount);
+            }
+            else {
+                cuserhql.append("and amount <" + inputamount);
+            }
+        }
+        if (!CommonUtils.isEmptyString(minsdate)) {
+            cuserhql.append("and addtime >'" + minsdate + "'");
+        }
+        if (!CommonUtils.isEmptyString(maxsdate)) {
+            Date enddate = CommonUtils.getDateFormat(maxsdate, "yyyy-MM-dd");
+            enddate.setHours(23);
+            enddate.setMinutes(59);
+            enddate.setSeconds(59);
+            String endmaxstime = CommonUtils.getTimeFormat(enddate, "yyyy-MM-dd HH:mm:ss");
+            cuserhql.append("and addtime <'" + endmaxstime + "'");
+        }
+        cuserhql.append("order by addtime desc");
+        List<BalanceCoachInfo> applycashlist = (List<BalanceCoachInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), pagesize, pageIndex, null);
+        if (applycashlist != null && applycashlist.size() > 0) {
+            for (BalanceCoachInfo capplyCash : applycashlist) {
+                CuserInfo coach = dataDao.getObjectById(CuserInfo.class, capplyCash.getUserid());
+                if (coach != null) {
+                    capplyCash.setRealname(coach.getRealname());
+                    capplyCash.setPhone(coach.getPhone());
+                }
+            }
+        }
+        String counthql = " select count(*) " + cuserhql.toString();
+        long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
+        return new QueryResult<BalanceCoachInfo>(applycashlist, total);
+    }
+
+
+
     @SuppressWarnings("unchecked")
     @Override
     public QueryResult<ModelsInfo> getModellist(Integer pageIndex, int pagesize) {
