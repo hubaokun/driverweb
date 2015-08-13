@@ -572,7 +572,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					System.out.println(info.getCoachid());
 			}*/
 			//System.out.println(hqlCoach.toString());
-			hqlCoach.append("  order by coursestate desc,drive_schoolid desc,score desc");
+			//hqlCoach.append("  order by coursestate desc,drive_schoolid desc,score desc");
 			List<CuserInfo> cuserlist = (List<CuserInfo>) dataDao.SqlPageQuery(hqlCoach.toString(), null, null,CuserInfo.class, null);
 			//List<CuserInfo> cuserlist = (List<CuserInfo>) dataDao.getObjectsViaParam(hqlCoach.toString(), paramsCoach, cids, now, now, now, now, now);
 			if (cuserlist != null && cuserlist.size() > 0) {
@@ -769,6 +769,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 	@Override
 	public HashMap<String, Object> getCoachList2(String cityid,String condition1, String condition2, String condition3, String condition4, String condition5, String condition6, String condition8, String condition9,
 			String condition10, String condition11, String pagenum) {
+		//long starttime=System.currentTimeMillis();
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		StringBuffer cuserhql = new StringBuffer();
 		cuserhql.append("select getTeachAddress(u.coachid) as address,getCoachOrderCount(u.coachid) as drive_schoolid, u.*  from t_user_coach u where state = 2 and id_cardexptime > curdate() and coach_cardexptime > curdate() and drive_cardexptime > curdate() and car_cardexptime > curdate() and (select count(*) from t_teach_address a where u.coachid = a.coachid and iscurrent = 1) > 0");
@@ -825,7 +826,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		if (!CommonUtils.isEmptyString(condition11)) {
 			cuserhql.append(" and modelid like '%" + condition11 + "%'");
 		}
-		cuserhql.append(" and money >= gmoney and isquit = 0 and state=2 order by coursestate desc,drive_schoolid desc,score desc");
+		cuserhql.append(" and money >= gmoney and isquit = 0  order by coursestate desc,drive_schoolid desc,score desc");
 		//System.out.println(cuserhql.toString());
 		List<CuserInfo> coachlist = (List<CuserInfo>) dataDao.SqlPageQuery(cuserhql.toString(), Constant.USERLIST_SIZE+1, CommonUtils.parseInt(pagenum, 0) + 1,CuserInfo.class, null);
 		
@@ -868,7 +869,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		String countSql=cuserhql.toString().substring(n, cuserhql.toString().length());
 		countSql="select count(*)  "+countSql;*/
 		//System.out.println(countSql);
-		//System.out.println("总耗时："+(endtime-starttime));
+		/*long endtime=System.currentTimeMillis();
+		System.out.println("总耗时："+(endtime-starttime));*/
 		return result;
 	}
 
