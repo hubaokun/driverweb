@@ -1,19 +1,20 @@
 package com.daoshun.guangda.serviceImpl;
 
 
-import com.daoshun.common.CommonUtils;
-import com.daoshun.common.QueryResult;
-import com.daoshun.guangda.pojo.CoinRecordInfo;
-import com.daoshun.guangda.pojo.CouponInfo;
-import com.daoshun.guangda.pojo.CuserInfo;
-import com.daoshun.guangda.pojo.DriveSchoolInfo;
-import com.daoshun.guangda.service.ICoinRecordService;
-import com.daoshun.guangda.service.ICouponService;
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import com.daoshun.common.CoinType;
+import com.daoshun.common.CommonUtils;
+import com.daoshun.common.QueryResult;
+import com.daoshun.common.UserType;
+import com.daoshun.guangda.pojo.CoinRecordInfo;
+import com.daoshun.guangda.pojo.SuserInfo;
+import com.daoshun.guangda.service.ICoinRecordService;
 
 /**
  * Created by tutu on 15/7/24.
@@ -30,14 +31,15 @@ public class CoinRecordServiceImpl extends BaseServiceImpl implements ICoinRecor
     }
 
 
-    public  QueryResult<CoinRecordInfo> getCoinRecordListByPage(int pageIndex, int pageSize, String starttime, String endtime,  Integer ownertype,  String ownerid)
+    public  QueryResult<CoinRecordInfo> getCoinRecordListByPage(int pageIndex, int pageSize, String starttime,
+    		String endtime,  Integer ownertype,  String ownerid,String receiverid)
     {
         StringBuffer coinsql = new StringBuffer();
         coinsql.append(" from CoinRecordInfo where 1=1 ");
         if (!CommonUtils.isEmptyString(starttime)) {
             coinsql.append(" and addtime > '" + starttime + "'");
         }
-
+ 
         if (!CommonUtils.isEmptyString(endtime)) {
             coinsql.append(" and addtime <= '" + endtime + " 23:59:59'");
         }
@@ -53,11 +55,54 @@ public class CoinRecordServiceImpl extends BaseServiceImpl implements ICoinRecor
                 }
             }
         }
+        
+        if(receiverid!=null && !"".equals(receiverid) && !"null".equals(receiverid)){
+        	coinsql.append(" and receiverid="+receiverid);
+        	coinsql.append(" or payerid="+receiverid);
+        	
+        }
         List<CoinRecordInfo> coinRecordList = (List<CoinRecordInfo>) dataDao.pageQueryViaParam(coinsql.toString() + " order by addtime desc", pageSize, pageIndex, null);
-
+        
+        
         String counthql = coinsql.insert(0, " select count(*) ").toString();
         long count = (Long) dataDao.getFirstObjectViaParam(counthql, null);
         QueryResult<CoinRecordInfo> result = new QueryResult<CoinRecordInfo>(coinRecordList, count);
         return result;
     }
+
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	@Override
+	public void reclaimCoin(int receiverid) {
+    	SuserInfo suser=dataDao.getObjectById(SuserInfo.class, receiverid);
+    	if(suser!=null){
+    		if(suser.getCoinnum()!=null && suser.getCoinnum()>0){
+				//回收即学员向平台支付剩余所有的小巴币
+				CoinRecordInfo coinRecordInfo = new CoinRecordInfo ();
+		        coinRecordInfo.setReceiverid(0);
+		        coinRecordInfo.setReceivertype(UserType.PLATFORM);
+		        coinRecordInfo.setReceivername("平台");
+		       
+		        
+		        coinRecordInfo.setPayerid(receiverid);
+		        coinRecordInfo.setPayertype(UserType.STUDENT);
+		        coinRecordInfo.setPayername(suser.getRealname());
+		        coinRecordInfo.setType(CoinType.REFUND);
+		        
+		        
+		        coinRecordInfo.setOwnerid(0);
+		        coinRecordInfo.setOwnertype(UserType.PLATFORM);
+		        coinRecordInfo.setOwnername("平台");
+		        
+		        coinRecordInfo.setCoinnum(suser.getCoinnum());
+		        coinRecordInfo.setAddtime(new Date());
+		        
+		        dataDao.addObject(coinRecordInfo);
+		        if(suser.getCoinnum()!=null){
+		        	suser.setCoinnum(0);
+		        }
+		        dataDao.updateObject(suser);
+    		}
+	        
+    	}
+	}
 }

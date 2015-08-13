@@ -10,9 +10,14 @@ import java.util.List;
  */
 public interface ICoinRecordService {
 
-    public abstract QueryResult<CoinRecordInfo> getCoinRecordListByPage(int pageIndex, int pageSize, String starttime, String endtime,  Integer ownertype,  String ownerid);
+    public abstract QueryResult<CoinRecordInfo> getCoinRecordListByPage(int pageIndex, int pageSize, String starttime, String endtime,  Integer ownertype,  String ownerid,String receiverid);
 
     public abstract void addCoinRecord(CoinRecordInfo coinRecordInfo);
+    /**
+     * 回收小巴币
+     * @param receiverid
+     */
+    public void reclaimCoin(int receiverid);
 
 //    public abstract void delCouponById(int id);
 //

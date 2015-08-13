@@ -75,7 +75,19 @@ public class CoinRecordInfo implements Serializable {
 	@Transient
 	private String coachname;
 	
+	//剩余小巴币数量
+	@Transient
+	private int surpluscoinnum;
 	
+	
+	public int getSurpluscoinnum() {
+		return surpluscoinnum;
+	}
+
+	public void setSurpluscoinnum(int surpluscoinnum) {
+		this.surpluscoinnum = surpluscoinnum;
+	}
+
 	public Integer getOrderid() {
 		return orderid;
 	}

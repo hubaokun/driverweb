@@ -81,24 +81,12 @@ public class CoinRecordAction extends BaseAction{
     
     private int pageCount;
     
-    
-    
-    
-    
-   
-    
-
-    
-
-    
-
-
-    
 
     @Action(value = "goGrantCoinRecord", results = { @Result(name = SUCCESS, location = "/coinGrant.jsp") })
     public String goGrantCoinRecord() {
     	
-    	QueryResult<CoinRecordInfo> result = coinRecordService.getCoinRecordListByPage(pageIndex, 10, starttime, endtime, ownertype, String.valueOf(ownerid));
+    	QueryResult<CoinRecordInfo> result = coinRecordService.getCoinRecordListByPage(pageIndex, 10, starttime, 
+    			endtime, ownertype, String.valueOf(ownerid),String.valueOf(receiverid));
 		
     	coinrecordlist = result.getDataList();
 		total = (int) result.getTotal();
@@ -110,6 +98,27 @@ public class CoinRecordAction extends BaseAction{
 			}
 		}
     	
+        return SUCCESS;
+    }
+    @Action(value = "goCoinRecord", results = { @Result(name = SUCCESS, location = "/coinrecord.jsp") })
+    public String goCoinRecord() {
+    	QueryResult<CoinRecordInfo> result = coinRecordService.getCoinRecordListByPage(pageIndex, 10, starttime, endtime, ownertype, String.valueOf(ownerid),String.valueOf(receiverid));
+		
+    	coinrecordlist = result.getDataList();
+		total = (int) result.getTotal();
+		pageCount = (total + 9) / 10;
+		if (pageIndex > 1) {
+			if (coinrecordlist == null || coinrecordlist.size() == 0) {
+				pageIndex--;
+				getCoinrecordlist();
+			}
+		}
+        return SUCCESS;
+    }
+    //回收小巴币
+    @Action(value = "reclaimCoin", results = { @Result(name = SUCCESS, type = "redirect" ,location = "goCoinRecord.do?receiverid=${receiverid}") })
+    public String reclaimCoin() {
+    	coinRecordService.reclaimCoin(receiverid);
         return SUCCESS;
     }
 
