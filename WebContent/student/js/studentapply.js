@@ -5,6 +5,12 @@ function stuCheckPass(applyid,index,pageIndex,change_id) {
 		window.location.href="studentApplyCheckPass.do?applyid="+applyid+"&index="+index+"&pageIndex="+pageIndex+"&change_id="+change_id;
 	}
 }
+//审核不通过
+function stuCheckNoPass(applyid,index,pageIndex,change_id) {
+	if(confirm("确认审核不通过？")){
+		window.location.href="studentApplyCheckNoPass.do?applyid="+applyid+"&index="+index+"&pageIndex="+pageIndex+"&change_id="+change_id;
+	}
+}
 
 function searchStudentApply(){
 	var realname=$("#realname").val();

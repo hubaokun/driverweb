@@ -1028,6 +1028,16 @@ public class CuserAction extends BaseAction {
 		cuserService.applyCheckPass(applyid);
 		return SUCCESS;
 	}
+	/**
+	 * 教练提现审核不通过
+	 * 
+	 * @return
+	 */
+	@Action(value = "/applyCheckNoPass", results = { @Result(name = SUCCESS, location = "/getCoachApplyList.do?index=${index}&pageIndex=${pageIndex}", type = "redirect") })
+	public String applyCheckNoPass() {
+		cuserService.applyCheckNoPass(applyid);
+		return SUCCESS;
+	}
 
 	/**
 	 * 设置保证金
@@ -1289,7 +1299,7 @@ public class CuserAction extends BaseAction {
 			schoolid = driveschoolid;
 			changetype = 1;
 		}
-		QueryResult<CApplyCashInfo> result = cuserService.getCoachApplyBySearch(searchname, searchphone, amount, inputamount, schoolid, minsdate, maxsdate, pageIndex, pagesize);
+		QueryResult<CApplyCashInfo> result = cuserService.getCoachApplyBySearch(searchname, searchphone, amount, inputamount, schoolid, minsdate, maxsdate, state,pageIndex, pagesize);
 		total = result.getTotal();
 		applycashlist = result.getDataList();
 		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
@@ -1316,7 +1326,7 @@ public class CuserAction extends BaseAction {
 		if (driveschoolid != 0) {
 			schoolid = driveschoolid;
 		}
-		QueryResult<BalanceCoachInfo> result = cuserService.getCoachBalanceBySearch(schoolid, searchname, searchphone, amount, inputamount, minsdate, maxsdate, pageIndex, pagesize);
+		QueryResult<BalanceCoachInfo> result = cuserService.getCoachHistoryApplyBySearch(schoolid, searchname, searchphone, amount, inputamount, minsdate, maxsdate, pageIndex, pagesize);
 		total = result.getTotal();
 		balancecoachlist = result.getDataList();
 		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;

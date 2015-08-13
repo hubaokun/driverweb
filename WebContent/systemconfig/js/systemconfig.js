@@ -586,6 +586,38 @@ function edit_reward_num(){
 		});
 	}
 }
+//修改教练开课默认天数
+function updatecoursedate(){
+	var dataid=$("#coursedateid").val();
+	var editvalue=$("#diffcoursedate").val();
+	var colname=$("#coursedateflag").val();
+	if (confirm("是否修改？")) {
+		$.ajax({
+			type : "POST",
+			url : "editValue.do",
+			data : {
+				dataid : dataid,
+				editvalue : editvalue,
+				colname: colname
+			},
+			success : function(data) {
+				if (data == "error") {
+					alert("修改失败");
+					return;
+				}
+				if (data == "success") {
+					alert("修改成功！");
+					window.location.reload();
+				}
+				if (data == "error1") {
+					alert("修改后的名称已存在");
+					return;
+				}
+			}
+		});
+	}
+}
+
 //修改是否可以使用不同小巴券
 function updatexiaoba(){
 	var dataid=$("#systemxiaobaid").val();
@@ -619,7 +651,7 @@ function updatexiaoba(){
 }
 
 
-//修改是否可启用广告图片
+//修改是否可启用闪屏广告图片
 function updateadv(){
 	var dataid=$("#advid").val();
 	var editvalue=$("#diffadv").val();
@@ -652,7 +684,38 @@ function updateadv(){
 	}
 }
 
-
+//修改是否可启用广告图片
+function updateadv1(){
+	var dataid=$("#advid1").val();
+	var editvalue=$("#diffadv1").val();
+//	alert(editvalue);
+	var colname=$("#advflag1").val();
+	if (confirm("是否修改？")) {
+		$.ajax({
+			type : "POST",
+			url : "editValue.do",
+			data : {
+				dataid : dataid,
+				editvalue : editvalue,
+				colname: colname
+			},
+			success : function(data) {
+				if (data == "error") {
+					alert("修改失败");
+					return;
+				}
+				if (data == "success") {
+					alert("修改成功！");
+					window.location.reload();
+				}
+				if (data == "error1") {
+					alert("修改后的名称已存在");
+					return;
+				}
+			}
+		});
+	}
+}
 
 
 
@@ -813,7 +876,7 @@ function showdiffxiaoba(dataid,oldvalue,colname){
 }
 
 
-//设置是否启用广告
+//设置是否启用闪屏广告
 function showdiffadv(dataid,oldvalue,colname){
 	$("#advid").val(dataid);
 	if(oldvalue==0){
@@ -827,7 +890,40 @@ function showdiffadv(dataid,oldvalue,colname){
 	$("#adv_last").show();
 }
 
-
+//设置是否启用弹窗广告
+function showdiffadv1(dataid,oldvalue,colname){
+	$("#advid1").val(dataid);
+	if(oldvalue==0){
+		$("#advoldvalue1").val('当前值: 不启用 ');
+	}else if(oldvalue==1){
+		$("#advoldvalue1").val('当前值: 跳转URL地址');
+	}
+	else
+	{
+		$("#advoldvalue1").val('当前值: 跳转分享页面地址');
+	}
+	$("#advflag1").val(colname);
+	$("#maskadv1").show();
+	$("#mask_adv1").show();
+	$("#adv_last1").show();
+}
+//设置是否启用弹窗广告
+function showeditcoursecancel(dataid,oldvalue,colname){
+	$("#coursedateid").val(dataid);
+	if(oldvalue==5){
+		$("#coursedateoldvalue").val('当前值: 5天 ');
+	}else if(oldvalue==10){
+		$("#coursedateoldvalue").val('当前值: 10天');
+	}
+	else
+	{
+		$("#coursedateoldvalue").val('当前值: 20天');
+	}
+	$("#coursedateflag").val(colname);
+	$("#maskcoursedate").show();
+	$("#mask_coursedate").show();
+	$("#coursedate_last").show();
+}
 
 function unshowisnum() {
 	$("#level").hide();
@@ -858,8 +954,17 @@ function unupdateadv() {
 	$("#adv_last").hide();
 }
 
+function unupdateadv1() {
+	$("#maskadv1").hide();
+	$("#mask_adv1").hide();
+	$("#adv_last1").hide();
+}
 
-
+function unupdatecoursedate() {
+	$("#maskcoursedate").hide();
+	$("#mask_coursedate").hide();
+	$("#coursedate_last").hide();
+}
 function timeIsNum(){
 	var re = /^[0-9]+.?[0-9]*$/;   //判断字符串是否为数字     //判断正整数 /^[1-9]+[0-9]*]*$/  
     var nubmer = $("#edittime").val();

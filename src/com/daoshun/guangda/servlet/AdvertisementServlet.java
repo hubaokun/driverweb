@@ -202,10 +202,10 @@ public class AdvertisementServlet  extends BaseServlet{
 	   }*/
 	   SystemSetInfo resultpojo=advertisementService.getAdvertisementcontent();
 	   
-	   resultMap.put("c_img",resultpojo.getCoach_advertisement_url());
-	   resultMap.put("s_img",resultpojo.getStudent_advertisement_url());
-	   resultMap.put("c_url","http://www.xiaobaxueche.com/share.jsp?");
-	   resultMap.put("s_url","http://www.xiaobaxueche.com/share.jsp?");
+	   resultMap.put("c_img",resultpojo.getCoach_advertisement_img());
+	   resultMap.put("s_img",resultpojo.getStudent_advertisement_img());
+	   resultMap.put("c_url",resultpojo.getCoach_advertisement_url());
+	   resultMap.put("s_url",resultpojo.getStudent_advertisement_url());
 	   resultMap.put("curldisplay",resultpojo.getCoach_advertisement_flag());
 	   resultMap.put("surldisplay",resultpojo.getStudent_advertisement_flag());
    }

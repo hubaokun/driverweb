@@ -81,19 +81,28 @@ public class SystemSetInfo implements Serializable {
 
 	@Column(name = "can_use_coupon_count", length = 2, columnDefinition = "TINYINT default 1")
 	private Integer can_use_coupon_count;
-	//教练弹框标示位
+	
+	//默认教练开课显示天数
+	@Column(name = "course_date", length = 2, columnDefinition = "INT default 5")
+	private Integer coursedate;
+	
+	//教练闪屏标示位
 	@Column(name = "advertisement_flag", length = 2, columnDefinition = "TINYINT default 0")
 	private Integer advertisement_flag;
-	//教练弹框url
+	//教练闪屏url
 	@Column(name = "advertisement_url",  length = 1000)
 	private String advertisement_url;
 	
-	//教练闪屏标示位
+	//教练弹窗标示位
 	@Column(name = "coach_advertisement_flag", length = 2, columnDefinition = "TINYINT default 0")
 	private Integer coach_advertisement_flag;
-	//教练闪屏url
+	//教练弹窗url
 	@Column(name = "coach_advertisement_url",  length = 1000)
 	private String coach_advertisement_url;
+	
+	//教练弹窗img地址
+	@Column(name = "coach_advertisement_img",  length = 1000)
+	private String coach_advertisement_img;
 	
 	//学员弹框标示位
 	@Column(name = "student_advertisement_flag", length = 2, columnDefinition = "TINYINT default 0")
@@ -101,6 +110,10 @@ public class SystemSetInfo implements Serializable {
 	//学员弹框url
 	@Column(name = "student_advertisement_url",  length = 1000)
 	private String student_advertisement_url;
+	
+	//学员弹框img地址
+	@Column(name = "student_advertisement_img",  length = 1000)
+	private String student_advertisement_img;
 
 	@Column(name = "creward_amount", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")
 	private BigDecimal crewardamount;
@@ -328,6 +341,30 @@ public class SystemSetInfo implements Serializable {
 
 	public void setCoach_advertisement_url(String coach_advertisement_url) {
 		this.coach_advertisement_url = coach_advertisement_url;
+	}
+
+	public Integer getCoursedate() {
+		return coursedate;
+	}
+
+	public void setCoursedate(Integer coursedate) {
+		this.coursedate = coursedate;
+	}
+
+	public String getCoach_advertisement_img() {
+		return coach_advertisement_img;
+	}
+
+	public void setCoach_advertisement_img(String coach_advertisement_img) {
+		this.coach_advertisement_img = coach_advertisement_img;
+	}
+
+	public String getStudent_advertisement_img() {
+		return student_advertisement_img;
+	}
+
+	public void setStudent_advertisement_img(String student_advertisement_img) {
+		this.student_advertisement_img = student_advertisement_img;
 	}
 	
 }

@@ -516,6 +516,17 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			dataDao.addObject(balancestudent);
 		}
 	}
+	
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	@Override
+	public void applyCheckNoPass(int coachid) {
+		StudentApplyInfo studentApply = dataDao.getObjectById(StudentApplyInfo.class, coachid);
+		if (studentApply != null) {
+			studentApply.setState(2);
+			studentApply.setUpdatetime(new Date());
+			dataDao.updateObject(studentApply);
+		}
+	}
 
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	@Override
@@ -539,11 +550,11 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			}
 		}
 		if (state != null) {
-			if (state == 1) {
+			if (state == 0) {
 				cuserhql.append(" and state = 0");
 			}
 			if (state == 2) {
-				cuserhql.append(" and state = 1");
+				cuserhql.append(" and state = 2");
 			}
 		}
 		if (!CommonUtils.isEmptyString(minsdate)) {
@@ -957,6 +968,15 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		String ct = (String)dataDao.getFirstObjectViaParam(suserhql.toString(), params, id);
 		return ct;
 	}
+	
+	@Override
+	public String getSuserSchoolByid(int id) {
+		StringBuffer suserhql = new StringBuffer();
+		suserhql.append(" select name from DriveSchoolInfo where schoolid = :schoolid");
+		String[] params = { "schoolid" };
+		String uschool = (String)dataDao.getFirstObjectViaParam(suserhql.toString(), params, id);
+		return uschool;
+	}
 
 	@Override
 	public StudentCheckInfo getcoachbycheck(int studentid) {
@@ -1144,5 +1164,35 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		}
 		return 1;
 	}
+    
+    
+    
+   //学员驾校列表
+  	@SuppressWarnings("unchecked")
+  	@Override
+  	public QueryResult<SuserInfo> getStudentSchool(Integer pageIndex, int pagesize) {
+  		StringBuffer suserhql = new StringBuffer();
+  		suserhql.append("from SuserInfo where state=1");
+  		List<SuserInfo> suserInfolist = (List<SuserInfo>) dataDao.pageQueryViaParam(suserhql.toString() + " order by studentid asc", pagesize, pageIndex, null);
+  		String counthql = " select count(*) " + suserhql.toString();
+  		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
+  		return new QueryResult<SuserInfo>(suserInfolist, total);
+  	}
+  	
+    //学员添加驾校列表
+  	@SuppressWarnings("unchecked")
+  	@Override
+  	public QueryResult<SuserInfo> setStudentSchool(Integer pageIndex, int pagesize) {
+  		StringBuffer suserhql = new StringBuffer();
+  		suserhql.append("from SuserInfo where state=1");
+  		//List<SuserInfo> suserInfolist = (List<SuserInfo>) dataDao.pageQueryViaParam(suserhql.toString() + " order by studentid asc", pagesize, pageIndex, null);
+  		List<SuserInfo> suserInfolist = (List<SuserInfo>) dataDao.getObjectsViaParam(suserhql.toString() + " order by studentid asc", null);
+  		
+  		String counthql = " select count(*) " + suserhql.toString();
+  		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
+  		return new QueryResult<SuserInfo>(suserInfolist, total);
+  	}
+  	
+  	
 
 }

@@ -41,7 +41,7 @@ $(function(){
 <title>学员提现申请</title>
 </head>
 <input type="hidden" id="hidamount" value="${amount}" />
-<input type="hidden" id="hidstate" value="${state}" />
+<!-- <input type="hidden" id="hidstate" value="${state}" />-->
 <input type="hidden" id="index" value="${index}" />
 <input type="hidden" id="change_id" value="${change_id}"/>
 <body onload="getTop()">
@@ -78,17 +78,16 @@ $(function(){
 		<input type="text" class="searchdiv" style="width: 30px;text-align: center;font-family: 微软雅黑;" value="到" readonly="readonly">
 		<input id="maxsdate" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})" type="text" class="searchdiv" style="width: 120px;text-align: center;font-family: 微软雅黑;" value="${maxsdate}" >
 	</div>
-	<!-- 
+	
  	<div class="serchcontentdiv"style="float: left; margin-left: 50px; width: 130px"  > 
  	<input type="text" class="searchdiv" style="width: 40px;text-align: center;font-family: 微软雅黑;" value="状态" readonly="readonly"> 
  		<select id="state" class="searchdiv" style="width: 85px;"> 
- 			<option value="0" >不限</option> 
-			<option value="1" >申请中</option> 
- 			<option value="2" >申请通过</option> 
+			<option value="0" >申请中</option> 
+ 			<option value="2" >申请不通过</option> 
  		</select> 
  	</div> 
- 	-->
- 	<input type="hidden" id="state" value="${state}" />
+ 	
+ 	<!-- <input type="hidden" id="state" value="${state}" />-->
 			</div>
 			<div id="content_form_table">
 				<table border="0" cellspacing="0" cellpadding="0"
@@ -118,12 +117,17 @@ $(function(){
 							<td style="width: 100px;" class="border_right_bottom">${amount}</td>
 							<td style="width: 200px;" class="border_right_bottom"><s:date name="addtime" format="yyyy-MM-dd HH:mm:ss"/></td>
 							<td style="width: 150px;" class="border_right_bottom">${alipay_account}</td>
-							<td style="width: 100px;" class="border_noright_bottom">
+							<td style="width: 200px;" class="border_noright_bottom">
 							<s:if test="state==0">
-								<div class="table_edit_button" style="width: 80px;margin-left: 100px;">
+								<div class="table_edit_button" style="width: 80px;">
 									<div class="table_button_edit_icon"></div>
 									<div class="table_button_text"
 										onclick="stuCheckPass(${applyid},${index},${pageIndex},${change_id})">审核通过</div>
+								</div>
+								<div class="table_edit_button" style="width: 90px;background:#f83a22">
+									<div class="table_button_edit_icon"></div>
+									<div class="table_button_text"
+										onclick="stuCheckNoPass(${applyid},${index},${pageIndex},${change_id})">审核不通过</div>
 								</div>
 								</s:if>
 							</td>
@@ -150,7 +154,7 @@ $(function(){
 					var phone=$("#phone").val();
 					var amount=$("#hidamount").val();
 					var inputamount=$("#inputamount").val();
-// 					var state = $("#hidstate").val();
+ 					var state = $("#state").val();
 					var minsdate=$("#minsdate").val();
 					var maxsdate=$("#maxsdate").val();
 					var index = $("#index").val();
@@ -161,13 +165,13 @@ $(function(){
 						  //alert(pageindex);
 					    a[a.length] = "<a onclick=\"\" class=\"hide_page_prev unclickprev on\"></a>";
 					  } else {
-					    a[a.length] = "<a onclick=\"previousPage("+pageindex+",'getStudentApplyBySearch.do?searchname="+realname+"&searchphone="+phone+"&amount="+amount+"&inputamount="+inputamount+"&minsdate="+minsdate+"&maxsdate="+maxsdate+"&index="+index+"&change_id="+change_id+"&')\" class=\"page_prev\"></a>";
+					    a[a.length] = "<a onclick=\"previousPage("+pageindex+",'getStudentApplyBySearch.do?searchname="+realname+"&searchphone="+phone+"&amount="+amount+"&inputamount="+inputamount+"&minsdate="+minsdate+"&maxsdate="+maxsdate+"&state="+state+"&index="+index+"&change_id="+change_id+"&')\" class=\"page_prev\"></a>";
 					  }
 					  function setPageList() {
 					    if (pageindex == i) {
-					      a[a.length] = "<a onclick=\"goPage('getStudentApplyBySearch.do?searchname="+realname+"&searchphone="+phone+"&amount="+amount+"&inputamount="+inputamount+"&minsdate="+minsdate+"&maxsdate="+maxsdate+"&index="+index+"&change_id="+change_id+"&',"+i+")\" class=\"on\">" + i + "</a>";
+					      a[a.length] = "<a onclick=\"goPage('getStudentApplyBySearch.do?searchname="+realname+"&searchphone="+phone+"&amount="+amount+"&inputamount="+inputamount+"&minsdate="+minsdate+"&maxsdate="+maxsdate+"&state="+state+"&index="+index+"&change_id="+change_id+"&',"+i+")\" class=\"on\">" + i + "</a>";
 					    } else {
-					      a[a.length] = "<a onclick=\"goPage('getStudentApplyBySearch.do?searchname="+realname+"&searchphone="+phone+"&amount="+amount+"&inputamount="+inputamount+"&minsdate="+minsdate+"&maxsdate="+maxsdate+"&index="+index+"&change_id="+change_id+"&',"+i+")\">" + i + "</a>";
+					      a[a.length] = "<a onclick=\"goPage('getStudentApplyBySearch.do?searchname="+realname+"&searchphone="+phone+"&amount="+amount+"&inputamount="+inputamount+"&minsdate="+minsdate+"&maxsdate="+maxsdate+"&state="+state+"&index="+index+"&change_id="+change_id+"&',"+i+")\">" + i + "</a>";
 					    }
 					  }
 					  //总页数小于10
@@ -181,31 +185,31 @@ $(function(){
 					      for (var i = 1; i <= 5; i++) {
 					        setPageList();
 					      }
-					      a[a.length] = "...<a onclick=\"goPage('getStudentApplyBySearch.do?searchname="+realname+"&searchphone="+phone+"&amount="+amount+"&inputamount="+inputamount+"&minsdate="+minsdate+"&maxsdate="+maxsdate+"&index="+index+"&change_id="+change_id+"&',"+count+")\">" + count + "</a>";
+					      a[a.length] = "...<a onclick=\"goPage('getStudentApplyBySearch.do?searchname="+realname+"&searchphone="+phone+"&amount="+amount+"&inputamount="+inputamount+"&minsdate="+minsdate+"&maxsdate="+maxsdate+"&state="+state+"&index="+index+"&change_id="+change_id+"&',"+count+")\">" + count + "</a>";
 					    } else if (pageindex >= count - 3) {
-					      a[a.length] = "<a onclick=\"goPage('getStudentApplyBySearch.do?searchname="+realname+"&searchphone="+phone+"&amount="+amount+"&inputamount="+inputamount+"&minsdate="+minsdate+"&maxsdate="+maxsdate+"&index="+index+"&change_id="+change_id+"&',1)\">1</a>...";
+					      a[a.length] = "<a onclick=\"goPage('getStudentApplyBySearch.do?searchname="+realname+"&searchphone="+phone+"&amount="+amount+"&inputamount="+inputamount+"&minsdate="+minsdate+"&maxsdate="+maxsdate+"&state="+state+"&index="+index+"&change_id="+change_id+"&',1)\">1</a>...";
 					      for (var i = count - 4; i <= count; i++) {
 					        setPageList();
 					      };
 					    } else { //当前页在中间部分
-					      a[a.length] = "<a onclick=\"goPage('getStudentApplyBySearch.do?searchname="+realname+"&searchphone="+phone+"&amount="+amount+"&inputamount="+inputamount+"&minsdate="+minsdate+"&maxsdate="+maxsdate+"&index="+index+"&change_id="+change_id+"&',1)\">1</a>...";
+					      a[a.length] = "<a onclick=\"goPage('getStudentApplyBySearch.do?searchname="+realname+"&searchphone="+phone+"&amount="+amount+"&inputamount="+inputamount+"&minsdate="+minsdate+"&maxsdate="+maxsdate+"&state="+state+"&index="+index+"&change_id="+change_id+"&',1)\">1</a>...";
 					      for (var i = pageindex - 2; i <= pageindex+2; i++) {
 					        setPageList();
 					      }
-					      a[a.length] = "...<a onclick=\"goPage('getStudentApplyBySearch.do?searchname="+realname+"&searchphone="+phone+"&amount="+amount+"&inputamount="+inputamount+"&minsdate="+minsdate+"&maxsdate="+maxsdate+"&index="+index+"&change_id="+change_id+"&',"+count+")\">" + count + "</a>";
+					      a[a.length] = "...<a onclick=\"goPage('getStudentApplyBySearch.do?searchname="+realname+"&searchphone="+phone+"&amount="+amount+"&inputamount="+inputamount+"&minsdate="+minsdate+"&maxsdate="+maxsdate+"&state="+state+"&index="+index+"&change_id="+change_id+"&',"+count+")\">" + count + "</a>";
 					    }
 					  }
 					  if (pageindex == count) {
 						    a[a.length] = "<a onclick=\"\" class=\"hide_page_next unclicknext\"></a> 共"+count+"页  到第  "+
 						    "<input type=\"text\" class=\"jump_num\" id=\"topage\"/> 页"+
-						    "<a class=\"jump_btn\" onclick=\"gotoPage('getStudentApplyBySearch.do?searchname="+realname+"&searchphone="+phone+"&amount="+amount+"&inputamount="+inputamount+"&minsdate="+minsdate+"&maxsdate="+maxsdate+"&index="+index+"&change_id="+change_id+"&',"+$("#pageSize").val()+")\")\">"+
+						    "<a class=\"jump_btn\" onclick=\"gotoPage('getStudentApplyBySearch.do?searchname="+realname+"&searchphone="+phone+"&amount="+amount+"&inputamount="+inputamount+"&minsdate="+minsdate+"&maxsdate="+maxsdate+"&state="+state+"&index="+index+"&change_id="+change_id+"&',"+$("#pageSize").val()+")\")\">"+
 						    "<a id='page_msg'></a>";
 						  } else {
 						    a[a.length] = 
-						    	"<a onclick=\"nextPage("+$("#pageIndex").val()+",'getStudentApplyBySearch.do?searchname="+realname+"&searchphone="+phone+"&amount="+amount+"&inputamount="+inputamount+"&minsdate="+minsdate+"&maxsdate="+maxsdate+"&index="+index+"&change_id="+change_id+"&')\" "+
+						    	"<a onclick=\"nextPage("+$("#pageIndex").val()+",'getStudentApplyBySearch.do?searchname="+realname+"&searchphone="+phone+"&amount="+amount+"&inputamount="+inputamount+"&minsdate="+minsdate+"&maxsdate="+maxsdate+"&state="+state+"&index="+index+"&change_id="+change_id+"&')\" "+
 						    	"class=\"page_next\"></a> 共"+count+"页 到第 "+
 						    "<input type=\"text\" class=\"jump_num\" id=\"topage\"/> 页"+
-						    "<a class=\"jump_btn\" onclick=\"gotoPage('getStudentApplyBySearch.do?searchname="+realname+"&searchphone="+phone+"&amount="+amount+"&inputamount="+inputamount+"&minsdate="+minsdate+"&maxsdate="+maxsdate+"&index="+index+"&change_id="+change_id+"&',"+$("#pageSize").val()+")\">"+
+						    "<a class=\"jump_btn\" onclick=\"gotoPage('getStudentApplyBySearch.do?searchname="+realname+"&searchphone="+phone+"&amount="+amount+"&inputamount="+inputamount+"&minsdate="+minsdate+"&maxsdate="+maxsdate+"&state="+state+"&index="+index+"&change_id="+change_id+"&',"+$("#pageSize").val()+")\">"+
 						    "<a id='page_msg'></a>";
 						  }
 // 					  a[a.length]="<a href='#' onclick='addunit()' style='float: right;position: relative;right: 50px;padding: 0px; margin: 0px; top: 3px;'><img src='imgs/add_.png'></a>";

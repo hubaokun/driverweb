@@ -34,7 +34,7 @@ public class StudentApplyInfo implements Serializable {
 	@Column(name = "amount", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")
 	private BigDecimal amount;
 	
-	//类型(0:正在申请中  1：申请通过)
+	//类型(0:正在申请中  1：申请通过 2：申请不通过)
 	@Column(name = "state",length=10,columnDefinition = "INT default 0")
 	private Integer state=0;
 	

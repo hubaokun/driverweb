@@ -614,6 +614,20 @@ public class SystemConfigAction extends BaseAction {
 				systemSetInfo.setCan_use_diff_coupon(Integer.parseInt(editvalue));
 			else if(colname.equals("advertisement_flag"))
 				systemSetInfo.setAdvertisement_flag(Integer.parseInt(editvalue));
+			else if(colname.equals("coursedate_flag"))
+				systemSetInfo.setCoursedate(Integer.parseInt(editvalue));
+			else if(colname.equals("coach_advertisement_flag"))
+				systemSetInfo.setCoach_advertisement_flag(Integer.parseInt(editvalue));
+			else if(colname.equals("coach_advertisement_urlflag"))
+				systemSetInfo.setCoach_advertisement_url(editvalue);
+			else if(colname.equals("coach_advertisement_imgflag"))
+				systemSetInfo.setCoach_advertisement_img(editvalue);
+			else if(colname.equals("student_advertisement_flag"))
+				systemSetInfo.setStudent_advertisement_flag(Integer.parseInt(editvalue));
+			else if(colname.equals("student_advertisement_urlflag"))
+				systemSetInfo.setStudent_advertisement_url(editvalue);
+			else if(colname.equals("student_advertisement_imgflag"))
+				systemSetInfo.setStudent_advertisement_img(editvalue);
 			else if(colname.equals("crewardamount_flag"))
 				systemSetInfo.setCrewardamount(new BigDecimal(editvalue));
 			else if(colname.equals("orewardamount_flag"))

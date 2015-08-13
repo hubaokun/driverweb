@@ -146,6 +146,9 @@ public interface ICUserService {
 	/****** 设置教练等级 ****/
 	public abstract void setLevels(String coachid, int level);
 
+	@SuppressWarnings({"unchecked", "deprecation"})
+	QueryResult<BalanceCoachInfo> getCoachHistoryApplyBySearch(int schoolid, String searchname, String searchphone, String amount, String inputamount, String minsdate, String maxsdate, Integer pageIndex, int pagesize);
+
 	/** 分页得到准教车型列表信息 **/
 	public abstract QueryResult<ModelsInfo> getModellist(Integer pageIndex, int pagesize);
 
@@ -204,9 +207,11 @@ public interface ICUserService {
 
 	/** 提现申请审核 */
 	public abstract void applyCheckPass(int coachid);
+	/** 提现申请审核 */
+	public abstract void applyCheckNoPass(int coachid);
 
 	/** 根据条件搜索提现记录 */
-	public abstract QueryResult<CApplyCashInfo> getCoachApplyBySearch(String searchname, String searchphone, String amount, String inputamount, Integer state, String minsdate, String maxsdate,
+	public abstract QueryResult<CApplyCashInfo> getCoachApplyBySearch(String searchname, String searchphone, String amount, String inputamount, Integer schoolid, String minsdate, String maxsdate,Integer state,
 			Integer pageIndex, int pagesize);
 
 	/** 根据条件搜索历史提现 */

@@ -421,10 +421,52 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
             }
         }
     }
+    
+    //教练提现审核不通过
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    @Override
+    public void applyCheckNoPass(int coachid) {
+        CApplyCashInfo capplyCash = dataDao.getObjectById(CApplyCashInfo.class, coachid);
+        if (capplyCash != null) {
+            capplyCash.setState(3);
+            capplyCash.setUpdatetime(new Date());
+            dataDao.updateObject(capplyCash);
+            /*CuserInfo coach = dataDao.getObjectById(CuserInfo.class, capplyCash.getCoachid());
+            if (coach != null) {
+                coach.setFmoney(coach.getFmoney().subtract(capplyCash.getAmount()));
+                dataDao.updateObject(coach);
+            }*/
+            /*
+            BalanceCoachInfo balancoach = new BalanceCoachInfo();
+            balancoach.setType(2);
+            balancoach.setAddtime(new Date());
+            balancoach.setAmount(capplyCash.getAmount());
+            balancoach.setUserid(capplyCash.getCoachid());
+            balancoach.setAmount_out1(new BigDecimal(0));
+            balancoach.setAmount_out2(new BigDecimal(0));
+            dataDao.addObject(balancoach);*/
+            /*
+            if (capplyCash.getSchoolid() != null && capplyCash.getSchoolid() > 0) {
+                DriveSchoolInfo schoolinfo = dataDao.getObjectById(DriveSchoolInfo.class, capplyCash.getSchoolid());
+                if (schoolinfo != null) {
+                    schoolinfo.setMoney(schoolinfo.getMoney().add(capplyCash.getAmount()));
+                    dataDao.updateObject(schoolinfo);
+                    SchoolBalance schoolbalance = new SchoolBalance();
+                    schoolbalance.setAddtime(new Date());
+                    schoolbalance.setCoachid(coachid);
+                    schoolbalance.setAmount(capplyCash.getAmount());
+                    schoolbalance.setSchoolid(capplyCash.getSchoolid());
+                    schoolbalance.setType(1);
+                    dataDao.addObject(schoolbalance);
+                }
+            }
+            */
+        }
+    }
 
     @SuppressWarnings({"unchecked", "deprecation"})
     @Override
-    public QueryResult<CApplyCashInfo> getCoachApplyBySearch(String searchname, String searchphone, String amount, String inputamount, Integer schoolid, String minsdate, String maxsdate, Integer pageIndex, int pagesize) {
+    public QueryResult<CApplyCashInfo> getCoachApplyBySearch(String searchname, String searchphone, String amount, String inputamount, Integer schoolid, String minsdate, String maxsdate, Integer state,Integer pageIndex, int pagesize) {
         StringBuffer cuserhql = new StringBuffer();
         cuserhql.append("from CApplyCashInfo where state = 0 and amount > 0");
         if (!CommonUtils.isEmptyString(searchname)) {
@@ -457,6 +499,9 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
             enddate.setSeconds(59);
             String endmaxstime = CommonUtils.getTimeFormat(enddate, "yyyy-MM-dd HH:mm:ss");
             cuserhql.append("and addtime <'" + endmaxstime + "'");
+        }
+        if (state != null) {
+            cuserhql.append(" and state =" + state);
         }
         cuserhql.append("order by addtime desc");
         List<CApplyCashInfo> applycashlist = (List<CApplyCashInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), pagesize, pageIndex, null);
@@ -544,6 +589,62 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
         long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
         return new QueryResult<BalanceCoachInfo>(applycashlist, total);
     }
+
+
+
+    @SuppressWarnings({"unchecked", "deprecation"})
+    @Override
+    public QueryResult<BalanceCoachInfo> getCoachHistoryApplyBySearch(int schoolid, String searchname, String searchphone, String amount, String inputamount, String minsdate, String maxsdate, Integer pageIndex, int pagesize) {
+        StringBuffer cuserhql = new StringBuffer();
+        cuserhql.append("from BalanceCoachInfo where type=2 ");
+        if (schoolid > 0) {
+            cuserhql.append(" and userid in (select coachid from CuserInfo where drive_schoolid = " + schoolid + ")");
+        }
+        if (!CommonUtils.isEmptyString(searchname)) {
+            cuserhql.append(" and userid in (select coachid from CuserInfo where realname like '%" + searchname + "%')");
+        }
+        if (!CommonUtils.isEmptyString(searchphone)) {
+            cuserhql.append(" and userid in (select coachid from CuserInfo where phone like '%" + searchphone + "%')");
+        }
+        if (CommonUtils.parseFloat(inputamount, 0) != 0) {
+            if (CommonUtils.parseInt(amount, -1) == 0) {
+                cuserhql.append("and amount >" + inputamount);
+            }
+            else if (CommonUtils.parseInt(amount, -1) == 1) {
+                cuserhql.append("and amount =" + inputamount);
+            }
+            else {
+                cuserhql.append("and amount <" + inputamount);
+            }
+        }
+        if (!CommonUtils.isEmptyString(minsdate)) {
+            cuserhql.append("and addtime >'" + minsdate + "'");
+        }
+        if (!CommonUtils.isEmptyString(maxsdate)) {
+            Date enddate = CommonUtils.getDateFormat(maxsdate, "yyyy-MM-dd");
+            enddate.setHours(23);
+            enddate.setMinutes(59);
+            enddate.setSeconds(59);
+            String endmaxstime = CommonUtils.getTimeFormat(enddate, "yyyy-MM-dd HH:mm:ss");
+            cuserhql.append("and addtime <'" + endmaxstime + "'");
+        }
+        cuserhql.append("order by addtime desc");
+        List<BalanceCoachInfo> applycashlist = (List<BalanceCoachInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), pagesize, pageIndex, null);
+        if (applycashlist != null && applycashlist.size() > 0) {
+            for (BalanceCoachInfo capplyCash : applycashlist) {
+                CuserInfo coach = dataDao.getObjectById(CuserInfo.class, capplyCash.getUserid());
+                if (coach != null) {
+                    capplyCash.setRealname(coach.getRealname());
+                    capplyCash.setPhone(coach.getPhone());
+                }
+            }
+        }
+        String counthql = " select count(*) " + cuserhql.toString();
+        long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
+        return new QueryResult<BalanceCoachInfo>(applycashlist, total);
+    }
+
+
 
     @SuppressWarnings("unchecked")
     @Override
