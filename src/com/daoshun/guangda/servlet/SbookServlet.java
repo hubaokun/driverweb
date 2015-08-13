@@ -299,6 +299,9 @@ public class SbookServlet extends BaseServlet {
 		CommonUtils.validateEmpty(pointcenter);
 		CommonUtils.validateEmpty(radius);
 		String condition1 = getRequestParamter(request, "condition1");// 关键字
+		if(condition1!=null){
+			condition1=condition1.replaceAll("'", "");
+		}
 		String condition2 = getRequestParamter(request, "condition2");// 星级的下限
 		String condition3 = getRequestParamter(request, "condition3");// 时间的下限
 		String condition4 = getRequestParamter(request, "condition4");// 时间的上限
@@ -326,7 +329,10 @@ public class SbookServlet extends BaseServlet {
 
 	public void getCoachList(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String pagenum = getRequestParamter(request, "pagenum");
-		String condition1 = getRequestParamter(request, "condition1");// 关键字
+		String condition1 = getRequestParamter(request, "condition1");// 关键字:教练名称/驾校名称/教练手机号
+		if(condition1!=null){
+			condition1=condition1.replaceAll("'", "");
+		}
 		String condition2 = getRequestParamter(request, "condition2");// 星级的下限
 		String condition3 = getRequestParamter(request, "condition3");// 时间的下限
 		String condition4 = getRequestParamter(request, "condition4");// 时间的上限
@@ -336,7 +342,7 @@ public class SbookServlet extends BaseServlet {
 		String condition9 = getRequestParamter(request, "condition9");// 价格上限
 		String condition10 = getRequestParamter(request, "condition10");// 车型 0.表示不限
 		String condition11 = getRequestParamter(request, "condition11");// 准教车型
-		String condition12 = getRequestParamter(request, "condition12");// 教练手机号码
+		
 		//接收经纬度和城市名称
 		String longitude = getRequestParamter(request, "longitude");//经纬度
 		String latitude = getRequestParamter(request, "latitude");
