@@ -223,6 +223,10 @@ function changegmoney() {
 
 //修改教练准驾车型
 function changeModel() {
+	if($("input[name='coachmodelid']:checked").length==0){
+		alert("请选择");
+		return;
+	}
 	$("#changeModelForm").attr("action", "changeCoachModel.do").submit();
 }
 
@@ -1551,10 +1555,7 @@ function changegmoney() {
 	}
 }
 
-//修改教练准驾车型
-function changeModel() {
-	$("#changeModelForm").attr("action", "changeCoachModel.do").submit();
-}
+
 
 //添加余额弹框
 function addbalance(coachid) {

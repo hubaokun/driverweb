@@ -297,7 +297,7 @@
 						</s:else>
 						<td>综合评分：</td>
 						<td><input name="editscore" value="${cuser.score }" onpaste="return false" ondragenter="return false" oncontextmenu="return false;" onkeyup="this.value=this.value.replace(/[\u4e00-\u9fa5]/g,'')" onkeydown="myKeyDown(this.value, event)"></td>
-						<td>注册时间3232：</td>
+						<td>注册时间：</td>
 						<td><input name="editaddtime" value="<s:date name="cuser.addtime" format="yyyy-MM-dd HH:mm:ss" />" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})"/></td>
 					</tr>
 					<tr>
@@ -451,12 +451,12 @@
 						<div style="clean:both; float:left;"><input name="coachmodelid" id="coachmodelid" type="radio" value="${modelid}" />${modelname}</div>
 					</s:if>
 					<s:else>
-						<div style="float:left;"><input name="coachmodelid" id="coachmodelid" type="radio" value="${modelid}" />${modelname}</div>
+						<div style="float:left;"><input name="coachmodelid" id="coachmodelid" type="checkbox" value="${modelid}" />${modelname}</div>
 					</s:else>
 				</s:iterator>
 				</tr>	
 				<td>
-				<input type="button" style="width: 100px;height: 40px;margin-left: 0px; margin-top: 100px;font-size: 18px" value="确定" onclick="changeModel()">
+				<input type="button" style="width: 100px;height: 40px;margin-left: 0px; margin-top: 100px;font-size: 18px" value="确定" onclick="return changeModel()">
 				</td>
 				<td>
 				<input type="button" style="width: 100px;height: 40px;margin-left: 0px;margin-top: 100px;font-size: 18px" value="取消" onclick="unshowchangegmoney()">
