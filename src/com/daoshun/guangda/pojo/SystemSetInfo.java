@@ -83,7 +83,7 @@ public class SystemSetInfo implements Serializable {
 	private Integer can_use_coupon_count;
 	
 	//默认教练开课显示天数
-	@Column(name = "course_date", length = 2, columnDefinition = "INT default 0")
+	@Column(name = "course_date", length = 2, columnDefinition = "INT default 5")
 	private Integer coursedate;
 	
 	//教练闪屏标示位
