@@ -135,7 +135,7 @@ public class LocationServlet extends BaseServlet{
 		resultMap.put("china", list);
 	}
 	/**
-	 * 自动获取省市区
+	 * 小巴服务接口
 	 * @throws UnsupportedEncodingException
 	 */
 	public void getAutoPosition(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException, UnsupportedEncodingException {

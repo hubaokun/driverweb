@@ -322,7 +322,7 @@
 
 				<!-- 17 订单是否启用广告 -->
 				<tr class="tr_td">
-					<td style="width:500px;" class="border_right_bottom">是否启用广告</td>
+					<td style="width:500px;" class="border_right_bottom">是否启用闪屏广告</td>
 					<s:if test="systemSetInfo.advertisement_flag==0">
 						<td  style="width:500px;" class="border_right_bottom">不启用</td>
 					</s:if>
@@ -337,7 +337,105 @@
 						</div>
 					</td>
 				</tr>
-				<!--18推荐认证奖励金额 -->
+				<!-- 18 默认教练开课显示天数 -->
+				<tr class="tr_td">
+					<td style="width:500px;" class="border_right_bottom">默认教练开课显示天数</td>
+					<td  style="width:500px;" class="border_right_bottom">${systemSetInfo.coursedate}天</td>
+					<td  style="width:120px;" class="border_noright_bottom">
+
+						<div class="table_edit_button">
+							<div class="table_button_edit_icon"></div>
+							<div class="table_button_text" onclick="showeditcoursecancel('${systemSetInfo.dataid}','${systemSetInfo.coursedate}','coursedate_flag')">设置</div>
+						</div>
+					</td>
+				</tr>
+				<!-- 19 教练端弹窗广告设置 -->
+				<tr class="tr_td">
+					<td style="width:500px;" class="border_right_bottom">教练端弹窗广告设置</td>
+					<s:if test="systemSetInfo.coach_advertisement_flag==0">
+						<td  style="width:500px;" class="border_right_bottom">不启用</td>
+					</s:if>
+					<s:elseif test="systemSetInfo.coach_advertisement_flag==1">
+						<td  style="width:500px;" class="border_right_bottom">跳转URL地址</td>
+					</s:elseif>
+					<s:else>
+						<td  style="width:500px;" class="border_right_bottom">跳转分享页面地址</td>
+					</s:else>
+					<td  style="width:120px;" class="border_noright_bottom">
+
+						<div class="table_edit_button">
+							<div class="table_button_edit_icon"></div>
+							<div class="table_button_text" onclick="showdiffadv1('${systemSetInfo.dataid}','${systemSetInfo.coach_advertisement_flag}','coach_advertisement_flag')">设置</div>
+						</div>
+					</td>
+				</tr>
+				<!-- 20 教练端弹窗广告图片设置 -->
+				<tr class="tr_td">
+					<td style="width:500px;" class="border_right_bottom">教练端弹窗广告图片设置</td>
+			     	<td  style="width:500px;" class="border_right_bottom"></td>
+					<td  style="width:120px;" class="border_noright_bottom">
+
+						<div class="table_edit_button">
+							<div class="table_button_edit_icon"></div>
+							<div class="table_button_text" onclick="showedittimecancel('${systemSetInfo.dataid}','${systemSetInfo.coach_advertisement_img}','coach_advertisement_imgflag')">设置</div>
+						</div>
+					</td>
+				</tr>
+				<!-- 20 教练端弹窗广告图片跳转地址设置 -->
+				<tr class="tr_td">
+					<td style="width:500px;" class="border_right_bottom">教练端弹窗广告图片跳转地址设置</td>
+			     	<td  style="width:500px;" class="border_right_bottom"></td>
+					<td  style="width:120px;" class="border_noright_bottom">
+
+						<div class="table_edit_button">
+							<div class="table_button_edit_icon"></div>
+							<div class="table_button_text" onclick="showedittimecancel('${systemSetInfo.dataid}','${systemSetInfo.coach_advertisement_url}','coach_advertisement_urlflag')">设置</div>
+						</div>
+					</td>
+				</tr>
+				<!-- 21学员端是否启用弹窗广告 -->
+				<tr class="tr_td">
+					<td style="width:500px;" class="border_right_bottom">学员端是否启用弹窗广告</td>
+					<s:if test="systemSetInfo.student_advertisement_flag==0">
+						<td  style="width:500px;" class="border_right_bottom">不启用</td>
+					</s:if>
+					<s:elseif test="systemSetInfo.student_advertisement_flag==1">
+						<td  style="width:500px;" class="border_right_bottom">跳转URL地址</td>
+					</s:elseif>
+					<s:else>
+						<td  style="width:500px;" class="border_right_bottom">跳转分享页面地址</td>
+					</s:else>
+					<td  style="width:120px;" class="border_noright_bottom">
+
+						<div class="table_edit_button">
+							<div class="table_button_edit_icon"></div>
+							<div class="table_button_text" onclick="showdiffadv1('${systemSetInfo.dataid}','${systemSetInfo.student_advertisement_flag}','student_advertisement_flag')">设置</div>
+						</div>
+					</td>
+				</tr>
+				<!-- 22 学员端弹窗广告图片设置 -->
+				<tr class="tr_td">
+					<td style="width:500px;" class="border_right_bottom">学员端弹窗广告图片设置</td>
+					<td  style="width:500px;" class="border_right_bottom"></td>
+					<td  style="width:120px;" class="border_noright_bottom">
+						<div class="table_edit_button">
+							<div class="table_button_edit_icon"></div>
+							<div class="table_button_text" onclick="showedittimecancel('${systemSetInfo.dataid}','${systemSetInfo.student_advertisement_img}','student_advertisement_imgflag')">设置</div>
+						</div>
+					</td>
+				</tr>
+				<!-- 22 学员端弹窗广告图片跳转地址设置 -->
+				<tr class="tr_td">
+					<td style="width:500px;" class="border_right_bottom">学员端弹窗广告图片跳转地址设置</td>
+					<td  style="width:500px;" class="border_right_bottom"></td>
+					<td  style="width:120px;" class="border_noright_bottom">
+						<div class="table_edit_button">
+							<div class="table_button_edit_icon"></div>
+							<div class="table_button_text" onclick="showedittimecancel('${systemSetInfo.dataid}','${systemSetInfo.student_advertisement_url}','student_advertisement_urlflag')">设置</div>
+						</div>
+					</td>
+				</tr>
+				<!--23推荐认证奖励金额 -->
 				<tr class="tr_td">
 					<td style="width:500px;" class="border_right_bottom">认证奖励金额</td>
 					<td  style="width:500px;" class="border_right_bottom">${systemSetInfo.crewardamount}元</td>
@@ -349,7 +447,7 @@
 						</div>
 					</td>
 				</tr>
-				<!--19推荐开单奖励金额 -->
+				<!--24推荐开单奖励金额 -->
 				<tr class="tr_td">
 					<td style="width:500px;" class="border_right_bottom">开单奖励金额</td>
 					<td  style="width:500px;" class="border_right_bottom">${systemSetInfo.orewardamount}元</td>
@@ -447,7 +545,7 @@
 	</div>
 </div>
 
-<!-- 是否可以启用广告弹出框-->
+<!-- 是否可以启用闪屏广告弹出框-->
 <div id="maskadv" class="mask"></div>
 <div id="mask_adv" style="position: fixed; width: 100%; height: 300px;z-index: 300;">
 	<div id="adv_last" class="mask_last">
@@ -465,5 +563,41 @@
 	</div>
 </div>
 
+<!-- 是否可以启用广告弹出框-->
+<div id="maskadv1" class="mask"></div>
+<div id="mask_adv1" style="position: fixed; width: 100%; height: 300px;z-index: 300;">
+	<div id="adv_last1" class="mask_last">
+		<div style="position: fixed; width: 300px; height: 200px;background: #4cc2ff;margin-left: 400px;top: 250px;">
+			<input id="advid1" type="hidden" >
+			<input id="advflag1" type="hidden" >
+			<input id="advoldvalue1" type="text" style="width: 218px;height: 40px;margin: auto;margin-left: 41px;margin-top: 13px;font-size: 18px;text-align: center;" disabled="disabled"/>
+			<select id="diffadv1" style="width: 75px; height:25px; margin: auto;margin-left: 110px;margin-top: 20px;">
+				<option value="0">不启用</option>
+				<option value="1">跳转URL地址</option>
+				<option value="2">跳转分享页面地址</option>
+			</select>
+			<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 50px;margin-top: 25px;font-size: 18px" value="确定" onclick="updateadv1()">
+			<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 180x;margin-top: -40px;font-size: 18px" value="取消" onclick="unupdateadv1()">
+		</div>
+	</div>
+</div>
+<!-- 教练开课默认显示天数 -->
+<div id="maskcoursedate" class="mask"></div>
+<div id="mask_coursedate" style="position: fixed; width: 100%; height: 300px;z-index: 300;">
+	<div id="coursedate_last" class="mask_last">
+		<div style="position: fixed; width: 300px; height: 200px;background: #4cc2ff;margin-left: 400px;top: 250px;">
+			<input id="coursedateid" type="hidden" >
+			<input id="coursedateflag" type="hidden" >
+			<input id="coursedateoldvalue" type="text" style="width: 218px;height: 40px;margin: auto;margin-left: 41px;margin-top: 13px;font-size: 18px;text-align: center;" disabled="disabled"/>
+			<select id="diffcoursedate" style="width: 75px; height:25px; margin: auto;margin-left: 110px;margin-top: 20px;">
+				<option value="5">5天</option>
+				<option value="10">10天</option>
+				<option value="20">20天</option>
+			</select>
+			<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 50px;margin-top: 25px;font-size: 18px" value="确定" onclick="updatecoursedate()">
+			<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 180x;margin-top: -40px;font-size: 18px" value="取消" onclick="unupdatecoursedate()">
+		</div>
+	</div>
+</div>
 </body>
 </html>
