@@ -940,6 +940,9 @@ public String getStudentDetailByPhone() {
 	public String getStudentApplyBySearch() {
 		HttpSession session = ServletActionContext.getRequest().getSession();
 		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
+		if(state == null){
+			state=0;
+		}
 		QueryResult<StudentApplyInfo> result = suserService.getCoachApplyBySearch(searchname, searchphone, amount, inputamount, state, minsdate, maxsdate, pageIndex, pagesize);
 		total = result.getTotal();
 		stuApplyList = result.getDataList();

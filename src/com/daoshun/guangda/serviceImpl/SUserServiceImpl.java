@@ -533,7 +533,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	public QueryResult<StudentApplyInfo> getCoachApplyBySearch(String searchname, String searchphone, String amount, String inputamount, Integer state, String minsdate, String maxsdate,
 			Integer pageIndex, int pagesize) {
 		StringBuffer cuserhql = new StringBuffer();
-		cuserhql.append("from StudentApplyInfo where state = 0");
+		cuserhql.append("from StudentApplyInfo where 1 = 1");
 		if (!CommonUtils.isEmptyString(searchname)) {
 			cuserhql.append(" and userid in (select studentid from SuserInfo where realname like '%" + searchname + "%')");
 		}

@@ -1299,6 +1299,9 @@ public class CuserAction extends BaseAction {
 			schoolid = driveschoolid;
 			changetype = 1;
 		}
+		if(state == null){
+			state=0;
+		}
 		QueryResult<CApplyCashInfo> result = cuserService.getCoachApplyBySearch(searchname, searchphone, amount, inputamount, schoolid, minsdate, maxsdate, state,pageIndex, pagesize);
 		total = result.getTotal();
 		applycashlist = result.getDataList();

@@ -64,21 +64,21 @@ $(function(){
 						<input id="phone" type="text" onkeyup="value=value.replace(/[^\d]/g,'')" class="searchdiv" style="width:100px;font-family: 微软雅黑;" value="${searchphone }" maxlength="11"/>
 					</div>
 								
-<div class="serchcontentdiv"style="float: left; margin-left: 50px; width: 191px"  >
-		<select id="amount" class="searchdiv" style="width: 115px;">
-			<option value="0">提现金额大于</option>
-			<option value="1">提现金额等于</option>
-			<option value="2">提现金额小于</option>
-		</select> 
-		<input id="inputamount" type="text" onkeyup="value=value.replace(/[^\d]/g,'')" class="searchdiv" style="width: 71px;text-align: center;font-family: 微软雅黑;" value="${inputamount }" maxlength="10">
-	</div>
+					<div class="serchcontentdiv"style="float: left; margin-left: 50px; width: 191px"  >
+						<select id="amount" class="searchdiv" style="width: 115px;">
+							<option value="0">提现金额大于</option>
+							<option value="1">提现金额等于</option>
+							<option value="2">提现金额小于</option>
+						</select> 
+						<input id="inputamount" type="text" onkeyup="value=value.replace(/[^\d]/g,'')" class="searchdiv" style="width: 71px;text-align: center;font-family: 微软雅黑;" value="${inputamount }" maxlength="10">
+					</div>
 					
-<div class="serchcontentdiv"style="float: left; margin-left: 50px; width: 405px"  >
-		<input type="text" class="searchdiv" style="width: 119px;text-align: center;font-family: 微软雅黑;" value="提交申请时间区间" readonly="readonly">
-		<input id="minsdate" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})" type="text" class="searchdiv" style="width: 120px;text-align: center;font-family: 微软雅黑;" value="${minsdate}">
-		<input type="text" class="searchdiv" style="width: 30px;text-align: center;font-family: 微软雅黑;" value="到" readonly="readonly">
-		<input id="maxsdate" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})" type="text" class="searchdiv" style="width: 120px;text-align: center;font-family: 微软雅黑;" value="${maxsdate}" >
-	</div>
+					<div class="serchcontentdiv"style="float: left; margin-left: 50px; width: 405px"  >
+						<input type="text" class="searchdiv" style="width: 119px;text-align: center;font-family: 微软雅黑;" value="提交申请时间区间" readonly="readonly">
+						<input id="minsdate" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})" type="text" class="searchdiv" style="width: 120px;text-align: center;font-family: 微软雅黑;" value="${minsdate}">
+						<input type="text" class="searchdiv" style="width: 30px;text-align: center;font-family: 微软雅黑;" value="到" readonly="readonly">
+						<input id="maxsdate" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})" type="text" class="searchdiv" style="width: 120px;text-align: center;font-family: 微软雅黑;" value="${maxsdate}" >
+					</div>
 	<s:if test="changetype==1">
 		<input type="hidden" id="driveschoolid" value="${schoolid}" />
 	</s:if>
@@ -96,15 +96,15 @@ $(function(){
 		
  		
 	</div>
-	<div class="serchcontentdiv"style="float: left; margin-left: 50px; width: 130px"  >
-	<input type="text" class="searchdiv" style="width: 40px;text-align: center;font-family: 微软雅黑;" value="状态" readonly="readonly">
-		<select id="state" class="searchdiv" style="width: 85px;"> 
-	 		<option value="0" >申请中</option> 
-	 		<option value="3" >申请不通过</option> 
-	 	</select> 
-	 </div>
-	 
-		</s:else>
+	</s:else>
+	
+	<div class="serchcontentdiv"style="float: left; margin-left: 50px; width: 130px"  > 
+ 	<input type="text" class="searchdiv" style="width: 40px;text-align: center;font-family: 微软雅黑;" value="状态" readonly="readonly"> 
+ 		<select id="state" class="searchdiv" style="width: 85px;"> 
+			<option value="0" >申请中</option> 
+ 			<option value="3" >申请不通过</option> 
+ 		</select> <input type="hidden" id="hidstate" value="${state}" />
+ 	</div> 
 			</div>
 			<div id="content_form_table">
 				<table border="0" cellspacing="0" cellpadding="0"
