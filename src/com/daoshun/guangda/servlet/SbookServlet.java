@@ -447,7 +447,7 @@ public class SbookServlet extends BaseServlet {
 	}
 
 	/**
-	 * 获取可以使用的小巴币，小巴券，余额
+	 * 获取可以使用的小巴币，小巴券，余额,其中小巴币的总数=教练可用小巴币+驾校可用小巴币+平台可用小巴币
 	 * --获取可以使用的小巴券列表 条件:未过期，未使用过,且满足平台、驾校、教练规则
 	 * 
 	 * @param request
@@ -471,9 +471,13 @@ public class SbookServlet extends BaseServlet {
 			if (info.getCan_use_coupon_count() != null && info.getCan_use_coupon_count() != 0)
 				canUseMaxCount = info.getCan_use_coupon_count();
 		}
-		int num=suserService.getCanUseCoinnum(coachid,studentid);//获取可用小巴币
+		//小巴币的总数=教练可用小巴币+驾校可用小巴币+平台可用小巴币
+		int num=suserService.getCanUseCoinnum(coachid,studentid);//获取教练可用小巴币
 		int numForSchool=suserService.getCanUseCoinnumForDriveSchool(coachid,studentid);//获取驾校可用小巴币
+		//获取平台发送的小巴币
+		int numForPlatform=suserService.getCanUseCoinnumForPlatform("0",studentid);//获取平台可用小巴币
 		num+=numForSchool;
+		num+=numForPlatform;
 		SuserInfo suser=suserService.getUserById(studentid);//获取余额
 		if(suser==null){
 				resultMap.put(Constant.CODE, 2);

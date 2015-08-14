@@ -313,4 +313,5 @@ public interface ISUserService {
     
     public QueryResult<SuserInfo> getStudentSchool(Integer pageIndex, int pagesize);
     public QueryResult<SuserInfo> setStudentSchool(Integer pageIndex, int pagesize);
+    public int getCanUseCoinnumForPlatform(String coachid, String studentid);
 }

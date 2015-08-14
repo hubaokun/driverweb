@@ -103,7 +103,11 @@ public class CoinRecordAction extends BaseAction{
     @Action(value = "goCoinRecord", results = { @Result(name = SUCCESS, location = "/coinrecord.jsp") })
     public String goCoinRecord() {
     	QueryResult<CoinRecordInfo> result = coinRecordService.getCoinRecordListByPage(pageIndex, 10, starttime, endtime, ownertype, String.valueOf(ownerid),String.valueOf(receiverid));
-		
+    	if(receiverid!=null && !"".equals(receiverid) && !"null".equals(receiverid)){
+        	SuserInfo suser=suserService.getUserById(String.valueOf(receiverid));
+        	coinnum=suser.getCoinnum();
+        	receivername=suser.getRealname();
+        }
     	coinrecordlist = result.getDataList();
 		total = (int) result.getTotal();
 		pageCount = (total + 9) / 10;

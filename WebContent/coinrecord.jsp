@@ -46,8 +46,16 @@
                                    autocomplete="off" required="required"
                                    style="width: 200px; height: 33px; padding-left:5px; border: 1px solid #eaeff2; margin-top: 20px;">
                             <input value="" name="receiverid" id="receiverid" type="hidden">
+                           <s:if test="receiverid!=null">
+                             &nbsp;&nbsp;&nbsp;&nbsp;${receivername}剩余小巴币数量：${coinnum }
+                             <s:if test="coinnum!=0">
+							<a href="javascript:reclaimCoin('${receivername}','${receiverid}')">全部回收${receivername }的小巴币</a>
+							</s:if>
+                           </s:if>
+                          
                              <input type="button"  value="查询" onclick="goCoinRecord()"
                            style="clear: both;height: 40px;width: 184px;background: #4cc2ff; color: #fff; font-size: 16px;text-align: center; line-height: 40px;margin-left: 248px;margin-top: 20px;cursor: pointer;">
+                        
                         </div>
                         <div class="binding_detail" style="  left: 164px;top:-20px;clear:both;" id="optionalStudent">;
                         </div>
@@ -68,7 +76,6 @@
 				<th>支付类型</th>
 				<th>发行者</th>
 				<th>添加时间</th>
-				<th>回收小巴币</th>
 			</tr>
 			<s:iterator value="coinrecordlist" var="coinrecordlist">
 				<tr class="tr_td">
@@ -89,11 +96,6 @@
 					<td style="width: 100px;" class="border_right_bottom">${ownername}</td>
 					<td style="width: 200px;" class="border_right_bottom"><s:date
 							name="addtime" format="yyyy-MM-dd HH:mm:ss" /></td>
-					<td style="width: 100px;" class="border_right_bottom">
-					<s:if test="type!=3">
-					<a href="javascript:reclaimCoin('${receivername}','${receiverid}')">全部回收</a>
-					</s:if>
-					</td>
 
 				</tr>
 			</s:iterator>

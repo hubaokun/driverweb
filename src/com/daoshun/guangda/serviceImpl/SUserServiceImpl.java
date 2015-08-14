@@ -1095,7 +1095,22 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		
 		return (int) (totalin2-totalout2);
 	}
-	//获取学员总的小巴币数量
+	/**
+	 * 获取平台发给学员的可用小巴币数量
+	 * @param coachid 平台ID
+	 * @param studentid 学员ID
+	 * @return
+	 */
+	public int getCanUseCoinnumForPlatform(String coachid, String studentid) {
+			String countinhql = "select sum(coinnum) from CoinRecordInfo where (receiverid ="+studentid+" and receivertype="+ UserType.STUDENT+"and ownertype="+UserType.PLATFORM+" and ownerid="+coachid+")";
+			Object in= dataDao.getFirstObjectViaParam(countinhql, null);
+			int totalin= in==null?0:CommonUtils.parseInt(in.toString(), 0);
+
+			String countouthql = "select sum(coinnum) from CoinRecordInfo where (payerid ="+studentid+" and payertype="+ UserType.STUDENT+" and ownertype="+UserType.PLATFORM+"  and ownerid="+coachid+")";
+			Object out= dataDao.getFirstObjectViaParam(countouthql, null);
+			int totalout = (out==null) ? 0: CommonUtils.parseInt(out.toString(),0);
+		return (int) (totalin-totalout);
+	}
 	public int getSumCoinnum( String studentid ) {
 			String countinhql = "select sum(coinnum) from CoinRecordInfo where  receivertype=3 and receiverid ="+studentid;
 			Object in= dataDao.getFirstObjectViaParam(countinhql, null);
