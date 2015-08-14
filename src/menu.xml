@@ -50,8 +50,8 @@
 		<sub-item name="驾校列表" authority="3" action="getdriveSchool.do"/>
 	</menu-item>
 	<menu-item name="小巴券管理" iconURL="" authority="1">
-		<sub-item name="小巴券列表" authority="1" action="getCouponList.do"/>
-		<sub-item name="小巴券领取记录" authority="2" action="getCouponRecordInfo.do"/>
+		<sub-item name="小巴券类型列表" authority="1" action="getCouponList.do"/>
+		<sub-item name="小巴券发放记录" authority="2" action="getCouponRecordInfo.do"/>
 		<sub-item name="教练小巴券兑换记录" authority="2" action="getCouponCoachInfo.do"/>
 		<sub-item name="发放小巴币" authority="2" action="goGrantCoinRecord.do"/>
 		<sub-item name="小巴币发放查询" authority="2" action="goCoinRecord.do"/>

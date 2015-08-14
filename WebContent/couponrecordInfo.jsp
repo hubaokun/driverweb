@@ -96,7 +96,7 @@
 }
 </style>
 
-<title>小巴券领取记录</title>
+<title>小巴券发放记录</title>
 </head>
 <input type="hidden" id="index" value="8" />
 <input type="hidden" id="change_id" value="1" />
@@ -158,7 +158,7 @@
 							style="float: left; margin-left: 50px; width: 405px">
 							<input type="text" class="searchdiv"
 								style="width: 119px; text-align: center; font-family: 微软雅黑;"
-								value="到期时间" readonly="readonly"> <input id="starttime"
+								value="发放时间" readonly="readonly"> <input id="starttime"
 								name="starttime"
 								onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})"
 								type="text" class="searchdiv"
@@ -197,7 +197,7 @@
 						<th>发券人</th>
 						<th>总张数</th>
 						<th>已使用张数</th>
-						<th>使用截止日期</th>
+						<th>发放时间</th>
 						<th>操作</th>
 					</tr>
 					<s:iterator value="couponrecordlist" var="couponrecordlist">
@@ -214,7 +214,7 @@
 							<td style="width: 120px;" class="border_right_bottom">${usecount }</td>
 							
 							<td style="width: 200px;" class="border_right_bottom"><s:date
-									name="end_time" format="yyyy-MM-dd HH:mm:ss" /></td>
+									name="gettime" format="yyyy-MM-dd HH:mm:ss" /></td>
 							<td style="width: 200px;" class="border_noright_bottom">
 								<a href="getCouponRecordList.do?userid=${userid}"
 										style="text-decoration: none; cursor: pointer;">明细</a>

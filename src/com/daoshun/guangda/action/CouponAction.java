@@ -181,7 +181,7 @@ public class CouponAction extends BaseAction {
 	
 	
 	/**
-	 * 得到小巴券领取记录
+	 * 得到小巴券发放记录
 	 * 
 	 * @return
 	 */

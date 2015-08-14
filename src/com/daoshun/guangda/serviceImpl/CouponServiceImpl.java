@@ -228,12 +228,12 @@ public class CouponServiceImpl extends BaseServiceImpl implements ICouponService
 		}
 		if (!CommonUtils.isEmptyString(starttime)) {
 			starttime = starttime + " 00:00:00";
-			couponhql.append(" and end_time > '" + starttime + "'");
+			couponhql.append(" and gettime > '" + starttime + "'");
 		}
 
 		if (!CommonUtils.isEmptyString(endtime)) {
 			endtime = endtime + " 23:59:59";
-			couponhql.append(" and end_time <= '" + endtime + "'");
+			couponhql.append(" and gettime <= '" + endtime + "'");
 		}
 		if (ownertype != null) {
 			couponhql.append(" and ownertype = " + ownertype);

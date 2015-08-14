@@ -91,7 +91,7 @@ function searchfromsubmit(){
 }
 </style>
 
-<title>小巴券列表</title>
+<title>小巴券类型列表</title>
 </head>
 <input type="hidden" id="index" value="8" />
 <input type="hidden" id="change_id" value="0"/>
