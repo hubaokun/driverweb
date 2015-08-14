@@ -596,6 +596,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 				if (coach != null) {
 					balanceCoach.setRealname(coach.getRealname());
 					balanceCoach.setPhone(coach.getPhone());
+					balanceCoach.setAlipay_account(coach.getAlipay_account());
 				}
 			}
 		}

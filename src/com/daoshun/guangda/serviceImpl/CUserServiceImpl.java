@@ -636,6 +636,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
                 if (coach != null) {
                     capplyCash.setRealname(coach.getRealname());
                     capplyCash.setPhone(coach.getPhone());
+                    capplyCash.setAlipay_account(coach.getAlipay_account());
                 }
             }
         }

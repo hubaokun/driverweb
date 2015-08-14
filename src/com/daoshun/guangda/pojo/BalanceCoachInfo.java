@@ -59,6 +59,10 @@ public class BalanceCoachInfo implements Serializable {
 	// 电话
 	@Transient
 	private String phone;
+	
+	// 支付宝
+	@Transient
+	private String alipay_account;
 
 	public int getRecordid() {
 		return recordid;
@@ -131,5 +135,14 @@ public class BalanceCoachInfo implements Serializable {
 	public void setAmount_out2(BigDecimal amount_out2) {
 		this.amount_out2 = amount_out2;
 	}
+
+	public String getAlipay_account() {
+		return alipay_account;
+	}
+
+	public void setAlipay_account(String alipay_account) {
+		this.alipay_account = alipay_account;
+	}
+	
 
 }
