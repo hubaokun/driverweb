@@ -1,7 +1,16 @@
-8ÔÂ13ÈÕ·¢²¼×¢ÒâÊÂÏî
 
-1.±ít_systemset
-ĞÂÔö×Ö¶Î£º
+
+
+
+
+
+
+
+
+8æœˆ13æ—¥å‘å¸ƒæ³¨æ„äº‹é¡¹
+
+1.è¡¨t_systemset
+æ–°å¢å­—æ®µï¼š
 coach_advertisement_flag=2
 coach_advertisement_img="http://www.xiaobaxueche.com/images/adv.jpg"
 coach_advertisement_url="http://www.xiaobaxueche.com/share.jsp?"
@@ -9,7 +18,7 @@ student_advertisement_flag
 student_advertisement_img
 student_advertisement_url
 
-2.ÔËĞĞSQL°üÀïµÄgetcoachstate1.sql
+2.è¿è¡ŒSQLåŒ…é‡Œçš„getcoachstate1.sql
 
-                                                                                    ×«Ğ´Õß¡ª¡ªÎâ¼ÑÈğ
+                                                                                    æ’°å†™è€…â€”â€”å´ä½³ç‘
 ================================================================================================================================================
