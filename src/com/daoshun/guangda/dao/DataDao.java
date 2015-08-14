@@ -456,7 +456,7 @@ public class DataDao {
 	}
 	public List getCoachState(String coachid, int datacount, Date startdate, int starthour, int endhour,int subjectid){
 		Session session=this.getSession();
-		SQLQuery query= session.createSQLQuery("select getcoachstate1(?,?,?,?,?,?)");
+		SQLQuery query= session.createSQLQuery("select getcoachstate(?,?,?,?,?,?)");
 		query.setString(0, coachid);
 		query.setInteger(1, datacount);
 		query.setDate(2, startdate);
