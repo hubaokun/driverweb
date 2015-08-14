@@ -63,6 +63,15 @@ public class CoinRecordServiceImpl extends BaseServiceImpl implements ICoinRecor
         }
         List<CoinRecordInfo> coinRecordList = (List<CoinRecordInfo>) dataDao.pageQueryViaParam(coinsql.toString() + " order by addtime desc", pageSize, pageIndex, null);
         
+		 List<CoinRecordInfo> coinRecordList = (List<CoinRecordInfo>) dataDao.pageQueryViaParam(coinsql.toString() + " order by addtime desc", pageSize, pageIndex, null);
+
+        if (coinRecordList != null && coinRecordList.size() > 0) {
+            for (CoinRecordInfo coinrecordinfo : coinRecordList) {
+                if(coinrecordinfo.getOwnertype() == 0){
+                	coinrecordinfo.setOwnername("小巴");
+                }
+            }
+        }
         
         String counthql = coinsql.insert(0, " select count(*) ").toString();
         long count = (Long) dataDao.getFirstObjectViaParam(counthql, null);
