@@ -385,7 +385,42 @@ public class CuserInfo implements Serializable {
 	@Transient
 	private String locationname;//省市区全称
 	
+	//设备类型  1 IOS  ,2 android 
+	@Column(name = "devicetype", length = 1, columnDefinition = "INT default 0")
+	private Integer devicetype;
+	//版本
+	@Column(name = "version", length = 30)
+	private String version;
+	//用户类型  0 普通真实用户  1 测试用户  
+	@Column(name = "usertype", length = 1, columnDefinition = "INT default 0")
+	private Integer usertype;
 	
+	
+	
+	public Integer getDevicetype() {
+		return devicetype;
+	}
+
+	public void setDevicetype(Integer devicetype) {
+		this.devicetype = devicetype;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+	public Integer getUsertype() {
+		return usertype;
+	}
+
+	public void setUsertype(Integer usertype) {
+		this.usertype = usertype;
+	}
+
 	public Integer getFcoinnum() {
 		return fcoinnum;
 	}

@@ -340,6 +340,8 @@ public class SuserServlet extends BaseServlet {
 	public void login(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String phone = getRequestParamter(request, "phone");
 		String password = getRequestParamter(request, "password");// 验证码
+		String devicetype = getRequestParamter(request, "devicetype");//设备类型  1 IOS  2 ADNROID
+		String version = getRequestParamter(request, "version");//版本
 		CommonUtils.validateEmpty(phone);
 		CommonUtils.validateEmpty(password);
 		// 验证验证码的有效性
@@ -351,19 +353,27 @@ public class SuserServlet extends BaseServlet {
 			SuserInfo user = suserService.getUserByPhone(phone);
 			if (user == null) {
 //				System.out.println("do not save token to db "+token);
-				
 				user = suserService.registerUser(phone, token);// 注册
 				user.setPassword(password);
+				
 				resultMap.put("isregister", 1);
 			} else {
 				user.setToken(token);
 				user.setToken_time(new Date());
 				user.setInvitecode("S"+CommonUtils.getInviteCode(user.getPhone()));
-				suserService.updateUserInfo(user);
 				user.setPassword(password);
 				resultMap.put("isregister", 0);
 //				System.out.println("longin save token to db "+token+" "+Thread.currentThread().getId());
 			}
+			int dtype=CommonUtils.parseInt(devicetype, 0);
+			if(dtype!=0){
+				user.setDevicetype(dtype);//设置设备类型
+			}
+			if(version!=null && !"".equals(version)){
+				user.setVersion(version);//设置版本号
+			}
+			
+			suserService.updateUserInfo(user);
 			//根据省市区ID查询对应的名称
 			if(user.getProvinceid()!=null && user.getCityid()!=null && user.getAreaid()!=null){
 				ProvinceInfo pro=locationService.getProvincesById(user.getProvinceid());
@@ -799,6 +809,8 @@ public class SuserServlet extends BaseServlet {
 		resultMap.put("money", money);
 		resultMap.put("coinsum", coinsum);
 		resultMap.put("fcoinsum", fcoinsum);//冻结的小巴币
+		HashMap<String, Object> re=suserService.getConsumeAmount(studentid);//返回小巴币，小巴券，余额的累积消费额
+		resultMap.putAll(re);
 	}
 
 

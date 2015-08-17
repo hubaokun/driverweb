@@ -1155,6 +1155,41 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		}
 		return result;
 	}
+	//查询小巴币，小巴券,余额的累积消费额
+	public HashMap<String, Object> getConsumeAmount(String studentid) {
+		HashMap<String, Object> result = new HashMap<String, Object>();
+		SuserInfo user = dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
+		if (user != null) {
+			/*String hql = "select sum(coinnum) from CoinRecordInfo where payerid =:payerid and payertype="+ UserType.STUDENT+"  order by addtime desc";
+			String[] params = { "payerid"};
+			Integer cid = CommonUtils.parseInt(studentid, 0);
+			Long paycoinnum = (Long)dataDao.getFirstObjectViaParam(hql, params, cid);
+			result.put("paycoin", paycoinnum);//小巴币的累积消费额
+			
+			String couponhql="select sum(value) from CouponRecord where state=1 and userid=:userid";
+			String[] couponParams = { "userid"};
+			Long paycoupon = (Long)dataDao.getFirstObjectViaParam(couponhql, couponParams, cid);
+			result.put("paycoupon", paycoupon);//小巴券的累积消费额
+			result.put("paymoney", paycoupon);//余额的累积消费额*/
+			Integer cid = CommonUtils.parseInt(studentid, 0);
+			String hql ="select sum(total) from OrderInfo where studentid=:studentid and paytype=:paytype and studentstate=3";
+			String[] params = { "studentid","paytype"};
+			// 1 余额  2 小巴币  3 小巴券
+			Long consumeMoney = (Long)dataDao.getFirstObjectViaParam(hql, params, cid,1);
+			
+			Long consumeCoin = (Long)dataDao.getFirstObjectViaParam(hql, params, cid,2);
+			
+			Long consumeCoupon = (Long)dataDao.getFirstObjectViaParam(hql, params, cid,3);
+			result.put("consumeMoney", consumeMoney);
+			result.put("consumeCoin", consumeCoin);
+			result.put("consumeCoupon", consumeCoupon);
+			
+		}else {
+			result.put("code", 2);
+			result.put("message", "用户不存在");
+		}
+		return result;
+	}
     @Transactional(readOnly=false,propagation=Propagation.REQUIRED)
 	@Override
 	public int resetVerCode(String phone,int type) {

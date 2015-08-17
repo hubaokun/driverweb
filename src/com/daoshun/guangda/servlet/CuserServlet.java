@@ -317,6 +317,8 @@ public class CuserServlet extends BaseServlet {
 		String loginid = getRequestParamter(request, "loginid");// 电话号码
 		CommonUtils.validateEmpty(loginid);
 		String password = getRequestParamter(request, "password");// 验证码
+		String devicetype = getRequestParamter(request, "devicetype");//设备类型  1 IOS  2 ADNROID
+		String version = getRequestParamter(request, "version");//版本
 		CommonUtils.validateEmpty(password);
 		// 验证验证码的有效性
 		int result = cuserService.checkVerCode(loginid, password);
@@ -327,11 +329,25 @@ public class CuserServlet extends BaseServlet {
 			if (cuser == null) {				
 				cuser = cuserService.registerUser(loginid, token);// 注册
 				cuser.setPassword(password);
+				int dtype=CommonUtils.parseInt(devicetype, 0);
+				if(dtype!=0){
+					cuser.setDevicetype(dtype);//设置设备类型
+				}
+				if(version!=null && !"".equals(version)){
+					cuser.setVersion(version);//设置版本号
+				}
 				resultMap.put("isregister", 1);
 			} else {
 				cuser.setToken(token);
 				cuser.setToken_time(new Date());
 				cuser.setInvitecode("C"+CommonUtils.getInviteCode(cuser.getPhone()));
+				int dtype=CommonUtils.parseInt(devicetype, 0);
+				if(dtype!=0){
+					cuser.setDevicetype(dtype);//设置设备类型
+				}
+				if(version!=null && !"".equals(version)){
+					cuser.setVersion(version);//设置版本号
+				}
 				cuserService.updateCuser(cuser);
 				cuser.setCar_cardpicfurl(cuserService.backUrl(cuser.getCar_cardpicf())); // 行驶证正面照
 				cuser.setCar_cardpicburl(cuserService.backUrl(cuser.getCar_cardpicb())); // 行驶证反面照

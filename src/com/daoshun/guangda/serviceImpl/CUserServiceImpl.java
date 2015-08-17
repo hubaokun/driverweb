@@ -15,6 +15,7 @@ import com.alipay.config.AlipayConfig;
 import com.daoshun.common.ApplePushUtil;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
+import com.daoshun.common.DeviceType;
 import com.daoshun.common.QueryResult;
 import com.daoshun.common.UserType;
 import com.daoshun.guangda.pojo.AdminInfo;
@@ -1198,7 +1199,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
                 cancelorder.setCoachstate(4);
                 dataDao.updateObject(cancelorder);
                 UserPushInfo userPushInfo = (UserPushInfo) dataDao.getObjectsViaParam(" from UserPushInfo where userid = :studentid and usertype = 2", new String[]{"studentid"}, cancelorder.getStudentid());
-                if (userPushInfo != null && userPushInfo.getType() == 1) {
+                if (userPushInfo != null && userPushInfo.getType() == DeviceType.IOS) {
                     ApplePushUtil.sendpush(userPushInfo.getDevicetoken(), "{\"aps\":{\"alert\":\"" + "由于" + cuser.getRealname() + "教练离职，您" + cancelorder.getStart_time() + "~" + cancelorder.getEnd_time() + "的订单已经被取消" + "\",\"sound\":\"default\"} }", 1, 2);
                 }
             }

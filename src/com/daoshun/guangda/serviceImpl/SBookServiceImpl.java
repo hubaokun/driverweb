@@ -1347,7 +1347,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					String params5[] = { "userid" };
 					UserPushInfo userpush = (UserPushInfo) dataDao.getFirstObjectViaParam(hql5, params5, CommonUtils.parseInt(coachid, 0));
 					if (userpush != null) {
-						if (userpush.getType() == 0 && !CommonUtils.isEmptyString(userpush.getJpushid())) {// 安卓
+						if (userpush.getType() ==2 && !CommonUtils.isEmptyString(userpush.getJpushid())) {// 安卓
 							PushtoSingle pushsingle = new PushtoSingle();
 							pushsingle.pushsingle(userpush.getJpushid(), 1, "{\"message\":\"" + "您有新的订单哦" + "\",\"type\":\"1\"}");
 						} else if (userpush.getType() == 1 && !CommonUtils.isEmptyString(userpush.getDevicetoken())) {

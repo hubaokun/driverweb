@@ -20,6 +20,7 @@ import org.springframework.stereotype.Controller;
 
 import com.daoshun.common.ApplePushUtil;
 import com.daoshun.common.CommonUtils;
+import com.daoshun.common.DeviceType;
 import com.daoshun.common.ExslImport;
 import com.daoshun.common.PushtoSingle;
 import com.daoshun.common.QueryResult;
@@ -349,10 +350,10 @@ public class CouponAction extends BaseAction {
 					} else {// 推送通知
 						UserPushInfo userPushInfo = cuserService.getUserPushInfo(suer.getStudentid(), 2);
 						if (userPushInfo != null && userPushInfo.getDevicetoken() != null) {
-							if (userPushInfo.getType() == 0 && !CommonUtils.isEmptyString(userPushInfo.getJpushid())) {
+							if (userPushInfo.getType() == DeviceType.ANDROID && !CommonUtils.isEmptyString(userPushInfo.getJpushid())) {
 								PushtoSingle push = new PushtoSingle();
 								push.pushsingle(userPushInfo.getJpushid(), 2, "{\"message\":\"" + message + "\",\"type\":\"4\"}");
-							} else if (userPushInfo.getType() == 1 && !CommonUtils.isEmptyString(userPushInfo.getDevicetoken())) {
+							} else if (userPushInfo.getType() == DeviceType.IOS && !CommonUtils.isEmptyString(userPushInfo.getDevicetoken())) {
 								ApplePushUtil.sendpush(userPushInfo.getDevicetoken(), "{\"aps\":{\"alert\":\"" + message + "\",\"sound\":\"default\"},\"userid\":" + suer.getStudentid() + "}", 1, 2);
 							}
 						}
@@ -420,10 +421,10 @@ public class CouponAction extends BaseAction {
 							} else {// 推送通知
 								UserPushInfo userPushInfo = cuserService.getUserPushInfo(suser.getStudentid(), 2);
 								if (userPushInfo != null && userPushInfo.getDevicetoken() != null) {
-									if (userPushInfo.getType() == 0 && !CommonUtils.isEmptyString(userPushInfo.getJpushid())) {
+									if (userPushInfo.getType() == DeviceType.ANDROID && !CommonUtils.isEmptyString(userPushInfo.getJpushid())) {
 										PushtoSingle push = new PushtoSingle();
 										push.pushsingle(userPushInfo.getJpushid(), 2, "{\"message\":\"" + message + "\",\"type\":\"4\"}");
-									} else if (userPushInfo.getType() == 1 && !CommonUtils.isEmptyString(userPushInfo.getDevicetoken())) {
+									} else if (userPushInfo.getType() == DeviceType.IOS && !CommonUtils.isEmptyString(userPushInfo.getDevicetoken())) {
 										ApplePushUtil.sendpush(userPushInfo.getDevicetoken(),
 												"{\"aps\":{\"alert\":\"" + message + "\",\"sound\":\"default\"},\"userid\":" + suser.getStudentid() + "}", 1, 2);
 									}
@@ -483,10 +484,10 @@ public class CouponAction extends BaseAction {
 							} else {// 推送通知
 								UserPushInfo userPushInfo = cuserService.getUserPushInfo(uuser.getStudentid(), 2);
 								if (userPushInfo != null && userPushInfo.getDevicetoken() != null) {
-									if (userPushInfo.getType() == 0 && !CommonUtils.isEmptyString(userPushInfo.getJpushid())) {
+									if (userPushInfo.getType() == DeviceType.ANDROID && !CommonUtils.isEmptyString(userPushInfo.getJpushid())) {
 										PushtoSingle push = new PushtoSingle();
 										push.pushsingle(userPushInfo.getJpushid(), 2, "{\"message\":\"" + message + "\",\"type\":\"4\"}");
-									} else if (userPushInfo.getType() == 1 && !CommonUtils.isEmptyString(userPushInfo.getDevicetoken())) {
+									} else if (userPushInfo.getType() == DeviceType.IOS && !CommonUtils.isEmptyString(userPushInfo.getDevicetoken())) {
 										ApplePushUtil.sendpush(userPushInfo.getDevicetoken(),
 												"{\"aps\":{\"alert\":\"" + message + "\",\"sound\":\"default\"},\"userid\":" + uuser.getStudentid() + "}", 1, 2);
 									}
@@ -549,10 +550,10 @@ public class CouponAction extends BaseAction {
 				} else {// 推送通知
 					UserPushInfo userPushInfo = cuserService.getUserPushInfo(userinfo.getStudentid(), 2);
 					if (userPushInfo != null && userPushInfo.getDevicetoken() != null) {
-						if (userPushInfo.getType() == 0 && !CommonUtils.isEmptyString(userPushInfo.getJpushid())) {
+						if (userPushInfo.getType() ==DeviceType.ANDROID && !CommonUtils.isEmptyString(userPushInfo.getJpushid())) {
 							PushtoSingle push = new PushtoSingle();
 							push.pushsingle(userPushInfo.getJpushid(), 2, "{\"message\":\"" + message + "\",\"type\":\"4\"}");
-						} else if (userPushInfo.getType() == 1 && !CommonUtils.isEmptyString(userPushInfo.getDevicetoken())) {
+						} else if (userPushInfo.getType() == DeviceType.IOS && !CommonUtils.isEmptyString(userPushInfo.getDevicetoken())) {
 							ApplePushUtil.sendpush(userPushInfo.getDevicetoken(), "{\"aps\":{\"alert\":\"" + message + "\",\"sound\":\"default\"},\"userid\":" + userinfo.getStudentid() + "}", 1, 2);
 						}
 					}

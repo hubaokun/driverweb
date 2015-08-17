@@ -14,6 +14,7 @@ import com.daoshun.common.ApplePushUtil;
 import com.daoshun.common.CoinType;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
+import com.daoshun.common.DeviceType;
 import com.daoshun.common.PayType;
 import com.daoshun.common.PushtoSingle;
 import com.daoshun.common.QueryResult;
@@ -908,10 +909,10 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				String params5[] = { "userid" };
 				UserPushInfo userpush = (UserPushInfo) dataDao.getFirstObjectViaParam(hql5, params5,coachid);
 				if (userpush != null) {
-					if (userpush.getType() == 0 && !CommonUtils.isEmptyString(userpush.getJpushid())) {// 安卓
+					if (userpush.getType() == DeviceType.ANDROID && !CommonUtils.isEmptyString(userpush.getJpushid())) {// 安卓
 						PushtoSingle pushsingle = new PushtoSingle();
 						pushsingle.pushsingle(userpush.getJpushid(), 1, "{\"message\":\"" + pushMsg + "\",\"type\":\"1\",\"orderid\":\""+orderid+"\"}");
-					} else if (userpush.getType() == 1 && !CommonUtils.isEmptyString(userpush.getDevicetoken())) {
+					} else if (userpush.getType() == DeviceType.IOS && !CommonUtils.isEmptyString(userpush.getDevicetoken())) {
 						ApplePushUtil.sendpush(userpush.getDevicetoken(), "{\"aps\":{\"alert\":\"" + pushMsg + "\",\"sound\":\"default\"},\"userid\":" + coachid + ",\"orderid\":\""+orderid+"\"}", 1, 1);
 					}
 				}
@@ -944,10 +945,10 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 			String params5[] = { "userid" };
 			UserPushInfo userPushInfo = (UserPushInfo) dataDao.getFirstObjectViaParam(hql5, params5,CommonUtils.parseInt(studentid, 0));
 			if (userPushInfo != null && userPushInfo.getDevicetoken() != null) {
-				if (userPushInfo.getType() == 0 && !CommonUtils.isEmptyString(userPushInfo.getJpushid())) {
+				if (userPushInfo.getType() == DeviceType.ANDROID && !CommonUtils.isEmptyString(userPushInfo.getJpushid())) {
 					PushtoSingle push = new PushtoSingle();
 					push.pushsingle(userPushInfo.getJpushid(), 2, "{\"message\":\"" + pushMsg + "\",\"type\":\"5\"}");
-				} else if (userPushInfo.getType() == 1 && !CommonUtils.isEmptyString(userPushInfo.getDevicetoken())) {
+				} else if (userPushInfo.getType() == DeviceType.IOS && !CommonUtils.isEmptyString(userPushInfo.getDevicetoken())) {
 					ApplePushUtil.sendpush(userPushInfo.getDevicetoken(), "{\"aps\":{\"alert\":\"" + pushMsg + "\",\"sound\":\"default\"},\"userid\":" + studentid + "}", 1, 2);
 				}
 			}
@@ -1052,10 +1053,10 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				String params5[] = { "userid" };
 				UserPushInfo userPushInfo = (UserPushInfo) dataDao.getFirstObjectViaParam(hql5, params5,CommonUtils.parseInt(studentid, 0));
 				if (userPushInfo != null && userPushInfo.getDevicetoken() != null) {
-					if (userPushInfo.getType() == 0 && !CommonUtils.isEmptyString(userPushInfo.getJpushid())) {
+					if (userPushInfo.getType() == DeviceType.ANDROID && !CommonUtils.isEmptyString(userPushInfo.getJpushid())) {
 						PushtoSingle push = new PushtoSingle();
 						push.pushsingle(userPushInfo.getJpushid(), 2, "{\"message\":\"" + pushMsg + "\",\"type\":\"4\"}");
-					} else if (userPushInfo.getType() == 1 && !CommonUtils.isEmptyString(userPushInfo.getDevicetoken())) {
+					} else if (userPushInfo.getType() == DeviceType.IOS && !CommonUtils.isEmptyString(userPushInfo.getDevicetoken())) {
 						ApplePushUtil.sendpush(userPushInfo.getDevicetoken(), "{\"aps\":{\"alert\":\"" + pushMsg + "\",\"sound\":\"default\"},\"userid\":" + studentid + "}", 1, 2);
 					}
 				}

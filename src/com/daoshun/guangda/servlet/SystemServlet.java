@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
+import com.daoshun.common.DeviceType;
 import com.daoshun.common.ErrException;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.SuserInfo;
@@ -189,38 +190,38 @@ public class SystemServlet extends BaseServlet {
 		CommonUtils.validateEmpty(devicetype);
 		UserPushInfo userPushInfo = systemService.getUserPushInfoBykeyword(CommonUtils.parseInt(userid, 0), CommonUtils.parseInt(usertype, 0));
 
-		int dtype = CommonUtils.parseInt(devicetype, 0);// 0:安卓 1:IOS
+		int dtype = CommonUtils.parseInt(devicetype, 0);// 2:安卓 1:IOS
 		if (userPushInfo != null) {
-			if (dtype == 0 && !CommonUtils.isEmptyString(jpushid)) {
+			if (dtype == DeviceType.ANDROID && !CommonUtils.isEmptyString(jpushid)) {
 				userPushInfo.setDevicetoken("");
 				userPushInfo.setJpushid(jpushid);
-				userPushInfo.setType(0);
+				userPushInfo.setType(DeviceType.ANDROID);
 				userPushInfo.setUserid(CommonUtils.parseInt(userid, 0));
 				userPushInfo.setUsertype(CommonUtils.parseInt(usertype, 0));
 				cuserService.updateObject(userPushInfo);
-			} else if (dtype == 1 && !CommonUtils.isEmptyString(devicetoken)) {
+			} else if (dtype == DeviceType.IOS && !CommonUtils.isEmptyString(devicetoken)) {
 				userPushInfo.setDevicetoken(devicetoken);
 				userPushInfo.setJpushid("");
-				userPushInfo.setType(1);
+				userPushInfo.setType(DeviceType.IOS);
 				userPushInfo.setUserid(CommonUtils.parseInt(userid, 0));
 				userPushInfo.setUsertype(CommonUtils.parseInt(usertype, 0));
 				cuserService.updateObject(userPushInfo);
 			}
 
 		} else {
-			if (dtype == 0 && !CommonUtils.isEmptyString(jpushid)) {
+			if (dtype == DeviceType.ANDROID && !CommonUtils.isEmptyString(jpushid)) {
 				UserPushInfo newuserPush = new UserPushInfo();
 				newuserPush.setDevicetoken("");
 				newuserPush.setJpushid(jpushid);
-				newuserPush.setType(0);
+				newuserPush.setType(DeviceType.ANDROID);
 				newuserPush.setUserid(CommonUtils.parseInt(userid, 0));
 				newuserPush.setUsertype(CommonUtils.parseInt(usertype, 0));
 				cuserService.addObject(newuserPush);
-			} else if (dtype == 1 && !CommonUtils.isEmptyString(devicetoken)) {
+			} else if (dtype == DeviceType.IOS && !CommonUtils.isEmptyString(devicetoken)) {
 				UserPushInfo newuserPush = new UserPushInfo();
 				newuserPush.setDevicetoken(devicetoken);
 				newuserPush.setJpushid("");
-				newuserPush.setType(1);
+				newuserPush.setType(DeviceType.IOS);
 				newuserPush.setUserid(CommonUtils.parseInt(userid, 0));
 				newuserPush.setUsertype(CommonUtils.parseInt(usertype, 0));
 				cuserService.addObject(newuserPush);

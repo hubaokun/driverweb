@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import com.daoshun.common.ApplePushUtil;
 import com.daoshun.common.CommonUtils;
+import com.daoshun.common.DeviceType;
 import com.daoshun.common.PushtoSingle;
 import com.daoshun.common.QueryResult;
 import com.daoshun.guangda.pojo.CuserInfo;
@@ -259,13 +260,13 @@ public class SystemNoticeAction extends BaseAction {
 			cuserService.addObject(noticesUserInfo);
 			userPushInfo = cuserService.getUserPushInfo(singleuserid, 1);
 			if (userPushInfo != null) {
-				if (userPushInfo.getType() == 0 && !CommonUtils.isEmptyString(userPushInfo.getJpushid())) {
+				if (userPushInfo.getType() == DeviceType.ANDROID && !CommonUtils.isEmptyString(userPushInfo.getJpushid())) {
 					// 安卓
 					PushtoSingle pushsingle = new PushtoSingle();
 					pushsingle.pushsingle(userPushInfo.getJpushid(), 1, "{\"message\":\"" + "您有新的通知" + "\",\"type\":\"3\"}");
 
 				}
-				if (userPushInfo.getType() == 1 && !CommonUtils.isEmptyString(userPushInfo.getDevicetoken())) {
+				if (userPushInfo.getType() == DeviceType.IOS && !CommonUtils.isEmptyString(userPushInfo.getDevicetoken())) {
 					// ihpone
 					ApplePushUtil.sendpush(userPushInfo.getDevicetoken(), "{\"aps\":{\"alert\":\"" + "您有新的通知" + "\",\"sound\":\"default\"},\"userid\":" + singleuserid + "}", 1, 1);
 				}
@@ -288,13 +289,13 @@ public class SystemNoticeAction extends BaseAction {
 			cuserService.addObject(noticesUserInfo);
 			userPushInfo = cuserService.getUserPushInfo(singleuserid, 2);
 			if (userPushInfo != null) {
-				if (userPushInfo.getType() == 0 && !CommonUtils.isEmptyString(userPushInfo.getJpushid())) {
+				if (userPushInfo.getType() == DeviceType.ANDROID && !CommonUtils.isEmptyString(userPushInfo.getJpushid())) {
 					// 安卓
 					PushtoSingle pushsingle = new PushtoSingle();
 					pushsingle.pushsingle(userPushInfo.getJpushid(), 2, "{\"message\":\"" + "您有新的通知" + "\",\"type\":\"3\"}");
 
 				}
-				if (userPushInfo.getType() == 1 && !CommonUtils.isEmptyString(userPushInfo.getDevicetoken())) {
+				if (userPushInfo.getType() == DeviceType.IOS && !CommonUtils.isEmptyString(userPushInfo.getDevicetoken())) {
 					// ihpone
 					ApplePushUtil.sendpush(userPushInfo.getDevicetoken(), "{\"aps\":{\"alert\":\"" + "您有新的通知" + "\",\"sound\":\"default\"},\"userid\":" + singleuserid + "}", 1, 2);
 				}
@@ -325,13 +326,13 @@ public class SystemNoticeAction extends BaseAction {
 				cuserService.addObject(noticesUserInfo);
 				userPushInfo = cuserService.getUserPushInfo(orderlist.get(i).getStudentid(), 2);
 				if (userPushInfo != null) {
-					if (userPushInfo.getType() == 0 && !CommonUtils.isEmptyString(userPushInfo.getJpushid())) {
+					if (userPushInfo.getType() == DeviceType.ANDROID && !CommonUtils.isEmptyString(userPushInfo.getJpushid())) {
 						// 安卓
 						PushtoSingle pushsingle = new PushtoSingle();
 						pushsingle.pushsingle(userPushInfo.getJpushid(), 2, "{\"message\":\"" + "您有新的通知" + "\",\"type\":\"3\"}");
 
 					}
-					if (userPushInfo.getType() == 1 && !CommonUtils.isEmptyString(userPushInfo.getDevicetoken())) {
+					if (userPushInfo.getType() == DeviceType.IOS && !CommonUtils.isEmptyString(userPushInfo.getDevicetoken())) {
 						// ihpone
 						ApplePushUtil.sendpush(userPushInfo.getDevicetoken(), "{\"aps\":{\"alert\":\"" + "您有新的通知" + "\",\"sound\":\"default\"},\"userid\":" + orderlist.get(i).getStudentid() + "}", 1,
 								2);
@@ -362,13 +363,13 @@ public class SystemNoticeAction extends BaseAction {
 				cuserService.addObject(noticesUserInfo);
 				userPushInfo = cuserService.getUserPushInfo(cuserlist.get(i).getCoachid(), 1);
 				if (userPushInfo != null) {
-					if (userPushInfo.getType() == 0 && !CommonUtils.isEmptyString(userPushInfo.getJpushid())) {
+					if (userPushInfo.getType() == DeviceType.ANDROID && !CommonUtils.isEmptyString(userPushInfo.getJpushid())) {
 						// 安卓
 						PushtoSingle pushsingle = new PushtoSingle();
 						pushsingle.pushsingle(userPushInfo.getJpushid(), 1, "{\"message\":\"" + "您有新的通知" + "\",\"type\":\"3\"}");
 
 					}
-					if (userPushInfo.getType() == 1 && !CommonUtils.isEmptyString(userPushInfo.getDevicetoken())) {
+					if (userPushInfo.getType() == DeviceType.IOS && !CommonUtils.isEmptyString(userPushInfo.getDevicetoken())) {
 						// ihpone
 						ApplePushUtil
 								.sendpush(userPushInfo.getDevicetoken(), "{\"aps\":{\"alert\":\"" + "您有新的通知" + "\",\"sound\":\"default\"},\"userid\":" + cuserlist.get(i).getCoachid() + "}", 1, 1);
@@ -395,13 +396,13 @@ public class SystemNoticeAction extends BaseAction {
 				cuserService.addObject(noticesUserInfo);
 				userPushInfo = cuserService.getUserPushInfo(suserlist.get(i).getStudentid(), 2);
 				if (userPushInfo != null) {
-					if (userPushInfo.getType() == 0 && !CommonUtils.isEmptyString(userPushInfo.getJpushid())) {
+					if (userPushInfo.getType() == DeviceType.ANDROID && !CommonUtils.isEmptyString(userPushInfo.getJpushid())) {
 						// 安卓
 						PushtoSingle pushsingle = new PushtoSingle();
 						pushsingle.pushsingle(userPushInfo.getJpushid(), 2, "{\"message\":\"" + "您有新的通知" + "\",\"type\":\"3\"}");
 
 					}
-					if (userPushInfo.getType() == 1 && !CommonUtils.isEmptyString(userPushInfo.getDevicetoken())) {
+					if (userPushInfo.getType() == DeviceType.IOS && !CommonUtils.isEmptyString(userPushInfo.getDevicetoken())) {
 						// ihpone
 						ApplePushUtil.sendpush(userPushInfo.getDevicetoken(), "{\"aps\":{\"alert\":\"" + "您有新的通知" + "\",\"sound\":\"default\"},\"userid\":" + suserlist.get(i).getStudentid() + "}", 1,
 								2);
@@ -429,12 +430,12 @@ public class SystemNoticeAction extends BaseAction {
 				userPushInfo = cuserService.getUserPushInfo(orderlist.get(i).getStudentid(), 2);
 				if (userPushInfo != null) {
 
-					if (userPushInfo.getType() == 0 && !CommonUtils.isEmptyString(userPushInfo.getJpushid())) {
+					if (userPushInfo.getType() == DeviceType.ANDROID && !CommonUtils.isEmptyString(userPushInfo.getJpushid())) {
 						// 安卓
 						PushtoSingle pushsingle = new PushtoSingle();
 						pushsingle.pushsingle(userPushInfo.getJpushid(), 2, "{\"message\":\"" + "您有新的通知" + "\",\"type\":\"3\"}");
 					}
-					if (userPushInfo.getType() == 1 && !CommonUtils.isEmptyString(userPushInfo.getDevicetoken())) {
+					if (userPushInfo.getType() == DeviceType.IOS && !CommonUtils.isEmptyString(userPushInfo.getDevicetoken())) {
 						// ihpone
 						ApplePushUtil.sendpush(userPushInfo.getDevicetoken(), "{\"aps\":{\"alert\":\"" + "您有新的通知" + "\",\"sound\":\"default\"},\"userid\":" + orderlist.get(i).getStudentid() + "}", 1,
 								2);

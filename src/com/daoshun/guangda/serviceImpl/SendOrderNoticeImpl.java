@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.daoshun.common.ApplePushUtil;
 import com.daoshun.common.CommonUtils;
+import com.daoshun.common.DeviceType;
 import com.daoshun.common.PushtoSingle;
 import com.daoshun.guangda.pojo.OrderInfo;
 import com.daoshun.guangda.pojo.OrderNotiRecord;
@@ -51,10 +52,10 @@ public class SendOrderNoticeImpl extends BaseServiceImpl implements ISendOrderNo
 					String params5[] = { "userid" };
 					UserPushInfo pushInfo = (UserPushInfo) dataDao.getFirstObjectViaParam(hql5, params5, orderNotiRecord.getCoachid());
 					if (pushInfo != null) {
-						if (pushInfo.getType() == 0 && !CommonUtils.isEmptyString(pushInfo.getJpushid())) {// 安卓
+						if (pushInfo.getType() == DeviceType.ANDROID && !CommonUtils.isEmptyString(pushInfo.getJpushid())) {// 安卓
 							PushtoSingle pushsingle = new PushtoSingle();
 							pushsingle.pushsingle(pushInfo.getJpushid(), 1, "{\"message\":\"" + message + "\",\"type\":\"2\"}");
-						} else if (pushInfo.getType() == 1 && !CommonUtils.isEmptyString(pushInfo.getDevicetoken())) {
+						} else if (pushInfo.getType() == DeviceType.IOS && !CommonUtils.isEmptyString(pushInfo.getDevicetoken())) {
 							ApplePushUtil.sendpush(pushInfo.getDevicetoken(), "{\"aps\":{\"alert\":\"" + message + "\",\"sound\":\"default\"},\"userid\":" + orderNotiRecord.getCoachid() + "}", 1, 1);
 						}
 					}
@@ -63,10 +64,10 @@ public class SendOrderNoticeImpl extends BaseServiceImpl implements ISendOrderNo
 					String params5[] = { "userid" };
 					UserPushInfo pushInfo = (UserPushInfo) dataDao.getFirstObjectViaParam(hql5, params5, orderNotiRecord.getStudentid());
 					if (pushInfo != null) {
-						if (pushInfo.getType() == 0 && !CommonUtils.isEmptyString(pushInfo.getJpushid())) {// 安卓
+						if (pushInfo.getType() == DeviceType.ANDROID && !CommonUtils.isEmptyString(pushInfo.getJpushid())) {// 安卓
 							PushtoSingle pushsingle = new PushtoSingle();
 							pushsingle.pushsingle(pushInfo.getJpushid(), 2, "{\"message\":\"" + message + "\",\"type\":\"2\"}");
-						} else if (pushInfo.getType() == 1 && !CommonUtils.isEmptyString(pushInfo.getDevicetoken())) {
+						} else if (pushInfo.getType() == DeviceType.IOS && !CommonUtils.isEmptyString(pushInfo.getDevicetoken())) {
 							ApplePushUtil.sendpush(pushInfo.getDevicetoken(), "{\"aps\":{\"alert\":\"" + message + "\",\"sound\":\"default\"},\"userid\":" + orderNotiRecord.getCoachid() + "}", 1, 1);
 						}
 					}
@@ -76,10 +77,10 @@ public class SendOrderNoticeImpl extends BaseServiceImpl implements ISendOrderNo
 					String params5[] = { "userid" };
 					UserPushInfo pushInfo = (UserPushInfo) dataDao.getFirstObjectViaParam(hql5, params5, orderNotiRecord.getCoachid());
 					if (pushInfo != null) {
-						if (pushInfo.getType() == 0 && !CommonUtils.isEmptyString(pushInfo.getJpushid())) {// 安卓
+						if (pushInfo.getType() == DeviceType.ANDROID && !CommonUtils.isEmptyString(pushInfo.getJpushid())) {// 安卓
 							PushtoSingle pushsingle = new PushtoSingle();
 							pushsingle.pushsingle(pushInfo.getJpushid(), 1, "{\"message\":\"" + message + "\",\"type\":\"2\"}");
-						} else if (pushInfo.getType() == 1 && !CommonUtils.isEmptyString(pushInfo.getDevicetoken())) {
+						} else if (pushInfo.getType() == DeviceType.IOS && !CommonUtils.isEmptyString(pushInfo.getDevicetoken())) {
 							ApplePushUtil.sendpush(pushInfo.getDevicetoken(), "{\"aps\":{\"alert\":\"" + message + "\",\"sound\":\"default\"},\"userid\":" + orderNotiRecord.getCoachid() + "}", 1, 1);
 						}
 					}
@@ -88,10 +89,10 @@ public class SendOrderNoticeImpl extends BaseServiceImpl implements ISendOrderNo
 					String params6[] = { "userid" };
 					UserPushInfo pushInfo1 = (UserPushInfo) dataDao.getFirstObjectViaParam(hql6, params6, orderNotiRecord.getStudentid());
 					if (pushInfo1 != null) {
-						if (pushInfo1.getType() == 0 && !CommonUtils.isEmptyString(pushInfo1.getJpushid())) {// 安卓
+						if (pushInfo1.getType() == DeviceType.ANDROID && !CommonUtils.isEmptyString(pushInfo1.getJpushid())) {// 安卓
 							PushtoSingle pushsingle = new PushtoSingle();
 							pushsingle.pushsingle(pushInfo1.getJpushid(), 2, "{\"message\":\"" + message + "\",\"type\":\"2\"}");
-						} else if (pushInfo1.getType() == 1 && !CommonUtils.isEmptyString(pushInfo1.getDevicetoken())) {
+						} else if (pushInfo1.getType() == DeviceType.IOS && !CommonUtils.isEmptyString(pushInfo1.getDevicetoken())) {
 							ApplePushUtil.sendpush(pushInfo1.getDevicetoken(), "{\"aps\":{\"alert\":\"" + message + "\",\"sound\":\"default\"},\"userid\":" + orderNotiRecord.getCoachid() + "}", 1, 1);
 						}
 					}

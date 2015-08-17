@@ -69,3 +69,5 @@ getCanUseCouponList  预约时小巴币
 
 GETSTUDENTWALLETINFO  钱包小巴币
 GetMessageCount 
+2015-08-17
+bookCoach2  添加测试账号预约判断处理

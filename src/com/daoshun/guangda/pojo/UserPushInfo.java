@@ -41,7 +41,7 @@ public class UserPushInfo implements Serializable {
 	@Column(name = "jpushid", length = 100)
 	private String jpushid;
 
-	// 设备类型 0、安卓 1、ios
+	// 设备类型 2、安卓 1、ios  参考DeviceType类
 	@Column(name = "type", length = 1, nullable = false, columnDefinition = "INT default 0")
 	private Integer type;
 

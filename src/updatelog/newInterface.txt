@@ -28,3 +28,17 @@ coachid 教练ID
 noticeid 通知的ID
 返回结果：
 code 1 成功 
+
+
+# 学员账号接口GETSTUDENTWALLETINFO新增返回累积消费余额
+consumeMoney 余额累积消费额
+consumeCoin  小巴币累积消费额
+consumeCoupon 小巴券累积消费额
+
+# 学员login接口新增请求参数：
+devicetype  设备类型  1 IOS 2 android
+version     版本号
+
+# 教练login接口新增请求参数：
+devicetype  设备类型  1 IOS 2 android
+version     版本号
