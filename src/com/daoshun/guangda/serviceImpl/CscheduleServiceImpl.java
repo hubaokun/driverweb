@@ -3,7 +3,9 @@ package com.daoshun.guangda.serviceImpl;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -261,5 +263,35 @@ public class CscheduleServiceImpl extends BaseServiceImpl implements ICscheduleS
 				tempCuserInfo.setCoursestate(Integer.parseInt(result));
 				dataDao.updateObject(tempCuserInfo);
 		}
+	}
+
+	@Override
+	public Map getAllCoachscheduleinfo(String coachid, String hour) {
+		Map resultmap=new HashMap();
+		BigDecimal info = null;
+		String hql = "from DefaultSchedule where coachid = :coachid and hour = :hour";
+		String[] param = { "coachid", "hour" };
+		DefaultSchedule defaultSet = (DefaultSchedule) dataDao.getFirstObjectViaParam(hql, param, CommonUtils.parseInt(coachid, 0), hour);
+		if (defaultSet != null) {
+			info = defaultSet.getPrice();
+		}
+		int result = -1;
+		if (defaultSet != null) {
+			result=defaultSet.getIsrest();
+		}
+		CaddAddressInfo tempCaddAddressInfo = null;
+		if (defaultSet != null) {
+			tempCaddAddressInfo = dataDao.getObjectById(CaddAddressInfo.class, defaultSet.getAddressid());
+		}
+		CsubjectInfo tempCsubjectInfo = null;
+		if (defaultSet != null) {
+			tempCsubjectInfo = dataDao.getObjectById(CsubjectInfo.class, defaultSet.getSubjectid());
+		}
+		
+		resultmap.put("info", info);
+		resultmap.put("result", result);
+		resultmap.put("CaddAddressInfo", tempCaddAddressInfo);
+		resultmap.put("CsubjectInfo", tempCsubjectInfo);
+		return resultmap;
 	}
 }

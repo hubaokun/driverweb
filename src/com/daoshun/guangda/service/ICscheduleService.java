@@ -2,7 +2,9 @@ package com.daoshun.guangda.service;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.daoshun.guangda.pojo.CBookTimeInfo;
 import com.daoshun.guangda.pojo.CaddAddressInfo;
@@ -109,4 +111,8 @@ public interface ICscheduleService {
 	 */
 	public void getCoachStateByFunction(String coachid,int datacount,int starthour,int endhour,int subjectid);
 	public boolean getIsbookedBybooktime(String hour, int coachid, String date) ;
+	/**
+	 * 获取教练开课默认设置（包括所有项） 
+	 */
+	public abstract Map getAllCoachscheduleinfo(String coachid, String hour);
 }
