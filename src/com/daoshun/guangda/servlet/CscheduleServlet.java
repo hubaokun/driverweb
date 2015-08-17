@@ -59,6 +59,8 @@ public class CscheduleServlet extends BaseServlet {
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//long start=System.currentTimeMillis();
+	//	System.out.println("开始时间="+start);
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
 		try {
 			String action = getAction(request);
@@ -73,7 +75,10 @@ public class CscheduleServlet extends BaseServlet {
 
 			if (Constant.CGETSCHEDULE.equals(action)) {
 				// 获取教练的日程安排
+				
+				
 				getSchedule2(request, resultMap);
+			
 			}else if (Constant.CGETSCHEDULEBYDATE.equals(action)) {
 				// 根据日期获取教练的日程安排
 				getScheduleByDate(request, resultMap);
@@ -97,6 +102,9 @@ public class CscheduleServlet extends BaseServlet {
 			setResultWhenException(response, e.getMessage());
 		}
 		setResult(response, resultMap);
+	//	long end=System.currentTimeMillis();
+	//	System.out.println("结束时间="+end);
+	//	System.out.println("一共耗费了"+(end-start)+"时间");
 	}
 
 	private boolean checkSession(HttpServletRequest request, String action, HashMap<String, Object> resultMap) throws ErrException {
@@ -485,6 +493,7 @@ public class CscheduleServlet extends BaseServlet {
 				schedulelist.add(allDaySet);
 				//System.out.println("耗时2："+(end2-start));
 				// 时间点循环
+			//	long start1 =System.currentTimeMillis();			
 				for (int k = 5; k < 24; k++) {
 					CscheduleInfo info = null;
 					
@@ -548,15 +557,19 @@ public class CscheduleServlet extends BaseServlet {
 							else
 								info.setExpire(0);
 						}
+						HashMap defaultsetup=(HashMap) cscheduleService.getAllCoachscheduleinfo(coachid, String.valueOf(k));
+						
 						// 默认价格
-						BigDecimal price = cscheduleService.getDefaultPrice(coachid, String.valueOf(k));
+						//BigDecimal price = cscheduleService.getDefaultPrice(coachid, String.valueOf(k));
+						BigDecimal price =(BigDecimal) defaultsetup.get("info");
 						if (price != null && price.doubleValue() != 0) {
 							info.setPrice(price);
 						} else {// 设置为系统的默认价格
 							info.setPrice(new BigDecimal(defaultPrice));
 						}
 						// 默认的开课休息状态
-						int rest = cscheduleService.getDefaultRest(coachid, String.valueOf(k));
+					//	int rest = cscheduleService.getDefaultRest(coachid, String.valueOf(k));
+						int rest = (int) defaultsetup.get("result");
 						if (rest != -1) {
 							info.setIsrest(rest);
 						} else {// 5、6、12、18设置为休息
@@ -568,7 +581,8 @@ public class CscheduleServlet extends BaseServlet {
 						}
 						
 						// 地址信息
-						CaddAddressInfo address = cscheduleService.getDefaultAddress(coachid, String.valueOf(k));
+					//	CaddAddressInfo address = cscheduleService.getDefaultAddress(coachid, String.valueOf(k));
+						CaddAddressInfo address = (CaddAddressInfo) defaultsetup.get("CaddAddressInfo");
 						if (address != null) {
 							info.setAddressid(address.getAddressid());
 							info.setAddressdetail(address.getDetail());
@@ -579,7 +593,8 @@ public class CscheduleServlet extends BaseServlet {
 					
 						
 						// 科目信息
-						CsubjectInfo subject = cscheduleService.getDefaultSubject(coachid, String.valueOf(k));
+					//	CsubjectInfo subject = cscheduleService.getDefaultSubject(coachid, String.valueOf(k));
+						CsubjectInfo subject =(CsubjectInfo) defaultsetup.get("CsubjectInfo");
 						if (subject != null) {
 							info.setSubjectid(subject.getSubjectid());
 							info.setSubject(subject.getSubjectname());
@@ -607,8 +622,10 @@ public class CscheduleServlet extends BaseServlet {
 					}
 					
 				}
+				//long end1 =System.currentTimeMillis();
+				//System.out.println("5-24点循环耗时="+(end1-start1));
 			}
-
+			
 			// 获得最新的list
 			Collections.sort(schedulelist, new CscheduleCompare());
 
