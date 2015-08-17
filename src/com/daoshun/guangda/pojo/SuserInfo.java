@@ -150,7 +150,7 @@ public class SuserInfo implements Serializable {
 	@Column(name = "coachstate", columnDefinition = "INT default 0")
 	private Integer coachstate = 0;
 
-	// 教练上传身份证正面
+	// 教练上传身份证正面  
 	@Column(name = "ccheck_idcardpicf", columnDefinition = "INT default 0")
 	private Integer ccheck_idcardpicf = 0;
 
