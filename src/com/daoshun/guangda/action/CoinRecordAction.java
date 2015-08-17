@@ -1,30 +1,24 @@
 package com.daoshun.guangda.action;
 
-import com.daoshun.common.CommonUtils;
-import com.daoshun.common.QueryResult;
-import com.daoshun.common.UserType;
-import com.daoshun.guangda.pojo.CoinRecordInfo;
-import com.daoshun.guangda.pojo.CouponInfo;
-import com.daoshun.guangda.pojo.CouponRecord;
-import com.daoshun.guangda.pojo.CuserInfo;
-import com.daoshun.guangda.pojo.SuserInfo;
-import com.daoshun.guangda.service.ICUserService;
-import com.daoshun.guangda.service.ICoinRecordService;
-import com.daoshun.guangda.service.ICouponService;
-import com.daoshun.guangda.service.ISUserService;
-import com.daoshun.guangda.serviceImpl.CoinRecordServiceImpl;
-import org.apache.struts2.convention.annotation.Action;
-import org.apache.struts2.convention.annotation.Result;
-
-import javax.annotation.Resource;
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.Result;
+
+import com.daoshun.common.QueryResult;
+import com.daoshun.common.UserType;
+import com.daoshun.guangda.pojo.CoinRecordInfo;
+import com.daoshun.guangda.pojo.CuserInfo;
+import com.daoshun.guangda.pojo.DriveSchoolInfo;
+import com.daoshun.guangda.pojo.SuserInfo;
+import com.daoshun.guangda.service.ICUserService;
+import com.daoshun.guangda.service.ICoinRecordService;
+import com.daoshun.guangda.service.IDriveSchoolService;
+import com.daoshun.guangda.service.ISUserService;
 
 /**
  * Created by tutu on 15/7/24.
@@ -40,6 +34,8 @@ public class CoinRecordAction extends BaseAction{
     
     @Resource
     private ICUserService cuserService;
+    @Resource
+    private IDriveSchoolService driveSchoolService;
 
     private Integer coinrecordid;
 
@@ -125,32 +121,50 @@ public class CoinRecordAction extends BaseAction{
 
         CoinRecordInfo coinRecordInfo = new CoinRecordInfo ();
         coinRecordInfo.setReceiverid(receiverid);
-        coinRecordInfo.setReceivername(receivername);
         coinRecordInfo.setReceivertype(UserType.STUDENT);//代表学员
+        SuserInfo suser =suserService.getUserById(receiverid.toString());
+        if(suser!=null){
+        	 coinRecordInfo.setReceivername(suser.getRealname());
+        }
         if(ownertype==UserType.PLATFORM)//平台发放
         {
-            coinRecordInfo.setOwnerid(0);
-            //coinRecordInfo.setPayerid(0);
-        }
-        else//教练发放
-        {
-            coinRecordInfo.setOwnerid(ownerid);
+             coinRecordInfo.setOwnerid(UserType.PLATFORM);
+           
+             coinRecordInfo.setOwnername("平台");
+             coinRecordInfo.setPayerid(UserType.PLATFORM);
+             coinRecordInfo.setPayertype(UserType.PLATFORM);//0 平台  1 驾校  2 教练  3 学员
+             coinRecordInfo.setPayername("平台");
+        }else if(ownertype==UserType.DRIVESCHOOL){//驾校发放
+        	 coinRecordInfo.setOwnerid(ownerid);//驾校ID
+        	 coinRecordInfo.setOwnertype(ownertype);
+        	 DriveSchoolInfo ds=driveSchoolService.getDriveSchoolInfoByid(ownerid);
+        	 if(ds!=null){
+        		 coinRecordInfo.setOwnername(ds.getName());//驾校名称
+        		 coinRecordInfo.setPayername(ds.getName());
+        	 }
+        	 coinRecordInfo.setPayerid(ownerid);
+             coinRecordInfo.setPayertype(UserType.DRIVESCHOOL);//0 平台  1 驾校  2 教练  3 学员
+        }else if(ownertype==UserType.COAH){//教练发放
+             coinRecordInfo.setOwnerid(ownerid);
+             coinRecordInfo.setOwnertype(ownertype);
             //添加教练姓名
             CuserInfo cuser =cuserService.getCoachByid(ownerid);
-            coinRecordInfo.setOwnername(cuser.getRealname());
-            
-           
+            if(cuser!=null){
+            	 coinRecordInfo.setOwnername(cuser.getRealname());
+            	 coinRecordInfo.setPayername(cuser.getRealname());
+            }
+            coinRecordInfo.setPayerid(ownerid);
+            coinRecordInfo.setPayertype(UserType.COAH);//0 平台  1 驾校  2 教练  3 学员
         }
-        coinRecordInfo.setPayerid(0);
-        coinRecordInfo.setType(UserType.PLATFORM);
-        coinRecordInfo.setOwnertype(ownertype);
+        
+        coinRecordInfo.setType(1);//type  1 发放给学员    2 学员支付    3 退款    4 教练兑换
+        
         coinRecordInfo.setCoinnum(coinnum);
-        coinRecordInfo.setType(1);
         coinRecordInfo.setAddtime(new Date());
         
         coinRecordService.addCoinRecord(coinRecordInfo);
 
-        SuserInfo suser =suserService.getUserById(receiverid.toString());
+       
         if(suser!=null){
         	 if(suser.getCoinnum()==null){
         		 suser.setCoinnum(coinnum);
@@ -329,6 +343,20 @@ public class CoinRecordAction extends BaseAction{
 
 	public void setPageCount(int pageCount) {
 		this.pageCount = pageCount;
+	}
+
+
+
+
+	public IDriveSchoolService getDriveSchoolService() {
+		return driveSchoolService;
+	}
+
+
+
+
+	public void setDriveSchoolService(IDriveSchoolService driveSchoolService) {
+		this.driveSchoolService = driveSchoolService;
 	}
     
     

@@ -642,6 +642,14 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		CuserInfo coach = (CuserInfo) dataDao.getFirstObjectViaParam(cuserhql.toString(), params, phone);
 		return coach;
 	}
+	
+	public CuserInfo getCoachById(String coachid) {
+		StringBuffer cuserhql = new StringBuffer();
+		cuserhql.append(" from CuserInfo where coachid = :coachid");
+		String[] params = { "coachid" };
+		CuserInfo coach = (CuserInfo) dataDao.getFirstObjectViaParam(cuserhql.toString(), params, CommonUtils.parseInt(coachid, 0));
+		return coach;
+	}
 
 	@Override
 	public StudentApplyInfo getApplyById(int applyid) {
@@ -1046,6 +1054,29 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 
 		return (int) (totalin-totalout);
 	}
+	
+	public int getCanUseCoinnumForDriveSchool(String coachid, String studentid) {
+		/*String countinhql = "select sum(coinnum) from CoinRecordInfo where (receiverid ="+studentid+" and receivertype="+ UserType.STUDENT+"and ownertype="+UserType.COAH+" and ownerid="+coachid+")";
+		Object in= dataDao.getFirstObjectViaParam(countinhql, null);
+		int totalin= in==null?0:CommonUtils.parseInt(in.toString(), 0);
+		
+		String countouthql = "select sum(coinnum) from CoinRecordInfo where (payerid ="+studentid+" and payertype="+ UserType.STUDENT+" and ownertype="+UserType.COAH+"  and ownerid="+coachid+")";
+		Object out= dataDao.getFirstObjectViaParam(countouthql, null);
+		int totalout = (out==null) ? 0: CommonUtils.parseInt(out.toString(),0);*/
+		
+		CuserInfo cuser=getCoachById(coachid);
+		Integer schoolid=cuser.getDrive_schoolid();
+		
+		String countinhql2 = "select sum(coinnum) from CoinRecordInfo where (receiverid ="+studentid+" and receivertype="+ UserType.STUDENT+"and ownertype="+UserType.DRIVESCHOOL+" and ownerid="+schoolid+")";
+		Object in2= dataDao.getFirstObjectViaParam(countinhql2, null);
+		int totalin2= in2==null?0:CommonUtils.parseInt(in2.toString(), 0);
+
+		String countouthql3 = "select sum(coinnum) from CoinRecordInfo where (payerid ="+studentid+" and payertype="+ UserType.STUDENT+" and ownertype="+UserType.DRIVESCHOOL+"  and ownerid="+schoolid+")";
+		Object out2= dataDao.getFirstObjectViaParam(countouthql3, null);
+		int totalout2 = (out2==null) ? 0: CommonUtils.parseInt(out2.toString(),0);
+		
+		return (int) (totalin2-totalout2);
+	}
 	//获取学员总的小巴币数量
 	public int getSumCoinnum( String studentid ) {
 			String countinhql = "select sum(coinnum) from CoinRecordInfo where  receivertype=3 and receiverid ="+studentid;
@@ -1067,11 +1098,11 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			String[] params = {"receiverid", "payerid"};
             
 			Integer cid = CommonUtils.parseInt(studentid, 0);
-			String chql="from CuserInfo where coachid=:coachid";
-			String[] params1={"coachid"};
+			
 			List<CoinRecordInfo> list = (List<CoinRecordInfo>)dataDao.getObjectsViaParam(hql, params, cid, cid);
 			
-
+			String chql="from CuserInfo where coachid=:coachid";
+			String[] params1={"coachid"};
 			if (list != null && list.size()>0) {
 				CuserInfo tempCuserInfo=(CuserInfo)dataDao.getFirstObjectViaParam(chql, params1,list.get(0).getOwnerid());
 				if(tempCuserInfo!=null)

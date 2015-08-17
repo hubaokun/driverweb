@@ -109,6 +109,9 @@ public class RecommendServlet extends BaseServlet {
 			// 意见反馈
 			userid = getRequestParamter(request, "studentid");
 			usertype = getRequestParamter(request, "type");
+		} else if(action.equals(Constant.CGETRECOMMENDLIST)){
+			userid = getRequestParamter(request, "coachid");
+			usertype = "1";
 		}
 
 		if (!CommonUtils.isEmptyString(userid) && !CommonUtils.isEmptyString(usertype)) {

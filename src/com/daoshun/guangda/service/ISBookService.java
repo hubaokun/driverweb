@@ -61,7 +61,7 @@ public interface ISBookService {
 	 * 原接口上添加返回教练订单总数
 	 * @return
 	 */
-	public abstract List<CuserInfo> getNearByCoach2(String pointcenter, String radius, String condition1, String condition2, String condition3, String condition4, String condition5, String condition6,
+	public abstract List<CuserInfo> getNearByCoach2(String cityid,String pointcenter, String radius, String condition1, String condition2, String condition3, String condition4, String condition5, String condition6,
 			String condition8, String condition9, String condition10, String condition11);
 
 	/**

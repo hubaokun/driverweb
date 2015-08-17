@@ -417,7 +417,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		return coachlist;
 	}
 	
-	public List<CuserInfo> getNearByCoach2(String pointcenter, String radius, String condition1, String condition2, String condition3, String condition4, String condition5, String condition6,
+	public List<CuserInfo> getNearByCoach2(String cityid,String pointcenter, String radius, String condition1, String condition2, String condition3, String condition4, String condition5, String condition6,
 			String condition8, String condition9, String condition10, String condition11) {
 		List<CuserInfo> coachlist = new ArrayList<CuserInfo>();
 		// 取得中心点经纬度
@@ -452,7 +452,10 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			hqlCoach.append("select getTeachAddress(u.coachid) as address,getCoachOrderCount(u.coachid) as drive_schoolid, u.*  from t_user_coach u where coachid in "+
 							cs.toString()+" and state = 2 and id_cardexptime > curdate() and coach_cardexptime > curdate() "
 					+ " and drive_cardexptime > curdate() and car_cardexptime > curdate() and money >= gmoney and isquit = 0");
-
+			
+			if (!CommonUtils.isEmptyString(cityid)) {
+				hqlCoach.append(" and cityid = " + cityid);
+			}
 			// 真实姓名和教练所属驾校
 			if (!CommonUtils.isEmptyString(condition1)) {
 				//如果是手机号码
@@ -812,7 +815,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			int subjectid = CommonUtils.parseInt(condition6, 0);
 			Calendar c = Calendar.getInstance();
 			cuserhql.append(" and  coursestate = 1");
-
+			//cuserhql.append(" and  drive_schoolid=1");
 			//cuserhql.append(" and getcoachstate(u.coachid," + 10 + ",'" + CommonUtils.getTimeFormat(c.getTime(), "yyyy-MM-dd") + "'," + 5 + "," + 23 + "," + subjectid + ") = 1");
 		}
 
@@ -1552,10 +1555,23 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				}else if(String.valueOf(PayType.COUPON).equals(paytype)){
 					delmoney= array.getInt("delmoney");
 					recordid= array.getString("recordid");
+					boolean recordFlag=false;
+					String[] recordidArray = recordid.split(",");
+					if(recordidArray.length>1){
+						recordFlag=true;//一次性传入多张券
+					}
+					
+					for (int recoridn = 0; recoridn < recordidArray.length; recoridn++) {
+						int cid = CommonUtils.parseInt(recordidArray[recoridn], 0);
+						CouponRecord record = dataDao.getObjectById(CouponRecord.class, cid);//该券已经被使用过或者不存在
+						if(record==null || record.getState()==1 ){
+							recordFlag=true;
+						}
+					}
 					//1.早起版本券的id尾巴上多了一个逗号,2.券的张数跟课时数不匹配,3.传了券id,但没传入delmoney的值
 					if((recordid.lastIndexOf(',')==recordid.length()-1)||
 							recordid.split(",").length>times.length()||
-							(recordid.length()>0&& delmoney<=0))
+							(recordid.length()>0&& delmoney<=0) || recordFlag)
 					{
 						//版本需要更新
 						result.put("failtimes", -1);
@@ -1566,7 +1582,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						return result;
 					}
 
-				}else if(String.valueOf(PayType.COIN).equals(paytype)){
+				}else if(String.valueOf(PayType.COIN).equals(paytype)){//小巴币支付
 					delmoney= array.getInt("delmoney");
 				}
 			/*	System.out.println("##############################################");
@@ -1921,7 +1937,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						
 						
 						// 小巴券，判断，如果 2 
-						if(2==orderList.get(m).mOrderInfo.getPaytype()){
+						if(PayType.COUPON==orderList.get(m).mOrderInfo.getPaytype()){
 							
 							total = total.subtract(new BigDecimal(orderList.get(m).mOrderInfo.getDelmoney()));// 减去小巴券中抵掉的金额
 								if (orderList.get(m).mOrderInfo.getCouponrecordid() != null && orderList.get(m).mOrderInfo.getCouponrecordid().length() > 0) {
@@ -1929,8 +1945,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 									for (int i = 0; i < recordidArray.length; i++) {
 										int cid = CommonUtils.parseInt(recordidArray[i], 0);
 										CouponRecord record = dataDao.getObjectById(CouponRecord.class, cid);
-										if (record != null) {
-											record.setState(1);// 学员的状态修改为已经使用
+										if (record != null && record.getState()==0) {//未被使用
+											record.setState(1);// 小巴券的状态修改为已经使用
 											record.setUsetime(new Date());//使用时间
 											record.setOrderid(orderList.get(m).mOrderInfo.getOrderid());//订单号
 											dataDao.updateObject(record);
@@ -1938,6 +1954,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 											} else {// 钱
 												// 只需要修改为已经使用,
 											}
+										}else{
+											//已被使用
 										}
 									}
 								}
@@ -1947,7 +1965,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 
 						if (student != null) {
 							
-							//  判断 1 或者 3  1 扣余额  2 扣小巴币 如果是小巴币，直接扣除  ，如果是余额，
+							//  判断 1 或者 3  1 扣余额
 							if(PayType.MONEY==orderList.get(m).mOrderInfo.getPaytype()){
 								if(student.getMoney().subtract(total).doubleValue()<0){
 									result.put("code", 4);

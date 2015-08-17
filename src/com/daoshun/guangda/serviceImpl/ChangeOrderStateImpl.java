@@ -35,11 +35,12 @@ import com.daoshun.guangda.service.IChangeOrderState;
 @Component
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrderState {
-
+	
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-	@Scheduled(cron = "0 0 0 * * ?")
+	@Scheduled(cron = "0 0 1 * * ?")
 	@Override
 	public void changeOrderState() {
+		System.out.println("##################定时任务执行开始#################");
 		Calendar now = Calendar.getInstance();
 		now.add(Calendar.SECOND, -1);
 
@@ -188,5 +189,9 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 				dataDao.deleteObject(orderNotiRecord);
 			}
 		}
+		
+		//重置教练开课状态
+		dataDao.callUpdatecoursestate();
+		System.out.println("##################定时任务执行结束#################");
 	}
 }

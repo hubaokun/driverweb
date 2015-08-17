@@ -480,6 +480,9 @@ public class SuserServlet extends BaseServlet {
 		String studentid = getRequestParamter(request, "studentid");
 		String realname = getRequestParamter(request, "realname");
 		String phone = getRequestParamter(request, "phone");
+		String provinceid = getRequestParamter(request, "provinceid");
+		String cityid = getRequestParamter(request, "cityid");
+		String areaid = getRequestParamter(request, "areaid");
 		CommonUtils.validateEmpty(studentid);
 		SuserInfo user = suserService.getUserById(studentid);
 		if (user == null) {
@@ -492,6 +495,15 @@ public class SuserServlet extends BaseServlet {
 			}
 			if (realname != null) {
 				user.setRealname(realname);
+			}
+			if (provinceid != null) {
+				user.setProvinceid(provinceid);
+			}
+			if (cityid != null) {
+				user.setCityid(cityid);
+			}
+			if (areaid != null) {
+				user.setAreaid(areaid);
 			}
 			suserService.updateUserInfo(user);
 		}

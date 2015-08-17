@@ -298,8 +298,8 @@ public class SbookServlet extends BaseServlet {
 		String condition10 = getRequestParamter(request, "condition10");// 车型 0.表示不限
 		String condition11 = getRequestParamter(request, "condition11");// 准教车型
 		String studentid = getRequestParamter(request, "studentid");// 准教车型
-		
-		List<CuserInfo> coachlist = sbookService.getNearByCoach2(pointcenter, radius, condition1, condition2, condition3, condition4, condition5, condition6, condition8, condition9, condition10,
+		String cityid = getRequestParamter(request, "cityid");// 准教车型
+		List<CuserInfo> coachlist = sbookService.getNearByCoach2(cityid,pointcenter, radius, condition1, condition2, condition3, condition4, condition5, condition6, condition8, condition9, condition10,
 				condition11);
 		
 			if(studentid==null || !"18".equals(studentid)){
@@ -413,7 +413,8 @@ public class SbookServlet extends BaseServlet {
 	}
 
 	/**
-	 * 获取可以使用的小巴券列表 条件:未过期，未使用过,且满足平台、驾校、教练规则
+	 * 获取可以使用的小巴币，小巴券，余额
+	 * --获取可以使用的小巴券列表 条件:未过期，未使用过,且满足平台、驾校、教练规则
 	 * 
 	 * @param request
 	 * @throws ErrException
@@ -437,7 +438,8 @@ public class SbookServlet extends BaseServlet {
 				canUseMaxCount = info.getCan_use_coupon_count();
 		}
 		int num=suserService.getCanUseCoinnum(coachid,studentid);//获取可用小巴币
-		
+		int numForSchool=suserService.getCanUseCoinnumForDriveSchool(coachid,studentid);//获取可用小巴币
+		num+=numForSchool;
 		SuserInfo suser=suserService.getUserById(studentid);//获取余额
 		if(suser==null){
 				resultMap.put(Constant.CODE, 2);
@@ -471,8 +473,11 @@ public class SbookServlet extends BaseServlet {
 		String coachid = getRequestParamter(request, "coachid");// 预订的教练ID
 		CommonUtils.validateEmpty(studentid);
 		CommonUtils.validateEmpty(coachid);
-		int coinnum = suserService.getCanUseCoinnum(coachid,studentid);
-		resultMap.put("coinnum", coinnum);
+		//对某个教练能使用的小巴币
+		int coinnumForCoach = suserService.getCanUseCoinnum(coachid,studentid);
+		//对某个驾校下所有教练能使用的小巴币
+		int coinnumForSchool = suserService.getCanUseCoinnumForDriveSchool(coachid,studentid);
+		resultMap.put("coinnum", coinnumForCoach+coinnumForSchool);
 	}
 
 }
