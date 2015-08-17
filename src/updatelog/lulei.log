@@ -52,3 +52,16 @@ http://localhost:8080/xb/sbook?action=GETNEARBYCOACH&radius=1000&condition1=1395
 学员评价完订单后，就开始结算，并且把冻结的金额取消
 
 getWalletInfo 学员端 获取余额接口
+
+
+getCanUseCouponList 学员获取可以使用的小巴币，小巴券，余额
+
+
+SettlementOrder 结算
+
+getCanUseCoinnumForDriveSchool 查询学员针对某个驾校的小巴币数量
+
+
+
+
+
