@@ -414,7 +414,7 @@ public class CuserServlet extends BaseServlet {
 				cuser.setLocationname(locationname);
 			}
 			resultMap.put("UserInfo", cuser);
-			int rflag=recommendService.checkRecommendinfo(String.valueOf(cuser.getCoachid()));
+			int rflag=recommendService.checkRecommendinfo(String.valueOf(cuser.getCoachid()),1);
 			if(rflag==0)
 				//返回0代表已经存在记录了
 				resultMap.put("isInvited", 0);

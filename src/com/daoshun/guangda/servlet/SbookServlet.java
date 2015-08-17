@@ -27,6 +27,7 @@ public class SbookServlet extends BaseServlet {
 	private ICUserService cuserService;
 	private ISUserService suserService;
 	private IDriveSchoolService driveSchoolService;
+	private ICscheduleService cscheduleService;
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -36,6 +37,8 @@ public class SbookServlet extends BaseServlet {
 		cuserService = (ICUserService) applicationContext.getBean("cuserService");
 		suserService = (ISUserService) applicationContext.getBean("suserService");
 		driveSchoolService = (IDriveSchoolService) applicationContext.getBean("driveSchoolService");
+		suserService = (ISUserService) applicationContext.getBean("suserService");
+		cscheduleService = (ICscheduleService) applicationContext.getBean("cscheduleService");
 	}
 
 	@Override
@@ -371,6 +374,8 @@ public class SbookServlet extends BaseServlet {
 			CommonUtils.validateEmpty(date);
 			//CommonUtils.validateEmpty(paytype);
 			resultMap.putAll(sbookService.bookCoach2(coachid, studentid, date));
+			//根据教练当前开课状态来设置教练表中coursestate
+			cscheduleService.getCoachStateByFunction(coachid, 5, 5, 23, 0);
 		} catch (Exception e) {
 			resultMap.put("code", 2);
 			resultMap.put("message", "预约失败");

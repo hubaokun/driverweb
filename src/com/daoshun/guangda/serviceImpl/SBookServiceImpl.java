@@ -1879,8 +1879,6 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 											} else {// 钱
 												// 只需要修改为已经使用,
 											}
-										}else{
-											//已被使用
 										}
 									}
 								}

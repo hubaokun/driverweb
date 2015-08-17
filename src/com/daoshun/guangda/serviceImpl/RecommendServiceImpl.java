@@ -24,6 +24,7 @@ import com.daoshun.guangda.pojo.BalanceCoachInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.OrderInfo;
 import com.daoshun.guangda.pojo.RecommendInfo;
+import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.pojo.SystemSetInfo;
 import com.daoshun.guangda.service.IRecommendService;
 /**
@@ -37,17 +38,13 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 
 	@Override
 	//获取教练推荐人员列表
-	public QueryResult<RecommendInfo> getRecommendList(String coachid,int page) {
+	public QueryResult<RecommendInfo> getRecommendList(String coachid,int page,int type) {
 	    StringBuilder querystring=new StringBuilder();
-	    querystring.append("from RecommendInfo where coachid=:coachid order by coachid");
-	    String[] params={"coachid"};
-		List<RecommendInfo> listr=(List<RecommendInfo>)dataDao.pageQueryViaParam(querystring.toString(), Constant.USERLIST_SIZE, page, params,CommonUtils.parseInt(coachid, 0));
-		/*for(RecommendInfo temp:listr)
-		{
-			System.out.println(temp.getInvitedcoachid());
-		}*/
+	    querystring.append("from RecommendInfo where coachid=:coachid and type=:type order by coachid");
+	    String[] params={"coachid","type"};
+		List<RecommendInfo> listr=(List<RecommendInfo>)dataDao.pageQueryViaParam(querystring.toString(), Constant.USERLIST_SIZE, page, params,CommonUtils.parseInt(coachid, 0),type);
 		String querys="select count(*)"+querystring.toString();
-		long total=(Long) dataDao.getFirstObjectViaParam(querys, params, CommonUtils.parseInt(coachid, 0));
+		long total=(Long) dataDao.getFirstObjectViaParam(querys, params, CommonUtils.parseInt(coachid, 0),type);
 		if(listr!=null)
 		    return new QueryResult<RecommendInfo>(listr,total);
 		else
@@ -55,10 +52,10 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 	}
    //获取所得奖励总额
 	@Override
-	public BigDecimal getReward(String coachid) {
-		String querystring="select sum(reward) from RecommendInfo where coachid=:coachid";
-	    String[] params={"coachid"};
-	    BigDecimal sumreward=(BigDecimal)dataDao.getFirstObjectViaParam(querystring, params, CommonUtils.parseInt(coachid, 0));
+	public BigDecimal getReward(String coachid,int type) {
+		String querystring="select sum(reward) from RecommendInfo where coachid=:coachid and type=:type";
+	    String[] params={"coachid","type"};
+	    BigDecimal sumreward=(BigDecimal)dataDao.getFirstObjectViaParam(querystring, params, CommonUtils.parseInt(coachid, 0),type);
 		return sumreward;
 	}
    
@@ -91,34 +88,34 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 	
     //新增推荐人员信息
 	@Override
-	public int addRecommendInfo(String inviteid, String invitedcoachid) {	
+	public int addRecommendInfo(String inviteid, String invitedpeopleid,int type) {	
+	    if(type==1)
+	    {
 	        String querystring="from CuserInfo where invitecode=:inviteid";
 	        String querystring1="from CuserInfo where coachid=:coachid";
 	        String[] params={"inviteid"};
 	        String[] params1={"coachid"};
 			CuserInfo cquery=(CuserInfo)dataDao.getFirstObjectViaParam(querystring, params,inviteid);
-			CuserInfo invitequer=(CuserInfo)dataDao.getFirstObjectViaParam(querystring1, params1,CommonUtils.parseInt(invitedcoachid,0));
+			CuserInfo invitequer=(CuserInfo)dataDao.getFirstObjectViaParam(querystring1, params1,CommonUtils.parseInt(invitedpeopleid,0));
 			if(cquery!=null)
 			{
-				BigDecimal c_reward = new BigDecimal(0);
 				int coachid=cquery.getCoachid();
-				int isExist=checkRecommendinfo(invitedcoachid);
+				int isExist=checkRecommendinfo(invitedpeopleid,type);
 				if(isExist==1)
 				{
 					RecommendInfo rectemp=new RecommendInfo();
 					rectemp.setCoachid(coachid);
-					rectemp.setInvitedcoachid(Integer.parseInt(invitedcoachid));
+					rectemp.setInvitedcoachid(Integer.parseInt(invitedpeopleid));
 					rectemp.setType(0);
 					rectemp.setInviteid(inviteid);
 					rectemp.setAddtime(new Date());
-					rectemp.setReward(c_reward);
+					rectemp.setReward(new BigDecimal(0));
 					rectemp.setIschecked(invitequer.getState()==2?1:0);
-					rectemp.setIsorder(checkOrderState(invitedcoachid));
+					rectemp.setIsorder(checkOrderState(invitedpeopleid));
 					rectemp.setCflag(invitequer.getState()==2?1:0);
-					rectemp.setOflag(checkOrderState(invitedcoachid));
-				//	rectemp.setInvitecount(getInviteCount(coachid));
-				//	rectemp.setOrdercount(getOrderCount(coachid));
+					rectemp.setOflag(checkOrderState(invitedpeopleid));
 					rectemp.setCoachname(cquery.getRealname());
+					rectemp.setType(type);
 					rectemp.setCoachtelphone(cquery.getTelphone());
 					rectemp.setInvitedpeoplename(invitequer.getRealname());
 					rectemp.setInvitedpeopletelphone(invitequer.getTelphone());
@@ -128,14 +125,58 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 				else
 					return 0;
 			}
-			else
-				return 0;
+				
+	    }
+	    else if(type==2)
+	    {
+	    	String querystring="from CuserInfo where invitecode=:inviteid";
+	        String querystring1="from SuserInfo where studentid=:studentid";
+	        String[] params={"inviteid"};
+	        String[] params1={"studentid"};
+	        CuserInfo cquery=(CuserInfo)dataDao.getFirstObjectViaParam(querystring, params,inviteid);
+	        SuserInfo invitequer=(SuserInfo)dataDao.getFirstObjectViaParam(querystring1, params1,CommonUtils.parseInt(invitedpeopleid,0));
+	        if(cquery!=null)
+			{
+				int coachid=cquery.getCoachid();
+				int isExist=checkRecommendinfo(invitedpeopleid,type);
+				if(isExist==1)
+				{
+					RecommendInfo rectemp=new RecommendInfo();
+					rectemp.setCoachid(coachid);
+					rectemp.setInvitedstudentid(Integer.parseInt(invitedpeopleid));
+					rectemp.setType(0);
+					rectemp.setInviteid(inviteid);
+					rectemp.setAddtime(new Date());
+					rectemp.setReward(new BigDecimal(0));
+					rectemp.setCoachname(cquery.getRealname());
+					rectemp.setType(type);
+					rectemp.setCoachtelphone(cquery.getTelphone());
+					rectemp.setInvitedpeoplename(invitequer.getRealname());
+					rectemp.setInvitedpeopletelphone(invitequer.getPhone());
+					dataDao.addObject(rectemp);
+					return 1;
+				}
+				else
+					return 0;
+			}
+	    }
+	    return 0;
 	}
 	@Override
-	public int checkRecommendinfo(String invitedcoachid) {
-		String querystring="from RecommendInfo where invitedcoachid=:invitedcoachid";
-		String[] params={"invitedcoachid"};
-		List querylist=(List)dataDao.getObjectsViaParam(querystring, params,CommonUtils.parseInt(invitedcoachid,0));
+	public int checkRecommendinfo(String invitedcoachid,int type) {
+		StringBuffer querystring=new StringBuffer();
+		String[] params={""};
+		if(type==1 || type==3)
+		{
+			querystring.append("from RecommendInfo where invitedcoachid=:invitedcoachid");
+			params[0]="invitedcoachid";
+		}
+		else
+		{
+			querystring.append("from RecommendInfo where invitedstudentid=:invitedstudentid");
+			params[0]="invitedstudentid";
+		}
+		List querylist=(List)dataDao.getObjectsViaParam(querystring.toString(), params,CommonUtils.parseInt(invitedcoachid,0));
 		if(querylist.size()!=0)
 		{
 			//返回0代表已经存在记录了
@@ -146,42 +187,47 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 			return 1;
 	}
 	@Override
-	public int ifhasmoreRecommendinfo(String coachid, int page) {
+	public int ifhasmoreRecommendinfo(String coachid, int page,int type) {
 		StringBuilder querystring=new StringBuilder();
-	    querystring.append("from RecommendInfo where coachid=:coachid order by coachid");
-	    String[] params={"coachid"};
-		List<RecommendInfo> listr=(List<RecommendInfo>)dataDao.pageQueryViaParam(querystring.toString(), Constant.USERLIST_SIZE, page+1, params,CommonUtils.parseInt(coachid, 0));
+	    querystring.append("from RecommendInfo where coachid=:coachid and type=:type order by coachid");
+	    String[] params={"coachid","type"};
+		List<RecommendInfo> listr=(List<RecommendInfo>)dataDao.pageQueryViaParam(querystring.toString(), Constant.USERLIST_SIZE, page+1, params,CommonUtils.parseInt(coachid, 0),type);
 		if(listr.size()==0)
 		{
 			return 0;
 		}
 		else
 			return 1;
-		
 	}
 	@SuppressWarnings("unchecked")
 	@Override
-	public QueryResult<RecommendInfo> getRecommendListForServer(int page, int pagesize) {
-		String queryString="from RecommendInfo group by coachid order by coachid";
-		String[] params={""};
-		List<RecommendInfo> listr=(List<RecommendInfo>)dataDao.pageQueryViaParam(queryString.toString(), pagesize, page, params);
+	public QueryResult<RecommendInfo> getRecommendListForServer(int page, int pagesize,int type) {
+		StringBuffer queryString=new StringBuffer();
+		queryString.append("from RecommendInfo where type=:type group by coachid order by coachid");
+		String[] params={"type"};	
+		
+		List<RecommendInfo> listr=(List<RecommendInfo>)dataDao.pageQueryViaParam(queryString.toString(), pagesize, page, params,type);
 		for(RecommendInfo temp:listr)
 		{
-			temp.setInvitecount(getRecommendCount(String.valueOf(temp.getCoachid())));
-			temp.setCheckmancount(getCheckManCount(temp.getCoachid()));
-			temp.setOrdercount(getOrderCount(temp.getCoachid()));
-			temp.setTotalreward(getReward(String.valueOf(temp.getCoachid())));
+			temp.setInvitecount(getRecommendCount(String.valueOf(temp.getCoachid()),type));
+			if(type==1)
+			{
+				temp.setCheckmancount(getCheckManCount(temp.getCoachid(),type));
+				temp.setOrdercount(getOrderCount(temp.getCoachid()));
+			}
+			temp.setTotalreward(getReward(String.valueOf(temp.getCoachid()),type));
 		}
 		String querys="SELECT count(*)"+queryString;
- 		List countlist=(List)dataDao.getObjectsViaParam(querys, params);
+ 		List countlist=(List)dataDao.getObjectsViaParam(querys, params,type);
  		long total=	countlist.size();
         return new  QueryResult<RecommendInfo>(listr,total);
 	}
 	@Override
-	public int getRecommendCount(String coachid) {
-	    String queryString="select count(*) from RecommendInfo where coachid=:coachid";
-	    String[] params={"coachid"};
-	    long total=(Long) dataDao.getFirstObjectViaParam(queryString, params, CommonUtils.parseInt(coachid, 0));	    
+	public int getRecommendCount(String coachid,int type) {
+	    StringBuffer queryString=new StringBuffer();
+	    queryString.append("select count(*) from RecommendInfo where coachid=:coachid and type=:type");
+	    String[] params={"coachid","type"};
+	    long total=(Long) dataDao.getFirstObjectViaParam(queryString.toString(), params, CommonUtils.parseInt(coachid, 0),type);	    
 		return (int)total;
 	}
 	@Override
@@ -224,12 +270,12 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 	}
 	@SuppressWarnings("unchecked")
 	@Override
-	public QueryResult<RecommendInfo> getInvitedDetailsForServer(String coachid,int page,int pagesize) {
-          String querystring="from RecommendInfo where coachid=:coachid";
-          String[] params={"coachid"};
-          List<RecommendInfo> templist= (List<RecommendInfo>)dataDao.pageQueryViaParam(querystring,pagesize, page, params, CommonUtils.parseInt(coachid, 0));
+	public QueryResult<RecommendInfo> getInvitedDetailsForServer(String coachid,int page,int pagesize,int type) {
+          String querystring="from RecommendInfo where coachid=:coachid and type=:type";
+          String[] params={"coachid","type"};
+          List<RecommendInfo> templist= (List<RecommendInfo>)dataDao.pageQueryViaParam(querystring,pagesize, page, params, CommonUtils.parseInt(coachid, 0),type);
           String querys="select count(*)"+querystring;
-  		  long total=(Long) dataDao.getFirstObjectViaParam(querys, params, CommonUtils.parseInt(coachid, 0));
+  		  long total=(Long) dataDao.getFirstObjectViaParam(querys, params, CommonUtils.parseInt(coachid, 0),type);
          return new  QueryResult<RecommendInfo>(templist,total);
 	}
 	@Override
@@ -251,13 +297,6 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 		else
 			 return 1;
 	}
-	@Override
-	public int getInviteCount(Integer coachid) {
-		String queryString="select count(*) from RecommendInfo where coachid =:coachid";
-		String[] params={"coachid"};
-		long total=(Long)dataDao.getFirstObjectViaParam(queryString, params, coachid);
-		return (int)total;
-	}
 	@SuppressWarnings("unchecked")
 	@Override
 	public int getOrderCount(Integer coachid) {
@@ -274,11 +313,11 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 		return result;
 	}
 	@Override
-	public int getCheckManCount(Integer coachid) {
-		String queryString="from RecommendInfo where coachid =:coachid";
-		String[] params={"coachid"};
+	public int getCheckManCount(Integer coachid,int type) {
+		String queryString="from RecommendInfo where coachid =:coachid and type=:type";
+		String[] params={"coachid","type"};
 		int result=0;
-		List<RecommendInfo> tempRecommendInfo=(List<RecommendInfo>) dataDao.getObjectsViaParam(queryString, params, coachid);
+		List<RecommendInfo> tempRecommendInfo=(List<RecommendInfo>) dataDao.getObjectsViaParam(queryString, params, coachid,type);
 		for(RecommendInfo temp:tempRecommendInfo)
 		{
 			if(checkRegisterState(String.valueOf(temp.getInvitedcoachid()))==1)
@@ -371,12 +410,14 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 		RecommendInfo tempRecommendInfo=(RecommendInfo)dataDao.getFirstObjectViaParam(querystring1, params1, CommonUtils.parseInt(coachid, 0));
 		return tempRecommendInfo;
 	}
+	@SuppressWarnings("unchecked")
 	@Override
-	public QueryResult<RecommendInfo> getRecommonedInfoByKeyWord(String searchname, String searchphone) 
+	public QueryResult<RecommendInfo> getRecommonedInfoByKeyWord(String searchname, String searchphone,int type) 
 	{
-		StringBuffer queryString=new StringBuffer("from RecommendInfo where 1=1"); 
-		String[] params=new String[2];
+		StringBuffer queryString=new StringBuffer("from RecommendInfo where type=:type "); 
+		String[] params=new String[3];
 		int count=0;
+		params[count++]="type";
 		if(!searchname.equals(""))
 		{
 			queryString.append(" and coachname like :coachname ");
@@ -385,10 +426,10 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 		}
 		if(!searchphone.equals(""))
 		{
-			queryString.append("and coachtelphone like :coachtelphone ");
+			queryString.append(" and coachtelphone like :coachtelphone ");
 			params[count++]="coachtelphone";
 		}
-		queryString.append("group by coachid order by coachid");
+		queryString.append(" group by coachid order by coachid");
 		
 		
 	
@@ -397,30 +438,33 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 		List countlist=new ArrayList();
 	    if(!searchname.equals("") && searchphone.equals(""))
 	    {
-			listr=(List<RecommendInfo>)dataDao.getObjectsViaParam(queryString.toString(), params,"%"+searchname+"%");
-	 		countlist=(List)dataDao.getObjectsViaParam(querys, params,"%"+searchname+"%");
+			listr=(List<RecommendInfo>)dataDao.getObjectsViaParam(queryString.toString(), params,type,"%"+searchname+"%");
+	 		countlist=(List)dataDao.getObjectsViaParam(querys, params,type,"%"+searchname+"%");
 	    }
 	    else if(searchname.equals("") && !searchphone.equals(""))
 	    {
-	    	listr=(List<RecommendInfo>)dataDao.getObjectsViaParam(queryString.toString(), params,"%"+searchphone+"%");
-	 		countlist=(List)dataDao.getObjectsViaParam(querys, params,"%"+searchphone+"%");
+	    	listr=(List<RecommendInfo>)dataDao.getObjectsViaParam(queryString.toString(), params,type,"%"+searchphone+"%");
+	 		countlist=(List)dataDao.getObjectsViaParam(querys, params,type,"%"+searchphone+"%");
 	    }
 	    else if(!searchname.equals("") && !searchphone.equals(""))
 	    {
-	    	listr=(List<RecommendInfo>)dataDao.getObjectsViaParam(queryString.toString(), params,"%"+searchname+"%","%"+searchphone+"%");
-	 		countlist=(List)dataDao.getObjectsViaParam(querys, params,"%"+searchname+"%","%"+searchphone+"%");
+	    	listr=(List<RecommendInfo>)dataDao.getObjectsViaParam(queryString.toString(), params,type,"%"+searchname+"%","%"+searchphone+"%");
+	 		countlist=(List)dataDao.getObjectsViaParam(querys, params,type,"%"+searchname+"%","%"+searchphone+"%");
 	    }
 	    else
 	    {
-	    	listr=(List<RecommendInfo>)dataDao.getObjectsViaParam(queryString.toString(), params);
-	    	countlist=(List)dataDao.getObjectsViaParam(querys, params);
+	    	listr=(List<RecommendInfo>)dataDao.getObjectsViaParam(queryString.toString(), params,type);
+	    	countlist=(List)dataDao.getObjectsViaParam(querys, params,type);
 	    }
  		for(RecommendInfo temp:listr)
 		{
-			temp.setInvitecount(getRecommendCount(String.valueOf(temp.getCoachid())));
-			temp.setCheckmancount(getCheckManCount(temp.getCoachid()));
+			temp.setInvitecount(getRecommendCount(String.valueOf(temp.getCoachid()),type));
+			if(type==1)
+			{
+			temp.setCheckmancount(getCheckManCount(temp.getCoachid(),type));
 			temp.setOrdercount(getOrderCount(temp.getCoachid()));
-			temp.setTotalreward(getReward(String.valueOf(temp.getCoachid())));
+			}
+			temp.setTotalreward(getReward(String.valueOf(temp.getCoachid()),type));
 		}
  		long total=	countlist.size();
         return new  QueryResult<RecommendInfo>(listr,total);
@@ -438,20 +482,34 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 	}
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override
-	public void deleteRecommonedInfo(String coachid, String invitedcoachid) {
-		String queryString="from RecommendInfo where coachid=:coachid and invitedcoachid=:invitedcoachid";
-		String[] params={"coachid","invitedcoachid"};
-		RecommendInfo tempRecommendInfo=(RecommendInfo)dataDao.getFirstObjectViaParam(queryString, params,CommonUtils.parseInt(coachid, 0),CommonUtils.parseInt(invitedcoachid, 0));
+	public void deleteRecommonedInfo(String coachid, String invitedid,int type) {
+		StringBuffer queryString=new StringBuffer();
+		queryString.append("from RecommendInfo where coachid=:coachid and type=:type");
+		String[] params=new String[4];
+		int count =0;
+		params[count++]="coachid";
+		params[count++]="type";
+		if(type==1)
+		{
+			queryString.append(" and invitedcoachid=:invitedcoachid");
+			params[count++]="invitedcoachid";
+		}
+		else if(type==2)
+		{
+			queryString.append(" and invitedstudentid=:invitedstudentid");
+			params[count++]="invitedstudentid";
+		}
+		RecommendInfo tempRecommendInfo=(RecommendInfo)dataDao.getFirstObjectViaParam(queryString.toString(), params,CommonUtils.parseInt(coachid, 0),type,CommonUtils.parseInt(invitedid, 0));
 		dataDao.deleteObject(tempRecommendInfo);
 	}
 	@Override
-	public QueryResult<InviteReport> getRecommenReport(Integer pageSize,Integer pageIndex) {
+	public QueryResult<InviteReport> getRecommenReport(Integer pageSize,Integer pageIndex,int type) {
 	    StringBuffer querysb=new StringBuffer();
-	    querysb.append("select DATE(addtime) from RecommendInfo group by DATE(addtime) order by addtime desc");
-	    String querystring="select count(*) from RecommendInfo group by DATE(addtime) order by addtime desc";
-	    String[] params={""};
-	    List dateRecommendInfo=(List)dataDao.pageQueryViaParam(querysb.toString(), pageSize, pageIndex, params);
-	    List<RecommendInfo> tempRecommendInfo=(List<RecommendInfo>) dataDao.getObjectsViaParam(querystring, params);
+	    querysb.append("select DATE(addtime) from RecommendInfo where type=:type group by DATE(addtime) order by addtime desc");
+	    String querystring="select count(*) from RecommendInfo where type=:type group by DATE(addtime) order by addtime desc";
+	    String[] params={"type"};
+	    List dateRecommendInfo=(List)dataDao.pageQueryViaParam(querysb.toString(), pageSize, pageIndex, params,type);
+	    List<RecommendInfo> tempRecommendInfo=(List<RecommendInfo>) dataDao.getObjectsViaParam(querystring, params,type);
 	    long total=tempRecommendInfo.size();
 	    List<InviteReport> resultInviteReport=new ArrayList<InviteReport>();
 	    for(int i=0;i<dateRecommendInfo.size();i++)
@@ -459,19 +517,19 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 	    	InviteReport temInviteReport=new InviteReport();
 	    	temInviteReport.setAddtime((Date) dateRecommendInfo.get(i));
 	    	Date tempdate=(Date) dateRecommendInfo.get(i);
-	    	temInviteReport.setInviteCount(getInviteCount(tempdate));
+	    	temInviteReport.setInviteCount(getInviteCount(tempdate,type));
 	    	temInviteReport.setCheckPassCount(getCheckPassCount(tempdate));
 	    	temInviteReport.setOrderPassCount(getOrderPassCount(tempdate));
-	    	temInviteReport.setRewardCount(getRewardCount(tempdate));
+	    	temInviteReport.setRewardCount(getRewardCount(tempdate,type));
 	    	resultInviteReport.add(temInviteReport);
         }
 		return new QueryResult<InviteReport>(resultInviteReport,total);
 	}
 	@Override
-	public int getInviteCount(Date addtime) {
-		String querystring="select count(*) from RecommendInfo where Date(addtime)=:addtime";
-		String[] params={"addtime"};
-		long result=(Long)dataDao.getFirstObjectViaParam(querystring, params,addtime);
+	public int getInviteCount(Date addtime,int type) {
+		String querystring="select count(*) from RecommendInfo where Date(addtime)=:addtime and type=:type";
+		String[] params={"addtime","type"};
+		long result=(Long)dataDao.getFirstObjectViaParam(querystring, params,addtime,type);
 		return (int) result;
 	}
 	@Override
@@ -489,10 +547,10 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 		return (int) result;
 	}
 	@Override
-	public BigDecimal getRewardCount(Date addtime) {
-		String querystring="select sum(reward) from RecommendInfo where Date(addtime)=:addtime";
-		String[] params={"addtime"};
-		BigDecimal result=(BigDecimal)dataDao.getFirstObjectViaParam(querystring, params,addtime);
+	public BigDecimal getRewardCount(Date addtime,int type) {
+		String querystring="select sum(reward) from RecommendInfo where Date(addtime)=:addtime and type=:type";
+		String[] params={"addtime","type"};
+		BigDecimal result=(BigDecimal)dataDao.getFirstObjectViaParam(querystring, params,addtime,type);
 		return result;
 
 	}
@@ -571,13 +629,13 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 		return result;
 	}
 	@Override
-	public QueryResult<RecommendInfo> getRecommoneddetailInfoByKeyWord(String searchname, String searchphone,
-			String coachid) {
+	public QueryResult<RecommendInfo> getRecommoneddetailInfoByKeyWord(String searchname, String searchphone,String coachid,int type) {
 		 StringBuffer querystring=new StringBuffer();
-		 querystring.append("from RecommendInfo where coachid=:coachid");
-		 String[] params=new String[3];
+		 querystring.append("from RecommendInfo where coachid=:coachid and type=:type");
+		 String[] params=new String[4];
 		 int count=0;
 		 params[count++]="coachid";
+		 params[count++]="type";
 			if(!searchname.equals(""))
 			{
 				querystring.append(" and invitedpeoplename like :invitedpeoplename ");
@@ -594,23 +652,23 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 		 List<RecommendInfo> templist=new ArrayList<RecommendInfo>();
 		    if(!searchname.equals("") && searchphone.equals(""))
 		    {
-		    	templist=(List<RecommendInfo>)dataDao.getObjectsViaParam(querystring.toString(), params,CommonUtils.parseInt(coachid, 0),"%"+searchname+"%");
-		 		countlist=(List)dataDao.getObjectsViaParam(querys, params,CommonUtils.parseInt(coachid, 0),"%"+searchname+"%");
+		    	templist=(List<RecommendInfo>)dataDao.getObjectsViaParam(querystring.toString(), params,CommonUtils.parseInt(coachid, 0),type,"%"+searchname+"%");
+		 		countlist=(List)dataDao.getObjectsViaParam(querys, params,CommonUtils.parseInt(coachid, 0),type,"%"+searchname+"%");
 		    }
 		    else if(searchname.equals("") && !searchphone.equals(""))
 		    {
-		    	templist=(List<RecommendInfo>)dataDao.getObjectsViaParam(querystring.toString(), params,CommonUtils.parseInt(coachid, 0),"%"+searchphone+"%");
-		 		countlist=(List)dataDao.getObjectsViaParam(querys, params,CommonUtils.parseInt(coachid, 0),"%"+searchphone+"%");
+		    	templist=(List<RecommendInfo>)dataDao.getObjectsViaParam(querystring.toString(), params,CommonUtils.parseInt(coachid, 0),type,"%"+searchphone+"%");
+		 		countlist=(List)dataDao.getObjectsViaParam(querys, params,CommonUtils.parseInt(coachid, 0),type,"%"+searchphone+"%");
 		    }
 		    else if(!searchname.equals("") && !searchphone.equals(""))
 		    {
-		    	templist=(List<RecommendInfo>)dataDao.getObjectsViaParam(querystring.toString(), params,CommonUtils.parseInt(coachid, 0),"%"+searchname+"%","%"+searchphone+"%");
-		 		countlist=(List)dataDao.getObjectsViaParam(querys, params,CommonUtils.parseInt(coachid, 0),"%"+searchname+"%","%"+searchphone+"%");
+		    	templist=(List<RecommendInfo>)dataDao.getObjectsViaParam(querystring.toString(), params,CommonUtils.parseInt(coachid, 0),type,"%"+searchname+"%","%"+searchphone+"%");
+		 		countlist=(List)dataDao.getObjectsViaParam(querys, params,CommonUtils.parseInt(coachid, 0),type,"%"+searchname+"%","%"+searchphone+"%");
 		    }
 		    else
 		    {
-		    	templist=(List<RecommendInfo>)dataDao.getObjectsViaParam(querystring.toString(), params,CommonUtils.parseInt(coachid, 0));
-		    	countlist=(List)dataDao.getObjectsViaParam(querys, params,CommonUtils.parseInt(coachid, 0));
+		    	templist=(List<RecommendInfo>)dataDao.getObjectsViaParam(querystring.toString(), params,CommonUtils.parseInt(coachid, 0),type);
+		    	countlist=(List)dataDao.getObjectsViaParam(querys, params,CommonUtils.parseInt(coachid, 0),type);
 		    }
  		  long total=countlist.size();
         return new  QueryResult<RecommendInfo>(templist,total);

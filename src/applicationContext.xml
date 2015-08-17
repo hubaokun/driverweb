@@ -10,8 +10,7 @@
 	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
 	http://www.springframework.org/schema/task  
-	http://www.springframework.org/schema/task/spring-task-3.0.xsd
-	"
+	http://www.springframework.org/schema/task/spring-task-3.0.xsd"
 	xmlns:task="http://www.springframework.org/schema/task">
 	<!-- 使用 annotation -->
 	<context:annotation-config />
@@ -40,7 +39,7 @@
 				<!-- <property name="user" value="root" /> -->
 				<!-- <property name="driverUrl" value="jdbc:mysql://localhost:3306/db_guangda?useUnicode=true&amp;characterEncoding=UTF-8&amp;characterSetResults=UTF-8" 
 					/> -->
-			 <property name="driverUrl" value="jdbc:mysql://localhost:3306/d1?useUnicode=true&amp;characterEncoding=UTF-8&amp;characterSetResults=UTF-8" />
+			 <property name="driverUrl" value="jdbc:mysql://localhost:3306/driver?useUnicode=true&amp;characterEncoding=UTF-8&amp;characterSetResults=UTF-8" />
 			  
 				<property name="user" value="root" />
 				<property name="password" value="123456" />

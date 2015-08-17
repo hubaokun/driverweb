@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.QueryResult;
+import com.daoshun.guangda.pojo.CouponCoach;
 import com.daoshun.guangda.pojo.CouponInfo;
 import com.daoshun.guangda.pojo.CouponRecord;
 import com.daoshun.guangda.pojo.CuserInfo;
@@ -303,6 +304,93 @@ public class CouponServiceImpl extends BaseServiceImpl implements ICouponService
 		long count = Crlist.size();
 		//System.out.print(count);
 		QueryResult<CouponRecord> result = new QueryResult<CouponRecord>(CouponRecordlist, count);
+		return result;
+	}
+	
+	
+//获得教练小巴券兑换记录
+	@SuppressWarnings("unchecked")
+	@Override
+	public QueryResult<CouponCoach> getCouponCoachInfoByPage(int pageIndex, int pageSize, String name, Integer coupontype, String starttime, String endtime, Integer value, Integer valuetype,
+			Integer ownertype, String ownerkey, Integer state)  {
+		
+		StringBuffer couponhql = new StringBuffer();
+		
+		if(state != null){
+			couponhql.append(" from CouponCoach where state = " + state);
+		}else{
+			couponhql.append(" from CouponCoach where 1 = 1");
+		}
+		
+		if (!CommonUtils.isEmptyString(name)) {
+			couponhql.append(" and coachid in ( select coachid from CuserInfo where realname like '%" + name + "%' or phone like '%" + name + "%')");
+		}
+		if (coupontype != null) {
+			couponhql.append(" and coupontype = " + coupontype);
+		}
+		if (!CommonUtils.isEmptyString(starttime)) {
+			starttime = starttime + " 00:00:00";
+			couponhql.append(" and gettime > '" + starttime + "'");
+		}
+
+		if (!CommonUtils.isEmptyString(endtime)) {
+			endtime = endtime + " 23:59:59";
+			couponhql.append(" and gettime <= '" + endtime + "'");
+		}
+		if (ownertype != null) {
+			couponhql.append(" and ownertype = " + ownertype);
+			if (ownertype == 1) {
+				if (!CommonUtils.isEmptyString(ownerkey)) {
+					couponhql.append(" and ownerid in ( select schoolid from DriveSchoolInfo where name like '%" + ownerkey + "%')");
+				}
+			} else if (ownertype == 2) {
+				if (!CommonUtils.isEmptyString(ownerkey)) {
+					couponhql.append(" and ownerid in ( select coachid from CuserInfo where realname like '%" + ownerkey + "%')");
+				}
+			}
+		}
+		if (value != null) {
+			if (valuetype == 1) {
+				couponhql.append(" and value >" + value);
+			} else if (valuetype == 2) {
+				couponhql.append(" and value =" + value);
+			} else if (valuetype == 3) {
+				couponhql.append(" and value <" + value);
+			}
+		}
+		
+		couponhql.append("order by recordid desc");
+		//System.out.print(couponhql);
+	
+		List<CouponCoach> CouponCoachlist = (List<CouponCoach>) dataDao.pageQueryViaParam(couponhql.toString(), pageSize, pageIndex, null);
+		
+		for (CouponCoach couponcoach : CouponCoachlist) {
+			CuserInfo Cuserinfo = dataDao.getObjectById(CuserInfo.class, couponcoach.getCoachid());
+			if (Cuserinfo != null) {
+				if (CommonUtils.isEmptyString(Cuserinfo.getRealname())) {
+					couponcoach.setUsernick("未设置:" + Cuserinfo.getPhone());
+				} else {
+					couponcoach.setUsernick(Cuserinfo.getRealname() + ":" + Cuserinfo.getPhone());
+				}
+			}
+			if (couponcoach.getOwnertype() == 1) {
+				DriveSchoolInfo driveschool = dataDao.getObjectById(DriveSchoolInfo.class, couponcoach.getOwnerid());
+				if (driveschool != null) {
+					couponcoach.setSchoolname(driveschool.getName());
+				}
+			}
+			if (couponcoach.getOwnertype() == 2) {
+				CuserInfo cuserinfo = dataDao.getObjectById(CuserInfo.class, couponcoach.getOwnerid());
+				if (cuserinfo != null) {
+					couponcoach.setCusername(cuserinfo.getRealname());
+				}
+			}
+			
+		}
+		
+		String counthql = couponhql.insert(0, " select count(*)").toString();
+		long count = (Long) dataDao.getFirstObjectViaParam(counthql, null);
+		QueryResult<CouponCoach> result = new QueryResult<CouponCoach>(CouponCoachlist, count);
 		return result;
 	}
 

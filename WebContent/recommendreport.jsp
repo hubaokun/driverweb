@@ -120,13 +120,13 @@
 											//alert(pageindex);
 											a[a.length] = "<a onclick=\"\" class=\"hide_page_prev unclickprev on\"></a>";
 										} else {
-											a[a.length] = "<a onclick=\"previousPage("+pageindex+",'getRecommendReport.do?index="+index+"&change_id"+j+"&')\" class=\"page_prev\"></a>";
+											a[a.length] = "<a onclick=\"previousPage("+pageindex+",'getRecommendReport.do?&recommendtype=1&index="+index+"&change_id"+j+"&')\" class=\"page_prev\"></a>";
 										}
 										function setPageList() {
 											if (pageindex == i) {
-												a[a.length] = "<a onclick=\"goPage('getRecommendReport.do?index="+index+"&change_id"+j+"&',"+i+")\" class=\"on\">" + i + "</a>";
+												a[a.length] = "<a onclick=\"goPage('getRecommendReport.do?&recommendtype=1&index="+index+"&change_id"+j+"&',"+i+")\" class=\"on\">" + i + "</a>";
 											} else {
-												a[a.length] = "<a onclick=\"goPage('getRecommendReport.do?index="+index+"&change_id"+j+"&',"+i+")\">" + i + "</a>";
+												a[a.length] = "<a onclick=\"goPage('getRecommendReport.do?&recommendtype=1&index="+index+"&change_id"+j+"&',"+i+")\">" + i + "</a>";
 											}
 										}
 										//总页数小于10
@@ -140,31 +140,31 @@
 												for (var i = 1; i <= 5; i++) {
 													setPageList();
 												}
-												a[a.length] = "...<a onclick=\"goPage('getRecommendReport.do?index="+index+"&change_id"+j+"&',"+count+")\">" + count + "</a>";
+												a[a.length] = "...<a onclick=\"goPage('getRecommendReport.do?&recommendtype=1&index="+index+"&change_id"+j+"&',"+count+")\">" + count + "</a>";
 											} else if (pageindex >= count - 3) {
-												a[a.length] = "<a onclick=\"goPage('getRecommendReport.do?index="+index+"&change_id"+j+"&',1)\">1</a>...";
+												a[a.length] = "<a onclick=\"goPage('getRecommendReport.do?&recommendtype=1&index="+index+"&change_id"+j+"&',1)\">1</a>...";
 												for (var i = count - 4; i <= count; i++) {
 													setPageList();
 												};
 											} else { //当前页在中间部分
-												a[a.length] = "<a onclick=\"goPage('getRecommendReport.do?index="+index+"&change_id"+j+"&',1)\">1</a>...";
+												a[a.length] = "<a onclick=\"goPage('getRecommendReport.do?&recommendtype=1&index="+index+"&change_id"+j+"&',1)\">1</a>...";
 												for (var i = pageindex - 2; i <= pageindex+2; i++) {
 													setPageList();
 												}
-												a[a.length] = "...<a onclick=\"goPage('getRecommendReport.do?index="+index+"&change_id"+j+"&',"+count+")\">" + count + "</a>";
+												a[a.length] = "...<a onclick=\"goPage('getRecommendReport.do?&recommendtype=1&index="+index+"&change_id"+j+"&',"+count+")\">" + count + "</a>";
 											}
 										}
 										if (pageindex == count) {
 											a[a.length] = "<a onclick=\"\" class=\"hide_page_next unclicknext\"></a> 共"+count+"页  到第  "+
 											"<input type=\"text\" class=\"jump_num\" id=\"topage\"/> 页"+
-											"<a class=\"jump_btn\" onclick=\"gotoPage('getRecommendReport.do?index="+index+"&change_id"+j+"&',"+$("#pageSize").val()+")\")\">"+
+											"<a class=\"jump_btn\" onclick=\"gotoPage('getRecommendReport.do?&recommendtype=1&index="+index+"&change_id"+j+"&',"+$("#pageSize").val()+")\")\">"+
 											"<a id='page_msg'></a>";
 										} else {
 											a[a.length] =
-													"<a onclick=\"nextPage("+$("#pageIndex").val()+",'getRecommendReport.do?index="+index+"&change_id"+j+"&')\" "+
+													"<a onclick=\"nextPage("+$("#pageIndex").val()+",'getRecommendReport.do?&recommendtype=1&index="+index+"&change_id"+j+"&')\" "+
 													"class=\"page_next\"></a> 共"+count+"页 到第 "+
 													"<input type=\"text\" class=\"jump_num\" id=\"topage\"/> 页"+
-													"<a class=\"jump_btn\" onclick=\"gotoPage('getRecommendReport.do?&',"+$("#pageSize").val()+")\">"+
+													"<a class=\"jump_btn\" onclick=\"gotoPage('getRecommendReport.do?&recommendtype=1&',"+$("#pageSize").val()+")\">"+
 													"<a id='page_msg'></a>";
 										}
 // 					  a[a.length]="<a href='#' onclick='addunit()' style='float: right;position: relative;right: 50px;padding: 0px; margin: 0px; top: 3px;'><img src='imgs/add_.png'></a>";

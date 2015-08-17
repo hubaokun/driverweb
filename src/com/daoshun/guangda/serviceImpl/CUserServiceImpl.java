@@ -369,7 +369,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
     @Override
     public QueryResult<CApplyCashInfo> getCoachApplyBySearch(String searchname, String searchphone, String amount, String inputamount, Integer schoolid, String minsdate, String maxsdate, Integer pageIndex, int pagesize) {
         StringBuffer cuserhql = new StringBuffer();
-        cuserhql.append("from CApplyCashInfo where state = 0");
+        cuserhql.append("from CApplyCashInfo where state = 0 and amount > 0");
         if (!CommonUtils.isEmptyString(searchname)) {
             cuserhql.append(" and coachid in (select coachid from CuserInfo where realname like '%" + searchname + "%')");
         }

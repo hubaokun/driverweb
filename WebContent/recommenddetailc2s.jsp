@@ -40,22 +40,22 @@ $(function(){
 
 	 }
  }
-function deleteinvite(invitedcoachid)
+function deleteinvite(invitedstudentid)
 {
 	if(confirm("确认删除吗？"))
 	 {			
-		document.getElementById("invitedcoachid").value=invitedcoachid;
-	    $("#offeredForm").attr("action","deleteRecommoned.do").submit(); 
+		document.getElementById("invitedstudentid").value=invitedstudentid;
+	    $("#offeredForm").attr("action","deleteRecommonedc2s.do").submit(); 
 	 }
 	
 }
 function goback()
 {
-	window.location.href="getRecommendList.do?recommendtype=1";
+	window.location.href="getRecommendListc2s.do?recommendtype=2";
 }
 function searchbegin()
 {
-	$("#offeredForm").attr("action","SearchRecommoneddetail.do").submit();
+	$("#offeredForm").attr("action","SearchRecommoneddetailc2s.do").submit();
 }
 </script>
 <style type="text/css">
@@ -140,12 +140,12 @@ function searchbegin()
 						<th>被邀请人姓名</th>
 						<th>手机号</th>
 						<th>注册时间</th>
-						<th>教练认证</th>
-						<th>首单</th>
+					<!--	<th>教练认证</th>
+						<th>首单</th>-->
 						<th>奖励金额</th>
-						<th>审核奖励</th>
+					<!--  	<th>审核奖励</th>
 						<th>开单奖励</th>
-						<th>操作</th>
+						<th>操作</th>-->
 					</tr>
 					<s:iterator value="mp">
 					
@@ -153,10 +153,10 @@ function searchbegin()
 							<td style="width: 80px;" class="border_right_bottom">${invitedpeoplename}</td>
 							<td style="width: 200px;" class="border_right_bottom">${invitedpeopletelphone}</td>
 							<td style="width: 200px;" class="border_right_bottom">${addtime}</td>
-							<td style="width: 80px;" class="border_right_bottom">${ischecked eq 1?"已认证":"未认证"}</td>
-							<td style="width: 80px;" class="border_right_bottom">${isorder eq 1?"已开单":"未开单"}</td>
+						<!--<td style="width: 80px;" class="border_right_bottom">${ischecked eq 1?"已认证":"未认证"}</td>
+							<td style="width: 80px;" class="border_right_bottom">${isorder eq 1?"已开单":"未开单"}</td>-->
 							<td style="width: 80px;" class="border_right_bottom">${reward}</td>
-							<td style="width: 100px;" class="border_noright_bottom">
+							<!--<td style="width: 100px;" class="border_noright_bottom">
 								<div class="table_lookdetail">
 									
 									<s:if test="%{cflag==1}">
@@ -178,13 +178,13 @@ function searchbegin()
 									</s:elseif>
                                  
 								</div>
-							</td>
+							</td>-->
 							<td style="width: 80px;" class="border_right_bottom">
 							<s:if test="%{oflag==2 ||cflag==2}">
 							
 							</s:if>
 							<s:else>
-							<a href="javascript:deleteinvite(${invitedcoachid})">删除邀请</a>
+							<a href="javascript:deleteinvite(${invitedstudentid})">删除邀请</a>
 							</s:else>
 							</td>
 					      </tr>
@@ -193,7 +193,7 @@ function searchbegin()
                        <input type="hidden" value="" id="typestyle" name="typestyle"/>
                         <input type="hidden" value="${recommendtype}" id="recommendtype" name="recommendtype"/>
 		               <input type="hidden" value="${coachid}" id="coachid" name="coachid"/>
-		        	   <input type="hidden" value="${invitedcoachid}" id="invitedcoachid" name="invitedcoachid"/>
+		        	   <input type="hidden" value="${invitedstudentid}" id="invitedstudentid" name="invitedstudentid"/>
 		        	   <input type="hidden" value="${invitecount}" id="invitecount" name="invitecount"/>
 		        	   <input type="hidden" value="${checkPastCount}" id="checkPastCount" name="checkPastCount"/>
 		        	   <input type="hidden" value="${earnCount}" id="earnCount" name="earnCount"/>
@@ -231,13 +231,13 @@ function searchbegin()
 						  //alert(pageindex);
 					    a[a.length] = "<a onclick=\"\" class=\"hide_page_prev unclickprev on\"></a>";
 					  } else {
-					    a[a.length] = "<a onclick=\"previousPage("+pageindex+",'getRecommendDetail.do?coachid="+coachid+"&invitecount="+invitecount+"&checkPastCount="+checkPastCount+"&earnCount="+earnCount+"&totalreward="+totalreward+"&recommendtype=1&index="+index+"&change_id"+j+"&')\" class=\"page_prev\"></a>";
+					    a[a.length] = "<a onclick=\"previousPage("+pageindex+",'getRecommendDetailc2s.do?coachid="+coachid+"&invitecount="+invitecount+"&checkPastCount="+checkPastCount+"&earnCount="+earnCount+"&totalreward="+totalreward+"&recommendtype=2&index="+index+"&change_id"+j+"&')\" class=\"page_prev\"></a>";
 					  }
 					  function setPageList() {
 					    if (pageindex == i) {
-					      a[a.length] = "<a onclick=\"goPage('getRecommendDetail.do?coachid="+coachid+"&invitecount="+invitecount+"&checkPastCount="+checkPastCount+"&earnCount="+earnCount+"&totalreward="+totalreward+"&index="+index+"&recommendtype=1&change_id"+j+"&',"+i+")\" class=\"on\">" + i + "</a>";
+					      a[a.length] = "<a onclick=\"goPage('getRecommendDetailc2s.do?coachid="+coachid+"&invitecount="+invitecount+"&checkPastCount="+checkPastCount+"&earnCount="+earnCount+"&totalreward="+totalreward+"&index="+index+"&recommendtype=2&change_id"+j+"&',"+i+")\" class=\"on\">" + i + "</a>";
 					    } else {
-					      a[a.length] = "<a onclick=\"goPage('getRecommendDetail.do?coachid="+coachid+"&invitecount="+invitecount+"&checkPastCount="+checkPastCount+"&earnCount="+earnCount+"&totalreward="+totalreward+"&index="+index+"&recommendtype=1&change_id"+j+"&',"+i+")\">" + i + "</a>";
+					      a[a.length] = "<a onclick=\"goPage('getRecommendDetailc2s.do?coachid="+coachid+"&invitecount="+invitecount+"&checkPastCount="+checkPastCount+"&earnCount="+earnCount+"&totalreward="+totalreward+"&index="+index+"&recommendtype=2&change_id"+j+"&',"+i+")\">" + i + "</a>";
 					    }
 					  }
 					  //总页数小于10
@@ -251,31 +251,31 @@ function searchbegin()
 					      for (var i = 1; i <= 5; i++) {
 					        setPageList();
 					      }
-					      a[a.length] = "...<a onclick=\"goPage('getRecommendDetail.do?coachid="+coachid+"&invitecount="+invitecount+"&checkPastCount="+checkPastCount+"&earnCount="+earnCount+"&totalreward="+totalreward+"&recommendtype=1&index="+index+"&change_id"+j+"&',"+count+")\">" + count + "</a>";
+					      a[a.length] = "...<a onclick=\"goPage('getRecommendDetailc2s.do?coachid="+coachid+"&invitecount="+invitecount+"&checkPastCount="+checkPastCount+"&earnCount="+earnCount+"&totalreward="+totalreward+"&recommendtype=2&index="+index+"&change_id"+j+"&',"+count+")\">" + count + "</a>";
 					    } else if (pageindex >= count - 3) {
-					      a[a.length] = "<a onclick=\"goPage('getRecommendDetail.do?coachid="+coachid+"&invitecount="+invitecount+"&checkPastCount="+checkPastCount+"&earnCount="+earnCount+"&totalreward="+totalreward+"&recommendtype=1&index="+index+"&change_id"+j+"&',1)\">1</a>...";
+					      a[a.length] = "<a onclick=\"goPage('getRecommendDetailc2s.do?coachid="+coachid+"&invitecount="+invitecount+"&checkPastCount="+checkPastCount+"&earnCount="+earnCount+"&totalreward="+totalreward+"&recommendtype=2&index="+index+"&change_id"+j+"&',1)\">1</a>...";
 					      for (var i = count - 4; i <= count; i++) {
 					        setPageList();
 					      };
 					    } else { //当前页在中间部分
-					      a[a.length] = "<a onclick=\"goPage('getRecommendDetail.do?coachid="+coachid+"&invitecount="+invitecount+"&checkPastCount="+checkPastCount+"&earnCount="+earnCount+"&totalreward="+totalreward+"&recommendtype=1&index="+index+"&change_id"+j+"&',1)\">1</a>...";
+					      a[a.length] = "<a onclick=\"goPage('getRecommendDetailc2s.do?coachid="+coachid+"&invitecount="+invitecount+"&checkPastCount="+checkPastCount+"&earnCount="+earnCount+"&totalreward="+totalreward+"&recommendtype=2&index="+index+"&change_id"+j+"&',1)\">1</a>...";
 					      for (var i = pageindex - 2; i <= pageindex+2; i++) {
 					        setPageList();
 					      }
-					      a[a.length] = "...<a onclick=\"goPage('getRecommendDetail.do?coachid="+coachid+"&invitecount="+invitecount+"&checkPastCount="+checkPastCount+"&earnCount="+earnCount+"&totalreward="+totalreward+"&recommendtype=1&index="+index+"&change_id"+j+"&',"+count+")\">" + count + "</a>";
+					      a[a.length] = "...<a onclick=\"goPage('getRecommendDetailc2s.do?coachid="+coachid+"&invitecount="+invitecount+"&checkPastCount="+checkPastCount+"&earnCount="+earnCount+"&totalreward="+totalreward+"&recommendtype=2&index="+index+"&change_id"+j+"&',"+count+")\">" + count + "</a>";
 					    }
 					  }
 					  if (pageindex == count) {
 						    a[a.length] = "<a onclick=\"\" class=\"hide_page_next unclicknext\"></a> 共"+count+"页  到第  "+
 						    "<input type=\"text\" class=\"jump_num\" id=\"topage\"/> 页"+
-						    "<a class=\"jump_btn\" onclick=\"gotoPage('getRecommendDetail.do?coachid="+coachid+"&invitecount="+invitecount+"&checkPastCount="+checkPastCount+"&earnCount="+earnCount+"&totalreward="+totalreward+"&recommendtype=1&index="+index+"&change_id"+j+"&',"+$("#pageSize").val()+")\")\">"+
+						    "<a class=\"jump_btn\" onclick=\"gotoPage('ggetRecommendDetailc2s.do?coachid="+coachid+"&invitecount="+invitecount+"&checkPastCount="+checkPastCount+"&earnCount="+earnCount+"&totalreward="+totalreward+"&recommendtype=2&index="+index+"&change_id"+j+"&',"+$("#pageSize").val()+")\")\">"+
 						    "<a id='page_msg'></a>";
 						  } else {
 						    a[a.length] = 
-						    	"<a onclick=\"nextPage("+$("#pageIndex").val()+",'getRecommendDetail.do?coachid="+coachid+"&invitecount="+invitecount+"&checkPastCount="+checkPastCount+"&earnCount="+earnCount+"&totalreward="+totalreward+"&recommendtype=1&index="+index+"&change_id"+j+"&')\" "+
+						    	"<a onclick=\"nextPage("+$("#pageIndex").val()+",'getRecommendDetailc2s.do?coachid="+coachid+"&invitecount="+invitecount+"&checkPastCount="+checkPastCount+"&earnCount="+earnCount+"&totalreward="+totalreward+"&recommendtype=2&index="+index+"&change_id"+j+"&')\" "+
 						    	"class=\"page_next\"></a> 共"+count+"页 到第 "+
 						    "<input type=\"text\" class=\"jump_num\" id=\"topage\"/> 页"+
-						    "<a class=\"jump_btn\" onclick=\"gotoPage('getRecommendDetail.do?coachid="+coachid+"&invitecount="+invitecount+"&checkPastCount="+checkPastCount+"&earnCount="+earnCount+"&totalreward="+totalreward +"&recommendtype=1&',"+$("#pageSize").val()+")\">"+
+						    "<a class=\"jump_btn\" onclick=\"gotoPage('getRecommendDetailc2s.do?coachid="+coachid+"&invitecount="+invitecount+"&checkPastCount="+checkPastCount+"&earnCount="+earnCount+"&totalreward="+totalreward +"&recommendtype=2&',"+$("#pageSize").val()+")\">"+
 						    "<a id='page_msg'></a>";
 						  }
 //					  a[a.length]="<a href='#' onclick='addunit()' style='float: right;position: relative;right: 50px;padding: 0px; margin: 0px; top: 3px;'><img src='imgs/add_.png'></a>";
