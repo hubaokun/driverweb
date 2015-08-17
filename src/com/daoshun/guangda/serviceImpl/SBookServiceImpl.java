@@ -822,92 +822,17 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		if (!CommonUtils.isEmptyString(condition11)) {
 			cuserhql.append(" and modelid like '%" + condition11 + "%'");
 		}
-
-
-		// 开始时间和结束时间
-		// if (!CommonUtils.isEmptyString(condition3) && !CommonUtils.isEmptyString(condition4)) {
-		//
-		// int subjectid = CommonUtils.parseInt(condition6, 0);
-		//
-		// Date start = CommonUtils.getDateFormat(condition3, "yyyy-MM-dd HH:mm:ss");
-		// Date end = CommonUtils.getDateFormat(condition4, "yyyy-MM-dd HH:mm:ss");
-		// if (start != null && end != null) {
-		// Calendar startCal = Calendar.getInstance();
-		// startCal.setTime(start);
-		// Calendar endCal = Calendar.getInstance();
-		// endCal.setTime(end);
-		//
-		// if (startCal.compareTo(endCal) <= 0) {
-		// int starthour = startCal.get(Calendar.HOUR_OF_DAY);
-		// int endhour = endCal.get(Calendar.HOUR_OF_DAY);
-		// int datecount = 1;
-		// int startmonth = startCal.get(Calendar.MONTH);
-		// int endmonth = endCal.get(Calendar.MONTH);
-		// int startday = startCal.get(Calendar.DAY_OF_MONTH);
-		// int endday = endCal.get(Calendar.DAY_OF_MONTH);
-		// if (startmonth == endmonth) {
-		// datecount = endday - startday + 1;
-		// } else {
-		// startCal.set(Calendar.DATE, 1);
-		// startCal.roll(Calendar.DATE, -1);
-		// int maxday = startCal.get(Calendar.DAY_OF_MONTH);
-		// datecount = maxday - startday + 1;
-		//
-		// if (startmonth + 1 == endmonth) {
-		// datecount += endday;
-		// } else {
-		// Calendar c = Calendar.getInstance();
-		// c.set(Calendar.YEAR, startCal.get(Calendar.YEAR));
-		// c.set(Calendar.MONTH, 1);
-		// c.set(Calendar.DATE, 1);
-		// c.roll(Calendar.DATE, -1);
-		// datecount += c.get(Calendar.DAY_OF_MONTH) + endday;
-		// }
-		// }
-		//
-		// cuserhql.append(" and getcoachstate(u.coachid," + datecount + ",'" + CommonUtils.getTimeFormat(start, "yyyy-MM-dd") + "'," + starthour + "," + endhour + "," + subjectid + ") = 1");
-		// }
-		// }
-		// }
-
-		// if (CommonUtils.parseInt(condition5, 0) != 0) {
-		// cuserhql.append(" and gender = " + condition5);
-		// }
-		//
-		// if (CommonUtils.parseInt(condition8, 0) != 0 && CommonUtils.parseInt(condition9, 0) != 0 && CommonUtils.parseInt(condition8, 0) <= CommonUtils.parseInt(condition9, 0)) {
-		// cuserhql.append(" and price >= " + condition8 + " and price <= " + condition9);
-		// }
-		//
-		// if (CommonUtils.parseInt(condition10, 0) != 0 && CommonUtils.parseInt(condition10, 0) != -1) {
-		// cuserhql.append(" and carmodelid = " + condition10);
-		// } else if (CommonUtils.parseInt(condition10, 0) == -1) {
-		// cuserhql.append(" and length(carmodel) > 0");
-		// }
-		//cuserhql.append(" and money >= gmoney and isquit = 0 order by score desc");
-		//String[] params = { "now", "now", "now", "now" };
-		//String now = CommonUtils.getTimeFormat(new Date(), "yyyy-MM-dd");
-		//System.out.println(cuserhql.toString());
 		cuserhql.append(" and money >= gmoney and isquit = 0 and state=2 order by score desc,drive_schoolid desc ");
-		//System.out.println(cuserhql.toString());
-		StringBuffer s=new StringBuffer("");
-		s.append("select getTeachAddress(u.coachid) as address,getCoachOrderCount(u.coachid) as drive_schoolid, u.*  from t_user_coach u where state = 2 and phone='15397128850'");
 		//System.out.println(cuserhql.toString());
 		List<CuserInfo> coachlist = (List<CuserInfo>) dataDao.SqlPageQuery(cuserhql.toString(), Constant.USERLIST_SIZE+1, CommonUtils.parseInt(pagenum, 0) + 1,CuserInfo.class, null);
 		
-		
-		
-		//System.out.println(cuserhql.toString());
-		//String[] params = { "now", "now", "now", "now" };
-		//String now = CommonUtils.getTimeFormat(new Date(), "yyyy-MM-dd");
-		//System.out.println(cuserhql.toString());
-		//String t="select getTeachAddress(u.coachid) as address,getCoachOrderCount(u.coachid) as drive_schoolid,u.*  from t_user_coach u";
 		if (coachlist != null && coachlist.size() > 0) {
 			for (CuserInfo coach : coachlist) {
 				//StringBuffer cuserhql1 = new StringBuffer();
 				//cuserhql1.append("from CaddAddressInfo where coachid =:coachid and iscurrent = 1");
 				//String[] params1 = { "coachid" };
 				//CaddAddressInfo address = (CaddAddressInfo) dataDao.getFirstObjectViaParam(cuserhql1.toString(), params1, coach.getCoachid());
-				if(coach.getDrive_schoolid()!=null){
+				if(coach.getDrive_schoolid()!=null){//设置教练的订单总数，其中drive_schoolid字段存放的是自定义函数中获取的订单数，因为非字段别名不能自动封装值，所以先使用drive_schoolid临时存放教练的总订单数
 					coach.setSumnum(new Long(coach.getDrive_schoolid()));
 				}
 				if(coach.getAddress()!=null){
