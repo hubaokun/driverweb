@@ -331,12 +331,11 @@ function grantCoinRecord(){
     if(id == ''){
         return;
     }
-
     var receiverid = $("#receiverid").val();
     var ownerid = $("#ownerid").val();
     var coinnum = $("#coinnum").val();
     var ownertype = $("#ownertype").val();
-
+    //alert(receiverid+" "+ownerid+" "+coinnum+" "+ownertype);
     $.ajax({
         url: "grantCoinRecord.do",
         data:{ownerid: ownerid,receiverid:receiverid,coinnum:coinnum,ownertype:ownertype},
