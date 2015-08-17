@@ -1394,6 +1394,14 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 	@Transactional(readOnly = false, propagation = Propagation.SUPPORTS)
 	public HashMap<String, Object> bookCoach2(String coachid, String studentid, String date) {
 		HashMap<String, Object> result = new HashMap<String, Object>();
+		//处理测试账号
+		SuserInfo student = dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
+		if(student!=null && "18888888888".equals(student.getPhone())){
+			result.put("message", "测试账号不能预约");
+			result.put("code", 20);
+			return result;
+		}
+		
 		String failtimes = "";// 不能预订的时间点集合
 		int successorderid = 0;// 预订成功的第一个订单的ID
 		String hql1 = "from CscheduleInfo where coachid =:coachid and date = :date and hour =:hour";
@@ -1406,7 +1414,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		String params3[] = { "coachid" };
 		
 		 
-		SuserInfo student = dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
+		
 		if(student.getMoney().doubleValue()<0.0||student.getFmoney().doubleValue()<0.0||student.getCoinnum()<0)// 余额不够
 		{
 			//版本需要更新
