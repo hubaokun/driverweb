@@ -282,6 +282,7 @@ public class CuserAction extends BaseAction {
 	private String starttime;
 	private String endtime;
 	
+	private Integer editusertype;
 
 	/**
 	 * 得到教练列表
@@ -1471,7 +1472,7 @@ public class CuserAction extends BaseAction {
 	/**
 	 * 编辑个人详情
 	 */
-	@Action(value = "/editSingleCoach", results = { @Result(name = SUCCESS, location = "/getCoachDetail.do?coachid=${coachid}&index=1&change_id=0", type = "redirect") })
+	@Action(value = "/editSingleCoach", results = { @Result(name = SUCCESS, location = "/getCoachDetail.do?coachid=${coachid}&index=1&change_id=0&editsucc=1", type = "redirect") })
 	public String editSingleCoach() {
 		cuser = cuserService.getCoachByid(CommonUtils.parseInt(coachid, 0));
 
@@ -1575,6 +1576,10 @@ public class CuserAction extends BaseAction {
 		if (!CommonUtils.isEmptyString(editcarlicense)) {
 			cuser.setCarlicense(editcarlicense);
 		}
+		if(editusertype!=null){
+			cuser.setUsertype(editusertype);
+		}
+		
 		// 身份证正面照
 		if (editid_cardpicfurl != null) {
 			try {
@@ -2868,6 +2873,14 @@ public class CuserAction extends BaseAction {
 
 	public void setEndtime(String endtime) {
 		this.endtime = endtime;
+	}
+
+	public Integer getEditusertype() {
+		return editusertype;
+	}
+
+	public void setEditusertype(Integer editusertype) {
+		this.editusertype = editusertype;
 	}
 	
 	

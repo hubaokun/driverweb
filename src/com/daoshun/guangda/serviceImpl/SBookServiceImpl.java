@@ -1396,11 +1396,28 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		//处理测试账号
 		SuserInfo student = dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
-		if(student!=null && "18888888888".equals(student.getPhone())){
+		CuserInfo cuser = dataDao.getObjectById(CuserInfo.class, CommonUtils.parseInt(coachid, 0));
+		if(student!=null && cuser!=null){
+			//学员为测试用户,教练不是测试用户
+			if(student.getUsertype()!=null && student.getUsertype()==1 && cuser.getUsertype()!=null && cuser.getUsertype()!=1){
+				result.put("message", "学员测试账号不能预约正式教练，请选择测试教练");
+				result.put("code", 21);
+				return result;
+			}
+			//正式学员不能预约测试教练
+			if(student.getUsertype()!=null && student.getUsertype()==0 && cuser.getUsertype()!=null && cuser.getUsertype()==1){
+				result.put("message", "你预约的教练是测试教练，请选择其他教练预约");
+				result.put("code", 22);
+				return result;
+			}
+		}
+		
+		/*if(student!=null && "18888888888".equals(student.getPhone())){
 			result.put("message", "测试账号不能预约");
 			result.put("code", 20);
 			return result;
-		}
+		}*/
+		
 		
 		String failtimes = "";// 不能预订的时间点集合
 		int successorderid = 0;// 预订成功的第一个订单的ID
@@ -1448,7 +1465,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			}
 		}
 
-		CuserInfo cuser = dataDao.getObjectById(CuserInfo.class, CommonUtils.parseInt(coachid, 0));
+		
 		if (cuser != null && cuser.getDrive_schoolid() != null && cuser.getDrive_schoolid() != 0) {
 			DriveSchoolInfo school = dataDao.getObjectById(DriveSchoolInfo.class, cuser.getDrive_schoolid());
 			if (school != null && school.getOrder_pull() != null && school.getOrder_pull() != 0) {

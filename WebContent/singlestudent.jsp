@@ -113,6 +113,7 @@ $(function(){
 <th>紧急联系人号码</th>
 <th>注册时间</th>
 <th>综合评分</th>
+<th>是否测试用户</th>
 </tr>
 
 
@@ -122,6 +123,9 @@ $(function(){
 <td  style="width:150px;min-width: 150px" class="border_right_bottom"><input name="editurgent_phone" onkeyup="value=value.replace(/[^\d]/g,'')" value="${suser.urgent_phone }"   style="text-align: center;width:150px;height: 35px;font-size:18px" /></td>
 <td  style="width:150px;min-width: 150px" class="border_right_bottom"><input name="editaddtime" value="<s:date name="suser.addtime" format="yyyy-MM-dd HH:mm:ss" />" style="text-align: center;width:175px;height: 35px;font-size:18px" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})"/></td>
 <td  style="width:150px;min-width: 150px" class="border_right_bottom"><input  name="editscore" onpaste="return false" ondragenter="return false" oncontextmenu="return false;" onkeyup="this.value=this.value.replace(/[\u4e00-\u9fa5]/g,'')"  onkeydown="myKeyDown(this.value, event)" value="${suser.score }" style="text-align: center;width:150px;height: 35px;font-size:18px"/></td>
+<td  style="width:150px;min-width: 150px" class="border_right_bottom">
+<input  name="editusertype" type="radio" value="0" ${suser.usertype=='0'?'checked':'' } ${suser.usertype==null?'checked':'' }/>不是 
+<input  name="editusertype" type="radio" value="1" ${suser.usertype=='1'?'checked':'' }/>是</td>
 </tr>
 
 </table>
@@ -268,4 +272,10 @@ $(function(){
 
 
 </body>
+<script type="text/javascript">
+	var editsucc='${param.editsucc}';
+	if(editsucc=='1'){
+		alert("修改成功!");
+	}
+</script>
 </html>

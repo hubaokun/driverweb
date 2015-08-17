@@ -178,6 +178,8 @@ public class SuserAction extends BaseAction {
 	private String[] checkbox;
 	
 	private BigDecimal money;
+	
+	private Integer editusertype;// 是否测试用户 ，0 普通用户  ，1 测试用户
 
 
 	//编辑学员跟进状态
@@ -1371,7 +1373,7 @@ public String getStudentDetailByPhone() {
 	}
 
 	
-	@Action(value = "/editsinglestudent", results = { @Result(name = SUCCESS, location = "/getStudentDetail.do?studentid=${studentid}&index=${index}&change_id=${change_id}",type="redirect") })
+	@Action(value = "/editsinglestudent", results = { @Result(name = SUCCESS, location = "/getStudentDetail.do?studentid=${studentid}&index=${index}&change_id=${change_id}&editsucc=1",type="redirect") })
 
 //	@Action(value = "/editsinglestudent", results = { @Result(name = SUCCESS, location = "/getStudentlist.do?studentid=${studentid}&index=${index}&change_id=${change_id}",type="redirect") })
 	
@@ -1428,6 +1430,10 @@ public String getStudentDetailByPhone() {
 		//修改学员证日期
 		if(!CommonUtils.isEmptyString(editstudent_card_creat)){
 			suser.setStudent_card_creat(editstudent_card_creat);
+		}
+		//修改是否测试用户 0 普通用户  1 测试用户
+		if(editusertype!=null){
+			suser.setUsertype(editusertype);
 		}
 		
 		//身份证正面照
@@ -2212,5 +2218,17 @@ public String getStudentDetailByPhone() {
 	public void setFlagresult(int flagresult) {
 		this.flagresult = flagresult;
 	}
+
+
+	public Integer getEditusertype() {
+		return editusertype;
+	}
+
+
+	public void setEditusertype(Integer editusertype) {
+		this.editusertype = editusertype;
+	}
+
+	
 	
 }

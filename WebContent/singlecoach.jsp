@@ -313,8 +313,12 @@
 						<td><input name="editbirthday" value="${cuser.birthday }"  onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})" realvalue=""></td>
 						<td>
 							<%--注册时间：--%>
+							是否测试用户
+							
 						</td>
 						<td>
+						<input  name="editusertype" type="radio" value="0" ${cuser.usertype=='0'?'checked':'' }  ${suser.usertype==null?'checked':'' }/>不是 
+						<input  name="editusertype" type="radio" value="1" ${cuser.usertype=='1'?'checked':'' }/>是
 							<%--<input name="editaddtime" value="<s:date name="cuser.addtime" format="yyyy-MM-dd HH:mm:ss" />" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})"/>--%>
 						</td>
 						<td></td>
@@ -544,4 +548,10 @@
 	</div>
 </div>
 </body>
+<script type="text/javascript">
+	var editsucc='${param.editsucc}';
+	if(editsucc=='1'){
+		alert("修改成功!");
+	}
+</script>
 </html>
