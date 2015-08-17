@@ -569,7 +569,7 @@ public class CscheduleServlet extends BaseServlet {
 						}
 						// 默认的开课休息状态
 					//	int rest = cscheduleService.getDefaultRest(coachid, String.valueOf(k));
-						int rest = (int) defaultsetup.get("result");
+						int rest = (Integer) defaultsetup.get("result");
 						if (rest != -1) {
 							info.setIsrest(rest);
 						} else {// 5、6、12、18设置为休息
