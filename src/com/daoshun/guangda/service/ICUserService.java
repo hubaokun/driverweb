@@ -3,6 +3,7 @@ package com.daoshun.guangda.service;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.daoshun.common.QueryResult;
 import com.daoshun.guangda.pojo.AdminInfo;
@@ -209,6 +210,8 @@ public interface ICUserService {
 	public abstract void applyCheckPass(int coachid);
 	/** 提现申请审核 */
 	public abstract void applyCheckNoPass(int coachid);
+	/** 提现申请审核 */
+	public abstract void applyCheckrevocation(int coachid);
 
 	/** 根据条件搜索提现记录 */
 	public abstract QueryResult<CApplyCashInfo> getCoachApplyBySearch(String searchname, String searchphone, String amount, String inputamount, Integer schoolid, String minsdate, String maxsdate,Integer state,
@@ -257,4 +260,9 @@ public interface ICUserService {
 	public Long getOrderSum(int coachid);
 	public Long getOrderOver(int coachid);
 	public Long getOrderCancel(int coachid);
+	
+	/**
+	 *  获取教练提现详情
+	 */
+	public abstract Map getWithdrawcashdetail(int applyid,String coachid);
 }
