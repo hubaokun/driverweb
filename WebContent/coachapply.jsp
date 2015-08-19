@@ -38,6 +38,11 @@ $(function(){
 	var hiddenschoolid = $("#hiddenschoolid").val();
 	$("#driveschoolid").val(hiddenschoolid);
 })
+
+function getdetail(applyid,coachid,amount)
+{
+	window.location.href="getWithdrawCashDetailByCoach.do?applyid="+applyid+"&coachid="+coachid+"&amount="+amount;
+}
 </script>
 <title>教练提现申请</title>
 </head>
@@ -159,12 +164,16 @@ $(function(){
 									<div class="table_button_text"
 										onclick="checknopass(${applyid},${index},${pageIndex},${change_id})">审核不通过</div>
 								</div>
-								<div class="table_edit_button" style="width: 90px;background:#f83a22">
+								<div class="table_edit_button" style="width: 80px;background:#999999">
 									<div class="table_button_edit_icon"></div>
 									<div class="table_button_text"
 										onclick="checkrevocation(${applyid},${index},${pageIndex},${change_id})">作废</div>
 								</div>
-								
+								<div class="table_edit_button" style="width: 90px;background:#16b9a0;margin-top:15px">
+									<div class="table_button_edit_icon"></div>
+									<div class="table_button_text"
+										onclick="getdetail(${applyid},${coach.coachid},${amount});">提现详情</div>
+								</div>
 								
 								</s:if>
 								<s:else><!--

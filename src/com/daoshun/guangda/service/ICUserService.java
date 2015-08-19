@@ -3,6 +3,7 @@ package com.daoshun.guangda.service;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.daoshun.common.QueryResult;
 import com.daoshun.guangda.pojo.AdminInfo;
@@ -259,4 +260,9 @@ public interface ICUserService {
 	public Long getOrderSum(int coachid);
 	public Long getOrderOver(int coachid);
 	public Long getOrderCancel(int coachid);
+	
+	/**
+	 *  获取教练提现详情
+	 */
+	public abstract Map getWithdrawcashdetail(int applyid,String coachid);
 }
