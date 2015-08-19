@@ -145,6 +145,8 @@ public class Constant {
 
 	// 取得未完成订单
 	public static final String GETUNCOMPLETEORDER = "GETUNCOMPLETEORDER";
+	// 取得被投诉订单
+	public static final String GETCOMPLAINTORDER  = "GETCOMPLAINTORDER";
 
 	// 取得待评价订单
 	public static final String GETWAITEVALUATIONORDER = "GETWAITEVALUATIONORDER";

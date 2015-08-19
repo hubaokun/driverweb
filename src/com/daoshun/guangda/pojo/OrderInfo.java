@@ -110,7 +110,7 @@ public class OrderInfo implements Serializable {
 	private String couponrecordid;
 	
 	@Column(name = "paytype", length = 11, nullable = true, columnDefinition = "INT default 0")
-	private int paytype;
+	private int paytype;//1 余额  2 小巴券  3 小巴币
 	// 学生的详细信息
 	@Transient
 	private SuserInfo studentinfo;
@@ -189,8 +189,20 @@ public class OrderInfo implements Serializable {
 	//订单准教车型
 	@Transient
 	private String modelid;
+	//科目
+	@Transient
+	private String subjectname;
 	
 	
+
+	public String getSubjectname() {
+		return subjectname;
+	}
+
+	public void setSubjectname(String subjectname) {
+		this.subjectname = subjectname;
+	}
+
 	public String getModelid() {
 		return modelid;
 	}

@@ -11,25 +11,23 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.daoshun.common.ApplePushUtil;
-import com.daoshun.common.CoinType;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
 import com.daoshun.common.DeviceType;
 import com.daoshun.common.PayType;
 import com.daoshun.common.PushtoSingle;
 import com.daoshun.common.QueryResult;
-import com.daoshun.common.UserType;
 import com.daoshun.guangda.NetData.ComplaintNetData;
 import com.daoshun.guangda.pojo.BalanceCoachInfo;
 import com.daoshun.guangda.pojo.BalanceStudentInfo;
 import com.daoshun.guangda.pojo.CBookTimeInfo;
 import com.daoshun.guangda.pojo.CoachStudentInfo;
-import com.daoshun.guangda.pojo.CoinRecordInfo;
 import com.daoshun.guangda.pojo.ComplaintBookInfo;
 import com.daoshun.guangda.pojo.ComplaintInfo;
 import com.daoshun.guangda.pojo.ComplaintSetInfo;
 import com.daoshun.guangda.pojo.CouponCoach;
 import com.daoshun.guangda.pojo.CouponRecord;
+import com.daoshun.guangda.pojo.CsubjectInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.EvaluationInfo;
 import com.daoshun.guangda.pojo.OrderInfo;
@@ -195,6 +193,14 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				order.setCuserinfo(user);
 				//设置牌照
 				order.setCarlicense(user.getCarlicense());
+				StringBuffer subHql = new StringBuffer();
+				subHql.append("from CsubjectInfo where subjectid =:subjectid ");
+				String[] params3 = { "subjectid" };
+				CsubjectInfo subjectInfo = (CsubjectInfo) dataDao.getFirstObjectViaParam(subHql.toString(), params3, user.getSubjectdef());
+				if(subjectInfo!=null){
+					//设置科目
+					order.setSubjectname(subjectInfo.getSubjectname());
+				}
 			}
 
 			order.setHours(-2);// 学车已经完成
@@ -267,12 +273,217 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 		nowCanDown.add(Calendar.MINUTE, -s_can_down);
 		StringBuffer cuserhql = new StringBuffer();
 		List<OrderInfo> orderlist = new ArrayList<OrderInfo>();
-		cuserhql.append("from OrderInfo a where a.studentid =:studentid and (a.studentstate in (0,4) and a.coachstate!=4) and ((select count(*) from ComplaintInfo c where c.order_id"
+		/*cuserhql.append("from OrderInfo a where a.studentid =:studentid and (a.studentstate in (0,4) and a.coachstate!=4) and ((select count(*) from ComplaintInfo c where c.order_id"
 				+ " = a.orderid and c.type = 1 and c.state = 0) > 0 or ((select count(*) from ComplaintInfo c where c.order_id"
+				+ " = a.orderid and c.type = 1 and c.state = 0) = 0 and  a.end_time > :now))  order by a.start_time asc");*/
+		cuserhql.append("from OrderInfo a where a.studentid =:studentid and (a.studentstate in (0,4) and a.coachstate!=4) "
+				+ "  and ((select count(*) from ComplaintInfo c where c.order_id "
 				+ " = a.orderid and c.type = 1 and c.state = 0) = 0 and  a.end_time > :now))  order by a.start_time asc");
 		String[] params = { "studentid", "now" };
 		orderlist.addAll((List<OrderInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), Constant.ORDERLIST_SIZE, CommonUtils.parseInt(pagenum, 0) + 1, params, CommonUtils.parseInt(studentid, 0),
 				nowCanDown.getTime()));
+
+		for (OrderInfo order : orderlist) {
+			CuserInfo user = dataDao.getObjectById(CuserInfo.class, order.getCoachid());
+			if (user != null) {// 教练信息
+				order.setCuserinfo(user);
+				//设置教练的牌照
+				order.setCarlicense(user.getCarlicense());
+				StringBuffer subHql = new StringBuffer();
+				subHql.append("from CsubjectInfo where subjectid =:subjectid ");
+				String[] params3 = { "subjectid" };
+				CsubjectInfo subjectInfo = (CsubjectInfo) dataDao.getFirstObjectViaParam(subHql.toString(), params3, user.getSubjectdef());
+				if(subjectInfo!=null){
+					//设置科目
+					order.setSubjectname(subjectInfo.getSubjectname());
+				}
+			}
+			
+			// 是否已经确认上车
+			StringBuffer cuserhql1 = new StringBuffer();
+			cuserhql1.append("from OrderRecordInfo where orderid =:orderid and userid =:userid and operation = 1");
+			String[] params1 = { "orderid", "userid" };
+			OrderRecordInfo orderRecord = (OrderRecordInfo) dataDao.getFirstObjectViaParam(cuserhql1.toString(), params1, order.getOrderid(), CommonUtils.parseInt(studentid, 0));
+
+			// 是否已经确认下车
+			StringBuffer cuserhql2 = new StringBuffer();
+			cuserhql2.append("from OrderRecordInfo where orderid =:orderid and userid =:userid and operation = 2");
+			String[] params2 = { "orderid", "userid" };
+			OrderRecordInfo orderRecord2 = (OrderRecordInfo) dataDao.getFirstObjectViaParam(cuserhql2.toString(), params2, order.getOrderid(), CommonUtils.parseInt(studentid, 0));
+
+			// 可以确认上车的时间点
+			Calendar left = Calendar.getInstance();
+			left.setTime(order.getStart_time());
+			left.add(Calendar.MINUTE, -s_can_up);
+
+			// 订单结束时间
+			Calendar right = Calendar.getInstance();
+			right.setTime(order.getEnd_time());
+
+			// 可以确认下车的最晚时间
+			Calendar right1 = Calendar.getInstance();
+			right1.setTime(order.getEnd_time());
+			right1.add(Calendar.MINUTE, s_can_down);
+
+			// 订单显示即将开始
+			if (orderRecord == null && now.getTime().before(order.getStart_time()) && now.after(left)) {
+				order.setHours(0);
+			} else if (now.before(left)) {// 订单显示距离开始时间
+				long millisecond = order.getStart_time().getTime() - now.getTimeInMillis();
+				order.setHours((int) (millisecond / 60000));
+			} else if (orderRecord != null && orderRecord2 == null && now.before(right1)) {// 订单显示正在学车
+				order.setHours(-1);
+			} else if (orderRecord2 != null || now.after(right1)) {// 订单显示学车已经结束
+				order.setHours(-2);
+			} else if (orderRecord == null && now.getTime().after(order.getStart_time()) && now.getTime().before(order.getEnd_time())) {// 订单显示等待确认上车
+				order.setHours(-3);
+			} else if (orderRecord2 == null && now.getTime().after(order.getEnd_time()) && now.before(right1)) {// 订单显示等待确认下车
+				order.setHours(-4);
+			} else {// 订单显示学车已经结束
+				order.setHours(-2);
+			}
+
+			StringBuffer cuserhql3 = new StringBuffer();
+			cuserhql3.append("from OrderPrice where orderid =:orderid ");
+			String[] params3 = { "orderid" };
+			List<OrderPrice> orderpricelist = (List<OrderPrice>) dataDao.getObjectsViaParam(cuserhql3.toString(), params3, order.getOrderid());
+			if (orderpricelist != null && orderpricelist.size() > 0) {
+				order.setOrderprice(orderpricelist);
+			}
+			// 是否可以投诉
+			if (orderRecord2 != null || now.after(right1)) {// 如果订单已经确认下车过了，或者时间已经过去了
+				order.setCan_complaint(1);//
+			} else {
+				order.setCan_complaint(0);//
+			}
+
+			// 是否需要取消投诉
+			String hql2 = "from ComplaintInfo c where c.order_id =:order_id and c.type = 1 and c.state = 0";
+			String[] p2 = { "order_id" };
+			List<ComplaintInfo> cList = (List<ComplaintInfo>) dataDao.getObjectsViaParam(hql2, p2, order.getOrderid());
+			if (cList != null && cList.size() > 0) {
+				order.setNeed_uncomplaint(1);
+			} else {
+				order.setNeed_uncomplaint(0);
+			}
+			// 是否可以取消
+			if (order.getCancancel() == 1) {// 不可取消
+				order.setCan_cancel(0);
+			} else {// 可以取消
+				Calendar now2 = Calendar.getInstance();
+				now2.add(Calendar.MINUTE, time_cancel);
+				if (now2.getTime().before(order.getStart_time())) {
+					order.setCan_cancel(1);
+				} else {
+					order.setCan_cancel(0);
+				}
+			}
+
+			if (orderRecord != null || orderRecord2 != null) {// 确认下车过或者确认上车过
+				order.setCan_up(0);// 不可以再确认上车
+			} else {
+
+				if (now.after(left) && now.before(right)) {
+					order.setCan_up(1);
+				} else {
+					order.setCan_up(0);
+				}
+			}
+
+			if (orderRecord2 != null) {// 已经确认下车过了
+				order.setCan_down(0);
+			} else {
+				if (orderRecord != null) {
+					if (now.before(right1)) {
+						order.setCan_down(1);
+					} else {
+						order.setCan_down(0);
+					}
+				} else {
+					if (now.after(right) && now.before(right1)) {
+						order.setCan_down(1);
+					} else {
+						order.setCan_down(0);
+					}
+				}
+			}
+
+			// 是否可以评论
+			String hqlC = "from EvaluationInfo where order_id = :order_id and type = 1";
+			String[] paramsC = { "order_id" };
+			EvaluationInfo eva = (EvaluationInfo) dataDao.getFirstObjectViaParam(hqlC, paramsC, order.getOrderid());
+
+			if (eva == null && (orderRecord2 != null || now.after(right1))) {
+				order.setCan_comment(1);
+			} else {
+				order.setCan_comment(0);
+			}
+			
+		}
+
+		return orderlist;
+	}
+	@Override
+	public int getUnCompleteOrderMore(String studentid, String pagenum) {
+		// 首先查询出订单相关的几个时间配置
+		String hqlset = "from SystemSetInfo where 1 = 1";
+		SystemSetInfo setInfo = (SystemSetInfo) dataDao.getFirstObjectViaParam(hqlset, null);
+		int s_can_down = 60;// 距离订单结束之后可以确认下车的时间默认60分钟
+
+		if (setInfo != null) {
+			if (setInfo.getS_can_down() != null && setInfo.getS_can_down() != 0)
+				s_can_down = setInfo.getS_can_down();
+		}
+		Calendar now = Calendar.getInstance();
+		now.add(Calendar.MINUTE, -s_can_down);
+		StringBuffer cuserhql = new StringBuffer();
+
+		cuserhql.append("from OrderInfo a where a.studentid =:studentid and (a.studentstate in (0,4) and a.coachstate!=4) and "
+				+ "  ((select count(*) as ccount from ComplaintInfo c where c.order_id"
+				+ " = a.orderid and c.type = 1 and state = 0) = 0 and  a.end_time > :now)) order by start_time asc");
+		String[] params = { "studentid", "now" };
+		List<OrderInfo> orderlist = (List<OrderInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), Constant.ORDERLIST_SIZE, CommonUtils.parseInt(pagenum, 0) + 1, params,
+				CommonUtils.parseInt(studentid, 0), now.getTime());
+		if (orderlist == null || orderlist.size() == 0) {
+			return 0;
+		} else {
+			return 1;
+		}
+	}
+	/**
+	 * 获取被投诉的订单
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<OrderInfo> getComplaintOrder(String studentid, String pagenum) {
+		// 首先查询出订单相关的几个时间配置
+		String hqlset = "from SystemSetInfo where 1 = 1";
+		SystemSetInfo setInfo = (SystemSetInfo) dataDao.getFirstObjectViaParam(hqlset, null);
+
+		int time_cancel = 2880;// 距离订单开始前订单可以取消的时间 默认48小时
+		int s_can_up = 30; // 距离订单开始时间前可以确认上车的时间 默认 30分钟
+		int s_can_down = 60;// 距离订单结束之后可以确认下车的时间默认60分钟
+
+		if (setInfo != null) {
+			if (setInfo.getTime_cancel() != null && setInfo.getTime_cancel() != 0)
+				time_cancel = setInfo.getTime_cancel();
+			if (setInfo.getS_can_up() != null && setInfo.getS_can_up() != 0)
+				s_can_up = setInfo.getS_can_up();
+			if (setInfo.getS_can_down() != null && setInfo.getS_can_down() != 0)
+				s_can_down = setInfo.getS_can_down();
+
+		}
+		Calendar now = Calendar.getInstance();
+
+		Calendar nowCanDown = Calendar.getInstance();
+		nowCanDown.add(Calendar.MINUTE, -s_can_down);
+		StringBuffer cuserhql = new StringBuffer();
+		List<OrderInfo> orderlist = new ArrayList<OrderInfo>();
+		cuserhql.append("from OrderInfo a where a.studentid =:studentid and (a.studentstate in (0,4) and a.coachstate!=4) and ((select count(*) from ComplaintInfo c where c.order_id"
+				+ " = a.orderid and c.type = 1 and c.state = 0) > 0 "
+				+ "  order by a.start_time asc");
+		String[] params = { "studentid" };
+		orderlist.addAll((List<OrderInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), Constant.ORDERLIST_SIZE, CommonUtils.parseInt(pagenum, 0) + 1, params, CommonUtils.parseInt(studentid, 0)));
 
 		for (OrderInfo order : orderlist) {
 			CuserInfo user = dataDao.getObjectById(CuserInfo.class, order.getCoachid());
@@ -408,9 +619,9 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 
 		return orderlist;
 	}
-
+	
 	@Override
-	public int getUnCompleteOrderMore(String studentid, String pagenum) {
+	public int getComplaintOrderMore(String studentid, String pagenum) {
 		// 首先查询出订单相关的几个时间配置
 		String hqlset = "from SystemSetInfo where 1 = 1";
 		SystemSetInfo setInfo = (SystemSetInfo) dataDao.getFirstObjectViaParam(hqlset, null);
@@ -425,17 +636,18 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 		StringBuffer cuserhql = new StringBuffer();
 
 		cuserhql.append("from OrderInfo a where a.studentid =:studentid and (a.studentstate in (0,4) and a.coachstate!=4) and ((select count(*) as ccount from ComplaintInfo c where c.order_id"
-				+ " = a.orderid and c.type = 1 and state = 0) > 0 or ((select count(*) as ccount from ComplaintInfo c where c.order_id"
-				+ " = a.orderid and c.type = 1 and state = 0) = 0 and  a.end_time > :now)) order by start_time asc");
-		String[] params = { "studentid", "now" };
+				+ " = a.orderid and c.type = 1 and state = 0) > 0 "
+				+ "  order by start_time asc");
+		String[] params = { "studentid" };
 		List<OrderInfo> orderlist = (List<OrderInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), Constant.ORDERLIST_SIZE, CommonUtils.parseInt(pagenum, 0) + 1, params,
-				CommonUtils.parseInt(studentid, 0), now.getTime());
+				CommonUtils.parseInt(studentid, 0));
 		if (orderlist == null || orderlist.size() == 0) {
 			return 0;
 		} else {
 			return 1;
 		}
 	}
+	
 
 	/**
 	 * 取得已经完成的订单列表
@@ -456,6 +668,14 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				order.setCuserinfo(user);
 				//设置车的牌照
 				order.setCarlicense(user.getCarlicense());
+				StringBuffer subHql = new StringBuffer();
+				subHql.append("from CsubjectInfo where subjectid =:subjectid ");
+				String[] params3 = { "subjectid" };
+				CsubjectInfo subjectInfo = (CsubjectInfo) dataDao.getFirstObjectViaParam(subHql.toString(), params3, user.getSubjectdef());
+				if(subjectInfo!=null){
+					//设置科目
+					order.setSubjectname(subjectInfo.getSubjectname());
+				}
 			}
 			StringBuffer cuserhql1 = new StringBuffer();
 			cuserhql1.append("from OrderPrice where orderid =:orderid ");

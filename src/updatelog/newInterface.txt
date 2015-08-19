@@ -42,3 +42,24 @@ version     版本号
 # 教练login接口新增请求参数：
 devicetype  设备类型  1 IOS 2 android
 version     版本号
+
+
+2015-08-19
+#学员未完成订单GetUnCompleteOrder
+   待评价订单GetWaitEvaluationOrder
+   已完成订单GetCompleteOrder
+   这3个接口中新增返回
+ carlicense  牌照
+ modelid 准教车型
+ subjectname 科目
+
+#学员未完成订单GetUnCompleteOrder中
+ 过滤掉了被投诉的订单
+
+#新增被投诉订单列表
+接口名称 /sorder?action=GETCOMPLAINTORDER
+参数：studentid 学员ID
+    pagenum   页号
+返回：
+  hasmore 	1 有下一页  0 没有
+  orderlist 订单列表
