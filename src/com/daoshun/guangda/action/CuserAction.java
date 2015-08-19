@@ -1041,6 +1041,18 @@ public class CuserAction extends BaseAction {
 	}
 
 	/**
+	 * 教练提现作废
+	 * 
+	 * @return
+	 */
+	@Action(value = "/applyCheckrevocation", results = { @Result(name = SUCCESS, location = "/getCoachApplyList.do?index=${index}&pageIndex=${pageIndex}", type = "redirect") })
+	public String applyCheckrevocation() {
+		cuserService.applyCheckrevocation(applyid);
+		return SUCCESS;
+	}
+
+	
+	/**
 	 * 设置保证金
 	 * 
 	 * @return

@@ -103,6 +103,7 @@ $(function(){
  		<select id="state" class="searchdiv" style="width: 85px;"> 
 			<option value="0" >申请中</option> 
  			<option value="3" >申请不通过</option> 
+ 			<option value="4" >已作废</option> 
  		</select> <input type="hidden" id="hidstate" value="${state}" />
  	</div> 
 			</div>
@@ -157,6 +158,11 @@ $(function(){
 									<div class="table_button_edit_icon"></div>
 									<div class="table_button_text"
 										onclick="checknopass(${applyid},${index},${pageIndex},${change_id})">审核不通过</div>
+								</div>
+								<div class="table_edit_button" style="width: 90px;background:#f83a22">
+									<div class="table_button_edit_icon"></div>
+									<div class="table_button_text"
+										onclick="checkrevocation(${applyid},${index},${pageIndex},${change_id})">作废</div>
 								</div>
 								
 								

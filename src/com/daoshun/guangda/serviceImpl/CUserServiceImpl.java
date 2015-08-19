@@ -432,11 +432,58 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
             capplyCash.setState(3);
             capplyCash.setUpdatetime(new Date());
             dataDao.updateObject(capplyCash);
-            /*CuserInfo coach = dataDao.getObjectById(CuserInfo.class, capplyCash.getCoachid());
+            
+            CuserInfo coach = dataDao.getObjectById(CuserInfo.class, capplyCash.getCoachid());
+            if (coach != null) {
+                coach.setFmoney(coach.getFmoney().subtract(capplyCash.getAmount()));
+                //增加教练可提现余额
+                coach.setMoney(coach.getMoney().add(capplyCash.getAmount()));
+                dataDao.updateObject(coach);
+            }
+            
+            BalanceCoachInfo balancoach = new BalanceCoachInfo();
+            balancoach.setType(5);
+            balancoach.setAddtime(new Date());
+            balancoach.setAmount(capplyCash.getAmount());  
+            balancoach.setUserid(capplyCash.getCoachid());
+            balancoach.setAmount_out1(new BigDecimal(0));
+            balancoach.setAmount_out2(new BigDecimal(0));
+            dataDao.addObject(balancoach);
+            /*
+            if (capplyCash.getSchoolid() != null && capplyCash.getSchoolid() > 0) {
+                DriveSchoolInfo schoolinfo = dataDao.getObjectById(DriveSchoolInfo.class, capplyCash.getSchoolid());
+                if (schoolinfo != null) {
+                    schoolinfo.setMoney(schoolinfo.getMoney().add(capplyCash.getAmount()));
+                    dataDao.updateObject(schoolinfo);
+                    SchoolBalance schoolbalance = new SchoolBalance();
+                    schoolbalance.setAddtime(new Date());
+                    schoolbalance.setCoachid(coachid);
+                    schoolbalance.setAmount(capplyCash.getAmount());
+                    schoolbalance.setSchoolid(capplyCash.getSchoolid());
+                    schoolbalance.setType(1);
+                    dataDao.addObject(schoolbalance);
+                }
+            }
+            */
+        }
+    }
+    
+    
+    //教练提现作废
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    @Override
+    public void applyCheckrevocation(int coachid) {
+        CApplyCashInfo capplyCash = dataDao.getObjectById(CApplyCashInfo.class, coachid);
+        if (capplyCash != null) {
+            capplyCash.setState(4);
+            capplyCash.setUpdatetime(new Date());
+            dataDao.updateObject(capplyCash);
+            
+            CuserInfo coach = dataDao.getObjectById(CuserInfo.class, capplyCash.getCoachid());
             if (coach != null) {
                 coach.setFmoney(coach.getFmoney().subtract(capplyCash.getAmount()));
                 dataDao.updateObject(coach);
-            }*/
+            }
             /*
             BalanceCoachInfo balancoach = new BalanceCoachInfo();
             balancoach.setType(2);
@@ -445,7 +492,8 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
             balancoach.setUserid(capplyCash.getCoachid());
             balancoach.setAmount_out1(new BigDecimal(0));
             balancoach.setAmount_out2(new BigDecimal(0));
-            dataDao.addObject(balancoach);*/
+            dataDao.addObject(balancoach);
+            */
             /*
             if (capplyCash.getSchoolid() != null && capplyCash.getSchoolid() > 0) {
                 DriveSchoolInfo schoolinfo = dataDao.getObjectById(DriveSchoolInfo.class, capplyCash.getSchoolid());

@@ -12,6 +12,13 @@ function checknopass(applyid,index,pageIndex,change_id) {
 	}
 }
 
+//作废
+function checkrevocation(applyid,index,pageIndex,change_id) {
+	if(confirm("确认撤销？")){
+		window.location.href="applyCheckrevocation.do?applyid="+applyid+"&index="+index+"&pageIndex="+pageIndex+"&change_id="+change_id;
+	}
+}
+
 function checkall(){
 	if($("input[name='checkall']").attr("checked")==true){
 		$("input[name='checkbox']").attr("checked",true);

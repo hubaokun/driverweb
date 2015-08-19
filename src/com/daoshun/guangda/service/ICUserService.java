@@ -209,6 +209,8 @@ public interface ICUserService {
 	public abstract void applyCheckPass(int coachid);
 	/** 提现申请审核 */
 	public abstract void applyCheckNoPass(int coachid);
+	/** 提现申请审核 */
+	public abstract void applyCheckrevocation(int coachid);
 
 	/** 根据条件搜索提现记录 */
 	public abstract QueryResult<CApplyCashInfo> getCoachApplyBySearch(String searchname, String searchphone, String amount, String inputamount, Integer schoolid, String minsdate, String maxsdate,Integer state,
