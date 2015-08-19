@@ -193,6 +193,8 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 			CuserInfo user = dataDao.getObjectById(CuserInfo.class, order.getCoachid());
 			if (user != null) {
 				order.setCuserinfo(user);
+				//设置牌照
+				order.setCarlicense(user.getCarlicense());
 			}
 
 			order.setHours(-2);// 学车已经完成
@@ -276,8 +278,12 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 			CuserInfo user = dataDao.getObjectById(CuserInfo.class, order.getCoachid());
 			if (user != null) {// 教练信息
 				order.setCuserinfo(user);
+				//设置教练的牌照
+				order.setCarlicense(user.getCarlicense());
 			}
-
+			
+			
+			
 			// 是否已经确认上车
 			StringBuffer cuserhql1 = new StringBuffer();
 			cuserhql1.append("from OrderRecordInfo where orderid =:orderid and userid =:userid and operation = 1");
@@ -397,6 +403,7 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 			} else {
 				order.setCan_comment(0);
 			}
+			
 		}
 
 		return orderlist;
@@ -447,6 +454,8 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 			CuserInfo user = dataDao.getObjectById(CuserInfo.class, order.getCoachid());
 			if (user != null) {
 				order.setCuserinfo(user);
+				//设置车的牌照
+				order.setCarlicense(user.getCarlicense());
 			}
 			StringBuffer cuserhql1 = new StringBuffer();
 			cuserhql1.append("from OrderPrice where orderid =:orderid ");

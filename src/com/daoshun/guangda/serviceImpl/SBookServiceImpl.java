@@ -1394,7 +1394,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 	@Transactional(readOnly = false, propagation = Propagation.SUPPORTS)
 	public HashMap<String, Object> bookCoach2(String coachid, String studentid, String date) {
 		HashMap<String, Object> result = new HashMap<String, Object>();
-		//处理测试账号
+		//################处理测试账号开始#####################
 		SuserInfo student = dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
 		CuserInfo cuser = dataDao.getObjectById(CuserInfo.class, CommonUtils.parseInt(coachid, 0));
 		if(student!=null && cuser!=null){ 
@@ -1411,12 +1411,13 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				return result;
 			}
 		}
-		
 		/*if(student!=null && "18888888888".equals(student.getPhone())){
 			result.put("message", "测试账号不能预约");
 			result.put("code", 20);
 			return result;
 		}*/
+		//################处理测试账号结束#####################
+		
 		
 		
 		String failtimes = "";// 不能预订的时间点集合
@@ -1845,8 +1846,14 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						hasError = true;
 					}
 				}
+				//判断订单总价格，如果没有在50到500价格之间，返回预订失败
+				if(total.doubleValue()>500 ||total.doubleValue()<50){
+					result.put("code", 26);
+					result.put("message", "订单额非法");
+					return result;
+				}
 			}
-
+			
 			if (!hasError) {
 				if (orderList.size() > 0) {
 					

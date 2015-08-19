@@ -183,9 +183,30 @@ public class OrderInfo implements Serializable {
 	//0 教练未同意取消  1 教练已同意取消
 	@Transient
 	private int agreecancel;
+	//驾照
+	@Transient
+	private String carlicense;
+	//订单准教车型
+	@Transient
+	private String modelid;
 	
 	
-	
+	public String getModelid() {
+		return modelid;
+	}
+
+	public void setModelid(String modelid) {
+		this.modelid = modelid;
+	}
+
+	public String getCarlicense() {
+		return carlicense;
+	}
+
+	public void setCarlicense(String carlicense) {
+		this.carlicense = carlicense;
+	}
+
 	public int getPaytype() {
 		return paytype;
 	}
