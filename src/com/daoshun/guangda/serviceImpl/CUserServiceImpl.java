@@ -1519,4 +1519,31 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 		 return result;
 	}
 
+	@Override
+	public void setCoachDriverSchool(List<CuserInfo> cusrlist) {
+		StringBuffer querystring=new StringBuffer();
+		querystring.append("from DriveSchoolInfo where schoolid=:schoolid");
+		String[] params={"schoolid"};
+		for(CuserInfo c:cusrlist)
+		{
+			DriveSchoolInfo temp=(DriveSchoolInfo) dataDao.getFirstObjectViaParam(querystring.toString(), params, c.getDrive_schoolid());
+			if(temp!=null)
+			{
+				c.setDisplaydriverschool(temp.getName());
+			}
+		}	
+	}
+
+	@Override
+	public Integer getDriverSchoolIDbyName(String schoolname) {
+		StringBuffer querystring=new StringBuffer();
+		querystring.append("from DriveSchoolInfo where name=:name");
+		String[] params={"name"};
+		DriveSchoolInfo temp=(DriveSchoolInfo) dataDao.getFirstObjectViaParam(querystring.toString(), params,schoolname);
+		if(temp!=null)
+                return temp.getSchoolid();
+		else	
+		        return 0;
+	}
+
 }
