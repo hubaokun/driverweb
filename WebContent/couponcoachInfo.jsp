@@ -117,10 +117,10 @@
 						</div>
 
 						<div class="serchcontentdiv"
-							style="float: left; margin-left: 50px; width: 156px">
+							style="float: left; margin-left: 50px; width: 206px">
 							<input type="text" class="searchdiv"
-								style="width: 50px; text-align: center; font-family: 微软雅黑;"
-								value="用户名" readonly="readonly"> <input id="username"
+								style="width: 100px; text-align: center; font-family: 微软雅黑;"
+								value="用户名或手机号" readonly="readonly"> <input id="username"
 								type="text" name="username" class="searchdiv"
 								style="width: 100px; font-family: 微软雅黑;" value="${username}"
 								maxlength="11" onclick="username.focus();this.select();" />
@@ -176,9 +176,9 @@
 								name="state" class="searchdiv" style="width: 85px;">
 								<option id="state0" value="">全部</option>
 								<option id="state0" value="0">被冻结</option>
-								<option id="state1" value="1">未申请套现</option>
-								<option id="state2" value="2">已经申请套现</option>
-								<option id="state3" value="3">套现申请已通过</option>
+								<option id="state1" value="1">未申请兑换</option>
+								<option id="state2" value="2">已经申请兑换</option>
+								<option id="state3" value="3">兑换申请已通过</option>
 							</select> <input type="hidden" id="hiddenstate" value="${state}">
 						</div>
 					</div>
@@ -192,7 +192,7 @@
 						<th>发券人</th>
 						<th>状态</th>
 						<th>面值</th>
-						<th>套现金额</th>
+						<th>兑换金额</th>
 						<th>结算时间</th>
 					</tr>
 					<s:iterator value="couponcoachlist" var="couponcoachlist">
@@ -207,9 +207,9 @@
 							
 							<td style="width: 200px;" class="border_right_bottom"><s:if
 									test="state==0">被冻结</s:if> 
-									<s:elseif test="state==1">未申请套现
-									</s:elseif> <s:elseif test="state==2">已经申请套现
-									</s:elseif><s:elseif test="state==3">套现申请已通过
+									<s:elseif test="state==1">未申请兑换
+									</s:elseif> <s:elseif test="state==2">已经申请兑换
+									</s:elseif><s:elseif test="state==3">兑换申请已通过
 									</s:elseif>
 							</td>
 							<td style="width: 100px;" class="border_right_bottom">${value}</td>
