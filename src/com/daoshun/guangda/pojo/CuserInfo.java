@@ -336,7 +336,10 @@ public class CuserInfo implements Serializable {
 
 	@Transient
 	private String driveschool;
-
+   //列表展示用驾校名称字段
+	@Transient
+	private String displaydriverschool;
+	
 	@Transient
 	private String teachcarmodel;
 
@@ -1126,6 +1129,14 @@ public class CuserInfo implements Serializable {
 
 	public void setAd_flag(int ad_flag) {
 		this.ad_flag = ad_flag;
+	}
+
+	public String getDisplaydriverschool() {
+		return displaydriverschool;
+	}
+
+	public void setDisplaydriverschool(String displaydriverschool) {
+		this.displaydriverschool = displaydriverschool;
 	}
 	
 }

@@ -1228,6 +1228,7 @@ public class CuserAction extends BaseAction {
 				cuserlist.get(i).setAge(age);
 			}
 		}
+		cuserService.setCoachDriverSchool(cuserlist);
 		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
 		if (pageIndex > 1) {
 			if (cuserlist == null || cuserlist.size() == 0) {
