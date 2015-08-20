@@ -33,7 +33,9 @@ import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.DriveSchoolInfo;
 import com.daoshun.guangda.pojo.LogInfo;
 import com.daoshun.guangda.pojo.ModelsInfo;
+import com.daoshun.guangda.pojo.OrderInfo;
 import com.daoshun.guangda.pojo.ProvinceInfo;
+import com.daoshun.guangda.pojo.RechargeRecordInfo;
 import com.daoshun.guangda.pojo.TeachcarInfo;
 import com.daoshun.guangda.service.IBaseService;
 import com.daoshun.guangda.service.ICUserService;
@@ -76,6 +78,12 @@ public class CuserAction extends BaseAction {
 	private List<LogInfo> logInfoList;
 
 	private CuserInfo cuser;
+	
+	private CApplyCashInfo cacash;
+	
+	private List<OrderInfo> orderlist;
+	
+	private List<RechargeRecordInfo> recharglist;
 
 	private String coachid;
 	
@@ -1169,6 +1177,24 @@ public class CuserAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	/**
+	 * 获取教练提现详情
+	 * 
+	 * @return
+	 */
+	@Action(value = "/getWithdrawCashDetailByCoach", results = { @Result(name = SUCCESS, location = "/withdrawcashdetailbycoach.jsp") })
+	public String getWithdrawCashDetailByCoach() {
+		Map result=new HashMap();
+		result=cuserService.getWithdrawcashdetail(applyid, coachid);
+		cuser=(CuserInfo)result.get("CuserInfo");
+		balancecoachlist=(List<BalanceCoachInfo>) result.get("BalanceCoachInfo");
+		cacash=(CApplyCashInfo) result.get("CApplyCashInfo");
+		orderlist=(List<OrderInfo>) result.get("OrderInfo");
+		recharglist=(List<RechargeRecordInfo>) result.get("RechargeRecordInfo");
+		return SUCCESS;
+	}
+	
+	
 	/**
 	 * 根据关键字搜索
 	 * 
@@ -2893,6 +2919,30 @@ public class CuserAction extends BaseAction {
 
 	public void setEditusertype(Integer editusertype) {
 		this.editusertype = editusertype;
+	}
+
+	public CApplyCashInfo getCacash() {
+		return cacash;
+	}
+
+	public void setCacash(CApplyCashInfo cacash) {
+		this.cacash = cacash;
+	}
+
+	public List<OrderInfo> getOrderlist() {
+		return orderlist;
+	}
+
+	public void setOrderlist(List<OrderInfo> orderlist) {
+		this.orderlist = orderlist;
+	}
+
+	public List<RechargeRecordInfo> getRecharglist() {
+		return recharglist;
+	}
+
+	public void setRecharglist(List<RechargeRecordInfo> recharglist) {
+		this.recharglist = recharglist;
 	}
 	
 	

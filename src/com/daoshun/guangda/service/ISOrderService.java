@@ -342,4 +342,12 @@ public interface ISOrderService {
 	 * @param enddate 结束时间
 	 */
 	public List<OrderInfo> getOrderBydate(String startdate,String enddate);
+	/**
+	 * 被投诉的订单
+	 * @param studentid
+	 * @param pagenum
+	 * @return
+	 */
+	public List<OrderInfo> getComplaintOrder(String studentid, String pagenum);
+	public int getComplaintOrderMore(String studentid, String pagenum);
 }

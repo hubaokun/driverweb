@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "t_recharge_record")
@@ -55,7 +56,11 @@ public class RechargeRecordInfo implements Serializable {
 
 	@Column(name = "buyer_email", nullable = true, length = 255)
 	private String buyer_email;
-
+    
+	
+	@Transient
+	private SuserInfo suser;
+	
 	public Integer getRechargeid() {
 		return rechargeid;
 	}
@@ -126,6 +131,14 @@ public class RechargeRecordInfo implements Serializable {
 
 	public void setBuyer_email(String buyer_email) {
 		this.buyer_email = buyer_email;
+	}
+
+	public SuserInfo getSuser() {
+		return suser;
+	}
+
+	public void setSuser(SuserInfo suser) {
+		this.suser = suser;
 	}
 
 }

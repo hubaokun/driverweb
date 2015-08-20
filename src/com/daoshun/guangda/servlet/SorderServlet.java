@@ -76,6 +76,9 @@ public class SorderServlet extends BaseServlet {
 			} else if (Constant.GETUNCOMPLETEORDER.equals(action)) {
 				// 获取未完成订单
 				getUnCompleteOrder(request, resultMap);
+			}else if (Constant.GETCOMPLAINTORDER.equals(action)) {
+				// 获取被投诉订单
+				getComplaintOrder(request, resultMap);
 			} else if (Constant.GETCOMPLETEORDER.equals(action)) {
 				// 获取已完成订单
 				getCompleteOrder(request, resultMap);
@@ -370,6 +373,21 @@ public class SorderServlet extends BaseServlet {
 		CommonUtils.validateEmpty(studentid);
 		List<OrderInfo> orderlist = sorderService.getUnCompleteOrder(studentid, pagenum);
 		int hasmore = sorderService.getUnCompleteOrderMore(studentid, String.valueOf(CommonUtils.parseInt(pagenum, 0) + 1));
+		resultMap.put("hasmore", hasmore);
+		resultMap.put("orderlist", orderlist);
+	}
+	/**
+	 * 取得被投诉订单列表
+	 * 
+	 * @param request
+	 * @throws ErrException
+	 */
+	public void getComplaintOrder(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String studentid = getRequestParamter(request, "studentid");
+		String pagenum = getRequestParamter(request, "pagenum");
+		CommonUtils.validateEmpty(studentid);
+		List<OrderInfo> orderlist = sorderService.getComplaintOrder(studentid, pagenum);
+		int hasmore = sorderService.getComplaintOrderMore(studentid, String.valueOf(CommonUtils.parseInt(pagenum, 0) + 1));
 		resultMap.put("hasmore", hasmore);
 		resultMap.put("orderlist", orderlist);
 	}

@@ -1,6 +1,7 @@
 package com.daoshun.guangda.serviceImpl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -1455,6 +1456,67 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 	@Override
 	public void resetCoachCoursestate() {
 		dataDao.callUpdatecoursestate();
+	}
+
+	@Override
+	public Map getWithdrawcashdetail(int applyid, String coachid) {
+		 Map result=new HashMap();
+		 StringBuffer querystring1=new StringBuffer();
+		 StringBuffer querystring2=new StringBuffer();
+		 StringBuffer querystring3=new StringBuffer();
+		 String[] params={"coachid"};
+		 String[] params1={"userid"};
+		 //历史提现申请详情
+		 querystring1.append("from BalanceCoachInfo where userid=:userid and type=2");
+		 //现阶段由于需要统计paytype=0的老数据，所以先用方案1
+		 querystring2.append("from OrderInfo where coachid=:coachid and over_time is not null and delmoney=0");
+		//方案2，不包含paytype=0的老数据
+		// querystring2.append("from OrderInfo where coachid=:coachid and over_time is not null and paytype=1");
+		 querystring3.append("from RechargeRecordInfo where userid=:userid and state=1 and type=2");
+		 CuserInfo tempCuserInfo=(CuserInfo) dataDao.getObjectById(CuserInfo.class, CommonUtils.parseInt(coachid, 0));
+		 CApplyCashInfo  tempCApplyCashInfo=dataDao.getObjectById(CApplyCashInfo.class, applyid);
+		 tempCApplyCashInfo.setCoach(tempCuserInfo);
+		 List<BalanceCoachInfo> tempBalanceCoachInfolist=(List<BalanceCoachInfo>) dataDao.getObjectsViaParam(querystring1.toString(), params1,CommonUtils.parseInt(coachid, 0));
+		 for(BalanceCoachInfo b:tempBalanceCoachInfolist)
+		 {
+			 b.setRealname(tempCuserInfo.getRealname());
+			 b.setPhone(tempCuserInfo.getPhone());
+			 b.setAlipay_account(tempCuserInfo.getAlipay_account());
+		 }
+		 List<OrderInfo> tempOrderInfo=(List<OrderInfo>) dataDao.getObjectsViaParam(querystring2.toString(), params,CommonUtils.parseInt(coachid, 0));
+		 List<Integer> studentname=new ArrayList<Integer>();
+		 List<RechargeRecordInfo> tempRechargeRecordInfo=new ArrayList<RechargeRecordInfo>();
+		 if(tempOrderInfo!=null)
+		 {
+			 for(OrderInfo c:tempOrderInfo)
+			 {
+				 //如果未添加该学院ID
+				 if(!studentname.contains(c.getStudentid()))
+				 {
+					 studentname.add(c.getStudentid());
+				 }
+				 c.setCuserinfo(tempCuserInfo);
+				 SuserInfo temps=dataDao.getObjectById(SuserInfo.class,c.getStudentid());
+				 c.setStudentinfo(temps);
+			 }
+		 }
+		 for(int i=0;i<studentname.size();i++)
+		 {
+			 List<RechargeRecordInfo> temp=(List<RechargeRecordInfo>) dataDao.getObjectsViaParam(querystring3.toString(), params1,studentname.get(i));
+			 tempRechargeRecordInfo.addAll(temp);
+		 }
+		 for(RechargeRecordInfo r:tempRechargeRecordInfo)
+		 {
+			 Integer studentid=r.getUserid();
+			 SuserInfo tempsuserinfo=dataDao.getObjectById(SuserInfo.class, studentid);
+			 r.setSuser(tempsuserinfo);
+		 }
+		 result.put("CuserInfo", tempCuserInfo);
+		 result.put("CApplyCashInfo", tempCApplyCashInfo);
+		 result.put("BalanceCoachInfo", tempBalanceCoachInfolist);
+		 result.put("OrderInfo", tempOrderInfo);
+		 result.put("RechargeRecordInfo", tempRechargeRecordInfo);
+		 return result;
 	}
 
 }
