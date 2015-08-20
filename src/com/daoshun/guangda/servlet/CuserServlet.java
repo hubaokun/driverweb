@@ -322,7 +322,7 @@ public class CuserServlet extends BaseServlet {
 		CommonUtils.validateEmpty(password);
 		// 验证验证码的有效性
 		int result = cuserService.checkVerCode(loginid, password);
-
+		//result=1;
 		if (result == 1) {// 可以登录
 			String token = request.getSession().getId().toLowerCase();
 			CuserInfo cuser = cuserService.getCuserByPhone(loginid);

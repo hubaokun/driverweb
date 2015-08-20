@@ -1,10 +1,12 @@
 package com.daoshun.guangda.serviceImpl;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 
-import com.daoshun.common.UserType;
-import com.daoshun.guangda.pojo.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,11 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alipay.config.AlipayConfig;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.QueryResult;
+import com.daoshun.common.UserType;
 import com.daoshun.guangda.pojo.AdminInfo;
 import com.daoshun.guangda.pojo.BalanceStudentInfo;
 import com.daoshun.guangda.pojo.CoachStudentInfo;
-import com.daoshun.guangda.pojo.CouponInfo;
-import com.daoshun.guangda.pojo.CouponRecord;
+import com.daoshun.guangda.pojo.CoinRecordInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.RechargeRecordInfo;
 import com.daoshun.guangda.pojo.StudentApplyInfo;
@@ -1163,26 +1165,49 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			/*String hql = "select sum(coinnum) from CoinRecordInfo where payerid =:payerid and payertype="+ UserType.STUDENT+"  order by addtime desc";
 			String[] params = { "payerid"};
 			Integer cid = CommonUtils.parseInt(studentid, 0);
-			Long paycoinnum = (Long)dataDao.getFirstObjectViaParam(hql, params, cid);
-			result.put("paycoin", paycoinnum);//小巴币的累积消费额
+			BigDecimal consumeCoin = (BigDecimal)dataDao.getFirstObjectViaParam(hql, params, cid);
+			if(consumeCoin!=null){
+				result.put("consumeCoin", consumeCoin);//小巴币的累积消费额
+			}else{
+				result.put("consumeCoin", 0);//小巴币的累积消费额
+			}
 			
-			String couponhql="select sum(value) from CouponRecord where state=1 and userid=:userid";
+			
+			String couponhql="select count(*) from CouponRecord where state=1 and userid=:userid";
 			String[] couponParams = { "userid"};
-			Long paycoupon = (Long)dataDao.getFirstObjectViaParam(couponhql, couponParams, cid);
-			result.put("paycoupon", paycoupon);//小巴券的累积消费额
-			result.put("paymoney", paycoupon);//余额的累积消费额*/
+			Long consumeCoupon = (Long)dataDao.getFirstObjectViaParam(couponhql, couponParams, cid);
+			if(consumeCoupon!=null){
+				result.put("consumeCoupon", consumeCoupon);//小巴券的累积消费额
+			}else{
+				result.put("consumeCoupon", 0);//小巴券的累积消费额
+			}
+			*/
+			
 			Integer cid = CommonUtils.parseInt(studentid, 0);
-			String hql ="select sum(total) from OrderInfo where studentid=:studentid and paytype=:paytype and studentstate=3";
-			String[] params = { "studentid","paytype"};
-			// 1 余额  2 小巴币  3 小巴券
-			Long consumeMoney = (Long)dataDao.getFirstObjectViaParam(hql, params, cid,1);
+			String hql3 ="select sum(total) from OrderInfo where studentid=:studentid and paytype=:paytype and studentstate=3";
+			String[] params3 = { "studentid","paytype"};
+			// 1 余额  3小巴币  2 小巴券
+			BigDecimal consumeMoney = (BigDecimal)dataDao.getFirstObjectViaParam(hql3, params3, cid,1);
+			String hql4 ="select count(*) from OrderInfo where studentid=:studentid and paytype=:paytype and studentstate=3";
+			Long  consumeCoupon= (Long)dataDao.getFirstObjectViaParam(hql4, params3, cid,2);//小巴券
 			
-			Long consumeCoin = (Long)dataDao.getFirstObjectViaParam(hql, params, cid,2);
+			BigDecimal  consumeCoin= (BigDecimal)dataDao.getFirstObjectViaParam(hql3, params3, cid,3);//小巴币
+			if(consumeMoney!=null){
+				result.put("consumeMoney", consumeMoney.doubleValue());
+			}else{
+				result.put("consumeMoney", 0);
+			}
+			if(consumeCoin!=null){
+				result.put("consumeCoin", consumeCoin.intValue());
+			}else{
+				result.put("consumeCoin", 0);
+			}
+			if(consumeCoupon!=null){
+				result.put("consumeCoupon", consumeCoupon.intValue());
+			}else{
+				result.put("consumeCoupon",0);
+			}
 			
-			Long consumeCoupon = (Long)dataDao.getFirstObjectViaParam(hql, params, cid,3);
-			result.put("consumeMoney", consumeMoney);
-			result.put("consumeCoin", consumeCoin);
-			result.put("consumeCoupon", consumeCoupon);
 			
 		}else {
 			result.put("code", 2);

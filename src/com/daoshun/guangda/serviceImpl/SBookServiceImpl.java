@@ -1397,7 +1397,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		//处理测试账号
 		SuserInfo student = dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
 		CuserInfo cuser = dataDao.getObjectById(CuserInfo.class, CommonUtils.parseInt(coachid, 0));
-		if(student!=null && cuser!=null){
+		if(student!=null && cuser!=null){ 
 			//学员为测试用户,教练不是测试用户
 			if(student.getUsertype()!=null && student.getUsertype()==1 && cuser.getUsertype()!=null && cuser.getUsertype()!=1){
 				result.put("message", "学员测试账号不能预约正式教练，请选择测试教练");
