@@ -44,7 +44,7 @@ $(function(){
 		<jsp:include page="left.jsp" />
 		<div id="content_form">
 			<div id="content_form_table">
-					<font size="4" color="red">当前提现申请详情:</font>
+					<font size="4" color="#4cc3ff">当前提现申请详情:</font>
 					<br>
 					<table border="0" cellspacing="0" cellpadding="0" style="width: 100%;">
 					  <tr class="tr_th">
@@ -76,7 +76,7 @@ $(function(){
 		
 		<div id="content_form">
 			<div id="content_form_table">
-					<font size="4" color="red">历史提现申请详情:</font><br>
+					<font size="4" color="#4cc3ff">历史提现申请详情:</font><br>
 					<table border="0" cellspacing="0" cellpadding="0" style="width: 100%;">
 					  <tr class="tr_th">
 					  <th>教练姓名</th>
@@ -85,6 +85,7 @@ $(function(){
 					  <th>申请时间</th>
 					  <th>支付宝账号</th>
 					  </tr>
+					 <s:if test="balancecoachlist.size()>0">
 					  <s:iterator value="balancecoachlist">
 					   <tr class="tr_td">
 					    <td class="border_right_bottom">${realname}</td>
@@ -94,12 +95,22 @@ $(function(){
 					    <td class="border_right_bottom">${alipay_account}</td>
 					   </tr>
 					  </s:iterator>
+					  </s:if>
+					  <s:else>
+						  <tr class="tr_td">
+						    <td class="border_right_bottom">——</td>
+						    <td class="border_right_bottom">——</td>
+						    <td class="border_right_bottom">——</td>
+						    <td style="width: 200px;" class="border_right_bottom">——</td>
+						    <td class="border_right_bottom">——</td>
+						   </tr>
+					  </s:else>
 					</table>
 				</div>
 		</div>
 		<div id="content_form">
 			<div id="content_form_table">
-					<font size="4" color="red">历史交易订单详情:</font><br>
+					<font size="4" color="#4cc3ff">历史交易订单详情:</font><br>
 					<table border="0" cellspacing="0" cellpadding="0" style="width: 100%;">
 					  <tr class="tr_th">
 					  <th>教练姓名</th>
@@ -108,6 +119,8 @@ $(function(){
 					  <th>学员电话</th>
 					  <th>开始时间</th>
 					  <th>结束时间</th>
+					  <th>小巴券号码</th>
+					  <th>抵扣金额</th>
 					  <th>支付方式</th>
 					  <th>创建时间</th>
 					  <th>结算时间</th>
@@ -115,28 +128,66 @@ $(function(){
 					  <th>抵扣金额</th>
 					  <th>总价</th>
 					  </tr>
-					  <s:iterator value="orderlist">
-					   <tr class="tr_td">
-					    <td class="border_right_bottom">${cuserinfo.realname}</td>
-					    <td class="border_right_bottom">${cuserinfo.phone}</td>
-					    <td class="border_right_bottom">${studentinfo.realname}</td>
-					    <td class="border_right_bottom">${studentinfo.phone}</td>
-					    <td class="border_right_bottom">${start_time}</td>
-					    <td class="border_right_bottom">${end_time}</td>
-					    <td class="border_right_bottom">${paytype}</td>
-					    <td class="border_right_bottom">${creat_time}</td>
-					    <td class="border_right_bottom">${over_time}</td>
-					    <td class="border_right_bottom">已结算</td>
-					    <td class="border_right_bottom">${delmoney}</td>
-					    <td class="border_right_bottom">${total}</td>
-					   </tr>
-					  </s:iterator>
+					  <s:if test="orderlist.size()>0">
+						  <s:iterator value="orderlist">
+						   <tr class="tr_td">
+						    <td class="border_right_bottom">${cuserinfo.realname}</td>
+						    <td class="border_right_bottom">${cuserinfo.phone}</td>
+						    <td class="border_right_bottom">${studentinfo.realname}</td>
+						    <td class="border_right_bottom">${studentinfo.phone}</td>
+						    <td class="border_right_bottom">${start_time}</td>
+						    <td class="border_right_bottom">${end_time}</td>
+						    <td class="border_right_bottom">${couponrecordid}</td>
+						    <td class="border_right_bottom">${delmoney}</td>
+						    <s:if test="paytype==0">
+						       <s:if test="couponrecordid==0 || couponrecordid==''">
+						            <td class="border_right_bottom">余额</td>
+						       </s:if>
+						       <s:else>
+						            <td class="border_right_bottom"><font color="red">老数据错单</font></td>
+						       </s:else>
+						    </s:if>
+						     <s:elseif test="paytype==1">
+						      <td class="border_right_bottom">余额</td>
+						    </s:elseif>
+						    <s:elseif test="paytype==2">
+						      <td class="border_right_bottom">小巴券</td>
+						    </s:elseif>
+						    <s:else>
+						      <td class="border_right_bottom">小巴币</td>
+						    </s:else>
+						    <td class="border_right_bottom">${creat_time}</td>
+						    <td class="border_right_bottom">${over_time}</td>
+						    <td class="border_right_bottom">已结算</td>
+						    <td class="border_right_bottom">${delmoney}</td>
+						    <td class="border_right_bottom">${total}</td>
+						   </tr>
+						  </s:iterator>
+					    </s:if>
+					    <s:else>
+					     <tr class="tr_td">
+						    <td class="border_right_bottom">——</td>
+						    <td class="border_right_bottom">——</td>
+						    <td class="border_right_bottom">——</td>
+						    <td class="border_right_bottom">——</td>
+						    <td class="border_right_bottom">——</td>
+						    <td class="border_right_bottom">——</td>
+						    <td class="border_right_bottom">——</td>
+						    <td class="border_right_bottom">——</td>
+						    <td class="border_right_bottom">——</td>
+						    <td class="border_right_bottom">——</td>
+						    <td class="border_right_bottom">——</td>
+						    <td class="border_right_bottom">——</td>
+						    <td class="border_right_bottom">——</td>
+						    <td class="border_right_bottom">——</td>
+						   </tr>    
+					    </s:else>
 					</table>
 				</div>
 		</div>
 		<div id="content_form">
 			<div id="content_form_table">
-					<font size="4" color="red">学员历史交易金额充值记录:</font><br>
+					<font size="4" color="#4cc3ff">学员历史交易金额充值记录:</font><br>
 					<table border="0" cellspacing="0" cellpadding="0" style="width: 100%;">
 					  <tr class="tr_th">
 					  <th>真实姓名</th>
@@ -145,6 +196,7 @@ $(function(){
 					  <th>充值账号</th>
 					  <th>申请处理时间</th>
 					  </tr>
+					<s:if test="recharglist.size()>0">
 					  <s:iterator value="recharglist">
 					   <tr class="tr_td">
 					    <td class="border_right_bottom">${suser.realname}</td>
@@ -152,9 +204,18 @@ $(function(){
 					    <td class="border_right_bottom">${amount}</td>
 					    <td class="border_right_bottom">${suser.alipay_account}</td>
 					    <td style="width: 200px;" class="border_right_bottom"><s:date name="addtime" format="yyyy-MM-dd HH:mm:ss"/></td>
-					    <td></td>
 					   </tr>
 					  </s:iterator>
+					</s:if>
+					<s:else>
+					  <tr class="tr_td">
+					    <td class="border_right_bottom">——</td>
+					    <td class="border_right_bottom">——</td>
+					    <td class="border_right_bottom">——</td>
+					    <td class="border_right_bottom">——</td>
+					    <td style="width: 200px;" class="border_right_bottom">——</td>
+					   </tr>
+					</s:else>
 					</table>
 				</div>
 		</div>
