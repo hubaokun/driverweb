@@ -104,8 +104,7 @@ public class SorderServlet extends BaseServlet {
 				// 确认上车
 				confirmOn(request, resultMap);
 			} else if (Constant.CONFIRMDOWN.equals(action)) {
-				// 确认下车
-				confirmDown(request, resultMap);
+				
 			} else {
 				throw new ErrException();
 			}

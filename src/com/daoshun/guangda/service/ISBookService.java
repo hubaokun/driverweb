@@ -1,6 +1,7 @@
 package com.daoshun.guangda.service;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -46,7 +47,8 @@ public interface ISBookService {
 	 * @return
 	 */
 	public abstract List<CscheduleInfo> refreshCoachSchedule(String coachid, String date, String studentid);
-
+	public int getCoachState(String coachid, int datacount, Date startdate, int starthour, int endhour,int subjectid);
+	public void remindCoach(String coachid,String studentid,String date);
 	/**
 	 * 获取附近教练
 	 * 
@@ -107,5 +109,7 @@ public interface ISBookService {
 	 * @return
 	 */
 	public abstract HashMap<String, Object> getCoachComments(String coachid,String type, String pagenum);
-
+	public HashMap<String, Object> getCoachListByRedis(String cityid,String condition1, String condition2, String condition3, String condition4, String condition5, String condition6, String condition8, String condition9,
+			String condition10, String condition11, String pagenum) ;
+	public int getRemindState(String coachid,String studentid,String date);
 }

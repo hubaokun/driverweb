@@ -63,3 +63,17 @@ version     版本号
 返回：
   hasmore 	1 有下一页  0 没有
   orderlist 订单列表
+  
+# 学员获取教练某一天日程安排REFRESHCOACHSCHEDULE接口新增返回字段
+coachstate 教练在当天的开课状态  1 开课， 0 休息
+remindstate 提醒状态 1 已提醒过，  0 未提醒
+# 新增提醒教练在开课接口
+接口名称：/sbook?action=REMINDCOACH
+       参数：coachid    教练ID
+      studentid  学员ID
+      date       日期字符 ，格式 yyyy-MM-dd
+返回：
+   code 	1 
+   message "操作成功"
+      
+  

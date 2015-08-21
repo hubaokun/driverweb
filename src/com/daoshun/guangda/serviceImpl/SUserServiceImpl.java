@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +33,7 @@ import com.daoshun.guangda.service.ISUserService;
 @Service("suserService")
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
-
+	static Logger logger = Logger.getLogger(SUserServiceImpl.class.getName ()) ;
 	@Override
 	public SuserInfo getUserByPhone(String phone) {
 		StringBuffer cuserhql = new StringBuffer();
@@ -137,7 +138,14 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	public SuserInfo getUserById(String studentid) {
 		SuserInfo suserInfo = dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
 		if (suserInfo != null) {
-			suserInfo.setAvatarurl(getFilePathById(suserInfo.getAvatar()));
+			if(suserInfo.getAvatar()!=null){
+				String avurl=getFilePathById(suserInfo.getAvatar());
+				if(avurl!=null){
+					suserInfo.setAvatarurl(avurl);
+				}
+			}else{
+				logger.error("studentid="+studentid+",getUserById()的suserInfo.getAvatar()为null");
+			}
 			suserInfo.setStudent_cardpicb_url(getFilePathById(suserInfo.getStudent_cardpicb()));
 			suserInfo.setStudent_cardpicf_url(getFilePathById(suserInfo.getStudent_cardpicf()));
 			suserInfo.setId_cardpicb_url(getFilePathById(suserInfo.getId_cardpicb()));

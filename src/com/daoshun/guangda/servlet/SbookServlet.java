@@ -3,6 +3,7 @@ package com.daoshun.guangda.servlet;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -12,9 +13,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.daoshun.common.ApplePushUtil;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
+import com.daoshun.common.DeviceType;
 import com.daoshun.common.ErrException;
+import com.daoshun.common.PushtoSingle;
 import com.daoshun.guangda.pojo.*;
 import com.daoshun.guangda.service.*;
 
@@ -87,6 +91,8 @@ public class SbookServlet extends BaseServlet {
 				getCanUseCouponList(request, resultMap);
 			} else if (Constant.GETCANUSECOINSUM.equals(action)) {
 				getCanUseCoinSum(request, resultMap);
+			} else if (Constant.REMINDCOACH.equals(action)) {
+				remindCoach(request, resultMap);
 			} else {
 				throw new ErrException();
 			}
@@ -282,14 +288,32 @@ public class SbookServlet extends BaseServlet {
 		
 		resultMap.put("coachinfo", cuser);
 	}
-
+	/**
+	 * 提醒教练开课
+	 * @param request
+	 * @param resultMap
+	 * @throws ErrException
+	 */
+	public void remindCoach(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException{
+		String coachid = getRequestParamter(request, "coachid");
+		String studentid = getRequestParamter(request, "studentid");
+		String date = getRequestParamter(request, "date");
+		sbookService.remindCoach(coachid,studentid,date);
+		
+	}
 	public void refreshCoachSchedule(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		String studentid = getRequestParamter(request, "studentid");
 		String date = getRequestParamter(request, "date");
 		CommonUtils.validateEmpty(coachid);
 		CommonUtils.validateEmpty(date);
+		Date fdate=CommonUtils.getDateFormat(date, "yyyy-MM-dd");
+		int remindstate=sbookService.getRemindState(coachid,studentid,date);
+		int coachstate=sbookService.getCoachState(coachid, 1,fdate,5,23,0);
 		List<CscheduleInfo> datelist = sbookService.refreshCoachSchedule(coachid, date, studentid);
+		
+		resultMap.put("remindstate", remindstate);//提醒状态 1 已提醒过,  0 未提醒
+		resultMap.put("coachstate", coachstate);//教练在当天的开课状态  1 开课， 0 休息
 		resultMap.put("datelist", datelist);
 	}
 
