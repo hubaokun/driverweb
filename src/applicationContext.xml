@@ -12,6 +12,7 @@
 	http://www.springframework.org/schema/task  
 	http://www.springframework.org/schema/task/spring-task-3.0.xsd"
 	xmlns:task="http://www.springframework.org/schema/task">
+	<import resource="applicationContext-redis.xml"/>
 	<!-- 使用 annotation -->
 	<context:annotation-config />
 	<!-- 定时器注解配置 -->
