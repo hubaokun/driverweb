@@ -150,6 +150,11 @@ public interface ICUserService {
 	@SuppressWarnings({"unchecked", "deprecation"})
 	QueryResult<BalanceCoachInfo> getCoachHistoryApplyBySearch(int schoolid, String searchname, String searchphone, String amount, String inputamount, String minsdate, String maxsdate, Integer pageIndex, int pagesize);
 
+	@SuppressWarnings({"unchecked", "deprecation"})
+	QueryResult<BalanceCoachInfo> getCoachHistoryBalanceBySearchFinance(int schoolid, String searchname, String searchphone, String amount, String inputamount, String minsdate, String maxsdate, Integer pageIndex, int pagesize);
+
+	
+	
 	/** 分页得到准教车型列表信息 **/
 	public abstract QueryResult<ModelsInfo> getModellist(Integer pageIndex, int pagesize);
 
@@ -202,6 +207,9 @@ public interface ICUserService {
 
 	/** 获取教练提现申请列表 */
 	public abstract QueryResult<CApplyCashInfo> getCoachApplyList(Integer pageIndex, int pagesize);
+	
+	/** 财务获取教练提现申请列表 */
+	public abstract QueryResult<CApplyCashInfo> getCoachApplyListFinance(Integer pageIndex, int pagesize);
 
 	/** 获取历史提现记录列表 */
 	public abstract QueryResult<BalanceCoachInfo> getApplyRecordList(Integer pageIndex, int pagesize);
@@ -212,6 +220,12 @@ public interface ICUserService {
 	public abstract void applyCheckNoPass(int coachid);
 	/** 提现申请审核 */
 	public abstract void applyCheckrevocation(int coachid);
+	
+	/** 教练提现申请返审 */
+	public abstract void applyCheckback(int applyid);
+	
+	/** 教练提现申请返审 */
+	public abstract void applyCheckPassTwice(int applyid);
 
 	/** 根据条件搜索提现记录 */
 	public abstract QueryResult<CApplyCashInfo> getCoachApplyBySearch(String searchname, String searchphone, String amount, String inputamount, Integer schoolid, String minsdate, String maxsdate,Integer state,

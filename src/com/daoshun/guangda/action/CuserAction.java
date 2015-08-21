@@ -1058,8 +1058,26 @@ public class CuserAction extends BaseAction {
 		cuserService.applyCheckrevocation(applyid);
 		return SUCCESS;
 	}
-
-	
+	/**
+	 * 教练提现返审
+	 * 
+	 * @return
+	 */
+	@Action(value = "/applyCheckback", results = { @Result(name = SUCCESS, location = "/getCoachApplyListFinance.do?index=${index}&pageIndex=${pageIndex}", type = "redirect") })
+	public String applyCheckback() {
+		cuserService.applyCheckback(applyid);
+		return SUCCESS;
+	}
+	/**
+	 * 教练提现审核
+	 * 
+	 * @return
+	 */
+	@Action(value = "/applyCheckPassTwice", results = { @Result(name = SUCCESS, location = "/getCoachApplyListFinance.do?index=${index}&pageIndex=${pageIndex}", type = "redirect") })
+	public String applyCheckPassTwice() {
+		cuserService.applyCheckPassTwice(applyid);
+		return SUCCESS;
+	}
 	/**
 	 * 设置保证金
 	 * 
@@ -1355,7 +1373,60 @@ public class CuserAction extends BaseAction {
 		driveschoollist = cuserService.getDriveSchoolInfo();
 		return SUCCESS;
 	}
-
+	
+	/**
+	 * 财务可反审教练提现列表
+	 * 
+	 * @return
+	 */
+	@Action(value = "/getCoachApplyListFinance", results = { @Result(name = SUCCESS, location = "/coachapplyFinance.jsp") })
+	public String getCoachApplyListFinance() {
+		HttpSession session = ServletActionContext.getRequest().getSession();
+		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
+		QueryResult<CApplyCashInfo> result = cuserService.getCoachApplyListFinance(pageIndex, pagesize);
+		total = result.getTotal();
+		applycashlist = result.getDataList();
+		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
+		if (pageIndex > 1) {
+			if (applycashlist == null || applycashlist.size() == 0) {
+				pageIndex--;
+				getCoachApplyListFinance();
+			}
+		}
+		driveschoollist = cuserService.getDriveSchoolInfo();
+		return SUCCESS;
+	}
+	
+	/**
+	 * 根据关键字搜索财务可反审教练提现列表
+	 * 
+	 * @return
+	 */
+	@Action(value = "/getCoachApplyBySearchFinance", results = { @Result(name = SUCCESS, location = "/coachapplyFinance.jsp") })
+	public String getCoachApplyBySearchFinance() {
+		HttpSession session = ServletActionContext.getRequest().getSession();
+		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
+		int driveschoolid = CommonUtils.parseInt(String.valueOf(session.getAttribute("schoolid")), 0);
+		if (driveschoolid != 0) {
+			schoolid = driveschoolid;
+			changetype = 1;
+		}
+		if(state == null){
+			state=1;
+		}
+		QueryResult<CApplyCashInfo> result = cuserService.getCoachApplyBySearch(searchname, searchphone, amount, inputamount, schoolid, minsdate, maxsdate, state,pageIndex, pagesize);
+		total = result.getTotal();
+		applycashlist = result.getDataList();
+		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
+		if (pageIndex > 1) {
+			if (applycashlist == null || applycashlist.size() == 0) {
+				pageIndex--;
+				getCoachApplyBySearch();
+			}
+		}
+		driveschoollist = cuserService.getDriveSchoolInfo();
+		return SUCCESS;
+	}
 	/**
 	 * 关键字搜索提现历史列表
 	 * 
@@ -1381,7 +1452,33 @@ public class CuserAction extends BaseAction {
 		}
 		return SUCCESS;
 	}
-
+	/**
+	 * 关键字搜索提现历史列表,财务发起
+	 * 
+	 * @return
+	 */
+	@Action(value = "/getCoachBalanceListFinance", results = { @Result(name = SUCCESS, location = "/coachbalanceFinance.jsp") })
+	public String getCoachBalanceListFinance() {
+		HttpSession session = ServletActionContext.getRequest().getSession();
+		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
+		int driveschoolid = CommonUtils.parseInt(String.valueOf(session.getAttribute("schoolid")), 0);
+		if (driveschoolid != 0) {
+			schoolid = driveschoolid;
+		}
+		QueryResult<BalanceCoachInfo> result = cuserService.getCoachHistoryBalanceBySearchFinance(schoolid, searchname, searchphone, amount, inputamount, minsdate, maxsdate, pageIndex, pagesize);
+		total = result.getTotal();
+		balancecoachlist = result.getDataList();
+		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
+		if (pageIndex > 1) {
+			if (balancecoachlist == null || balancecoachlist.size() == 0) {
+				pageIndex--;
+				getCoachBalanceListFinance();
+			}
+		}
+		return SUCCESS;
+	}
+	
+	
 	/**
 	 * 获取教练提现申请列表
 	 * 

@@ -388,14 +388,33 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
         long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
         return new QueryResult<CApplyCashInfo>(applycashlist, total);
     }
+    @SuppressWarnings("unchecked")
+    @Override
+    public QueryResult<CApplyCashInfo> getCoachApplyListFinance(Integer pageIndex, int pagesize) {
+        StringBuffer cuserhql = new StringBuffer();
+        cuserhql.append("from CApplyCashInfo where state = 1 order by addtime desc");
+        List<CApplyCashInfo> applycashlist = (List<CApplyCashInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), pagesize, pageIndex, null);
+        if (applycashlist != null && applycashlist.size() > 0) {
+            for (CApplyCashInfo capplyCash : applycashlist) {
+                CuserInfo coach = dataDao.getObjectById(CuserInfo.class, capplyCash.getCoachid());
+                if (coach != null) {
+                    capplyCash.setCoach(coach);
+                }
+            }
+        }
+        String counthql = " select count(*) " + cuserhql.toString();
+        long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
+        return new QueryResult<CApplyCashInfo>(applycashlist, total);
+    }
 
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     @Override
     public void applyCheckPass(int coachid) {
         CApplyCashInfo capplyCash = dataDao.getObjectById(CApplyCashInfo.class, coachid);
+        Date todate=new Date();
         if (capplyCash != null) {
             capplyCash.setState(1);
-            capplyCash.setUpdatetime(new Date());
+            capplyCash.setUpdatetime(todate);
             dataDao.updateObject(capplyCash);
             CuserInfo coach = dataDao.getObjectById(CuserInfo.class, capplyCash.getCoachid());
             if (coach != null) {
@@ -404,7 +423,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
             }
             BalanceCoachInfo balancoach = new BalanceCoachInfo();
             balancoach.setType(2);
-            balancoach.setAddtime(new Date());
+            balancoach.setAddtime(todate);
             balancoach.setAmount(capplyCash.getAmount());
             balancoach.setUserid(capplyCash.getCoachid());
             balancoach.setAmount_out1(new BigDecimal(0));
@@ -416,7 +435,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
                     schoolinfo.setMoney(schoolinfo.getMoney().add(capplyCash.getAmount()));
                     dataDao.updateObject(schoolinfo);
                     SchoolBalance schoolbalance = new SchoolBalance();
-                    schoolbalance.setAddtime(new Date());
+                    schoolbalance.setAddtime(todate);
                     schoolbalance.setCoachid(coachid);
                     schoolbalance.setAmount(capplyCash.getAmount());
                     schoolbalance.setSchoolid(capplyCash.getSchoolid());
@@ -432,9 +451,10 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
     @Override
     public void applyCheckNoPass(int coachid) {
         CApplyCashInfo capplyCash = dataDao.getObjectById(CApplyCashInfo.class, coachid);
+        Date todate=new Date();
         if (capplyCash != null) {
             capplyCash.setState(3);
-            capplyCash.setUpdatetime(new Date());
+            capplyCash.setUpdatetime(todate);
             dataDao.updateObject(capplyCash);
             
             CuserInfo coach = dataDao.getObjectById(CuserInfo.class, capplyCash.getCoachid());
@@ -447,7 +467,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
             
             BalanceCoachInfo balancoach = new BalanceCoachInfo();
             balancoach.setType(5);
-            balancoach.setAddtime(new Date());
+            balancoach.setAddtime(todate);
             balancoach.setAmount(capplyCash.getAmount());  
             balancoach.setUserid(capplyCash.getCoachid());
             balancoach.setAmount_out1(new BigDecimal(0));
@@ -478,9 +498,10 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
     @Override
     public void applyCheckrevocation(int coachid) {
         CApplyCashInfo capplyCash = dataDao.getObjectById(CApplyCashInfo.class, coachid);
+        Date todate=new Date();
         if (capplyCash != null) {
             capplyCash.setState(4);
-            capplyCash.setUpdatetime(new Date());
+            capplyCash.setUpdatetime(todate);
             dataDao.updateObject(capplyCash);
             
             CuserInfo coach = dataDao.getObjectById(CuserInfo.class, capplyCash.getCoachid());
@@ -516,7 +537,66 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
             */
         }
     }
-
+    //教练提现返审
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	@Override
+	public void applyCheckback(int applyid) {
+		CApplyCashInfo capplyCash = dataDao.getObjectById(CApplyCashInfo.class, applyid);
+		String querystring="from BalanceCoachInfo where addtime=:addtime";
+		String querystring1="from SchoolBalance where addtime=:addtime";
+		String[] params={"addtime"};
+		Date searchdate=capplyCash.getUpdatetime();
+        if (capplyCash != null) {
+            capplyCash.setState(0);
+            dataDao.updateObject(capplyCash);
+            CuserInfo coach = dataDao.getObjectById(CuserInfo.class, capplyCash.getCoachid());
+            if (coach != null) {
+                coach.setFmoney(coach.getFmoney().add(capplyCash.getAmount()));
+                dataDao.updateObject(coach);
+            }
+            if (capplyCash.getSchoolid() != null && capplyCash.getSchoolid() > 0) {
+                DriveSchoolInfo schoolinfo = dataDao.getObjectById(DriveSchoolInfo.class, capplyCash.getSchoolid());
+                if (schoolinfo != null) {
+                    schoolinfo.setMoney(schoolinfo.getMoney().subtract(capplyCash.getAmount()));
+                    dataDao.updateObject(schoolinfo);
+                }
+            }
+        }
+	}
+    //教练提现二次审批通过，由财务发起
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    @Override
+    public void applyCheckPassTwice(int applyid) {
+        CApplyCashInfo capplyCash = dataDao.getObjectById(CApplyCashInfo.class, applyid);
+        Date todate=new Date();
+        if (capplyCash != null) {
+            capplyCash.setState(5);
+            capplyCash.setUpdatetime(todate);
+            dataDao.updateObject(capplyCash);
+ 
+            BalanceCoachInfo balancoach = new BalanceCoachInfo();
+            balancoach.setType(6);
+            balancoach.setAddtime(todate);
+            balancoach.setAmount(capplyCash.getAmount());
+            balancoach.setUserid(capplyCash.getCoachid());
+            balancoach.setAmount_out1(new BigDecimal(0));
+            balancoach.setAmount_out2(new BigDecimal(0));
+            dataDao.addObject(balancoach);
+//            if (capplyCash.getSchoolid() != null && capplyCash.getSchoolid() > 0) {
+//                DriveSchoolInfo schoolinfo = dataDao.getObjectById(DriveSchoolInfo.class, capplyCash.getSchoolid());
+//                if (schoolinfo != null) {
+//                    SchoolBalance schoolbalance = new SchoolBalance();
+//                    schoolbalance.setAddtime(todate);
+//                    schoolbalance.setCoachid(applyid);
+//                    schoolbalance.setAmount(capplyCash.getAmount());
+//                    schoolbalance.setSchoolid(capplyCash.getSchoolid());
+//                    schoolbalance.setType(1);
+//                    dataDao.addObject(schoolbalance);
+//                }
+//            }
+        }
+    }
+    
     @SuppressWarnings({"unchecked", "deprecation"})
     @Override
     public QueryResult<CApplyCashInfo> getCoachApplyBySearch(String searchname, String searchphone, String amount, String inputamount, Integer schoolid, String minsdate, String maxsdate, Integer state,Integer pageIndex, int pagesize) {
@@ -697,7 +777,59 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
         long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
         return new QueryResult<BalanceCoachInfo>(applycashlist, total);
     }
-
+    //获取教练提现二次审核通过的历史记录，由财务发起
+    @SuppressWarnings({"unchecked", "deprecation"})
+    @Override
+    public QueryResult<BalanceCoachInfo> getCoachHistoryBalanceBySearchFinance(int schoolid, String searchname, String searchphone, String amount, String inputamount, String minsdate, String maxsdate, Integer pageIndex, int pagesize) {
+        StringBuffer cuserhql = new StringBuffer();
+        cuserhql.append("from BalanceCoachInfo where type=6 ");
+        if (schoolid > 0) {
+            cuserhql.append(" and userid in (select coachid from CuserInfo where drive_schoolid = " + schoolid + ")");
+        }
+        if (!CommonUtils.isEmptyString(searchname)) {
+            cuserhql.append(" and userid in (select coachid from CuserInfo where realname like '%" + searchname + "%')");
+        }
+        if (!CommonUtils.isEmptyString(searchphone)) {
+            cuserhql.append(" and userid in (select coachid from CuserInfo where phone like '%" + searchphone + "%')");
+        }
+        if (CommonUtils.parseFloat(inputamount, 0) != 0) {
+            if (CommonUtils.parseInt(amount, -1) == 0) {
+                cuserhql.append("and amount >" + inputamount);
+            }
+            else if (CommonUtils.parseInt(amount, -1) == 1) {
+                cuserhql.append("and amount =" + inputamount);
+            }
+            else {
+                cuserhql.append("and amount <" + inputamount);
+            }
+        }
+        if (!CommonUtils.isEmptyString(minsdate)) {
+            cuserhql.append("and addtime >'" + minsdate + "'");
+        }
+        if (!CommonUtils.isEmptyString(maxsdate)) {
+            Date enddate = CommonUtils.getDateFormat(maxsdate, "yyyy-MM-dd");
+            enddate.setHours(23);
+            enddate.setMinutes(59);
+            enddate.setSeconds(59);
+            String endmaxstime = CommonUtils.getTimeFormat(enddate, "yyyy-MM-dd HH:mm:ss");
+            cuserhql.append("and addtime <'" + endmaxstime + "'");
+        }
+        cuserhql.append("order by addtime desc");
+        List<BalanceCoachInfo> applycashlist = (List<BalanceCoachInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), pagesize, pageIndex, null);
+        if (applycashlist != null && applycashlist.size() > 0) {
+            for (BalanceCoachInfo capplyCash : applycashlist) {
+                CuserInfo coach = dataDao.getObjectById(CuserInfo.class, capplyCash.getUserid());
+                if (coach != null) {
+                    capplyCash.setRealname(coach.getRealname());
+                    capplyCash.setPhone(coach.getPhone());
+                    capplyCash.setAlipay_account(coach.getAlipay_account());
+                }
+            }
+        }
+        String counthql = " select count(*) " + cuserhql.toString();
+        long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
+        return new QueryResult<BalanceCoachInfo>(applycashlist, total);
+    }
 
 
     @SuppressWarnings("unchecked")
