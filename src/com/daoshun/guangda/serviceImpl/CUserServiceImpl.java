@@ -245,8 +245,11 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 
         }
         if (checkstate != null) {
+        	if (checkstate == 4) {
+        		cuserhql.append(" and state >= 0 ");
+        	}
             if (checkstate == 0) {
-                cuserhql.append(" and state >= 0 ");
+                cuserhql.append(" and state = 0 ");
             }
             if (checkstate == 1) {
                 cuserhql.append(" and state = 1 ");
@@ -1514,6 +1517,33 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 		 result.put("OrderInfo", tempOrderInfo);
 		 result.put("RechargeRecordInfo", tempRechargeRecordInfo);
 		 return result;
+	}
+
+	@Override
+	public void setCoachDriverSchool(List<CuserInfo> cusrlist) {
+		StringBuffer querystring=new StringBuffer();
+		querystring.append("from DriveSchoolInfo where schoolid=:schoolid");
+		String[] params={"schoolid"};
+		for(CuserInfo c:cusrlist)
+		{
+			DriveSchoolInfo temp=(DriveSchoolInfo) dataDao.getFirstObjectViaParam(querystring.toString(), params, c.getDrive_schoolid());
+			if(temp!=null)
+			{
+				c.setDisplaydriverschool(temp.getName());
+			}
+		}	
+	}
+
+	@Override
+	public Integer getDriverSchoolIDbyName(String schoolname) {
+		StringBuffer querystring=new StringBuffer();
+		querystring.append("from DriveSchoolInfo where name=:name");
+		String[] params={"name"};
+		DriveSchoolInfo temp=(DriveSchoolInfo) dataDao.getFirstObjectViaParam(querystring.toString(), params,schoolname);
+		if(temp!=null)
+                return temp.getSchoolid();
+		else	
+		        return 0;
 	}
 
 }

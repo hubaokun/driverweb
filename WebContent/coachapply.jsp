@@ -29,12 +29,13 @@ $(function(){
 	}else{
 		$("#amount").val(hidamount);
 	}
-// 	var hidstate = $("#hidstate").val();
-// 	if(hidstate==''){
-// 		$("#state").val(0);
-// 	}else{
-// 		$("#state").val(hidstate);
-// 	}
+ 	var hidstate = $("#hidstate").val();
+ 	if(hidstate==''){
+		$("#state").val(0);
+ 	}else{
+		$("#state").val(hidstate);
+ 	}
+ 	
 	var hiddenschoolid = $("#hiddenschoolid").val();
 	$("#driveschoolid").val(hiddenschoolid);
 })
