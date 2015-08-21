@@ -710,8 +710,9 @@ public class CuserServlet extends BaseServlet {
 			}
 
 			if (!CommonUtils.isEmptyString(driveschool)) {
-				cuser.setDrive_school(driveschool);
-				cuser.setDrive_schoolid(0);
+				//cuser.setDrive_school(driveschool);
+				cuser.setDrive_schoolid(cuserService.getDriverSchoolIDbyName(driveschool));
+				//cuser.setDrive_schoolid(0);
 			}
 
 			if (!CommonUtils.isEmptyString(driveschoolid)) {

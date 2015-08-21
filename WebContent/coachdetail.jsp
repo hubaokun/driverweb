@@ -276,7 +276,7 @@ function dataToLead(){
 							<td style="width: 40px;" class="border_right_bottom">${age}</td>
 							<td style="width: 50px;" class="border_right_bottom">${years}&nbsp;年</td>
 							<td style="width: 60px;" class="border_right_bottom">${score}&nbsp;分</td>
-							<td style="width: 100px;" class="border_right_bottom">${cuser.drive_school}</td>
+							<td style="width: 100px;" class="border_right_bottom">${cuser.displaydriverschool}</td>
 							<s:if test="state==0">
 							<td style="width: 100px;" class="border_right_bottom">资料不完善</td>
 							</s:if>
@@ -495,7 +495,7 @@ function dataToLead(){
 		<input type="checkbox" style="margin-top: 5px;" name="C1"  id="a1" value="9"> 教学用车型号
 		<input type="checkbox" style="margin-left: 5px;margin-top: 5px;" name="C1"  id="a1" value="10"> 教学用车型号ID
 		<input type="checkbox" style="margin-left: 5px;margin-top: 5px;" name="C1"  id="a1" value="11"> 教学用车牌照
-		<input type="checkbox" style="margin-left: 5px;margin-top: 5px;" name="C1"  id="a1" value="12"> 教校名称
+		<input type="checkbox" style="margin-left: 5px;margin-top: 5px;" name="C1"  id="a1" value="12"> 驾校名称
 		<input type="checkbox" style="margin-left: 5px;margin-top: 5px;" name="C1"  id="a1" value="13"> 性别
 		<input type="checkbox" style="margin-left: 5px;margin-top: 5px;" name="C1"  id="a1" value="14"> 出生日期
 		<br>

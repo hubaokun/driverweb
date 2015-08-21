@@ -265,4 +265,12 @@ public interface ICUserService {
 	 *  获取教练提现详情
 	 */
 	public abstract Map getWithdrawcashdetail(int applyid,String coachid);
+	/**
+	 *  设置教练先显示用驾校名称
+	 */
+	public abstract void setCoachDriverSchool(List<CuserInfo> cusrlist);
+	/**
+	 * 根据驾校名称找到驾校ID
+	 */
+	public abstract Integer getDriverSchoolIDbyName(String schoolname);
 }
