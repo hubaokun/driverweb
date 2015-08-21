@@ -338,8 +338,9 @@ public class Constant {
 
 	// 获取可以使用的小巴币个数
 	public static final String GETCANUSECOINSUM = "GETCANUSECOINSUM";
-
-
+	//提醒教练开课
+	public static final String REMINDCOACH = "REMINDCOACH";
+	
 	// 获取所有驾校信息
 	public static final String CGETALLSCHOOL = "GETALLSCHOOL";
 	// 设置支付宝账户
