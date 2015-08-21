@@ -1,5 +1,6 @@
 package com.daoshun.guangda.serviceImpl;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -226,6 +227,12 @@ public class CouponServiceImpl extends BaseServiceImpl implements ICouponService
 		if (coupontype != null) {
 			couponhql.append(" and coupontype = " + coupontype);
 		}
+		
+		if (CommonUtils.isEmptyString(starttime) && CommonUtils.isEmptyString(endtime)) {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			starttime = formatter.format(new Date());
+			endtime = formatter.format(new Date());
+		}
 		if (!CommonUtils.isEmptyString(starttime)) {
 			starttime = starttime + " 00:00:00";
 			couponhql.append(" and gettime > '" + starttime + "'");
@@ -263,6 +270,9 @@ public class CouponServiceImpl extends BaseServiceImpl implements ICouponService
 		
 		for (CouponRecord couponrecord : CouponRecordlist) {
 			SuserInfo suserinfo = dataDao.getObjectById(SuserInfo.class, couponrecord.getUserid());
+			
+			couponrecord.setUserphone(suserinfo.getPhone());
+			
 			if (suserinfo != null) {
 				if (CommonUtils.isEmptyString(suserinfo.getRealname())) {
 					couponrecord.setUsernick("未设置:" + suserinfo.getPhone());

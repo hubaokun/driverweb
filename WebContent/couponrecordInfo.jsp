@@ -4,6 +4,8 @@
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
 <%@page import="com.daoshun.menu.SideMenu"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.util.Date"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -29,7 +31,18 @@
 
 		var state = $("#hiddenstate").val();
 		$("#state").val(state);
-
+		
+		var starttime = $("#hiddenstarttime").val();
+		var endtime = $("#hiddenendtime").val();
+		if(starttime=='' && endtime==''){
+			var d = new Date();
+			$("#starttime").val( d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate() );
+			$("#endtime").val( d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate() );
+		}else{
+			$("#starttime").val(starttime);
+			$("#endtime").val(endtime);
+		}
+		
 		var hiddenownertype = $("#hiddenownertype").val();
 		$("#ownertype").val(hiddenownertype);
 
@@ -50,6 +63,10 @@
 				alert("结束时间必须在开始时间之后！");
 				return;
 			}
+		}
+		if (endtime == ''){
+			var d = new Date();
+			document.getElementById("endtime").value=d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
 		}
 		$("#searchform").submit();
 	}
@@ -158,20 +175,21 @@
 							style="float: left; margin-left: 50px; width: 405px">
 							<input type="text" class="searchdiv"
 								style="width: 119px; text-align: center; font-family: 微软雅黑;"
-								value="发放时间" readonly="readonly"> <input id="starttime"
+								value="发放时间" readonly="readonly"> <%SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+								String today=formatter.format(new Date());%><input id="starttime"
 								name="starttime"
 								onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})"
 								type="text" class="searchdiv"
 								style="width: 120px; text-align: center; font-family: 微软雅黑;"
-								value="${starttime}"> <input type="text"
-								class="searchdiv"
+								value="${starttime}">  <input type="hidden" id="hiddenstarttime" value="${starttime}">
+							<input type="text" class="searchdiv"  
 								style="width: 30px; text-align: center; font-family: 微软雅黑;"
 								value="到" readonly="readonly"> <input id="endtime"
 								name="endtime"
 								onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})"
 								type="text" class="searchdiv"
 								style="width: 120px; text-align: center; font-family: 微软雅黑;"
-								value="${endtime}">
+								value="${endtime}"> <input type="hidden" id="hiddenendtime" value="${endtime}">
 						</div>
 
 						<div class="serchcontentdiv"
@@ -202,7 +220,8 @@
 					</tr>
 					<s:iterator value="couponrecordlist" var="couponrecordlist">
 						<tr class="tr_td">
-							<td style="width: 100px;" class="border_right_bottom">${usernick}</td>
+							<td style="width: 100px;" class="border_right_bottom"><a href="getCouponCoachInfo.do?username=${userphone}" 
+										style="text-decoration: none; cursor: pointer;">${usernick}</a></td>
 							<td style="width: 150px;" class="border_right_bottom"><s:if
 									test="ownertype==0">平台发行</s:if> 
 									<s:elseif test="ownertype==1">驾校发行:${schoolname }
@@ -252,6 +271,11 @@
 											var endtime = $("#endtime").val();
 											var state = $("#hiddenstate").val();
 											var a = [];
+											//若结束日期为空，则设置截止日期为当前日期(防止两个日期都为空的情况下显示的数据为当日的数据)
+											if (endtime == ''){
+												var d = new Date();
+												document.getElementById("endtime").value = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+											}
 											//总页数少于10 全部显示,大于10 显示前3 后3 中间3 其余....
 											if (pageindex == 1) {
 												//alert(pageindex);
