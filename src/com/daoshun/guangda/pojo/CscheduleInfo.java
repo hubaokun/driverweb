@@ -71,6 +71,10 @@ public class CscheduleInfo implements Serializable {
 	@Column(name = "expire", length = 10,columnDefinition = "INT default 0")
 	private int expire;
 	
+	// 该时间段是否被预约   0=未预约   1=已预约
+	@Column(name = "bookstate", length = 10,columnDefinition = "INT default 0")
+	private int bookstate;
+	
 	// 地址详细
 	@Transient
 	private String addressdetail;
@@ -216,6 +220,14 @@ public class CscheduleInfo implements Serializable {
 
 	public void setExpire(int expire) {
 		this.expire = expire;
+	}
+
+	public int getBookstate() {
+		return bookstate;
+	}
+
+	public void setBookstate(int bookstate) {
+		this.bookstate = bookstate;
 	}
 
 }

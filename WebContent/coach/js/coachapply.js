@@ -18,7 +18,18 @@ function checkrevocation(applyid,index,pageIndex,change_id) {
 		window.location.href="applyCheckrevocation.do?applyid="+applyid+"&index="+index+"&pageIndex="+pageIndex+"&change_id="+change_id;
 	}
 }
-
+//返审
+function checkback(applyid,index,pageIndex,change_id){
+	if(confirm("确认返审？")){
+		window.location.href="applyCheckback.do?applyid="+applyid+"&index="+index+"&pageIndex="+pageIndex+"&change_id="+change_id;
+	}
+}
+//二次审核通过
+function checkpasstwice(applyid,index,pageIndex,change_id) {
+	if(confirm("确认通过二次审核？")){
+		window.location.href="applyCheckPassTwice.do?applyid="+applyid+"&index="+index+"&pageIndex="+pageIndex+"&change_id="+change_id;
+	}
+}
 function checkall(){
 	if($("input[name='checkall']").attr("checked")==true){
 		$("input[name='checkbox']").attr("checked",true);
@@ -48,6 +59,26 @@ function searchCoachApply(){
 	window.location="getCoachApplyBySearch.do?searchname="+realname+"&searchphone="+phone+"&amount="+amount+"&inputamount="+inputamount+"&minsdate="
 	+minsdate+"&maxsdate="+maxsdate+"&index="+index+"&change_id="+change_id+"&schoolid="+driveschoolid+"&state="+state;
 }
-
+//财务可返审查询
+function searchCoachApplyFinance(){
+	var realname=$("#realname").val();
+	var phone=$("#phone").val();
+	var amount=$("#amount").val();
+	var inputamount=$("#inputamount").val();
+	var state = $("#state").val();
+	var driveschoolid = $("#driveschoolid").val();
+	var minsdate=$("#minsdate").val();
+	var maxsdate=$("#maxsdate").val();
+	if(minsdate!=''&&maxsdate!=''){
+		if(minsdate>maxsdate){
+			alert("结束时间必须在开始时间之后！");
+			return;
+		}
+	}
+	var index = $("#index").val();
+	var change_id = $("#change_id").val();
+	window.location="getCoachApplyBySearchFinance.do?searchname="+realname+"&searchphone="+phone+"&amount="+amount+"&inputamount="+inputamount+"&minsdate="
+	+minsdate+"&maxsdate="+maxsdate+"&index="+index+"&change_id="+change_id+"&schoolid="+driveschoolid+"&state="+state;
+}
 
 

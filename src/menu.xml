@@ -17,13 +17,17 @@
 		<sub-item name="分配学员驾校" authority="7" action="getStudentSchool.do"/>
 	</menu-item>
 	<menu-item name="充值提现管理" iconURL="" authority="1">
-		<sub-item name="教练提现申请" authority="3" action="getCoachApplyBySearch.do"/>
+		<sub-item name="教练提现申请" authority="3" action="getCoachApplyList.do"/>
 		<sub-item name="教练历史提现" authority="4" action="getCoachBalanceBySearch.do"/>
 		<sub-item name="学员提现申请" authority="5" action="getStudentApplyList.do"/>
 		<sub-item name="学员历史提现" authority="6" action="getStudentApplyRecordList.do"/>
 		<sub-item name="学员历史充值" authority="7" action="getStudentRechargeList.do"/>
 		<sub-item name="驾校余额管理" authority="8" action="schoolmoneymanage.do"/>
 		<sub-item name="驾校历史提现" authority="9" action="getschoolRechargeList.do"/>
+	</menu-item>
+	<menu-item name="提现管理-财务" iconURL="" authority="1">
+		<sub-item name="提现申请-财务" authority="3" action="getCoachApplyListFinance.do"/>
+		<sub-item name="提现成功-财务" authority="3" action="getCoachBalanceListFinance.do"/>
 	</menu-item>
 	<menu-item name="系统配置" iconURL="" authority="1">
 		<sub-item name="系统设置项" authority="3" action="getTimeCancel.do"/>

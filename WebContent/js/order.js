@@ -32,6 +32,14 @@ function searchOrder(){
 			return;
 		}
 	}
+	var createminsdate=$("#createminsdate").val();
+	var createmaxsdate=$("#createmaxsdate").val();
+	if(createminsdate!=''&&createmaxsdate!=''){
+		if(createminsdate>createmaxsdate){
+			alert("结束时间必须在开始时间之后！");
+			return;
+		}
+	}
 	var state=$("#state").val();
 	var ordertotal = $("#ordertotal").val();
 	var inputordertotal = $("#inputordertotal").val();
@@ -40,5 +48,5 @@ function searchOrder(){
 	var change_id = $("#change_id").val();
 	var t_paytype=$("#t_paytype").val();
 	window.location.href="getOrderList.do?coachphone="+coachphone+"&studentphone="+studentphone+"&startminsdate="+startminsdate+"&startmaxsdate="+startmaxsdate+
-	"&endminsdate="+endminsdate+"&endmaxsdate="+endmaxsdate+"&state="+state+"&ordertotal="+ordertotal+"&inputordertotal="+inputordertotal+"&ishavacomplaint="+ishavacomplaint+"&t_paytype="+t_paytype+"&index="+index+"&change_id="+change_id;
+	"&endminsdate="+endminsdate+"&endmaxsdate="+endmaxsdate+"&createminsdate="+createminsdate+"&createmaxsdate="+createmaxsdate+"&state="+state+"&ordertotal="+ordertotal+"&inputordertotal="+inputordertotal+"&ishavacomplaint="+ishavacomplaint+"&t_paytype="+t_paytype+"&index="+index+"&change_id="+change_id;
 }
