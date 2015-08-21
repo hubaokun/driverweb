@@ -162,7 +162,7 @@ public interface ISOrderService {
 	 * @param pagesize
 	 * @return
 	 */
-	public abstract QueryResult<OrderInfo> getOrderList(String coachphone, String studentphone, String startminsdate, String startmaxsdate, String endminsdate, String endmaxsdate, Integer state,
+	public abstract QueryResult<OrderInfo> getOrderList(String coachphone, String studentphone, String startminsdate, String startmaxsdate, String endminsdate, String endmaxsdate, String createminsdate, String createmaxsdate, Integer state,
 			Integer ordertotal, String inputordertotal, Integer ishavacomplaint,Integer paytype, Integer pageIndex, int pagesize);
 
 	/**

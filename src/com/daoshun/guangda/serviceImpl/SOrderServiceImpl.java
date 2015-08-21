@@ -1454,7 +1454,7 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 	}
 
 	@Override
-	public QueryResult<OrderInfo> getOrderList(String coachphone, String studentphone, String startminsdate, String startmaxsdate, String endminsdate, String endmaxsdate, Integer state,
+	public QueryResult<OrderInfo> getOrderList(String coachphone, String studentphone, String startminsdate, String startmaxsdate, String endminsdate, String endmaxsdate,String createminsdate, String createmaxsdate, Integer state,
 			Integer ordertotal, String inputordertotal, Integer ishavacomplaint,Integer paytype, Integer pageIndex, int pagesize) {
 		StringBuffer cuserhql = new StringBuffer();
 		cuserhql.append("from OrderInfo where 1=1");
@@ -1485,6 +1485,17 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 			enddate.setSeconds(59);
 			String endmaxstime = CommonUtils.getTimeFormat(enddate, "yyyy-MM-dd HH:mm:ss");
 			cuserhql.append(" and end_time <='" + endmaxstime + "'");
+		}
+		if (!CommonUtils.isEmptyString(createminsdate)) {
+			cuserhql.append(" and creat_time >='" + createminsdate + "'");
+		}
+		if (!CommonUtils.isEmptyString(createmaxsdate)) {
+			Date enddate = CommonUtils.getDateFormat(createmaxsdate, "yyyy-MM-dd");
+			enddate.setHours(23);
+			enddate.setMinutes(59);
+			enddate.setSeconds(59);
+			String createmaxstime = CommonUtils.getTimeFormat(enddate, "yyyy-MM-dd HH:mm:ss");
+			cuserhql.append(" and creat_time <='" + createmaxstime + "'");
 		}
 		if (state != null) {
 			if (state == 1) {

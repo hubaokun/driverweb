@@ -81,6 +81,10 @@ public class OrderAction extends BaseAction {
 	
 	private String endmaxsdate;
 	
+	private String createminsdate;
+	
+	private String createmaxsdate;
+	
 	private Integer state;
 	
 	private Integer ordertotal;
@@ -95,14 +99,14 @@ public class OrderAction extends BaseAction {
 	
 	private Integer t_paytype;
 	/**
-	 * 获取教练任务列表
+	 * 获取订单列表
 	 * @return
 	 */
 	@Action(value = "/getOrderList", results = { @Result(name = SUCCESS, location = "/order.jsp") })
 	public String getOrderList() {
 		HttpSession session = ServletActionContext.getRequest().getSession();
 		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
-		QueryResult<OrderInfo> result = orderService.getOrderList(coachphone,studentphone,startminsdate,startmaxsdate,endminsdate,endmaxsdate,state,ordertotal,inputordertotal,ishavacomplaint,t_paytype, pageIndex, pagesize);
+		QueryResult<OrderInfo> result = orderService.getOrderList(coachphone,studentphone,startminsdate,startmaxsdate,endminsdate,endmaxsdate,createminsdate,createmaxsdate,state,ordertotal,inputordertotal,ishavacomplaint,t_paytype, pageIndex, pagesize);
 		total = result.getTotal();
 		orderlist = result.getDataList();
 		for(int i=0; i< orderlist.size();i++)
@@ -541,6 +545,24 @@ public class OrderAction extends BaseAction {
 
 	public void setEndmaxsdate(String endmaxsdate) {
 		this.endmaxsdate = endmaxsdate;
+	}
+	
+	
+
+	public String getCreateminsdate() {
+		return createminsdate;
+	}
+
+	public void setCreateminsdate(String createminsdate) {
+		this.createminsdate = createminsdate;
+	}
+
+	public String getCreatemaxsdate() {
+		return createmaxsdate;
+	}
+
+	public void setCreatemaxsdate(String createmaxsdate) {
+		this.createmaxsdate = createmaxsdate;
 	}
 
 	public Integer getState() {
