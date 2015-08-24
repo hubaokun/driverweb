@@ -174,11 +174,11 @@ public interface ISUserService {
 
 	public QueryResult<SuserInfo> getStudentByKeyword(String searchname, String searchphone, String minsdate, String maxsdate, Integer pageIndex, int pagesize);
 	
-	public QueryResult<SuserInfo> getEnrollStudentByKeyword(String searchname, String searchphone, String minsdate, String maxsdate, Integer pageIndex, int pagesize);
+	public QueryResult<SuserInfo> getEnrollStudentByKeyword(String searchname, String searchphone, String minsdate, String maxsdate,String minenrollsdate, String maxenrollsdate, Integer pageIndex, int pagesize);
 	
-	public QueryResult<SuserInfo> getEnrolledStudentByKeyword(String searchname, String searchphone, String minsdate, String maxsdate, Integer pageIndex, int pagesize);
+	public QueryResult<SuserInfo> getEnrolledStudentByKeyword(String searchname, String searchphone, String minsdate, String maxsdate, String minenrollsdate, String maxenrollsdate,  Integer pageIndex, int pagesize);
 	
-	public QueryResult<SuserInfo> getDeleteStudentByKeyword(String searchname, String searchphone, String minsdate, String maxsdate, Integer pageIndex, int pagesize);
+	public QueryResult<SuserInfo> getDeleteStudentByKeyword(String searchname, String searchphone, String minsdate, String maxsdate, String minenrollsdate, String maxenrollsdate,Integer pageIndex, int pagesize);
 
 	public QueryResult<SuserState> getStudentstateByKeyword(String studentid, Integer pageIndex, int pagesize);
 	

@@ -130,6 +130,12 @@ function dataExport(){
 					<input id="endtime" type="text" class="searchdiv" style="width: 105px;text-align: center;font-family: 微软雅黑;"value="${maxsdate}" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})" placeholder="&nbsp;请选择结束日期">
 				</div>
 
+				<div class="serchcontentdiv"style="float: left; margin-left: 50px; width: 309px"  >
+					<input type="text" class="searchdiv" style="width: 71px;text-align: center;font-family: 微软雅黑;" value="报名时间" readonly="readonly">
+					<input id="startenrolltime" type="text" class="searchdiv" style="width: 99px;text-align: center;font-family: 微软雅黑;border-right: #fff;"  value="${minenrollsdate}" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})" placeholder="&nbsp;请选择开始日期">
+					<input type="text" class="searchdiv" style="width: 20px;text-align: center;font-family: 微软雅黑; border-right: #fff;" value="到" readonly="readonly">
+					<input id="endenrolltime" type="text" class="searchdiv" style="width: 105px;text-align: center;font-family: 微软雅黑;"value="${maxenrollsdate}" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})" placeholder="&nbsp;请选择结束日期">
+				</div>
 
 				
 			</div>
@@ -204,13 +210,15 @@ function dataExport(){
 									<script type="text/javascript">
 					//container 容器，count 总页数 pageindex 当前页数
 					function setPage(container, count, pageindex) {
-				var container = container;
+					var container = container;
 					var count = parseInt(count);
 					var pageindex = parseInt(pageindex);
 					var realname=$("#realname").val();
 					var phone=$("#phone").val();
 					var starttime=$("#starttime").val();
 					var endtime=$("#endtime").val();
+					var startenrolltime=$("#startenrolltime").val();
+					var endenrolltime=$("#endenrolltime").val();
 					var j = $("#change_id").val();
 					var index=$("#index").val();
 					var a = [];
@@ -219,13 +227,16 @@ function dataExport(){
 						  //alert(pageindex);
 					    a[a.length] = "<a onclick=\"\" class=\"hide_page_prev unclickprev on\"></a>";
 					  } else {
-					    a[a.length] = "<a onclick=\"previousPage("+pageindex+",'getDeleteStudentByKeyword.do?searchname="+realname+"&searchphone="+phone+"&minsdate="+starttime+"&maxsdate="+endtime +"&index="+index+"&change_id"+j+"&')\" class=\"page_prev\"></a>";
+					    a[a.length] = "<a onclick=\"previousPage("+pageindex+",'getDeleteStudentByKeyword.do?searchname="+realname+"&searchphone="+phone+"&minsdate="+starttime+"&maxsdate="+endtime +"&minenrollsdate=" + startenrolltime + "&maxenrollsdate="
+						+ endenrolltime+"&index="+index+"&change_id"+j+"&')\" class=\"page_prev\"></a>";
 					  }
 					  function setPageList() {
 					    if (pageindex == i) {
-					      a[a.length] = "<a onclick=\"goPage('getDeleteStudentByKeyword.do?searchname="+realname+"&searchphone="+phone+"&minsdate="+starttime+"&maxsdate="+endtime +"&index="+index+"&change_id"+j+"&',"+i+")\" class=\"on\">" + i + "</a>";
+					      a[a.length] = "<a onclick=\"goPage('getDeleteStudentByKeyword.do?searchname="+realname+"&searchphone="+phone+"&minsdate="+starttime+"&maxsdate="+endtime+"&minenrollsdate=" + startenrolltime + "&maxenrollsdate="
+							+ endenrolltime +"&index="+index+"&change_id"+j+"&',"+i+")\" class=\"on\">" + i + "</a>";
 					    } else {
-					      a[a.length] = "<a onclick=\"goPage('getDeleteStudentByKeyword.do?searchname="+realname+"&searchphone="+phone+"&minsdate="+starttime+"&maxsdate="+endtime +"&index="+index+"&change_id"+j+"&',"+i+")\">" + i + "</a>";
+					      a[a.length] = "<a onclick=\"goPage('getDeleteStudentByKeyword.do?searchname="+realname+"&searchphone="+phone+"&minsdate="+starttime+"&maxsdate="+endtime+"&minenrollsdate=" + startenrolltime + "&maxenrollsdate="
+							+ endenrolltime +"&index="+index+"&change_id"+j+"&',"+i+")\">" + i + "</a>";
 					    }
 					  }
 					  //总页数小于10
@@ -239,31 +250,38 @@ function dataExport(){
 					      for (var i = 1; i <= 5; i++) {
 					        setPageList();
 					      }
-					      a[a.length] = "...<a onclick=\"goPage('getDeleteStudentByKeyword.do?searchname="+realname+"&searchphone="+phone+"&minsdate="+starttime+"&maxsdate="+endtime+"&index="+index+"&change_id"+j+"&',"+count+")\">" + count + "</a>";
+					      a[a.length] = "...<a onclick=\"goPage('getDeleteStudentByKeyword.do?searchname="+realname+"&searchphone="+phone+"&minsdate="+starttime+"&maxsdate="+endtime+"&minenrollsdate=" + startenrolltime + "&maxenrollsdate="
+							+ endenrolltime+"&index="+index+"&change_id"+j+"&',"+count+")\">" + count + "</a>";
 					    } else if (pageindex >= count - 3) {
-					      a[a.length] = "<a onclick=\"goPage('getDeleteStudentByKeyword.do?searchname="+realname+"&searchphone="+phone+"&minsdate="+starttime+"&maxsdate="+endtime+"&index="+index+"&change_id"+j+"&',1)\">1</a>...";
+					      a[a.length] = "<a onclick=\"goPage('getDeleteStudentByKeyword.do?searchname="+realname+"&searchphone="+phone+"&minsdate="+starttime+"&maxsdate="+endtime+"&minenrollsdate=" + startenrolltime + "&maxenrollsdate="
+							+ endenrolltime+"&index="+index+"&change_id"+j+"&',1)\">1</a>...";
 					      for (var i = count - 4; i <= count; i++) {
 					        setPageList();
 					      };
 					    } else { //当前页在中间部分
-					      a[a.length] = "<a onclick=\"goPage('getDeleteStudentByKeyword.do?searchname="+realname+"&searchphone="+phone+"&minsdate="+starttime+"&maxsdate="+endtime +"&index="+index+"&change_id"+j+"&',1)\">1</a>...";
+					      a[a.length] = "<a onclick=\"goPage('getDeleteStudentByKeyword.do?searchname="+realname+"&searchphone="+phone+"&minsdate="+starttime+"&maxsdate="+endtime +"&minenrollsdate=" + startenrolltime + "&maxenrollsdate="
+							+ endenrolltime+"&index="+index+"&change_id"+j+"&',1)\">1</a>...";
 					      for (var i = pageindex - 2; i <= pageindex+2; i++) {
 					        setPageList();
 					      }
-					      a[a.length] = "...<a onclick=\"goPage('getDeleteStudentByKeyword.do?searchname="+realname+"&searchphone="+phone+"&minsdate="+starttime+"&maxsdate="+endtime+"&index="+index+"&change_id"+j+"&',"+count+")\">" + count + "</a>";
+					      a[a.length] = "...<a onclick=\"goPage('getDeleteStudentByKeyword.do?searchname="+realname+"&searchphone="+phone+"&minsdate="+starttime+"&maxsdate="+endtime+"&minenrollsdate=" + startenrolltime + "&maxenrollsdate="
+							+ endenrolltime+"&index="+index+"&change_id"+j+"&',"+count+")\">" + count + "</a>";
 					    }
 					  }
 					  if (pageindex == count) {
 						    a[a.length] = "<a onclick=\"\" class=\"hide_page_next unclicknext\"></a> 共"+count+"页  到第  "+
 						    "<input type=\"text\" class=\"jump_num\" id=\"topage\"/> 页"+
-						    "<a class=\"jump_btn\" onclick=\"gotoPage('getDeleteStudentByKeyword.do?searchname="+realname+"&searchphone="+phone+"&minsdate="+starttime+"&maxsdate="+endtime +"&index="+index+"&change_id"+j+"&',"+$("#pageSize").val()+")\")\">"+
+						    "<a class=\"jump_btn\" onclick=\"gotoPage('getDeleteStudentByKeyword.do?searchname="+realname+"&searchphone="+phone+"&minsdate="+starttime+"&maxsdate="+endtime +"&minenrollsdate=" + startenrolltime + "&maxenrollsdate="
+							+ endenrolltime+"&index="+index+"&change_id"+j+"&',"+$("#pageSize").val()+")\")\">"+
 						    "<a id='page_msg'></a>";
 						  } else {
 						    a[a.length] = 
-						    	"<a onclick=\"nextPage("+$("#pageIndex").val()+",'getDeleteStudentByKeyword.do?searchname="+realname+"&searchphone="+phone+"&minsdate="+starttime+"&maxsdate="+endtime +"&index="+index+"&change_id"+j+"&')\" "+
+						    	"<a onclick=\"nextPage("+$("#pageIndex").val()+",'getDeleteStudentByKeyword.do?searchname="+realname+"&searchphone="+phone+"&minsdate="+starttime+"&maxsdate="+endtime +"&minenrollsdate=" + startenrolltime + "&maxenrollsdate="
+								+ endenrolltime+"&index="+index+"&change_id"+j+"&')\" "+
 						    	"class=\"page_next\"></a> 共"+count+"页 到第 "+
 						    "<input type=\"text\" class=\"jump_num\" id=\"topage\"/> 页"+
-						    "<a class=\"jump_btn\" onclick=\"gotoPage('getDeleteStudentByKeyword.do?searchname="+realname+"&searchphone="+phone+"&minsdate="+starttime+"&maxsdate="+endtime +"&',"+$("#pageSize").val()+")\">"+
+						    "<a class=\"jump_btn\" onclick=\"gotoPage('getDeleteStudentByKeyword.do?searchname="+realname+"&searchphone="+phone+"&minsdate="+starttime+"&maxsdate="+endtime +"&minenrollsdate=" + startenrolltime + "&maxenrollsdate="
+							+ endenrolltime+"&',"+$("#pageSize").val()+")\">"+
 						    "<a id='page_msg'></a>";
 						  }
 // 					  a[a.length]="<a href='#' onclick='addunit()' style='float: right;position: relative;right: 50px;padding: 0px; margin: 0px; top: 3px;'><img src='imgs/add_.png'></a>";

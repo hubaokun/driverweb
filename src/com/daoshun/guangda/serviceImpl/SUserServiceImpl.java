@@ -367,7 +367,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public QueryResult<SuserInfo> getEnrollStudentByKeyword(String searchname, String searchphone, String minsdate, String maxsdate, Integer pageIndex, int pagesize) {
+	public QueryResult<SuserInfo> getEnrollStudentByKeyword(String searchname, String searchphone, String minsdate, String maxsdate, String minenrollsdate, String maxenrollsdate, Integer pageIndex, int pagesize) {
 		StringBuffer cuserhql = new StringBuffer();
 		cuserhql.append("from SuserInfo where state=1");
 		if (!CommonUtils.isEmptyString(searchname)) {
@@ -376,6 +376,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		if (!CommonUtils.isEmptyString(searchphone)) {
 			cuserhql.append(" and phone like '%" + searchphone + "%'");
 		}
+		//注册时间
 		if (!CommonUtils.isEmptyString(maxsdate)) {
 			Date newmaxsdate = CommonUtils.getDateFormat(maxsdate, "yyyy-MM-dd");
 			Calendar latertime = Calendar.getInstance();
@@ -397,6 +398,29 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			Date starttime = nowtime.getTime();
 			String newtoday = CommonUtils.getTimeFormat(starttime, "yyyy-MM-dd");
 			cuserhql.append(" and addtime >= '" + newtoday + "'");
+		}
+		//报名时间
+		if (!CommonUtils.isEmptyString(maxenrollsdate)) {
+			Date newmaxsdate = CommonUtils.getDateFormat(maxenrollsdate, "yyyy-MM-dd");
+			Calendar latertime = Calendar.getInstance();
+			latertime.setTime(newmaxsdate);
+			latertime.set(Calendar.HOUR_OF_DAY, 23);
+			latertime.set(Calendar.MINUTE, 59);
+			latertime.set(Calendar.SECOND, 59);
+			Date timelater = latertime.getTime();
+			String newtimelater = CommonUtils.getTimeFormat(timelater, "yyyy-MM-dd");
+			cuserhql.append(" and enrolltime <= '" + newtimelater + "'");
+		}
+		if (!CommonUtils.isEmptyString(minenrollsdate)) {
+			Date newminsdate = CommonUtils.getDateFormat(minenrollsdate, "yyyy-MM-dd");
+			Calendar nowtime = Calendar.getInstance();
+			nowtime.setTime(newminsdate);
+			nowtime.set(Calendar.HOUR_OF_DAY, 0);
+			nowtime.set(Calendar.MINUTE, 0);
+			nowtime.set(Calendar.SECOND, 0);
+			Date starttime = nowtime.getTime();
+			String newtoday = CommonUtils.getTimeFormat(starttime, "yyyy-MM-dd");
+			cuserhql.append(" and enrolltime >= '" + newtoday + "'");
 		}
 		List<SuserInfo> suserInfolist = (List<SuserInfo>) dataDao.pageQueryViaParam(cuserhql.toString() + " order by studentid asc", pagesize, pageIndex, null);
 		String counthql = " select count(*) " + cuserhql.toString();
@@ -408,7 +432,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public QueryResult<SuserInfo> getDeleteStudentByKeyword(String searchname, String searchphone, String minsdate, String maxsdate, Integer pageIndex, int pagesize) {
+	public QueryResult<SuserInfo> getDeleteStudentByKeyword(String searchname, String searchphone, String minsdate, String maxsdate, String minenrollsdate, String maxenrollsdate,Integer pageIndex, int pagesize) {
 		StringBuffer cuserhql = new StringBuffer();
 		cuserhql.append("from SuserInfo where state=6");
 		if (!CommonUtils.isEmptyString(searchname)) {
@@ -417,6 +441,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		if (!CommonUtils.isEmptyString(searchphone)) {
 			cuserhql.append(" and phone like '%" + searchphone + "%'");
 		}
+		//注册时间
 		if (!CommonUtils.isEmptyString(maxsdate)) {
 			Date newmaxsdate = CommonUtils.getDateFormat(maxsdate, "yyyy-MM-dd");
 			Calendar latertime = Calendar.getInstance();
@@ -438,6 +463,29 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			Date starttime = nowtime.getTime();
 			String newtoday = CommonUtils.getTimeFormat(starttime, "yyyy-MM-dd");
 			cuserhql.append(" and addtime >= '" + newtoday + "'");
+		}
+		//报名时间
+		if (!CommonUtils.isEmptyString(maxenrollsdate)) {
+			Date newmaxsdate = CommonUtils.getDateFormat(maxenrollsdate, "yyyy-MM-dd");
+			Calendar latertime = Calendar.getInstance();
+			latertime.setTime(newmaxsdate);
+			latertime.set(Calendar.HOUR_OF_DAY, 23);
+			latertime.set(Calendar.MINUTE, 59);
+			latertime.set(Calendar.SECOND, 59);
+			Date timelater = latertime.getTime();
+			String newtimelater = CommonUtils.getTimeFormat(timelater, "yyyy-MM-dd");
+			cuserhql.append(" and enrolltime <= '" + newtimelater + "'");
+		}
+		if (!CommonUtils.isEmptyString(minenrollsdate)) {
+			Date newminsdate = CommonUtils.getDateFormat(minenrollsdate, "yyyy-MM-dd");
+			Calendar nowtime = Calendar.getInstance();
+			nowtime.setTime(newminsdate);
+			nowtime.set(Calendar.HOUR_OF_DAY, 0);
+			nowtime.set(Calendar.MINUTE, 0);
+			nowtime.set(Calendar.SECOND, 0);
+			Date starttime = nowtime.getTime();
+			String newtoday = CommonUtils.getTimeFormat(starttime, "yyyy-MM-dd");
+			cuserhql.append(" and enrolltime >= '" + newtoday + "'");
 		}
 		List<SuserInfo> suserInfolist = (List<SuserInfo>) dataDao.pageQueryViaParam(cuserhql.toString() + " order by studentid asc", pagesize, pageIndex, null);
 		String counthql = " select count(*) " + cuserhql.toString();
@@ -467,7 +515,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	//已报名学员
 	@SuppressWarnings("unchecked")
 	@Override
-	public QueryResult<SuserInfo> getEnrolledStudentByKeyword(String searchname, String searchphone, String minsdate, String maxsdate, Integer pageIndex, int pagesize) {
+	public QueryResult<SuserInfo> getEnrolledStudentByKeyword(String searchname, String searchphone, String minsdate, String maxsdate,String minenrollsdate, String maxenrollsdate, Integer pageIndex, int pagesize) {
 		StringBuffer cuserhql = new StringBuffer();
 		cuserhql.append("from SuserInfo where state=2 ");
 		if (!CommonUtils.isEmptyString(searchname)) {
@@ -476,6 +524,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		if (!CommonUtils.isEmptyString(searchphone)) {
 			cuserhql.append(" and phone like '%" + searchphone + "%'");
 		}
+		//注册时间
 		if (!CommonUtils.isEmptyString(maxsdate)) {
 			Date newmaxsdate = CommonUtils.getDateFormat(maxsdate, "yyyy-MM-dd");
 			Calendar latertime = Calendar.getInstance();
@@ -497,6 +546,29 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			Date starttime = nowtime.getTime();
 			String newtoday = CommonUtils.getTimeFormat(starttime, "yyyy-MM-dd");
 			cuserhql.append(" and addtime >= '" + newtoday + "'");
+		}
+		//报名时间
+		if (!CommonUtils.isEmptyString(maxenrollsdate)) {
+			Date newmaxsdate = CommonUtils.getDateFormat(maxenrollsdate, "yyyy-MM-dd");
+			Calendar latertime = Calendar.getInstance();
+			latertime.setTime(newmaxsdate);
+			latertime.set(Calendar.HOUR_OF_DAY, 23);
+			latertime.set(Calendar.MINUTE, 59);
+			latertime.set(Calendar.SECOND, 59);
+			Date timelater = latertime.getTime();
+			String newtimelater = CommonUtils.getTimeFormat(timelater, "yyyy-MM-dd");
+			cuserhql.append(" and enrolltime <= '" + newtimelater + "'");
+		}
+		if (!CommonUtils.isEmptyString(minenrollsdate)) {
+			Date newminsdate = CommonUtils.getDateFormat(minenrollsdate, "yyyy-MM-dd");
+			Calendar nowtime = Calendar.getInstance();
+			nowtime.setTime(newminsdate);
+			nowtime.set(Calendar.HOUR_OF_DAY, 0);
+			nowtime.set(Calendar.MINUTE, 0);
+			nowtime.set(Calendar.SECOND, 0);
+			Date starttime = nowtime.getTime();
+			String newtoday = CommonUtils.getTimeFormat(starttime, "yyyy-MM-dd");
+			cuserhql.append(" and enrolltime >= '" + newtoday + "'");
 		}
 		List<SuserInfo> suserInfolist = (List<SuserInfo>) dataDao.pageQueryViaParam(cuserhql.toString() + " order by studentid asc", pagesize, pageIndex, null);
 		String counthql = " select count(*) " + cuserhql.toString();
