@@ -92,6 +92,10 @@ public class CscheduleInfo implements Serializable {
 	@Transient
 	private int isbooked;// 是否已经被预约   0   没有  1教练被别人预约 2教练被自己预约 3自己预约了别的教练
 
+	
+	@Transient
+	private String bookedername;// 预约人的姓名
+
 	public String getAddressdetail() {
 		return addressdetail;
 	}
@@ -228,6 +232,14 @@ public class CscheduleInfo implements Serializable {
 
 	public void setBookstate(int bookstate) {
 		this.bookstate = bookstate;
+	}
+
+	public String getBookedername() {
+		return bookedername;
+	}
+
+	public void setBookedername(String bookedername) {
+		this.bookedername = bookedername;
 	}
 
 }

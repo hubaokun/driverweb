@@ -125,7 +125,12 @@ public class CoinRecordAction extends BaseAction{
     	coinRecordService.reclaimCoin(receiverid);
         return SUCCESS;
     }
-
+    //小巴币月报记录
+    @Action(value = "CoinReport", results = { @Result(name = SUCCESS, type = "redirect" ,location = "goCoinRecord.do?receiverid=${receiverid}") })
+    public String CoinReport() {
+    	 
+        return SUCCESS;
+    }
 
 
 

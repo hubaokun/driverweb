@@ -1,10 +1,13 @@
 package com.daoshun.guangda.serviceImpl;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -38,12 +41,14 @@ import com.daoshun.guangda.pojo.OrderRecordInfo;
 import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.pojo.SystemSetInfo;
 import com.daoshun.guangda.pojo.UserPushInfo;
+import com.daoshun.guangda.service.ICscheduleService;
 import com.daoshun.guangda.service.ISOrderService;
 
 @Service("sorderService")
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService {
-
+	@Resource
+	public ICscheduleService cscheduleService;
 	@Override
 	public List<ComplaintNetData> getComplaintToMy(String studentid, String pagenum) {
 		List<ComplaintNetData> complaintNetDatalist = new ArrayList<ComplaintNetData>();
@@ -1373,7 +1378,10 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 		if (order != null) {
 			//if (order.getStart_time().after(c.getTime())) {
 			cuser=dataDao.getObjectById(CuserInfo.class, order.getCoachid());
-			
+			Calendar c1=Calendar.getInstance();
+			c1.setTime(order.getStart_time());
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			cscheduleService.setCscheduleByday(String.valueOf(order.getCoachid()), sdf.format(c1.getTime()),String.valueOf(c1.get(Calendar.HOUR_OF_DAY)),0);
 			if(order.getPaytype()==PayType.MONEY){
 				student.setFmoney(student.getFmoney().subtract(order.getTotal()));
 				student.setMoney(student.getMoney().add(order.getTotal()));

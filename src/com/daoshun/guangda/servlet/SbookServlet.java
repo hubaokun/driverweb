@@ -310,7 +310,7 @@ public class SbookServlet extends BaseServlet {
 		Date fdate=CommonUtils.getDateFormat(date, "yyyy-MM-dd");
 		int remindstate=sbookService.getRemindState(coachid,studentid,date);
 		int coachstate=sbookService.getCoachState(coachid, 1,fdate,5,23,0);
-		List<CscheduleInfo> datelist = sbookService.refreshCoachSchedule(coachid, date, studentid);
+		List<CscheduleInfo> datelist = sbookService.refreshCoachScheduleNew(coachid, date, studentid);
 		
 		resultMap.put("remindstate", remindstate);//提醒状态 1 已提醒过,  0 未提醒
 		resultMap.put("coachstate", coachstate);//教练在当天的开课状态  1 开课， 0 休息
@@ -411,7 +411,7 @@ public class SbookServlet extends BaseServlet {
 			CommonUtils.validateEmpty(studentid);
 			CommonUtils.validateEmpty(date);
 			//CommonUtils.validateEmpty(paytype);
-			resultMap.putAll(sbookService.bookCoach2(coachid, studentid, date));
+			resultMap.putAll(sbookService.bookCoachNew(coachid, studentid, date));
 			//根据教练当前开课状态来设置教练表中coursestate
 			cscheduleService.getCoachStateByFunction(coachid, 5, 5, 23, 0);
 		} catch (Exception e) {

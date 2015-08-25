@@ -28,6 +28,7 @@ import com.daoshun.guangda.pojo.CaddAddressInfo;
 import com.daoshun.guangda.pojo.CscheduleInfo;
 import com.daoshun.guangda.pojo.CsubjectInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
+import com.daoshun.guangda.pojo.DefaultSchedule;
 import com.daoshun.guangda.pojo.SystemSetInfo;
 import com.daoshun.guangda.service.ICUserService;
 import com.daoshun.guangda.service.ICscheduleService;
@@ -77,22 +78,26 @@ public class CscheduleServlet extends BaseServlet {
 				// 获取教练的日程安排
 				
 				
-				getSchedule2(request, resultMap);
+				getScheduleNew(request, resultMap);
 			
 			}else if (Constant.CGETSCHEDULEBYDATE.equals(action)) {
 				// 根据日期获取教练的日程安排
 				getScheduleByDate(request, resultMap);
 			} else if (Constant.CSETDATETIME.equals(action)) {
 				// 教练设置某天的休息时间（30天内）
-				setDateTime(request, resultMap);
+				setDateTimeNew(request, resultMap);
 			} else if (Constant.CCHANGEALLDAYSCHEDULE.equals(action)) {
 				// 教练改变某一天的全天时间（30天内）
-				changeAllDaySchedule(request, resultMap);
+				changeAllDayScheduleNew(request, resultMap);
 			} else if (Constant.CCHANGEORDERCANCEL.equals(action)) {
 				changeOrderCancel(request, resultMap);
 			} else if (Constant.SETDEFAULT.equals(action)) {
 				setDefault(request, resultMap);
-			} else {
+			}
+			 else if (Constant.GETDEFAULTSCHEDULE.equals(action)) {
+				 getDefaultNew(request, resultMap);
+			}
+			else {
 				throw new ErrException();
 			}
 
@@ -649,7 +654,135 @@ public class CscheduleServlet extends BaseServlet {
 		long end=System.currentTimeMillis();
 		//System.out.println("getSchedule总耗时："+(end-start));
 	}
-	
+	/**
+	 * 获取教练的日程安排2.0新版
+	 * 
+	 * @param request
+	 * @throws ErrException
+	 */
+	public void getScheduleNew(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		// 获取参数教练ID
+		String coachid = getRequestParamter(request, "coachid");
+		CommonUtils.validateEmpty(coachid);
+		// 找到该教练
+		CuserInfo cuser = cuserService.getCuserByCoachid(coachid);
+		// 找到该教练的当前使用地址
+		CaddAddressInfo addressInfo = cuserService.getcoachaddress(coachid);
+		SystemSetInfo set = cuserService.getSystemSetInfo();
+		if (cuser != null && addressInfo != null) {
+			// 查询出默认的日期天使设置
+			int maxDays = 30;// 默认设置30天
+			if (set != null && set.getBook_day_max() != null && set.getBook_day_max() != 0) {
+				maxDays = set.getBook_day_max();
+			}
+			Calendar now = Calendar.getInstance();
+			Calendar c1 = Calendar.getInstance();
+			int  hournow=c1.get(c1.HOUR_OF_DAY);
+			//maxDays=5;
+			List<CscheduleInfo> schedulelist = new ArrayList<CscheduleInfo>();
+			// 日期循环
+			for (int i = 0; i < maxDays; i++) {
+				// 取得日期
+				Calendar c = Calendar.getInstance();
+				c.add(Calendar.DATE, i);
+				Date time = c.getTime();
+				String newnow = CommonUtils.getTimeFormat(time, "yyyy-MM-dd");
+				// 取得DB中当天的所有日程设置
+				List<CscheduleInfo> dayist = cscheduleService.getCscheduleInfoByDatelist(newnow, coachid);
+				//查询是否有已过期的日程
+				if (dayist != null && dayist.size()>0) {
+					if(i==0)//只检查当天的日程信息里是否有过期时间
+					{
+						for (CscheduleInfo tempc : dayist) {
+							if(hournow>=CommonUtils.parseInt(tempc.getHour(), 0))
+							{
+								tempc.setExpire(1);
+								cscheduleService.updateScheduleInfo(tempc);
+							}
+							   
+						}
+					}
+				}
+				// 时间点循环	
+				for (int k = 5; k < 24; k++) {
+					CscheduleInfo info =null;
+					// 先寻找数据库中是否有该时间点的设置
+					for (CscheduleInfo cscheduleInfo : dayist) {
+						if (String.valueOf(k).equals(cscheduleInfo.getHour())) {
+							info = cscheduleInfo;
+							break;
+						}
+					}
+					
+					// 如果在数据库中找到了设置
+					if (info != null) {
+						// 查询地址信息
+						CaddAddressInfo address = cuserService.getaddress(info.getAddressid());
+						if (address != null) {
+							info.setAddressdetail(address.getDetail());
+						} 
+						// 科目信息
+						CsubjectInfo subject = cuserService.getSubjectById(info.getSubjectid());
+						if (subject != null) {
+							info.setSubject(subject.getSubjectname());
+						}
+						boolean isbooked = cscheduleService.getIsbookedBybooktime(String.valueOf(k), CommonUtils.parseInt(coachid, 0), newnow);
+						if (isbooked) {
+							info.setHasbooked(1);
+							info.setBookedername(cscheduleService.getBookederName(coachid, info.getDate(), info.getHour()));
+						} else {
+							info.setHasbooked(0);
+						}
+						schedulelist.add(info);
+					}
+					else
+					{
+						info=new CscheduleInfo();
+						info.setHour(String.valueOf(k));
+						info.setPrice(new BigDecimal(100.0));
+						info.setSubjectid(1);
+						info.setIsrest(1);
+						info.setDate(newnow);
+						info.setAddressid(addressInfo.getAddressid());
+						info.setAddressdetail(addressInfo.getDetail());
+						CsubjectInfo subject = cuserService.getSubjectById(info.getSubjectid());
+						if (subject != null) {
+							info.setSubject(subject.getSubjectname());
+						}
+						info.setCoachid(CommonUtils.parseInt(coachid, 0));
+						if(i==0)//只检查当天的日程信息里是否有过期时间
+						{
+							if(hournow>=k)
+							{
+								info.setExpire(1);
+							}
+						}
+						schedulelist.add(info);
+					}
+						
+				}
+			}
+			// 获得最新的list
+		//	Collections.sort(schedulelist, new CscheduleCompare());
+
+			// CuserInfo newcuser = cuserService.getCuserByCoachid(coachid);
+			// if (newcuser.getCancancel() == 0) {
+			// resultMap.put("cancelpermission", 0);
+			// } else {
+			resultMap.put("cancelpermission", 1);// 设置是否具有设置订单可以取消的权限
+			// }
+
+			resultMap.put("maxdays", maxDays);
+			resultMap.put("datelist", schedulelist);
+			resultMap.put("today", CommonUtils.getTimeFormat(now.getTime(), "yyyy-MM-dd"));// 返回服务器的日期
+			// 当前小时
+			int hour = now.get(Calendar.HOUR_OF_DAY);
+			resultMap.put("hour", hour);
+		} else {
+			resultMap.put("code", 5);
+			resultMap.put("message", "请先设置默认教学地址");
+		}
+	}
 	/**
 	 * 获取教练今天的日程安排
 	 * 
@@ -1260,7 +1393,93 @@ public class CscheduleServlet extends BaseServlet {
 		resultMap.put("message", "修改成功");
 		resultMap.put("datelist", schedulelist);
 	}
+	/**
+	 * 设置教练某天的某些时段设置
+	 * 
+	 * @param request
+	 * @throws ErrException
+	 */
+	public void setDateTimeNew(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String coachid = getRequestParamter(request, "coachid");
+		CommonUtils.validateEmpty(coachid);
+		String day = getRequestParamter(request, "day");
+		CommonUtils.validateEmpty(day);
+		String setjson = getRequestParamter(request, "setjson");
+		CommonUtils.validateEmpty(setjson);
 
+		CaddAddressInfo addressInfo = cuserService.getcoachaddress(coachid);
+
+		JSONArray json = null;
+		try {
+			json = new JSONArray(setjson);
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+
+		if (json == null) {
+			resultMap.put("code", 2);
+			resultMap.put("message", "设置失败,数据错误");
+			return;
+		} else {
+			for (int i = 0; i < json.length(); i++) {
+				JSONObject nextjson = null;
+				String hour = null;
+				String price = null;
+				String isrest = null;
+				String addressid = null;
+				String subjectid = null;
+				try {
+					nextjson = json.getJSONObject(i);
+					hour = nextjson.getString("hour");
+					price = nextjson.getString("price");
+					isrest = nextjson.getString("isrest");
+					addressid = nextjson.getString("addressid");
+					subjectid = nextjson.getString("subjectid");
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+
+				if (hour == null || price == null || isrest == null || addressid == null || subjectid == null) {
+					resultMap.put("code", 2);
+					resultMap.put("message", "设置失败,数据错误");
+					return;
+				}
+				CscheduleInfo cscheduleInfo = cscheduleService.getCscheduleByday(coachid, day, hour);// 根据时间教练 找到日程信息
+
+				if (cscheduleInfo == null) {
+					// 新添加日程
+					CscheduleInfo scheduleInfo = new CscheduleInfo();
+					scheduleInfo.setCoachid(CommonUtils.parseInt(coachid, 0));// 教练id
+					scheduleInfo.setDate(day); // 日期
+					scheduleInfo.setHour(hour); // 设置时间
+
+					BigDecimal b = new BigDecimal(CommonUtils.parseDouble(price, 0d));
+					scheduleInfo.setPrice(b); // 设置单价
+
+					scheduleInfo.setIsrest(1); // 设置是否休息
+
+					scheduleInfo.setAddressid(CommonUtils.parseInt(addressid, 0)); // 设置地址id
+
+					scheduleInfo.setSubjectid(CommonUtils.parseInt(subjectid, 0));// 设置科目id
+					cscheduleService.addScheduleInfo(scheduleInfo);
+				} else {
+					BigDecimal b = new BigDecimal(CommonUtils.parseDouble(price, 0d));
+					cscheduleInfo.setPrice(b); // 设置单价
+
+					cscheduleInfo.setIsrest(1); // 设置是否休息
+
+					cscheduleInfo.setAddressid(CommonUtils.parseInt(addressid, 0)); // 设置地址id
+
+					cscheduleInfo.setSubjectid(CommonUtils.parseInt(subjectid, 0));// 设置科目id
+					cscheduleService.updateScheduleInfo(cscheduleInfo);
+				}
+				cscheduleService.setDefaultNew(coachid, hour, price, addressid, subjectid);
+				
+			}
+			resultMap.put("code", 1);
+			resultMap.put("message", "修改成功");
+		}
+	}
 	/**
 	 * 改变某一天的全天安排
 	 * 
@@ -1396,6 +1615,176 @@ public class CscheduleServlet extends BaseServlet {
 			resultMap.put("code", 1);
 			resultMap.put("message", "设置成功");
 			resultMap.put("type", cscheduleInfo.getState());
+		} else {
+			resultMap.put("code", 5);
+			resultMap.put("message", "请先设置默认教学地址");
+		}
+	}
+	/**
+	 * 开课停课接口 2.0新版
+	 * 
+	 * @param request
+	 * @throws ErrException
+	 */
+	public void changeAllDayScheduleNew(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String coachid = getRequestParamter(request, "coachid");
+		CommonUtils.validateEmpty(coachid);
+		String day = getRequestParamter(request, "day");
+		CommonUtils.validateEmpty(day);
+		String type = getRequestParamter(request, "type");// 修改的状态1.开课 2.停课
+		CommonUtils.validateEmpty(type);
+		String setjson = getRequestParamter(request, "setjson");
+		CommonUtils.validateEmpty(setjson);
+		Calendar c=Calendar.getInstance();
+		int hournow=c.get(c.HOUR_OF_DAY);
+		if(type.equals("1"))
+		{
+			JSONArray json = null;
+			try {
+				json = new JSONArray(setjson);
+			} catch (JSONException e1) {
+				e1.printStackTrace();
+			}
+	
+			if (json == null) {
+				resultMap.put("code", 2);
+				resultMap.put("message", "设置失败,数据错误");
+				return;
+			} else {
+				for (int i = 0; i < json.length(); i++) {
+					JSONObject nextjson = null;
+					String hour = null;
+					String price = null;
+					String isrest = null;
+					String addressid = null;
+					String subjectid = null;
+					try {
+						nextjson = json.getJSONObject(i);
+						hour = nextjson.getString("hour");
+						price = nextjson.getString("price");
+						isrest = nextjson.getString("isrest");
+						addressid = nextjson.getString("addressid");
+						subjectid = nextjson.getString("subjectid");
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+	
+					if (hour == null || price == null || isrest == null || addressid == null || subjectid == null) {
+						resultMap.put("code", 2);
+						resultMap.put("message", "设置失败,数据错误");
+						return;
+					}
+	
+					CscheduleInfo cscheduleInfo = cscheduleService.getCscheduleByday(coachid, day, hour);// 根据时间教练 找到日程信息
+	
+					if (cscheduleInfo == null) {
+						// 新添加日程
+						CscheduleInfo scheduleInfo = new CscheduleInfo();
+						scheduleInfo.setCoachid(CommonUtils.parseInt(coachid, 0));// 教练id
+						scheduleInfo.setDate(day); // 日期
+						scheduleInfo.setHour(hour); // 设置时间
+	
+						BigDecimal b = new BigDecimal(CommonUtils.parseDouble(price, 0d));
+						scheduleInfo.setPrice(b); // 设置单价
+	
+						scheduleInfo.setIsrest(CommonUtils.parseInt(isrest, 0)); // 设置是否休息
+	
+						scheduleInfo.setAddressid(CommonUtils.parseInt(addressid, 0)); // 设置地址id
+	
+						scheduleInfo.setSubjectid(CommonUtils.parseInt(subjectid, 0));// 设置科目id
+						if(hournow>=CommonUtils.parseInt(hour, 0) && c.getTime().compareTo(CommonUtils.getDateFormat(day, "yyyy-MM-dd"))==1)//设置过期时间
+							scheduleInfo.setExpire(1);
+						else
+							scheduleInfo.setExpire(0);
+						cscheduleService.addScheduleInfo(scheduleInfo);
+						
+						
+					} else {
+						BigDecimal b = new BigDecimal(CommonUtils.parseDouble(price, 0d));
+						cscheduleInfo.setPrice(b); // 设置单价
+	
+						cscheduleInfo.setIsrest(CommonUtils.parseInt(isrest, 0)); // 设置是否休息
+	
+						cscheduleInfo.setAddressid(CommonUtils.parseInt(addressid, 0)); // 设置地址id
+	
+						cscheduleInfo.setSubjectid(CommonUtils.parseInt(subjectid, 0));// 设置科目id
+						
+						if(hournow>=CommonUtils.parseInt(hour, 0) && c.getTime().compareTo(CommonUtils.getDateFormat(day, "yyyy-MM-dd"))==1)//设置过期时间
+							cscheduleInfo.setExpire(1);
+						else
+							cscheduleInfo.setExpire(0);
+						cscheduleService.updateScheduleInfo(cscheduleInfo);
+					}
+					cscheduleService.setDefaultNew(coachid, hour, price, addressid, subjectid);
+				}
+			}
+		}
+		else if(type.equals("2"))
+		{
+			JSONArray json = null;
+			try {
+				json = new JSONArray(setjson);
+			} catch (JSONException e1) {
+				e1.printStackTrace();
+			}
+	
+			if (json == null) {
+				resultMap.put("code", 2);
+				resultMap.put("message", "设置失败,数据错误");
+				return;
+			} else {
+				for (int i = 0; i < json.length(); i++) {
+					JSONObject nextjson = null;
+					String hour = null;
+					String price = null;
+					String isrest = null;
+					String addressid = null;
+					String subjectid = null;
+					try {
+						nextjson = json.getJSONObject(i);
+						hour = nextjson.getString("hour");
+						price = nextjson.getString("price");
+						isrest = nextjson.getString("isrest");
+						addressid = nextjson.getString("addressid");
+						subjectid = nextjson.getString("subjectid");
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+	
+					if (hour == null || price == null || isrest == null || addressid == null || subjectid == null) {
+						resultMap.put("code", 2);
+						resultMap.put("message", "设置失败,数据错误");
+						return;
+					}
+	
+					CscheduleInfo cscheduleInfo = cscheduleService.getCscheduleByday(coachid, day, hour);// 根据时间教练 找到日程信息
+	
+						BigDecimal b = new BigDecimal(CommonUtils.parseDouble(price, 0d));
+						cscheduleInfo.setPrice(b); // 设置单价
+	
+						cscheduleInfo.setIsrest(CommonUtils.parseInt(isrest, 1)); // 设置是否休息
+	
+						cscheduleInfo.setAddressid(CommonUtils.parseInt(addressid, 0)); // 设置地址id
+	
+						cscheduleInfo.setSubjectid(CommonUtils.parseInt(subjectid, 0));// 设置科目id
+						
+						if(hournow>=CommonUtils.parseInt(hour, 0) && c.getTime().compareTo(CommonUtils.getDateFormat(day, "yyyy-MM-dd"))==1)//设置过期时间
+							cscheduleInfo.setExpire(1);
+						else
+							cscheduleInfo.setExpire(0);
+						cscheduleService.updateScheduleInfo(cscheduleInfo);
+				
+				}
+			}
+		}
+		CuserInfo cuser = cuserService.getCuserByCoachid(coachid);
+		CaddAddressInfo addressInfo = cuserService.getcoachaddress(coachid);
+		if (cuser != null && addressInfo != null) {
+			//根据教练当前开课状态来设置教练表中coursestate
+			cscheduleService.getCoachStateByFunction(coachid, 5, 5, 23, 0);
+			resultMap.put("code", 1);
+			resultMap.put("message", "设置成功");
+		//	resultMap.put("type", cscheduleInfo.getState());
 		} else {
 			resultMap.put("code", 5);
 			resultMap.put("message", "请先设置默认教学地址");
@@ -1699,5 +2088,30 @@ public class CscheduleServlet extends BaseServlet {
 		resultMap.put("hour", hour);
 		resultMap.put("code", 1);
 		resultMap.put("message", "设置成功");
+	}
+	/**
+	 *  2.0新版获取默认设置
+	 * @param request
+	 * @param resultMap
+	 * @throws ErrException
+	 */
+	public void getDefaultNew(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String coachid=getRequestParamter(request,"coachid");
+		List<DefaultSchedule> tempDefaultSchedule =cscheduleService.getDefaultNew(coachid);
+		for(DefaultSchedule d:tempDefaultSchedule)
+		{
+				// 查询地址信息
+				CaddAddressInfo address = cuserService.getaddress(d.getAddressid());
+				if (address != null) {
+					d.setAddressdetail(address.getDetail());
+				} 
+				// 科目信息
+				CsubjectInfo subject = cuserService.getSubjectById(d.getSubjectid());
+				if (subject != null) {
+					d.setSubject(subject.getSubjectname());
+				}
+		}
+		resultMap.put("DefaultSchedule", tempDefaultSchedule);
+		
 	}
 }
