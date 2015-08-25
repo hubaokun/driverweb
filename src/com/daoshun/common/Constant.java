@@ -374,6 +374,11 @@ public class Constant {
 
 	//广告服务接口
 	public static final String GETADVERTISEMENT ="GETADVERTISEMENT";
+	
+	// 获取默认日程设置
+    public static final String GETDEFAULTSCHEDULE = "GETDEFAULTSCHEDULE";
+
+	
 
 	/**************************** 默认属性设置 ********************************/
 	/************ 默认全天状态 ************/
