@@ -63,6 +63,13 @@ public interface ICscheduleService {
 	 * @param schedule
 	 */
 	public abstract void updateScheduleInfo(CscheduleInfo schedule);
+	
+	/**
+	 * 修改日程表信息
+	 * 
+	 * @param schedulelist
+	 */
+	public abstract void updateScheduleInfoByList(List<CscheduleInfo> schedulelist);
 
 	/**
 	 * 删除某天的日程安排
@@ -145,5 +152,9 @@ public interface ICscheduleService {
 	 * @return
 	 */
 	public abstract DefaultSchedule getCoachDefaultScheduleByDay(String coachid, String hour);
-
+	
+	/**
+	 * 查询该时间段是否已经被预约
+	 */
+    public abstract int checkBooked(String coachid,String booktime,String date);
 }

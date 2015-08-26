@@ -48,6 +48,14 @@ public class CscheduleServiceImpl extends BaseServiceImpl implements ICscheduleS
 
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override
+	public void updateScheduleInfoByList(List<CscheduleInfo> schedulelist) {
+		for(CscheduleInfo c:schedulelist)
+		{
+			dataDao.updateObject(c);
+		}	
+	}
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	@Override
 	public void delScheduleInfo(CscheduleInfo schedule) {
 		dataDao.deleteObject(schedule);
 	}
@@ -350,5 +358,16 @@ public class CscheduleServiceImpl extends BaseServiceImpl implements ICscheduleS
 		String hql = "from DefaultSchedule where coachid = :coachid and hour=:hour";
 		String[] param = { "coachid","hour" };
 		return (DefaultSchedule) dataDao.getFirstObjectViaParam(hql, param, CommonUtils.parseInt(coachid, 0),hour);
+	}
+
+	@Override
+	public int checkBooked(String coachid, String booktime, String date) {
+		String hql="from CBookTimeInfo where coachid =:coachid and bookedtime =:bookedtime and date =:date";
+		String params[] = { "coachid", "bookedtime", "date" };
+		List<CBookTimeInfo> booktimeList = (List<CBookTimeInfo>) dataDao.getObjectsViaParam(hql, params,CommonUtils.parseInt(coachid, 0),booktime,date);
+		if (booktimeList != null && booktimeList.size() > 0) 
+			return 1;
+		else
+			return 0;
 	}
 }
