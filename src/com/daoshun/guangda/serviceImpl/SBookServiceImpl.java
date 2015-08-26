@@ -2156,7 +2156,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					} else {
 						hasError = true;
 					}
-				}
+				//}
 				//判断订单总价格，如果没有在50到500价格之间，返回预订失败
 				if(total.doubleValue()>500 ||total.doubleValue()<50){
 					result.put("code", 26);
