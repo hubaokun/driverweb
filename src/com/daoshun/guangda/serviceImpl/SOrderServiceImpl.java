@@ -1450,9 +1450,11 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 					return -1;
 				}
 				student.setCoinnum(student.getCoinnum()+order.getMixCoin());
+				order.setMixCoin(0);
 				//***********余额的处理***************
 				student.setFmoney(student.getFmoney().subtract(new BigDecimal(order.getMixMoney())));
 				student.setMoney(student.getMoney().add(new BigDecimal(order.getMixMoney())));
+				order.setMixMoney(0);
 				
 			}
 			
