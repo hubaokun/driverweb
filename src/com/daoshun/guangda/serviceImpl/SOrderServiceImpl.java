@@ -346,11 +346,13 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				+ " = a.orderid and c.type = 1 and c.state = 0) = 0 and  a.end_time > :now))  order by a.start_time asc");*/
 		cuserhql.append("from OrderInfo a where a.studentid =:studentid and (a.studentstate in (0,4) and a.coachstate not in (4,5)) "
 				+ "  and ((select count(*) from ComplaintInfo c where c.order_id "
-				+ " = a.orderid and c.type = 1 and c.state = 0) = 0 and  a.end_time > :now))  order by a.start_time desc");
+				+ " = a.orderid and c.type = 1 and c.state = 0) = 0 and  a.end_time > :now)  order by a.start_time asc");
 		String[] params = { "studentid", "now" };
-		orderlist.addAll((List<OrderInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), Constant.ORDERLIST_SIZE, CommonUtils.parseInt(pagenum, 0) + 1, params, CommonUtils.parseInt(studentid, 0),
-				nowCanDown.getTime()));
-
+		//System.out.println(cuserhql.toString());
+		List<OrderInfo> list=(List<OrderInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), Constant.ORDERLIST_SIZE, CommonUtils.parseInt(pagenum, 0) + 1, params, CommonUtils.parseInt(studentid, 0),
+				nowCanDown.getTime());
+		orderlist.addAll(list);
+    
 		for (OrderInfo order : orderlist) {
 			CuserInfo user = dataDao.getObjectById(CuserInfo.class, order.getCoachid());
 			if (user != null) {// 教练信息
