@@ -155,6 +155,10 @@ public class OrderInfo implements Serializable {
 	@Transient
 	private List<OrderPrice> orderprice;
 	
+	
+	
+	
+	
 
 	// 是否有投诉
 	// @Transient
@@ -193,7 +197,27 @@ public class OrderInfo implements Serializable {
 	@Transient
 	private String subjectname;
 	
+	@Column(name = "mixCoin", length = 11, nullable = true, columnDefinition = "INT default 0")
+	private int mixCoin;//混合支付时的小巴币
+	@Column(name = "mixMoney", length = 11, nullable = true, columnDefinition = "INT default 0")
+	private int mixMoney;//混合支付时的余额
 	
+
+	public int getMixCoin() {
+		return mixCoin;
+	}
+
+	public void setMixCoin(int mixCoin) {
+		this.mixCoin = mixCoin;
+	}
+
+	public int getMixMoney() {
+		return mixMoney;
+	}
+
+	public void setMixMoney(int mixMoney) {
+		this.mixMoney = mixMoney;
+	}
 
 	public String getSubjectname() {
 		return subjectname;

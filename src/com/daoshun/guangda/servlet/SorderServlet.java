@@ -80,7 +80,7 @@ public class SorderServlet extends BaseServlet {
 				// 获取被投诉订单
 				getComplaintOrder(request, resultMap);
 			}else if (Constant.GETWAITDEALWITHORDER.equals(action)) {
-				// #########特殊订单：获取待处理订单#############
+				// #########特殊订单：获取待处理订单---》现在移到投诉列表中了#############
 				getWaitDealwithOrder(request, resultMap);
 			} else if (Constant.GETCOMPLETEORDER.equals(action)) {
 				// 获取已完成订单

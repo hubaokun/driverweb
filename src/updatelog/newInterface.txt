@@ -83,3 +83,29 @@ remindstate 提醒状态 1 已提醒过，  0 未提醒
 返回：hours  -6 
            其他返回与未完成订单列表相同
   
+# 
+教练完善个人资料：
+perfectPersonInfo  
+参数：
+birthday	生日
+years		教龄
+selfeval	自我评价
+
+完善账号信息：
+perfectAccountInfo 
+参数：
+realname 姓名
+gender   性别
+phone	 手机
+
+# 获取所有驾校信息GetAllSchool
+参数：cityid 城市ID
+
+# 接口perfectCoachInfo 新增参数：
+cityid 城市ID
+# 教练的登录接口login 新增返回
+cityid字段
+
+# PERFECTCOACHMODELID 完善准教车型
+参数： coachid  教练id
+    modelid  车型ID ,17或18 ，如果多选，上传 17,18

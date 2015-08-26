@@ -193,20 +193,35 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 			List<OrderPrice> orderpricelist = (List<OrderPrice>) dataDao.getObjectsViaParam(cuserhql1.toString(), params1, order.getOrderid());
 			if (orderpricelist != null && orderpricelist.size() > 0) {
 				order.setOrderprice(orderpricelist);
+				OrderPrice op=orderpricelist.get(0);
+				if(op!=null){
+					//设置科目
+					order.setSubjectname(op.getSubject());
+				}
 			}
 			CuserInfo user = dataDao.getObjectById(CuserInfo.class, order.getCoachid());
 			if (user != null) {
 				order.setCuserinfo(user);
 				//设置牌照
 				order.setCarlicense(user.getCarlicense());
-				StringBuffer subHql = new StringBuffer();
+				/*String subjectHql="from OrderPrice where orderid =:orderid";
+				String[] params1 = { "orderid" };
+				List<OrderPrice> orderpricelist = (List<OrderPrice>) dataDao.getObjectsViaParam(subjectHql.toString(), params1, order.getOrderid());
+				if (orderpricelist != null && orderpricelist.size() > 0) {
+					OrderPrice op=orderpricelist.get(0);
+					if(op!=null){
+						//设置科目
+						order.setSubjectname(op.getSubject());
+					}
+				}*/
+				/*StringBuffer subHql = new StringBuffer();
 				subHql.append("from CsubjectInfo where subjectid =:subjectid ");
 				String[] params3 = { "subjectid" };
 				CsubjectInfo subjectInfo = (CsubjectInfo) dataDao.getFirstObjectViaParam(subHql.toString(), params3, user.getSubjectdef());
 				if(subjectInfo!=null){
 					//设置科目
 					order.setSubjectname(subjectInfo.getSubjectname());
-				}
+				}*/
 			}
 
 			order.setHours(-2);// 学车已经完成
@@ -331,7 +346,7 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				+ " = a.orderid and c.type = 1 and c.state = 0) = 0 and  a.end_time > :now))  order by a.start_time asc");*/
 		cuserhql.append("from OrderInfo a where a.studentid =:studentid and (a.studentstate in (0,4) and a.coachstate not in (4,5)) "
 				+ "  and ((select count(*) from ComplaintInfo c where c.order_id "
-				+ " = a.orderid and c.type = 1 and c.state = 0) = 0 and  a.end_time > :now))  order by a.start_time asc");
+				+ " = a.orderid and c.type = 1 and c.state = 0) = 0 and  a.end_time > :now))  order by a.start_time desc");
 		String[] params = { "studentid", "now" };
 		orderlist.addAll((List<OrderInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), Constant.ORDERLIST_SIZE, CommonUtils.parseInt(pagenum, 0) + 1, params, CommonUtils.parseInt(studentid, 0),
 				nowCanDown.getTime()));
@@ -342,14 +357,23 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				order.setCuserinfo(user);
 				//设置教练的牌照
 				order.setCarlicense(user.getCarlicense());
-				StringBuffer subHql = new StringBuffer();
-				subHql.append("from CsubjectInfo where subjectid =:subjectid ");
+				String subjectHql="from OrderPrice where orderid =:orderid";
+				String[] params1 = { "orderid" };
+				List<OrderPrice> orderpricelist = (List<OrderPrice>) dataDao.getObjectsViaParam(subjectHql.toString(), params1, order.getOrderid());
+				if (orderpricelist != null && orderpricelist.size() > 0) {
+					OrderPrice op=orderpricelist.get(0);
+					if(op!=null){
+						//设置科目
+						order.setSubjectname(op.getSubject());
+					}
+				}
+				/*subHql.append("from CsubjectInfo where subjectid =:subjectid ");
 				String[] params3 = { "subjectid" };
 				CsubjectInfo subjectInfo = (CsubjectInfo) dataDao.getFirstObjectViaParam(subHql.toString(), params3, user.getSubjectdef());
 				if(subjectInfo!=null){
 					//设置科目
 					order.setSubjectname(subjectInfo.getSubjectname());
-				}
+				}*/
 			}
 			
 			// 是否已经确认上车
@@ -510,9 +534,9 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 		now.add(Calendar.MINUTE, -s_can_down);
 		StringBuffer cuserhql = new StringBuffer();
 
-		cuserhql.append("from OrderInfo a where a.studentid =:studentid and (a.studentstate in (0,4) and a.coachstate!=4) and "
+		cuserhql.append("from OrderInfo a where a.studentid =:studentid and (a.studentstate in (0,4) and a.coachstate not in (4,5)) and "
 				+ "  ((select count(*) as ccount from ComplaintInfo c where c.order_id"
-				+ " = a.orderid and c.type = 1 and state = 0) = 0 and  a.end_time > :now)) order by start_time asc");
+				+ " = a.orderid and c.type = 1 and state = 0) = 0 and  a.end_time > :now)) order by start_time desc");
 		String[] params = { "studentid", "now" };
 		List<OrderInfo> orderlist = (List<OrderInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), Constant.ORDERLIST_SIZE, CommonUtils.parseInt(pagenum, 0) + 1, params,
 				CommonUtils.parseInt(studentid, 0), now.getTime());
@@ -734,14 +758,24 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				order.setCuserinfo(user);
 				//设置车的牌照
 				order.setCarlicense(user.getCarlicense());
-				StringBuffer subHql = new StringBuffer();
+				String subjectHql="from OrderPrice where orderid =:orderid";
+				String[] params1 = { "orderid" };
+				List<OrderPrice> orderpricelist = (List<OrderPrice>) dataDao.getObjectsViaParam(subjectHql.toString(), params1, order.getOrderid());
+				if (orderpricelist != null && orderpricelist.size() > 0) {
+					OrderPrice op=orderpricelist.get(0);
+					if(op!=null){
+						//设置科目
+						order.setSubjectname(op.getSubject());
+					}
+				}
+				/*StringBuffer subHql = new StringBuffer();
 				subHql.append("from CsubjectInfo where subjectid =:subjectid ");
 				String[] params3 = { "subjectid" };
 				CsubjectInfo subjectInfo = (CsubjectInfo) dataDao.getFirstObjectViaParam(subHql.toString(), params3, user.getSubjectdef());
 				if(subjectInfo!=null){
 					//设置科目
 					order.setSubjectname(subjectInfo.getSubjectname());
-				}
+				}*/
 			}
 			StringBuffer cuserhql1 = new StringBuffer();
 			cuserhql1.append("from OrderPrice where orderid =:orderid ");
@@ -1404,6 +1438,20 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				}
 				
 				student.setCoinnum(student.getCoinnum()+order.getTotal().intValue());
+			}else if(order.getPaytype()==PayType.COIN_MONEY){
+				//***********小巴币的处理*************
+				//教练同意时，取消冻结金额。如果冻结金额小于订单额，直接相减后，冻结金额会出现负数，所以判断
+				if(student.getFcoinnum().intValue()>=order.getMixCoin()){
+					student.setFcoinnum(student.getFcoinnum().subtract(new BigDecimal(order.getMixCoin())));
+				}else{
+					System.out.println("cancelOrderByCoach方法中：小巴币解冻时发现数量小于订单额!停止解冻");
+					return -1;
+				}
+				student.setCoinnum(student.getCoinnum()+order.getMixCoin());
+				//***********余额的处理***************
+				student.setFmoney(student.getFmoney().subtract(new BigDecimal(order.getMixMoney())));
+				student.setMoney(student.getMoney().add(new BigDecimal(order.getMixMoney())));
+				
 			}
 			
 				

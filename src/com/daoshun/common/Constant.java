@@ -122,6 +122,8 @@ public class Constant {
 
 	// 账户充值
 	public static final String RECHARGE = "RECHARGE";
+	// 准教车型
+	public static final String PERFECTCOACHMODELID = "PERFECTCOACHMODELID";
 
 	// 获取通知列表
 	public static final String GETNOTICES = "GETNOTICES";

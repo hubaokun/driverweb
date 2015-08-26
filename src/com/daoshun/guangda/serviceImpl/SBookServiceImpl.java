@@ -27,6 +27,7 @@ import com.daoshun.common.PayType;
 import com.daoshun.common.PushtoSingle;
 import com.daoshun.guangda.pojo.CBookTimeInfo;
 import com.daoshun.guangda.pojo.CaddAddressInfo;
+import com.daoshun.guangda.pojo.CityRadius;
 import com.daoshun.guangda.pojo.CoachStudentInfo;
 import com.daoshun.guangda.pojo.CouponRecord;
 import com.daoshun.guangda.pojo.CscheduleInfo;
@@ -622,6 +623,14 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		/*String longitude="120.048943";
 		String latitude="30.329578";*/
 		radius="20.0";
+		String rhql="from CityRadius where cityid=:cityid";
+		String p[]={"cityid"};
+		CityRadius cr=(CityRadius) dataDao.getFirstObjectViaParam(rhql, p, CommonUtils.parseInt(cityid, 0));
+		if(cr!=null){
+			if(cr.getRadius()!=0){
+				radius=String.valueOf(cr.getRadius());
+			}
+		}
 		
 		// 获得符合条件的地址
 		//radius="8";//设置查询半径值
@@ -1812,6 +1821,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				String recordid="";
 				int delmoney=0;
 				//int orderPrice=0;
+				int mixMoney=0;//混合支付时余额支付额
+				int mixCoin=0;//混合支付时的小巴币数量
 				if(String.valueOf(PayType.MONEY).equals(paytype)){
 					delmoney= array.getInt("delmoney");
 				}else if(String.valueOf(PayType.COUPON).equals(paytype)){
@@ -1848,7 +1859,34 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				}else if(String.valueOf(PayType.COIN).equals(paytype)){//小巴币支付
 					delmoney= array.getInt("delmoney");
 				}else if(String.valueOf(PayType.COIN_MONEY).equals(paytype)){//小巴币支付
-					delmoney= array.getInt("delmoney");
+					delmoney= array.getInt("delmoney");//小巴币
+					mixCoin=delmoney;//小巴币数量
+					if(delmoney<0){
+						result.put("failtimes", -1);
+						result.put("successorderid", -1);
+						result.put("coachauth", -1);
+						result.put("code", 31);
+						result.put("message", "混合支付小巴币个数有误！");
+						return result;
+					}
+					int total=array.getInt("total");//订单总额
+					if(total<0){
+						result.put("failtimes", -1);
+						result.put("successorderid", -1);
+						result.put("coachauth", -1);
+						result.put("code", 32);
+						result.put("message", "混合支付订单总额有误！");
+						return result;
+					}
+					mixMoney=total-delmoney;//余额支付=订单总额-小巴币支付额
+					if(mixMoney<0){
+						result.put("failtimes", -1);
+						result.put("successorderid", -1);
+						result.put("coachauth", -1);
+						result.put("code", 32);
+						result.put("message", "混合支付时余额支付有误！");
+						return result;
+					}
 				}
 			/*	System.out.println("##############################################");
 				System.out.println("paytype="+paytype);
@@ -2051,6 +2089,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 
 						// 订单总价格
 						order.setTotal(total);
+						order.setMixCoin(mixCoin);
+						order.setMixMoney(mixMoney);
 						order.setStudentstate(0);// 学生端订单状态
 						order.setCoachstate(0);// 教练段任务状态
 						// 地址相关
@@ -2170,6 +2210,9 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					
 					for (int m = 0; m < orderList.size(); m++) {
 						BigDecimal total = new BigDecimal(0);
+						//混合支付时：
+						int mixCoin=0;//混合支付时小巴币个数
+						int mixMoney=0;//混合支付时余额
 						dataDao.addObject(orderList.get(m).mOrderInfo);
 						// 查看订单的提醒设置
 						if (orderNotiList != null && orderNotiList.size() > 0) {
@@ -2304,6 +2347,51 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 							        coinRecordInfo.setOrderid(orderList.get(m).mOrderInfo.getOrderid());//设置小巴币所属的订单的ID
 							        dataDao.addObject(coinRecordInfo);*/
 								///////////////////////////////////////////
+							}else if(PayType.COIN_MONEY==orderList.get(m).mOrderInfo.getPaytype()){
+								//小巴币和余额混合支付
+								//#############先处理小巴币 开始###########################  
+								int mixcoin=orderList.get(m).mOrderInfo.getMixCoin();
+								
+								//BigDecimal cnum = new BigDecimal(student.getCoinnum());
+								double dc=student.getCoinnum()-mixcoin;
+								//小巴币大于0，并且剩余小巴币余额减去支付额大于等于0，表示余额购，否则余额不足
+								if(dc>=0){
+									student.setCoinnum((int)dc); //学员小巴币数量减少
+									student.setFcoinnum(student.getFcoinnum().add(new BigDecimal(mixcoin)));
+								}else{
+									//不足
+									result.put("code", 6);
+									result.put("message", "小巴币余额不足!");
+									return result;
+								}
+								//#############小巴币处理结束###########################    
+								//#############余额支付开始############################
+								int mixmoney=orderList.get(m).mOrderInfo.getMixMoney();
+								BigDecimal mmoney=new BigDecimal(mixmoney);
+								if(student.getMoney().subtract(mmoney).doubleValue()<0){
+									result.put("code", 4);
+									result.put("message", "账户余额不足！");
+									return result;
+								}
+								student.setFmoney(student.getFmoney().add(mmoney));
+								student.setMoney(student.getMoney().subtract(mmoney));
+								/*
+								 * 学员下订单时，订单价格为M，此时学员的余额减M，冻结金额加M,教练的账户金额不变
+									取消订单时，学员的冻结金额减去M,学员的余额加M,教练的账户金额不变
+								 */
+								if (student.getMoney().doubleValue() < 0 || student.getFmoney().doubleValue() < 0) {
+									result.put("failtimes", failtimes);
+									result.put("successorderid", successorderid);
+									result.put("coachauth", student.getCoachstate());
+									if (failtimes.length() == 0) {
+										result.put("code", 15);
+									} else {
+										result.put("code", 2);
+									}
+									result.put("message", "账户余额不足！");
+									return result;
+								}
+								//#############余额支付结束############################
 							}
 							dataDao.updateObject(student);
 						}

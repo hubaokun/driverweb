@@ -39,6 +39,8 @@ public class AutoPositionInfo implements java.io.Serializable {
     
     @Column(name="marks",length=200)
     private String marks;
+    
+    
 
 	public int getAid() {
 		return aid;
