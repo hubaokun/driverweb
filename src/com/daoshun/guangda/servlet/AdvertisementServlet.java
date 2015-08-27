@@ -184,7 +184,8 @@ public class AdvertisementServlet  extends BaseServlet{
 		}
 	}
 
-   private void getAdvertiesementcontent(HttpServletRequest request, HashMap<String, Object> resultMap)
+   @SuppressWarnings("unused")
+private void getAdvertiesementcontent(HttpServletRequest request, HashMap<String, Object> resultMap)
    {
 	 /*  String id=getRequestParamter(request, "id");
 	   String type=getRequestParamter(request, "type");
@@ -200,12 +201,48 @@ public class AdvertisementServlet  extends BaseServlet{
 		   resultMap.put("advertisement",resultpojo);
 		   resultMap.put("isdiplay",1);
 	   }*/
+	   String model=getRequestParamter(request, "model");
+	   String c_image_ios="";
+	   String c_image_android="";
+	   String s_image_ios="";
+	   String s_image_android="";
+	   String c_image_ios_flash="";
+	   String c_image_android_flash="";
+	   String s_image_ios_flash="";
+	   String s_image_android_flash="";
+	   if(model!=null)
+	   {
+		   if(model.equals("1"))
+		   {
+			   String height=getRequestParamter(request, "height");
+			   String width=getRequestParamter(request, "width");
+			   s_image_ios=width+"x"+height+".jpg";
+		   }
+		   else
+		   {
+			   s_image_android="im_ad.png";
+		   }
+			   
+	   }
+	  
 	   SystemSetInfo resultpojo=advertisementService.getAdvertisementcontent();
 	   
-	   resultMap.put("c_img",resultpojo.getCoach_advertisement_img());
-	   resultMap.put("s_img",resultpojo.getStudent_advertisement_img());
+	   resultMap.put("c_img_ios",resultpojo.getCoach_advertisement_img_ios()+c_image_ios);
+	   resultMap.put("c_img_android",resultpojo.getCoach_advertisement_img_android()+c_image_android);
+	   resultMap.put("s_img_ios",resultpojo.getStudent_advertisement_img_ios()+s_image_ios);
+	   resultMap.put("s_img_android",resultpojo.getStudent_advertisement_img_android()+s_image_android);
+	   resultMap.put("c_flag",resultpojo.getCoach_advertisement_flag());
+	   resultMap.put("s_flag",resultpojo.getStudent_advertisement_flag());
+	   resultMap.put("c_flash_flag",resultpojo.getCoach_advertisement_flag_flash());
+	   resultMap.put("s_flash_flag",resultpojo.getStudent_advertisement_flag_flash());
 	   resultMap.put("c_url",resultpojo.getCoach_advertisement_url());
 	   resultMap.put("s_url",resultpojo.getStudent_advertisement_url());
+	   resultMap.put("c_img_android_flash",resultpojo.getCoach_advertisement_img_flash_android()+c_image_android_flash);
+	   resultMap.put("c_img_ios_flash",resultpojo.getCoach_advertisement_img_flash_ios()+c_image_ios_flash);
+	   resultMap.put("s_img_android_flash",resultpojo.getStudent_advertisement_img_flash_android()+s_image_android_flash);
+	   resultMap.put("s_img_ios_flash",resultpojo.getStudent_advertisement_img_flash_ios()+s_image_ios_flash);
+	   resultMap.put("c_img",resultpojo.getCoach_advertisement_img());
+	   resultMap.put("s_img",resultpojo.getStudent_advertisement_img());
 	   resultMap.put("curldisplay",resultpojo.getCoach_advertisement_flag());
 	   resultMap.put("surldisplay",resultpojo.getStudent_advertisement_flag());
    }

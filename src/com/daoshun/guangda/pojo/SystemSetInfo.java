@@ -87,22 +87,58 @@ public class SystemSetInfo implements Serializable {
 	private Integer coursedate;
 	
 	//教练闪屏标示位
-	@Column(name = "advertisement_flag", length = 2, columnDefinition = "TINYINT default 0")
-	private Integer advertisement_flag;
+	@Column(name = "coach_advertisement_flag_flash", length = 2, columnDefinition = "TINYINT default 0")
+	private Integer coach_advertisement_flag_flash;
+	
+	
 	//教练闪屏url
-	@Column(name = "advertisement_url",  length = 1000)
-	private String advertisement_url;
+	@Column(name = "coach_advertisement_url_flash",  length = 1000)
+	private String coach_advertisement_url_flash;
+	
+	//教练闪屏url 安卓
+	@Column(name = "coach_advertisement_img_flash_android",  length = 1000)
+	private String coach_advertisement_img_flash_android;
+	
+	//教练闪屏url 苹果
+	@Column(name = "coach_advertisement_img_flash_ios",  length = 1000)
+	private String coach_advertisement_img_flash_ios;
+	
+	//学员闪屏标示位
+	@Column(name = "student_advertisement_flag_flash", length = 2, columnDefinition = "TINYINT default 0")
+	private Integer student_advertisement_flag_flash;
+	
+	
+	//学员闪屏url
+	@Column(name = "student_advertisement_url_flash",  length = 1000)
+	private String student_advertisement_url_flash;
+	
+	//学员闪屏url 安卓
+	@Column(name = "student_advertisement_img_flash_android",  length = 1000)
+	private String student_advertisement_img_flash_android;
+	
+	//学员闪屏url 苹果
+	@Column(name = "student_advertisement_img_flash_ios",  length = 1000)
+	private String student_advertisement_img_flash_ios;
 	
 	//教练弹窗标示位
 	@Column(name = "coach_advertisement_flag", length = 2, columnDefinition = "TINYINT default 0")
 	private Integer coach_advertisement_flag;
+	
 	//教练弹窗url
 	@Column(name = "coach_advertisement_url",  length = 1000)
 	private String coach_advertisement_url;
 	
-	//教练弹窗img地址
+	//教练弹窗img地址 安卓
 	@Column(name = "coach_advertisement_img",  length = 1000)
 	private String coach_advertisement_img;
+	
+	//教练弹窗img地址 安卓
+	@Column(name = "coach_advertisement_img_android",  length = 1000)
+	private String coach_advertisement_img_android;
+	
+	//教练弹窗img地址 苹果
+	@Column(name = "coach_advertisement_img_ios",  length = 1000)
+	private String coach_advertisement_img_ios;
 	
 	//学员弹框标示位
 	@Column(name = "student_advertisement_flag", length = 2, columnDefinition = "TINYINT default 0")
@@ -111,9 +147,17 @@ public class SystemSetInfo implements Serializable {
 	@Column(name = "student_advertisement_url",  length = 1000)
 	private String student_advertisement_url;
 	
-	//学员弹框img地址
-	@Column(name = "student_advertisement_img",  length = 1000)
+	//学员弹框img地址 安卓
+    @Column(name = "student_advertisement_img",  length = 1000)
 	private String student_advertisement_img;
+	
+	//学员弹框img地址 安卓
+	@Column(name = "student_advertisement_img_android",  length = 1000)
+	private String student_advertisement_img_android;
+	
+	//学员弹框img地址 苹果
+	@Column(name = "student_advertisement_img_ios",  length = 1000)
+	private String student_advertisement_img_ios;
 
 	@Column(name = "creward_amount", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")
 	private BigDecimal crewardamount;
@@ -270,21 +314,70 @@ public class SystemSetInfo implements Serializable {
 	}
 
 
-	public Integer getAdvertisement_flag() {
-		return advertisement_flag;
+	
+
+	public Integer getCoach_advertisement_flag_flash() {
+		return coach_advertisement_flag_flash;
 	}
 
-	public void setAdvertisement_flag(Integer advertisement_flag) {
-		this.advertisement_flag = advertisement_flag;
+	public void setCoach_advertisement_flag_flash(Integer coach_advertisement_flag_flash) {
+		this.coach_advertisement_flag_flash = coach_advertisement_flag_flash;
 	}
 
-
-	public String getAdvertisement_url() {
-		return advertisement_url;
+	public String getCoach_advertisement_url_flash() {
+		return coach_advertisement_url_flash;
 	}
 
-	public void setAdvertisement_url(String advertisement_url) {
-		this.advertisement_url = advertisement_url;
+	public void setCoach_advertisement_url_flash(String coach_advertisement_url_flash) {
+		this.coach_advertisement_url_flash = coach_advertisement_url_flash;
+	}
+
+	public String getCoach_advertisement_img_flash_android() {
+		return coach_advertisement_img_flash_android;
+	}
+
+	public void setCoach_advertisement_img_flash_android(String coach_advertisement_img_flash_android) {
+		this.coach_advertisement_img_flash_android = coach_advertisement_img_flash_android;
+	}
+
+	public String getCoach_advertisement_img_flash_ios() {
+		return coach_advertisement_img_flash_ios;
+	}
+
+	public void setCoach_advertisement_img_flash_ios(String coach_advertisement_img_flash_ios) {
+		this.coach_advertisement_img_flash_ios = coach_advertisement_img_flash_ios;
+	}
+
+	public Integer getStudent_advertisement_flag_flash() {
+		return student_advertisement_flag_flash;
+	}
+
+	public void setStudent_advertisement_flag_flash(Integer student_advertisement_flag_flash) {
+		this.student_advertisement_flag_flash = student_advertisement_flag_flash;
+	}
+
+	public String getStudent_advertisement_url_flash() {
+		return student_advertisement_url_flash;
+	}
+
+	public void setStudent_advertisement_url_flash(String student_advertisement_url_flash) {
+		this.student_advertisement_url_flash = student_advertisement_url_flash;
+	}
+
+	public String getStudent_advertisement_img_flash_android() {
+		return student_advertisement_img_flash_android;
+	}
+
+	public void setStudent_advertisement_img_flash_android(String student_advertisement_img_flash_android) {
+		this.student_advertisement_img_flash_android = student_advertisement_img_flash_android;
+	}
+
+	public String getStudent_advertisement_img_flash_ios() {
+		return student_advertisement_img_flash_ios;
+	}
+
+	public void setStudent_advertisement_img_flash_ios(String student_advertisement_img_flash_ios) {
+		this.student_advertisement_img_flash_ios = student_advertisement_img_flash_ios;
 	}
 
 	public BigDecimal getCrewardamount() {
@@ -351,6 +444,38 @@ public class SystemSetInfo implements Serializable {
 		this.coursedate = coursedate;
 	}
 
+	public String getCoach_advertisement_img_android() {
+		return coach_advertisement_img_android;
+	}
+
+	public void setCoach_advertisement_img_android(String coach_advertisement_img_android) {
+		this.coach_advertisement_img_android = coach_advertisement_img_android;
+	}
+
+	public String getCoach_advertisement_img_ios() {
+		return coach_advertisement_img_ios;
+	}
+
+	public void setCoach_advertisement_img_ios(String coach_advertisement_img_ios) {
+		this.coach_advertisement_img_ios = coach_advertisement_img_ios;
+	}
+
+	public String getStudent_advertisement_img_android() {
+		return student_advertisement_img_android;
+	}
+
+	public void setStudent_advertisement_img_android(String student_advertisement_img_android) {
+		this.student_advertisement_img_android = student_advertisement_img_android;
+	}
+
+	public String getStudent_advertisement_img_ios() {
+		return student_advertisement_img_ios;
+	}
+
+	public void setStudent_advertisement_img_ios(String student_advertisement_img_ios) {
+		this.student_advertisement_img_ios = student_advertisement_img_ios;
+	}
+
 	public String getCoach_advertisement_img() {
 		return coach_advertisement_img;
 	}
@@ -366,5 +491,7 @@ public class SystemSetInfo implements Serializable {
 	public void setStudent_advertisement_img(String student_advertisement_img) {
 		this.student_advertisement_img = student_advertisement_img;
 	}
+
+
 	
 }
