@@ -330,4 +330,35 @@ function selectall() {
 	}
 }
 
+//信息导出弹框
+function alertDataExportBox() {
+	$("#alertbox").show();
+	$("#alertbox_sec").show();
+	$("#alertbox_last").show();
+}
+
+function unAlertDataExportBox() {
+	$("#alertbox").hide();
+	$("#alertbox_sec").hide();
+	$("#alertbox_last").hide();
+}
+//导出全选框
+function selectallrecord() {
+	var aa = $("#allrecordcheck").val();
+	if (aa == 0) {
+		var a = document.getElementsByName("C1");
+		for (var i = 0; i < a.length; i++) {
+			a[i].checked = true;
+		}
+		$("#allrecordcheck").val("1");
+	}
+	if (aa == 1) {
+		var a = document.getElementsByName("C1");
+		for (var i = 0; i < a.length; i++) {
+			a[i].checked = false;
+		}
+		$("#allrecordcheck").val("0");
+	}
+}
+
 

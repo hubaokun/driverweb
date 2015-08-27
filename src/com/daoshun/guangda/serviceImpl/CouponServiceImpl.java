@@ -122,7 +122,7 @@ public class CouponServiceImpl extends BaseServiceImpl implements ICouponService
 	public void updateCouponInfo(CouponInfo coupon) {
 		dataDao.updateObject(coupon);
 	}
-
+//获得小巴券发放记录明细
 	@SuppressWarnings("unchecked")
 	@Override
 	public QueryResult<CouponRecord> getCouponReecordListByPage(int pageIndex, int pageSize, String name, Integer coupontype, String starttime, String endtime, Integer value, Integer valuetype,
@@ -205,7 +205,7 @@ public class CouponServiceImpl extends BaseServiceImpl implements ICouponService
 		return result;
 	}
 	
-//获得小巴券领取记录
+//获得小巴券发放记录
 	@SuppressWarnings("unchecked")
 	@Override
 	public QueryResult<CouponRecord> getCouponReecordInfoByPage(int pageIndex, int pageSize, String name, Integer coupontype, String starttime, String endtime, Integer value, Integer valuetype,
@@ -317,6 +317,14 @@ public class CouponServiceImpl extends BaseServiceImpl implements ICouponService
 		return result;
 	}
 	
+//获得所有小巴券发放记录明细
+	@Override
+	public List<CouponRecord> getCouponRecordList() {
+		StringBuffer cuserhql = new StringBuffer();
+		cuserhql.append(" from CouponRecord");
+		List<CouponRecord> CouponRecordlist = (List<CouponRecord>) dataDao.getObjectsViaParam(cuserhql.toString(), null);
+		return CouponRecordlist;
+	}
 	
 //获得教练小巴券兑换记录
 	@SuppressWarnings("unchecked")
