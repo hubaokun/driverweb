@@ -74,10 +74,10 @@ public class CuserServlet extends BaseServlet {
 
 			if (Constant.CPERFECTACCOUNTINFO.equals(action) || Constant.CCHANGEAVATAR.equals(action) || Constant.CPERFECTPERSONINFO.equals(action) || Constant.CPERFECTCOACHINFO.equals(action)
 					|| Constant.RECHARGE.equals(action) || Constant.GETMYBALANCEINFO.equals(action) || Constant.GETMYCOINRECORD.equals(action)) {
-				if (!checkSession(request, action, resultMap)) {
+				/*if (!checkSession(request, action, resultMap)) {
 					setResult(response, resultMap);
 					return;
-				}
+				}*/
 			}
 
 			if (Constant.CLOGIN.equals(action)) {
@@ -98,6 +98,9 @@ public class CuserServlet extends BaseServlet {
 			} else if (Constant.CPERFECTCOACHINFO.equals(action)) {
 				// 完善教练资格资料
 				perfectCoachInfo(request, resultMap);
+			}else if (Constant.PERFECTCOACHMODELID.equals(action)) {
+				// 完善准教车型
+				perfectCoachModelid(request, resultMap);
 			} else if (Constant.RECHARGE.equals(action)) {
 				// 充值
 				recharge(request, resultMap);
@@ -465,7 +468,7 @@ public class CuserServlet extends BaseServlet {
 		String driveschool = getRequestParamter(request, "driveschool"); // 驾校名称
 		String driveschoolid = getRequestParamter(request, "driveschoolid"); // 驾校id
 		String gender = getRequestParamter(request, "gender"); // 性别
-		CommonUtils.validateEmpty(gender);// 性别必填
+		//CommonUtils.validateEmpty(gender);// 性别必填
 
 		CuserInfo cuserFir = cuserService.getCuserByCoachid(coachid);
 		if (cuserFir == null) {
@@ -486,7 +489,7 @@ public class CuserServlet extends BaseServlet {
 
 			if (!CommonUtils.isEmptyString(driveschoolid)) {
 				cuserFir.setDrive_schoolid(CommonUtils.parseInt(driveschoolid, 0));
-				cuserFir.setDrive_school("");
+				//cuserFir.setDrive_school("");
 			}
 
 			if (!CommonUtils.isEmptyString(gender)) {
@@ -663,7 +666,22 @@ public class CuserServlet extends BaseServlet {
 			cuserService.updateCuser(cuser);
 		}
 	}
-
+	public void perfectCoachModelid(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String coachid = getRequestParamter(request, "coachid");
+		CommonUtils.validateEmptytoMsg(coachid,"教练ID不能为空");
+		String modelid = getRequestParamter(request, "modelid"); // 准教车型
+		CommonUtils.validateEmptytoMsg(modelid, "车型不能为空");
+		CuserInfo cuser = cuserService.getCuserByCoachid(coachid);
+		if (cuser == null) {
+			resultMap.put("code", 2);
+			resultMap.put("message", "用户不存在");
+		} else {
+			if (!CommonUtils.isEmptyString(modelid)) {
+				cuser.setModelid(modelid);
+			}
+		}
+		cuserService.updateCuser(cuser);
+	}
 	/**
 	 * 完善教练资格资料
 	 * 
@@ -687,6 +705,7 @@ public class CuserServlet extends BaseServlet {
 		String carmodel = getRequestParamter(request, "carmodel"); // 教学用车车型
 		String carmodelid = getRequestParamter(request, "carmodelid"); // 教学用车车型id
 		String carlicense = getRequestParamter(request, "carlicense"); // 教学用车牌照号码
+		String cityid = getRequestParamter(request, "cityid"); //城市id
 		String cradpic1 = (String) request.getAttribute("cardpic1"); // 身份证正面
 		String cradpic2 = (String) request.getAttribute("cardpic2"); // 身份证反面
 		String cradpic3 = (String) request.getAttribute("cardpic3"); // 教练证照片
@@ -694,6 +713,7 @@ public class CuserServlet extends BaseServlet {
 		String cradpic5 = (String) request.getAttribute("cardpic5"); // 车辆行驶证正面照
 		String cradpic6 = (String) request.getAttribute("cardpic6"); // 车辆行驶证反面照
 		String cradpic7 = (String) request.getAttribute("cardpic7"); // 教练真实照片
+		
 		CuserInfo cuser = cuserService.getCuserByCoachid(coachid);
 		if (cuser == null) {
 			resultMap.put("code", 2);
@@ -775,6 +795,9 @@ public class CuserServlet extends BaseServlet {
 			}
 			if (!CommonUtils.isEmptyString(cradpic7)) {
 				cuser.setRealpic(CommonUtils.parseInt(cradpic7, 0));
+			}
+			if (!CommonUtils.isEmptyString(cityid)) {
+				cuser.setCityid(cityid);
 			}
 			cuser.setState(1);
 			cuserService.updateCuser(cuser);

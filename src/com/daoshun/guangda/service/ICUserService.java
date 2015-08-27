@@ -287,4 +287,5 @@ public interface ICUserService {
 	 * 根据驾校名称找到驾校ID
 	 */
 	public abstract Integer getDriverSchoolIDbyName(String schoolname);
+	 public List<DriveSchoolInfo> getDriveSchoolInfoByCityId(String cityid);
 }

@@ -63,6 +63,13 @@ public interface ICscheduleService {
 	 * @param schedule
 	 */
 	public abstract void updateScheduleInfo(CscheduleInfo schedule);
+	
+	/**
+	 * 修改日程表信息
+	 * 
+	 * @param schedulelist
+	 */
+	public abstract void updateScheduleInfoByList(List<CscheduleInfo> schedulelist);
 
 	/**
 	 * 删除某天的日程安排
@@ -115,4 +122,39 @@ public interface ICscheduleService {
 	 * 获取教练开课默认设置（包括所有项） 
 	 */
 	public abstract Map getAllCoachscheduleinfo(String coachid, String hour);
+	
+	/**
+	 * 2.0新版 日程默认设置
+	 */
+	public abstract void setDefaultNew(String coachid,String hour,String price,String addressid,String subjectid);
+	/**
+	 * 2.0新版 获取日程默认
+	 */
+	public abstract List<DefaultSchedule> getDefaultNew(String coachid);
+	/**
+	 * 2.0新版 根据预订信息获取预订学员姓名
+	 */
+	public abstract String getBookederName(String coachid,String date,String hour);
+	
+	/**
+	 * 2.0 预约时添加日程被预约标记
+	 * 
+	 * @param day
+	 * @param coachid
+	 * @return
+	 */
+	public abstract void setCscheduleByday(String coachid, String day, String hour,int bookstate);
+	/**
+	 * 获取教练的默认日程设置
+	 * 
+	 * @param coachid
+	 * @param hour
+	 * @return
+	 */
+	public abstract DefaultSchedule getCoachDefaultScheduleByDay(String coachid, String hour);
+	
+	/**
+	 * 查询该时间段是否已经被预约
+	 */
+    public abstract int checkBooked(String coachid,String booktime,String date);
 }

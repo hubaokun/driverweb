@@ -521,7 +521,52 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 				        coinRecordInfo.setAddtime(new Date());
 				        coinRecordInfo.setOrderid(order.getOrderid());//设置小巴币所属的订单的ID
 				        dataDao.addObject(coinRecordInfo);
+					}else if(order.getPaytype()==PayType.COIN_MONEY){
+						//混合支付
+						//###############处理 小巴币 开始###################
+						//学员冻结小巴币取消
+						BigDecimal b1=new BigDecimal(order.getMixCoin());
+						if(student.getFcoinnum().intValue()>=b1.intValue()){
+							student.setFcoinnum(student.getFcoinnum().subtract(b1));
+						}else{
+							System.out.println("结算SettlementOrder方法中：小巴币解冻时发现数量小于订单额!停止结算");
+							return;
+						}
+						
+						b1=b1.add(new BigDecimal(cuser.getCoinnum()));
+						//教练小巴币增加
+						cuser.setCoinnum(b1.intValue());
+						
+						CoinRecordInfo coinRecordInfo = new CoinRecordInfo ();
+				        coinRecordInfo.setReceiverid(cuser.getCoachid());
+				        coinRecordInfo.setReceivertype(UserType.COAH);
+				        coinRecordInfo.setReceivername(cuser.getRealname());
+				       
+				        coinRecordInfo.setPayerid(student.getStudentid());
+				        coinRecordInfo.setPayertype(UserType.STUDENT);
+				        coinRecordInfo.setPayername(student.getRealname());
+				        coinRecordInfo.setType(CoinType.STUDENT_PAY);//学员支付
+				        
+				        coinRecordInfo.setOwnerid(cuser.getCoachid());
+				        coinRecordInfo.setOwnertype(2);
+				        coinRecordInfo.setOwnername(cuser.getRealname());
+				        
+				        coinRecordInfo.setCoinnum(order.getMixCoin());
+				        coinRecordInfo.setAddtime(new Date());
+				        coinRecordInfo.setOrderid(order.getOrderid());//设置小巴币所属的订单的ID
+				        dataDao.addObject(coinRecordInfo);
+				        //###############处理 小巴币 结束###################
+				      //###############处理余额 开始###################
+				        BigDecimal mmoney=new BigDecimal(order.getMixMoney());
+						//设置学员冻结金额为
+						student.setFmoney(student.getFmoney().subtract(mmoney));
+						mmoney=mmoney.add(cuser.getMoney());
+						cuser.setMoney(mmoney);
+				        
+				      //###############处理余额 结束###################
+				        
 					}
+						
 					cuser.setTotaltime(cuser.getTotaltime() + order.getTime());
 					student.setLearn_time(student.getLearn_time() + order.getTime());
 					

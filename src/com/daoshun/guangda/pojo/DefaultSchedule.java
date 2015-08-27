@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "t_default_schedule")
@@ -56,6 +57,14 @@ public class DefaultSchedule implements Serializable {
 	@Column(name = "updatetime", nullable = false)
 	private Date updatetime;
 
+	// 地址详细
+	@Transient
+	private String addressdetail;
+
+	// 教学科目名称
+	@Transient
+	private String subject;
+		
 	public Integer getScheduleid() {
 		return scheduleid;
 	}
@@ -134,6 +143,22 @@ public class DefaultSchedule implements Serializable {
 
 	public void setSubjectid(int subjectid) {
 		this.subjectid = subjectid;
+	}
+
+	public String getAddressdetail() {
+		return addressdetail;
+	}
+
+	public void setAddressdetail(String addressdetail) {
+		this.addressdetail = addressdetail;
+	}
+
+	public String getSubject() {
+		return subject;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
 	}
 
 }

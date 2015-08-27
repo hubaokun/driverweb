@@ -24,8 +24,7 @@
 	<context:component-scan base-package="com.daoshun" />
 
 	<!-- <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"> -->
-	<bean id="dataSource"
-		class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
+	<bean id="dataSource" 	class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
 		<property name="targetDataSource">
 			<bean class="org.logicalcobwebs.proxool.ProxoolDataSource">
 				<property name="driver" value="com.mysql.jdbc.Driver" />

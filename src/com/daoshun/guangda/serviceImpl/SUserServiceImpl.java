@@ -1272,13 +1272,28 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			Long  consumeCoupon= (Long)dataDao.getFirstObjectViaParam(hql4, params3, cid,2);//小巴券
 			
 			BigDecimal  consumeCoin= (BigDecimal)dataDao.getFirstObjectViaParam(hql3, params3, cid,3);//小巴币
+			//混合支付的情况：
+			String mixhql ="select sum(mixCoin),sum(mixMoney) from OrderInfo where studentid=:studentid and paytype=:paytype and studentstate=3";
+			String[] mixparams = { "studentid","paytype"};
+			Object[]  mixamout= (Object[])dataDao.getFirstObjectViaParam(mixhql, mixparams, cid,4);
+			Long  mixcoin=0L;
+			Long  mixmoney=0L;
+			if(mixamout!=null){
+				if(mixamout[0]!=null){
+					mixcoin=(Long)mixamout[0];
+				}
+				if(mixamout[1]!=null){
+					mixmoney=(Long)mixamout[1];
+				}
+			}
+			
 			if(consumeMoney!=null){
-				result.put("consumeMoney", consumeMoney.doubleValue());
+				result.put("consumeMoney", consumeMoney.doubleValue()+mixmoney.doubleValue());
 			}else{
 				result.put("consumeMoney", 0);
 			}
 			if(consumeCoin!=null){
-				result.put("consumeCoin", consumeCoin.intValue());
+				result.put("consumeCoin", consumeCoin.intValue()+mixcoin.doubleValue());
 			}else{
 				result.put("consumeCoin", 0);
 			}

@@ -21,6 +21,8 @@ import com.daoshun.guangda.pojo.CscheduleInfo;
 import com.daoshun.guangda.pojo.CsubjectInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.DefaultSchedule;
+import com.daoshun.guangda.pojo.OrderInfo;
+import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.pojo.SystemSetInfo;
 import com.daoshun.guangda.service.ICscheduleService;
 
@@ -44,6 +46,14 @@ public class CscheduleServiceImpl extends BaseServiceImpl implements ICscheduleS
 		dataDao.updateObject(schedule);
 	}
 
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	@Override
+	public void updateScheduleInfoByList(List<CscheduleInfo> schedulelist) {
+		for(CscheduleInfo c:schedulelist)
+		{
+			dataDao.updateObject(c);
+		}	
+	}
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override
 	public void delScheduleInfo(CscheduleInfo schedule) {
@@ -293,5 +303,71 @@ public class CscheduleServiceImpl extends BaseServiceImpl implements ICscheduleS
 		resultmap.put("CaddAddressInfo", tempCaddAddressInfo);
 		resultmap.put("CsubjectInfo", tempCsubjectInfo);
 		return resultmap;
+	}
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	@Override
+	public void setDefaultNew(String coachid, String hour,String price,String addressid,String subjectid) {
+		String querystring="from DefaultSchedule where coachid=:coachid and hour=:hour";
+		String[] params={"coachid","hour"};
+		DefaultSchedule tempDefaultSchedule=(DefaultSchedule) dataDao.getFirstObjectViaParam(querystring, params, CommonUtils.parseInt(coachid, 0),hour);
+	    if(tempDefaultSchedule!=null)
+	    {
+	    	BigDecimal b = new BigDecimal(CommonUtils.parseDouble(price, 0d));
+	    	tempDefaultSchedule.setPrice(b);
+	    	tempDefaultSchedule.setSubjectid(CommonUtils.parseInt(subjectid,0));
+	    	tempDefaultSchedule.setAddressid(CommonUtils.parseInt(addressid,0));
+	    	tempDefaultSchedule.setUpdatetime(new Date());
+	    	dataDao.updateObject(tempDefaultSchedule);
+	    }
+	
+	}
+
+	@Override
+	public List<DefaultSchedule> getDefaultNew(String coachid) {
+		String querystring="from DefaultSchedule where coachid=:coachid and hour<>0";
+		String[] params={"coachid"};
+		List<DefaultSchedule> tempDefaultSchedule=(List<DefaultSchedule>) dataDao.getObjectsViaParam(querystring, params, CommonUtils.parseInt(coachid, 0));
+		return tempDefaultSchedule;
+	}
+
+	@Override
+	public String getBookederName(String coachid, String date, String hour) {
+		 String querystring ="from OrderInfo where coachid=:coachid and HOUR(start_time)=:hour and DATE(start_time)=:date";
+		 String[] params={"coachid","hour","date"};
+		 OrderInfo tempOrderInfo=(OrderInfo) dataDao.getFirstObjectViaParam(querystring, params,CommonUtils.parseInt(coachid, 0),Integer.parseInt(hour),CommonUtils.getDateFormat(date, "yyyy-MM-dd"));
+		 if(tempOrderInfo!=null)
+		 {
+			 int id=tempOrderInfo.getStudentid();
+			 SuserInfo tempSuserInfo=dataDao.getObjectById(SuserInfo.class, id);
+			 return tempSuserInfo.getRealname();
+		 }
+		 
+		 return "";
+		
+	}
+
+	@Override
+	public void setCscheduleByday(String coachid, String day, String hour,int bookstate) {
+		CscheduleInfo tempCscheduleInfo= getCscheduleByday(coachid, day, hour);
+		tempCscheduleInfo.setBookstate(bookstate);
+		updateScheduleInfo(tempCscheduleInfo);
+	}
+
+	@Override
+	public DefaultSchedule getCoachDefaultScheduleByDay(String coachid, String hour) {
+		String hql = "from DefaultSchedule where coachid = :coachid and hour=:hour";
+		String[] param = { "coachid","hour" };
+		return (DefaultSchedule) dataDao.getFirstObjectViaParam(hql, param, CommonUtils.parseInt(coachid, 0),hour);
+	}
+
+	@Override
+	public int checkBooked(String coachid, String booktime, String date) {
+		String hql="from CBookTimeInfo where coachid =:coachid and bookedtime =:bookedtime and date =:date";
+		String params[] = { "coachid", "bookedtime", "date" };
+		List<CBookTimeInfo> booktimeList = (List<CBookTimeInfo>) dataDao.getObjectsViaParam(hql, params,CommonUtils.parseInt(coachid, 0),booktime,date);
+		if (booktimeList != null && booktimeList.size() > 0) 
+			return 1;
+		else
+			return 0;
 	}
 }

@@ -108,7 +108,7 @@ public class CmyServlet extends BaseServlet {
 				getAllTeachCarModel(request, resultMap);
 			} else if (Constant.CGETALLSCHOOL.equals(action)) {
 				// 得到所有驾校信息
-				getAllSchool(request, resultMap);
+				getAllSchool2(request, resultMap);
 			} else if (Constant.CHANGEALIACCOUNT.equals(action)) {
 				changeAliAccount(request, resultMap);
 			} else if (Constant.GETALLCOUPON.equals(action)) {
@@ -846,6 +846,22 @@ public class CmyServlet extends BaseServlet {
 	public void getAllSchool(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		List<DriveSchoolInfo> driveschoollist = cuserService.getDriveSchoolInfo();
 		resultMap.put("schoollist", driveschoollist);
+	}
+	/**
+	 * 获取所有驾校信息2
+	 * 
+	 * @param request
+	 * @throws ErrException
+	 */
+	public void getAllSchool2(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String cityid = getRequestParamter(request, "cityid");
+		if(cityid!=null && !"".equals(cityid)){
+			List<DriveSchoolInfo> driveschoollist = cuserService.getDriveSchoolInfoByCityId(cityid);
+			resultMap.put("schoollist", driveschoollist);
+		}else{
+			List<DriveSchoolInfo> driveschoollist = cuserService.getDriveSchoolInfo();
+			resultMap.put("schoollist", driveschoollist);
+		}
 	}
 
 	public void changeAliAccount(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {

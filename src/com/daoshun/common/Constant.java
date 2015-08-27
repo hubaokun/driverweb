@@ -122,6 +122,9 @@ public class Constant {
 
 	// 账户充值
 	public static final String RECHARGE = "RECHARGE";
+	// 准教车型										  PERFECTCOACHMODELID
+	public static final String PERFECTCOACHMODELID = "PERFECTCOACHMODELID";
+
 
 	// 获取通知列表
 	public static final String GETNOTICES = "GETNOTICES";
@@ -147,6 +150,8 @@ public class Constant {
 	public static final String GETUNCOMPLETEORDER = "GETUNCOMPLETEORDER";
 	// 取得被投诉订单
 	public static final String GETCOMPLAINTORDER  = "GETCOMPLAINTORDER";
+	// 取得待处理订单
+	public static final String GETWAITDEALWITHORDER  = "GETWAITDEALWITHORDER";
 
 	// 取得待评价订单
 	public static final String GETWAITEVALUATIONORDER = "GETWAITEVALUATIONORDER";
@@ -372,6 +377,11 @@ public class Constant {
 
 	//广告服务接口
 	public static final String GETADVERTISEMENT ="GETADVERTISEMENT";
+	
+	// 获取默认日程设置
+    public static final String GETDEFAULTSCHEDULE = "GETDEFAULTSCHEDULE";
+
+	
 
 	/**************************** 默认属性设置 ********************************/
 	/************ 默认全天状态 ************/

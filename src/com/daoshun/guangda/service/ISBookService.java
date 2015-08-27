@@ -47,6 +47,14 @@ public interface ISBookService {
 	 * @return
 	 */
 	public abstract List<CscheduleInfo> refreshCoachSchedule(String coachid, String date, String studentid);
+	/**
+	 * 刷新教练日程 2.0新版
+	 * 
+	 * @param coachid
+	 * @param date
+	 * @return
+	 */
+	public abstract List<CscheduleInfo> refreshCoachScheduleNew(String coachid, String date, String studentid);
 	public int getCoachState(String coachid, int datacount, Date startdate, int starthour, int endhour,int subjectid);
 	public void remindCoach(String coachid,String studentid,String date);
 	/**
@@ -98,6 +106,9 @@ public interface ISBookService {
 	public abstract HashMap<String, Object> bookCoach(String coachid, String studentid, String date);
 	//新增不同支付处理
 	public HashMap<String, Object> bookCoach2(String coachid, String studentid, String date);
+
+	//新版2.0预约流程
+	public HashMap<String, Object> bookCoachNew(String coachid, String studentid, String date);
 
 	/**
 	 * 获取教练的评论数量

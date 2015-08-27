@@ -350,4 +350,5 @@ public interface ISOrderService {
 	 */
 	public List<OrderInfo> getComplaintOrder(String studentid, String pagenum);
 	public int getComplaintOrderMore(String studentid, String pagenum);
+	public List<OrderInfo> getWaitDealwithOrder(String studentid, String pagenum);
 }

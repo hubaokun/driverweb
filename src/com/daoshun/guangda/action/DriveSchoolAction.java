@@ -19,7 +19,6 @@ import com.daoshun.common.CommonUtils;
 import com.daoshun.common.QueryResult;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.DriveSchoolInfo;
-import com.daoshun.guangda.pojo.ProvinceInfo;
 import com.daoshun.guangda.pojo.SchoolBalance;
 import com.daoshun.guangda.service.ICUserService;
 import com.daoshun.guangda.service.ICtaskService;
