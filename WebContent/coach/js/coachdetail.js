@@ -2295,15 +2295,24 @@ function enrollstudentsearch() {
 	var phone = $("#phone").val();
 	var starttime = $("#starttime").val();
 	var endtime = $("#endtime").val();
+	var startenrolltime = $("#startenrolltime").val();
+	var endenrolltime = $("#endenrolltime").val();
 	if(starttime!=''&&endtime!=''){
 		if(starttime>endtime){
 			alert("结束时间必须大于开始时间！");
 			return;
 		}
 	}
+	if(startenrolltime!=''&&endenrolltime!=''){
+		if(startenrolltime>endenrolltime){
+			alert("结束时间必须大于开始时间！");
+			return;
+		}
+	}
 	window.location = "getEnrollStudentByKeyword.do?searchname=" + realname
 			+ "&searchphone=" + phone + "&minsdate=" + starttime + "&maxsdate="
-			+ endtime + "&index=" + index + "&change_id=" + j;
+			+ endtime +"&minenrollsdate=" + startenrolltime + "&maxenrollsdate="
+			+ endenrolltime + "&index=" + index + "&change_id=" + j;
 }
 
 //已报名学员条件搜索
@@ -2314,15 +2323,24 @@ function enrolledstudentsearch() {
 	var phone = $("#phone").val();
 	var starttime = $("#starttime").val();
 	var endtime = $("#endtime").val();
+	var startenrolltime = $("#startenrolltime").val();
+	var endenrolltime = $("#endenrolltime").val();
 	if(starttime!=''&&endtime!=''){
 		if(starttime>endtime){
 			alert("结束时间必须大于开始时间！");
 			return;
 		}
 	}
+	if(startenrolltime!=''&&endenrolltime!=''){
+		if(startenrolltime>endenrolltime){
+			alert("结束时间必须大于开始时间！");
+			return;
+		}
+	}
 	window.location = "getEnrolledStudentByKeyword.do?searchname=" + realname
 			+ "&searchphone=" + phone + "&minsdate=" + starttime + "&maxsdate="
-			+ endtime + "&index=" + index + "&change_id=" + j;
+			+ endtime +"&minenrollsdate=" + startenrolltime + "&maxenrollsdate="
+			+ endenrolltime + "&index=" + index + "&change_id=" + j;
 }
 
 //已删除学员条件搜索
@@ -2333,15 +2351,24 @@ function deletestudentsearch() {
 	var phone = $("#phone").val();
 	var starttime = $("#starttime").val();
 	var endtime = $("#endtime").val();
+	var startenrolltime = $("#startenrolltime").val();
+	var endenrolltime = $("#endenrolltime").val();
 	if(starttime!=''&&endtime!=''){
 		if(starttime>endtime){
 			alert("结束时间必须大于开始时间！");
 			return;
 		}
 	}
+	if(startenrolltime!=''&&endenrolltime!=''){
+		if(startenrolltime>endenrolltime){
+			alert("结束时间必须大于开始时间！");
+			return;
+		}
+	}
 	window.location = "getDeleteStudentByKeyword.do?searchname=" + realname
 			+ "&searchphone=" + phone + "&minsdate=" + starttime + "&maxsdate="
-			+ endtime + "&index=" + index + "&change_id=" + j;
+			+ endtime +"&minenrollsdate=" + startenrolltime + "&maxenrollsdate="
+			+ endenrolltime+ "&index=" + index + "&change_id=" + j;
 }
 
 // 学员条件搜索

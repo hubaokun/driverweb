@@ -80,6 +80,12 @@ public class SuserAction extends BaseAction {
 
 	// 搜索的结束时间
 	private String maxsdate;
+	
+	// 搜索的开始时间
+	private String minenrollsdate;
+
+	// 搜索的结束时间
+	private String maxenrollsdate;
 
 	// 搜索名字
 	private String searchname;
@@ -674,8 +680,8 @@ public String getStudentDetailByPhone() {
 	public String getEnrollStudentByKeyword() {
 		HttpSession session = ServletActionContext.getRequest().getSession();
 		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
-		QueryResult<SuserInfo> result = suserService.getEnrollStudentByKeyword(searchname, searchphone, minsdate, maxsdate, pageIndex, pagesize);
-		total = result.getTotal();
+		QueryResult<SuserInfo> result = suserService.getEnrollStudentByKeyword(searchname, searchphone, minsdate, maxsdate, minenrollsdate, maxenrollsdate, pageIndex, pagesize);
+		total = result.getTotal(); 
 		suserlist = result.getDataList();
 		for (int i = 0; i < suserlist.size(); i++) {
 			if (!CommonUtils.isEmptyString(suserlist.get(i).getBirthday())) {
@@ -714,7 +720,7 @@ public String getStudentDetailByPhone() {
 	public String getEnrolledStudentByKeyword() {
 		HttpSession session = ServletActionContext.getRequest().getSession();
 		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
-		QueryResult<SuserInfo> result = suserService.getEnrolledStudentByKeyword(searchname, searchphone, minsdate, maxsdate, pageIndex, pagesize);
+		QueryResult<SuserInfo> result = suserService.getEnrolledStudentByKeyword(searchname, searchphone, minsdate, maxsdate, minenrollsdate, maxenrollsdate,pageIndex, pagesize);
 		total = result.getTotal();
 		suserlist = result.getDataList();
 		for (int i = 0; i < suserlist.size(); i++) {
@@ -754,7 +760,7 @@ public String getStudentDetailByPhone() {
 	public String getDeleteStudentByKeyword() {
 		HttpSession session = ServletActionContext.getRequest().getSession();
 		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
-		QueryResult<SuserInfo> result = suserService.getDeleteStudentByKeyword(searchname, searchphone, minsdate, maxsdate, pageIndex, pagesize);
+		QueryResult<SuserInfo> result = suserService.getDeleteStudentByKeyword(searchname, searchphone, minsdate, maxsdate,minenrollsdate, maxenrollsdate, pageIndex, pagesize);
 		total = result.getTotal();
 		suserlist = result.getDataList();
 		for (int i = 0; i < suserlist.size(); i++) {
@@ -1784,6 +1790,28 @@ public String getStudentDetailByPhone() {
 	public void setMaxsdate(String maxsdate) {
 		this.maxsdate = maxsdate;
 	}
+	
+	
+
+	public String getMinenrollsdate() {
+		return minenrollsdate;
+	}
+
+
+	public void setMinenrollsdate(String minenrollsdate) {
+		this.minenrollsdate = minenrollsdate;
+	}
+
+
+	public String getMaxenrollsdate() {
+		return maxenrollsdate;
+	}
+
+
+	public void setMaxenrollsdate(String maxenrollsdate) {
+		this.maxenrollsdate = maxenrollsdate;
+	}
+
 
 	public List<BalanceStudentInfo> getBalanceStudentList() {
 		return balanceStudentList;
