@@ -522,7 +522,25 @@ public class CommonUtils {
 		// System.out.println(result);
 		return result;
 	}
-
+	public static String sendSms2(String phone, String content) {
+		// http://202.91.244.252/qd/SMSSendYD?usr=***&pwd=***&mobile=***&sms=***&extdsrcid=***
+		StringBuilder url = new StringBuilder();
+		url.append("http://120.26.69.248/msg/HttpSendSM?account=002006&pswd=Sd123456789&mobile=13958109962&needstatus=false&msg=");
+		/*url.append(Constant.SMS_USER);
+		url.append("&pwd=");
+		url.append(Constant.SMS_PWD);
+		url.append("&mobile=");
+		url.append(phone);
+		url.append("&sms=");*/
+		try {
+			url.append(java.net.URLEncoder.encode(content, "utf-8"));
+		} catch (UnsupportedEncodingException e) {
+		}
+		String result = HttpRequest.sendGet(url.toString(), null);
+		// System.out.println(result);
+		return result;
+	}
+	
 	/**
 	 * 上传图片
 	 * 
@@ -617,9 +635,10 @@ public class CommonUtils {
 
     
     public static void main(String[] args) { 
-    	String phone="18758234668";
+    	/*String phone="18758234668";
     	String code=CommonUtils.getInviteCode(phone);
-    	System.out.print(code);
+    	System.out.print(code);*/
+    	sendSms2("","【小巴科技】你的验证码是232323");
     }
     
 }

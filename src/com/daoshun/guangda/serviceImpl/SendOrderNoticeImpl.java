@@ -24,12 +24,21 @@ public class SendOrderNoticeImpl extends BaseServiceImpl implements ISendOrderNo
 	 */
 	@Transactional(readOnly = false)
 	@Scheduled(cron = "0 * * * * ?")
+	//@Scheduled(cron = "0/5 * *  * * ? ")
 	@Override
 	public void sendNoti() {
-
 		Calendar c = Calendar.getInstance();
-		// System.out.println("Send Order Niti....When:" + CommonUtils.getTimeFormat(c.getTime(), "yyyy-MM-dd HH:mm:ss"));
-		String hql = "from OrderNotiRecord where sendtime = :sendtime";
+		//System.out.println("Send Order Niti....When:" + CommonUtils.getTimeFormat(c.getTime(), "yyyy-MM-dd HH:mm:ss"));
+		String chql="from OrderInfo where start_time<=now() and studentstate=4 and coachstate=0";
+		List<OrderInfo> list = (List<OrderInfo>) dataDao.getObjectsViaParam(chql, null);
+		if(list!=null && list.size()>0){
+			//判断学员取消订单后，教练是否点击同意或不同操作按钮，如果在开课后教练还没有操作，默认
+			String checkHql="update t_order set coachstate=5 where start_time<=now() and studentstate=4 and coachstate=0";
+			dataDao.updateBySql(checkHql);
+		}
+		
+		
+		/*String hql = "from OrderNotiRecord where sendtime = :sendtime";
 		String[] params = { "sendtime" };
 		List<OrderNotiRecord> list = (List<OrderNotiRecord>) dataDao.getObjectsViaParam(hql, params, c.getTime());
 		if (list != null) {
@@ -99,5 +108,7 @@ public class SendOrderNoticeImpl extends BaseServiceImpl implements ISendOrderNo
 				}
 			}
 		}
+		*/
+		//////////////////
 	}
 }

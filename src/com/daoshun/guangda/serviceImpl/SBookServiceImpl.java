@@ -25,7 +25,6 @@ import com.daoshun.common.Constant;
 import com.daoshun.common.DeviceType;
 import com.daoshun.common.PayType;
 import com.daoshun.common.PushtoSingle;
-import com.daoshun.guangda.dao.RedisCoachDao;
 import com.daoshun.guangda.pojo.CBookTimeInfo;
 import com.daoshun.guangda.pojo.CaddAddressInfo;
 import com.daoshun.guangda.pojo.CoachStudentInfo;
@@ -50,8 +49,8 @@ import com.daoshun.guangda.service.ISBookService;
 @Service("sbookService")
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
-	@Resource
-	public RedisCoachDao redisCoachDao;
+	/*@Resource
+	public RedisCoachDao redisCoachDao;*/
 	@Override
 	public CuserInfo getCoachDetail(String coachid) {
 		CuserInfo cuser = dataDao.getObjectById(CuserInfo.class, CommonUtils.parseInt(coachid, 0));
@@ -131,7 +130,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				PushtoSingle pushsingle = new PushtoSingle();
 				pushsingle.pushsingle(userpush.getJpushid(), 1, "{\"message\":\"" + pushMsg + "\",\"type\":\"1\"}");
 			} else if (userpush.getType() == DeviceType.IOS && !CommonUtils.isEmptyString(userpush.getDevicetoken())) {
-				ApplePushUtil.sendpush(userpush.getDevicetoken(), "{\"aps\":{\"alert\":\"" + pushMsg + "\",\"sound\":\"default\"},\"userid\":" + coachid + "\"}", 1, 1);
+				ApplePushUtil.sendpush(userpush.getDevicetoken(), "{\"aps\":{\"alert\":\"" + pushMsg + "\",\"sound\":\"default\"},\"userid\":" + coachid + "}", 1, 1);
 			}
 		}
 		
@@ -1024,11 +1023,12 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		String countSql=cuserhql.toString().substring(n, cuserhql.toString().length());
 		countSql="select count(*)  "+countSql;*/
 		//System.out.println(countSql);
-		List<CuserInfo> coachlist=redisCoachDao.getCoachList();
+		/*List<CuserInfo> coachlist=redisCoachDao.getCoachList();
 		result.put("coachlist", coachlist);
 		long endtime=System.currentTimeMillis();
 		System.out.println("总耗时："+(endtime-starttime));
-		return result;
+		return result;*/
+		return null;
 	}
 
 	class OrderModel {
@@ -1663,7 +1663,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				}
 				String recordid="";
 				int delmoney=0;
-				int orderPrice=0;
+				//int orderPrice=0;
 				if(String.valueOf(PayType.MONEY).equals(paytype)){
 					delmoney= array.getInt("delmoney");
 				}else if(String.valueOf(PayType.COUPON).equals(paytype)){
@@ -1698,6 +1698,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					}
 
 				}else if(String.valueOf(PayType.COIN).equals(paytype)){//小巴币支付
+					delmoney= array.getInt("delmoney");
+				}else if(String.valueOf(PayType.COIN_MONEY).equals(paytype)){//小巴币支付
 					delmoney= array.getInt("delmoney");
 				}
 			/*	System.out.println("##############################################");

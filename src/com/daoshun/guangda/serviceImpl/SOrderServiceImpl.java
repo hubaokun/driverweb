@@ -216,6 +216,51 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 		}
 		return orderList;
 	}
+	/**
+	 * 获取待评价订单 未完成订单满足条件： studentid 为请求者ID and (studentstate = 2 or ( studentstate = 0 and 订单的结束时间已经过去 and 订单没有投诉))
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<OrderInfo> getWaitDealwithOrder(String studentid, String pagenum) {
+
+		StringBuffer cuserhql = new StringBuffer();
+		cuserhql.append("from OrderInfo  a where a.studentid =:studentid and a.coachstate=5 ");
+		String[] params = { "studentid"};
+		List<OrderInfo> orderList = new ArrayList<OrderInfo>();
+		orderList.addAll((List<OrderInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), Constant.ORDERLIST_SIZE, CommonUtils.parseInt(pagenum, 0) + 1, params, CommonUtils.parseInt(studentid, 0)));
+		for (OrderInfo order : orderList) {
+			StringBuffer cuserhql1 = new StringBuffer();
+			cuserhql1.append("from OrderPrice where orderid =:orderid ");
+			String[] params1 = { "orderid" };
+			List<OrderPrice> orderpricelist = (List<OrderPrice>) dataDao.getObjectsViaParam(cuserhql1.toString(), params1, order.getOrderid());
+			if (orderpricelist != null && orderpricelist.size() > 0) {
+				order.setOrderprice(orderpricelist);
+			}
+			CuserInfo user = dataDao.getObjectById(CuserInfo.class, order.getCoachid());
+			if (user != null) {
+				order.setCuserinfo(user);
+				//设置牌照
+				order.setCarlicense(user.getCarlicense());
+				StringBuffer subHql = new StringBuffer();
+				subHql.append("from CsubjectInfo where subjectid =:subjectid ");
+				String[] params3 = { "subjectid" };
+				CsubjectInfo subjectInfo = (CsubjectInfo) dataDao.getFirstObjectViaParam(subHql.toString(), params3, user.getSubjectdef());
+				if(subjectInfo!=null){
+					//设置科目
+					order.setSubjectname(subjectInfo.getSubjectname());
+				}
+			}
+			order.setHours(-6);// 学车已经完成
+			// 是否可以投诉
+			order.setCan_complaint(0);
+			order.setNeed_uncomplaint(0);// 订单肯定没有投诉
+			order.setCan_cancel(OrderState.CANNOT_CANCEL);// 肯定不可以取消
+			order.setCan_up(0);// 不可以再确认上车
+			order.setCan_down(0);
+			order.setCan_comment(0);
+		}
+		return orderList;
+	}
 
 	@Override
 	public int getWaitEvaluationOrderMore(String studentid, String pagenum) {
@@ -269,7 +314,7 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				s_can_down = setInfo.getS_can_down();
 
 		}
-		time_cancel = 10;// 距离订单开始前订单可以取消的时间 默认10分钟
+		time_cancel = 60;// 距离订单开始前订单可以取消的时间 默认60分钟
 		Calendar now = Calendar.getInstance();
 		
 		Calendar nowCanDown = Calendar.getInstance();
@@ -279,7 +324,7 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 		/*cuserhql.append("from OrderInfo a where a.studentid =:studentid and (a.studentstate in (0,4) and a.coachstate!=4) and ((select count(*) from ComplaintInfo c where c.order_id"
 				+ " = a.orderid and c.type = 1 and c.state = 0) > 0 or ((select count(*) from ComplaintInfo c where c.order_id"
 				+ " = a.orderid and c.type = 1 and c.state = 0) = 0 and  a.end_time > :now))  order by a.start_time asc");*/
-		cuserhql.append("from OrderInfo a where a.studentid =:studentid and (a.studentstate in (0,4) and a.coachstate!=4) "
+		cuserhql.append("from OrderInfo a where a.studentid =:studentid and (a.studentstate in (0,4) and a.coachstate not in (4,5)) "
 				+ "  and ((select count(*) from ComplaintInfo c where c.order_id "
 				+ " = a.orderid and c.type = 1 and c.state = 0) = 0 and  a.end_time > :now))  order by a.start_time asc");
 		String[] params = { "studentid", "now" };
@@ -370,16 +415,35 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				order.setNeed_uncomplaint(0);
 			}
 			// 是否可以取消
-			if (order.getCancancel() == 1) {// 不可取消
-				order.setCan_cancel(1);
+			/*if (order.getCancancel() == 1) {// 不可取消
+				order.setCan_cancel(OrderState.CANNOT_CANCEL);
 			} else {// 可以取消
 				Calendar now2 = Calendar.getInstance();
 				now2.add(Calendar.MINUTE, time_cancel);
 				if (now2.getTime().before(order.getStart_time())) {
-					order.setCan_cancel(1);
+					order.setCan_cancel(OrderState.CAN_CANCEL);
 				} else {
-					order.setCan_cancel(0);
+					order.setCan_cancel(OrderState.CANNOT_CANCEL);
 				}
+			}
+			*/
+			/*if (order.getCancancel() == 1) {// 不可取消
+				order.setCan_cancel(OrderState.CAN_CANCEL);
+			} else {// 可以取消
+				Calendar now2 = Calendar.getInstance();
+				now2.add(Calendar.MINUTE, time_cancel);
+				if (now2.getTime().before(order.getStart_time())) {
+					order.setCan_cancel(OrderState.CANNOT_CANCEL);
+				} else {
+					order.setCan_cancel(OrderState.CAN_CANCEL);
+				}
+			}*/
+			Calendar now2 = Calendar.getInstance();
+			now2.add(Calendar.MINUTE, time_cancel);
+			if (now2.getTime().before(order.getStart_time())) {
+				order.setCan_cancel(OrderState.CAN_CANCEL);
+			} else {
+				order.setCan_cancel(OrderState.CANNOT_CANCEL);//不能取消 0
 			}
 
 			if (orderRecord != null || orderRecord2 != null) {// 确认下车过或者确认上车过
@@ -454,7 +518,7 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 		}
 	}
 	/**
-	 * 获取被投诉的订单
+	 * 获取被投诉的订单【待处理】
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -476,15 +540,16 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				s_can_down = setInfo.getS_can_down();
 
 		}
+		time_cancel = 60;
 		Calendar now = Calendar.getInstance();
 
 		Calendar nowCanDown = Calendar.getInstance();
 		nowCanDown.add(Calendar.MINUTE, -s_can_down);
 		StringBuffer cuserhql = new StringBuffer();
 		List<OrderInfo> orderlist = new ArrayList<OrderInfo>();
-		cuserhql.append("from OrderInfo a where a.studentid =:studentid and (a.studentstate in (0,4) and a.coachstate!=4) and (select count(*) from ComplaintInfo c where c.order_id"
+		cuserhql.append("from OrderInfo a where a.studentid =:studentid and a.coachstate=5 or (select count(*) from ComplaintInfo c where c.order_id"
 				+ " = a.orderid and c.type = 1 and c.state = 0) > 0 "
-				+ "  order by a.start_time asc");
+				+ "  order by a.start_time desc");
 		String[] params = { "studentid" };
 		//System.out.println(cuserhql.toString());
 		orderlist.addAll((List<OrderInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), Constant.ORDERLIST_SIZE, CommonUtils.parseInt(pagenum, 0) + 1, params, CommonUtils.parseInt(studentid, 0)));
@@ -526,7 +591,7 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 			right1.add(Calendar.MINUTE, s_can_down);
 
 			// 订单显示即将开始
-			if (orderRecord == null && now.getTime().before(order.getStart_time()) && now.after(left)) {
+			/*if (orderRecord == null && now.getTime().before(order.getStart_time()) && now.after(left)) {
 				order.setHours(0);
 			} else if (now.before(left)) {// 订单显示距离开始时间
 				long millisecond = order.getStart_time().getTime() - now.getTimeInMillis();
@@ -541,8 +606,13 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				order.setHours(-4);
 			} else {// 订单显示学车已经结束
 				order.setHours(-2);
+			}*/
+			//学员取消教练没有操作
+			if(order.getCoachstate()==5){
+				order.setHours(-6);
+			}else{
+				order.setHours(-5);
 			}
-
 			StringBuffer cuserhql3 = new StringBuffer();
 			cuserhql3.append("from OrderPrice where orderid =:orderid ");
 			String[] params3 = { "orderid" };
@@ -575,8 +645,8 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 					order.setCan_cancel(0);
 				}
 			}
-
-			if (orderRecord != null || orderRecord2 != null) {// 确认下车过或者确认上车过
+			order.setCan_up(0);// 不可以再确认上车
+			/*if (orderRecord != null || orderRecord2 != null) {// 确认下车过或者确认上车过
 				order.setCan_up(0);// 不可以再确认上车
 			} else {
 
@@ -585,9 +655,9 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				} else {
 					order.setCan_up(0);
 				}
-			}
-
-			if (orderRecord2 != null) {// 已经确认下车过了
+			}*/
+			order.setCan_down(0);
+			/*if (orderRecord2 != null) {// 已经确认下车过了
 				order.setCan_down(0);
 			} else {
 				if (orderRecord != null) {
@@ -603,10 +673,9 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 						order.setCan_down(0);
 					}
 				}
-			}
+			}*/
 			// 是否可以评论
 			order.setCan_comment(OrderState.CANNOT_COMMENT);//不能评论
-			order.setHours(-5);//-5投诉中
 		}
 
 		return orderlist;
@@ -768,7 +837,7 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 			String[] p2 = { "order_id" };
 			List<ComplaintInfo> cList = (List<ComplaintInfo>) dataDao.getObjectsViaParam(hql2, p2, orderinfo.getOrderid());
 
-			if (orderinfo.getStudentstate() == 3) {// 已经完成订单
+			if (orderinfo.getStudentstate() == 3) {// 已经完成订单：已评价
 				// 是否可以投诉
 				orderinfo.setCan_complaint(1);
 				// 是否可以评论
@@ -789,7 +858,8 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				orderinfo.setCan_complaint(OrderState.CANNOT_COMPLAINT);
 				orderinfo.setCan_comment(OrderState.CANNOT_COMMENT);
 				
-			} else if (orderinfo.getStudentstate() == 2 || (orderinfo.getStudentstate() == 0 && (cList == null || cList.size() == 0) && now.after(over))) {// 待评价订单
+			} else if (orderinfo.getStudentstate() == 2 || (orderinfo.getStudentstate() == 0 && (cList == null || cList.size() == 0) && now.after(over))) 
+			{// 待评价订单
 				orderinfo.setHours(-2);// 学车已经完成
 				// 是否可以投诉
 				orderinfo.setCan_complaint(1);
@@ -802,7 +872,7 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				orderinfo.setCan_complaint(1);
 				orderinfo.setCan_cancel(OrderState.CANNOT_CANCEL);
 			} else if((orderinfo.getStudentstate() == 0 || orderinfo.getStudentstate()==4) 
-					&& orderinfo.getCoachstate()!=4 && (cList == null || cList.size() == 0)){// 未完成订单
+					&& orderinfo.getCoachstate()!=4 && orderinfo.getCoachstate()!=5 && (cList == null || cList.size() == 0)){// 未完成订单
 
 				// 是否已经确认上车
 				StringBuffer cuserhql5 = new StringBuffer();
@@ -861,16 +931,34 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 					orderinfo.setNeed_uncomplaint(0);
 				}
 				// 是否可以取消
-				if (orderinfo.getCancancel() == 1) {// 不可取消
-					orderinfo.setCan_cancel(1);
+				/*if (orderinfo.getCancancel() == 1) {// 不可取消
+					orderinfo.setCan_cancel(OrderState.CANNOT_CANCEL);
 				} else {// 可以取消
 					Calendar now2 = Calendar.getInstance();
 					now2.add(Calendar.MINUTE, time_cancel);
 					if (now2.getTime().before(orderinfo.getStart_time())) {
-						orderinfo.setCan_cancel(1);
+						orderinfo.setCan_cancel(OrderState.CAN_CANCEL);
 					} else {
-						orderinfo.setCan_cancel(0);
+						orderinfo.setCan_cancel(OrderState.CANNOT_CANCEL);
 					}
+				}*/
+				/*if (orderinfo.getCancancel() == 1) {// 不可取消
+					orderinfo.setCan_cancel(OrderState.CAN_CANCEL);
+				} else {// 可以取消
+					Calendar now2 = Calendar.getInstance();
+					now2.add(Calendar.MINUTE, time_cancel);
+					if (now2.getTime().before(orderinfo.getStart_time())) {
+						orderinfo.setCan_cancel(OrderState.CANNOT_CANCEL);
+					} else {
+						orderinfo.setCan_cancel(OrderState.CAN_CANCEL);
+					}
+				}*/
+				Calendar now2 = Calendar.getInstance();
+				now2.add(Calendar.MINUTE, time_cancel);
+				if (now2.getTime().before(orderinfo.getStart_time())) {
+					orderinfo.setCan_cancel(OrderState.CAN_CANCEL);
+				} else {
+					orderinfo.setCan_cancel(OrderState.CANNOT_CANCEL);
 				}
 
 				if (orderRecord != null || orderRecord2 != null) {// 确认下车过或者确认上车过
@@ -912,7 +1000,16 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				} else {
 					orderinfo.setCan_comment(0);
 				}
-			}else{//############被投诉
+			}/*else if(orderinfo.getCoachstate() == 5 && orderinfo.getStudentstate()==4){//待处理订单
+				orderinfo.setCan_complaint(0);
+				orderinfo.setHours(-6);// 待处理
+				orderinfo.setNeed_uncomplaint(0);
+				orderinfo.setCan_cancel(OrderState.CANNOT_CANCEL);// 肯定不可以取消
+				orderinfo.setCan_up(0);// 不可以再确认上车
+				orderinfo.setCan_down(0);
+				orderinfo.setCan_complaint(OrderState.CANNOT_COMPLAINT);
+				orderinfo.setCan_comment(OrderState.CANNOT_COMMENT);
+			}*/else{//############被投诉 //待处理订单
 				// 是否已经确认上车
 				StringBuffer cuserhql5 = new StringBuffer();
 				cuserhql5.append("from OrderRecordInfo where orderid =:orderid and userid =:userid and operation = 1");
@@ -974,8 +1071,8 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 						orderinfo.setCan_up(0);
 					}
 				}
-
-				if (orderRecord2 != null) {// 已经确认下车过了
+				orderinfo.setCan_down(0);
+				/*if (orderRecord2 != null) {// 已经确认下车过了
 					orderinfo.setCan_down(0);
 					orderinfo.setCan_complaint(1);
 				} else {
@@ -992,8 +1089,8 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 							orderinfo.setCan_down(0);
 						}
 					}
-				}
-				orderinfo.setHours(-5);//-5投诉中
+				}*/
+				orderinfo.setHours(-6);//-6投诉中
 				orderinfo.setCan_comment(OrderState.CANNOT_COMMENT);
 				
 			}
@@ -1227,8 +1324,8 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 		}
 		return -1;
 	}
-	/**
-	 * 教练同意取消订单
+	/** 
+	 * 教练是否同意取消订单 。 agree  1 ：教练不同意
 	 */
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override
@@ -1239,8 +1336,9 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 			studentid=String.valueOf(order.getStudentid());
 		}
 		if(order!=null && "1".equals(agree)){//教练不同意
-			//推送消息给学员
-			order.setStudentstate(0);
+			
+			//教练不同意时，把Coachstate设置为5
+			order.setCoachstate(5);
 			dataDao.updateObject(order);
 			//给学员推送消息
 			String pushMsg="教练不同意您取消"+order.getStart_time()+"的学车课程";
@@ -1258,7 +1356,7 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 			}
 			return 0;
 		}
-		
+		//教练同意取消
 		CuserInfo cuser;
 		SuserInfo student = dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
 		String hql = "from SystemSetInfo where 1=1";
@@ -1303,7 +1401,7 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				
 
 				//order.setStudentstate(4);//学员取消
-				order.setCoachstate(4);//教练取消
+				order.setCoachstate(4);//教练同意取消
 				dataDao.updateObject(order);
 
 				// 把订单中原来预订的时间返回回来
@@ -1974,6 +2072,10 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 
 		OrderInfo order = dataDao.getObjectById(OrderInfo.class, orderid);
 		if (order != null) {
+			if(order.getCoachstate()==5){//特殊订单，待处理订单，不能结算，直接返回
+				return;
+			}
+			
 			order.setStudentstate(3);// 设置订单状态为已结算
 
 			if (recordinfo != null) {// 如果教练确认下车过的话

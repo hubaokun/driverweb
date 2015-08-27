@@ -75,5 +75,11 @@ remindstate 提醒状态 1 已提醒过，  0 未提醒
 返回：
    code 	1 
    message "操作成功"
-      
+
+# 学员端显示待处理(学员取消但是教练没有同意或教练没有任何操作自动变成不同意)的订单列表   
+接口名称：/sorder?action=GETWAITDEALWITHORDER
+参数： studentid 学员ID
+    pagenum   页号   
+返回：hours  -6 
+           其他返回与未完成订单列表相同
   

@@ -79,6 +79,9 @@ public class SorderServlet extends BaseServlet {
 			}else if (Constant.GETCOMPLAINTORDER.equals(action)) {
 				// 获取被投诉订单
 				getComplaintOrder(request, resultMap);
+			}else if (Constant.GETWAITDEALWITHORDER.equals(action)) {
+				// #########特殊订单：获取待处理订单#############
+				getWaitDealwithOrder(request, resultMap);
 			} else if (Constant.GETCOMPLETEORDER.equals(action)) {
 				// 获取已完成订单
 				getCompleteOrder(request, resultMap);
@@ -95,7 +98,7 @@ public class SorderServlet extends BaseServlet {
 				// 取消订单
 				cancelOrder(request, resultMap);
 			} else if (Constant.CANCELORDERAGREE.equals(action)) {
-				// 取消订单教练同意
+				// 取消订单教练是否同意
 				cancelOrderAgree(request, resultMap);
 			} else if (Constant.CANCELCOMPLAINT.equals(action)) {
 				// 取消订单投诉
@@ -104,7 +107,7 @@ public class SorderServlet extends BaseServlet {
 				// 确认上车
 				confirmOn(request, resultMap);
 			} else if (Constant.CONFIRMDOWN.equals(action)) {
-				
+				confirmDown(request, resultMap);
 			} else {
 				throw new ErrException();
 			}
@@ -359,6 +362,21 @@ public class SorderServlet extends BaseServlet {
 		resultMap.put("hasmore", hasmore);
 		resultMap.put("orderlist", orderlist);
 	}
+	/**
+	 * ##########待处理订单列表 :暂时未使用 ，这个结果在被投诉列表中
+	 * 
+	 * @param request
+	 * @throws ErrException
+	 */
+	public void getWaitDealwithOrder(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String studentid = getRequestParamter(request, "studentid");
+		String pagenum = getRequestParamter(request, "pagenum");
+		CommonUtils.validateEmpty(studentid);
+		List<OrderInfo> orderlist = sorderService.getWaitDealwithOrder(studentid, pagenum);
+		int hasmore = sorderService.getWaitEvaluationOrderMore(studentid, String.valueOf(CommonUtils.parseInt(pagenum, 0)+ 1));
+		resultMap.put("hasmore", hasmore);
+		resultMap.put("orderlist", orderlist);
+	}
 
 	/**
 	 * 取得未完成订单列表
@@ -376,7 +394,7 @@ public class SorderServlet extends BaseServlet {
 		resultMap.put("orderlist", orderlist);
 	}
 	/**
-	 * 取得被投诉订单列表
+	 * 取得被投诉订单列表[待处理]
 	 * 
 	 * @param request
 	 * @throws ErrException
@@ -390,7 +408,7 @@ public class SorderServlet extends BaseServlet {
 		resultMap.put("hasmore", hasmore);
 		resultMap.put("orderlist", orderlist);
 	}
-
+	
 	/**
 	 * 取得已完成订单列表
 	 * 
@@ -437,6 +455,10 @@ public class SorderServlet extends BaseServlet {
 		CommonUtils.validateEmpty(type);
 		CommonUtils.validateEmpty(reason);
 		CommonUtils.validateEmpty(content);
+		//学员投诉时，把studentstate设置为5
+		OrderInfo order=sorderService.getOrderById(CommonUtils.parseInt(orderid, 0));
+		order.setStudentstate(5);
+		sorderService.updateOrderInfo(order);
 		sorderService.addComplaint(userid, orderid, type, reason, content);
 	}
 

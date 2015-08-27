@@ -383,7 +383,7 @@ public class SbookServlet extends BaseServlet {
 		if(studentid==null || !"18".equals(studentid)){
 			for (CuserInfo cuserInfo : list) {
 				if(cuserInfo.getCoachid()==13){
-					//list.remove(cuserInfo);
+					list.remove(cuserInfo);
 					break;
 				}
 			}
