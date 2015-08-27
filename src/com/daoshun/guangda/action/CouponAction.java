@@ -596,11 +596,13 @@ public class CouponAction extends BaseAction {
 		for (CouponRecord couponrecord : couponrecordlist) {
 			CouponRecordForExcel couponrecordexcel = new CouponRecordForExcel();
 			for(int i =0;i<data.length;i++){
-				couponrecordexcel.setId(couponrecord.getCouponid());
+				couponrecordexcel.setId(couponrecord.getOrderid());
 				if(data[i].equals("0")){
 					SuserInfo suser = suserService.getUserById( (couponrecord.getUserid()).toString() );
 					couponrecordexcel.setUsername(suser.getRealname());
 				}else if(data[i].equals("1")){
+					SuserInfo suser = suserService.getUserById( (couponrecord.getUserid()).toString() );
+					couponrecord.setUserphone(suser.getPhone());
 					couponrecordexcel.setPhone(couponrecord.getUserphone());
 				}else if(data[i].equals("2")){
 					couponrecordexcel.setValue(couponrecord.getValue());
