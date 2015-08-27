@@ -966,7 +966,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
     @Override
     public List<DriveSchoolInfo> getDriveSchoolInfoByCityId(String cityid) {
         StringBuffer cuserhql = new StringBuffer();
-        cuserhql.append("from DriveSchoolInfo where cityid=:cityid or cityid=0");
+        cuserhql.append("from DriveSchoolInfo where cityid=:cityid or cityid='0'");
         String p[]={"cityid"};
         List<DriveSchoolInfo> driveSchoolInfo = (List<DriveSchoolInfo>) dataDao.getObjectsViaParam(cuserhql.toString(), p,cityid);
         return driveSchoolInfo;
