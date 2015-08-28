@@ -467,4 +467,50 @@ public class DataDao {
 		List list = query.list();
 		return list;
 	}
+	public Object getAccountReport(String addtime){
+		Session session=this.getSession();
+		SQLQuery query= session.createSQLQuery("{call accountreportforday(?)}");
+		query.setString(0, addtime);
+		Object obj = query.uniqueResult();
+		return obj;
+	}
+	public List<Object> getCouponReportMontly(Date startdate,Date enddate){
+		Session session=this.getSession();
+		SQLQuery query= session.createSQLQuery("{Call couponreportmonthly(?,?)}");
+		query.setDate(0, startdate);
+		query.setDate(1, enddate);
+//		query.executeUpdate();
+		@SuppressWarnings("unchecked")
+		List<Object> list = query.list();
+		return list;
+	}
+	public List<Object> getCouponReportDetail(String coachid,Date startdate,Date enddate){
+		Session session=this.getSession();
+		SQLQuery query= session.createSQLQuery("{Call getcoachcoupondetailmontly(?,?,?)}");
+		query.setString(0, coachid);
+		query.setDate(1, startdate);
+		query.setDate(2, enddate);
+//		query.executeUpdate();
+		List<Object> list = query.list();
+		return list;
+	}
+	public List<Object> getCoinReportMontly(Date startdate,Date enddate){
+		Session session=this.getSession();
+		SQLQuery query= session.createSQLQuery("{Call coinreportmonthly(?,?)}");
+		query.setDate(0, startdate);
+		query.setDate(1, enddate);
+//		query.executeUpdate();
+		List<Object> list = query.list();
+		return list;
+	}
+	public List<Object> getCoinReportDetail(String coachid,Date startdate,Date enddate){
+		Session session=this.getSession();
+		SQLQuery query= session.createSQLQuery("{Call getstudentcoindetailmontly(?,?,?)}");
+		query.setString(0, coachid);
+		query.setDate(1, startdate);
+		query.setDate(2, enddate);
+//		query.executeUpdate();
+		List<Object> list = query.list();
+		return list;
+	}
 }

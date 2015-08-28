@@ -83,4 +83,9 @@
 	<menu-item name="日志" iconURL="" authority="1">
 		<sub-item name="教练日志" authority="3" action="CoachLog.do"/>
 	</menu-item>
+	<menu-item name="运营报表" iconURL="" authority="1">
+		<sub-item name="日业绩" authority="3" action="GotoAccountReport.do"/>
+		<sub-item name="学时券月报表" authority="3" action="GotoCouponReportMontly.do"/>
+		<sub-item name="小巴币月报表" authority="3" action="GotoCoinReportMontly.do"/>
+	</menu-item>
 </menu-list>

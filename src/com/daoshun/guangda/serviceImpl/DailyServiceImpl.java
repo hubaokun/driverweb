@@ -1,5 +1,6 @@
 package com.daoshun.guangda.serviceImpl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -93,4 +94,32 @@ public class DailyServiceImpl extends BaseServiceImpl implements IDailyService {
 		return Object;
 	}
 
+	@Override
+	public Object getAccountReport(String addtime) {
+		Object obj = dataDao.getAccountReport(addtime);
+		return obj;
+	}
+
+	@Override
+	public List<Object> getCouponReportMontly(Date startdate,Date enddate) {
+		List<Object> Object = dataDao.getCouponReportMontly(startdate, enddate);
+		return Object;
+	}
+
+	@Override
+	public List<Object> getCoinReportMontly(Date startdate,Date enddate) {
+		List<Object> Object = dataDao.getCoinReportMontly(startdate, enddate);
+		return Object;
+	}
+	@Override
+	public List<Object> getCouponReportDetail(String coachid, Date startdate, Date enddate) {
+		List<Object> Object = dataDao.getCouponReportDetail(coachid, startdate, enddate);
+		return Object;
+	}
+
+	@Override
+	public List<Object> getCoinReportDetail(String coachid, Date startdate, Date enddate) {
+		List<Object> Object = dataDao.getCoinReportDetail(coachid, startdate, enddate);
+		return Object;
+	}
 }
