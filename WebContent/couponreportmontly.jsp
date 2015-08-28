@@ -27,15 +27,24 @@ $(function(){
 function search(){
 	var starttime = $("#starttime").val();
 	var endtime = $("#endtime").val();
-	window.location.href = "GetCouponReportMontly.do?starttime="+starttime+"&endtime="+endtime;
+	if(endtime<starttime)
+		alert("结束时间必须大于开始时间，请重新选择！");
+	else
+	   window.location.href = "GetCouponReportMontly.do?starttime="+starttime+"&endtime="+endtime;
 }
 
 function dataExport(){
 	var starttime = $("#starttime").val();
 	var endtime = $("#endtime").val();
-	if (confirm("确认导出小巴券数据？")) {
-		window.location.href="CouponReportMontlyExport.do?starttime="+starttime+"&endtime="+endtime;
+	if(endtime<starttime)
+		alert("结束时间必须大于开始时间，请重新选择！");
+	else
+	{
+		if (confirm("确认导出小巴券数据？")) {
+			window.location.href="CouponReportMontlyExport.do?starttime="+starttime+"&endtime="+endtime;
+		}
 	}
+	
 }
 function checkdetail(coachid){
 	var starttime = $("#starttime").val();
