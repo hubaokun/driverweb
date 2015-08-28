@@ -319,9 +319,18 @@ public class CouponServiceImpl extends BaseServiceImpl implements ICouponService
 	
 //获得所有小巴券发放记录明细
 	@Override
-	public List<CouponRecord> getCouponRecordList() {
+	public List<CouponRecord> getCouponRecordList(String starttime, String endtime) {
 		StringBuffer cuserhql = new StringBuffer();
-		cuserhql.append(" from CouponRecord");
+		cuserhql.append(" from CouponRecord where 1=1");
+		if (!CommonUtils.isEmptyString(starttime)) {
+			starttime = starttime + " 00:00:00";
+			cuserhql.append(" and usetime > '" + starttime + "'");
+		}
+
+		if (!CommonUtils.isEmptyString(endtime)) {
+			endtime = endtime + " 23:59:59";
+			cuserhql.append(" and usetime <= '" + endtime + "'");
+		}
 		List<CouponRecord> CouponRecordlist = (List<CouponRecord>) dataDao.getObjectsViaParam(cuserhql.toString(), null);
 		return CouponRecordlist;
 	}

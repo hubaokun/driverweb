@@ -590,7 +590,7 @@ public class CouponAction extends BaseAction {
 	//导出小巴券发放记录数据
 	@Action(value = "/couponrecorddataExport")
 	public void couponrecorddataExport() {
-		couponrecordlist = couponService.getCouponRecordList();
+		couponrecordlist = couponService.getCouponRecordList(starttime,endtime);
 		List<CouponRecordForExcel> excellist = new ArrayList<CouponRecordForExcel>();
 		String [] data = couponrecorddate.split(",");
 		for (CouponRecord couponrecord : couponrecordlist) {

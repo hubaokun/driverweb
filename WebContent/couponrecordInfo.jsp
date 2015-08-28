@@ -75,15 +75,20 @@
 		if (confirm("确认导出小巴券发放信息？")) {
 			var couponrecorddate = document.getElementsByName("C1");
 			var data='';
+			var startdate=$("#datastartdate").val();
+			var enddate=$("#dataenddate").val();
+			
 			for(var i=0;i<couponrecorddate.length;i++){
 				if(couponrecorddate[i].checked == true){
 					data+=couponrecorddate[i].value+",";
 				}
 			}
-			if(data==''){
+			if(startdate>enddate){
+				alert("开始时间不能大于结束时间");
+			}else if(data==''){
 				alert("请选择导出信息！");
 			}else{
-				window.location.href="couponrecorddataExport.do?couponrecorddate="+data;
+				window.location.href="couponrecorddataExport.do?couponrecorddate="+data+"&starttime="+startdate+"&endtime="+enddate;
 			}
 		}
 	}
@@ -572,6 +577,11 @@
 		<input type="checkbox" style="margin-left: 5px;margin-top: 5px;" name="C1"  id="a1" value="6"> 使用时间
 		<input type="checkbox" style="margin-left: 5px;margin-top: 5px;" name="C1"  id="a1" value="7"> 使用截止日期
 
+
+		导出时间选择:开始时间
+		<input id="datastartdate" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})" type="text" class="searchdiv" style="width: 135px;height:20px;text-align: center;font-family: 微软雅黑;" value="" >
+		结束时间
+		<input id="dataenddate" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})" type="text" class="searchdiv" style="width: 135px;height:20px;text-align: center;font-family: 微软雅黑;" value="" >
 		
 		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 130px;margin-top: 100px;font-size: 18px" value="确定" onclick="dataExport()">
 		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 180x;margin-top: -40px;font-size: 18px" value="取消" onclick="unAlertDataExportBox()">
