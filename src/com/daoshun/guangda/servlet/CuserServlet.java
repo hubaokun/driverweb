@@ -706,6 +706,8 @@ public class CuserServlet extends BaseServlet {
 		String carmodelid = getRequestParamter(request, "carmodelid"); // 教学用车车型id
 		String carlicense = getRequestParamter(request, "carlicense"); // 教学用车牌照号码
 		String cityid = getRequestParamter(request, "cityid"); //城市id
+		String provinceid = getRequestParamter(request, "provinceid"); //省id
+		String areaid = getRequestParamter(request, "areaid"); //城市id
 		String cradpic1 = (String) request.getAttribute("cardpic1"); // 身份证正面
 		String cradpic2 = (String) request.getAttribute("cardpic2"); // 身份证反面
 		String cradpic3 = (String) request.getAttribute("cardpic3"); // 教练证照片
@@ -798,6 +800,12 @@ public class CuserServlet extends BaseServlet {
 			}
 			if (!CommonUtils.isEmptyString(cityid)) {
 				cuser.setCityid(cityid);
+			}
+			if (!CommonUtils.isEmptyString(provinceid)) {
+				cuser.setProvinceid(provinceid);
+			}
+			if (!CommonUtils.isEmptyString(areaid)) {
+				cuser.setAreaid(areaid);
 			}
 			cuser.setState(1);
 			cuserService.updateCuser(cuser);
