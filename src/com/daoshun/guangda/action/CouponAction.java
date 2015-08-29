@@ -3,6 +3,7 @@ package com.daoshun.guangda.action;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -10,7 +11,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
@@ -24,6 +27,8 @@ import com.daoshun.common.DeviceType;
 import com.daoshun.common.ExslImport;
 import com.daoshun.common.PushtoSingle;
 import com.daoshun.common.QueryResult;
+import com.daoshun.guangda.NetData.CouponRecordForExcel;
+import com.daoshun.guangda.NetData.StudentInfoForExcel;
 import com.daoshun.guangda.pojo.CoachStudentInfo;
 import com.daoshun.guangda.pojo.CouponCoach;
 import com.daoshun.guangda.pojo.CouponInfo;
@@ -139,6 +144,8 @@ public class CouponAction extends BaseAction {
 	private int errortype;
 
 	private String errormessage;
+	
+	private String couponrecorddate;
 
 	/**
 	 * 得到优惠券列表
@@ -579,6 +586,58 @@ public class CouponAction extends BaseAction {
 			}
 		}
 	}
+	
+	//导出小巴券发放记录数据
+	@Action(value = "/couponrecorddataExport")
+	public void couponrecorddataExport() {
+		couponrecordlist = couponService.getCouponRecordList();
+		List<CouponRecordForExcel> excellist = new ArrayList<CouponRecordForExcel>();
+		String [] data = couponrecorddate.split(",");
+		for (CouponRecord couponrecord : couponrecordlist) {
+			CouponRecordForExcel couponrecordexcel = new CouponRecordForExcel();
+			for(int i =0;i<data.length;i++){
+				couponrecordexcel.setId(couponrecord.getOrderid());
+				if(data[i].equals("0")){
+					SuserInfo suser = suserService.getUserById( (couponrecord.getUserid()).toString() );
+					couponrecordexcel.setUsername(suser.getRealname());
+				}else if(data[i].equals("1")){
+					SuserInfo suser = suserService.getUserById( (couponrecord.getUserid()).toString() );
+					couponrecord.setUserphone(suser.getPhone());
+					couponrecordexcel.setPhone(couponrecord.getUserphone());
+				}else if(data[i].equals("2")){
+					couponrecordexcel.setValue(couponrecord.getValue());
+				}else if(data[i].equals("3")){
+					String owner = "";
+					if(couponrecord.getOwnertype() ==1 ){
+						DriveSchoolInfo driveSchool = cuserService.getDriveSchoolInfoByid(couponrecord.getOwnerid());
+						owner = "驾校发行："+ driveSchool.getName();
+					}
+					if(couponrecord.getOwnertype() == 2){
+						CuserInfo cuser = cuserService.getCoachByid(couponrecord.getOwnerid());
+						owner = "教练发行：" + cuser.getRealname();
+						
+					}
+					couponrecordexcel.setOwner(owner);
+				}else if(data[i].equals("4")){
+					couponrecordexcel.setGettime(couponrecord.getGettime());
+				}else if(data[i].equals("5")){
+					couponrecordexcel.setState(couponrecord.getState());
+				}else if(data[i].equals("6")){
+					couponrecordexcel.setUsetime(couponrecord.getUsetime());
+				}else if(data[i].equals("7")){
+					couponrecordexcel.setEnd_time(couponrecord.getEnd_time());
+				}
+			}
+			excellist.add(couponrecordexcel);
+		}
+		String[] title = {"主键ID","用户名","手机号","面值","发券人","发放时间","使用状态(0:未使用1:已使用  2:已作废)","使用时间","使用截止日期" };
+		String filename = CommonUtils.exportExcel("couponrecorddataExport", title, excellist,data);
+		filename = CommonUtils.properties.getProperty("uploadFilePath") + filename;
+		HttpServletResponse response = ServletActionContext.getResponse();
+		CommonUtils.downloadExcel(filename, "小巴券发放记录表", response);
+	}
+	
+	
 
 	public SuserInfo getSuser() {
 		return suser;
@@ -899,6 +958,14 @@ public class CouponAction extends BaseAction {
 
 	public void setUserid(int userid) {
 		this.userid = userid;
+	}
+
+	public String getCouponrecorddate() {
+		return couponrecorddate;
+	}
+
+	public void setCouponrecorddate(String couponrecorddate) {
+		this.couponrecorddate = couponrecorddate;
 	}
 	
 	

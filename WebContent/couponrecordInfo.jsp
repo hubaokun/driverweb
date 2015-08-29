@@ -70,6 +70,23 @@
 		}
 		$("#searchform").submit();
 	}
+	
+	function dataExport(){
+		if (confirm("确认导出小巴券发放信息？")) {
+			var couponrecorddate = document.getElementsByName("C1");
+			var data='';
+			for(var i=0;i<couponrecorddate.length;i++){
+				if(couponrecorddate[i].checked == true){
+					data+=couponrecorddate[i].value+",";
+				}
+			}
+			if(data==''){
+				alert("请选择导出信息！");
+			}else{
+				window.location.href="couponrecorddataExport.do?couponrecorddate="+data;
+			}
+		}
+	}
 </script>
 <style type="text/css">
 .mask {
@@ -111,6 +128,25 @@
 	margin: 0 auto;
 	display: none;
 }
+.alertbox {
+	position: fixed;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	background: #707070;
+	opacity: 0.3;
+	display: none;
+}
+
+.alertbox_last{
+	position: fixed;
+	background: #fff;
+	width: 600px;
+	height: 350px;
+	margin: 0 auto;
+	display: none;
+}
 </style>
 
 <title>小巴券发放记录</title>
@@ -131,6 +167,11 @@
 						<div class="searchbutton" onclick="searchfromsubmit();">
 							<img src="imgs/common/searchicon.png" width=22px height=22px
 								style="margin-top: 9px;">
+						</div>
+						
+						<div class="searchbutton" style="width:80px;">
+							<div class="table_button_edit_icon"></div>
+							<div class="table_button_text" style="font-size: 12px;line-height: 38px;" onclick="alertDataExportBox();">数据导出</div>
 						</div>
 
 						<div class="serchcontentdiv"
@@ -513,5 +554,31 @@
 		</div>
 	</div>
 
+
+
+	<!-- 数据导出弹框 -->
+	<div id="alertbox" class="alertbox"></div>
+	<div id="alertbox_sec" style="position: fixed; width: 100%; height: 300px;z-index: 300;">
+		<div id="alertbox_last" class="alertbox_last">
+		<div style="position: fixed; width: 500px; height: 250px;background: #4cc2ff;margin-left: 50px;margin-top: 50px;">
+		<div style="font-size: 15px;width: 110px;margin: auto;">请选择导出信息</div>
+		<div>全选<input type="checkbox" id="allrecordcheck" value="0" onclick="selectallrecord()"></div>
+		<input type="checkbox" style="margin-top: 5px;" name="C1"  id="a1" value="0"/> 用户名
+		<input type="checkbox" style="margin-left: 5px;margin-top: 5px;" name="C1"  id="a1" value="1"> 手机号
+		<input type="checkbox" style="margin-left: 5px;margin-top: 5px;" name="C1"  id="a1" value="2"> 面值
+		<input type="checkbox" style="margin-left: 5px;margin-top: 5px;" name="C1"  id="a1" value="3"> 发券人
+		<input type="checkbox" style="margin-left: 5px;margin-top: 5px;" name="C1"  id="a1" value="4"> 发放时间
+		<input type="checkbox" style="margin-left: 5px;margin-top: 5px;" name="C1"  id="a1" value="5"> 使用状态
+		<input type="checkbox" style="margin-left: 5px;margin-top: 5px;" name="C1"  id="a1" value="6"> 使用时间
+		<input type="checkbox" style="margin-left: 5px;margin-top: 5px;" name="C1"  id="a1" value="7"> 使用截止日期
+
+		
+		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 130px;margin-top: 100px;font-size: 18px" value="确定" onclick="dataExport()">
+		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 180x;margin-top: -40px;font-size: 18px" value="取消" onclick="unAlertDataExportBox()">
+		</div>
+		</div>
+	</div>
+	
+	
 </body>
 </html>

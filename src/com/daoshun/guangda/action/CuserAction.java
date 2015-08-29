@@ -1245,6 +1245,14 @@ public class CuserAction extends BaseAction {
 				int age = cuserService.getCoachAgeByid(cuserlist.get(i).getCoachid());
 				cuserlist.get(i).setAge(age);
 			}
+			
+			if (cuserlist.get(i).getDrive_schoolid() != null && cuserlist.get(i).getDrive_schoolid() != 0) {
+				DriveSchoolInfo school = driveSchoolService.getDriveSchoolInfoByid(cuserlist.get(i).getDrive_schoolid());
+				if (school != null) {
+					cuserlist.get(i).setDrive_school(school.getName());
+//					driveSchoolname = cuser.getDrive_schoolid();
+				}
+			}
 		}
 		cuserService.setCoachDriverSchool(cuserlist);
 		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
