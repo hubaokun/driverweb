@@ -1078,7 +1078,7 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				right1.add(Calendar.MINUTE, s_can_down);
 
 				// 订单显示即将开始
-				if (orderRecord == null && now.getTime().before(orderinfo.getStart_time()) && now.after(left)) {
+				/*if (orderRecord == null && now.getTime().before(orderinfo.getStart_time()) && now.after(left)) {
 					orderinfo.setHours(0);
 				} else if (now.before(left)) {// 订单显示距离开始时间
 					long millisecond = orderinfo.getStart_time().getTime() - now.getTimeInMillis();
@@ -1093,7 +1093,7 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 					orderinfo.setHours(-4);
 				} else {// 订单显示学车已经结束
 					orderinfo.setHours(-2);
-				}
+				}*/
 
 				
 				orderinfo.setCan_complaint(OrderState.CANNOT_COMPLAINT);//
@@ -1131,9 +1131,18 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 						}
 					}
 				}*/
-				orderinfo.setHours(-6);//-6投诉中
+				if(cList!=null && cList.size()>0){
+					orderinfo.setHours(-5);//-5投诉中
+					ComplaintInfo cp=cList.get(0);
+					if(cp!=null){
+						//设置投诉内容
+						orderinfo.setComplaintcontent(cp.getContent());
+						orderinfo.setReason(cp.getReason());
+					}
+				}else{
+					orderinfo.setHours(-6);//-6教练不同意取消的订单
+				}
 				orderinfo.setCan_comment(OrderState.CANNOT_COMMENT);
-				
 			}
 
 			// 设置订单的评论信息

@@ -202,6 +202,29 @@ public class OrderInfo implements Serializable {
 	@Column(name = "mixMoney", length = 11, nullable = true, columnDefinition = "INT default 0")
 	private int mixMoney;//混合支付时的余额
 	
+	//投诉内容
+	@Transient
+	private String complaintcontent;
+	//投诉原因
+	@Transient
+	private String reason;
+	
+	
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+
+	public String getComplaintcontent() {
+		return complaintcontent;
+	}
+
+	public void setComplaintcontent(String complaintcontent) {
+		this.complaintcontent = complaintcontent;
+	}
 
 	public int getMixCoin() {
 		return mixCoin;

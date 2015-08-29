@@ -109,3 +109,7 @@ cityid字段
 # PERFECTCOACHMODELID 完善准教车型
 参数： coachid  教练id
     modelid  车型ID ,17或18 ，如果多选，上传 17,18
+    
+# 学员订单投诉详情接口：GETORDERDETAIL 中新增返回
+complaintcontent 投诉内容
+reason			   投诉原因
