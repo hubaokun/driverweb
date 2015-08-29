@@ -47,36 +47,50 @@ function search(){
 	</div>
 </div>
 <div id="content_form_table">
-	<div style="width: 100%; height: auto; margin: 0 auto;">
-		<div class="daily_top">
-			<div class="daily_top_center" style="width: 5%;">日期</div>
-			<div class="daily_top_center" style="width: 5%;">注册教练</div>
-			<div class="daily_top_center" style="width: 5%;">注册学员</div>
-			<div class="daily_top_center" style="width: 5%;">一键报名</div>
-			<div class="daily_top_center" style="width: 32%;">日课程</div>
-			<div class="daily_top_center" style="width: 32%;">订单数</div>
-			<div class="daily_top_center" style="width: 15%;">日交易额</div>
-		</div>
-		<div class="daily_second">  
-			<div class="daily_second_center" style="width: 5%;">${addtime}</div>
-			<div class="daily_second_center" style="width: 5%;">${accountreportdaliy.getRegistcoach()}</div>
-			<div class="daily_second_center" style="width: 5%;">${accountreportdaliy.getRegiststudent() }</div>
-			<div class="daily_second_center" style="width: 5%;">${accountreportdaliy.getApply() }</div>
-			<div class="daily_second_center" style="width: 8%;">${accountreportdaliy.getCoachbeginclass() }</div>
-			<div class="daily_second_center" style="width: 8%;">${accountreportdaliy.getCoursetimecount() }</div>
-			<div class="daily_second_center" style="width: 8%;">${accountreportdaliy.getReservedstudent() }</div>
-			<div class="daily_second_center" style="width: 8%;">${accountreportdaliy.getReservedcoursetime() }</div>
-			<div class="daily_second_center" style="width: 8%;">${accountreportdaliy.getOrderbycash() }</div>
-			<div class="daily_second_center" style="width: 8%;">${accountreportdaliy.getOrderbycoupon() }</div>
-			<div class="daily_second_center" style="width: 8%;">${accountreportdaliy.getOrderbycoin() }</div>
-			<div class="daily_second_center" style="width: 8%;">${accountreportdaliy.getOrdercancel() }</div>
-			<div class="daily_second_center" style="width: 5%;">${accountreportdaliy.getCash() }</div>
-			<div class="daily_second_center" style="width: 5%;">${accountreportdaliy.getCoupon() }</div>
-			<div class="daily_second_center" style="width: 5%;">${accountreportdaliy.getCoin() }</div>
-		</div>
+	<table  border="0" cellspacing="0" cellpadding="0"
+					style="width: 100%;">
+	<tr class="tr_th">
+	      <th rowspan="2">日期</th>
+	      <th rowspan="2">注册教练</th>
+	      <th rowspan="2">注册学员</th>
+	      <th rowspan="2">一键报名</th>
+	      <th colspan="4">日课程</th>
+	      <th colspan="4">订单数</th>
+	      <th colspan="3">日交易额</th>
+	   </tr>
+	   <tr>
+	      <th>在线教练数</th>
+	      <th>总发布课时</th>
+	      <th>预约学员</th>
+	      <th>预约课时</th>
+	      <th>现金订单</th>
+	      <th>学时券订单数</th>
+	      <th>小巴币订单数</th>
+	      <th>取消订单数</th>
+	      <th>现金</th>
+	      <th>小巴券</th>
+	      <th>小巴币</th>
+	   </tr>
+	   <tr class="tr_td">
+		<td style="width: 40px;" class="border_right_bottom">${addtime}</td>
+		<td style="width: 40px;" class="border_right_bottom">${accountreportdaliy.getRegistcoach()}</td>
+		<td style="width: 40px;" class="border_right_bottom">${accountreportdaliy.getRegiststudent() }</td>
+		<td style="width: 40px;" class="border_right_bottom">${accountreportdaliy.getApply() }</td>
+		<td style="width: 40px;" class="border_right_bottom">${accountreportdaliy.getCoachbeginclass() }</td>
+		<td style="width: 40px;" class="border_right_bottom">${accountreportdaliy.getCoursetimecount() }</td>
+		<td style="width: 40px;" class="border_right_bottom">${accountreportdaliy.getReservedstudent() }</td>
+		<td style="width: 40px;" class="border_right_bottom">${accountreportdaliy.getReservedcoursetime() }</td>
+		<td style="width: 40px;" class="border_right_bottom">${accountreportdaliy.getOrderbycash() }</td>
+		<td style="width: 40px;" class="border_right_bottom">${accountreportdaliy.getOrderbycoupon() }</td>
+		<td style="width: 40px;" class="border_right_bottom">${accountreportdaliy.getOrderbycoin() }</td>
+		<td style="width: 40px;" class="border_right_bottom">${accountreportdaliy.getOrdercancel() }</td>
+		<td style="width: 40px;" class="border_right_bottom">${accountreportdaliy.getCash() }</td>
+		<td style="width: 40px;" class="border_right_bottom">${accountreportdaliy.getCoupon() }</td>
+		<td style="width: 40px;" class="border_right_bottom">${accountreportdaliy.getCoin() }</td>
+		</tr>   
+	</table>
 		
 		
-	</div>
 </div>
 </div>
 </div>
