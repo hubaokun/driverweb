@@ -1097,7 +1097,7 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 
 				
 				orderinfo.setCan_complaint(OrderState.CANNOT_COMPLAINT);//
-				orderinfo.setNeed_uncomplaint(0);//不能取消投诉
+				orderinfo.setNeed_uncomplaint(1);//不能取消投诉
 				// 是否可以取消
 				orderinfo.setCan_cancel(OrderState.CANNOT_COMPLAINT);
 				
