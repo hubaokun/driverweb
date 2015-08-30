@@ -37,7 +37,7 @@ public interface ICouponService {
 	public abstract QueryResult<CouponRecord> getCouponReecordInfoByPage(int pageIndex, int pageSize, String name, Integer coupontype, String starttime, String endtime, Integer value,
 			Integer valuetype, Integer ownertype, String ownerkey, Integer state);
 	
-	public List<CouponRecord> getCouponRecordList();
+	public List<CouponRecord> getCouponRecordList(String starttime, String endtime);
 	
 	public abstract QueryResult<CouponCoach> getCouponCoachInfoByPage(int pageIndex, int pageSize, String name, Integer coupontype, String starttime, String endtime, Integer value,
 			Integer valuetype, Integer ownertype, String ownerkey, Integer state);

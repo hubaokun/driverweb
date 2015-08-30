@@ -20,6 +20,7 @@ import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.Region;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -31,10 +32,15 @@ import com.daoshun.common.CommonUtils;
 import com.daoshun.guangda.NetData.CoachAccountDaily;
 import com.daoshun.guangda.NetData.CoachApplyDailyData;
 import com.daoshun.guangda.NetData.CoachDailyData;
+import com.daoshun.guangda.NetData.CoinReportMontly;
+import com.daoshun.guangda.NetData.CouponReportMontly;
 import com.daoshun.guangda.NetData.SchoolBillDaily;
 import com.daoshun.guangda.NetData.SchoolDailyData;
+import com.daoshun.guangda.NetData.AccountReportDaily;
 import com.daoshun.guangda.NetData.StudentAccountDaily;
 import com.daoshun.guangda.NetData.StudentApplyDailyData;
+import com.daoshun.guangda.NetData.StudentCoinDetail;
+import com.daoshun.guangda.NetData.StudentCouponDetail;
 import com.daoshun.guangda.NetData.XiaoBaDaily;
 import com.daoshun.guangda.pojo.DriveSchoolInfo;
 import com.daoshun.guangda.service.ICUserService;
@@ -115,9 +121,13 @@ public class DailyAction extends BaseAction {
 	private String addtime;
 
 	private String starttime;
+	
+	private String endtime;
 
 	private String schoolname;
-
+	
+	private String coachid;
+	
 	private List<SchoolDailyData> schooldailylist;
 
 	private List<CoachDailyData> coachdailylist;
@@ -129,6 +139,20 @@ public class DailyAction extends BaseAction {
 	private StudentAccountDaily studentaccountdaily;
 
 	private CoachAccountDaily coachaccountdaily;
+	
+	private AccountReportDaily accountreportdaliy;
+	
+	private List<CouponReportMontly> couponreportmontly;
+	
+	private List<StudentCouponDetail> studentlist;
+	
+	private List<CoinReportMontly> coinreportmontly;
+	
+	private List<StudentCoinDetail> studentcoinlist;
+	
+	private List<StudentCouponDetail> studentcoupondetail;
+	
+	private List<StudentCoinDetail> studentcoindetail;
 
 	private List<SchoolBillDaily> schoolbilldaily;
 
@@ -703,6 +727,503 @@ public class DailyAction extends BaseAction {
 		CommonUtils.downloadExcel(filename, "教校日报表", response);
 	}
 
+	/**
+	 * 小巴券月报数据导出
+	 * 
+	 * @throws IOException
+	 */
+	@SuppressWarnings("deprecation")
+	@Action(value = "/CouponReportMontlyExport")
+	public void CouponReportMontlyExport() throws IOException {
+		// 以下开始输出到EXCEL
+		String newfilename = "";
+		// 定义输出流，以便打开保存对话框begin
+		newfilename += CommonUtils.getTimeFormat(new Date(), "yyyyMMddhhmmssSSS") + "_" + (Math.random() * 100) + ".xls";
+		String filename = CommonUtils.properties.get("uploadFilePath") + newfilename;
+		File file = new File(filename);
+		if (!file.exists()) {
+			file.createNewFile();
+		}
+		// 第一步，创建一个webbook，对应一个Excel文件
+		HSSFWorkbook wb = new HSSFWorkbook();
+		// 第二步，在webbook中添加一个sheet,对应Excel文件中的sheet
+		HSSFSheet sheet = wb.createSheet("小巴券月报表");
+		// 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
+		int index = 0;
+		HSSFRow row = sheet.createRow((Integer) index++);
+		// 第四步，创建单元格，并设置值表头 设置表头居中
+		HSSFCellStyle style = wb.createCellStyle();
+		style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
+		style.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		HSSFCell cell = row.createCell((short) 0);
+		cell.setCellValue("小巴学时券统计报表（"+starttime +"——"+endtime+ "）");
+		cell.setCellStyle(style);
+		sheet.addMergedRegion(new Region(0, (short) 0, 1, (short) 10));
+		index++;
+		row = sheet.createRow((Integer) index++);
+		cell = row.createCell((short) 0);
+		cell.setCellValue("教练 /驾校");
+		cell.setCellStyle(style);
+		sheet.addMergedRegion(new Region(2, (short) 0, 2, (short) 6));
+		cell = row.createCell((short) 7);
+		cell.setCellValue("学员");
+		cell.setCellStyle(style);
+		sheet.addMergedRegion(new Region(2, (short) 7, 2, (short) 10));
+		
+		
+		row = sheet.createRow((Integer) index++);
+		cell = row.createCell((short) 0);
+		cell.setCellValue("序号");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 1);
+		cell.setCellValue("券类");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 2);
+		cell.setCellValue("发放教练");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 3);
+		cell.setCellValue("发放教练手机号");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 4);
+		cell.setCellValue("教练所在驾校");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 5);
+		cell.setCellValue("发放教练券(1小时/张)");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 6);
+		cell.setCellValue("已结算教练券(1小时/张)");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 7);
+		cell.setCellValue("学员手机号码");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 8);
+		cell.setCellValue("学员 姓名");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 9);
+		cell.setCellValue("获得教练券");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 10);
+		cell.setCellValue("已使用教练券");
+		cell.setCellStyle(style);
+		List<Object> objm = dailyService.getCouponReportMontly(CommonUtils.getDateFormat(starttime, "yyyy-MM-dd"), CommonUtils.getDateFormat(endtime, "yyyy-MM-dd"));
+		couponreportmontly = new ArrayList<CouponReportMontly>();
+		if (objm != null && objm.size() > 0) {
+			for (Object object : objm) {
+				indexnum++;
+				CouponReportMontly coupontemp = new CouponReportMontly();
+				Object[] array = (Object[]) object;
+				if (array[1] != null) {
+					coupontemp.setCoachid(array[1].toString());
+				}
+				if (array[2] != null) {
+					coupontemp.setCoachname(array[2].toString());
+				}
+				if (array[3] != null) {
+					coupontemp.setCoachphone(array[3].toString());
+				}
+				if (array[4] != null) {
+					coupontemp.setSchoolname(array[4].toString());
+				}
+				if (array[5] != null) {
+					coupontemp.setCouponnumber((Integer) array[5]);
+				} else {
+					coupontemp.setCouponnumber(0);
+				}
+				if (array[6] != null) {
+					coupontemp.setCouponpaycount((Integer) array[6]);
+				} else {
+					coupontemp.setCouponpaycount(0);
+				}
+				List<Object> objd=dailyService.getCouponReportDetail(coupontemp.getCoachid(), CommonUtils.getDateFormat(starttime, "yyyy-MM-dd"), CommonUtils.getDateFormat(endtime, "yyyy-MM-dd"));
+				studentlist=new ArrayList<StudentCouponDetail>();
+						if (objd != null && objd.size() > 0) {
+							for (Object o1 : objd) {
+								Object[] olist=(Object[])o1;
+								StudentCouponDetail tempstudent=new StudentCouponDetail();
+								if (olist[1] != null) {
+									tempstudent.setPhone(olist[1].toString());
+								}
+								if (olist[2] != null) {
+									tempstudent.setName(olist[2].toString());
+								}
+								if (olist[3] != null) {
+									tempstudent.setCouponusenumber((Integer)olist[3]);
+								}
+								else {
+									tempstudent.setCouponusenumber(0);
+								}
+								if (olist[4] != null) {
+									tempstudent.setCouponpaynumber((Integer)olist[4]);
+								}
+								else {
+									tempstudent.setCouponpaynumber(0);
+								}
+									studentlist.add(tempstudent);
+							}
+							coupontemp.setStudentdetaillist(studentlist);
+						}
+				couponreportmontly.add(coupontemp);
+			}
+			
+		}
+		if (couponreportmontly != null && couponreportmontly.size() > 0) {
+			for (int i = 0; i < couponreportmontly.size(); i++) {
+				row = sheet.createRow((Integer) index);
+				CouponReportMontly couponmontly = couponreportmontly.get(i);
+				List<StudentCouponDetail> tempstudentlist=couponmontly.getStudentdetaillist();
+				int rowcount=couponmontly.getStudentdetaillist().size();
+				cell=row.createCell((short) 0);
+				cell.setCellValue(i + 1);
+				cell.setCellStyle(style);
+				int rowendindex=index+rowcount-1;
+				sheet.addMergedRegion(new Region(index,(short)0,rowendindex,(short) 0));
+				cell=row.createCell((short) 1);
+				cell.setCellValue("学时券");
+				cell.setCellStyle(style);
+				sheet.addMergedRegion(new Region(index,(short)1,rowendindex,(short) 1));
+				if (couponmontly.getCoachname() != null) {
+					cell=row.createCell((short) 2);
+					cell.setCellValue(couponmontly.getCoachname());
+					cell.setCellStyle(style);
+					sheet.addMergedRegion(new Region(index,(short)2,rowendindex,(short) 2));
+				}
+				if (couponmontly.getCoachphone() != null) {
+					cell=row.createCell((short) 3);
+					cell.setCellValue(couponmontly.getCoachphone());
+					cell.setCellStyle(style);
+					sheet.addMergedRegion(new Region(index,(short)3,rowendindex,(short) 3));
+				}
+				if (couponmontly.getSchoolname() != null) {
+					cell=row.createCell((short) 4);
+					cell.setCellValue(couponmontly.getSchoolname());
+					cell.setCellStyle(style);
+					sheet.addMergedRegion(new Region(index,(short)4,rowendindex,(short) 4));
+				}
+				if (couponmontly.getCouponnumber() != null) {
+					cell=row.createCell((short) 5);
+					cell.setCellValue(couponmontly.getCouponnumber());
+					cell.setCellStyle(style);
+					sheet.addMergedRegion(new Region(index,(short)5,rowendindex,(short) 5));
+				}
+				if (couponmontly.getCouponpaycount() != null) {
+					cell=row.createCell((short) 6);
+					cell.setCellValue(couponmontly.getCouponpaycount());
+					cell.setCellStyle(style);
+					sheet.addMergedRegion(new Region(index,(short)6,rowendindex,(short) 6));
+				}
+			    for(int j=0;j<tempstudentlist.size();j++)
+			    {
+			    	StudentCouponDetail tempt=tempstudentlist.get(j);
+			    	if(j==0)
+			    	{
+				    	cell=row.createCell((short) 7);
+				    	cell.setCellValue(tempt.getPhone());
+						cell.setCellStyle(style);
+						cell=row.createCell((short) 8);
+				    	cell.setCellValue(tempt.getName());
+						cell.setCellStyle(style);
+						cell=row.createCell((short) 9);
+				    	cell.setCellValue(tempt.getCouponusenumber());
+						cell.setCellStyle(style);
+						cell=row.createCell((short) 10);
+				    	cell.setCellValue(tempt.getCouponpaynumber());
+						cell.setCellStyle(style);
+						if(j==tempstudentlist.size()-1)
+				    	{
+				    		index++;
+				    	}
+			    	}
+                   
+			    	else
+			    	{
+			    		index++;
+			    		row=sheet.createRow((Integer) index);
+			    		cell=row.createCell((short) 7);
+				    	cell.setCellValue(tempt.getPhone());
+						cell.setCellStyle(style);
+						cell=row.createCell((short) 8);
+				    	cell.setCellValue(tempt.getName());
+						cell.setCellStyle(style);
+						cell=row.createCell((short) 9);
+				    	cell.setCellValue(tempt.getCouponusenumber());
+						cell.setCellStyle(style);
+						cell=row.createCell((short) 10);
+				    	cell.setCellValue(tempt.getCouponpaynumber());
+						cell.setCellStyle(style);
+						if(j==tempstudentlist.size()-1)
+				    	{
+				    		index++;
+				    	}
+			    	}
+			    	
+			    }
+			}
+		}
+		try {
+			FileOutputStream fout = new FileOutputStream(file);
+			wb.write(fout);
+			fout.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		filename = CommonUtils.properties.getProperty("uploadFilePath") + newfilename;
+		HttpServletResponse response = ServletActionContext.getResponse();
+		CommonUtils.downloadExcel(filename, "小巴券月报表", response);
+	}
+	/**
+	 * 小巴币月报数据导出
+	 * 
+	 * @throws IOException
+	 */
+	@SuppressWarnings("deprecation")
+	@Action(value = "/CoinReportMontlyExport")
+	public void CoinReportMontlyExport() throws IOException {
+		// 以下开始输出到EXCEL
+		String newfilename = "";
+		// 定义输出流，以便打开保存对话框begin
+		newfilename += CommonUtils.getTimeFormat(new Date(), "yyyyMMddhhmmssSSS") + "_" + (Math.random() * 100) + ".xls";
+		String filename = CommonUtils.properties.get("uploadFilePath") + newfilename;
+		File file = new File(filename);
+		if (!file.exists()) {
+			file.createNewFile();
+		}
+		// 第一步，创建一个webbook，对应一个Excel文件
+		HSSFWorkbook wb = new HSSFWorkbook();
+		// 第二步，在webbook中添加一个sheet,对应Excel文件中的sheet
+		HSSFSheet sheet = wb.createSheet("小巴币月报表");
+		// 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
+		int index = 0;
+		HSSFRow row = sheet.createRow((Integer) index++);
+		// 第四步，创建单元格，并设置值表头 设置表头居中
+		HSSFCellStyle style = wb.createCellStyle();
+		style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
+		style.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		HSSFCell cell = row.createCell((short) 0);
+		cell.setCellValue("小巴币统计报表（"+starttime +"——"+endtime+ "）");
+		cell.setCellStyle(style);
+		sheet.addMergedRegion(new Region(0, (short) 0, 1, (short) 11));
+		index++;
+		row = sheet.createRow((Integer) index++);
+		cell = row.createCell((short) 0);
+		cell.setCellValue("教练 /驾校");
+		cell.setCellStyle(style);
+		sheet.addMergedRegion(new Region(2, (short) 0, 2, (short) 7));
+		cell = row.createCell((short) 8);
+		cell.setCellValue("学员");
+		cell.setCellStyle(style);
+		sheet.addMergedRegion(new Region(2, (short) 8, 2, (short) 11));
+		
+		
+		row = sheet.createRow((Integer) index++);
+		cell = row.createCell((short) 0);
+		cell.setCellValue("序号");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 1);
+		cell.setCellValue("券类");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 2);
+		cell.setCellValue("发放教练/驾校");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 3);
+		cell.setCellValue("教练所在驾校");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 4);
+		cell.setCellValue("发放教练手机号");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 5);
+		cell.setCellValue("小巴币面值(1元/个)");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 6);
+		cell.setCellValue("发放小巴币(个)");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 7);
+		cell.setCellValue("已结算小巴币(个)");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 8);
+		cell.setCellValue("学员手机号");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 9);
+		cell.setCellValue("学员姓名");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 10);
+		cell.setCellValue("获取小巴币");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 11);
+		cell.setCellValue("已使用小巴币");
+		cell.setCellStyle(style);
+		
+		
+		List<Object> objm = dailyService.getCoinReportMontly(CommonUtils.getDateFormat(starttime, "yyyy-MM-dd"), CommonUtils.getDateFormat(endtime, "yyyy-MM-dd"));
+		coinreportmontly = new ArrayList<CoinReportMontly>();
+		if (objm != null && objm.size() > 0) {
+			for (Object object : objm) {
+				indexnum++;
+				CoinReportMontly cointemp = new CoinReportMontly();
+				Object[] array = (Object[]) object;
+				if (array[1] != null) {
+					cointemp.setCoachid(array[1].toString());
+				}
+				if (array[2] != null) {
+					cointemp.setCoachname(array[2].toString());
+				}
+				if (array[3] != null) {
+					cointemp.setSchoolname(array[3].toString());
+				}
+				if (array[4] != null) {
+					cointemp.setCoachphone(array[4].toString());
+				}
+				if (array[5] != null) {
+					cointemp.setCoinnumber(new BigDecimal(array[5].toString()));
+				} else {
+					cointemp.setCoinnumber(new BigDecimal(0));
+				}
+				if (array[6] != null) {
+					cointemp.setCoinnpaycount(new BigDecimal(array[6].toString()));
+				} else {
+					cointemp.setCoinnpaycount(new BigDecimal(0));
+				}
+				List<Object> objd=dailyService.getCoinReportDetail(cointemp.getCoachid(), CommonUtils.getDateFormat(starttime, "yyyy-MM-dd"), CommonUtils.getDateFormat(endtime, "yyyy-MM-dd"));
+				studentcoinlist=new ArrayList<StudentCoinDetail>();
+						if (objd != null && objd.size() > 0) {
+							for (Object o1 : objd) {
+								Object[] olist=(Object[])o1;
+								StudentCoinDetail tempstudent=new StudentCoinDetail();
+								if (olist[1] != null) {
+									tempstudent.setPhone(olist[1].toString());
+								}
+								if (olist[2] != null) {
+									tempstudent.setName(olist[2].toString());
+								}
+								if (olist[3] != null) {
+									tempstudent.setCoinusenumber(new BigDecimal(olist[3].toString()));
+								}
+								else {
+									tempstudent.setCoinusenumber(new BigDecimal(0));
+								}
+								if (olist[4] != null) {
+									tempstudent.setCoinpaynumber(new BigDecimal(olist[4].toString()));
+								}
+								else {
+									tempstudent.setCoinpaynumber(new BigDecimal(0));
+								}
+								studentcoinlist.add(tempstudent);
+							}
+							cointemp.setStudentdetaillist(studentcoinlist);
+						}
+						coinreportmontly.add(cointemp);
+			}
+			
+		}
+		if (coinreportmontly != null && coinreportmontly.size() > 0) {
+			for (int i = 0; i < coinreportmontly.size(); i++) {
+				row = sheet.createRow((Integer) index);
+				CoinReportMontly coinmontly = coinreportmontly.get(i);
+				List<StudentCoinDetail> tempstudentlist=coinmontly.getStudentdetaillist();
+				int rowcount=coinmontly.getStudentdetaillist().size();
+				cell=row.createCell((short) 0);
+				cell.setCellValue(i + 1);
+				cell.setCellStyle(style);
+				int rowendindex=index+rowcount-1;
+				sheet.addMergedRegion(new Region(index,(short)0,rowendindex,(short) 0));
+				cell=row.createCell((short) 1);
+				cell.setCellValue("小巴币");
+				cell.setCellStyle(style);
+				sheet.addMergedRegion(new Region(index,(short)1,rowendindex,(short) 1));
+				if (coinmontly.getCoachname() != null) {
+					cell=row.createCell((short) 2);
+					cell.setCellValue(coinmontly.getCoachname());
+					cell.setCellStyle(style);
+					sheet.addMergedRegion(new Region(index,(short)2,rowendindex,(short) 2));
+				}
+				if (coinmontly.getSchoolname() != null) {
+					cell=row.createCell((short) 3);
+					cell.setCellValue(coinmontly.getSchoolname());
+					cell.setCellStyle(style);
+					sheet.addMergedRegion(new Region(index,(short)3,rowendindex,(short) 3));
+				}
+				if (coinmontly.getCoachphone() != null) {
+					cell=row.createCell((short) 4);
+					cell.setCellValue(coinmontly.getCoachphone());
+					cell.setCellStyle(style);
+					sheet.addMergedRegion(new Region(index,(short)4,rowendindex,(short) 4));
+				}
+				cell=row.createCell((short) 5);
+				cell.setCellValue("1");
+				cell.setCellStyle(style);
+				sheet.addMergedRegion(new Region(index,(short)5,rowendindex,(short) 5));
+				
+				if (coinmontly.getCoinnumber() != null) {
+					cell=row.createCell((short) 6);
+					cell.setCellValue(coinmontly.getCoinnumber().doubleValue());
+					cell.setCellStyle(style);
+					sheet.addMergedRegion(new Region(index,(short)6,rowendindex,(short) 6));
+				}
+				if (coinmontly.getCoinnpaycount() != null) {
+					cell=row.createCell((short) 7);
+					cell.setCellValue(coinmontly.getCoinnpaycount().doubleValue());
+					cell.setCellStyle(style);
+					sheet.addMergedRegion(new Region(index,(short)7,rowendindex,(short) 7));
+				}
+			    for(int j=0;j<tempstudentlist.size();j++)
+			    {
+			    	StudentCoinDetail tempt=tempstudentlist.get(j);
+			    	if(j==0)
+			    	{
+				    	cell=row.createCell((short) 8);
+				    	cell.setCellValue(tempt.getPhone());
+						cell.setCellStyle(style);
+						cell=row.createCell((short) 9);
+				    	cell.setCellValue(tempt.getName());
+						cell.setCellStyle(style);
+						cell=row.createCell((short) 10);
+				    	cell.setCellValue(tempt.getCoinusenumber().doubleValue());
+						cell.setCellStyle(style);
+						cell=row.createCell((short) 11);
+				    	cell.setCellValue(tempt.getCoinpaynumber().doubleValue());
+						cell.setCellStyle(style);
+						if(j==tempstudentlist.size()-1)
+				    	{
+				    		index++;
+				    	}
+			    	}
+                   
+			    	else
+			    	{
+			    		index++;
+			    		row=sheet.createRow((Integer) index);
+			    		cell=row.createCell((short) 8);
+				    	cell.setCellValue(tempt.getPhone());
+						cell.setCellStyle(style);
+						cell=row.createCell((short) 9);
+				    	cell.setCellValue(tempt.getName());
+						cell.setCellStyle(style);
+						cell=row.createCell((short) 10);
+				    	cell.setCellValue(tempt.getCoinusenumber().doubleValue());
+						cell.setCellStyle(style);
+						cell=row.createCell((short) 11);
+				    	cell.setCellValue(tempt.getCoinpaynumber().doubleValue());
+						cell.setCellStyle(style);
+						if(j==tempstudentlist.size()-1)
+				    	{
+				    		index++;
+				    	}
+			    	}
+			    	
+			    }
+			}
+		}
+		try {
+			FileOutputStream fout = new FileOutputStream(file);
+			wb.write(fout);
+			fout.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		filename = CommonUtils.properties.getProperty("uploadFilePath") + newfilename;
+		HttpServletResponse response = ServletActionContext.getResponse();
+		CommonUtils.downloadExcel(filename, "小巴币月报表", response);
+	}
+	
 	/**
 	 * 教练日报
 	 * 
@@ -2617,6 +3138,295 @@ public class DailyAction extends BaseAction {
 		CommonUtils.downloadExcel(filename, "小巴券日报", response);
 	}
 
+	/**
+	   * 跳转日业绩报表
+	   * @throws IOException
+	   */
+		@SuppressWarnings("deprecation")
+		@Action(value = "/GotoAccountReport",results = { @Result(name = SUCCESS, location = "/accountreport.jsp") })
+		public String GotoAccountReport(){
+		   return SUCCESS;
+		}
+		 /**
+		   * 日业绩报表
+		   * @throws IOException
+		   */
+			@SuppressWarnings("deprecation")
+			@Action(value = "/getaccountreportdaliy",results = { @Result(name = SUCCESS, location = "/accountreport.jsp") })
+			public String getaccountreportdaliy(){
+				if (CommonUtils.isEmptyString(addtime) || addtime == null) {
+					DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+					addtime = formatter.format(new Date());
+				}
+				Object object = dailyService.getAccountReport(addtime);
+				Object[] obj=(Object[]) object;
+				accountreportdaliy=new AccountReportDaily();
+				if(obj[0]!=null)
+			        accountreportdaliy.setRegistcoach((Integer)obj[0]);
+				else
+					accountreportdaliy.setRegistcoach(0);
+				if(obj[1]!=null)
+			        accountreportdaliy.setRegiststudent((Integer) obj[1]);
+				else
+					 accountreportdaliy.setRegiststudent(0);
+				if(obj[2]!=null)
+					 accountreportdaliy.setApply((Integer) obj[2]);
+				else
+					 accountreportdaliy.setApply(0);
+				if(obj[3]!=null)
+			         accountreportdaliy.setCoachbeginclass((Integer) obj[3]);
+				else
+					 accountreportdaliy.setCoachbeginclass(0);
+				if(obj[4]!=null)
+			         accountreportdaliy.setCoursetimecount((Integer) obj[4]);
+				else
+					accountreportdaliy.setCoursetimecount(0);
+				if(obj[5]!=null)
+			        accountreportdaliy.setReservedstudent((Integer) obj[5]);
+				else
+					accountreportdaliy.setReservedstudent(0);
+				if(obj[6]!=null)
+			        accountreportdaliy.setReservedcoursetime((Integer) obj[6]);
+				else
+					accountreportdaliy.setReservedcoursetime(0);
+				if(obj[7]!=null)
+			        accountreportdaliy.setOrderbycash((Integer) obj[7]);
+				else
+					accountreportdaliy.setOrderbycash(0);
+				if(obj[8]!=null)
+			        accountreportdaliy.setOrderbycoupon((Integer) obj[8]);
+				else
+					accountreportdaliy.setOrderbycoupon(0);
+				if(obj[9]!=null)
+			        accountreportdaliy.setOrderbycoin((Integer) obj[9]);
+				else
+					accountreportdaliy.setOrderbycoin(0);
+				if(obj[10]!=null)
+			        accountreportdaliy.setOrdercancel((Integer) obj[10]);
+				else
+					accountreportdaliy.setOrdercancel(0);
+				if(obj[11]!=null)
+			        accountreportdaliy.setCash((Integer) obj[11]);
+				else
+					accountreportdaliy.setCash(0);
+				if(obj[12]!=null)
+			        accountreportdaliy.setCoupon((Integer) obj[12]);
+				else
+					accountreportdaliy.setCoupon(0);
+				if(obj[13]!=null)
+			        accountreportdaliy.setCoin((Integer) obj[13]);
+				else
+					accountreportdaliy.setCoin(0);
+			    
+			   return SUCCESS;
+			}
+	  /**
+	   * 跳转到小巴券月报表
+	 * @return 
+	   * @throws IOException
+	   */
+		@SuppressWarnings("deprecation")
+		@Action(value = "/GotoCouponReportMontly",results = { @Result(name = SUCCESS, location = "/couponreportmontly.jsp") })
+		public String GotoCouponReportMontly()  {
+			
+			return SUCCESS;
+		}
+		
+		
+		 /**
+		   * 小巴券月报表
+		 * @return 
+		   * @throws IOException
+		   */
+			@SuppressWarnings("deprecation")
+			@Action(value = "/GetCouponReportMontly",results = { @Result(name = SUCCESS, location = "/couponreportmontly.jsp") })
+			public String GetCouponReportMontly()  {
+				
+				List<Object> objm = dailyService.getCouponReportMontly(CommonUtils.getDateFormat(starttime, "yyyy-MM-dd"), CommonUtils.getDateFormat(endtime, "yyyy-MM-dd"));
+				couponreportmontly = new ArrayList<CouponReportMontly>();
+				total = objm.size();
+				int pagesize = 10;
+				pageCount = (total + pagesize - 1) / pagesize;
+				if (objm != null && objm.size() > 0) {
+					for (Object object : objm) {
+						indexnum++;
+						CouponReportMontly coupontemp = new CouponReportMontly();
+						Object[] array = (Object[]) object;
+						if (array[1] != null) {
+							coupontemp.setCoachid(array[1].toString());
+						}
+						if (array[2] != null) {
+							coupontemp.setCoachname(array[2].toString());
+						}
+						if (array[3] != null) {
+							coupontemp.setCoachphone(array[3].toString());
+						}
+						if (array[4] != null) {
+							coupontemp.setSchoolname(array[4].toString());
+						}
+						if (array[5] != null) {
+							coupontemp.setCouponnumber((Integer) array[5]);
+						} else {
+							coupontemp.setCouponnumber(0);
+						}
+						if (array[6] != null) {
+							coupontemp.setCouponpaycount((Integer) array[6]);
+						} else {
+							coupontemp.setCouponpaycount(0);
+						}				
+						
+						if ((pageIndex * pagesize - 9) <= indexnum && indexnum <= (pageIndex * pagesize)) {
+							couponreportmontly.add(coupontemp);
+						}
+					}
+				}
+				
+				return SUCCESS;
+			}
+			 /**
+			   * 小巴券月报表详情
+			 * @return 
+			   * @throws IOException
+			   */
+				@SuppressWarnings("deprecation")
+				@Action(value = "/GetCouponReportDetail",results = { @Result(name = SUCCESS, location = "/couponreportdetail.jsp") })
+				public String GetCouponReportDetail()  {
+					
+					List<Object> objd=dailyService.getCouponReportDetail(coachid, CommonUtils.getDateFormat(starttime, "yyyy-MM-dd"), CommonUtils.getDateFormat(endtime, "yyyy-MM-dd"));
+					studentlist=new ArrayList<StudentCouponDetail>();
+					total = objd.size();
+					int pagesize = 10;
+					pageCount = (total + pagesize - 1) / pagesize;
+							indexnum++;
+							if (objd != null && objd.size() > 0) {
+								for (Object o1 : objd) {
+									Object[] olist=(Object[])o1;
+									StudentCouponDetail tempstudent=new StudentCouponDetail();
+									if (olist[1] != null) {
+										tempstudent.setPhone(olist[1].toString());
+									}
+									if (olist[2] != null) {
+										tempstudent.setName(olist[2].toString());
+									}
+									if (olist[3] != null) {
+										tempstudent.setCouponusenumber((Integer)olist[3]);
+									}
+									else {
+										tempstudent.setCouponusenumber(0);
+									}
+									if (olist[4] != null) {
+										tempstudent.setCouponpaynumber((Integer)olist[4]);
+									}
+									else {
+										tempstudent.setCouponpaynumber(0);
+									}
+									if ((pageIndex * pagesize - 9) <= indexnum && indexnum <= (pageIndex * pagesize)) {
+										studentlist.add(tempstudent);
+									}
+								}
+							}
+					
+					return SUCCESS;
+				}
+	  /**
+	   * 跳转到小巴币月报表
+	   * @throws IOException
+	   */
+		@SuppressWarnings("deprecation")
+		@Action(value = "/GotoCoinReportMontly",results = { @Result(name = SUCCESS, location = "/coinreportmontly.jsp") })
+		public String GotoCoinReportMontly()  {
+			return SUCCESS;
+		}
+		 /**
+		   * 小巴币月报表
+		   * @throws IOException
+		   */
+			@SuppressWarnings("deprecation")
+			@Action(value = "/GetCoinReportMontly",results = { @Result(name = SUCCESS, location = "/coinreportmontly.jsp") })
+			public String GetCoinReportMontly()  {
+				List<Object> objm = dailyService.getCoinReportMontly(CommonUtils.getDateFormat(starttime, "yyyy-MM-dd"), CommonUtils.getDateFormat(endtime, "yyyy-MM-dd"));
+				coinreportmontly = new ArrayList<CoinReportMontly>();
+				total = objm.size();
+				int pagesize = 10;
+				pageCount = (total + pagesize - 1) / pagesize;
+				if (objm != null && objm.size() > 0) {
+					for (Object object : objm) {
+						indexnum++;
+						CoinReportMontly cointemp = new CoinReportMontly();
+						Object[] array = (Object[]) object;
+						if (array[1] != null) {
+							cointemp.setCoachid(array[1].toString());
+						}
+						if (array[2] != null) {
+							cointemp.setCoachname(array[2].toString());
+						}
+						if (array[3] != null) {
+							cointemp.setSchoolname(array[3].toString());
+						}
+						if (array[4] != null) {
+							cointemp.setCoachphone(array[4].toString());
+						}
+						if (array[5] != null) {
+							cointemp.setCoinnumber(new BigDecimal(array[5].toString()));
+						} else {
+							cointemp.setCoinnumber(new BigDecimal(0));
+						}
+						if (array[6] != null) {
+							cointemp.setCoinnpaycount(new BigDecimal(array[6].toString()));
+						} else {
+							cointemp.setCoinnpaycount(new BigDecimal(0));
+						}				
+						
+						if ((pageIndex * pagesize - 9) <= indexnum && indexnum <= (pageIndex * pagesize)) {
+							coinreportmontly.add(cointemp);
+						}
+					}
+				}
+				return SUCCESS;
+			}
+     /**
+	   * 小巴币月报表详细
+	   * @throws IOException
+	 */
+		@SuppressWarnings("deprecation")
+		@Action(value = "/GetCoinReportMontlyDetail",results = { @Result(name = SUCCESS, location = "/coinreportdetail.jsp") })
+		public String GetCoinReportMontlyDetail()  {
+			List<Object> objd=dailyService.getCoinReportDetail(coachid, CommonUtils.getDateFormat(starttime, "yyyy-MM-dd"), CommonUtils.getDateFormat(endtime, "yyyy-MM-dd"));
+			studentcoinlist=new ArrayList<StudentCoinDetail>();
+			total = objd.size();
+			int pagesize = 10;
+			pageCount = (total + pagesize - 1) / pagesize;
+					indexnum++;
+					if (objd != null && objd.size() > 0) {
+						for (Object o1 : objd) {
+							Object[] olist=(Object[])o1;
+							StudentCoinDetail tempstudent=new StudentCoinDetail();
+							if (olist[1] != null) {
+								tempstudent.setPhone(olist[1].toString());
+							}
+							if (olist[2] != null) {
+								tempstudent.setName(olist[2].toString());
+							}
+							if (olist[3] != null) {
+								tempstudent.setCoinusenumber(new BigDecimal(olist[3].toString()));
+							}
+							else {
+								tempstudent.setCoinusenumber(new BigDecimal(0));
+							}
+							if (olist[4] != null) {
+								tempstudent.setCoinpaynumber(new BigDecimal(olist[4].toString()));
+							}
+							else {
+								tempstudent.setCoinpaynumber(new BigDecimal(0));
+							}
+							if ((pageIndex * pagesize - 9) <= indexnum && indexnum <= (pageIndex * pagesize)) {
+								studentcoinlist.add(tempstudent);
+							}
+						}
+					}
+			return SUCCESS;
+		}
+	
 	public Integer getPageIndex() {
 		return pageIndex;
 	}
@@ -2881,7 +3691,83 @@ public class DailyAction extends BaseAction {
 		this.cuserinfolist = cuserinfolist;
 	}
 
+	public AccountReportDaily getAccountreportdaliy() {
+		return accountreportdaliy;
+	}
+
+	public void setAccountreportdaliy(AccountReportDaily accountreportdaliy) {
+		this.accountreportdaliy = accountreportdaliy;
+	}
+
+	public String getEndtime() {
+		return endtime;
+	}
+
+	public void setEndtime(String endtime) {
+		this.endtime = endtime;
+	}
+
+	public List<CouponReportMontly> getCouponreportmontly() {
+		return couponreportmontly;
+	}
+
+	public void setCouponreportmontly(List<CouponReportMontly> couponreportmontly) {
+		this.couponreportmontly = couponreportmontly;
+	}
+
+	public List<CoinReportMontly> getCoinreportmontly() {
+		return coinreportmontly;
+	}
+
+	public void setCoinreportmontly(List<CoinReportMontly> coinreportmontly) {
+		this.coinreportmontly = coinreportmontly;
+	}
+
+	public List<StudentCouponDetail> getStudentcoupondetail() {
+		return studentcoupondetail;
+	}
+
+	public void setStudentcoupondetail(List<StudentCouponDetail> studentcoupondetail) {
+		this.studentcoupondetail = studentcoupondetail;
+	}
+
+	public List<StudentCoinDetail> getStudentcoindetail() {
+		return studentcoindetail;
+	}
+
+	public void setStudentcoindetail(List<StudentCoinDetail> studentcoindetail) {
+		this.studentcoindetail = studentcoindetail;
+	}
+
+	public String getCoachid() {
+		return coachid;
+	}
+
+	public void setCoachid(String coachid) {
+		this.coachid = coachid;
+	}
+
+	public List<StudentCouponDetail> getStudentlist() {
+		return studentlist;
+	}
+
+	public void setStudentlist(List<StudentCouponDetail> studentlist) {
+		this.studentlist = studentlist;
+	}
+
+	public List<StudentCoinDetail> getStudentcoinlist() {
+		return studentcoinlist;
+	}
+
+	public void setStudentcoinlist(List<StudentCoinDetail> studentcoinlist) {
+		this.studentcoinlist = studentcoinlist;
+	}
+
+	
+
 	
 	
 	
+
+
 }

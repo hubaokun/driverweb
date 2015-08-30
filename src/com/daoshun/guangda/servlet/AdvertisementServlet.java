@@ -217,6 +217,7 @@ private void getAdvertiesementcontent(HttpServletRequest request, HashMap<String
 			   String height=getRequestParamter(request, "height");
 			   String width=getRequestParamter(request, "width");
 			   s_image_ios=width+"x"+height+".jpg";
+			   s_image_ios_flash=width+"x"+height+".jpg";
 		   }
 		   else
 		   {
