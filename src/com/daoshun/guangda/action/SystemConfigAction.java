@@ -666,7 +666,7 @@ public class SystemConfigAction extends BaseAction {
 	@Action(value = "/addOpenModelPrice", results = { @Result(name = SUCCESS,type="redirect", location = "/getOpenModelPrice.do") })
 	public String addOpenModelPrice(){
 		List<ModelPrice> list=sbookService.getModelPriceByCityId(city);
-		if(list!=null ){
+		if(list!=null && list.size()>0 ){
 			return SUCCESS;
 		}
 		ModelPrice mp=new ModelPrice();
