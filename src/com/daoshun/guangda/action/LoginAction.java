@@ -1,7 +1,9 @@
 package com.daoshun.guangda.action;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
@@ -112,14 +114,32 @@ public class LoginAction extends BaseAction {
 					session.setAttribute("userid", admin.getAdminid());
 					session.setAttribute("usertype", admin.getType());
 					session.setAttribute("schoolid",0);
-					 newpermissions=new ArrayList<Integer>();
+					newpermissions=new ArrayList<Integer>();
+					
+					Map<String,List<Integer>> submap=new HashMap<String,List<Integer>>();
 					String[] permissions = admin.getPermission().split(",");
 					for (int i = 0; i < permissions.length; i++) {
-					newpermissions.add(CommonUtils.parseInt(permissions[i], 0));
-					}
-					for (int i = 0; i < newpermissions.size(); i++) {
+						
+						String[] temppermissions=permissions[i].split("-");
+						for(int k=0;k<temppermissions.length;k++)
+						{
+							if (temppermissions[k].contains(";"))
+							{
+								String[] subpermissions=temppermissions[k].split(";");
+								List<Integer> subpermissionslist=new ArrayList<Integer>();
+								  for(int h=0;h<subpermissions.length;h++)
+								  {
+									  subpermissionslist.add(CommonUtils.parseInt(subpermissions[h], 0));
+								  }
+								  submap.put(temppermissions[k-1], subpermissionslist);
+							}
+							else
+								newpermissions.add(CommonUtils.parseInt(temppermissions[k], 0));
+						}
+					    
 					}
 					session.setAttribute("permission", newpermissions);
+					session.setAttribute("subpermission", submap);
 					Cookie cookie = getCookieByName(request, "loginname");
 					if (cookie == null) {
 						cookie = new Cookie("loginname", loginname);
@@ -134,7 +154,7 @@ public class LoginAction extends BaseAction {
 						cookie2.setValue(password);
 					}
 					response.addCookie(cookie2);
-					jump=CommonUtils.parseInt(permissions[0], 0);
+					jump=newpermissions.get(0);
 					return "SUCCESS"+jump;
 				} else {
 					//驾校管理员
