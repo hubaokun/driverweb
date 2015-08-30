@@ -2,6 +2,7 @@ package com.daoshun.guangda.servlet;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,14 +14,23 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.daoshun.common.ApplePushUtil;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
-import com.daoshun.common.DeviceType;
 import com.daoshun.common.ErrException;
-import com.daoshun.common.PushtoSingle;
-import com.daoshun.guangda.pojo.*;
-import com.daoshun.guangda.service.*;
+import com.daoshun.guangda.pojo.CouponRecord;
+import com.daoshun.guangda.pojo.CscheduleInfo;
+import com.daoshun.guangda.pojo.CuserInfo;
+import com.daoshun.guangda.pojo.DriveSchoolInfo;
+import com.daoshun.guangda.pojo.ModelPrice;
+import com.daoshun.guangda.pojo.ModelPriceVo;
+import com.daoshun.guangda.pojo.SuserInfo;
+import com.daoshun.guangda.pojo.SystemSetInfo;
+import com.daoshun.guangda.service.ICUserService;
+import com.daoshun.guangda.service.ICscheduleService;
+import com.daoshun.guangda.service.IDriveSchoolService;
+import com.daoshun.guangda.service.ISBookService;
+import com.daoshun.guangda.service.ISUserService;
+import com.daoshun.guangda.service.ISystemService;
 
 @WebServlet("/sbook")
 public class SbookServlet extends BaseServlet {
@@ -93,7 +103,13 @@ public class SbookServlet extends BaseServlet {
 				getCanUseCoinSum(request, resultMap);
 			} else if (Constant.REMINDCOACH.equals(action)) {
 				remindCoach(request, resultMap);
-			} else {
+			}else if (Constant.GETMODELPRICE.equals(action)) {
+				//城市套餐价格
+				getmodelprice(request, resultMap);
+			}else if (Constant.GETOPENMODELPRICE.equals(action)) {
+				//城市套餐价格
+				getOpenModelPrice(request, resultMap);
+			}  else {
 				throw new ErrException();
 			}
 
@@ -271,7 +287,38 @@ public class SbookServlet extends BaseServlet {
 			systemService.recordUserAction(userid, usertype, "sbook", action);
 		}
 	}
-
+	/**
+	 * 城市套餐价格
+	 * @param request
+	 * @param resultMap
+	 * @throws ErrException
+	 */
+	public void getmodelprice(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException{
+		String cityid = getRequestParamter(request, "cityid");
+		List<ModelPrice> list=sbookService.getModelPriceByCityId(CommonUtils.parseInt(cityid, 0));
+		List<ModelPriceVo> mpvlist=null;
+		if(list!=null && list.size()>0){
+			mpvlist=new ArrayList<ModelPriceVo>();
+			ModelPrice mp=list.get(0);
+			ModelPriceVo mpv1=new ModelPriceVo();
+			mpv1.setName("c1");
+			mpv1.setXiaobaprice(mp.getC1xiaobaprice());
+			mpv1.setMarketprice(mp.getC1marketprice());
+			
+			ModelPriceVo mpv2=new ModelPriceVo();
+			mpv2.setName("c2");
+			mpv2.setXiaobaprice(mp.getC2xiaobaprice());
+			mpv2.setMarketprice(mp.getC2marketprice());
+			mpvlist.add(mpv1);
+			mpvlist.add(mpv2);
+		}
+		resultMap.put("modelprice", mpvlist);
+	}
+	//获取已开通套餐价格城市列表
+	public void getOpenModelPrice(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException{
+		List<ModelPrice> list=sbookService.getOpenModelPrice();
+		resultMap.put("opencity", list);
+	}
 	public void getCoachDetail(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		CommonUtils.validateEmpty(coachid);

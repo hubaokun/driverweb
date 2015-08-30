@@ -37,6 +37,7 @@
 		<sub-item name="教练车型设置" authority="7" action="getTeachcarModellist.do"/>
 		<sub-item name="教学科目设置" authority="8" action="getSubjectlists.do"/>
 		<sub-item name="节假日设置" authority="8" action="getHolidays.do"/>
+		<sub-item name="开通城市设置" authority="4" action="getOpenModelPrice.do"/>
 		<sub-item name="省市区" authority="9" action="getProvince.do"/>
 
 		<sub-item name="重置教练开课状态" authority="10" action="showResetCoachCoursestate.do"/>

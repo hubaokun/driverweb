@@ -11,11 +11,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.daoshun.guangda.pojo.*;
-import jxl.Sheet;
-import jxl.Workbook;
-import jxl.WorkbookSettings;
-
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -28,13 +23,19 @@ import com.daoshun.common.QueryResult;
 import com.daoshun.guangda.NetData.StudentInfoForExcel;
 import com.daoshun.guangda.pojo.BalanceStudentInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
+import com.daoshun.guangda.pojo.ModelPrice;
 import com.daoshun.guangda.pojo.StudentApplyInfo;
 import com.daoshun.guangda.pojo.StudentCheckInfo;
 import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.pojo.SuserState;
 import com.daoshun.guangda.service.IBaseService;
 import com.daoshun.guangda.service.ICUserService;
+import com.daoshun.guangda.service.ISBookService;
 import com.daoshun.guangda.service.ISUserService;
+
+import jxl.Sheet;
+import jxl.Workbook;
+import jxl.WorkbookSettings;
 
 @ParentPackage("default")
 @Controller
@@ -231,8 +232,8 @@ public class SuserAction extends BaseAction {
 		}
 		return SUCCESS;
 	}
-	
-	
+	@Resource
+	ISBookService bookService;
 	/**
 	 * 得到报名学员列表
 	 * 
@@ -259,7 +260,19 @@ public class SuserAction extends BaseAction {
 				if(!CommonUtils.isEmptyString(suserlist.get(i).getCityid())){
 					city = suserService.getCityByCityid(Integer.parseInt(suserlist.get(i).getCityid()));
 				}
-				suserlist.get(i).setCity(city);;
+				suserlist.get(i).setCity(city);
+				if(suserlist.get(i).getModelcityid()!=null){
+					List<ModelPrice> list=bookService.getModelPriceByCityId(suserlist.get(i).getModelcityid());
+					if(list!=null && list.size()>0){
+						ModelPrice mp=list.get(0);
+						String model=suserlist.get(i).getModel();
+						if("c1".equals(model)){
+							suserlist.get(i).setPrice(mp.getC1xiaobaprice());
+						}else if("c2".equals(model)){
+							suserlist.get(i).setPrice(mp.getC2xiaobaprice());
+						}
+					}
+				}
 			}
 		}
 		

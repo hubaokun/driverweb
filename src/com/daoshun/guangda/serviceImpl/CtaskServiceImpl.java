@@ -66,7 +66,7 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 		StringBuffer ctaskhql = new StringBuffer();
 		ctaskhql.append("select t.* from t_order t where t.coachid=");
 		ctaskhql.append(coachid);
-		ctaskhql.append(" and t.coachstate != 4 and t.coachstate !=2");
+		ctaskhql.append(" and t.coachstate not in (2,4,5) ");
 		ctaskhql.append(" order by t.start_time asc");
 		//System.out.println(ctaskhql.toString());
 		//String[] params = { "coachid" };
@@ -92,6 +92,29 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 		ctaskhql.append("order by end_time desc");
 		String[] params = { "coachstate", "coachid" };
 		List<OrderInfo> orderlist = (List<OrderInfo>) dataDao.pageQueryViaParam(ctaskhql.toString(), count, page + 1, params, coachstate, coachid);
+		return orderlist;
+	}
+	/**
+	 * 查询教练历史订单及学员取消教练不同意的订单
+	 * @param coachid
+	 * @param page
+	 * @param count
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<OrderInfo> getHistoryOrderListByCoach( int coachid, int page, int count) {
+		StringBuffer ctaskhql = new StringBuffer();
+		ctaskhql.append("from OrderInfo where coachstate in (2,5) and coachid = :coachid ");
+		ctaskhql.append("order by end_time desc");
+		String[] params = { "coachid" };
+		List<OrderInfo> orderlist = (List<OrderInfo>) dataDao.pageQueryViaParam(ctaskhql.toString(), count, page + 1, params,coachid);
+		for (OrderInfo orderInfo : orderlist) {
+			if(orderInfo.getCoachstate()==5){//教练不同意的订单
+				orderInfo.setDisagree(1);
+			}else{
+				orderInfo.setDisagree(0);
+			}
+		}
 		return orderlist;
 	}
 
@@ -496,7 +519,7 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 						if(student.getFcoinnum().intValue()>=b1.intValue()){
 							student.setFcoinnum(student.getFcoinnum().subtract(b1));
 						}else{
-							System.out.println("结算SettlementOrder方法中：小巴币解冻时发现数量小于订单额!停止结算");
+							System.out.println("小巴币结算：结算SettlementOrder方法中：小巴币解冻时发现数量小于订单额!停止结算");
 							return;
 						}
 						
@@ -529,7 +552,7 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 						if(student.getFcoinnum().intValue()>=b1.intValue()){
 							student.setFcoinnum(student.getFcoinnum().subtract(b1));
 						}else{
-							System.out.println("结算SettlementOrder方法中：小巴币解冻时发现数量小于订单额!停止结算");
+							System.out.println("小巴币+余额结算：结算SettlementOrder方法中：小巴币解冻时发现数量小于订单额!停止结算");
 							return;
 						}
 						

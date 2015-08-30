@@ -162,6 +162,8 @@ function dataExport(){
 						<th>年龄</th>
 						<th>城市</th>
 						<th>报名时间</th>
+						<th>车型</th>
+						<th>小巴价</th>
 						<th>注册时间</th>
 						<th>操作</th>
 
@@ -183,6 +185,12 @@ function dataExport(){
 							
 							<td style="width: 100px;" class="border_right_bottom">
 							<s:date name="enrolltime" format="yyyy-MM-dd HH:mm:ss" />
+							</td>
+							<td style="width: 100px;" class="border_right_bottom">
+							${model }
+							</td>
+							<td style="width: 100px;" class="border_right_bottom">
+							${price==0?'':price }
 							</td>
 							<td style="width: 100px;" class="border_right_bottom">
 							<s:date name="addtime" format="yyyy-MM-dd HH:mm:ss" />

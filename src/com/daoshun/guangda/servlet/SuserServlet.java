@@ -710,13 +710,17 @@ public class SuserServlet extends BaseServlet {
 	
 	//学员报名
 	public void enroll(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
-
 		try
 		{
 		String studentid = getRequestParamter(request, "studentid");
+		String model = getRequestParamter(request, "model");//车型
+		String cityid = getRequestParamter(request, "cityid");//车型
+		
 		SuserInfo student = suserService.getUserById(studentid);
 		student.setState(1);
 		student.setEnrolltime(new Date());
+		student.setModel(model);//设置车型c1,c2
+		student.setModelcityid(CommonUtils.parseInt(cityid, 0));
 		suserService.updateUserInfo(student);
 		resultMap.put("code", 1);
 		resultMap.put("message", "报名成功");
@@ -725,7 +729,6 @@ public class SuserServlet extends BaseServlet {
 			resultMap.put("code", 2);
 			resultMap.put("message", "报名失败");
 		}
-			
 	}
 	
 	

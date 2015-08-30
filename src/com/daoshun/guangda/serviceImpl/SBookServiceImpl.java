@@ -27,6 +27,7 @@ import com.daoshun.common.PayType;
 import com.daoshun.common.PushtoSingle;
 import com.daoshun.guangda.pojo.CBookTimeInfo;
 import com.daoshun.guangda.pojo.CaddAddressInfo;
+import com.daoshun.guangda.pojo.CityInfo;
 import com.daoshun.guangda.pojo.CityRadius;
 import com.daoshun.guangda.pojo.CoachStudentInfo;
 import com.daoshun.guangda.pojo.CouponRecord;
@@ -36,6 +37,7 @@ import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.DefaultSchedule;
 import com.daoshun.guangda.pojo.DriveSchoolInfo;
 import com.daoshun.guangda.pojo.EvaluationInfo;
+import com.daoshun.guangda.pojo.ModelPrice;
 import com.daoshun.guangda.pojo.ModelsInfo;
 import com.daoshun.guangda.pojo.OrderInfo;
 import com.daoshun.guangda.pojo.OrderNotiRecord;
@@ -115,6 +117,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		}
 	}
 	public void remindCoach(String coachid,String studentid,String date){
+		//long starttime=System.currentTimeMillis();
 		RemindCoach rc=new RemindCoach();
 		rc.setCoachid(CommonUtils.parseInt(coachid, 0));
 		rc.setStudentid(CommonUtils.parseInt(studentid, 0));
@@ -125,6 +128,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		if(student!=null){
 			studentName=student.getRealname();
 		}
+		//long e1=System.currentTimeMillis();
+		//System.out.println(e1-starttime);
 		String pushMsg="学员"+studentName+"提醒你开启"+date+"的课程";
 		//给此订单关联的教练推送消息，提示让他同意取消订单
 		String hql5 = "from UserPushInfo where userid =:userid and usertype = 1";
@@ -138,7 +143,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				ApplePushUtil.sendpush(userpush.getDevicetoken(), "{\"aps\":{\"alert\":\"" + pushMsg + "\",\"sound\":\"default\"},\"userid\":" + coachid + "}", 1, 1);
 			}
 		}
-		
+		//long e2=System.currentTimeMillis();
+		//System.out.println(e2-starttime);
 	}
 	@Override
 	public List<CscheduleInfo> refreshCoachSchedule(String coachid, String date, String studentid) {
@@ -1031,7 +1037,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			cuserhql.append(" and modelid like '%" + condition11 + "%'");
 		}
 		cuserhql.append(" and money >= gmoney and isquit = 0  order by coursestate desc,drive_schoolid desc,score desc");
-		//System.out.println(cuserhql.toString());
+		System.out.println(cuserhql.toString());
 		List<CuserInfo> coachlist = (List<CuserInfo>) dataDao.SqlPageQuery(cuserhql.toString(), Constant.USERLIST_SIZE+1, CommonUtils.parseInt(pagenum, 0) + 1,CuserInfo.class, null);
 		
 		if (coachlist != null && coachlist.size() > 0) {
@@ -3345,5 +3351,32 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 	public SystemSetInfo getSystemSetInfo() {
 		String hql = "from SystemSetInfo where 1 = 1";
 		return (SystemSetInfo) dataDao.getFirstObjectViaParam(hql, null);
+	}
+	/**
+	 * 查询城市套餐价格
+	 */
+	@Override
+	public List<ModelPrice> getModelPriceByCityId(int cityid) {
+		String hql="from ModelPrice where cityid=:cityid";
+		String p[]={"cityid"};
+		List<ModelPrice> list=(List<ModelPrice>) dataDao.getObjectsViaParam(hql, p,cityid);
+		return list;
+	}
+	@Override
+	public List<ModelPrice> getOpenModelPrice() {
+		String hql="from ModelPrice";
+		List<ModelPrice> list=(List<ModelPrice>) dataDao.getObjectsViaParam(hql, null);
+		/*for (ModelPrice modelPrice : list) {
+			modelPrice.setC1marketprice(null);
+			modelPrice.setC1xiaobaprice(null);
+			modelPrice.setC2marketprice(null);
+			modelPrice.setC2xiaobaprice(null);
+			modelPrice.setId(null);
+		}*/
+		return list;
+	}
+	@Override
+	public void addOpenModelPrice(ModelPrice mp) {
+		dataDao.addObject(mp);
 	}
 }

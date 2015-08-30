@@ -131,4 +131,5 @@ public interface ICtaskService {
 	public abstract int getCountByorderid(int id);
 
 	public abstract QueryResult<FeedBackInfo> getFeedbackInfoOfPage(String searchname, String searchphone, String starttime, String endtime, Integer pageIndex, int pageSize);
+	public List<OrderInfo> getHistoryOrderListByCoach( int coachid, int page, int count);
 }

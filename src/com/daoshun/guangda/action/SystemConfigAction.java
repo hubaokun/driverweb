@@ -17,14 +17,18 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.daoshun.common.CommonUtils;
+import com.daoshun.guangda.pojo.CityInfo;
 import com.daoshun.guangda.pojo.CoachLevelInfo;
 import com.daoshun.guangda.pojo.ComplaintSetInfo;
 import com.daoshun.guangda.pojo.CsubjectInfo;
+import com.daoshun.guangda.pojo.ModelPrice;
 import com.daoshun.guangda.pojo.ModelsInfo;
 import com.daoshun.guangda.pojo.SystemSetInfo;
 import com.daoshun.guangda.pojo.TeachcarInfo;
 import com.daoshun.guangda.service.IAdvertisementService;
 import com.daoshun.guangda.service.ICUserService;
+import com.daoshun.guangda.service.ILocationService;
+import com.daoshun.guangda.service.ISBookService;
 
 @ParentPackage("default")
 @Controller
@@ -641,7 +645,105 @@ public class SystemConfigAction extends BaseAction {
 	public String jumpp(){
 		return SUCCESS;
 	}
+	
+	@Resource
+	private ISBookService sbookService;
+	@Resource
+	private ILocationService locationService;
+	/**
+	 * 显示所有的开通城市
+	 * @return
+	 */
+	@Action(value = "/getOpenModelPrice", results = { @Result(name = SUCCESS, location = "/openmodelprice.jsp") })
+	public String getOpenModelPrice(){
+		mplist=sbookService.getOpenModelPrice();
+		return SUCCESS;
+	}
+	/**
+	 * 添加开通城市
+	 * @return
+	 */
+	@Action(value = "/addOpenModelPrice", results = { @Result(name = SUCCESS,type="redirect", location = "/getOpenModelPrice.do") })
+	public String addOpenModelPrice(){
+		List<ModelPrice> list=sbookService.getModelPriceByCityId(city);
+		if(list!=null ){
+			return SUCCESS;
+		}
+		ModelPrice mp=new ModelPrice();
+		mp.setC1marketprice(c1marketprice);
+		mp.setC1xiaobaprice(c1xiaobaprice);
+		mp.setC2marketprice(c2marketprice);
+		mp.setC2xiaobaprice(c2xiaobaprice);
+		mp.setCityid(city);
+		CityInfo cityinfo=locationService.getCityById(String.valueOf(city));
+		if(cityinfo!=null){
+			mp.setCityname(cityinfo.getCity());
+		}
+		sbookService.addOpenModelPrice(mp);
+		return SUCCESS;
+	}
 
+	private int c1marketprice;
+	private int c2marketprice;
+	private int c1xiaobaprice;
+	private int c2xiaobaprice;
+	private int city;//城市ID
+	
+	
+	
+	
+	
+	
+	
+	public int getC1marketprice() {
+		return c1marketprice;
+	}
+
+	public void setC1marketprice(int c1marketprice) {
+		this.c1marketprice = c1marketprice;
+	}
+
+	public int getC2marketprice() {
+		return c2marketprice;
+	}
+
+	public void setC2marketprice(int c2marketprice) {
+		this.c2marketprice = c2marketprice;
+	}
+
+	public int getC1xiaobaprice() {
+		return c1xiaobaprice;
+	}
+
+	public void setC1xiaobaprice(int c1xiaobaprice) {
+		this.c1xiaobaprice = c1xiaobaprice;
+	}
+
+	public int getC2xiaobaprice() {
+		return c2xiaobaprice;
+	}
+
+	public void setC2xiaobaprice(int c2xiaobaprice) {
+		this.c2xiaobaprice = c2xiaobaprice;
+	}
+
+	public int getCity() {
+		return city;
+	}
+
+	public void setCity(int city) {
+		this.city = city;
+	}
+
+	private List<ModelPrice> mplist;
+	
+	public List<ModelPrice> getMplist() {
+		return mplist;
+	}
+
+	public void setMplist(List<ModelPrice> mplist) {
+		this.mplist = mplist;
+	}
 
 	public ComplaintSetInfo getComplaintSetInfo() {
 		return complaintSetInfo;

@@ -6,10 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.daoshun.guangda.pojo.CaddAddressInfo;
+import com.daoshun.guangda.pojo.CityInfo;
 import com.daoshun.guangda.pojo.CouponRecord;
 import com.daoshun.guangda.pojo.CscheduleInfo;
 import com.daoshun.guangda.pojo.CsubjectInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
+import com.daoshun.guangda.pojo.ModelPrice;
 import com.daoshun.guangda.pojo.SystemSetInfo;
 
 public interface ISBookService {
@@ -123,4 +125,7 @@ public interface ISBookService {
 	public HashMap<String, Object> getCoachListByRedis(String cityid,String condition1, String condition2, String condition3, String condition4, String condition5, String condition6, String condition8, String condition9,
 			String condition10, String condition11, String pagenum) ;
 	public int getRemindState(String coachid,String studentid,String date);
+	public List<ModelPrice> getModelPriceByCityId(int cityid);
+	public List<ModelPrice> getOpenModelPrice();
+	public void addOpenModelPrice(ModelPrice mp);
 }

@@ -257,8 +257,41 @@ public class SuserInfo implements Serializable {
 	@Column(name = "usertype", length = 1, columnDefinition = "INT default 0")
 	private Integer usertype;
 	
+	@Column(name = "model", length = 10)
+	private String model;//车型
+	@Column(name = "modelcityid", length = 1, columnDefinition = "INT default 0")
+	private Integer modelcityid;//报名车型所属的城市id
+	
+	@Transient
+	private int price;//一键报名价格
 	
 	
+	
+
+	public int getPrice() {
+		return price;
+	}
+
+	public void setPrice(int price) {
+		this.price = price;
+	}
+
+	public Integer getModelcityid() {
+		return modelcityid;
+	}
+
+	public void setModelcityid(Integer modelcityid) {
+		this.modelcityid = modelcityid;
+	}
+
+	public String getModel() {
+		return model;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
+	}
+
 	public Integer getDevicetype() {
 		return devicetype;
 	}

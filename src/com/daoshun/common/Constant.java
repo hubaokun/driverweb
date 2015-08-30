@@ -345,6 +345,10 @@ public class Constant {
 	public static final String GETCANUSECOINSUM = "GETCANUSECOINSUM";
 	//提醒教练开课
 	public static final String REMINDCOACH = "REMINDCOACH";
+	//城市套餐价格
+	public static final String GETMODELPRICE = "GETMODELPRICE";
+	//城市套餐价格
+	public static final String GETOPENMODELPRICE = "GETOPENMODELPRICE";
 	
 	// 获取所有驾校信息
 	public static final String CGETALLSCHOOL = "GETALLSCHOOL";

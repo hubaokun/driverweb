@@ -113,3 +113,24 @@ cityid字段
 # 学员订单投诉详情接口：GETORDERDETAIL 中新增返回
 complaintcontent 投诉内容
 reason			   投诉原因
+# 教练历史订单接口：GetHisTask 新增返回字段：
+disagree  历史订单中，分原有的历史订单和教练 不同意取消的订单，原有历史订单此属性是0，教练 不同意取消的订单是1
+
+# 获取开通车型c1/c2价格的城市列表
+接口名称：sbook?action=GETOPENMODELPRICE
+返回：
+	"cityid": 3100100, //城市ID
+	"cityname": "杭州"//城市名称
+
+# 获取某个城市的c1/c2价格详情
+接口：sbook?action=GETMODELPRICE
+参数：cityid 城市ID ,如3100100
+返回：
+    "name": "c1", //车型名称
+    "xiaobaprice": 2000, //小巴价
+    "marketprice": 3000  //市场价
+       
+# 一键报名接口enroll 
+ 参数： studentid  学员id
+     model     车型 ：c1 ,c2
+  	 cityid     报名的城市ID

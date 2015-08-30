@@ -209,7 +209,19 @@ public class OrderInfo implements Serializable {
 	@Transient
 	private String reason;
 	
+	@Transient
+	private int disagree;//历史订单中，分原有的历史订单和教练 不同意取消的订单，原有历史订单此属性是0，教练 不同意取消的订单是1
 	
+	
+	
+	public int getDisagree() {
+		return disagree;
+	}
+
+	public void setDisagree(int disagree) {
+		this.disagree = disagree;
+	}
+
 	public String getReason() {
 		return reason;
 	}

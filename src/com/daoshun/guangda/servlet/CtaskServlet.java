@@ -315,7 +315,7 @@ public class CtaskServlet extends BaseServlet {
 			}
 			resultMap.put("tasklist", orderInfolist);
 		}
-		List<OrderInfo> neworderInfolist = ctaskService.getOrderInfoListBycoachid(coachid, CommonUtils.parseInt(page, 0) + 1, Constant.COUNT_NUM);
+		List<OrderInfo> neworderInfolist = ctaskService.getOrderNoExistAgreeInfoListBycoachid(coachid, CommonUtils.parseInt(page, 0) + 1, Constant.COUNT_NUM);
 		if (neworderInfolist.size() == 0) {
 			resultMap.put("hasmore", 0);
 		} else {
@@ -335,7 +335,7 @@ public class CtaskServlet extends BaseServlet {
 		String page = request.getParameter("pagenum");
 		CommonUtils.validateEmpty(page);
 		// 获得完成任务的列表
-		List<OrderInfo> orderInfolist = ctaskService.getPageOrderInfoListBycoach(2, CommonUtils.parseInt(coachid, 0), CommonUtils.parseInt(page, 0), Constant.COUNT_NUM);
+		List<OrderInfo> orderInfolist = ctaskService.getHistoryOrderListByCoach(CommonUtils.parseInt(coachid, 0), CommonUtils.parseInt(page, 0), Constant.COUNT_NUM);
 		if (orderInfolist != null) {
 			for (int i = 0; i < orderInfolist.size(); i++) {
 				SuserInfo suser = suserService.getUserById(String.valueOf(orderInfolist.get(i).getStudentid()));
@@ -358,10 +358,10 @@ public class CtaskServlet extends BaseServlet {
 				ctaskService.updateOrderInfo(orderInfolist.get(i));
 			}
 			// 重新得到修改后的list 返回
-			List<OrderInfo> neworderInfolist = ctaskService.getPageOrderInfoListBycoach(2, CommonUtils.parseInt(coachid, 0), CommonUtils.parseInt(page, 0), Constant.COUNT_NUM);
+			List<OrderInfo> neworderInfolist = ctaskService.getHistoryOrderListByCoach(CommonUtils.parseInt(coachid, 0), CommonUtils.parseInt(page, 0), Constant.COUNT_NUM);
 			resultMap.put("tasklist", neworderInfolist);
 		}
-		List<OrderInfo> neworderInfolist = ctaskService.getPageOrderInfoListBycoach(2, CommonUtils.parseInt(coachid, 0), CommonUtils.parseInt(page, 0) + 1, Constant.COUNT_NUM);
+		List<OrderInfo> neworderInfolist = ctaskService.getHistoryOrderListByCoach(CommonUtils.parseInt(coachid, 0), CommonUtils.parseInt(page, 0) + 1, Constant.COUNT_NUM);
 		if (neworderInfolist.size() == 0) {
 			resultMap.put("hasmore", 0);
 		} else {
