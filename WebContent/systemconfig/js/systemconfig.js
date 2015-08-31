@@ -654,7 +654,14 @@ function updatexiaoba(){
 //修改是否可启用闪屏广告图片
 function updateadv(){
 	var dataid=$("#advid").val();
-	var editvalue=$("#diffadv").val();
+	var adv_newflag_flash=$("#adv_newflag_flash").val();
+	var adv_anewimg_flash=$("#adv_anewimg_flash").val();
+	var adv_inewimg_flash=$("#adv_inewimg_flash").val();
+	var adv_new_flag=$("#adv_new_flag").val();
+	var adv_anewimg=$("#adv_anewimg").val();
+	var adv_inewimg=$("#adv_inewimg").val();
+	var adv_newurl=$("#adv_newurl").val();
+    var editvalue=adv_newflag_flash+","+adv_anewimg_flash+","+adv_inewimg_flash+","+adv_new_flag+","+adv_anewimg+","+adv_inewimg+","+adv_newurl
 //	alert(editvalue);
 	var colname=$("#advflag").val();
 	if (confirm("是否修改？")) {
@@ -877,13 +884,37 @@ function showdiffxiaoba(dataid,oldvalue,colname){
 
 
 //设置是否启用闪屏广告
-function showdiffadv(dataid,oldvalue,colname){
+function showcoachadv(dataid,oldflag_flash,aoldimg_flash,ioldimg_flash,old_flag,aoldimg,ioldimg,oldurl,colname){
 	$("#advid").val(dataid);
-	if(oldvalue==0){
-		$("#advoldvalue").val('当前值: 不启用 ');
+	if(oldflag_flash==0){
+		$("#adv_oldflag_flash").val('当前值: 不启用 ');
+		$("#adv_newflag_flash").val("0");
 	}else{
-		$("#advoldvalue").val('当前值: 启用 ');
+		$("#adv_oldflag_flash").val('当前值: 启用 ');
+		$("#adv_newflag_flash").val("1");
 	}
+	$("#adv_aoldimg_flash").val(aoldimg_flash);
+	$("#adv_anewimg_flash").val(aoldimg_flash);
+	$("#adv_ioldimg_flash").val(ioldimg_flash);
+	$("#adv_inewimg_flash").val(ioldimg_flash);
+	if(old_flag==0){
+		$("#adv_old_flag").val('当前值: 不启用 ');
+		$("#adv_new_flag").val("0");
+	}else if(old_flag==1){
+		$("#adv_old_flag").val('当前值: 跳转到URL地址 ');
+		$("#adv_new_flag").val("1");
+	}
+	else
+	{
+		$("#adv_old_flag").val('当前值: 跳转到分享地址 ');
+		$("#adv_new_flag").val("2");
+	}
+	$("#adv_aoldimg").val(aoldimg);
+	$("#adv_anewimg").val(aoldimg);
+	$("#adv_ioldimg").val(ioldimg);
+	$("#adv_inewimg").val(ioldimg);
+	$("#adv_oldurl").val(oldurl);
+	$("#adv_newurl").val(oldurl);
 	$("#advflag").val(colname);
 	$("#maskadv").show();
 	$("#mask_adv").show();

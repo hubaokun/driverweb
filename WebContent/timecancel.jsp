@@ -320,24 +320,36 @@
 				</tr>
 
 
-				<!-- 17 订单是否启用广告 -->
+			<!-- 17 教练端广告设置 -->
 				<tr class="tr_td">
-					<td style="width:500px;" class="border_right_bottom">是否启用闪屏广告</td>
-					<s:if test="systemSetInfo.advertisement_flag==0">
-						<td  style="width:500px;" class="border_right_bottom">不启用</td>
-					</s:if>
-					<s:else>
-						<td  style="width:500px;" class="border_right_bottom">启用</td>
-					</s:else>
+					<td style="width:500px;" class="border_right_bottom">教练端广告设置</td>
+			
+						<td  style="width:500px;" class="border_right_bottom"></td>
+
 					<td  style="width:120px;" class="border_noright_bottom">
 
 						<div class="table_edit_button">
 							<div class="table_button_edit_icon"></div>
-							<div class="table_button_text" onclick="showdiffadv('${systemSetInfo.dataid}','${systemSetInfo.advertisement_flag}','advertisement_flag')">设置</div>
+							<div class="table_button_text" onclick="showcoachadv('${systemSetInfo.dataid}','${systemSetInfo.coach_advertisement_flag_flash}','${systemSetInfo.coach_advertisement_img_flash_android}','${systemSetInfo.coach_advertisement_img_flash_ios}','${systemSetInfo.coach_advertisement_flag}','${systemSetInfo.coach_advertisement_img_android}','${systemSetInfo.coach_advertisement_img_ios}','${systemSetInfo.coach_advertisement_url}','advertisement_coach')">设置</div>
 						</div>
 					</td>
 				</tr>
-				<!-- 18 默认教练开课显示天数 -->
+				
+			<!-- 18 学员端广告设置 -->
+				<tr class="tr_td">
+					<td style="width:500px;" class="border_right_bottom">学员端广告设置</td>
+			
+						<td  style="width:500px;" class="border_right_bottom"></td>
+
+					<td  style="width:120px;" class="border_noright_bottom">
+
+						<div class="table_edit_button">
+							<div class="table_button_edit_icon"></div>
+							<div class="table_button_text" onclick="showcoachadv('${systemSetInfo.dataid}','${systemSetInfo.student_advertisement_flag_flash}','${systemSetInfo.student_advertisement_img_flash_android}','${systemSetInfo.student_advertisement_img_flash_ios}','${systemSetInfo.student_advertisement_flag}','${systemSetInfo.student_advertisement_img_android}','${systemSetInfo.student_advertisement_img_ios}','${systemSetInfo.student_advertisement_url}','advertisement_student')">设置</div>
+						</div>
+					</td>
+				</tr>
+				<!-- 19 默认教练开课显示天数 -->
 				<tr class="tr_td">
 					<td style="width:500px;" class="border_right_bottom">默认教练开课显示天数</td>
 					<td  style="width:500px;" class="border_right_bottom">${systemSetInfo.coursedate}天</td>
@@ -349,93 +361,7 @@
 						</div>
 					</td>
 				</tr>
-				<!-- 19 教练端弹窗广告设置 -->
-				<tr class="tr_td">
-					<td style="width:500px;" class="border_right_bottom">教练端弹窗广告设置</td>
-					<s:if test="systemSetInfo.coach_advertisement_flag==0">
-						<td  style="width:500px;" class="border_right_bottom">不启用</td>
-					</s:if>
-					<s:elseif test="systemSetInfo.coach_advertisement_flag==1">
-						<td  style="width:500px;" class="border_right_bottom">跳转URL地址</td>
-					</s:elseif>
-					<s:else>
-						<td  style="width:500px;" class="border_right_bottom">跳转分享页面地址</td>
-					</s:else>
-					<td  style="width:120px;" class="border_noright_bottom">
-
-						<div class="table_edit_button">
-							<div class="table_button_edit_icon"></div>
-							<div class="table_button_text" onclick="showdiffadv1('${systemSetInfo.dataid}','${systemSetInfo.coach_advertisement_flag}','coach_advertisement_flag')">设置</div>
-						</div>
-					</td>
-				</tr>
-				<!-- 20 教练端弹窗广告图片设置 -->
-				<tr class="tr_td">
-					<td style="width:500px;" class="border_right_bottom">教练端弹窗广告图片设置</td>
-			     	<td  style="width:500px;" class="border_right_bottom"></td>
-					<td  style="width:120px;" class="border_noright_bottom">
-
-						<div class="table_edit_button">
-							<div class="table_button_edit_icon"></div>
-							<div class="table_button_text" onclick="showedittimecancel('${systemSetInfo.dataid}','${systemSetInfo.coach_advertisement_img}','coach_advertisement_imgflag')">设置</div>
-						</div>
-					</td>
-				</tr>
-				<!-- 20 教练端弹窗广告图片跳转地址设置 -->
-				<tr class="tr_td">
-					<td style="width:500px;" class="border_right_bottom">教练端弹窗广告图片跳转地址设置</td>
-			     	<td  style="width:500px;" class="border_right_bottom"></td>
-					<td  style="width:120px;" class="border_noright_bottom">
-
-						<div class="table_edit_button">
-							<div class="table_button_edit_icon"></div>
-							<div class="table_button_text" onclick="showedittimecancel('${systemSetInfo.dataid}','${systemSetInfo.coach_advertisement_url}','coach_advertisement_urlflag')">设置</div>
-						</div>
-					</td>
-				</tr>
-				<!-- 21学员端是否启用弹窗广告 -->
-				<tr class="tr_td">
-					<td style="width:500px;" class="border_right_bottom">学员端是否启用弹窗广告</td>
-					<s:if test="systemSetInfo.student_advertisement_flag==0">
-						<td  style="width:500px;" class="border_right_bottom">不启用</td>
-					</s:if>
-					<s:elseif test="systemSetInfo.student_advertisement_flag==1">
-						<td  style="width:500px;" class="border_right_bottom">跳转URL地址</td>
-					</s:elseif>
-					<s:else>
-						<td  style="width:500px;" class="border_right_bottom">跳转分享页面地址</td>
-					</s:else>
-					<td  style="width:120px;" class="border_noright_bottom">
-
-						<div class="table_edit_button">
-							<div class="table_button_edit_icon"></div>
-							<div class="table_button_text" onclick="showdiffadv1('${systemSetInfo.dataid}','${systemSetInfo.student_advertisement_flag}','student_advertisement_flag')">设置</div>
-						</div>
-					</td>
-				</tr>
-				<!-- 22 学员端弹窗广告图片设置 -->
-				<tr class="tr_td">
-					<td style="width:500px;" class="border_right_bottom">学员端弹窗广告图片设置</td>
-					<td  style="width:500px;" class="border_right_bottom"></td>
-					<td  style="width:120px;" class="border_noright_bottom">
-						<div class="table_edit_button">
-							<div class="table_button_edit_icon"></div>
-							<div class="table_button_text" onclick="showedittimecancel('${systemSetInfo.dataid}','${systemSetInfo.student_advertisement_img}','student_advertisement_imgflag')">设置</div>
-						</div>
-					</td>
-				</tr>
-				<!-- 22 学员端弹窗广告图片跳转地址设置 -->
-				<tr class="tr_td">
-					<td style="width:500px;" class="border_right_bottom">学员端弹窗广告图片跳转地址设置</td>
-					<td  style="width:500px;" class="border_right_bottom"></td>
-					<td  style="width:120px;" class="border_noright_bottom">
-						<div class="table_edit_button">
-							<div class="table_button_edit_icon"></div>
-							<div class="table_button_text" onclick="showedittimecancel('${systemSetInfo.dataid}','${systemSetInfo.student_advertisement_url}','student_advertisement_urlflag')">设置</div>
-						</div>
-					</td>
-				</tr>
-				<!--23推荐认证奖励金额 -->
+				<!--20推荐认证奖励金额 -->
 				<tr class="tr_td">
 					<td style="width:500px;" class="border_right_bottom">认证奖励金额</td>
 					<td  style="width:500px;" class="border_right_bottom">${systemSetInfo.crewardamount}元</td>
@@ -447,7 +373,7 @@
 						</div>
 					</td>
 				</tr>
-				<!--24推荐开单奖励金额 -->
+				<!--21推荐开单奖励金额 -->
 				<tr class="tr_td">
 					<td style="width:500px;" class="border_right_bottom">开单奖励金额</td>
 					<td  style="width:500px;" class="border_right_bottom">${systemSetInfo.orewardamount}元</td>
@@ -494,7 +420,7 @@
 
 <!-- 设置新值弹出框-->
 <div id="level" class="level"></div>
-<div id="level_sec" style="position: fixed; width: 100%; height: 300px;z-index: 300;">
+<div id="level_sec" style="position: fixed; width: 100%; height: 300px;z-index: 300; display:none;">
 	<div id="level_last" class="level_last">
 		<div style="position: fixed; width: 300px; height: 200px;background: #4cc2ff;margin-left: 100px;margin-top: 50px;">
 			<input id="numsystemid" type="hidden" >
@@ -526,7 +452,7 @@
 </div>
 <!-- 设置分享奖励弹出框-->
 <div id="maskreward" class="mask"></div>
-<div id="mask_rew" style="position: fixed; width: 100%; height: 300px;z-index: 300; top:20%;left:15%">
+<div id="mask_rew" style="position: fixed; width: 100%; height: 300px;z-index: 300; top:20%;left:15%;display:none;">
 	<div id="mask_lastrew" class="mask_last">
 		<div style="position: fixed; width: 300px; height: 200px;background: #4cc2ff;margin-left: 100px;margin-top:50px;">
 			<input id="systemxiaobaid_rew" type="hidden" >
@@ -545,18 +471,44 @@
 	</div>
 </div>
 
-<!-- 是否可以启用闪屏广告弹出框-->
+<!-- 广告设置-->
 <div id="maskadv" class="mask"></div>
-<div id="mask_adv" style="position: fixed; width: 100%; height: 300px;z-index: 300;">
+<div id="mask_adv" style="position:fixed; width: 100%; height:900px;z-index: 300;">
 	<div id="adv_last" class="mask_last">
-		<div style="position: fixed; width: 300px; height: 200px;background: #4cc2ff;margin-left: 400px;top: 250px;">
+		<div style="position: fixed; width: 422px; height: 592px; overflow:auto;background: #4cc2ff;margin-left: 400px;top: 250px;">
 			<input id="advid" type="hidden" >
 			<input id="advflag" type="hidden" >
-			<input id="advoldvalue" type="text" style="width: 218px;height: 40px;margin: auto;margin-left: 41px;margin-top: 13px;font-size: 18px;text-align: center;" disabled="disabled"/>
-			<select id="diffadv" style="width: 75px; height:25px; margin: auto;margin-left: 110px;margin-top: 20px;">
+			闪屏是否启用
+			<input id="adv_oldflag_flash" type="text" style="width: 218px;height: 40px;margin: auto;margin-left: 41px;margin-top: 13px;font-size: 18px;text-align: center;" disabled="disabled"/>
+			<select id="adv_newflag_flash" style="width: 75px; height:25px; margin: auto;margin-left: 110px;margin-top: 20px;">
 				<option value="0">不启用</option>
 				<option value="1">启用</option>
+			</select><br/>
+			安卓闪屏图片地址<input id="adv_aoldimg_flash" type="text" style="width: 218px;height: 40px;margin: auto;margin-left: 41px;margin-top: 13px;font-size: 18px;text-align: center;" disabled="disabled"/>
+			<input id="adv_anewimg_flash" type="text" style="width: 218px;height: 40px;margin: auto;margin-left: 41px;margin-top: 20px;font-size: 18px;text-align: center;" placeholder="请输入新值" onkeyup="" />
+			<br/>
+			苹果闪屏图片地址<input id="adv_ioldimg_flash" type="text" style="width: 218px;height: 40px;margin: auto;margin-left: 41px;margin-top: 13px;font-size: 18px;text-align: center;" disabled="disabled"/>
+			<input id="adv_inewimg_flash" type="text" style="width: 218px;height: 40px;margin: auto;margin-left: 41px;margin-top: 20px;font-size: 18px;text-align: center;" placeholder="请输入新值" onkeyup="" />
+			<br/>
+			是否开启弹窗
+			<input id="adv_old_flag" type="text" style="width: 218px;height: 40px;margin: auto;margin-left: 41px;margin-top: 13px;font-size: 18px;text-align: center;" disabled="disabled"/>
+			<select id="adv_new_flag" style="width: 75px; height:25px; margin: auto;margin-left: 110px;margin-top: 20px;">
+				<option value="0">不启用</option>
+				<option value="1">跳转URL地址</option>
+				<option value="2">跳转分享页面地址</option>
 			</select>
+			<br/>
+			安卓弹窗图片地址<input id="adv_aoldimg" type="text" style="width: 218px;height: 40px;margin: auto;margin-left: 41px;margin-top: 13px;font-size: 18px;text-align: center;" disabled="disabled"/>
+			<input id="adv_anewimg" type="text" style="width: 218px;height: 40px;margin: auto;margin-left: 41px;margin-top: 20px;font-size: 18px;text-align: center;" placeholder="请输入新值" onkeyup="" />
+			<br/>
+			苹果弹窗图片地址<input id="adv_ioldimg" type="text" style="width: 218px;height: 40px;margin: auto;margin-left: 41px;margin-top: 13px;font-size: 18px;text-align: center;" disabled="disabled"/>
+			<input id="adv_inewimg" type="text" style="width: 218px;height: 40px;margin: auto;margin-left: 41px;margin-top: 20px;font-size: 18px;text-align: center;" placeholder="请输入新值" onkeyup="" />
+			
+			<br/>
+			弹窗图片URL地址<input id="adv_oldurl" type="text" style="width: 218px;height: 40px;margin: auto;margin-left: 41px;margin-top: 13px;font-size: 18px;text-align: center;" disabled="disabled"/>
+			<input id="adv_newurl" type="text" style="width: 218px;height: 40px;margin: auto;margin-left: 41px;margin-top: 20px;font-size: 18px;text-align: center;" placeholder="请输入新值" onkeyup="" />
+			
+			
 			<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 50px;margin-top: 25px;font-size: 18px" value="确定" onclick="updateadv()">
 			<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 180x;margin-top: -40px;font-size: 18px" value="取消" onclick="unupdateadv()">
 		</div>
@@ -567,7 +519,7 @@
 <div id="maskadv1" class="mask"></div>
 <div id="mask_adv1" style="position: fixed; width: 100%; height: 300px;z-index: 300;">
 	<div id="adv_last1" class="mask_last">
-		<div style="position: fixed; width: 300px; height: 200px;background: #4cc2ff;margin-left: 400px;top: 250px;">
+		<div style="position: fixed; width: 300px; height: 200px;overflow: auto;background: #4cc2ff;margin-left: 400px;top: 250px;">
 			<input id="advid1" type="hidden" >
 			<input id="advflag1" type="hidden" >
 			<input id="advoldvalue1" type="text" style="width: 218px;height: 40px;margin: auto;margin-left: 41px;margin-top: 13px;font-size: 18px;text-align: center;" disabled="disabled"/>
