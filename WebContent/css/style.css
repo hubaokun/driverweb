@@ -74,7 +74,7 @@ h1,h2,ul,p,li,dl,dt,dd,img,input {
 
 #content_form_top {
 	width: 100%;
-	height: 84px;
+    overflow:hidden;
 	border-bottom: 1px solid #cfd9df;
 }
 

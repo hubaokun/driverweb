@@ -3,6 +3,7 @@
 <%@taglib uri="/struts-tags" prefix="s"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
+<%@page import="java.util.HashMap"%>
 <%@page import="com.daoshun.menu.SideMenu"%>
 <%@page import="com.daoshun.menu.MenuItem"%>
 <%@page import="com.daoshun.menu.SubItem"%>
@@ -107,7 +108,29 @@ function goaction(actionUrl,index,j){
 				<div class="left_list" id="left_list_<%=i%>">
 					<%
 						List<SubItem> subItems = menuItems.get(i).getSubItems();
-										for (int j = 0; j < subItems.size(); j++) {
+						for (int j = 0; j < subItems.size(); j++) {
+							HashMap<String,List<Integer>> submap=(HashMap<String,List<Integer>>)session.getAttribute("subpermission");
+							List<Integer> subpermissdions=submap.get(aaa.get(k).toString());
+							  if (subpermissdions!=null && subpermissdions.size()>0)
+							  {
+									  for(Integer temp:subpermissdions)
+								      if(j==(temp-1))
+								      {
+											    
+	    		%>
+				<div id="change_<%=j%><%=i%>" class="left_list_mask_detail"
+					onclick="goaction('<%=subItems.get(j).getAction()%>','<%=i%>',<%=j%>);">
+					<div class="left_list_detail">
+						<%=subItems.get(j).getName()%>
+					</div>
+				</div>
+				<%					    	  						    	  
+											      }
+												  
+												  
+											  }
+											  else
+											  {
 					%>
 					<div id="change_<%=j%><%=i%>" class="left_list_mask_detail"
 						onclick="goaction('<%=subItems.get(j).getAction()%>','<%=i%>',<%=j%>);">
@@ -116,6 +139,7 @@ function goaction(actionUrl,index,j){
 						</div>
 					</div>
 					<%
+											  }
 						}
 					%>
 				</div>

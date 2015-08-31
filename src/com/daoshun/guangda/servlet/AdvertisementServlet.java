@@ -216,12 +216,11 @@ private void getAdvertiesementcontent(HttpServletRequest request, HashMap<String
 		   {
 			   String height=getRequestParamter(request, "height");
 			   String width=getRequestParamter(request, "width");
-			   s_image_ios=width+"x"+height+".jpg";
+			  // s_image_ios=width+"x"+height+".png";
 			   s_image_ios_flash=width+"x"+height+".jpg";
-		   }
-		   else
-		   {
-			   s_image_android="im_ad.png";
+			   //c_image_ios=width+"x"+height+".png";
+			   c_image_ios_flash=width+"x"+height+".jpg";
+			   
 		   }
 			   
 	   }

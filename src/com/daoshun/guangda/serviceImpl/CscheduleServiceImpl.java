@@ -319,6 +319,18 @@ public class CscheduleServiceImpl extends BaseServiceImpl implements ICscheduleS
 	    	tempDefaultSchedule.setUpdatetime(new Date());
 	    	dataDao.updateObject(tempDefaultSchedule);
 	    }
+	    else
+	    {
+	    	DefaultSchedule newDefaultSchedule =new DefaultSchedule();
+	    	BigDecimal b = new BigDecimal(CommonUtils.parseDouble(price, 0d));
+	    	newDefaultSchedule.setPrice(b);
+	    	newDefaultSchedule.setSubjectid(CommonUtils.parseInt(subjectid,0));
+	    	newDefaultSchedule.setAddressid(CommonUtils.parseInt(addressid,0));
+	    	newDefaultSchedule.setUpdatetime(new Date());
+	    	newDefaultSchedule.setHour(hour);
+	    	newDefaultSchedule.setCoachid(CommonUtils.parseInt(coachid, 0));
+	    	dataDao.addObject(newDefaultSchedule);
+	    }
 	
 	}
 

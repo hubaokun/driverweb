@@ -136,7 +136,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	public void updateUserState(SuserState userstate) {
 		dataDao.updateObject(userstate);
 	}
-
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override
 	public SuserInfo getUserById(String studentid) {
 		SuserInfo suserInfo = dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
@@ -147,7 +147,17 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 					suserInfo.setAvatarurl(avurl);
 				}
 			}else{
-				logger.error("studentid="+studentid+",getUserById()的suserInfo.getAvatar()为null");
+				suserInfo.setAvatar(0);
+				//logger.error("studentid="+studentid+",getUserById()的suserInfo.getAvatar()为null");
+				suserInfo.setStudent_cardpicb(0);
+				suserInfo.setStudent_cardpicf(0);
+				suserInfo.setId_cardpicb(0);
+				suserInfo.setId_cardpicf(0);
+				suserInfo.setCcheck_idcardpicb(0);
+				suserInfo.setCcheck_idcardpicf(0);
+				suserInfo.setCcheck_pic(0);
+				suserInfo.setCoachstate(0);
+				dataDao.updateObject(suserInfo);
 			}
 			suserInfo.setStudent_cardpicb_url(getFilePathById(suserInfo.getStudent_cardpicb()));
 			suserInfo.setStudent_cardpicf_url(getFilePathById(suserInfo.getStudent_cardpicf()));
@@ -156,7 +166,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			suserInfo.setCcheck_idcardpicb_url(getFilePathById(suserInfo.getCcheck_idcardpicb()));
 			suserInfo.setCcheck_idcardpicf_url(getFilePathById(suserInfo.getCcheck_idcardpicf()));
 			suserInfo.setCcheck_pic_url(getFilePathById(suserInfo.getCcheck_pic()));
-			dataDao.updateObject(suserInfo);
+			
 		}
 
 		return suserInfo;

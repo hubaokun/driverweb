@@ -620,22 +620,44 @@ public class SystemConfigAction extends BaseAction {
 //				systemSetInfo.setAdvertisement_flag(Integer.parseInt(editvalue));
 			else if(colname.equals("coursedate_flag"))
 				systemSetInfo.setCoursedate(Integer.parseInt(editvalue));
-			else if(colname.equals("coach_advertisement_flag"))
-				systemSetInfo.setCoach_advertisement_flag(Integer.parseInt(editvalue));
-			else if(colname.equals("coach_advertisement_urlflag"))
-				systemSetInfo.setCoach_advertisement_url(editvalue);
-			else if(colname.equals("coach_advertisement_imgflag"))
-				systemSetInfo.setCoach_advertisement_img(editvalue);
-			else if(colname.equals("student_advertisement_flag"))
-				systemSetInfo.setStudent_advertisement_flag(Integer.parseInt(editvalue));
-			else if(colname.equals("student_advertisement_urlflag"))
-				systemSetInfo.setStudent_advertisement_url(editvalue);
-			else if(colname.equals("student_advertisement_imgflag"))
-				systemSetInfo.setStudent_advertisement_img(editvalue);
+//			else if(colname.equals("coach_advertisement_flag"))
+//				systemSetInfo.setCoach_advertisement_flag(Integer.parseInt(editvalue));
+//			else if(colname.equals("coach_advertisement_urlflag"))
+//				systemSetInfo.setCoach_advertisement_url(editvalue);
+//			else if(colname.equals("coach_advertisement_imgflag"))
+//				systemSetInfo.setCoach_advertisement_img(editvalue);
+//			else if(colname.equals("student_advertisement_flag"))
+//				systemSetInfo.setStudent_advertisement_flag(Integer.parseInt(editvalue));
+//			else if(colname.equals("student_advertisement_urlflag"))
+//				systemSetInfo.setStudent_advertisement_url(editvalue);
+//			else if(colname.equals("student_advertisement_imgflag"))
+//				systemSetInfo.setStudent_advertisement_img(editvalue);
 			else if(colname.equals("crewardamount_flag"))
 				systemSetInfo.setCrewardamount(new BigDecimal(editvalue));
 			else if(colname.equals("orewardamount_flag"))
 				systemSetInfo.setOrewardamount(new BigDecimal(editvalue));
+			else if(colname.equals("advertisement_coach"))
+			{
+				String[] value=editvalue.split(",");
+				systemSetInfo.setCoach_advertisement_flag_flash(Integer.parseInt(value[0]));
+				systemSetInfo.setCoach_advertisement_img_flash_android(value[1]);
+				systemSetInfo.setCoach_advertisement_img_flash_ios(value[2]);
+				systemSetInfo.setCoach_advertisement_flag(Integer.parseInt(value[3]));
+				systemSetInfo.setCoach_advertisement_img_android(value[4]);
+				systemSetInfo.setCoach_advertisement_img_ios(value[5]);
+				systemSetInfo.setCoach_advertisement_url(value[6]);
+			}
+			else if(colname.equals("advertisement_student"))
+			{
+				String[] value=editvalue.split(",");
+				systemSetInfo.setStudent_advertisement_flag_flash(Integer.parseInt(value[0]));
+				systemSetInfo.setStudent_advertisement_img_flash_android(value[1]);
+				systemSetInfo.setStudent_advertisement_img_flash_ios(value[2]);
+				systemSetInfo.setStudent_advertisement_flag(Integer.parseInt(value[3]));
+				systemSetInfo.setStudent_advertisement_img_android(value[4]);
+				systemSetInfo.setStudent_advertisement_img_ios(value[5]);
+				systemSetInfo.setStudent_advertisement_url(value[6]);
+			}
 			cuserService.updateObject(systemSetInfo);
 			setResponseStr("success");
 		}

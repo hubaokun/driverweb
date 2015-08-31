@@ -168,6 +168,9 @@ public class SystemSetInfo implements Serializable {
 	@Column(name = "min_version", nullable = false)
 	private String minversion;
 
+	//教练弹窗标示位
+	@Column(name = "advertisement_flag", length = 2, columnDefinition = "TINYINT default 0")
+	private Integer advertisement_flag;
 
 	public int getDataid() {
 		return dataid;
@@ -490,6 +493,14 @@ public class SystemSetInfo implements Serializable {
 
 	public void setStudent_advertisement_img(String student_advertisement_img) {
 		this.student_advertisement_img = student_advertisement_img;
+	}
+
+	public Integer getAdvertisement_flag() {
+		return advertisement_flag;
+	}
+
+	public void setAdvertisement_flag(Integer advertisement_flag) {
+		this.advertisement_flag = advertisement_flag;
 	}
 
 
