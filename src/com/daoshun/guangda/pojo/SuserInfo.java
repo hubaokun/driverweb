@@ -270,6 +270,14 @@ public class SuserInfo implements Serializable {
 	
 	
 
+	public Integer getEnrollpay() {
+		return enrollpay;
+	}
+
+	public void setEnrollpay(Integer enrollpay) {
+		this.enrollpay = enrollpay;
+	}
+
 	public int getPrice() {
 		return price;
 	}

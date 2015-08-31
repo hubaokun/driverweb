@@ -317,4 +317,5 @@ public interface ISUserService {
     public HashMap<String, Object> getConsumeAmount(String studentid);
     public HashMap<String, Object> promoRecharge(String studentid, String amount);
     public void addAlipayCallBack(String qs,String ru);
+    public void promoEnrollCallback(String out_trade_no);
 }

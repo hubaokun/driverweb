@@ -892,7 +892,17 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 
 		return result;
 	}
-
+	
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public void promoEnrollCallback(String out_trade_no){
+		RechargeRecordInfo rc= dataDao.getObjectById(RechargeRecordInfo.class, CommonUtils.parseInt(out_trade_no,0));
+		if(rc!=null){
+			SuserInfo user=dataDao.getObjectById(SuserInfo.class,rc.getUserid());
+			user.setEnrollpay(1);//设置已支付
+			dataDao.updateObject(user);
+		}
+		 
+	}
 	@Override
 	public QueryResult<BalanceStudentInfo> searchStudentRecharge(String searchname, String searchphone, String amount, String inputamount, String minsdate, String maxsdate, Integer pageIndex,
 			int pagesize) {

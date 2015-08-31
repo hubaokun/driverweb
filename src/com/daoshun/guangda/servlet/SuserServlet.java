@@ -319,6 +319,8 @@ public class SuserServlet extends BaseServlet {
 	}
 	//促销报名支付回调，由支付宝服务器调用
 	public void promoEnrollCallback(HttpServletRequest request, HttpServletResponse response){
+		String out_trade_no = request.getParameter("out_trade_no");
+		suserService.promoEnrollCallback(out_trade_no);
 		String qs=request.getQueryString();
 		String ru=request.getRequestURL().toString();
 		System.out.println("qs:"+qs+"########ru"+ru);
