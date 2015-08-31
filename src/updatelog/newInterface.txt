@@ -130,7 +130,9 @@ disagree  历史订单中，分原有的历史订单和教练 不同意取消的
     "xiaobaprice": 2000, //小巴价
     "marketprice": 3000  //市场价
        
-# 一键报名接口enroll 
+# 小巴价促销一键报名接口
+接口名称：/suser?action=PROMOENROLL 
  参数： studentid  学员id
-     model     车型 ：c1 ,c2
+     model      车型 ：c1 ,c2
   	 cityid     报名的城市ID
+  	 amount		报名金额

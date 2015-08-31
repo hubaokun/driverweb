@@ -17,6 +17,7 @@ import com.daoshun.common.CommonUtils;
 import com.daoshun.common.QueryResult;
 import com.daoshun.common.UserType;
 import com.daoshun.guangda.pojo.AdminInfo;
+import com.daoshun.guangda.pojo.AlipayCallBack;
 import com.daoshun.guangda.pojo.BalanceStudentInfo;
 import com.daoshun.guangda.pojo.CoachStudentInfo;
 import com.daoshun.guangda.pojo.CoinRecordInfo;
@@ -854,6 +855,43 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 
 		return result;
 	}
+	/**
+	 * 促销报名支付
+	 * @param coachid
+	 * @param amount
+	 * @return
+	 */
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public HashMap<String, Object> promoRecharge(String studentid, String amount) {
+		HashMap<String, Object> result = new HashMap<String, Object>();
+		
+		// 插入数据
+		RechargeRecordInfo info = new RechargeRecordInfo();
+		info.setAddtime(new Date());
+		info.setAmount(new BigDecimal(CommonUtils.parseFloat(amount, 0.0f)));
+		info.setType(3);
+		info.setUserid(CommonUtils.parseInt(studentid, 0));
+		dataDao.addObject(info);
+
+		if ("1".equals(CommonUtils.getAliSet())) {
+			result.put("partner", AlipayConfig.partner);
+			result.put("seller_id", AlipayConfig.seller_id);
+			result.put("private_key", AlipayConfig.private_key);
+		} else {
+			result.put("partner", AlipayConfig.partner_formal);
+			result.put("seller_id", AlipayConfig.seller_id_formal);
+			result.put("private_key", AlipayConfig.private_key_formal);
+		}
+
+		result.put("notify_url", "http://120.25.236.228:8080/dadmin/suser?action=promoEnrollCallback");
+		result.put("out_trade_no", info.getRechargeid());
+		result.put("subject", "报名费：" + amount + "元");
+		result.put("total_fee", amount);
+		result.put("body", "报名费：" + amount + "元");
+
+		return result;
+	}
 
 	@Override
 	public QueryResult<BalanceStudentInfo> searchStudentRecharge(String searchname, String searchphone, String amount, String inputamount, String minsdate, String maxsdate, Integer pageIndex,
@@ -1363,6 +1401,15 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
   		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
   		return new QueryResult<SuserInfo>(suserInfolist, total);
   	}
+
+	@Override
+	public void addAlipayCallBack(String qs, String ru) {
+		AlipayCallBack ac=new AlipayCallBack();
+		ac.setQs(qs);
+		ac.setRu(ru);
+		dataDao.addObject(ac);
+		
+	}
   	
   	
 

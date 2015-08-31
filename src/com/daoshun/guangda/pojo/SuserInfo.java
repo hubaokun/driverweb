@@ -259,9 +259,11 @@ public class SuserInfo implements Serializable {
 	
 	@Column(name = "model", length = 10)
 	private String model;//车型
-	@Column(name = "modelcityid", length = 1, columnDefinition = "INT default 0")
+	@Column(name = "modelcityid", length = 11, columnDefinition = "INT default 0")
 	private Integer modelcityid;//报名车型所属的城市id
 	
+	@Column(name = "enrollpay", length = 11, columnDefinition = "INT default 0")
+	private Integer enrollpay;//是否报名支付成功，0 未成功，1 成功
 	@Transient
 	private int price;//一键报名价格
 	

@@ -81,6 +81,22 @@ public class BaseServlet extends HttpServlet {
 			resultMap.clear();
 		}
 	}
+	/**
+	 * Servlet 返回结果
+	 * 
+	 * @param HttpServletResponse
+	 */
+	public void setAliPayResult(HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		try {
+			PrintWriter out = response.getWriter();
+			out.print("success");
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public void setResultWhenException(HttpServletResponse response, String errmsg) {
 		response.setContentType("text/html;charset=UTF-8");

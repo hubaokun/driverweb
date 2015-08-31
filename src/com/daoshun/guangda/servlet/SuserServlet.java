@@ -72,7 +72,7 @@ public class SuserServlet extends BaseServlet {
 				login(request, resultMap);
 				
 			} else if (Constant.SENROLL.equals(action)) {
-				//报名
+				//普通报名
 				enroll(request, resultMap);
 			} else if (Constant.ThirdLogin.equals(action)) {// 第三方登录
 				thirdLogin(request, resultMap);
@@ -100,7 +100,13 @@ public class SuserServlet extends BaseServlet {
 			} else if (Constant.RECHARGE.equals(action)) {
 				// 账户充值
 				recharge(request, resultMap);
-			}  else if (Constant.GETSTUDENTWALLETINFO.equals(action)) {
+			} else if (Constant.PROMOENROLL.equals(action)) {
+				// 促销报名
+				promoEnroll(request, resultMap);
+			} else if (Constant.promoEnrollCallback.equals(action)) {
+				promoEnrollCallback(request, response);
+				return;
+			}else if (Constant.GETSTUDENTWALLETINFO.equals(action)) {
 				// 
 				getWalletInfo(request, resultMap);
 			}
@@ -275,7 +281,50 @@ public class SuserServlet extends BaseServlet {
 			systemService.recordUserAction(userid, usertype, "suser", action);
 		}
 	}
-
+	/**
+	 * 促销报名
+	 * @param request
+	 * @param resultMap
+	 * @throws ErrException
+	 */
+	public void promoEnroll(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		try
+		{
+		String studentid = getRequestParamter(request, "studentid");
+		String model = getRequestParamter(request, "model");//车型
+		String cityid = getRequestParamter(request, "cityid");//车型
+		String amount = getRequestParamter(request, "amount");// 报名金额
+		CommonUtils.validateEmpty(studentid);
+		CommonUtils.validateEmpty(amount);
+		CommonUtils.validateEmpty(cityid);
+		CommonUtils.validateEmpty(model);
+		SuserInfo student = suserService.getUserById(studentid);
+		student.setState(1);
+		student.setEnrolltime(new Date());
+		student.setModel(model);//设置车型c1,c2
+		student.setModelcityid(CommonUtils.parseInt(cityid, 0));
+		suserService.updateUserInfo(student);
+		suserService.promoRecharge(studentid, amount);
+		
+		
+		HashMap<String, Object> rechargeResult = suserService.promoRecharge(studentid, amount);
+		resultMap.put("code", 1);
+		resultMap.put("message", "报名成功");
+		resultMap.putAll(rechargeResult);
+		}catch(Exception ex)
+		{
+			resultMap.put("code", 2);
+			resultMap.put("message", "报名失败");
+		}
+	}
+	//促销报名支付回调，由支付宝服务器调用
+	public void promoEnrollCallback(HttpServletRequest request, HttpServletResponse response){
+		String qs=request.getQueryString();
+		String ru=request.getRequestURL().toString();
+		System.out.println("qs:"+qs+"########ru"+ru);
+		suserService.addAlipayCallBack(qs, ru);
+		setAliPayResult(response);
+	}
 	public void register(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String phone = getRequestParamter(request, "phone");
 		String realname = getRequestParamter(request, "realname");

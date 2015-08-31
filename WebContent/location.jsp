@@ -53,6 +53,7 @@
 					</div>
 			</div>
 			<div id="citys" style="font-size:15px;padding-left:40px;padding-top:10px;">
+			<%=request.getRequestURI()   %>
 			</div>
 	</div>
 </body>

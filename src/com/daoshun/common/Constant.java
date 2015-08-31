@@ -111,6 +111,8 @@ public class Constant {
 	//获取学员钱包页面所需的附加信息：券的张数，小巴币的
 	public static final String GETSTUDENTWALLETINFO="GETSTUDENTWALLETINFO";
 	
+	public static final String promoEnrollCallback="promoEnrollCallback";
+	
 	//获取学员小巴券列表
 	public static final String GETSTUDENTCOUPONLIST="GETSTUDENTCOUPONLIST";
 
@@ -122,10 +124,10 @@ public class Constant {
 
 	// 账户充值
 	public static final String RECHARGE = "RECHARGE";
+	//促销报名
+	public static final String PROMOENROLL = "PROMOENROLL";
 	// 准教车型										  PERFECTCOACHMODELID
 	public static final String PERFECTCOACHMODELID = "PERFECTCOACHMODELID";
-
-
 	// 获取通知列表
 	public static final String GETNOTICES = "GETNOTICES";
 

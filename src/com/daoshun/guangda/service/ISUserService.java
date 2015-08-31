@@ -315,4 +315,6 @@ public interface ISUserService {
     public QueryResult<SuserInfo> setStudentSchool(Integer pageIndex, int pagesize);
     public int getCanUseCoinnumForPlatform(String coachid, String studentid);
     public HashMap<String, Object> getConsumeAmount(String studentid);
+    public HashMap<String, Object> promoRecharge(String studentid, String amount);
+    public void addAlipayCallBack(String qs,String ru);
 }
