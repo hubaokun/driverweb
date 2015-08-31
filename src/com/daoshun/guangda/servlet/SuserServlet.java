@@ -304,9 +304,6 @@ public class SuserServlet extends BaseServlet {
 		student.setModel(model);//设置车型c1,c2
 		student.setModelcityid(CommonUtils.parseInt(cityid, 0));
 		suserService.updateUserInfo(student);
-		suserService.promoRecharge(studentid, amount);
-		
-		
 		HashMap<String, Object> rechargeResult = suserService.promoRecharge(studentid, amount);
 		resultMap.put("code", 1);
 		resultMap.put("message", "报名成功");
