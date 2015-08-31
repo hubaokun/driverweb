@@ -557,12 +557,8 @@
 
 			</div>
 		</div>
-	</div>
-
-
-
-	<!-- 数据导出弹框 -->
-	<div id="alertbox" class="alertbox"></div>
+		
+		<div id="alertbox" class="alertbox"></div>
 	<div id="alertbox_sec" style="position: fixed; width: 100%; height: 300px;z-index: 300;">
 		<div id="alertbox_last" class="alertbox_last">
 		<div style="position: fixed; width: 500px; height: 250px;background: #4cc2ff;margin-left: 50px;margin-top: 50px;">
@@ -588,6 +584,12 @@
 		</div>
 		</div>
 	</div>
+		
+	</div>
+
+
+
+	<!-- 数据导出弹框 -->
 	
 	
 </body>
