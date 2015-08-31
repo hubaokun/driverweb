@@ -288,4 +288,8 @@ public interface ICUserService {
 	 */
 	public abstract Integer getDriverSchoolIDbyName(String schoolname);
 	 public List<DriveSchoolInfo> getDriveSchoolInfoByCityId(String cityid);
+	 public int getCanUseCoinnumForPlatform(String coachid);
+	 public int getCanUseCoinnumForDriveSchool( String coachid);
+	 public int getCanUseCoinnumForCoach(String coachid) ;
+	 public HashMap<String, Object> getCoinAffiliation(String coachid);
 }

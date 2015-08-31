@@ -518,7 +518,7 @@ public class CmyServiceImpl extends BaseServiceImpl implements ICmyService {
 					c.setReceiverid(1);//1平台id
 					c.setReceivertype(UserType.PLATFORM);//1代表平台
 					c.setReceivername("平台");
-					
+					c.setType(4);
 					dataDao.addObject(c);
 					result.put("code", 1);
 					result.put("message", "申请提交成功");
@@ -529,6 +529,63 @@ public class CmyServiceImpl extends BaseServiceImpl implements ICmyService {
 			}
 		return result;
 	}
+	//申请兑现小巴币
+		@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+		@Override
+		public HashMap<String, Object> applyCoin(String coachid, Integer applyCoinNum,int type) {
+			HashMap<String, Object> result = new HashMap<String, Object>();
+			CuserInfo cuser = dataDao.getObjectById(CuserInfo.class, CommonUtils.parseInt(coachid, 0));
+				if (cuser != null) {
+					if(cuser.getCoinnum()<applyCoinNum){
+						result.put("code", 4);
+						result.put("message", "小巴币余额不足兑换");
+					}
+					else if(cuser.getCoinnum()<0 ||cuser.getFcoinnum()<0 || applyCoinNum<0)
+					{
+						result.put("code", 5);
+						result.put("message", "数据异常");
+					}
+					else{
+						cuser.setCoinnum(cuser.getCoinnum()-applyCoinNum);
+						dataDao.updateObject(cuser);
+						CoinRecordInfo c = new CoinRecordInfo();
+						c.setCoinnum(applyCoinNum);
+						c.setAddtime(new Date());
+						
+						c.setPayerid(Integer.parseInt(coachid));
+						c.setPayertype(UserType.COAH);//3代表教练
+						c.setPayername(cuser.getRealname());
+						if(type==UserType.PLATFORM){
+							c.setOwnerid(1);//1平台id
+							c.setOwnertype(type);//3代表教练
+							c.setOwnername("平台");
+						}else if(type==UserType.COAH){
+							c.setOwnerid(Integer.parseInt(coachid));
+							c.setOwnertype(type);
+							c.setOwnername(cuser.getRealname());
+						}else if(type==UserType.DRIVESCHOOL){
+							c.setOwnerid(cuser.getDrive_schoolid());
+							c.setOwnertype(type);
+							c.setOwnername(cuser.getDrive_school());
+						}
+						/*c.setOwnerid(Integer.parseInt(coachid));//1平台id
+						c.setOwnertype(type);//3代表教练
+						c.setOwnername(cuser.getRealname());*/
+						
+						c.setReceiverid(1);//1平台id
+						c.setReceivertype(UserType.PLATFORM);//1代表平台
+						c.setReceivername("平台");
+						c.setType(4);
+						dataDao.addObject(c);
+						result.put("code", 1);
+						result.put("message", "申请提交成功");
+					}
+				} else {
+					result.put("code", 3);
+					result.put("message", "用户不存在");
+				}
+			return result;
+		}
 
 
 
@@ -579,7 +636,7 @@ public class CmyServiceImpl extends BaseServiceImpl implements ICmyService {
 		}
 		returnResult.put("studentList", result);
 
-		List<SuserInfo> nextPage = (List<SuserInfo>) dataDao.pageQueryViaParam(hql, 10, CommonUtils.parseInt(pageNum, 1) + 1, params, CommonUtils.parseInt(coachid, 0));
+		List<SuserInfo> nextPage = (List<SuserInfo>) dataDao.pageQueryViaParam(hql, 10, (CommonUtils.parseInt(pageNum, 1) + 1), params, CommonUtils.parseInt(coachid, 0));
 		if (nextPage != null && nextPage.size() > 0) {
 			returnResult.put("hasmore", 1);
 		} else {

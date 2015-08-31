@@ -301,7 +301,7 @@ public interface ISUserService {
 	public abstract int changeCoach(String studentId,String oldCoachId,String newCoachId);
 
 	public int getCanUseCoinnum(String coachid, String studentid) ;
-	public int getCanUseCoinnumForDriveSchool(String coachid, String studentid) ;
+	public int getCanUseCoinnumForDriveSchool(String studentid) ;
 
 	public int getSumCoinnum( String studentid);
 
@@ -318,4 +318,5 @@ public interface ISUserService {
     public HashMap<String, Object> promoRecharge(String studentid, String amount);
     public void addAlipayCallBack(String qs,String ru);
     public void promoEnrollCallback(String out_trade_no);
+    public HashMap<String, Object> getCoinAffiliation(String studentid);
 }

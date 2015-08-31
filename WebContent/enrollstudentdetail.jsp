@@ -164,6 +164,7 @@ function dataExport(){
 						<th>报名时间</th>
 						<th>车型</th>
 						<th>小巴价</th>
+						<th>是否支付</th>
 						<th>注册时间</th>
 						<th>操作</th>
 
@@ -187,10 +188,14 @@ function dataExport(){
 							<s:date name="enrolltime" format="yyyy-MM-dd HH:mm:ss" />
 							</td>
 							<td style="width: 100px;" class="border_right_bottom">
-							${model }
+							${model }&nbsp;
 							</td>
 							<td style="width: 100px;" class="border_right_bottom">
-							${price==0?'':price }
+							${price==0?'':price }&nbsp;
+							</td>
+							<td style="width: 100px;" class="border_right_bottom">
+							${enrollpay==0?'未支付':'' }
+							${enrollpay==1?'已支付':'' }&nbsp;
 							</td>
 							<td style="width: 100px;" class="border_right_bottom">
 							<s:date name="addtime" format="yyyy-MM-dd HH:mm:ss" />

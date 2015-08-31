@@ -659,9 +659,10 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			
 			// 根据地址列表查询出教练,且教练需要设置了价格、默认科目、且教练不休息、证件时间未过期
 			StringBuffer hqlCoach = new StringBuffer();
-			hqlCoach.append("select getTeachAddress(u.coachid) as address,getCoachOrderCount(u.coachid) as drive_schoolid, u.*  from t_user_coach u where coachid in "+
+			/*hqlCoach.append("select getTeachAddress(u.coachid) as address,getCoachOrderCount(u.coachid) as drive_schoolid, u.*  from t_user_coach u where coachid in "+
 							cs.toString()+" and state = 2 and id_cardexptime > curdate() and coach_cardexptime > curdate() "
-					+ " and drive_cardexptime > curdate() and car_cardexptime > curdate() and money >= gmoney and isquit = 0");
+					+ " and drive_cardexptime > curdate() and car_cardexptime > curdate() and money >= gmoney and isquit = 0");*/
+			hqlCoach.append("select u.*  from app_coach_list u where isnew=1 ");
 			
 			if (!CommonUtils.isEmptyString(cityid)) {
 				hqlCoach.append(" and cityid = " + cityid);
@@ -983,6 +984,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		StringBuffer cuserhql = new StringBuffer();
 		cuserhql.append("select getTeachAddress(u.coachid) as address,getCoachOrderCount(u.coachid) as drive_schoolid, u.*  from t_user_coach u where state = 2 and id_cardexptime > curdate() and coach_cardexptime > curdate() and drive_cardexptime > curdate() and car_cardexptime > curdate() and (select count(*) from t_teach_address a where u.coachid = a.coachid and iscurrent = 1) > 0");
+		//cuserhql.append("select u.*  from app_coach_list u where state = 2 and id_cardexptime > curdate() and coach_cardexptime > curdate() and drive_cardexptime > curdate() and car_cardexptime > curdate() and (select count(*) from t_teach_address a where u.coachid = a.coachid and iscurrent = 1) > 0");
+		
 		if (!CommonUtils.isEmptyString(cityid)) {
 			cuserhql.append(" and cityid = " + cityid);
 		}
@@ -1035,6 +1038,137 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 
 		if (!CommonUtils.isEmptyString(condition11)) {
 			cuserhql.append(" and modelid like '%" + condition11 + "%'");
+		}
+		String studentid="";
+		if(!CommonUtils.isEmptyString(studentid)){
+			SuserInfo user=dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
+			if(user!=null){
+				if(user.getUsertype()==0){//正式学员，正式学员不能看到测试教练
+					cuserhql.append(" and usertype=0 ");
+				}
+			}
+		}else{
+			cuserhql.append(" and usertype=0 ");
+		}
+		cuserhql.append(" and money >= gmoney and isquit = 0  order by coursestate desc,drive_schoolid desc,score desc");
+		//System.out.println(cuserhql.toString());
+		List<CuserInfo> coachlist = (List<CuserInfo>) dataDao.SqlPageQuery(cuserhql.toString(), Constant.USERLIST_SIZE+1, CommonUtils.parseInt(pagenum, 0) + 1,CuserInfo.class, null);
+		
+		if (coachlist != null && coachlist.size() > 0) {
+			for (CuserInfo coach : coachlist) {
+				//StringBuffer cuserhql1 = new StringBuffer();
+				//cuserhql1.append("from CaddAddressInfo where coachid =:coachid and iscurrent = 1");
+				//String[] params1 = { "coachid" };
+				//CaddAddressInfo address = (CaddAddressInfo) dataDao.getFirstObjectViaParam(cuserhql1.toString(), params1, coach.getCoachid());
+				if(coach.getDrive_schoolid()!=null){//设置教练的订单总数，其中drive_schoolid字段存放的是自定义函数中获取的订单数，因为非字段别名不能自动封装值，所以先使用drive_schoolid临时存放教练的总订单数
+					coach.setSumnum(new Long(coach.getDrive_schoolid()));
+				}
+				if(coach.getAddress()!=null){
+					String str[]=coach.getAddress().split("#");
+					coach.setAddress("");
+					if(str!=null && str.length==3){
+						coach.setLongitude(str[0]);
+						coach.setLatitude(str[1]);
+						coach.setDetail(str[2]);
+					}
+					coach.setAvatarurl(getFilePathById(coach.getAvatar()));
+				}
+			}
+		}
+		result.put("coachlist", coachlist);
+		List<CuserInfo> coachlistnext = (List<CuserInfo>) dataDao.SqlPageQuery(cuserhql.toString(), Constant.USERLIST_SIZE, CommonUtils.parseInt(pagenum, 0) + 2,CuserInfo.class, null);
+		if (coachlistnext != null && coachlistnext.size() > 0) {
+			result.put("hasmore", 1);
+		} else {
+			result.put("hasmore", 0);
+		}
+		/*int n=cuserhql.toString().indexOf("from");
+		String countSql=cuserhql.toString().substring(n, cuserhql.toString().length());
+		countSql="select count(*)  "+countSql;
+		System.out.println(countSql);*/
+		//Long o=(Long) dataDao.getFirstObjectViaParam(countSql, p, coachid);
+		//Long coachlistnext = (Long) dataDao.SqlPageQuery(countSql, Constant.USERLIST_SIZE, CommonUtils.parseInt(pagenum, 0) + 2);
+		/*if(coachlistnext!=null && coachlistnext.size()>0){
+		int n=cuserhql.toString().indexOf("from");
+		String countSql=cuserhql.toString().substring(n, cuserhql.toString().length());
+		countSql="select count(*)  "+countSql;*/
+		//System.out.println(countSql);
+		/*long endtime=System.currentTimeMillis();
+		System.out.println("总耗时："+(endtime-starttime));*/
+		return result;
+	}
+	
+	public HashMap<String, Object> getCoachList3(String cityid,String condition1, String condition2, String condition3, String condition4, String condition5, String condition6, String condition8, String condition9,
+			String condition10, String condition11, String pagenum) {
+		//long starttime=System.currentTimeMillis();
+		HashMap<String, Object> result = new HashMap<String, Object>();
+		StringBuffer cuserhql = new StringBuffer();
+		cuserhql.append("select u.*  from app_coach_list u where isnew=1 ");
+		//cuserhql.append("select u.*  from app_coach_list u where state = 2 and id_cardexptime > curdate() and coach_cardexptime > curdate() and drive_cardexptime > curdate() and car_cardexptime > curdate() and (select count(*) from t_teach_address a where u.coachid = a.coachid and iscurrent = 1) > 0");
+		
+		if (!CommonUtils.isEmptyString(cityid)) {
+			cuserhql.append(" and cityid = " + cityid);
+		}
+		// 真实姓名和教练所属驾校
+		if (!CommonUtils.isEmptyString(condition1)) {
+			//如果是手机号码
+			if(CommonUtils.isNumber(condition1) && condition1.trim().length()==11){
+				cuserhql.append(" and phone = '").append(condition1).append("' ");
+			}else{
+				cuserhql.append(" and (realname like '%" + condition1 + "%' or drive_school like '%" + condition1 + "%' or drive_schoolid in (select schoolid from t_drive_school_info where name like  '%"
+						+ condition1 + "%') or phone like '%"+condition1+"%') ");
+			}
+			
+		}else{
+			cuserhql.append(" and  coursestate = 1 ");
+		}
+		// 星级
+		if (!CommonUtils.isEmptyString(condition2)) {
+			cuserhql.append(" and score >= " + condition2);
+		}
+
+		if (!CommonUtils.isEmptyString(condition3)) {
+
+			int subjectid = CommonUtils.parseInt(condition6, 0);
+
+			Date start = null;
+			if(condition3.length() == 10){
+				start = CommonUtils.getDateFormat(condition3, "yyyy-MM-dd");
+			}else if(condition3.length() == 19){
+				start = CommonUtils.getDateFormat(condition3, "yyyy-MM-dd HH:mm:ss");
+			}
+
+			if (start != null) {
+				Calendar startCal = Calendar.getInstance();
+				startCal.setTime(start);
+
+				int starthour = startCal.get(Calendar.HOUR_OF_DAY);
+				int datecount = 1;
+				//cuserhql.append(" and  coursestate = 1");
+				//cuserhql.append(" and getcoachstate(u.coachid," + datecount + ",'" + CommonUtils.getTimeFormat(start, "yyyy-MM-dd") + "'," + starthour + "," + 23 + "," + subjectid + ") = 1");
+
+			}
+		} else {
+			int subjectid = CommonUtils.parseInt(condition6, 0);
+			Calendar c = Calendar.getInstance();
+			//cuserhql.append(" and  coursestate = 1");
+			//cuserhql.append(" and  drive_schoolid=1");
+			//cuserhql.append(" and getcoachstate(u.coachid," + 10 + ",'" + CommonUtils.getTimeFormat(c.getTime(), "yyyy-MM-dd") + "'," + 5 + "," + 23 + "," + subjectid + ") = 1");
+		}
+
+		if (!CommonUtils.isEmptyString(condition11)) {
+			cuserhql.append(" and modelid like '%" + condition11 + "%'");
+		}
+		String studentid="";
+		if(!CommonUtils.isEmptyString(studentid)){
+			SuserInfo user=dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
+			if(user!=null){
+				if(user.getUsertype()==0){//正式学员，正式学员不能看到测试教练
+					cuserhql.append(" and usertype=0 ");
+				}
+			}
+		}else{
+			cuserhql.append(" and usertype=0 ");
 		}
 		cuserhql.append(" and money >= gmoney and isquit = 0  order by coursestate desc,drive_schoolid desc,score desc");
 		//System.out.println(cuserhql.toString());

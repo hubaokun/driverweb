@@ -33,6 +33,10 @@ public class OrderRecordInfo implements Serializable {
 	@Column(name = "operation", length=2, nullable = false)
 	private int operation;
 	
+	/*//学员上车状态  0 未上车  1 已上车
+	@Column(name = "studentgeton", length=2, nullable = false)
+	private int studentgeton;*/
+	
 	//经度
 	@Column(name = "longitude",length=50,nullable = true)
 	private String longitude;

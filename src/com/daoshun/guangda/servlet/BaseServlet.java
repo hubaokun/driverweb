@@ -86,7 +86,7 @@ public class BaseServlet extends HttpServlet {
 	 * 
 	 * @param HttpServletResponse
 	 */
-	public void setAliPayResult(HttpServletResponse response) {
+	/*public void setAliPayResult(HttpServletResponse response) {
 		response.setContentType("text/html;charset=UTF-8");
 		try {
 			PrintWriter out = response.getWriter();
@@ -96,7 +96,7 @@ public class BaseServlet extends HttpServlet {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 	public void setResultWhenException(HttpServletResponse response, String errmsg) {
 		response.setContentType("text/html;charset=UTF-8");

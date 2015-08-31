@@ -265,10 +265,21 @@ public class SuserInfo implements Serializable {
 	@Column(name = "enrollpay", length = 11, columnDefinition = "INT default 0")
 	private Integer enrollpay;//是否报名支付成功，0 未成功，1 成功
 	@Transient
-	private int price;//一键报名价格
+	private int price;
+	
+	//一键报名状态  0 未报名  1 已报名
+	@Column(name = "enrollstate", columnDefinition = "INT default 0")
+	private Integer enrollstate = 0;
 	
 	
 	
+	public Integer getEnrollstate() {
+		return enrollstate;
+	}
+
+	public void setEnrollstate(Integer enrollstate) {
+		this.enrollstate = enrollstate;
+	}
 
 	public Integer getEnrollpay() {
 		return enrollpay;

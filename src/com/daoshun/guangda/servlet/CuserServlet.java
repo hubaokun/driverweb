@@ -110,6 +110,9 @@ public class CuserServlet extends BaseServlet {
 			} else if (Constant.GETMYCOINRECORD.equals(action)) {
 				// 获取账户余额信息
 				getMyCoinRecord(request, resultMap);
+			}else if (Constant.GETCOACHCOINAFFILIATION.equals(action)) {
+				// 获取教练的归属小巴币
+				getCoachCoinAffiliation(request, resultMap);
 			}
 			else {
 				throw new ErrException();
@@ -853,5 +856,11 @@ public class CuserServlet extends BaseServlet {
 		HashMap<String, Object> coinRecordResult = cuserService.getCoinRecordList(coachid);
 		resultMap.putAll(coinRecordResult);
 	}
-
+	//获取教练小巴币归属那些教练或驾校使用
+	public void getCoachCoinAffiliation(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String coachid = getRequestParamter(request, "coachid");// 教练ID
+		CommonUtils.validateEmpty(coachid);
+		HashMap<String, Object> result=cuserService.getCoinAffiliation(coachid);
+		resultMap.putAll(result);
+	}
 }

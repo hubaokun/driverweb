@@ -425,7 +425,7 @@ public class SbookServlet extends BaseServlet {
 		
 		//HashMap<String, Object> result = sbookService.getCoachList(condition1, condition2, condition3, condition4, condition5, condition6, condition8, condition9, condition10, condition11, pagenum);
 		
-		HashMap<String, Object> result = sbookService.getCoachList2(cityid,condition1, condition2, condition3, condition4, condition5, condition6, condition8, condition9, condition10, condition11, pagenum);
+		HashMap<String, Object> result = sbookService.getCoachList3(cityid,condition1, condition2, condition3, condition4, condition5, condition6, condition8, condition9, condition10, condition11, pagenum);
 		List<CuserInfo> list=(List<CuserInfo>) result.get("coachlist");
 		if(studentid==null || !"18".equals(studentid)){
 			for (CuserInfo cuserInfo : list) {
@@ -544,7 +544,7 @@ public class SbookServlet extends BaseServlet {
 		}
 		//小巴币的总数=教练可用小巴币+驾校可用小巴币+平台可用小巴币
 		int num=suserService.getCanUseCoinnum(coachid,studentid);//获取教练可用小巴币
-		int numForSchool=suserService.getCanUseCoinnumForDriveSchool(coachid,studentid);//获取驾校可用小巴币
+		int numForSchool=suserService.getCanUseCoinnumForDriveSchool(studentid);//获取驾校可用小巴币
 		//获取平台发送的小巴币
 		int numForPlatform=suserService.getCanUseCoinnumForPlatform("0",studentid);//获取平台可用小巴币
 		num+=numForSchool;
@@ -585,7 +585,7 @@ public class SbookServlet extends BaseServlet {
 		//对某个教练能使用的小巴币
 		int coinnumForCoach = suserService.getCanUseCoinnum(coachid,studentid);
 		//对某个驾校下所有教练能使用的小巴币
-		int coinnumForSchool = suserService.getCanUseCoinnumForDriveSchool(coachid,studentid);
+		int coinnumForSchool = suserService.getCanUseCoinnumForDriveSchool(studentid);
 		resultMap.put("coinnum", coinnumForCoach+coinnumForSchool);
 	}
 

@@ -326,18 +326,18 @@ function unshowaddcity() {
 		<tr>
 		  <td>
 		 
-		  <input name="c1marketprice" type="text" style="width: 240px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;"  placeholder="请输入C1小巴价"/></td>
+		  <input name="c1marketprice" type="text" style="width: 240px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;"  placeholder="请输入C1市场价"/></td>
 		 </tr>
 		 <tr>
-		  <td><input name="c1xiaobaprice" type="text" style="width: 240px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;"  placeholder="请输入C1市场价" maxlength="11"/></td>
+		  <td><input name="c1xiaobaprice" type="text" style="width: 240px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;"  placeholder="请输入C1小巴价" maxlength="11"/></td>
 		</tr>
 		<tr>
 		  <td>
 		  
-		  <input  name="c2marketprice" type="text" style="width: 240px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;"  placeholder="请输入C2小巴价"/></td>
+		  <input  name="c2marketprice" type="text" style="width: 240px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;"  placeholder="请输入C2市场价"/></td>
 		  </tr>
 		  <tr>
-		  <td><input  name="c2xiaobaprice"  type="text" style="width: 240px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;"  placeholder="请输入C2市场价"/></td>
+		  <td><input  name="c2xiaobaprice"  type="text" style="width: 240px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;"  placeholder="请输入C2小巴价"/></td>
 		  </tr>
 		 
 		<tr align="center">

@@ -136,3 +136,32 @@ disagree  历史订单中，分原有的历史订单和教练 不同意取消的
      model      车型 ：c1 ,c2
   	 cityid     报名的城市ID
   	 amount		报名金额
+  	 
+# 获取报名信息 /suser?action=GETENROLLINFO
+ 参数：studentid  学员ID
+    cityid     城市ID
+返回：
+model 		车型名称  c1/c2
+marketprice 市场价
+xiaobaprice 小巴价
+enrolltime  报名时间
+cityname    城市名称
+enrollstate	报名状态 ：0 未报名  1 已报名
+enrollpay	支付状态：-1 不需要付款的报名  0 未付款  1 已付款
+
+# 获取小巴币归属的个数		 
+接口名称： /suser?action=GETCOINAFFILIATION
+参数：studentid 学员id
+返回：
+	coinAffiliationList  
+		coin  	      小巴币个数
+		msg       提醒信息
+# 获取教练的小巴币归属个数
+接口名称： /cuser?action=GETCOACHCOINAFFILIATION
+参数：coachid 教练id
+返回：
+	coinAffiliationList 数组  
+		coin  	      小巴币个数
+		type	  0 平台  ，1 驾校 ， 2 教练
+# 教练兑换接口APPLYCOIN
+新增type字段，表示兑换的类型

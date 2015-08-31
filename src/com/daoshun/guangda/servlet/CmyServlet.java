@@ -903,9 +903,10 @@ public class CmyServlet extends BaseServlet {
 	public void applyCoin(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");// 用户ID
 		String applycoinnum = getRequestParamter(request, "coinnum");
+		String type = getRequestParamter(request, "type");//小巴币类型
 		CommonUtils.validateEmpty(coachid);
 		CommonUtils.validateEmpty(applycoinnum);
-		HashMap<String, Object> result =cmyService.applyCoin(coachid,Integer.parseInt(applycoinnum));
+		HashMap<String, Object> result =cmyService.applyCoin(coachid,Integer.parseInt(applycoinnum),CommonUtils.parseInt(type, 0));
 		resultMap.putAll(result);
 	}
 

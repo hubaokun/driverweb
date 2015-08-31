@@ -110,15 +110,15 @@ public class SuserServlet extends BaseServlet {
 			}else if (Constant.GETENROLLINFO.equals(action)) {
 				// 获取报名信息
 				getEnrollInfo(request, resultMap);
-			} else if (Constant.PROMOENROLLCALLBACK.equals(action)) {
-				promoEnrollCallback(request, response);
-				return;
 			}else if (Constant.GETSTUDENTWALLETINFO.equals(action)) {
 				// 
 				getWalletInfo(request, resultMap);
 			}else if (Constant.GETSTUDENTCOINRECORDLIST.equals(action)) {
 				// 账户充值
 				getMyCoinRecord(request, resultMap);
+			}else if (Constant.GETCOINAFFILIATION.equals(action)) {
+				// 获取小巴币归属的个数
+				getCoinAffiliation(request, resultMap);
 			}
 			else {
 				throw new ErrException();
@@ -306,6 +306,7 @@ public class SuserServlet extends BaseServlet {
 		CommonUtils.validateEmpty(model);
 		SuserInfo student = suserService.getUserById(studentid);
 		student.setState(1);
+		student.setEnrollstate(1);
 		student.setEnrolltime(new Date());
 		student.setModel(model);//设置车型c1,c2
 		student.setModelcityid(CommonUtils.parseInt(cityid, 0));
@@ -320,24 +321,56 @@ public class SuserServlet extends BaseServlet {
 			resultMap.put("message", "报名失败");
 		}
 	}
-	//促销报名支付回调，由支付宝服务器调用
-	public void promoEnrollCallback(HttpServletRequest request, HttpServletResponse response){
+	//促销报名支付回调，由支付宝服务器调用--》此回调已迁移到EnrollAliPayServlet类中
+	/*public void promoEnrollCallback(HttpServletRequest request, HttpServletResponse response){
 		String out_trade_no = request.getParameter("out_trade_no");
 		suserService.promoEnrollCallback(out_trade_no);
-		/*String qs=request.getQueryString();
+		String qs=request.getQueryString();
 		String ru=request.getRequestURL().toString();
 		System.out.println("qs:"+qs+"########ru"+ru);
-		suserService.addAlipayCallBack(qs, ru);*/
+		suserService.addAlipayCallBack(qs, ru);
 		setAliPayResult(response);
-	}
+	}*/
+	/**
+	 * 获取报名状态信息
+	 * @param request
+	 * @param resultMap
+	 * @throws ErrException
+	 */
 	public void getEnrollInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
-		
+		//String cityid = getRequestParamter(request, "cityid");
 		SuserInfo user=suserService.getUserById(studentid);
+		if(user==null){
+			resultMap.put("code",-1);
+			resultMap.put("message","用户不存在");
+			return;
+		}
+		/*List<ModelPrice> mplist=sbookService.getModelPriceByCityId(CommonUtils.parseInt(cityid, 0));
+		if(mplist!=null && mplist.size()>0){
+			ModelPrice mp=mplist.get(0);
+			if(mp==null)
+			{
+				resultMap.put("enrollpay",-1);//未开通城市不需要付款的普通报名
+			}else{
+				if(user.getEnrollpay()==0){
+					resultMap.put("enrollpay",0);//未支付
+				}else if(user.getEnrollpay()==1){
+					resultMap.put("enrollpay",1);//已支付
+				}
+			}
+		}*/
+		
+		
+		resultMap.put("enrollpay",user.getEnrollpay());//0未支付 1 已支付 -1 不需要付款
+		resultMap.put("enrollstate",user.getEnrollstate());//0 未报名  1 已报名
 		resultMap.put("model", user.getModel());
 		resultMap.put("marketprice",0);
 		resultMap.put("xiaobaprice",0);
 		resultMap.put("enrolltime",user.getEnrolltime());
+		if(user.getModelcityid()==null){
+			user.setModelcityid(0);
+		}
 		if(user.getModelcityid()!=0){//报名
 			CityInfo city=locationService.getCityById(String.valueOf(user.getModelcityid()));
 			if(city!=null){
@@ -357,7 +390,7 @@ public class SuserServlet extends BaseServlet {
 				}
 			}
 		}
-		resultMap.put("state",user.getState());
+		
 	}
 	public void register(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String phone = getRequestParamter(request, "phone");
@@ -462,7 +495,11 @@ public class SuserServlet extends BaseServlet {
 				ProvinceInfo pro=locationService.getProvincesById(user.getProvinceid());
 				CityInfo city=locationService.getCityById(user.getCityid());
 				AreaInfo area=locationService.getAreaById(user.getAreaid());
-				String locationname=pro.getProvince()+"-"+city.getCity()+"-"+area.getArea();
+				
+				String locationname="";
+				if(pro!=null && city!=null && area!=null){
+					locationname=pro.getProvince()+"-"+city.getCity()+"-"+area.getArea();
+				}
 				user.setLocationname(locationname);
 			}
 			resultMap.put("UserInfo", user);
@@ -796,14 +833,16 @@ public class SuserServlet extends BaseServlet {
 		try
 		{
 		String studentid = getRequestParamter(request, "studentid");
-		String model = getRequestParamter(request, "model");//车型
-		String cityid = getRequestParamter(request, "cityid");//车型
+		/*String model = getRequestParamter(request, "model");//车型
+		String cityid = getRequestParamter(request, "cityid");//车型*/
 		
 		SuserInfo student = suserService.getUserById(studentid);
 		student.setState(1);
+		student.setEnrollstate(1);//报名状态，已报名
 		student.setEnrolltime(new Date());
-		student.setModel(model);//设置车型c1,c2
-		student.setModelcityid(CommonUtils.parseInt(cityid, 0));
+		student.setEnrollpay(-1);
+		/*student.setModel(model);//设置车型c1,c2
+		student.setModelcityid(CommonUtils.parseInt(cityid, 0));*/
 		suserService.updateUserInfo(student);
 		resultMap.put("code", 1);
 		resultMap.put("message", "报名成功");
@@ -898,11 +937,17 @@ public class SuserServlet extends BaseServlet {
 		HashMap<String, Object> re=suserService.getConsumeAmount(studentid);//返回小巴币，小巴券，余额的累积消费额
 		resultMap.putAll(re);
 	}
-
+	//获取学员小巴币归属那些教练或驾校使用
+	public void getCoinAffiliation(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String studentid = getRequestParamter(request, "studentid");// 教练ID
+		CommonUtils.validateEmpty(studentid);
+		HashMap<String, Object> result=suserService.getCoinAffiliation(studentid);
+		resultMap.putAll(result);
+	}
 
 	// 获取账户小巴币记录
 	public void getMyCoinRecord(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
-		String studentid = getRequestParamter(request, "studentid");// 教练ID
+		String studentid = getRequestParamter(request, "studentid");//教练ID
 		HashMap<String, Object> coinRecordResult = suserService.getCoinRecordList(studentid);
 		resultMap.putAll(coinRecordResult);
 	}

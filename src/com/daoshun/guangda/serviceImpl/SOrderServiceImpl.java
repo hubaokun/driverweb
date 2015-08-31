@@ -44,6 +44,8 @@ import com.daoshun.guangda.pojo.UserPushInfo;
 import com.daoshun.guangda.service.ICscheduleService;
 import com.daoshun.guangda.service.ISOrderService;
 
+import sun.net.smtp.SmtpProtocolException;
+
 @Service("sorderService")
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService {
@@ -389,6 +391,12 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 			cuserhql2.append("from OrderRecordInfo where orderid =:orderid and userid =:userid and operation = 2");
 			String[] params2 = { "orderid", "userid" };
 			OrderRecordInfo orderRecord2 = (OrderRecordInfo) dataDao.getFirstObjectViaParam(cuserhql2.toString(), params2, order.getOrderid(), CommonUtils.parseInt(studentid, 0));
+			
+			// 教练已经确认上车
+						StringBuffer cuserhql5 = new StringBuffer();
+						cuserhql1.append("from OrderRecordInfo where orderid =:orderid and userid =:userid and operation = 3");
+						String[] params5 = { "orderid", "userid" };
+						OrderRecordInfo orderRecord5 = (OrderRecordInfo) dataDao.getFirstObjectViaParam(cuserhql5.toString(), params5, order.getOrderid(), CommonUtils.parseInt(studentid, 0));
 
 			// 可以确认上车的时间点
 			Calendar left = Calendar.getInstance();
@@ -410,7 +418,7 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 			} else if (now.before(left)) {// 订单显示距离开始时间
 				long millisecond = order.getStart_time().getTime() - now.getTimeInMillis();
 				order.setHours((int) (millisecond / 60000));
-			} else if (orderRecord != null && orderRecord2 == null && now.before(right1)) {// 订单显示正在学车
+			} else if (orderRecord5 != null && orderRecord2 == null && now.before(right1)) {// 订单显示正在学车
 				order.setHours(-1);
 			} else if (orderRecord2 != null || now.after(right1)) {// 订单显示学车已经结束
 				order.setHours(-2);
@@ -855,7 +863,7 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 					s_can_down = setInfo.getS_can_down();
 
 			}
-			time_cancel = 10;// 距离订单开始前订单可以取消的时间 默认10分钟
+			time_cancel = 60;// 距离订单开始前订单可以取消的时间 默认10分钟
 			Calendar now = Calendar.getInstance();
 
 			Calendar over = Calendar.getInstance();
@@ -1001,7 +1009,17 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				} else {
 					orderinfo.setCan_cancel(OrderState.CANNOT_CANCEL);
 				}
-
+				
+				/*Calendar now2 = Calendar.getInstance();
+				now2.add(Calendar.MINUTE, time_cancel);
+				if (now2.getTime().before(order.getStart_time())) {
+					order.setCan_cancel(OrderState.CAN_CANCEL);
+				} else {
+					order.setCan_cancel(OrderState.CANNOT_CANCEL);//不能取消 0
+				}*/
+				
+				
+				
 				if (orderRecord != null || orderRecord2 != null) {// 确认下车过或者确认上车过
 					orderinfo.setCan_up(0);// 不可以再确认上车
 				} else {
@@ -1354,7 +1372,12 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				
 				String studentName=student.getRealname();
 				//张三申请取消07/12 21:00-22:00学车课程
-				String pushMsg=studentName+"申请取消"+order.getStart_time()+"的学车课程";
+				SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				String d="";
+				if(order.getStart_time()!=null){
+					d=sf.format(order.getStart_time());
+				}
+				String pushMsg=studentName+"申请取消"+d+"的学车课程";
 				//给此订单关联的教练推送消息，提示让他同意取消订单
 				String hql5 = "from UserPushInfo where userid =:userid and usertype = 1";
 				String params5[] = { "userid" };
