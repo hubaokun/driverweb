@@ -466,7 +466,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
             }
             
             BalanceCoachInfo balancoach = new BalanceCoachInfo();
-            balancoach.setType(5);
+            balancoach.setType(6);
             balancoach.setAddtime(todate);
             balancoach.setAmount(capplyCash.getAmount());  
             balancoach.setUserid(capplyCash.getCoachid());
