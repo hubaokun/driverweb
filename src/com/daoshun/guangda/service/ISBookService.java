@@ -129,5 +129,5 @@ public interface ISBookService {
 	public List<ModelPrice> getOpenModelPrice();
 	public void addOpenModelPrice(ModelPrice mp);
 	public HashMap<String, Object> getCoachList3(String cityid,String condition1, String condition2, String condition3, String condition4, String condition5, String condition6, String condition8, String condition9,
-			String condition10, String condition11, String pagenum);
+			String condition10, String condition11, String pagenum,String studentid);
 }

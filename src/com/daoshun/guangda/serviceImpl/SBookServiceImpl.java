@@ -1099,7 +1099,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 	}
 	
 	public HashMap<String, Object> getCoachList3(String cityid,String condition1, String condition2, String condition3, String condition4, String condition5, String condition6, String condition8, String condition9,
-			String condition10, String condition11, String pagenum) {
+			String condition10, String condition11, String pagenum,String studentid) {
 		//long starttime=System.currentTimeMillis();
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		StringBuffer cuserhql = new StringBuffer();
@@ -1159,7 +1159,6 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		if (!CommonUtils.isEmptyString(condition11)) {
 			cuserhql.append(" and modelid like '%" + condition11 + "%'");
 		}
-		String studentid="";
 		if(!CommonUtils.isEmptyString(studentid)){
 			SuserInfo user=dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
 			if(user!=null){
@@ -1171,11 +1170,11 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			cuserhql.append(" and usertype=0 ");
 		}
 		cuserhql.append(" and money >= gmoney and isquit = 0  order by coursestate desc,drive_schoolid desc,score desc");
-		System.out.println(cuserhql.toString());
+		//System.out.println(cuserhql.toString());
 		long start=System.currentTimeMillis();
 		List<CuserInfo> coachlist = (List<CuserInfo>) dataDao.SqlPageQuery(cuserhql.toString(), Constant.USERLIST_SIZE+1, CommonUtils.parseInt(pagenum, 0) + 1,CuserInfo.class, null);
 		long end=System.currentTimeMillis();
-		System.out.println("耗时="+(end-start));
+		//System.out.println("耗时="+(end-start));
 		if (coachlist != null && coachlist.size() > 0) {
 			for (CuserInfo coach : coachlist) {
 				//StringBuffer cuserhql1 = new StringBuffer();

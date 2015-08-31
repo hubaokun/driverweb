@@ -300,17 +300,28 @@ public class SbookServlet extends BaseServlet {
 		if(list!=null && list.size()>0){
 			mpvlist=new ArrayList<ModelPriceVo>();
 			ModelPrice mp=list.get(0);
-			ModelPriceVo mpv1=new ModelPriceVo();
-			mpv1.setName("c1");
-			mpv1.setXiaobaprice(mp.getC1xiaobaprice());
-			mpv1.setMarketprice(mp.getC1marketprice());
+			if(mp.getC1xiaobaprice()==null){
+				mp.setC1xiaobaprice(0);
+			}
+			if(mp.getC1xiaobaprice()!=0){
+				ModelPriceVo mpv1=new ModelPriceVo();
+				mpv1.setName("c1");
+				mpv1.setXiaobaprice(mp.getC1xiaobaprice());
+				mpv1.setMarketprice(mp.getC1marketprice());
+				mpvlist.add(mpv1);
+			}
 			
-			ModelPriceVo mpv2=new ModelPriceVo();
-			mpv2.setName("c2");
-			mpv2.setXiaobaprice(mp.getC2xiaobaprice());
-			mpv2.setMarketprice(mp.getC2marketprice());
-			mpvlist.add(mpv1);
-			mpvlist.add(mpv2);
+			if(mp.getC2xiaobaprice()==null){
+				mp.setC2xiaobaprice(0);
+			}
+			if(mp.getC2xiaobaprice()!=0){
+				ModelPriceVo mpv2=new ModelPriceVo();
+				mpv2.setName("c2");
+				mpv2.setXiaobaprice(mp.getC2xiaobaprice());
+				mpv2.setMarketprice(mp.getC2marketprice());
+				mpvlist.add(mpv2);
+			}
+			
 		}
 		resultMap.put("modelprice", mpvlist);
 	}
@@ -425,7 +436,7 @@ public class SbookServlet extends BaseServlet {
 		
 		//HashMap<String, Object> result = sbookService.getCoachList(condition1, condition2, condition3, condition4, condition5, condition6, condition8, condition9, condition10, condition11, pagenum);
 		
-		HashMap<String, Object> result = sbookService.getCoachList3(cityid,condition1, condition2, condition3, condition4, condition5, condition6, condition8, condition9, condition10, condition11, pagenum);
+		HashMap<String, Object> result = sbookService.getCoachList3(cityid,condition1, condition2, condition3, condition4, condition5, condition6, condition8, condition9, condition10, condition11, pagenum,studentid);
 		List<CuserInfo> list=(List<CuserInfo>) result.get("coachlist");
 		if(studentid==null || !"18".equals(studentid)){
 			for (CuserInfo cuserInfo : list) {
