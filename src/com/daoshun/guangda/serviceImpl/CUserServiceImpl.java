@@ -416,19 +416,19 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
             capplyCash.setState(1);
             capplyCash.setUpdatetime(todate);
             dataDao.updateObject(capplyCash);
-            CuserInfo coach = dataDao.getObjectById(CuserInfo.class, capplyCash.getCoachid());
-            if (coach != null) {
-                coach.setFmoney(coach.getFmoney().subtract(capplyCash.getAmount()));
-                dataDao.updateObject(coach);
-            }
-            BalanceCoachInfo balancoach = new BalanceCoachInfo();
-            balancoach.setType(2);
-            balancoach.setAddtime(todate);
-            balancoach.setAmount(capplyCash.getAmount());
-            balancoach.setUserid(capplyCash.getCoachid());
-            balancoach.setAmount_out1(new BigDecimal(0));
-            balancoach.setAmount_out2(new BigDecimal(0));
-            dataDao.addObject(balancoach);
+//            CuserInfo coach = dataDao.getObjectById(CuserInfo.class, capplyCash.getCoachid());
+//            if (coach != null) {
+//                coach.setFmoney(coach.getFmoney().subtract(capplyCash.getAmount()));
+//                dataDao.updateObject(coach);
+//            }
+//            BalanceCoachInfo balancoach = new BalanceCoachInfo();
+//            balancoach.setType(2);
+//            balancoach.setAddtime(todate);
+//            balancoach.setAmount(capplyCash.getAmount());
+//            balancoach.setUserid(capplyCash.getCoachid());
+//            balancoach.setAmount_out1(new BigDecimal(0));
+//            balancoach.setAmount_out2(new BigDecimal(0));
+//            dataDao.addObject(balancoach);
             if (capplyCash.getSchoolid() != null && capplyCash.getSchoolid() > 0) {
                 DriveSchoolInfo schoolinfo = dataDao.getObjectById(DriveSchoolInfo.class, capplyCash.getSchoolid());
                 if (schoolinfo != null) {
@@ -549,11 +549,11 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
         if (capplyCash != null) {
             capplyCash.setState(0);
             dataDao.updateObject(capplyCash);
-            CuserInfo coach = dataDao.getObjectById(CuserInfo.class, capplyCash.getCoachid());
-            if (coach != null) {
-                coach.setFmoney(coach.getFmoney().add(capplyCash.getAmount()));
-                dataDao.updateObject(coach);
-            }
+//            CuserInfo coach = dataDao.getObjectById(CuserInfo.class, capplyCash.getCoachid());
+//            if (coach != null) {
+//                coach.setFmoney(coach.getFmoney().add(capplyCash.getAmount()));
+//                dataDao.updateObject(coach);
+//            }
             if (capplyCash.getSchoolid() != null && capplyCash.getSchoolid() > 0) {
                 DriveSchoolInfo schoolinfo = dataDao.getObjectById(DriveSchoolInfo.class, capplyCash.getSchoolid());
                 if (schoolinfo != null) {
@@ -572,10 +572,15 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
         if (capplyCash != null) {
             capplyCash.setState(5);
             capplyCash.setUpdatetime(todate);
+            CuserInfo coach = dataDao.getObjectById(CuserInfo.class, capplyCash.getCoachid());
+	          if (coach != null) {
+	              coach.setFmoney(coach.getFmoney().subtract(capplyCash.getAmount()));
+	              dataDao.updateObject(coach);
+	          }
             dataDao.updateObject(capplyCash);
  
             BalanceCoachInfo balancoach = new BalanceCoachInfo();
-            balancoach.setType(6);
+            balancoach.setType(7);
             balancoach.setAddtime(todate);
             balancoach.setAmount(capplyCash.getAmount());
             balancoach.setUserid(capplyCash.getCoachid());
@@ -782,7 +787,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
     @Override
     public QueryResult<BalanceCoachInfo> getCoachHistoryBalanceBySearchFinance(int schoolid, String searchname, String searchphone, String amount, String inputamount, String minsdate, String maxsdate, Integer pageIndex, int pagesize) {
         StringBuffer cuserhql = new StringBuffer();
-        cuserhql.append("from BalanceCoachInfo where type=6 ");
+        cuserhql.append("from BalanceCoachInfo where type=7 ");
         if (schoolid > 0) {
             cuserhql.append(" and userid in (select coachid from CuserInfo where drive_schoolid = " + schoolid + ")");
         }

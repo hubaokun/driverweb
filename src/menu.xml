@@ -18,7 +18,7 @@
 	</menu-item>
 	<menu-item name="充值提现管理" iconURL="" authority="1">
 		<sub-item name="教练提现申请" authority="3" action="getCoachApplyList.do"/>
-		<sub-item name="教练历史提现" authority="4" action="getCoachBalanceBySearch.do"/>
+		<sub-item name="教练历史提现" authority="4" action="getCoachBalanceListFinance.do"/>
 		<sub-item name="学员提现申请" authority="5" action="getStudentApplyList.do"/>
 		<sub-item name="学员历史提现" authority="6" action="getStudentApplyRecordList.do"/>
 		<sub-item name="学员历史充值" authority="7" action="getStudentRechargeList.do"/>
