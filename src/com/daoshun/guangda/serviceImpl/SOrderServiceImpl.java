@@ -394,7 +394,7 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 			
 			// 教练已经确认上车
 						StringBuffer cuserhql5 = new StringBuffer();
-						cuserhql1.append("from OrderRecordInfo where orderid =:orderid and userid =:userid and operation = 3");
+						cuserhql5.append("from OrderRecordInfo where orderid =:orderid and userid =:userid and operation = 3");
 						String[] params5 = { "orderid", "userid" };
 						OrderRecordInfo orderRecord5 = (OrderRecordInfo) dataDao.getFirstObjectViaParam(cuserhql5.toString(), params5, order.getOrderid(), CommonUtils.parseInt(studentid, 0));
 
