@@ -1171,11 +1171,11 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			cuserhql.append(" and usertype=0 ");
 		}
 		cuserhql.append(" and money >= gmoney and isquit = 0  order by coursestate desc,drive_schoolid desc,score desc");
-		System.out.println(cuserhql.toString());
-		long start=System.currentTimeMillis();
+		//System.out.println(cuserhql.toString());
+		//long start=System.currentTimeMillis();
 		List<CuserInfo> coachlist = (List<CuserInfo>) dataDao.SqlPageQuery(cuserhql.toString(), Constant.USERLIST_SIZE+1, CommonUtils.parseInt(pagenum, 0) + 1,CuserInfo.class, null);
-		long end=System.currentTimeMillis();
-		System.out.println("耗时="+(end-start));
+		//long end=System.currentTimeMillis();
+		//System.out.println("耗时="+(end-start));
 		if (coachlist != null && coachlist.size() > 0) {
 			for (CuserInfo coach : coachlist) {
 				//StringBuffer cuserhql1 = new StringBuffer();
