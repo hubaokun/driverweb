@@ -884,7 +884,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			result.put("private_key", AlipayConfig.private_key_formal);
 		}
 
-		result.put("notify_url", "http://120.25.236.228:8080/dadmin/suser?action=promoEnrollCallback");
+		result.put("notify_url", "http://120.25.236.228:8080/dadmin/suser?action=PROMOENROLLCALLBACK");
 		result.put("out_trade_no", info.getRechargeid());
 		result.put("subject", "报名费：" + amount + "元");
 		result.put("total_fee", amount);
@@ -906,7 +906,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	@Override
 	public QueryResult<BalanceStudentInfo> searchStudentRecharge(String searchname, String searchphone, String amount, String inputamount, String minsdate, String maxsdate, Integer pageIndex,
 			int pagesize) {
-		StringBuffer cuserhql = new StringBuffer();
+	 	StringBuffer cuserhql = new StringBuffer();
 		cuserhql.append("from BalanceStudentInfo where type = 1");
 		if (!CommonUtils.isEmptyString(searchname)) {
 			cuserhql.append(" and userid in (select studentid from SuserInfo where realname like '%" + searchname + "%')");

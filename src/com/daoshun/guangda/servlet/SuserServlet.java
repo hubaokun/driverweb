@@ -18,6 +18,7 @@ import com.daoshun.common.ErrException;
 import com.daoshun.guangda.pojo.AreaInfo;
 import com.daoshun.guangda.pojo.CityInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
+import com.daoshun.guangda.pojo.ModelPrice;
 import com.daoshun.guangda.pojo.ProvinceInfo;
 import com.daoshun.guangda.pojo.RecommendInfo;
 import com.daoshun.guangda.pojo.SuserInfo;
@@ -26,6 +27,7 @@ import com.daoshun.guangda.pojo.VerifyCodeInfo;
 import com.daoshun.guangda.service.IBaseService;
 import com.daoshun.guangda.service.ILocationService;
 import com.daoshun.guangda.service.IRecommendService;
+import com.daoshun.guangda.service.ISBookService;
 import com.daoshun.guangda.service.ISUserService;
 import com.daoshun.guangda.service.ISystemService;
 
@@ -38,10 +40,12 @@ public class SuserServlet extends BaseServlet {
 	private ISystemService systemService;
 	private ILocationService locationService;
 	private IRecommendService recommendService;
+	private ISBookService sbookService;
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
+		sbookService = (ISBookService) applicationContext.getBean("sbookService");
 		suserService = (ISUserService) applicationContext.getBean("suserService");
 		baseService = (IBaseService) applicationContext.getBean("baseService");
 		systemService = (ISystemService) applicationContext.getBean("systemService");
@@ -103,14 +107,16 @@ public class SuserServlet extends BaseServlet {
 			} else if (Constant.PROMOENROLL.equals(action)) {
 				// 促销报名
 				promoEnroll(request, resultMap);
-			} else if (Constant.promoEnrollCallback.equals(action)) {
+			}else if (Constant.GETENROLLINFO.equals(action)) {
+				// 获取报名信息
+				getEnrollInfo(request, resultMap);
+			} else if (Constant.PROMOENROLLCALLBACK.equals(action)) {
 				promoEnrollCallback(request, response);
 				return;
 			}else if (Constant.GETSTUDENTWALLETINFO.equals(action)) {
 				// 
 				getWalletInfo(request, resultMap);
-			}
-			else if (Constant.GETSTUDENTCOINRECORDLIST.equals(action)) {
+			}else if (Constant.GETSTUDENTCOINRECORDLIST.equals(action)) {
 				// 账户充值
 				getMyCoinRecord(request, resultMap);
 			}
@@ -318,11 +324,40 @@ public class SuserServlet extends BaseServlet {
 	public void promoEnrollCallback(HttpServletRequest request, HttpServletResponse response){
 		String out_trade_no = request.getParameter("out_trade_no");
 		suserService.promoEnrollCallback(out_trade_no);
-		String qs=request.getQueryString();
+		/*String qs=request.getQueryString();
 		String ru=request.getRequestURL().toString();
 		System.out.println("qs:"+qs+"########ru"+ru);
-		suserService.addAlipayCallBack(qs, ru);
+		suserService.addAlipayCallBack(qs, ru);*/
 		setAliPayResult(response);
+	}
+	public void getEnrollInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String studentid = getRequestParamter(request, "studentid");
+		
+		SuserInfo user=suserService.getUserById(studentid);
+		resultMap.put("model", user.getModel());
+		resultMap.put("marketprice",0);
+		resultMap.put("xiaobaprice",0);
+		resultMap.put("enrolltime",user.getEnrolltime());
+		if(user.getModelcityid()!=0){//报名
+			CityInfo city=locationService.getCityById(String.valueOf(user.getModelcityid()));
+			if(city!=null){
+				resultMap.put("cityname",city.getCity());	
+			}
+			List<ModelPrice> list=sbookService.getModelPriceByCityId(user.getModelcityid());
+			if(list!=null && list.size()>0){
+				ModelPrice mp=list.get(0);
+				if(mp!=null){
+					if("c1".equals(user.getModel())){
+						resultMap.put("marketprice",mp.getC1marketprice());
+						resultMap.put("xiaobaprice",mp.getC1xiaobaprice());
+					}else if("c2".equals(user.getModel())){
+						resultMap.put("marketprice",mp.getC2marketprice());
+						resultMap.put("xiaobaprice",mp.getC2xiaobaprice());
+					}
+				}
+			}
+		}
+		resultMap.put("state",user.getState());
 	}
 	public void register(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String phone = getRequestParamter(request, "phone");
