@@ -100,6 +100,21 @@ public class CoinRecordAction extends BaseAction{
     	
         return SUCCESS;
     }
+    
+    //驾校发放小巴币
+    @Action(value = "goSchoolGrantCoin", results = { @Result(name = SUCCESS, location = "/schoolCoinGrant.jsp") })
+    public String goSchoolGrantCoin() {
+    	
+        return SUCCESS;
+    }
+    
+    //驾校发放小巴券
+    @Action(value = "goSchoolGrantCoupon", results = { @Result(name = SUCCESS, location = "/schoolCouponGrant.jsp") })
+    public String goSchoolGrantCoupon() {
+    	
+        return SUCCESS;
+    }
+    
     @Action(value = "goCoinRecord", results = { @Result(name = SUCCESS, location = "/coinrecord.jsp") })
     public String goCoinRecord() {
     	QueryResult<CoinRecordInfo> result = coinRecordService.getCoinRecordListByPage(pageIndex, 10, starttime, endtime, ownertype, String.valueOf(ownerid),String.valueOf(receiverid));
