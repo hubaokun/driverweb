@@ -1265,9 +1265,11 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		//平台小巴币
 		int numForPlatform=getCanUseCoinnumForPlatform("0",studentid);
-		CoinAffiliation cf=new CoinAffiliation(numForPlatform,"适用:所有教练");
 		List<CoinAffiliation> mList=new ArrayList<CoinAffiliation>();
-		mList.add(cf);//通用
+		if(numForPlatform!=0){
+			CoinAffiliation cf=new CoinAffiliation(numForPlatform,"适用:所有教练");
+			mList.add(cf);//通用
+		}
 		String hql="from CoinRecordInfo where receiverid =:receiverid and receivertype=3 and ownertype=:ownertype GROUP BY ownerid";
 		String params[]={"receiverid","ownertype"};
 		List<CoinRecordInfo> crlist= (List<CoinRecordInfo>) dataDao.getObjectsViaParam(hql, params, CommonUtils.parseInt(studentid, 0),2);
@@ -1275,8 +1277,10 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			for (CoinRecordInfo coinRecordInfo : crlist) {
 				int coachid=coinRecordInfo.getOwnerid();
 				int coachCoin=getCanUseCoinnum(String.valueOf(coachid),studentid);
-				CoinAffiliation ca=new CoinAffiliation(coachCoin,"适用:"+coinRecordInfo.getOwnername()+"教练");
-				mList.add(ca);
+				if(coachCoin!=0){
+					CoinAffiliation ca=new CoinAffiliation(coachCoin,"适用:"+coinRecordInfo.getOwnername()+"教练");
+					mList.add(ca);
+				}
 			}
 		}
 		String dschoolhql="from CoinRecordInfo where receiverid =:receiverid and receivertype=3 and ownertype=:ownertype GROUP BY ownerid";
@@ -1285,8 +1289,10 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		if(slist!=null && slist.size()>0){
 			for (CoinRecordInfo coinRecordInfo : slist) {
 				int schoolCoin=getCanUseCoinnumForDriveSchool(studentid);
-				CoinAffiliation ca=new CoinAffiliation(schoolCoin,"适用:"+coinRecordInfo.getOwnername());
-				mList.add(ca);
+				if(schoolCoin!=0){
+					CoinAffiliation ca=new CoinAffiliation(schoolCoin,"适用:"+coinRecordInfo.getOwnername());
+					mList.add(ca);
+				}
 			}
 		}
 		result.put("coinaffiliationlist",mList);//教练
