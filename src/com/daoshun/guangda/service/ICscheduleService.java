@@ -126,7 +126,7 @@ public interface ICscheduleService {
 	/**
 	 * 2.0新版 日程默认设置
 	 */
-	public abstract void setDefaultNew(String coachid,String hour,String price,String addressid,String subjectid);
+	public abstract void setDefaultNew(String coachid,String hour,String price,String addressid,String subjectid,String isrest);
 	/**
 	 * 2.0新版 获取日程默认
 	 */

@@ -1479,7 +1479,7 @@ public class CscheduleServlet extends BaseServlet {
 					cscheduleInfo.setSubjectid(CommonUtils.parseInt(subjectid, 0));// 设置科目id
 					cscheduleService.updateScheduleInfo(cscheduleInfo);
 				}
-				cscheduleService.setDefaultNew(coachid, hour, price, addressid, subjectid);
+				cscheduleService.setDefaultNew(coachid, hour, price, addressid, subjectid,isrest);
 				
 			}
 			resultMap.put("code", 1);
@@ -1694,7 +1694,7 @@ public class CscheduleServlet extends BaseServlet {
 						BigDecimal b = new BigDecimal(CommonUtils.parseDouble(price, 0d));
 						scheduleInfo.setPrice(b); // 设置单价
 	
-						scheduleInfo.setIsrest(CommonUtils.parseInt(isrest, 0)); // 设置是否休息
+						scheduleInfo.setIsrest(CommonUtils.parseInt(isrest, 1)); // 设置是否休息
 	
 						scheduleInfo.setAddressid(CommonUtils.parseInt(addressid, 0)); // 设置地址id
 	
@@ -1710,7 +1710,7 @@ public class CscheduleServlet extends BaseServlet {
 						BigDecimal b = new BigDecimal(CommonUtils.parseDouble(price, 0d));
 						cscheduleInfo.setPrice(b); // 设置单价
 	
-						cscheduleInfo.setIsrest(CommonUtils.parseInt(isrest, 0)); // 设置是否休息
+						cscheduleInfo.setIsrest(CommonUtils.parseInt(isrest, 1)); // 设置是否休息
 	
 						cscheduleInfo.setAddressid(CommonUtils.parseInt(addressid, 0)); // 设置地址id
 	
@@ -1722,7 +1722,7 @@ public class CscheduleServlet extends BaseServlet {
 							cscheduleInfo.setExpire(0);
 						cscheduleService.updateScheduleInfo(cscheduleInfo);
 					}
-					cscheduleService.setDefaultNew(coachid, hour, price, addressid, subjectid);
+					cscheduleService.setDefaultNew(coachid, hour, price, addressid, subjectid,isrest);
 				}
 			}
 		}
