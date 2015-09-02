@@ -1394,15 +1394,14 @@ public String getStudentDetailByPhone() {
 	
 	@Action(value = "/editsinglestudent", results = { @Result(name = SUCCESS, location = "/getStudentDetail.do?studentid=${studentid}&index=${index}&change_id=${change_id}&editsucc=1",type="redirect") })
 
-//	@Action(value = "/editsinglestudent", results = { @Result(name = SUCCESS, location = "/getStudentlist.do?studentid=${studentid}&index=${index}&change_id=${change_id}",type="redirect") })
-	
 	public String editSingleStudent(){
 		suser = suserService.getUserById(String.valueOf(studentid));
 		//修改姓名
 		if (!CommonUtils.isEmptyString(editrealname)) {
 			suser.setRealname(editrealname);
 		}
-		
+
+		//修改电话
 		if (!CommonUtils.isEmptyString(editphone)) {
 			suser.setPhone(editphone);
 		}

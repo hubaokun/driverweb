@@ -56,6 +56,25 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		return user;
 	}
 
+	@Override
+	public SuserInfo getUserByInviteCode(String invitecode) {
+		StringBuffer cuserhql = new StringBuffer();
+		cuserhql.append(" from SuserInfo where invitecode = :invitecode");
+		String[] params = { "invitecode" };
+		SuserInfo user = (SuserInfo) dataDao.getFirstObjectViaParam(cuserhql.toString(), params, invitecode);
+		if (user != null) {
+			user.setAvatarurl(getFilePathById(user.getAvatar()));
+			user.setStudent_cardpicf_url(getFilePathById(user.getStudent_cardpicf()));
+			user.setStudent_cardpicb_url(getFilePathById(user.getStudent_cardpicb()));
+			user.setId_cardpicf_url(getFilePathById(user.getId_cardpicf()));
+			user.setId_cardpicb_url(getFilePathById(user.getId_cardpicb()));
+			user.setCcheck_idcardpicf_url(getFilePathById(user.getCcheck_idcardpicf()));
+			user.setCcheck_idcardpicb_url(getFilePathById(user.getCcheck_idcardpicb()));
+			user.setCcheck_pic_url(getFilePathById(user.getCcheck_pic()));
+		}
+		return user;
+	}
+
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override
 	public void addSuserInfo(SuserInfo user) {
@@ -128,6 +147,16 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override
 	public void updateUserInfo(SuserInfo user) {
+
+		String inviteCode="S"+CommonUtils.getInviteCode(user.getPhone());
+
+
+		StringBuffer suserhql = new StringBuffer();
+		suserhql.append(" update SuserInfo set inviteCode=null where inviteCode=:inviteCode");
+		String[] params = { "inviteCode" };
+		dataDao.updateObjectsViaParam(suserhql.toString(), params, inviteCode);
+
+
 		dataDao.updateObject(user);
 	}
 	
