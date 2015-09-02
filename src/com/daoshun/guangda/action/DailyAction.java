@@ -871,11 +871,16 @@ public class DailyAction extends BaseAction {
 				row = sheet.createRow((Integer) index);
 				CouponReportMontly couponmontly = couponreportmontly.get(i);
 				List<StudentCouponDetail> tempstudentlist=couponmontly.getStudentdetaillist();
-				int rowcount=couponmontly.getStudentdetaillist().size();
+				int rowcount=0;
+				int rowendindex=index;
+				if(tempstudentlist!=null)
+				{
+					rowcount=couponmontly.getStudentdetaillist().size();
+					rowendindex=index+rowcount-1;
+				}
 				cell=row.createCell((short) 0);
 				cell.setCellValue(i + 1);
 				cell.setCellStyle(style);
-				int rowendindex=index+rowcount-1;
 				sheet.addMergedRegion(new Region(index,(short)0,rowendindex,(short) 0));
 				cell=row.createCell((short) 1);
 				cell.setCellValue("学时券");
@@ -911,52 +916,57 @@ public class DailyAction extends BaseAction {
 					cell.setCellStyle(style);
 					sheet.addMergedRegion(new Region(index,(short)6,rowendindex,(short) 6));
 				}
-			    for(int j=0;j<tempstudentlist.size();j++)
-			    {
-			    	StudentCouponDetail tempt=tempstudentlist.get(j);
-			    	if(j==0)
-			    	{
-				    	cell=row.createCell((short) 7);
-				    	cell.setCellValue(tempt.getPhone());
-						cell.setCellStyle(style);
-						cell=row.createCell((short) 8);
-				    	cell.setCellValue(tempt.getName());
-						cell.setCellStyle(style);
-						cell=row.createCell((short) 9);
-				    	cell.setCellValue(tempt.getCouponusenumber());
-						cell.setCellStyle(style);
-						cell=row.createCell((short) 10);
-				    	cell.setCellValue(tempt.getCouponpaynumber());
-						cell.setCellStyle(style);
-						if(j==tempstudentlist.size()-1)
+				if(tempstudentlist!=null && tempstudentlist.size()>0)
+				{
+				    for(int j=0;j<tempstudentlist.size();j++)
+				    {
+				    	StudentCouponDetail tempt=tempstudentlist.get(j);
+				    	if(j==0)
+				    	{
+					    	cell=row.createCell((short) 7);
+					    	cell.setCellValue(tempt.getPhone());
+							cell.setCellStyle(style);
+							cell=row.createCell((short) 8);
+					    	cell.setCellValue(tempt.getName());
+							cell.setCellStyle(style);
+							cell=row.createCell((short) 9);
+					    	cell.setCellValue(tempt.getCouponusenumber());
+							cell.setCellStyle(style);
+							cell=row.createCell((short) 10);
+					    	cell.setCellValue(tempt.getCouponpaynumber());
+							cell.setCellStyle(style);
+							if(j==tempstudentlist.size()-1)
+					    	{
+					    		index++;
+					    	}
+				    	}
+	                   
+				    	else
 				    	{
 				    		index++;
+				    		row=sheet.createRow((Integer) index);
+				    		cell=row.createCell((short) 7);
+					    	cell.setCellValue(tempt.getPhone());
+							cell.setCellStyle(style);
+							cell=row.createCell((short) 8);
+					    	cell.setCellValue(tempt.getName());
+							cell.setCellStyle(style);
+							cell=row.createCell((short) 9);
+					    	cell.setCellValue(tempt.getCouponusenumber());
+							cell.setCellStyle(style);
+							cell=row.createCell((short) 10);
+					    	cell.setCellValue(tempt.getCouponpaynumber());
+							cell.setCellStyle(style);
+							if(j==tempstudentlist.size()-1)
+					    	{
+					    		index++;
+					    	}
 				    	}
-			    	}
-                   
-			    	else
-			    	{
-			    		index++;
-			    		row=sheet.createRow((Integer) index);
-			    		cell=row.createCell((short) 7);
-				    	cell.setCellValue(tempt.getPhone());
-						cell.setCellStyle(style);
-						cell=row.createCell((short) 8);
-				    	cell.setCellValue(tempt.getName());
-						cell.setCellStyle(style);
-						cell=row.createCell((short) 9);
-				    	cell.setCellValue(tempt.getCouponusenumber());
-						cell.setCellStyle(style);
-						cell=row.createCell((short) 10);
-				    	cell.setCellValue(tempt.getCouponpaynumber());
-						cell.setCellStyle(style);
-						if(j==tempstudentlist.size()-1)
-				    	{
-				    		index++;
-				    	}
-			    	}
-			    	
-			    }
+				    	
+				    }
+				}
+				else
+					index++;
 			}
 		}
 		try {
@@ -1119,11 +1129,16 @@ public class DailyAction extends BaseAction {
 				row = sheet.createRow((Integer) index);
 				CoinReportMontly coinmontly = coinreportmontly.get(i);
 				List<StudentCoinDetail> tempstudentlist=coinmontly.getStudentdetaillist();
-				int rowcount=coinmontly.getStudentdetaillist().size();
+				int rowcount=0;
+				int rowendindex=index;
+				if(tempstudentlist!=null)
+				{
+				  rowcount=coinmontly.getStudentdetaillist().size();
+				  rowendindex=index+rowcount-1;
+				}
 				cell=row.createCell((short) 0);
 				cell.setCellValue(i + 1);
 				cell.setCellStyle(style);
-				int rowendindex=index+rowcount-1;
 				sheet.addMergedRegion(new Region(index,(short)0,rowendindex,(short) 0));
 				cell=row.createCell((short) 1);
 				cell.setCellValue("小巴币");
@@ -1164,52 +1179,57 @@ public class DailyAction extends BaseAction {
 					cell.setCellStyle(style);
 					sheet.addMergedRegion(new Region(index,(short)7,rowendindex,(short) 7));
 				}
-			    for(int j=0;j<tempstudentlist.size();j++)
-			    {
-			    	StudentCoinDetail tempt=tempstudentlist.get(j);
-			    	if(j==0)
-			    	{
-				    	cell=row.createCell((short) 8);
-				    	cell.setCellValue(tempt.getPhone());
-						cell.setCellStyle(style);
-						cell=row.createCell((short) 9);
-				    	cell.setCellValue(tempt.getName());
-						cell.setCellStyle(style);
-						cell=row.createCell((short) 10);
-				    	cell.setCellValue(tempt.getCoinusenumber().doubleValue());
-						cell.setCellStyle(style);
-						cell=row.createCell((short) 11);
-				    	cell.setCellValue(tempt.getCoinpaynumber().doubleValue());
-						cell.setCellStyle(style);
-						if(j==tempstudentlist.size()-1)
+				if(tempstudentlist!=null && tempstudentlist.size()>0)
+				{
+				    for(int j=0;j<tempstudentlist.size();j++)
+				    {
+				    	StudentCoinDetail tempt=tempstudentlist.get(j);
+				    	if(j==0)
+				    	{
+					    	cell=row.createCell((short) 8);
+					    	cell.setCellValue(tempt.getPhone());
+							cell.setCellStyle(style);
+							cell=row.createCell((short) 9);
+					    	cell.setCellValue(tempt.getName());
+							cell.setCellStyle(style);
+							cell=row.createCell((short) 10);
+					    	cell.setCellValue(tempt.getCoinusenumber().doubleValue());
+							cell.setCellStyle(style);
+							cell=row.createCell((short) 11);
+					    	cell.setCellValue(tempt.getCoinpaynumber().doubleValue());
+							cell.setCellStyle(style);
+							if(j==tempstudentlist.size()-1)
+					    	{
+					    		index++;
+					    	}
+				    	}
+	                   
+				    	else
 				    	{
 				    		index++;
+				    		row=sheet.createRow((Integer) index);
+				    		cell=row.createCell((short) 8);
+					    	cell.setCellValue(tempt.getPhone());
+							cell.setCellStyle(style);
+							cell=row.createCell((short) 9);
+					    	cell.setCellValue(tempt.getName());
+							cell.setCellStyle(style);
+							cell=row.createCell((short) 10);
+					    	cell.setCellValue(tempt.getCoinusenumber().doubleValue());
+							cell.setCellStyle(style);
+							cell=row.createCell((short) 11);
+					    	cell.setCellValue(tempt.getCoinpaynumber().doubleValue());
+							cell.setCellStyle(style);
+							if(j==tempstudentlist.size()-1)
+					    	{
+					    		index++;
+					    	}
 				    	}
-			    	}
-                   
-			    	else
-			    	{
-			    		index++;
-			    		row=sheet.createRow((Integer) index);
-			    		cell=row.createCell((short) 8);
-				    	cell.setCellValue(tempt.getPhone());
-						cell.setCellStyle(style);
-						cell=row.createCell((short) 9);
-				    	cell.setCellValue(tempt.getName());
-						cell.setCellStyle(style);
-						cell=row.createCell((short) 10);
-				    	cell.setCellValue(tempt.getCoinusenumber().doubleValue());
-						cell.setCellStyle(style);
-						cell=row.createCell((short) 11);
-				    	cell.setCellValue(tempt.getCoinpaynumber().doubleValue());
-						cell.setCellStyle(style);
-						if(j==tempstudentlist.size()-1)
-				    	{
-				    		index++;
-				    	}
-			    	}
-			    	
-			    }
+				    	
+				    }
+				}
+				else
+					index++;
 			}
 		}
 		try {
