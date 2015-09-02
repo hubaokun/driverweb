@@ -19,7 +19,9 @@ import com.daoshun.common.QueryResult;
 import com.daoshun.common.UserType;
 import com.daoshun.guangda.pojo.AdminInfo;
 import com.daoshun.guangda.pojo.AlipayCallBack;
+import com.daoshun.guangda.pojo.BalanceCoachInfo;
 import com.daoshun.guangda.pojo.BalanceStudentInfo;
+import com.daoshun.guangda.pojo.CApplyCashInfo;
 import com.daoshun.guangda.pojo.CoachStudentInfo;
 import com.daoshun.guangda.pojo.CoinAffiliation;
 import com.daoshun.guangda.pojo.CoinRecordInfo;
@@ -620,8 +622,46 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			studentApply.setState(2);
 			studentApply.setUpdatetime(new Date());
 			dataDao.updateObject(studentApply);
+	            
+	         SuserInfo suserInfo = dataDao.getObjectById(SuserInfo.class, coachid);
+	         if(suserInfo != null){
+	        	 suserInfo.setFmoney(suserInfo.getFmoney().subtract(studentApply.getAmount()));
+	        	 //增加学员可提现余额
+	        	 suserInfo.setMoney(suserInfo.getMoney().add(studentApply.getAmount()));
+	        	 dataDao.updateObject(suserInfo);
+	         }
+	         
+	         BalanceStudentInfo balanStudentInfo = new BalanceStudentInfo();
+	         balanStudentInfo.setType(4);
+	         balanStudentInfo.setAddtime(new Date());
+	         balanStudentInfo.setAmount(studentApply.getAmount());
+	         balanStudentInfo.setUserid(studentApply.getUserid());
+	         dataDao.addObject(balanStudentInfo);
+	         
 		}
 	}
+	
+	//学员提现作废
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    @Override
+    public void applyCheckrevocation(int coachid) {
+        StudentApplyInfo studentApply = dataDao.getObjectById(StudentApplyInfo.class, coachid);
+        Date todate=new Date();
+        if (studentApply != null) {
+        	studentApply.setState(3);
+        	studentApply.setUpdatetime(todate);
+            dataDao.updateObject(studentApply);
+           
+            
+            SuserInfo suserInfo = dataDao.getObjectById(SuserInfo.class, coachid);
+            if(suserInfo != null){
+            	suserInfo.setFmoney(suserInfo.getFmoney().subtract(studentApply.getAmount()));
+            	dataDao.updateObject(suserInfo);
+            }
+           
+        }
+    }
+    
 
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	@Override
@@ -683,7 +723,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	@Override
 	public QueryResult<BalanceStudentInfo> getApplyRecordList(Integer pageIndex, int pagesize) {
 		StringBuffer cuserhql = new StringBuffer();
-		cuserhql.append("from BalanceStudentInfo where type = 2");
+		cuserhql.append("from BalanceStudentInfo where type = 2 or type = 4");
 		List<BalanceStudentInfo> balancecoachlist = (List<BalanceStudentInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), pagesize, pageIndex, null);
 		if (balancecoachlist != null && balancecoachlist.size() > 0) {
 			for (BalanceStudentInfo balanceCoach : balancecoachlist) {

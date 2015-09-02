@@ -635,7 +635,7 @@ public String getStudentDetailByPhone() {
 	}
 
 	/**
-	 * 提现申请审核
+	 * 学员提现申请审核
 	 * 
 	 * @return
 	 */
@@ -646,13 +646,24 @@ public String getStudentDetailByPhone() {
 	}
 	
 	/**
-	 * 提现申请审核
+	 * 学员提现申请审核不通过
 	 * 
 	 * @return
 	 */
 	@Action(value = "/studentApplyCheckNoPass", results = { @Result(name = SUCCESS, location = "/getStudentApplyList.do?index=${index}&pageIndex=${pageIndex}", type = "redirect") })
 	public String studentApplyCheckNoPass() {
 		suserService.applyCheckNoPass(applyid);
+		return SUCCESS;
+	}
+	
+	/**
+	 * 学员提现作废
+	 * 
+	 * @return
+	 */
+	@Action(value = "/stuapplyCheckrevocation", results = { @Result(name = SUCCESS, location = "/getStudentApplyList.do?index=${index}&pageIndex=${pageIndex}", type = "redirect") })
+	public String stuapplyCheckrevocation() {
+		suserService.applyCheckrevocation(applyid);
 		return SUCCESS;
 	}
 
