@@ -399,7 +399,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			latertime.set(Calendar.SECOND, 59);
 			Date timelater = latertime.getTime();
 			String newtimelater = CommonUtils.getTimeFormat(timelater, "yyyy-MM-dd");
-			cuserhql.append(" and addtime <= '" + newtimelater + "'");
+			cuserhql.append(" and DATE(addtime) <= '" + newtimelater + "'");
 		}
 		if (!CommonUtils.isEmptyString(minsdate)) {
 			Date newminsdate = CommonUtils.getDateFormat(minsdate, "yyyy-MM-dd");
@@ -410,7 +410,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			nowtime.set(Calendar.SECOND, 0);
 			Date starttime = nowtime.getTime();
 			String newtoday = CommonUtils.getTimeFormat(starttime, "yyyy-MM-dd");
-			cuserhql.append(" and addtime >= '" + newtoday + "'");
+			cuserhql.append(" and DATE(addtime) >= '" + newtoday + "'");
 		}
 		//报名时间
 		if (!CommonUtils.isEmptyString(maxenrollsdate)) {
@@ -422,7 +422,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			latertime.set(Calendar.SECOND, 59);
 			Date timelater = latertime.getTime();
 			String newtimelater = CommonUtils.getTimeFormat(timelater, "yyyy-MM-dd");
-			cuserhql.append(" and enrolltime <= '" + newtimelater + "'");
+			cuserhql.append(" and  DATE(enrolltime) <= '" + newtimelater + "'");
 		}
 		if (!CommonUtils.isEmptyString(minenrollsdate)) {
 			Date newminsdate = CommonUtils.getDateFormat(minenrollsdate, "yyyy-MM-dd");
@@ -433,7 +433,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			nowtime.set(Calendar.SECOND, 0);
 			Date starttime = nowtime.getTime();
 			String newtoday = CommonUtils.getTimeFormat(starttime, "yyyy-MM-dd");
-			cuserhql.append(" and enrolltime >= '" + newtoday + "'");
+			cuserhql.append(" and  DATE(enrolltime) >= '" + newtoday + "'");
 		}
 		List<SuserInfo> suserInfolist = (List<SuserInfo>) dataDao.pageQueryViaParam(cuserhql.toString() + " order by studentid asc", pagesize, pageIndex, null);
 		String counthql = " select count(*) " + cuserhql.toString();
@@ -442,7 +442,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	}
 	
 	
-	
+	//已删除学员条件搜索
 	@SuppressWarnings("unchecked")
 	@Override
 	public QueryResult<SuserInfo> getDeleteStudentByKeyword(String searchname, String searchphone, String minsdate, String maxsdate, String minenrollsdate, String maxenrollsdate,Integer pageIndex, int pagesize) {
@@ -464,7 +464,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			latertime.set(Calendar.SECOND, 59);
 			Date timelater = latertime.getTime();
 			String newtimelater = CommonUtils.getTimeFormat(timelater, "yyyy-MM-dd");
-			cuserhql.append(" and addtime <= '" + newtimelater + "'");
+			cuserhql.append(" and DATE(addtime) <= '" + newtimelater + "'");
 		}
 		if (!CommonUtils.isEmptyString(minsdate)) {
 			Date newminsdate = CommonUtils.getDateFormat(minsdate, "yyyy-MM-dd");
@@ -475,7 +475,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			nowtime.set(Calendar.SECOND, 0);
 			Date starttime = nowtime.getTime();
 			String newtoday = CommonUtils.getTimeFormat(starttime, "yyyy-MM-dd");
-			cuserhql.append(" and addtime >= '" + newtoday + "'");
+			cuserhql.append(" and DATE(addtime) >= '" + newtoday + "'");
 		}
 		//报名时间
 		if (!CommonUtils.isEmptyString(maxenrollsdate)) {
@@ -487,7 +487,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			latertime.set(Calendar.SECOND, 59);
 			Date timelater = latertime.getTime();
 			String newtimelater = CommonUtils.getTimeFormat(timelater, "yyyy-MM-dd");
-			cuserhql.append(" and enrolltime <= '" + newtimelater + "'");
+			cuserhql.append(" and DATE(enrolltime) <= '" + newtimelater + "'");
 		}
 		if (!CommonUtils.isEmptyString(minenrollsdate)) {
 			Date newminsdate = CommonUtils.getDateFormat(minenrollsdate, "yyyy-MM-dd");
@@ -498,7 +498,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			nowtime.set(Calendar.SECOND, 0);
 			Date starttime = nowtime.getTime();
 			String newtoday = CommonUtils.getTimeFormat(starttime, "yyyy-MM-dd");
-			cuserhql.append(" and enrolltime >= '" + newtoday + "'");
+			cuserhql.append(" and DATE(enrolltime) >= '" + newtoday + "'");
 		}
 		List<SuserInfo> suserInfolist = (List<SuserInfo>) dataDao.pageQueryViaParam(cuserhql.toString() + " order by studentid asc", pagesize, pageIndex, null);
 		String counthql = " select count(*) " + cuserhql.toString();
@@ -547,7 +547,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			latertime.set(Calendar.SECOND, 59);
 			Date timelater = latertime.getTime();
 			String newtimelater = CommonUtils.getTimeFormat(timelater, "yyyy-MM-dd");
-			cuserhql.append(" and addtime <= '" + newtimelater + "'");
+			cuserhql.append(" and DATE(addtime) <= '" + newtimelater + "'");
 		}
 		if (!CommonUtils.isEmptyString(minsdate)) {
 			Date newminsdate = CommonUtils.getDateFormat(minsdate, "yyyy-MM-dd");
@@ -558,7 +558,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			nowtime.set(Calendar.SECOND, 0);
 			Date starttime = nowtime.getTime();
 			String newtoday = CommonUtils.getTimeFormat(starttime, "yyyy-MM-dd");
-			cuserhql.append(" and addtime >= '" + newtoday + "'");
+			cuserhql.append(" and DATE(addtime) >= '" + newtoday + "'");
 		}
 		//报名时间
 		if (!CommonUtils.isEmptyString(maxenrollsdate)) {
@@ -570,7 +570,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			latertime.set(Calendar.SECOND, 59);
 			Date timelater = latertime.getTime();
 			String newtimelater = CommonUtils.getTimeFormat(timelater, "yyyy-MM-dd");
-			cuserhql.append(" and enrolltime <= '" + newtimelater + "'");
+			cuserhql.append(" and DATE(enrolltime) <= '" + newtimelater + "'");
 		}
 		if (!CommonUtils.isEmptyString(minenrollsdate)) {
 			Date newminsdate = CommonUtils.getDateFormat(minenrollsdate, "yyyy-MM-dd");
@@ -581,7 +581,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			nowtime.set(Calendar.SECOND, 0);
 			Date starttime = nowtime.getTime();
 			String newtoday = CommonUtils.getTimeFormat(starttime, "yyyy-MM-dd");
-			cuserhql.append(" and enrolltime >= '" + newtoday + "'");
+			cuserhql.append(" and DATE(enrolltime) >= '" + newtoday + "'");
 		}
 		List<SuserInfo> suserInfolist = (List<SuserInfo>) dataDao.pageQueryViaParam(cuserhql.toString() + " order by studentid asc", pagesize, pageIndex, null);
 		String counthql = " select count(*) " + cuserhql.toString();
