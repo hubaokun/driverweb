@@ -222,6 +222,13 @@ public interface ISUserService {
 	 * @param type
 	 */
 	public abstract void applyCheckNoPass(int coachid);
+	/**
+	 * 提现申请审核作废
+	 * 
+	 * @param coachid
+	 * @param type
+	 */
+	public void applyCheckrevocation(int coachid);
 
 	/**
 	 * 关键字搜索提现记录

@@ -59,7 +59,7 @@ function dataExport(){
 	<div id="content">
 		<jsp:include page="left.jsp" />
 		<div id="content_form">
-			<div id="content_form_top" style="height:140px;">
+			<div id="content_form_top" style="height:190px;">
 					<div class="searchbutton" onclick="searchOrder()">
 						<img src="imgs/common/searchicon.png" width=22px height=22px
 							style="margin-top: 9px;">

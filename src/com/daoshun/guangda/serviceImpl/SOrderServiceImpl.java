@@ -44,7 +44,6 @@ import com.daoshun.guangda.pojo.UserPushInfo;
 import com.daoshun.guangda.service.ICscheduleService;
 import com.daoshun.guangda.service.ISOrderService;
 
-import sun.net.smtp.SmtpProtocolException;
 
 @Service("sorderService")
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)

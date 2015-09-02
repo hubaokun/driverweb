@@ -306,7 +306,7 @@ public class CscheduleServiceImpl extends BaseServiceImpl implements ICscheduleS
 	}
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override
-	public void setDefaultNew(String coachid, String hour,String price,String addressid,String subjectid) {
+	public void setDefaultNew(String coachid, String hour,String price,String addressid,String subjectid,String isrest) {
 		String querystring="from DefaultSchedule where coachid=:coachid and hour=:hour";
 		String[] params={"coachid","hour"};
 		DefaultSchedule tempDefaultSchedule=(DefaultSchedule) dataDao.getFirstObjectViaParam(querystring, params, CommonUtils.parseInt(coachid, 0),hour);
@@ -317,6 +317,7 @@ public class CscheduleServiceImpl extends BaseServiceImpl implements ICscheduleS
 	    	tempDefaultSchedule.setSubjectid(CommonUtils.parseInt(subjectid,0));
 	    	tempDefaultSchedule.setAddressid(CommonUtils.parseInt(addressid,0));
 	    	tempDefaultSchedule.setUpdatetime(new Date());
+	    	tempDefaultSchedule.setIsrest(CommonUtils.parseInt(isrest, 1));
 	    	dataDao.updateObject(tempDefaultSchedule);
 	    }
 	    else
@@ -328,6 +329,7 @@ public class CscheduleServiceImpl extends BaseServiceImpl implements ICscheduleS
 	    	newDefaultSchedule.setAddressid(CommonUtils.parseInt(addressid,0));
 	    	newDefaultSchedule.setUpdatetime(new Date());
 	    	newDefaultSchedule.setHour(hour);
+	    	newDefaultSchedule.setIsrest(CommonUtils.parseInt(isrest, 1));
 	    	newDefaultSchedule.setCoachid(CommonUtils.parseInt(coachid, 0));
 	    	dataDao.addObject(newDefaultSchedule);
 	    }

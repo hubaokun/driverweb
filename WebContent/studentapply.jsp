@@ -129,6 +129,11 @@ $(function(){
 									<div class="table_button_text"
 										onclick="stuCheckNoPass(${applyid},${index},${pageIndex},${change_id})">审核不通过</div>
 								</div>
+								<div class="table_edit_button" style="width: 80px;background:#999999">
+									<div class="table_button_edit_icon"></div>
+									<div class="table_button_text"
+										onclick="checkrevocation(${applyid},${index},${pageIndex},${change_id})">作废</div>
+								</div>
 								</s:if>
 							</td>
 
