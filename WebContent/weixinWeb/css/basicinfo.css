@@ -1,0 +1,170 @@
+body {
+	background-color: rgb(247,247,247);
+}
+/*基本信息*/
+input[type="text"] {
+	border: none;
+	height: 40px;
+}
+.basic-head {
+	margin-top: 8px;
+	background-color: white;
+	border-top: 1px solid rgb(239,239,239);
+	border-bottom: 1px solid rgb(239,239,239);
+}
+
+.basic-head label
+{
+	display:block;
+	width:100%;
+	height:35px;
+}
+.basic-head .col-md-12 input[type="text"],.basic-data .col-md-12 input[type="text"] {
+	border: none;
+	height: 40px;
+	width:78%;
+	text-align:right;
+	color:rgb(35,173,229);
+}
+.basic-head .col-md-12, .basic-data .col-md-12 {
+	border-bottom: 1px solid rgb(239,239,239);
+	padding: 0px 12px;
+}
+.basic-head .col-md-12:last-child, .basic-data .col-md-12:last-child {
+	border-bottom: none;
+}
+.basic-head .col-md-3 {
+	padding: 4px 0px;
+}
+.basic-head .col-md-3 img {
+	height: 35px;
+	width: auto;
+}
+.basic-head .col-md-12 p, .basic-data p {
+	padding: 0px;
+	margin: 0px;
+	line-height: 43px;
+	font-size: 13px;
+}
+.basic-head .col-md-12 p span:first-child {
+	color: #1e1e1e;
+}
+.basic-head .col-md-12 p span:last-child {
+	color: rgb(35,173,229);
+}
+.basic-icon {
+	line-height: 42px;
+	float: right;
+	color: rgb(237,237,237);
+}
+.basic-data {
+	background-color: white;
+	margin-top: 7px;
+	border-top: 1px solid rgb(239,239,239);
+	border-bottom: 1px solid rgb(239,239,239);
+	color: #1e1e1e;
+}
+/*学驾信息*/
+.mylearninfo-head {
+	background-color: white;
+	border-top: 1px solid rgb(239,239,239);
+	border-bottom: 1px solid rgb(239,239,239);
+}
+.mylearninfo-head .col-md-12 {
+	border-bottom: 1px solid rgb(239,239,239);
+	line-height: 44px;
+	padding: 0px 12px;
+}
+.mylearninfo-head .col-md-12:last-child {
+	border-bottom: none;
+}
+.mylearninfo-head .col-md-12 p {
+	margin: 0px;
+	padding: 0px;
+	font-size: 13px;
+}
+.mylearninfo-head .col-md-12 p span:first-child {
+	color: #1e1e1e;
+}
+.mylearninfo-head .col-md-12 p span:last-child {
+	color: rgb(33,173,229);
+	padding-left: 15px;
+}
+.mylearninfo-data {
+	margin-top: 6px;
+	margin-bottom: 6px;
+	border-bottom: 1px solid rgb(239,239,239);
+	border-top: 1px solid rgb(239,239,239);
+	background-color: white;
+	color: #1e1e1e;
+	font-size: 13px;
+	padding: 9px 0px;
+}
+.mylearninfo-data input[type="file"] {
+	display: none;
+}
+.mylearninfo-data .col-md-4 {
+	padding: 0px 12px;
+}
+.mylearninfo-data .col-md-6 img {
+	height: 98px;
+	width: auto;
+	margin-bottom: 9px;
+}
+.mylearninfo-data .col-md-6 label {
+	padding: 6px 0px;
+	margin: 0px;
+	font-size: 15px;
+	color: #6ec9ee;
+	border: 1px solid rgb(213,213,213);
+	border-radius: 4px;
+	background-color: rgb(250,250,250);
+	display: block;
+	line-height: 30px;
+}
+/*编辑资料 提示弹框*/
+.overlay {
+	width: 100%;
+	height: 100%;
+	background: rgba(27,27,27,0.84);
+	position: fixed;
+	top: 0;
+	display: none;
+	z-index: 100;
+}
+.overlay .overlay-content {
+	background-color: white;
+	width: 296px;
+	height: 90px;
+	text-align: center;
+	position: absolute;
+}
+.overlay .overlay-content .col-md-12 {
+	border-bottom: 1px solid rgb(218,218,218);
+}
+.overlay .overlay-content .col-md-12 span {
+	color: rgb(35,173,229);
+	font-size: 13px;
+	line-height: 43px;
+}
+.overlay .overlay-content .col-md-6 {
+	line-height: 43px;
+}
+.blue {
+	color: rgb(35,173,229);
+}
+.grey {
+	color: rgb(218,218,218);
+}
+.mylearninfo-submit {
+	margin-top: 17px;
+	margin-bottom: 28px;
+	text-align: center;
+}
+.mylearninfo-submit span {
+	background-color: rgb(35,173,229);
+	color: white;
+	display: block;
+	border-radius: 4px;
+	line-height: 44px;
+}

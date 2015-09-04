@@ -1,0 +1,92 @@
+/* CSS Document */
+body
+{
+	background-color:rgb(247,247,247);
+	overflow:hidden;
+}
+.container
+{
+	margin:0px;
+	padding:0px;
+	overflow:hidden;
+}
+.logo-row
+{
+	margin-top:32px;
+	margin-bottom:32px;
+}
+.logo-row img
+{
+	height:82px;
+}
+.form-row
+{
+	margin:0px 12px;
+	background-color:white;
+	border:1px solid rgb(212,212,212);
+
+	border-radius:4px;
+}
+.form-row
+{
+	position:relative;
+
+}
+.form-row input[type="text"]
+{
+	width:100%;
+	text-indent:0.5em;
+	border:none;
+	line-height:22px;
+	color:black;
+	font-size:15px;
+}
+.form-row input[type="text"]:first-child
+{
+	margin-bottom:11px;
+	margin-top:13px;
+}
+.form-row span.un-active
+{
+	color: #e3e3e3;
+	font-size: 12px;
+	background-color: rgb(202,202,202);
+	line-height: 15px;
+	padding: 4px;
+	border-radius: 4px;
+	position: absolute;
+	top: 14px;
+	right: 11px;
+}
+.form-row span.active
+{
+	color: white;
+	font-size: 12px;
+	background-color: #1798f2;
+}
+.div-line
+{
+	width: 95%;
+	height: 1px;
+	background-color: rgb(212,212,212);
+}
+.login-row
+{
+	text-align:center;
+	margin:0px 12px;
+}
+.login-row .col-md-12
+{
+	padding:0px;
+	margin-top:32px;
+}
+.login-row a
+{
+	text-decoration:none;
+	display:block;
+	background-color:#1798f2;
+	color:white;
+	font-size:15px;
+	border-radius:4px;
+	line-height:44px;
+}
