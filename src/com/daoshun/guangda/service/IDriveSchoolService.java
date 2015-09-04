@@ -22,4 +22,10 @@ public interface IDriveSchoolService {
 	public abstract List<CoachStudentInfo> getCoachStudentInfoByCoachid(int id);
 	
 	public abstract List<CuserInfo> getCuserListByKeyname(String name);
+	/**
+	 * 根据城市ID查询驾校信息
+	 * @param cityid
+	 * @return
+	 */
+	public List<DriveSchoolInfo> getDriveschoolByCityName(String cityid) ;
 }

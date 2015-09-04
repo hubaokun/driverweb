@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
 import com.daoshun.common.ErrException;
+import com.daoshun.guangda.pojo.AppCuserInfo;
 import com.daoshun.guangda.pojo.CouponRecord;
 import com.daoshun.guangda.pojo.CscheduleInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
@@ -109,7 +110,10 @@ public class SbookServlet extends BaseServlet {
 			}else if (Constant.GETOPENMODELPRICE.equals(action)) {
 				//城市套餐价格
 				getOpenModelPrice(request, resultMap);
-			}  else {
+			}else if (Constant.GETDRIVERSCHOOLBYCITYNAME.equals(action)) {
+				//按城市ID查询驾校信息
+				getDriveschoolByCityName(request, resultMap);
+			}else {
 				throw new ErrException();
 			}
 
@@ -393,13 +397,16 @@ public class SbookServlet extends BaseServlet {
 		String condition9 = getRequestParamter(request, "condition9");// 价格上限
 		String condition10 = getRequestParamter(request, "condition10");// 车型 0.表示不限
 		String condition11 = getRequestParamter(request, "condition11");// 准教车型
-		String studentid = getRequestParamter(request, "studentid");// 准教车型
-		String cityid = getRequestParamter(request, "cityid");// 准教车型
-		List<CuserInfo> coachlist = sbookService.getNearByCoach2(cityid,pointcenter, radius, condition1, condition2, condition3, condition4, condition5, condition6, condition8, condition9, condition10,
-				condition11);
+		String studentid = getRequestParamter(request, "studentid");//学员ID
+		String cityid = getRequestParamter(request, "cityid");//城市ID 
+		String driverschoolid = getRequestParamter(request, "driverschoolid");//驾校id
+		String fixedposition =getRequestParamter(request, "fixedposition");//定位的城市名称
+		List<AppCuserInfo> coachlist = sbookService.getNearByCoach2(cityid,pointcenter, radius, condition1, 
+												condition2, condition3, condition4, condition5, condition6, condition8, condition9, condition10,
+												condition11,driverschoolid,fixedposition);
 		
 			if(studentid==null || !"18".equals(studentid)){
-				for (CuserInfo cuserInfo : coachlist) {
+				for (AppCuserInfo cuserInfo : coachlist) {
 					if(cuserInfo.getCoachid()==13){
 						coachlist.remove(cuserInfo);
 						break;
@@ -408,7 +415,7 @@ public class SbookServlet extends BaseServlet {
 			}
 		resultMap.put("coachlist", coachlist);
 	}
-
+	
 	public void getCoachList(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String pagenum = getRequestParamter(request, "pagenum");
 		String condition1 = getRequestParamter(request, "condition1");// 关键字:教练名称/驾校名称/教练手机号
@@ -429,17 +436,20 @@ public class SbookServlet extends BaseServlet {
 		String longitude = getRequestParamter(request, "longitude");//经纬度
 		String latitude = getRequestParamter(request, "latitude");
 		String cityid = getRequestParamter(request, "cityid");//城市ID
-		String studentid = getRequestParamter(request, "studentid");//
+		String studentid = getRequestParamter(request, "studentid");//driverschoolid
+		String driverschoolid = getRequestParamter(request, "driverschoolid");//驾校
+		String fixedposition =getRequestParamter(request, "fixedposition");//定位的城市名称
 		/*CommonUtils.validateEmpty(longitude);
 		CommonUtils.validateEmpty(latitude);
 		CommonUtils.validateEmpty(cityid);*/
 		
 		//HashMap<String, Object> result = sbookService.getCoachList(condition1, condition2, condition3, condition4, condition5, condition6, condition8, condition9, condition10, condition11, pagenum);
 		
-		HashMap<String, Object> result = sbookService.getCoachList3(cityid,condition1, condition2, condition3, condition4, condition5, condition6, condition8, condition9, condition10, condition11, pagenum,studentid);
-		List<CuserInfo> list=(List<CuserInfo>) result.get("coachlist");
+		HashMap<String, Object> result = sbookService.getCoachList3(cityid,condition1, condition2, condition3, condition4, condition5, condition6,
+																	condition8, condition9, condition10, condition11, pagenum,studentid,driverschoolid,fixedposition);
+		List<AppCuserInfo> list=(List<AppCuserInfo>) result.get("coachlist");
 		if(studentid==null || !"18".equals(studentid)){
-			for (CuserInfo cuserInfo : list) {
+			for (AppCuserInfo cuserInfo : list) {
 				if(cuserInfo.getCoachid()==13){
 					list.remove(cuserInfo);
 					break;
@@ -448,21 +458,24 @@ public class SbookServlet extends BaseServlet {
 		}
 		resultMap.putAll(result);
 	}
-
+	public void getDriveschoolByCityName(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String cityname = getRequestParamter(request, "cityname");//城市ID
+		CommonUtils.validateEmptytoMsg(cityname, "城市名称不能为空");
+		List<DriveSchoolInfo> dslist=driveSchoolService.getDriveschoolByCityName(cityname);
+		resultMap.put("dslist", dslist);
+	}
 	public void bookCoach(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
 		String studentid = getRequestParamter(request, "studentid");
 		String date = getRequestParamter(request, "date");
 		//String paytype = getRequestParamter(request, "paytype");
 		String version=getRequestParamter(request, "version");
-		
 		if (version == null || version.length() == 0)
 		{
 			resultMap.put("code", 4);
 			resultMap.put("message", "您的app版本太低,请退出app并重新进入,将自动检测更新");
 			return;
 		}
-
 
 		try {
 			CommonUtils.validateEmpty(coachid);

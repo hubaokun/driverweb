@@ -165,3 +165,17 @@ enrollpay	支付状态：-1 不需要付款的报名  0 未付款  1 已付款
 		type	  0 平台  ，1 驾校 ， 2 教练
 # 教练兑换接口APPLYCOIN
 新增type字段，表示兑换的类型
+
+# 根据定位的城市名称查询这个城市的所有驾校信息
+接口名称： /sbook?action=GETDRIVERSCHOOLBYCITYNAME
+参数：cityname 城市名称 ，如 杭州
+返回：
+   dslist 数组
+   		schoolid 驾校ID
+   		name 	  驾校名称
+   		telphone 驾校电话
+# 获取教练列表接口GETCOACHLIST新增
+ 参数：driveschoolid 驾校ID
+ 	fixedposition 定位的城市名称，可以不传
+# 获取附近的教练列表getNearByCoach新增
+参数：driveschoolid 驾校ID

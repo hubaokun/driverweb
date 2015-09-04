@@ -25,6 +25,7 @@ import com.daoshun.common.Constant;
 import com.daoshun.common.DeviceType;
 import com.daoshun.common.PayType;
 import com.daoshun.common.PushtoSingle;
+import com.daoshun.guangda.pojo.AppCuserInfo;
 import com.daoshun.guangda.pojo.CBookTimeInfo;
 import com.daoshun.guangda.pojo.CaddAddressInfo;
 import com.daoshun.guangda.pojo.CityInfo;
@@ -618,9 +619,9 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		return coachlist;
 	}
 	
-	public List<CuserInfo> getNearByCoach2(String cityid,String pointcenter, String radius, String condition1, String condition2, String condition3, String condition4, String condition5, String condition6,
-			String condition8, String condition9, String condition10, String condition11) {
-		List<CuserInfo> coachlist = new ArrayList<CuserInfo>();
+	public List<AppCuserInfo> getNearByCoach2(String cityid,String pointcenter, String radius, String condition1, String condition2, String condition3, String condition4, String condition5, String condition6,
+			String condition8, String condition9, String condition10, String condition11,String driverschoolid,String fixedposition) {
+		List<AppCuserInfo> coachlist = new ArrayList<AppCuserInfo>();
 		// 取得中心点经纬度
 		String[] centers = pointcenter.split(",");
 		String longitude =centers[0].trim();
@@ -628,18 +629,15 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		//120.048943   30.329578
 		/*String longitude="120.048943";
 		String latitude="30.329578";*/
-		radius="20.0";
-		String rhql="from CityRadius where cityid=:cityid";
+		/*String rhql="from CityRadius where cityid=:cityid";
 		String p[]={"cityid"};
 		CityRadius cr=(CityRadius) dataDao.getFirstObjectViaParam(rhql, p, CommonUtils.parseInt(cityid, 0));
 		if(cr!=null){
 			if(cr.getRadius()!=0){
 				radius=String.valueOf(cr.getRadius());
 			}
-		}
-		
+		}*/
 		// 获得符合条件的地址
-		//radius="8";//设置查询半径值
 		StringBuffer cuserhql = new StringBuffer();
 		cuserhql.append("from CaddAddressInfo where getdistance(:longitude,:latitude, longitude ,latitude)<=:radius and iscurrent = 1");
 		String[] params = { "longitude", "latitude", "radius" };
@@ -648,22 +646,32 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		// 当前时间 <2015-04-25>
 		String now = CommonUtils.getTimeFormat(new Date(), "yyyy-MM-dd");
 		if (addresslist != null && addresslist.size() > 0) {
-			
 			StringBuffer cs=new StringBuffer("(0");
-			//List<Integer> cids = new ArrayList<Integer>();
 			for (CaddAddressInfo info : addresslist) {
-				//cids.add(info.getCoachid());
 				cs.append(",").append(info.getCoachid());
 			}
 			cs.append(")");
-			
 			// 根据地址列表查询出教练,且教练需要设置了价格、默认科目、且教练不休息、证件时间未过期
 			StringBuffer hqlCoach = new StringBuffer();
 			/*hqlCoach.append("select getTeachAddress(u.coachid) as address,getCoachOrderCount(u.coachid) as drive_schoolid, u.*  from t_user_coach u where coachid in "+
 							cs.toString()+" and state = 2 and id_cardexptime > curdate() and coach_cardexptime > curdate() "
 					+ " and drive_cardexptime > curdate() and car_cardexptime > curdate() and money >= gmoney and isquit = 0");*/
-			hqlCoach.append("select u.*  from app_coach_list u where isnew=1 ");
-			
+			hqlCoach.append("select u.*  from app_coach_list u where isnew=1  and coachid in ");
+			hqlCoach.append(cs.toString());
+			if(!CommonUtils.isEmptyString(driverschoolid)){
+				cuserhql.append("  and drive_schoolid  = "+driverschoolid+" or drive_schoolid in (select schoolid");
+				cuserhql.append("  from t_drive_school_info where schoolid = "+driverschoolid+")");
+			}
+			/*if (!CommonUtils.isEmptyString(fixedposition)) {
+				String findCityIdHql="from CityInfo where city like '%"+fixedposition+"%'";
+				List<CityInfo> citylist=(List<CityInfo>) dataDao.getObjectsViaParam(findCityIdHql.toString(),null);
+				if(citylist!=null && citylist.size()>0){
+					CityInfo city=citylist.get(0);
+					if(city!=null){
+						cuserhql.append(" and cityid = " + city.getCityid());
+					}
+				}
+			}*/
 			if (!CommonUtils.isEmptyString(cityid)) {
 				hqlCoach.append(" and cityid = " + cityid);
 			}
@@ -676,20 +684,24 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					hqlCoach.append(" and (realname like '%" + condition1 + "%' or drive_school like '%" + condition1 + "%' or drive_schoolid in (select schoolid from t_drive_school_info where name like  '%"
 						+ condition1 + "%')) ");
 				}
+			}else{
+				cuserhql.append(" and  coursestate = 1 ");
 			}
+			//cuserhql.append(" and  coursestate = 1 ");
 			// 星级
 			if (!CommonUtils.isEmptyString(condition2)) {
 				hqlCoach.append(" and score >= " + condition2);
 			}
+			
 			// 开始时间和结束时间
-			if (!CommonUtils.isEmptyString(condition3)) {
+			/*if (!CommonUtils.isEmptyString(condition3)) {
 
 				int subjectid = CommonUtils.parseInt(condition6, 0);
 
 				Date start = null;
 				if(condition3.length() == 10){
 					start = CommonUtils.getDateFormat(condition3, "yyyy-MM-dd");
-				}else if(condition3.length() == 19){
+				}else if(condition3.length() >10){
 					start = CommonUtils.getDateFormat(condition3, "yyyy-MM-dd HH:mm:ss");
 				}
 
@@ -708,7 +720,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				Calendar c = Calendar.getInstance();
 				hqlCoach.append(" and  coursestate = 1");
 				//hqlCoach.append(" and getcoachstate(u.coachid," + 10 + ",'" + CommonUtils.getTimeFormat(c.getTime(), "yyyy-MM-dd") + "'," + 5 + "," + 23 + "," + subjectid + ") = 1");
-			}
+			}*/
 
 			if (!CommonUtils.isEmptyString(condition11)) {//C1手动挡 接收到17 ，C2自动挡接收到18
 				hqlCoach.append(" and modelid like '%" + condition11 + "%'");
@@ -782,12 +794,12 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				if(info.getCoachid()==157)
 					System.out.println(info.getCoachid());
 			}*/
-			//System.out.println(hqlCoach.toString());
+			//System.out.println("getNNNN:"+hqlCoach.toString());
 			//hqlCoach.append("  order by coursestate desc,drive_schoolid desc,score desc");
-			List<CuserInfo> cuserlist = (List<CuserInfo>) dataDao.SqlPageQuery(hqlCoach.toString(), null, null,CuserInfo.class, null);
+			List<AppCuserInfo> cuserlist = (List<AppCuserInfo>) dataDao.SqlPageQuery(hqlCoach.toString(), null, null,AppCuserInfo.class, null);
 			//List<CuserInfo> cuserlist = (List<CuserInfo>) dataDao.getObjectsViaParam(hqlCoach.toString(), paramsCoach, cids, now, now, now, now, now);
 			if (cuserlist != null && cuserlist.size() > 0) {
-				for (CuserInfo cuser : cuserlist) {
+				for (AppCuserInfo cuser : cuserlist) {
 					if (cuser.getMoney().doubleValue() >= cuser.getGmoney().doubleValue()) {
 						coachlist.add(cuser);
 					}
@@ -800,6 +812,10 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			}
 			// 查询教练其它信息
 			for (int i = 0; i < coachlist.size(); i++) {
+				AppCuserInfo ac=coachlist.get(i);
+				ac.setGmoney(null);
+				ac.setMoney(null);
+				ac.setRealpic(null);
 				for (CaddAddressInfo address : addresslist) {// 设置地址信息 教练的默认上车地址
 					if (address.getCoachid() == coachlist.get(i).getCoachid()) {
 						coachlist.get(i).setLongitude(address.getLongitude());
@@ -810,6 +826,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				}
 			}
 		}
+		
 		return coachlist;
 	}
 
@@ -1099,13 +1116,26 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 	}
 	
 	public HashMap<String, Object> getCoachList3(String cityid,String condition1, String condition2, String condition3, String condition4, String condition5, String condition6, String condition8, String condition9,
-			String condition10, String condition11, String pagenum,String studentid) {
+			String condition10, String condition11, String pagenum,String studentid,String driverschoolid,String fixedposition) {
 		//long starttime=System.currentTimeMillis();
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		StringBuffer cuserhql = new StringBuffer();
 		cuserhql.append("select u.*  from app_coach_list u where isnew=1 ");
 		//cuserhql.append("select u.*  from app_coach_list u where state = 2 and id_cardexptime > curdate() and coach_cardexptime > curdate() and drive_cardexptime > curdate() and car_cardexptime > curdate() and (select count(*) from t_teach_address a where u.coachid = a.coachid and iscurrent = 1) > 0");
-		
+		if(!CommonUtils.isEmptyString(driverschoolid)){
+			cuserhql.append("  and drive_schoolid  = "+driverschoolid+" or drive_schoolid in (select schoolid");
+			cuserhql.append("  from t_drive_school_info where schoolid = "+driverschoolid+")");
+		}
+		if (!CommonUtils.isEmptyString(fixedposition)) {
+			String findCityIdHql="from CityInfo where city like '%"+fixedposition+"%'";
+			List<CityInfo> citylist=(List<CityInfo>) dataDao.getObjectsViaParam(findCityIdHql.toString(),null);
+			if(citylist!=null && citylist.size()>0){
+				CityInfo city=citylist.get(0);
+				if(city!=null){
+					cuserhql.append(" and cityid = " + city.getCityid());
+				}
+			}
+		}
 		if (!CommonUtils.isEmptyString(cityid)) {
 			cuserhql.append(" and cityid = " + cityid);
 		}
@@ -1115,8 +1145,10 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			if(CommonUtils.isNumber(condition1) && condition1.trim().length()==11){
 				cuserhql.append(" and phone = '").append(condition1).append("' ");
 			}else{
-				cuserhql.append(" and (realname like '%" + condition1 + "%' or drive_school like '%" + condition1 + "%' or drive_schoolid in (select schoolid from t_drive_school_info where name like  '%"
-						+ condition1 + "%') or phone like '%"+condition1+"%') ");
+				/*cuserhql.append(" and (realname like '%" + condition1 + "%' or drive_school like '%" + condition1 + "%' or drive_schoolid in (select schoolid from t_drive_school_info where name like  '%"
+						+ condition1 + "%') or phone like '%"+condition1+"%') ");*/
+				cuserhql.append(" and ((realname like '%" + condition1 + "%') "
+						+ " or phone like '%"+condition1+"%') ");
 			}
 			
 		}else{
@@ -1127,7 +1159,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			cuserhql.append(" and score >= " + condition2);
 		}
 
-		if (!CommonUtils.isEmptyString(condition3)) {
+		/*if (!CommonUtils.isEmptyString(condition3)) {
 
 			int subjectid = CommonUtils.parseInt(condition6, 0);
 
@@ -1144,6 +1176,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 
 				int starthour = startCal.get(Calendar.HOUR_OF_DAY);
 				int datecount = 1;
+				//coachid, 1,fdate,5,23,0
 				//cuserhql.append(" and  coursestate = 1");
 				//cuserhql.append(" and getcoachstate(u.coachid," + datecount + ",'" + CommonUtils.getTimeFormat(start, "yyyy-MM-dd") + "'," + starthour + "," + 23 + "," + subjectid + ") = 1");
 
@@ -1152,9 +1185,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			int subjectid = CommonUtils.parseInt(condition6, 0);
 			Calendar c = Calendar.getInstance();
 			//cuserhql.append(" and  coursestate = 1");
-			//cuserhql.append(" and  drive_schoolid=1");
 			//cuserhql.append(" and getcoachstate(u.coachid," + 10 + ",'" + CommonUtils.getTimeFormat(c.getTime(), "yyyy-MM-dd") + "'," + 5 + "," + 23 + "," + subjectid + ") = 1");
-		}
+		}*/
 
 		if (!CommonUtils.isEmptyString(condition11)) {
 			cuserhql.append(" and modelid like '%" + condition11 + "%'");
@@ -1162,6 +1194,9 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		if(!CommonUtils.isEmptyString(studentid)){
 			SuserInfo user=dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
 			if(user!=null){
+				if(user.getUsertype()==null){
+					user.setUsertype(0);
+				}
 				if(user.getUsertype()==0){//正式学员，正式学员不能看到测试教练
 					cuserhql.append(" and usertype=0 ");
 				}
@@ -1172,10 +1207,10 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		cuserhql.append(" and money >= gmoney and isquit = 0  order by coursestate desc,drive_schoolid desc,score desc");
 		//System.out.println(cuserhql.toString());
 
-		List<CuserInfo> coachlist = (List<CuserInfo>) dataDao.SqlPageQuery(cuserhql.toString(), Constant.USERLIST_SIZE+1, CommonUtils.parseInt(pagenum, 0) + 1,CuserInfo.class, null);
+		List<AppCuserInfo> coachlist = (List<AppCuserInfo>) dataDao.SqlPageQuery(cuserhql.toString(), Constant.USERLIST_SIZE+1, CommonUtils.parseInt(pagenum, 0) + 1,AppCuserInfo.class, null);
 		
 		if (coachlist != null && coachlist.size() > 0) {
-			for (CuserInfo coach : coachlist) {
+			for (AppCuserInfo coach : coachlist) {
 				//StringBuffer cuserhql1 = new StringBuffer();
 				//cuserhql1.append("from CaddAddressInfo where coachid =:coachid and iscurrent = 1");
 				//String[] params1 = { "coachid" };
@@ -1196,25 +1231,12 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			}
 		}
 		result.put("coachlist", coachlist);
-		List<CuserInfo> coachlistnext = (List<CuserInfo>) dataDao.SqlPageQuery(cuserhql.toString(), Constant.USERLIST_SIZE, CommonUtils.parseInt(pagenum, 0) + 2,CuserInfo.class, null);
+		List<AppCuserInfo> coachlistnext = (List<AppCuserInfo>) dataDao.SqlPageQuery(cuserhql.toString(), Constant.USERLIST_SIZE, CommonUtils.parseInt(pagenum, 0) + 2,AppCuserInfo.class, null);
 		if (coachlistnext != null && coachlistnext.size() > 0) {
 			result.put("hasmore", 1);
 		} else {
 			result.put("hasmore", 0);
 		}
-		/*int n=cuserhql.toString().indexOf("from");
-		String countSql=cuserhql.toString().substring(n, cuserhql.toString().length());
-		countSql="select count(*)  "+countSql;
-		System.out.println(countSql);*/
-		//Long o=(Long) dataDao.getFirstObjectViaParam(countSql, p, coachid);
-		//Long coachlistnext = (Long) dataDao.SqlPageQuery(countSql, Constant.USERLIST_SIZE, CommonUtils.parseInt(pagenum, 0) + 2);
-		/*if(coachlistnext!=null && coachlistnext.size()>0){
-		int n=cuserhql.toString().indexOf("from");
-		String countSql=cuserhql.toString().substring(n, cuserhql.toString().length());
-		countSql="select count(*)  "+countSql;*/
-		//System.out.println(countSql);
-		/*long endtime=System.currentTimeMillis();
-		System.out.println("总耗时："+(endtime-starttime));*/
 		return result;
 	}
 	//从redis中查询开课教练信息

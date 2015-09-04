@@ -5,8 +5,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import com.daoshun.guangda.pojo.AppCuserInfo;
 import com.daoshun.guangda.pojo.CaddAddressInfo;
-import com.daoshun.guangda.pojo.CityInfo;
 import com.daoshun.guangda.pojo.CouponRecord;
 import com.daoshun.guangda.pojo.CscheduleInfo;
 import com.daoshun.guangda.pojo.CsubjectInfo;
@@ -74,8 +74,8 @@ public interface ISBookService {
 	 * 原接口上添加返回教练订单总数
 	 * @return
 	 */
-	public abstract List<CuserInfo> getNearByCoach2(String cityid,String pointcenter, String radius, String condition1, String condition2, String condition3, String condition4, String condition5, String condition6,
-			String condition8, String condition9, String condition10, String condition11);
+	public abstract List<AppCuserInfo> getNearByCoach2(String cityid,String pointcenter, String radius, String condition1, String condition2, String condition3, String condition4, String condition5, String condition6,
+			String condition8, String condition9, String condition10, String condition11,String driveschollid,String fixedposition);
 
 	/**
 	 * 获取教练列表
@@ -129,5 +129,5 @@ public interface ISBookService {
 	public List<ModelPrice> getOpenModelPrice();
 	public void addOpenModelPrice(ModelPrice mp);
 	public HashMap<String, Object> getCoachList3(String cityid,String condition1, String condition2, String condition3, String condition4, String condition5, String condition6, String condition8, String condition9,
-			String condition10, String condition11, String pagenum,String studentid);
+			String condition10, String condition11, String pagenum,String studentid,String driveschollid,String fixedposition);
 }

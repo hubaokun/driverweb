@@ -276,6 +276,11 @@ public class SuserAction extends BaseAction {
 			}
 		}
 		
+		
+		
+		
+		
+		
 		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
 		if (pageIndex > 1) {
 			if (suserlist == null || suserlist.size() == 0) {

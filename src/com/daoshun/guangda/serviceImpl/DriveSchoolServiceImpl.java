@@ -93,5 +93,32 @@ public class DriveSchoolServiceImpl extends BaseServiceImpl implements IDriveSch
 		List<CuserInfo> cuserlist=	(List<CuserInfo>) dataDao.getObjectsViaParam(coahql.toString(), null);
 		return cuserlist;
 	}
+	/**
+	 * 根据定位城市名称查询驾校信息
+	 * @param cityid
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<DriveSchoolInfo> getDriveschoolByCityName(String cityname) {
+		
+		
+		StringBuffer drihql=new StringBuffer();
+		drihql.append(" from DriveSchoolInfo where cityid in (select cityid from CityInfo where city like '%"+cityname+"%')  order by addtime desc");
+		List<DriveSchoolInfo> schoollist=(List<DriveSchoolInfo>) dataDao.getObjectsViaParam(drihql.toString(),null);
+		for (DriveSchoolInfo ds : schoollist) {
+			ds.setAddtime(null);
+			ds.setAlipay_account(null);
+			ds.setAreaid(null);
+			ds.setContact(null);
+			ds.setIscontract(null);
+			ds.setMoney(null);
+			ds.setOrder_pull(null);
+			ds.setProvinceid(null);
+			ds.setTelphone(null);
+			ds.setCityid(null);
+		}
+		return schoollist;
+	}
 
 }

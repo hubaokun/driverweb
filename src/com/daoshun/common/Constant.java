@@ -355,7 +355,7 @@ public class Constant {
 	public static final String GETMODELPRICE = "GETMODELPRICE";
 	//城市套餐价格
 	public static final String GETOPENMODELPRICE = "GETOPENMODELPRICE";
-	
+	public static final String GETDRIVERSCHOOLBYCITYNAME = "GETDRIVERSCHOOLBYCITYNAME";
 	// 获取所有驾校信息
 	public static final String CGETALLSCHOOL = "GETALLSCHOOL";
 	// 设置支付宝账户
