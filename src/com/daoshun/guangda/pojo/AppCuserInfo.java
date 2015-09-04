@@ -71,6 +71,17 @@ public class AppCuserInfo implements Serializable {
 	private BigDecimal money;
 	private BigDecimal gmoney;
 	
+	private int coursestate;
+	
+	
+	public int getCoursestate() {
+		return coursestate;
+	}
+
+	public void setCoursestate(int coursestate) {
+		this.coursestate = coursestate;
+	}
+
 	public BigDecimal getGmoney() {
 		return gmoney;
 	}
