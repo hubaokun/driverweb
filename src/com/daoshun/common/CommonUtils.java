@@ -632,7 +632,18 @@ public class CommonUtils {
 //    	System.out.println("to24Base:"+phone+"-->"+code);
     	return code;
     }
-
+      public static String byteToString(byte[] digest) {
+		StringBuilder buf = new StringBuilder();
+		for (int i = 0; i < digest.length; i++) {
+		String tempStr = Integer.toHexString(digest[i] & 0xff);
+		if (tempStr.length() == 1) {
+		buf.append("0").append(tempStr);
+		} else {
+		buf.append(tempStr);
+		}
+		}
+		return buf.toString().toLowerCase();
+		}
     
     public static void main(String[] args) { 
     	/*String phone="18758234668";
