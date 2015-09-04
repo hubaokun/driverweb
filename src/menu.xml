@@ -60,6 +60,8 @@
 		<sub-item name="教练小巴券兑换记录" authority="2" action="getCouponCoachInfo.do"/>
 		<sub-item name="发放小巴币" authority="2" action="goGrantCoinRecord.do"/>
 		<sub-item name="小巴币发放查询" authority="2" action="goCoinRecord.do"/>
+		<sub-item name="驾校发放小巴券" authority="2" action="goSchoolGrantCoupon.do"/>
+		<sub-item name="驾校发放小巴币" authority="2" action="goSchoolGrantCoin.do"/>
 	</menu-item>
 
 	<menu-item name="其他" iconURL="" authority="1">

@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50625
 File Encoding         : 65001
 
-Date: 2015-08-28 20:11:54
+Date: 2015-09-02 21:24:37
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -20,7 +20,7 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `accountreportforday`;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `accountreportforday`(`querydate` date)
+CREATE  PROCEDURE `accountreportforday`(`querydate` date)
 BEGIN
 
 	DECLARE a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,a12,a13,a14 INT(11);
@@ -110,7 +110,7 @@ DELIMITER ;
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `coinreportmonthly`;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `coinreportmonthly`(`datestart` TEXT,`dateend` TEXT)
+CREATE  PROCEDURE `coinreportmonthly`(`datestart` TEXT,`dateend` TEXT)
 BEGIN
 	DECLARE v_payername VARCHAR(100) DEFAULT "";
   DECLARE v_payerschool VARCHAR(200) DEFAULT "";
@@ -118,9 +118,9 @@ BEGIN
   DECLARE v_coinnumber DECIMAL(20,2);
   DECLARE v_coinpay DECIMAL(20,2);
   DECLARE v_coinchage DECIMAL(20,2);
-  DECLARE v_payerid INT;
-  DECLARE v_type INT;
-  
+  DECLARE v_payerid INT(11);
+  DECLARE v_type INT(11);
+  DECLARE v_count INT(11);
  -- 遍历数据结束标志
 	DECLARE done INT DEFAULT FALSE;
   -- 游标
@@ -153,24 +153,66 @@ BEGIN
       LEAVE read_loop;
     END IF;
     -- 这里做你想做的循环的事件\
-    IF v_type = 1 THEN
-  	        select name into v_payername from  t_drive_school_info where schoolid = v_payerid;
-            set v_payerschool="";
-            set v_payerphone="";
-            set v_coinpay=0;
-            set v_coinchage=0;
+    IF v_type= 1 THEN
+            SELECT count(*) into v_count from  t_drive_school_info where schoolid = v_payerid;
+            IF v_count=0 THEN
+                set v_payerschool="";
+								set v_payerphone="";
+								set v_coinpay=0;
+								set v_coinchage=0;
+						ELSE
+					      select name into v_payername from  t_drive_school_info where schoolid = v_payerid;
+                    IF v_payername is NULL THEN
+												  set v_payerschool="";
+													set v_payerphone="";
+													set v_coinpay=0;
+													set v_coinchage=0;
+										END IF;
+						END IF;
+  	       
+            
  	   ELSE   
         IF v_type = 2 THEN   
            ## select realname,phone into v_payername,v_payerphone from  t_user_coach t1  where coachid = v_payerid;
-           select t1.realname,t2.name,t1.phone into v_payername,v_payerschool,v_payerphone from  t_user_coach t1, t_drive_school_info t2 where t1.coachid = v_payerid and t1.drive_schoolid=t2.schoolid;           
-            select SUM(coinnum) into v_coinpay from t_coin_record where receiverid=v_payerid and type=2;
-            IF v_coinpay is NULL THEN
-                   set v_coinpay=0;
-            END IF;
-            select SUM(coinnum) into v_coinchage from t_coin_record where payerid=v_payerid and type=4;
-            IF v_coinchage is NULL THEN
-                   set v_coinchage=0;
-            END IF;
+            SELECT count(*) into v_count from  t_user_coach t1, t_drive_school_info t2 where t1.coachid = v_payerid and t1.drive_schoolid=t2.schoolid;           
+            IF v_count=0 THEN
+               SET v_payername="";
+               SET v_payerschool="";
+							 SET v_payerphone="";
+						ELSE
+					      select t1.realname,t2.name,t1.phone into v_payername,v_payerschool,v_payerphone from  t_user_coach t1, t_drive_school_info t2 where t1.coachid = v_payerid and t1.drive_schoolid=t2.schoolid;
+                    IF v_payername is NULL THEN
+												  set v_payername="";
+										END IF;
+										IF v_payerschool is NULL THEN
+												  set v_payerschool="";
+										END IF;
+										IF v_payerphone is NULL THEN
+												  set v_payerphone="";
+										END IF;
+						END IF;
+            SELECT count(*) into v_count from t_coin_record where receiverid=v_payerid and type=2 and DATE(addtime) BETWEEN datestart and  dateend;
+            
+						IF v_count=0 THEN
+               set v_coinpay=0;
+						ELSE
+									select SUM(coinnum) into v_coinpay from t_coin_record where receiverid=v_payerid and type=2 and DATE(addtime) BETWEEN datestart and  dateend;
+									IF v_coinpay is NULL THEN
+												 set v_coinpay=0;
+									END IF;
+						END IF;
+
+						SELECT count(*) into v_count from t_coin_record where payerid=v_payerid and type=4;
+						IF v_count=0 THEN
+                set v_coinchage=0;
+						ELSE
+									select SUM(coinnum) into v_coinchage from t_coin_record where payerid=v_payerid and type=4;
+									IF v_coinchage is NULL THEN
+												 set v_coinchage=0;
+									END IF;
+						END IF;
+
+            
        END IF;
     END IF; 
    INSERT into tmpTable_coin1(c_payerid,c_name,c_school,c_phone,c_coinnumber,c_coinpay,c_coinchange) SELECT v_payerid,v_payername,v_payerschool,v_payerphone,v_coinnumber,v_coinpay,v_coinchage;   
@@ -187,14 +229,15 @@ DELIMITER ;
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `couponreportmonthly`;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `couponreportmonthly`(`datestart` TEXT,`dateend` TEXT)
+CREATE  PROCEDURE `couponreportmonthly`(`datestart` TEXT,`dateend` TEXT)
 BEGIN
 	DECLARE v_ownername VARCHAR(100) DEFAULT "";
   DECLARE v_ownerschool VARCHAR(200) DEFAULT "";
   DECLARE v_ownerphone VARCHAR(100) DEFAULT "";
   DECLARE v_couponnumber INT(10);
   DECLARE v_couponpaycount INT(10);
-  DECLARE v_ownerid INT;
+  DECLARE v_ownerid INT(10);
+  DECLARE v_ownschoolid INT(10);
  -- 遍历数据结束标志
 	DECLARE done INT DEFAULT FALSE;
   -- 游标
@@ -208,7 +251,7 @@ BEGIN
    
   create TEMPORARY table if not exists tmpTable_coupon1(  
            id int(10) primary key not null auto_increment,
-           c_opwnerid INT (10),
+           c_ownerid INT (10),
            c_name VARCHAR(100),
            c_school VARCHAR(200),  
            c_phone VARCHAR(100),  
@@ -226,22 +269,26 @@ BEGIN
       LEAVE read_loop;
     END IF;
     -- 这里做你想做的循环的事件\
-     SELECT t1.realname,t1.phone,t2.name into v_ownername,v_ownerphone,v_ownerschool  FROM t_user_coach t1,t_drive_school_info t2 where coachid=v_ownerid and t1.drive_schoolid=t2.schoolid;
-		 SELECT SUM(value) into v_couponpaycount from t_couponget_record where state=1 and ownerid=v_ownerid and DATE(usetime) BETWEEN datestart and dateend;
-			IF v_ownername is null  THEN
+     SELECT realname,phone,drive_schoolid into v_ownername,v_ownerphone,v_ownschoolid  FROM t_user_coach  where coachid=v_ownerid;
+     ##SELECT t1.realname,t1.phone,t2.name,t1.coachid into v_ownername,v_ownerphone,v_ownerschool  FROM t_user_coach t1,t_drive_school_info t2 where coachid=v_ownerid and t1.drive_schoolid=t2.schoolid;
+      IF v_ownschoolid IS NULL  THEN
+						set v_ownerschool="";
+      ELSE
+          SELECT name into v_ownerschool  FROM t_drive_school_info  where schoolid=v_ownschoolid;
+			END IF;  
+      IF v_ownername IS NULL  THEN
 						set v_ownername="";
 			END IF;      
-			IF v_ownerschool is null  THEN
-						set v_ownerschool="";
-      END IF;
-      IF v_ownerphone is null  THEN
+      IF v_ownerphone is NULL  THEN
             set v_ownerphone="";
-      END IF;
+      END IF;		
+      SELECT SUM(value) into v_couponpaycount from t_couponget_record where state=1 and ownerid=v_ownerid and DATE(usetime) BETWEEN datestart and dateend;
+			
 		 
-      IF v_couponpaycount is null  THEN
-            set v_couponpaycount=0;
+      IF v_couponpaycount is NULL  THEN
+          set v_couponpaycount=0;
       END IF;
-     INSERT into tmpTable_coupon1(c_opwnerid,c_name,c_school,c_phone,c_couponnumber,c_couponpay) SELECT v_ownerid,v_ownername,v_ownerschool,v_ownerphone,v_couponnumber,v_couponpaycount;   
+     INSERT into tmpTable_coupon1(c_ownerid,c_name,c_school,c_phone,c_couponnumber,c_couponpay) SELECT v_ownerid,v_ownername,v_ownerschool,v_ownerphone,v_couponnumber,v_couponpaycount;   
   END LOOP;
   CLOSE cur1;
   SELECT * from tmpTable_coupon1;
@@ -254,17 +301,17 @@ DELIMITER ;
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `getcoachcoupondetailmontly`;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getcoachcoupondetailmontly`(IN `coachid` int,`datestart` TEXT,`dateend` TEXT)
+CREATE  PROCEDURE `getcoachcoupondetailmontly`(IN `coachid` int,`datestart` TEXT,`dateend` TEXT)
 BEGIN
-	DECLARE s_phone varchar(100);
-  DECLARE s_name varchar(100);
+	DECLARE s_phone varchar(100) DEFAULT "";
+  DECLARE s_name varchar(100) DEFAULT "";
   DECLARE s_couponnum INT(10);
   DECLARE s_couponpaycount INT(10);
   DECLARE s_recid INT(11);
-    
+  DECLARE s_count INT(11);
  -- 遍历数据结束标志
 	DECLARE done INT DEFAULT FALSE;
-  DECLARE cur1 CURSOR FOR  SELECT userid,SUM(value) FROM t_couponget_record where ownerid=coachid and DATE(gettime) BETWEEN datestart and dateend GROUP BY userid ORDER BY userid;
+  DECLARE cur1 CURSOR FOR  SELECT userid,SUM(value) FROM t_couponget_record where ownerid=coachid and state=1 and DATE(usetime) BETWEEN datestart and dateend GROUP BY userid  ORDER BY userid;
 
 	-- 将结束标志绑定到游标
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
@@ -282,21 +329,43 @@ BEGIN
   -- 开始循环
   read_loop: LOOP
     -- 提取游标里的数据
-    FETCH cur1 INTO s_recid,s_couponnum;
-    IF s_couponnum is NULL THEN
-      set s_couponnum=0;
-    end IF;
+    FETCH cur1 INTO s_recid,s_couponpaycount;
+    
     -- 声明结束的时候
     IF done THEN
       LEAVE read_loop;
     END IF;
     -- 这里做你想做的循环的事件\
-    SELECT realname,phone into s_name,s_phone from t_user_student where studentid=s_recid;
+   /* IF s_recid =189 THEN
+         set s_name="";
+         set s_phone="";
+     ELSE*/
+        SELECT count(*) into s_count from t_user_student where studentid=s_recid;
+				IF s_count=0 THEN
+            set s_name="";
+            set s_phone="";
+				ELSE
+            SELECT realname,phone into s_name,s_phone from t_user_student where studentid=s_recid;
+						IF s_name is NULL THEN
+												 set s_name="";
+						END IF;
+						IF s_phone is NULL THEN
+											 set s_phone="";
+						END IF;
+				END IF;
+        
+				
+   ## END IF;
+       SELECT count(*) into s_count from t_couponget_record where ownerid=coachid and userid=s_recid and DATE(gettime) BETWEEN datestart and dateend;
+      IF s_count=0 THEN
+			     set s_couponnum=0;
 
-    SELECT SUM(value) into s_couponpaycount from t_couponget_record where state=1 and userid=s_recid and DATE(usetime) BETWEEN datestart and dateend;
-    IF s_couponpaycount is NULL THEN
-        set s_couponpaycount=0;
-    END IF;
+			ELSE
+            SELECT SUM(value) into s_couponnum from t_couponget_record where ownerid=coachid and userid=s_recid and DATE(gettime) BETWEEN datestart and dateend GROUP BY userid;
+			END IF;
+      
+
+      
   
     INSERT into tmpTable_coupon2(c_phone,c_name,c_couponnum111,c_couponpaycount) SELECT s_phone,s_name,s_couponnum,s_couponpaycount;
   END LOOP;
@@ -313,17 +382,17 @@ DELIMITER ;
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `getstudentcoindetailmontly`;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getstudentcoindetailmontly`(IN `coachid` int,`datestart` TEXT,`dateend` TEXT)
+CREATE  PROCEDURE `getstudentcoindetailmontly`(IN `coachid` int,`datestart` TEXT,`dateend` TEXT)
 BEGIN
 	DECLARE s_phone varchar(100);
   DECLARE s_name varchar(100);
   DECLARE s_coinnum DECIMAL(20,2);
   DECLARE s_coinpay DECIMAL(20,2);
   DECLARE v_recid INT(11);
-    
+  DECLARE v_count INT(11);
  -- 遍历数据结束标志
 	DECLARE done INT DEFAULT FALSE;
-  DECLARE cur1 CURSOR FOR  SELECT receiverid,SUM(coinnum) FROM t_coin_record where type=1 and ownerid=coachid and DATE(addtime) BETWEEN  datestart and dateend GROUP BY receiverid ORDER BY receiverid;
+  DECLARE cur1 CURSOR FOR  SELECT payerid,SUM(coinnum)FROM t_coin_record where type=2 and ownerid=coachid and DATE(addtime)  BETWEEN  datestart and dateend GROUP BY payerid HAVING SUM(coinnum)<>0 ORDER BY payerid;
 
 	-- 将结束标志绑定到游标
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
@@ -341,17 +410,40 @@ BEGIN
   -- 开始循环
   read_loop: LOOP
     -- 提取游标里的数据
-    FETCH cur1 INTO v_recid,s_coinnum;
+    FETCH cur1 INTO v_recid,s_coinpay;
     -- 声明结束的时候
     IF done THEN
       LEAVE read_loop;
     END IF;
     -- 这里做你想做的循环的事件\
-    SELECT realname,phone into s_name,s_phone from t_user_student where studentid=v_recid;
-    SELECT SUM(coinnum) into s_coinpay  from t_coin_record where type=2 and payerid=v_recid and DATE(addtime) BETWEEN  datestart and dateend;
-    IF s_coinpay is null THEN
-        set s_coinpay=0;
-    END IF;
+    SELECT count(*) into v_count from t_user_student where studentid=v_recid;
+            
+		IF v_count=0 THEN
+			 set s_name="";
+			 set s_phone="";		 
+		ELSE
+					SELECT realname,phone into s_name,s_phone from t_user_student where studentid=v_recid;
+					IF s_name is NULL THEN
+								 set s_name="";
+					END IF;
+					IF s_phone is NULL THEN
+								 set s_phone="";
+					END IF;
+		END IF;
+		SELECT count(*) into v_count from t_coin_record where type=1 and ownerid=coachid and receiverid=v_recid and DATE(addtime) BETWEEN  datestart and dateend;
+            
+		IF v_count=0 THEN
+			 set s_coinnum=0;
+		ELSE
+					SELECT SUM(coinnum) into s_coinnum  from t_coin_record where type=1 and ownerid=coachid and receiverid=v_recid and DATE(addtime) BETWEEN  datestart and dateend;
+					IF s_coinnum is null THEN
+							set s_coinnum=0;
+					END IF;
+		END IF;
+
+
+    
+   
   
     INSERT into tmpTable_coin2(c_phone,c_name,c_coinnumber,c_coinpay) SELECT s_phone,s_name,s_coinnum,s_coinpay;
   END LOOP;

@@ -5,10 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Result;
 
+import com.daoshun.common.CommonUtils;
 import com.daoshun.common.QueryResult;
 import com.daoshun.common.UserType;
 import com.daoshun.guangda.pojo.CoinRecordInfo;
@@ -81,6 +84,8 @@ public class CoinRecordAction extends BaseAction{
     
     private int pageCount;
     
+    private List<DriveSchoolInfo> driveSchoollist;
+    
 
     @Action(value = "goGrantCoinRecord", results = { @Result(name = SUCCESS, location = "/coinGrant.jsp") })
     public String goGrantCoinRecord() {
@@ -100,6 +105,27 @@ public class CoinRecordAction extends BaseAction{
     	
         return SUCCESS;
     }
+    
+    //驾校发放小巴币
+    @Action(value = "goSchoolGrantCoin", results = { @Result(name = SUCCESS, location = "/schoolCoinGrant.jsp") })
+    public String goSchoolGrantCoin() {
+    	HttpSession session = ServletActionContext.getRequest().getSession();
+		int schoolid = CommonUtils.parseInt(String.valueOf(session.getAttribute("schoolid")), 0);
+		driveSchoollist = cuserService.getDriveSchoolListById(schoolid);
+		
+        return SUCCESS;
+    }
+    
+    //驾校发放小巴券
+    @Action(value = "goSchoolGrantCoupon", results = { @Result(name = SUCCESS, location = "/schoolCouponGrant.jsp") })
+    public String goSchoolGrantCoupon() {
+    	HttpSession session = ServletActionContext.getRequest().getSession();
+		int schoolid = CommonUtils.parseInt(String.valueOf(session.getAttribute("schoolid")), 0);
+		driveSchoollist = cuserService.getDriveSchoolListById(schoolid);
+		
+        return SUCCESS;
+    }
+    
     @Action(value = "goCoinRecord", results = { @Result(name = SUCCESS, location = "/coinrecord.jsp") })
     public String goCoinRecord() {
     	QueryResult<CoinRecordInfo> result = coinRecordService.getCoinRecordListByPage(pageIndex, 10, starttime, endtime, ownertype, String.valueOf(ownerid),String.valueOf(receiverid));
@@ -375,6 +401,14 @@ public class CoinRecordAction extends BaseAction{
 
 	public void setDriveSchoolService(IDriveSchoolService driveSchoolService) {
 		this.driveSchoolService = driveSchoolService;
+	}
+
+	public List<DriveSchoolInfo> getDriveSchoollist() {
+		return driveSchoollist;
+	}
+
+	public void setDriveSchoollist(List<DriveSchoolInfo> driveSchoollist) {
+		this.driveSchoollist = driveSchoollist;
 	}
     
     

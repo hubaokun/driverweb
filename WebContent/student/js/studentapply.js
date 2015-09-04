@@ -11,6 +11,12 @@ function stuCheckNoPass(applyid,index,pageIndex,change_id) {
 		window.location.href="studentApplyCheckNoPass.do?applyid="+applyid+"&index="+index+"&pageIndex="+pageIndex+"&change_id="+change_id;
 	}
 }
+//作废
+function checkrevocation(applyid,index,pageIndex,change_id) {
+	if(confirm("确认作废？")){
+		window.location.href="stuapplyCheckrevocation.do?applyid="+applyid+"&index="+index+"&pageIndex="+pageIndex+"&change_id="+change_id;
+	}
+}
 
 function searchStudentApply(){
 	var realname=$("#realname").val();

@@ -34,7 +34,7 @@ public class BalanceStudentInfo implements Serializable {
 	@Column(name = "amount", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")
 	private BigDecimal amount;
 	
-	//类型(1:支付宝充值  2：提现  3：订单支付)
+	//类型(1:支付宝充值  2：提现  3：订单支付 4:提现不通过)
 	@Column(name = "type",length=10,columnDefinition = "INT default 0")
 	private Integer type=0;
 	

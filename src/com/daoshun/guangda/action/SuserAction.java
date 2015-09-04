@@ -640,7 +640,7 @@ public String getStudentDetailByPhone() {
 	}
 
 	/**
-	 * 提现申请审核
+	 * 学员提现申请审核
 	 * 
 	 * @return
 	 */
@@ -651,13 +651,24 @@ public String getStudentDetailByPhone() {
 	}
 	
 	/**
-	 * 提现申请审核
+	 * 学员提现申请审核不通过
 	 * 
 	 * @return
 	 */
 	@Action(value = "/studentApplyCheckNoPass", results = { @Result(name = SUCCESS, location = "/getStudentApplyList.do?index=${index}&pageIndex=${pageIndex}", type = "redirect") })
 	public String studentApplyCheckNoPass() {
 		suserService.applyCheckNoPass(applyid);
+		return SUCCESS;
+	}
+	
+	/**
+	 * 学员提现作废
+	 * 
+	 * @return
+	 */
+	@Action(value = "/stuapplyCheckrevocation", results = { @Result(name = SUCCESS, location = "/getStudentApplyList.do?index=${index}&pageIndex=${pageIndex}", type = "redirect") })
+	public String stuapplyCheckrevocation() {
+		suserService.applyCheckrevocation(applyid);
 		return SUCCESS;
 	}
 
@@ -1399,15 +1410,14 @@ public String getStudentDetailByPhone() {
 	
 	@Action(value = "/editsinglestudent", results = { @Result(name = SUCCESS, location = "/getStudentDetail.do?studentid=${studentid}&index=${index}&change_id=${change_id}&editsucc=1",type="redirect") })
 
-//	@Action(value = "/editsinglestudent", results = { @Result(name = SUCCESS, location = "/getStudentlist.do?studentid=${studentid}&index=${index}&change_id=${change_id}",type="redirect") })
-	
 	public String editSingleStudent(){
 		suser = suserService.getUserById(String.valueOf(studentid));
 		//修改姓名
 		if (!CommonUtils.isEmptyString(editrealname)) {
 			suser.setRealname(editrealname);
 		}
-		
+
+		//修改电话
 		if (!CommonUtils.isEmptyString(editphone)) {
 			suser.setPhone(editphone);
 		}

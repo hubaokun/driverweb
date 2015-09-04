@@ -19,7 +19,9 @@ import com.daoshun.common.QueryResult;
 import com.daoshun.common.UserType;
 import com.daoshun.guangda.pojo.AdminInfo;
 import com.daoshun.guangda.pojo.AlipayCallBack;
+import com.daoshun.guangda.pojo.BalanceCoachInfo;
 import com.daoshun.guangda.pojo.BalanceStudentInfo;
+import com.daoshun.guangda.pojo.CApplyCashInfo;
 import com.daoshun.guangda.pojo.CoachStudentInfo;
 import com.daoshun.guangda.pojo.CoinAffiliation;
 import com.daoshun.guangda.pojo.CoinRecordInfo;
@@ -43,6 +45,25 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		cuserhql.append(" from SuserInfo where phone = :phone");
 		String[] params = { "phone" };
 		SuserInfo user = (SuserInfo) dataDao.getFirstObjectViaParam(cuserhql.toString(), params, phone);
+		if (user != null) {
+			user.setAvatarurl(getFilePathById(user.getAvatar()));
+			user.setStudent_cardpicf_url(getFilePathById(user.getStudent_cardpicf()));
+			user.setStudent_cardpicb_url(getFilePathById(user.getStudent_cardpicb()));
+			user.setId_cardpicf_url(getFilePathById(user.getId_cardpicf()));
+			user.setId_cardpicb_url(getFilePathById(user.getId_cardpicb()));
+			user.setCcheck_idcardpicf_url(getFilePathById(user.getCcheck_idcardpicf()));
+			user.setCcheck_idcardpicb_url(getFilePathById(user.getCcheck_idcardpicb()));
+			user.setCcheck_pic_url(getFilePathById(user.getCcheck_pic()));
+		}
+		return user;
+	}
+
+	@Override
+	public SuserInfo getUserByInviteCode(String invitecode) {
+		StringBuffer cuserhql = new StringBuffer();
+		cuserhql.append(" from SuserInfo where invitecode = :invitecode");
+		String[] params = { "invitecode" };
+		SuserInfo user = (SuserInfo) dataDao.getFirstObjectViaParam(cuserhql.toString(), params, invitecode);
 		if (user != null) {
 			user.setAvatarurl(getFilePathById(user.getAvatar()));
 			user.setStudent_cardpicf_url(getFilePathById(user.getStudent_cardpicf()));
@@ -128,6 +149,16 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override
 	public void updateUserInfo(SuserInfo user) {
+
+		String inviteCode="S"+CommonUtils.getInviteCode(user.getPhone());
+
+
+		StringBuffer suserhql = new StringBuffer();
+		suserhql.append(" update SuserInfo set inviteCode=null where inviteCode=:inviteCode");
+		String[] params = { "inviteCode" };
+		dataDao.updateObjectsViaParam(suserhql.toString(), params, inviteCode);
+
+
 		dataDao.updateObject(user);
 	}
 	
@@ -399,7 +430,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			latertime.set(Calendar.SECOND, 59);
 			Date timelater = latertime.getTime();
 			String newtimelater = CommonUtils.getTimeFormat(timelater, "yyyy-MM-dd");
-			cuserhql.append(" and addtime <= '" + newtimelater + "'");
+			cuserhql.append(" and DATE(addtime) <= '" + newtimelater + "'");
 		}
 		if (!CommonUtils.isEmptyString(minsdate)) {
 			Date newminsdate = CommonUtils.getDateFormat(minsdate, "yyyy-MM-dd");
@@ -410,7 +441,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			nowtime.set(Calendar.SECOND, 0);
 			Date starttime = nowtime.getTime();
 			String newtoday = CommonUtils.getTimeFormat(starttime, "yyyy-MM-dd");
-			cuserhql.append(" and addtime >= '" + newtoday + "'");
+			cuserhql.append(" and DATE(addtime) >= '" + newtoday + "'");
 		}
 		//报名时间
 		if (!CommonUtils.isEmptyString(maxenrollsdate)) {
@@ -422,7 +453,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			latertime.set(Calendar.SECOND, 59);
 			Date timelater = latertime.getTime();
 			String newtimelater = CommonUtils.getTimeFormat(timelater, "yyyy-MM-dd");
-			cuserhql.append(" and enrolltime <= '" + newtimelater + "'");
+			cuserhql.append(" and  DATE(enrolltime) <= '" + newtimelater + "'");
 		}
 		if (!CommonUtils.isEmptyString(minenrollsdate)) {
 			Date newminsdate = CommonUtils.getDateFormat(minenrollsdate, "yyyy-MM-dd");
@@ -433,7 +464,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			nowtime.set(Calendar.SECOND, 0);
 			Date starttime = nowtime.getTime();
 			String newtoday = CommonUtils.getTimeFormat(starttime, "yyyy-MM-dd");
-			cuserhql.append(" and enrolltime >= '" + newtoday + "'");
+			cuserhql.append(" and  DATE(enrolltime) >= '" + newtoday + "'");
 		}
 		List<SuserInfo> suserInfolist = (List<SuserInfo>) dataDao.pageQueryViaParam(cuserhql.toString() + " order by studentid asc", pagesize, pageIndex, null);
 		String counthql = " select count(*) " + cuserhql.toString();
@@ -442,7 +473,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	}
 	
 	
-	
+	//已删除学员条件搜索
 	@SuppressWarnings("unchecked")
 	@Override
 	public QueryResult<SuserInfo> getDeleteStudentByKeyword(String searchname, String searchphone, String minsdate, String maxsdate, String minenrollsdate, String maxenrollsdate,Integer pageIndex, int pagesize) {
@@ -464,7 +495,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			latertime.set(Calendar.SECOND, 59);
 			Date timelater = latertime.getTime();
 			String newtimelater = CommonUtils.getTimeFormat(timelater, "yyyy-MM-dd");
-			cuserhql.append(" and addtime <= '" + newtimelater + "'");
+			cuserhql.append(" and DATE(addtime) <= '" + newtimelater + "'");
 		}
 		if (!CommonUtils.isEmptyString(minsdate)) {
 			Date newminsdate = CommonUtils.getDateFormat(minsdate, "yyyy-MM-dd");
@@ -475,7 +506,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			nowtime.set(Calendar.SECOND, 0);
 			Date starttime = nowtime.getTime();
 			String newtoday = CommonUtils.getTimeFormat(starttime, "yyyy-MM-dd");
-			cuserhql.append(" and addtime >= '" + newtoday + "'");
+			cuserhql.append(" and DATE(addtime) >= '" + newtoday + "'");
 		}
 		//报名时间
 		if (!CommonUtils.isEmptyString(maxenrollsdate)) {
@@ -487,7 +518,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			latertime.set(Calendar.SECOND, 59);
 			Date timelater = latertime.getTime();
 			String newtimelater = CommonUtils.getTimeFormat(timelater, "yyyy-MM-dd");
-			cuserhql.append(" and enrolltime <= '" + newtimelater + "'");
+			cuserhql.append(" and DATE(enrolltime) <= '" + newtimelater + "'");
 		}
 		if (!CommonUtils.isEmptyString(minenrollsdate)) {
 			Date newminsdate = CommonUtils.getDateFormat(minenrollsdate, "yyyy-MM-dd");
@@ -498,7 +529,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			nowtime.set(Calendar.SECOND, 0);
 			Date starttime = nowtime.getTime();
 			String newtoday = CommonUtils.getTimeFormat(starttime, "yyyy-MM-dd");
-			cuserhql.append(" and enrolltime >= '" + newtoday + "'");
+			cuserhql.append(" and DATE(enrolltime) >= '" + newtoday + "'");
 		}
 		List<SuserInfo> suserInfolist = (List<SuserInfo>) dataDao.pageQueryViaParam(cuserhql.toString() + " order by studentid asc", pagesize, pageIndex, null);
 		String counthql = " select count(*) " + cuserhql.toString();
@@ -547,7 +578,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			latertime.set(Calendar.SECOND, 59);
 			Date timelater = latertime.getTime();
 			String newtimelater = CommonUtils.getTimeFormat(timelater, "yyyy-MM-dd");
-			cuserhql.append(" and addtime <= '" + newtimelater + "'");
+			cuserhql.append(" and DATE(addtime) <= '" + newtimelater + "'");
 		}
 		if (!CommonUtils.isEmptyString(minsdate)) {
 			Date newminsdate = CommonUtils.getDateFormat(minsdate, "yyyy-MM-dd");
@@ -558,7 +589,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			nowtime.set(Calendar.SECOND, 0);
 			Date starttime = nowtime.getTime();
 			String newtoday = CommonUtils.getTimeFormat(starttime, "yyyy-MM-dd");
-			cuserhql.append(" and addtime >= '" + newtoday + "'");
+			cuserhql.append(" and DATE(addtime) >= '" + newtoday + "'");
 		}
 		//报名时间
 		if (!CommonUtils.isEmptyString(maxenrollsdate)) {
@@ -570,7 +601,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			latertime.set(Calendar.SECOND, 59);
 			Date timelater = latertime.getTime();
 			String newtimelater = CommonUtils.getTimeFormat(timelater, "yyyy-MM-dd");
-			cuserhql.append(" and enrolltime <= '" + newtimelater + "'");
+			cuserhql.append(" and DATE(enrolltime) <= '" + newtimelater + "'");
 		}
 		if (!CommonUtils.isEmptyString(minenrollsdate)) {
 			Date newminsdate = CommonUtils.getDateFormat(minenrollsdate, "yyyy-MM-dd");
@@ -581,7 +612,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			nowtime.set(Calendar.SECOND, 0);
 			Date starttime = nowtime.getTime();
 			String newtoday = CommonUtils.getTimeFormat(starttime, "yyyy-MM-dd");
-			cuserhql.append(" and enrolltime >= '" + newtoday + "'");
+			cuserhql.append(" and DATE(enrolltime) >= '" + newtoday + "'");
 		}
 		List<SuserInfo> suserInfolist = (List<SuserInfo>) dataDao.pageQueryViaParam(cuserhql.toString() + " order by studentid asc", pagesize, pageIndex, null);
 		String counthql = " select count(*) " + cuserhql.toString();
@@ -620,8 +651,46 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			studentApply.setState(2);
 			studentApply.setUpdatetime(new Date());
 			dataDao.updateObject(studentApply);
+	            
+	         SuserInfo suserInfo = dataDao.getObjectById(SuserInfo.class, coachid);
+	         if(suserInfo != null){
+	        	 suserInfo.setFmoney(suserInfo.getFmoney().subtract(studentApply.getAmount()));
+	        	 //增加学员可提现余额
+	        	 suserInfo.setMoney(suserInfo.getMoney().add(studentApply.getAmount()));
+	        	 dataDao.updateObject(suserInfo);
+	         }
+	         
+	         BalanceStudentInfo balanStudentInfo = new BalanceStudentInfo();
+	         balanStudentInfo.setType(4);
+	         balanStudentInfo.setAddtime(new Date());
+	         balanStudentInfo.setAmount(studentApply.getAmount());
+	         balanStudentInfo.setUserid(studentApply.getUserid());
+	         dataDao.addObject(balanStudentInfo);
+	         
 		}
 	}
+	
+	//学员提现作废
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    @Override
+    public void applyCheckrevocation(int coachid) {
+        StudentApplyInfo studentApply = dataDao.getObjectById(StudentApplyInfo.class, coachid);
+        Date todate=new Date();
+        if (studentApply != null) {
+        	studentApply.setState(3);
+        	studentApply.setUpdatetime(todate);
+            dataDao.updateObject(studentApply);
+           
+            
+            SuserInfo suserInfo = dataDao.getObjectById(SuserInfo.class, coachid);
+            if(suserInfo != null){
+            	suserInfo.setFmoney(suserInfo.getFmoney().subtract(studentApply.getAmount()));
+            	dataDao.updateObject(suserInfo);
+            }
+           
+        }
+    }
+    
 
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	@Override
@@ -683,7 +752,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	@Override
 	public QueryResult<BalanceStudentInfo> getApplyRecordList(Integer pageIndex, int pagesize) {
 		StringBuffer cuserhql = new StringBuffer();
-		cuserhql.append("from BalanceStudentInfo where type = 2");
+		cuserhql.append("from BalanceStudentInfo where type = 2 or type = 4");
 		List<BalanceStudentInfo> balancecoachlist = (List<BalanceStudentInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), pagesize, pageIndex, null);
 		if (balancecoachlist != null && balancecoachlist.size() > 0) {
 			for (BalanceStudentInfo balanceCoach : balancecoachlist) {

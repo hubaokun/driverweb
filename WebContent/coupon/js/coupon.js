@@ -361,4 +361,91 @@ function selectallrecord() {
 	}
 }
 
+var temp="";
+function showsearchschoolowner(){
+    var addownertype = $("#addownertype").val();
+    if(temp==""){
+    	temp=$("#bigsearch2");
+    }
+	//$("#addownerid").remove();
+    $("#bigsearch").remove();
+	$("#bigsearch2").remove();
+	if(addownertype==2){
+		var html = "";
+		html +='<div id="bigsearch" style="width: 100%; height: 75px; border-bottom: 1px solid #eaeff2;">';
+		html +='<div style="float:left; width: 143px; height: 100%; line-height: 75px; border-right: 1px solid #eaeff2;text-align: right;">教练名称或手机<span style="color:#f83a22; margin-right:16px; margin-left: 8px;">*</span></div>';
+		html +='<div style="height: 100%; line-height: 75px; float:left; margin-left: 20px;">';
+		html +='<input value="" name="owenersearch" id="searchname" onkeyup="searchCuser();" autocomplete="off"  required="required" style="width: 800px; height: 33px; padding-left:5px; border: 1px solid #eaeff2; margin-top: 20px;">';
+		html +='</div><div class="binding_detail"  style="  left: 164px;top:-20px;clear:both;" id="gartenDetail" >';
+		html +='</div><input type="hidden" id="addownerid" name="addownerid" >';
+		html +='</div>';
+		$("#searchbefore").before(html);
+	}else if(addownertype==1){
+		$("#searchbefore").before(temp);
+		/*
+		var html = "";
+		html +='<div  id="bigsearch" style="width: 100%; height: 75px; border-bottom: 1px solid #eaeff2;">';
+		html +='<div style="float:left; width: 143px; height: 100%; line-height: 75px; border-right: 1px solid #eaeff2;text-align: right;">驾校名称<span style="color:#f83a22; margin-right:16px; margin-left: 8px;">*</span></div>';
+		html +='<div style="height: 100%; line-height: 75px; float:left; margin-left: 20px;">';
+		html +='<input value="" name="owenersearch" id="searchname" onkeyup="searchDriveSchool();" autocomplete="off"  required="required" style="width: 800px; height: 33px; padding-left:5px; border: 1px solid #eaeff2; margin-top: 20px;">';
+		html +='</div><div class="binding_detail" style="  left: 164px;top:-20px;clear:both;" id="gartenDetail" >';
+		html +='</div><input type="hidden" id="addownerid" name="addownerid" required="required">';
+		$("#searchbefore").before(html);*/
+	}
+}
+
+
+/*function grantCouponRecord(){
+   
+    var addcoupontype = $("#addcoupontype").val();
+    var addownertype = $("#addownertype").val();
+    var addvalue = $("#addvalue").val();
+    var schoolownerid = $("#schoolownerid").val();
+    var addownerid = $("#addownerid").val();
+    var pub_count = $("#pub_count").val();
+    alert(addcoupontype+" "+addownertype+" "+addvalue+" "+schoolownerid+" "+addownerid+" "+pub_count);
+    if(ownertype==1){
+    $.ajax({
+        url: "addcoupon.do",
+        data:{addownerid: schoolownerid,addcoupontype:addcoupontype,addownertype:addownertype,addvalue:addvalue,pub_count:pub_count},
+        type: "POST",
+        success: function(msg){
+            //alert(msg);
+            var obj = eval("("+msg+")");
+            var code = obj.code;
+            if(code==1)
+                alert("添加成功!");
+            else
+                alert("添加失败!");
+            $("#receivername").val('');
+        },
+        error:function(msg)
+        {
+            alert("添加失败,请重试!");
+        }
+    });
+    }
+    if(ownertype==2){
+    $.ajax({
+        url: "addcoupon.do",
+        data:{addownerid: addownerid,addcoupontype:addcoupontype,addownertype:addownertype,addvalue:addvalue,pub_count:pub_count},
+        type: "POST",
+        success: function(msg){
+            //alert(msg);
+            var obj = eval("("+msg+")");
+            var code = obj.code;
+            if(code==1)
+                alert("添加成功!");
+            else
+                alert("添加失败!");
+            $("#receivername").val('');
+        },
+        error:function(msg)
+        {
+            alert("添加失败,请重试!");
+        }
+    });
+    }
+}
+*/
 

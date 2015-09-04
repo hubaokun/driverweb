@@ -120,6 +120,7 @@ public class CouponAction extends BaseAction {
 	private int addownertype;
 
 	private int addownerid;
+	private int schoolownerid;
 
 	private String searchsuserid;
 
@@ -854,6 +855,15 @@ public class CouponAction extends BaseAction {
 
 	public void setAddownerid(int addownerid) {
 		this.addownerid = addownerid;
+	}
+	
+
+	public int getSchoolownerid() {
+		return schoolownerid;
+	}
+
+	public void setSchoolownerid(int schoolownerid) {
+		this.schoolownerid = schoolownerid;
 	}
 
 	public String getSchoolkeyword() {
