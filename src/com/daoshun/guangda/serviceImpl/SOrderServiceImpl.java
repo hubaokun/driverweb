@@ -814,11 +814,12 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 			String[] paramsC = { "order_id" };
 			EvaluationInfo eva = (EvaluationInfo) dataDao.getFirstObjectViaParam(hqlC, paramsC, order.getOrderid());
 
-			if (eva == null) {
+			/*if (eva == null) {
 				order.setCan_comment(1);
 			} else {
 				order.setCan_comment(0);
-			}
+			}*/
+			order.setCan_comment(0);
 		}
 
 		return orderlist;

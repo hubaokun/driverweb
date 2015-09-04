@@ -818,10 +818,10 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					if (cuser.getMoney().doubleValue() >= cuser.getGmoney().doubleValue()) {
 						coachlist.add(cuser);
 					}
-					if(cuser.getDrive_schoolid()!=null){
+					/*if(cuser.getDrive_schoolid()!=null){
 						//设置教练的订单总数
 						cuser.setSumnum(new Long(cuser.getDrive_schoolid()));
-					}
+					}*/
 					
 				}
 			}
@@ -1220,9 +1220,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		}else{
 			cuserhql.append(" and usertype=0 ");
 		}
-		cuserhql.append(" and money >= gmoney and isquit = 0  order by coursestate desc,drive_schoolid desc,score desc");
+		cuserhql.append(" and money >= gmoney and isquit = 0  order by coursestate desc,sumnum desc,score desc");
 		//System.out.println(cuserhql.toString());
-
 		List<AppCuserInfo> coachlist = (List<AppCuserInfo>) dataDao.SqlPageQuery(cuserhql.toString(), Constant.USERLIST_SIZE+1, CommonUtils.parseInt(pagenum, 0) + 1,AppCuserInfo.class, null);
 		
 		if (coachlist != null && coachlist.size() > 0) {
@@ -1231,9 +1230,9 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				//cuserhql1.append("from CaddAddressInfo where coachid =:coachid and iscurrent = 1");
 				//String[] params1 = { "coachid" };
 				//CaddAddressInfo address = (CaddAddressInfo) dataDao.getFirstObjectViaParam(cuserhql1.toString(), params1, coach.getCoachid());
-				if(coach.getDrive_schoolid()!=null){//设置教练的订单总数，其中drive_schoolid字段存放的是自定义函数中获取的订单数，因为非字段别名不能自动封装值，所以先使用drive_schoolid临时存放教练的总订单数
+				/*if(coach.getDrive_schoolid()!=null){//设置教练的订单总数，其中drive_schoolid字段存放的是自定义函数中获取的订单数，因为非字段别名不能自动封装值，所以先使用drive_schoolid临时存放教练的总订单数
 					coach.setSumnum(new Long(coach.getDrive_schoolid()));
-				}
+				}*/
 				if(coach.getAddress()!=null){
 					String str[]=coach.getAddress().split("#");
 					coach.setAddress("");

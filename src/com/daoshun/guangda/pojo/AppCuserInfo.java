@@ -64,8 +64,8 @@ public class AppCuserInfo implements Serializable {
 	private String levelname;
 	private Integer drive_schoolid;
 	// 总订单数量
-	@Transient
-	private Long sumnum;
+	
+	private Integer sumnum;
 	private String address;
 	private int avatar = 0;
 	private BigDecimal money;
@@ -214,12 +214,14 @@ public class AppCuserInfo implements Serializable {
 		this.levelname = levelname;
 	}
 
-	public Long getSumnum() {
+	public Integer getSumnum() {
 		return sumnum;
 	}
 
-	public void setSumnum(Long sumnum) {
+	public void setSumnum(Integer sumnum) {
 		this.sumnum = sumnum;
 	}
+
+	
 
 }
