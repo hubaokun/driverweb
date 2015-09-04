@@ -403,7 +403,7 @@ public class SbookServlet extends BaseServlet {
 		String fixedposition =getRequestParamter(request, "fixedposition");//定位的城市名称
 		List<AppCuserInfo> coachlist = sbookService.getNearByCoach2(cityid,pointcenter, radius, condition1, 
 												condition2, condition3, condition4, condition5, condition6, condition8, condition9, condition10,
-												condition11,driverschoolid,fixedposition);
+												condition11,studentid,driverschoolid,fixedposition);
 		
 			if(studentid==null || !"18".equals(studentid)){
 				for (AppCuserInfo cuserInfo : coachlist) {

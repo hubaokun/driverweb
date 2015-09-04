@@ -620,7 +620,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 	}
 	
 	public List<AppCuserInfo> getNearByCoach2(String cityid,String pointcenter, String radius, String condition1, String condition2, String condition3, String condition4, String condition5, String condition6,
-			String condition8, String condition9, String condition10, String condition11,String driverschoolid,String fixedposition) {
+			String condition8, String condition9, String condition10, String condition11,String studentid,String driverschoolid,String fixedposition) {
 		List<AppCuserInfo> coachlist = new ArrayList<AppCuserInfo>();
 		// 取得中心点经纬度
 		String[] centers = pointcenter.split(",");
@@ -721,7 +721,22 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				hqlCoach.append(" and  coursestate = 1");
 				//hqlCoach.append(" and getcoachstate(u.coachid," + 10 + ",'" + CommonUtils.getTimeFormat(c.getTime(), "yyyy-MM-dd") + "'," + 5 + "," + 23 + "," + subjectid + ") = 1");
 			}*/
-
+			//判断是否是测试用户
+			if(!CommonUtils.isEmptyString(studentid)){
+				SuserInfo user=dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
+				if(user!=null){
+					if(user.getUsertype()==null){
+						user.setUsertype(0);
+						dataDao.updateObject(user);
+					}
+					if(user.getUsertype()==0){//正式学员，正式学员不能看到测试教练
+						hqlCoach.append(" and usertype=0 ");
+					}
+				}
+			}else{
+				hqlCoach.append(" and usertype=0 ");
+			}
+			
 			if (!CommonUtils.isEmptyString(condition11)) {//C1手动挡 接收到17 ，C2自动挡接收到18
 				hqlCoach.append(" and modelid like '%" + condition11 + "%'");
 			}
@@ -1196,6 +1211,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			if(user!=null){
 				if(user.getUsertype()==null){
 					user.setUsertype(0);
+					dataDao.updateObject(user);
 				}
 				if(user.getUsertype()==0){//正式学员，正式学员不能看到测试教练
 					cuserhql.append(" and usertype=0 ");

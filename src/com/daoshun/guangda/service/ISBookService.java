@@ -75,7 +75,7 @@ public interface ISBookService {
 	 * @return
 	 */
 	public abstract List<AppCuserInfo> getNearByCoach2(String cityid,String pointcenter, String radius, String condition1, String condition2, String condition3, String condition4, String condition5, String condition6,
-			String condition8, String condition9, String condition10, String condition11,String driveschollid,String fixedposition);
+			String condition8, String condition9, String condition10, String condition11,String studentid,String driveschollid,String fixedposition);
 
 	/**
 	 * 获取教练列表
