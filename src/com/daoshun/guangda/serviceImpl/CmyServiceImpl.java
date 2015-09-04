@@ -555,7 +555,7 @@ public class CmyServiceImpl extends BaseServiceImpl implements ICmyService {
 						c.setPayerid(Integer.parseInt(coachid));
 						c.setPayertype(UserType.COAH);//3代表教练
 						c.setPayername(cuser.getRealname());
-						if(type==UserType.PLATFORM){
+						/*if(type==UserType.PLATFORM){
 							c.setOwnerid(1);//1平台id
 							c.setOwnertype(type);//3代表教练
 							c.setOwnername("平台");
@@ -567,10 +567,10 @@ public class CmyServiceImpl extends BaseServiceImpl implements ICmyService {
 							c.setOwnerid(cuser.getDrive_schoolid());
 							c.setOwnertype(type);
 							c.setOwnername(cuser.getDrive_school());
-						}
-						/*c.setOwnerid(Integer.parseInt(coachid));//1平台id
+						}*/
+						c.setOwnerid(Integer.parseInt(coachid));//1平台id
 						c.setOwnertype(type);//3代表教练
-						c.setOwnername(cuser.getRealname());*/
+						c.setOwnername(cuser.getRealname());
 						
 						c.setReceiverid(1);//1平台id
 						c.setReceivertype(UserType.PLATFORM);//1代表平台

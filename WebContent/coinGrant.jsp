@@ -38,7 +38,7 @@
 
                     <div style=" height: 75px; border-bottom: 1px solid #eaeff2;">
                         <div style="float:left; width: 143px; height: 100%; line-height: 75px; border-right: 1px solid #eaeff2;text-align: right;">
-                            优惠券类型<span style="color:#f83a22; margin-right:16px; margin-left: 8px;">*</span></div>
+                            发放类型<span style="color:#f83a22; margin-right:16px; margin-left: 8px;">*</span></div>
                         <div style="height:50%; line-height: 75px; float:left; margin-left: 20px;">
                             <select name="ownertype" id="ownertype" onchange="showsearchowner()" class="searchdiv"
                                     style="  height: 50px;  border: 1px solid #cfd9df;margin-top:10px;">
@@ -71,7 +71,7 @@
                         <div class="binding_detail" style="  left: 164px;top:-20px;clear:both;" id="optionalStudent">;
                         </div>
                     </div>
-                    <input type="button"  value="提交" onclick="grantCoinRecord()"
+                    <input type="button"  value="提交" onclick="return grantCoinRecord()"
                            style="clear: both;height: 60px;width: 184px;background: #4cc2ff; color: #fff; font-size: 16px;text-align: center; line-height: 60px;margin-left: 248px;margin-top: 20px;cursor: pointer;">
         </form>
         </div>

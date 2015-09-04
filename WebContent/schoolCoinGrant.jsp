@@ -23,7 +23,7 @@
             $("#change_" + j + index).addClass('left_list_mask');
         })
     </script>
-    <title>驾校发放小巴币</title>
+    <title>发放小巴币</title>
 </head>
 <input type="hidden" id="index" value="8"/>
 <input type="hidden" id="change_id" value="2"/>
@@ -38,26 +38,16 @@
 
                     <div style=" height: 75px; border-bottom: 1px solid #eaeff2;">
                         <div style="float:left; width: 143px; height: 100%; line-height: 75px; border-right: 1px solid #eaeff2;text-align: right;">
-                            优惠券类型<span style="color:#f83a22; margin-right:16px; margin-left: 8px;">*</span></div>
+                            发放类型<span style="color:#f83a22; margin-right:16px; margin-left: 8px;">*</span></div>
                         <div style="height:50%; line-height: 75px; float:left; margin-left: 20px;">
-                            <select name="ownertype" id="ownertype" onchange="showsearchschoolowner()" class="searchdiv"
+                            <select name="ownertype" id="ownertype" onchange="showsearchowner()" class="searchdiv"
                                     style="  height: 50px;  border: 1px solid #cfd9df;margin-top:10px;">
+                                <option value="-1">请选择</option>
                                 <option value="1">驾校发放</option>
                                 <option value="2">教练发放</option>
                             </select>
                         </div>
                     </div>
-                    
-                    <s:iterator value="driveSchoollist" var="driveSchool">
-                    <div  id="bigsearch2" style="width: 100%; height: 75px; border-bottom: 1px solid #eaeff2;">
-                    <div style="float:left; width: 143px; height: 100%; line-height: 75px; border-right: 1px solid #eaeff2;text-align: right;">驾校名称<span style="color:#f83a22; margin-right:16px; margin-left: 8px;">*</span></div>
-                    <div style="height: 100%; line-height: 75px; float:left; margin-left: 20px;">
-                    <input value="${name }" name="owenersearch" id="searchname"  autocomplete="off"  required="required" readonly="readonly" style="color:grey; height: 33px; padding-left:5px; border: 1px solid #eaeff2; margin-top: 20px;">
-                    </div><div class="binding_detail" style="  left: 164px;top:-20px;clear:both;" id="gartenDetail" >
-                    </div><input type="hidden" id="schoolownerid" name="schoolownerid" value="${schoolid }" required="required">
-                    </div>
-                    </s:iterator>
-                    
                     <div id="searchbefore" style="width: 100%; height: 75px; border-bottom: 1px solid #eaeff2;">
                         <div style="float:left; width: 143px; height: 100%; line-height: 75px; border-right: 1px solid #eaeff2;text-align: right;">
                             发放数量<span style="color:#f83a22; margin-right:16px; margin-left: 8px;">*</span></div>
@@ -81,7 +71,7 @@
                         <div class="binding_detail" style="  left: 164px;top:-20px;clear:both;" id="optionalStudent">;
                         </div>
                     </div>
-                    <input type="button"  value="提交" onclick="grantCoinRecord()"
+                    <input type="button"  value="提交" onclick="return grantCoinRecord()"
                            style="clear: both;height: 60px;width: 184px;background: #4cc2ff; color: #fff; font-size: 16px;text-align: center; line-height: 60px;margin-left: 248px;margin-top: 20px;cursor: pointer;">
         </form>
         </div>

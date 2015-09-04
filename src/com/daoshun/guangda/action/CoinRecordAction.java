@@ -173,7 +173,6 @@ public class CoinRecordAction extends BaseAction{
         if(ownertype==UserType.PLATFORM)//平台发放
         {
              coinRecordInfo.setOwnerid(UserType.PLATFORM);
-           
              coinRecordInfo.setOwnername("平台");
              coinRecordInfo.setPayerid(UserType.PLATFORM);
              coinRecordInfo.setPayertype(UserType.PLATFORM);//0 平台  1 驾校  2 教练  3 学员
@@ -186,10 +185,13 @@ public class CoinRecordAction extends BaseAction{
         		 coinRecordInfo.setOwnername(ds.getName());//驾校名称
         		 coinRecordInfo.setPayername(ds.getName());
         	 }
-        	 coinRecordInfo.setPayerid(ownerid);
-             coinRecordInfo.setPayertype(UserType.DRIVESCHOOL);//0 平台  1 驾校  2 教练  3 学员
+        	 /*coinRecordInfo.setPayerid(ownerid);
+             coinRecordInfo.setPayertype(UserType.DRIVESCHOOL);*///0 平台  1 驾校  2 教练  3 学员
+        	 coinRecordInfo.setPayerid(UserType.PLATFORM);
+             coinRecordInfo.setPayertype(UserType.PLATFORM);//0 平台  1 驾校  2 教练  3 学员
+             coinRecordInfo.setPayername("平台");
         }else if(ownertype==UserType.COAH){//教练发放
-             coinRecordInfo.setOwnerid(ownerid);
+            /* coinRecordInfo.setOwnerid(ownerid);
              coinRecordInfo.setOwnertype(ownertype);
             //添加教练姓名
             CuserInfo cuser =cuserService.getCoachByid(ownerid);
@@ -198,7 +200,18 @@ public class CoinRecordAction extends BaseAction{
             	 coinRecordInfo.setPayername(cuser.getRealname());
             }
             coinRecordInfo.setPayerid(ownerid);
-            coinRecordInfo.setPayertype(UserType.COAH);//0 平台  1 驾校  2 教练  3 学员
+            coinRecordInfo.setPayertype(UserType.COAH);*///0 平台  1 驾校  2 教练  3 学员
+        	
+        	coinRecordInfo.setOwnerid(ownerid);
+            coinRecordInfo.setOwnertype(ownertype);
+           //添加教练姓名
+           CuserInfo cuser =cuserService.getCoachByid(ownerid);
+           if(cuser!=null){
+           	 coinRecordInfo.setOwnername(cuser.getRealname());
+           }
+           coinRecordInfo.setPayerid(UserType.PLATFORM);
+           coinRecordInfo.setPayertype(UserType.PLATFORM);//0 平台  1 驾校  2 教练  3 学员
+           coinRecordInfo.setPayername("平台");
         }
         
         coinRecordInfo.setType(1);//type  1 发放给学员    2 学员支付    3 退款    4 教练兑换

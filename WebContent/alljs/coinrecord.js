@@ -226,7 +226,7 @@ function showsearchowner(){
         html +='<div id="bigsearch" style="width: 100%; height: 75px; border-bottom: 1px solid #eaeff2;">';
         html +='<div style="float:left; width: 143px; height: 100%; line-height: 75px; border-right: 1px solid #eaeff2;text-align: right;">教练名称或手机<span style="color:#f83a22; margin-right:16px; margin-left: 8px;">*</span></div>';
         html +='<div style="height: 100%; line-height: 75px; float:left; margin-left: 20px;">';
-        html +='<input value="" name="owenersearch" id="searchname" onkeyup="searchCuser();" autocomplete="off"  required="required" style="width: 800px; height: 33px; padding-left:5px; border: 1px solid #eaeff2; margin-top: 20px;">';
+        html +='<input value="" name="owenersearch" id="coachsearchname" onkeyup="searchCuser();" autocomplete="off"  required="required" style="width: 800px; height: 33px; padding-left:5px; border: 1px solid #eaeff2; margin-top: 20px;">';
         html +='</div><div class="binding_detail"  style="  left: 164px;top:-20px;clear:both;" id="gartenDetail" >';
         html +='</div><input type="hidden" id="ownerid" name="ownerid" required="required">';
         $("#searchbefore").before(html);
@@ -335,7 +335,7 @@ function searchCuser(){
 
 function searchOwner(id,name){
     $("#ownerid").val(id);
-    $("#searchname").val(name);
+    $("#coachsearchname").val(name);
     $("#gartenDetail").empty();
     $("#gartenDetail").hide();
 }
@@ -364,38 +364,23 @@ function selectall() {
 
 
 function grantCoinRecord(){
+	var ownertype = $("#ownertype").val();
+    if(ownertype=="-1"){
+    	alert("请选择发放类型");
+    	return false;
+    }
     var id = $("#receiverid").val();
     if(id == ''){
-        return;
+    	alert("学员信息不能为空");
+        return false;
     }
+    var coinnum = $("#coinnum").val();
     var receiverid = $("#receiverid").val();
     var ownerid = $("#ownerid").val();
-    var schoolownerid = $("#schoolownerid").val();
-    var coinnum = $("#coinnum").val();
+    //var schoolownerid = $("#schoolownerid").val();
     var ownertype = $("#ownertype").val();
-    //alert(receiverid+" "+ownerid+" "+coinnum+" "+ownertype);
-    if(ownertype==1){
-    $.ajax({
-        url: "grantCoinRecord.do",
-        data:{ownerid: schoolownerid,receiverid:receiverid,coinnum:coinnum,ownertype:ownertype},
-        type: "POST",
-        success: function(msg){
-            //alert(msg);
-            var obj = eval("("+msg+")");
-            var code = obj.code;
-            if(code==1)
-                alert("添加成功!");
-            else
-                alert("添加失败!");
-            $("#receivername").val('');
-        },
-        error:function(msg)
-        {
-            alert("添加失败,请重试!");
-        }
-    });
-    }
-    if(ownertype==2){
+    //alert(receiverid+" "+ownerid+" "+coinnum+" "+ownertype+" "+schoolownerid);
+    // if(ownertype==1){
     $.ajax({
         url: "grantCoinRecord.do",
         data:{ownerid: ownerid,receiverid:receiverid,coinnum:coinnum,ownertype:ownertype},
@@ -415,7 +400,28 @@ function grantCoinRecord(){
             alert("添加失败,请重试!");
         }
     });
-    }
+    //}
+    /*if(ownertype==2 || ownertype==0){
+    $.ajax({
+        url: "grantCoinRecord.do",
+        data:{ownerid: ownerid,receiverid:receiverid,coinnum:coinnum,ownertype:ownertype},
+        type: "POST",
+        success: function(msg){
+            //alert(msg);
+            var obj = eval("("+msg+")");
+            var code = obj.code;
+            if(code==1)
+                alert("添加成功!");
+            else
+                alert("添加失败!");
+            $("#receivername").val('');
+        },
+        error:function(msg)
+        {
+            alert("添加失败,请重试!");
+        }
+    });
+    }*/
 }
 
 function goCoinRecord(){
