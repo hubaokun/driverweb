@@ -460,7 +460,7 @@ public class SbookServlet extends BaseServlet {
 	}
 	public void getDriveschoolByCityName(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String cityname = getRequestParamter(request, "cityname");//城市ID
-		CommonUtils.validateEmptytoMsg(cityname, "城市名称不能为空");
+		CommonUtils.validateEmptytoMsg(cityname, "无法定位到你所在的城市!请检查手机的GPS是否开启");
 		List<DriveSchoolInfo> dslist=driveSchoolService.getDriveschoolByCityName(cityname);
 		resultMap.put("dslist", dslist);
 	}
