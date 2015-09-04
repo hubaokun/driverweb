@@ -297,7 +297,7 @@ function searchDriveSchool(){
                 var id = schoollist[i].schoolid;
                 var name = schoollist[i].name;
                 $("#gartenDetail").append(
-                    '<div class="binding_detail_item" onclick="searchOwner('+id+', \''+name+'\')">'
+                    '<div class="binding_detail_item" onclick="searchOwner2('+id+', \''+name+'\')">'
                     +name+'</div>'
                 );
             }
@@ -336,6 +336,12 @@ function searchCuser(){
 function searchOwner(id,name){
     $("#ownerid").val(id);
     $("#coachsearchname").val(name);
+    $("#gartenDetail").empty();
+    $("#gartenDetail").hide();
+}
+function searchOwner2(id,name){
+    $("#ownerid").val(id);
+    $("#searchname").val(name);
     $("#gartenDetail").empty();
     $("#gartenDetail").hide();
 }
