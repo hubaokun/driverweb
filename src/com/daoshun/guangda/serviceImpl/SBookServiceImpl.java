@@ -659,8 +659,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			hqlCoach.append("select u.*  from app_coach_list u where isnew=1  and coachid in ");
 			hqlCoach.append(cs.toString());
 			if(!CommonUtils.isEmptyString(driverschoolid)){
-				cuserhql.append("  and drive_schoolid  = "+driverschoolid+" or drive_schoolid in (select schoolid");
-				cuserhql.append("  from t_drive_school_info where schoolid = "+driverschoolid+")");
+				hqlCoach.append("  and drive_schoolid  = "+driverschoolid+" or drive_schoolid in (select schoolid");
+				hqlCoach.append("  from t_drive_school_info where schoolid = "+driverschoolid+")");
 			}
 			/*if (!CommonUtils.isEmptyString(fixedposition)) {
 				String findCityIdHql="from CityInfo where city like '%"+fixedposition+"%'";
@@ -685,7 +685,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						+ condition1 + "%')) ");
 				}
 			}else{
-				cuserhql.append(" and  coursestate = 1 ");
+				hqlCoach.append(" and  coursestate = 1 ");
 			}
 			//cuserhql.append(" and  coursestate = 1 ");
 			// 星级
