@@ -175,7 +175,7 @@ enrollpay	支付状态：-1 不需要付款的报名  0 未付款  1 已付款
    		name 	  驾校名称
    		telphone 驾校电话
 # 获取教练列表接口GETCOACHLIST新增
- 参数：driveschoolid 驾校ID
+ 参数：driverschoolid 驾校ID 
  	fixedposition 定位的城市名称，可以不传
 # 获取附近的教练列表getNearByCoach新增
 参数：driveschoolid 驾校ID
