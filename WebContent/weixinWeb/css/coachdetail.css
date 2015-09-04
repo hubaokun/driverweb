@@ -1,0 +1,216 @@
+/* CSS Document */
+
+.coach-head {
+	background-color:rgb(14,161,248);
+	color: white;
+	font-size: 15px;
+	text-align: left;
+}
+.coach-head .col-md-2 .coach-head-icon {
+	line-height: 48px;
+	float: right;
+	margin-right: 20px;
+	color: rgb(161,228,255);
+}
+.coach-head .col-md-3, .coach-head .col-md-7, .coach-head .col-md-2 {
+	padding: 17px 0px;
+}
+.coach-head .col-md-7 p:first-child i
+{
+	padding-right: 5px;
+}
+.coach-head .col-md-7 span.coach-mark
+{
+	background-color:rgb(56,175,251);
+	border-radius:4px;
+	display: inline-block;
+	padding: 0px 5px;
+	margin-left: 10px;
+}
+.coach-head .col-md-7 p:last-child>i
+{
+	color:rgb(255,193,3);
+}
+.coach-head .head-avatar {
+	width: 60px;
+}
+.icon-man
+{
+	content:url(../images/man-icon.png);
+}
+body {
+	background-color: rgb(247,247,247);
+}
+.coach-data {
+	font-size: 13px;
+	background-color: white;
+	border-bottom: 1px solid #eee;
+	line-height: 39px;
+}
+.coach-data .col-md-12 
+{
+	padding:0px 12px;
+}
+.coach-data .col-md-12 p {
+	margin: 0px;
+	padding: 0px;
+	color: #1e1e1e;
+}
+.coach-data .col-md-12 p span {
+	color: rgb(35,173,229);
+	padding-left: 10px;
+}
+.coach-contact {
+	margin-top: 8px;
+	margin-bottom: 8px;
+	font-size: 13px;
+	color: rgb(35,173,229);
+	text-align: center;
+}
+.coach-contact .col-md-6
+{
+	padding:0px 12px
+}
+.coach-contact a
+{
+	text-decoration:none;
+	color: rgb(35,173,229);
+}
+.coach-contact span {
+	background-color: white;
+	padding: 7px;
+	display: block;
+	border-radius: 4px;
+	border: 1px solid rgb(211,211,211);
+}
+.coach-contact span>i {
+	font-size: 18px;
+	padding-right: 15px;
+}
+.coach-judge {
+	background-color: white;
+}
+
+.coach-judge hr
+{
+	padding:0px;
+	margin:0px;
+	
+}
+.coach-judge .coach-judge-head {
+	line-height: 44px;
+}
+.coach-judge .coach-judge-head p {
+	margin: 0px;
+	padding: 0px;
+}
+.coach-judge .coach-judge-head  .col-md-12
+{
+	padding:0px 12px;
+}
+.coach-judge .coach-judge-head p span:nth-child(1) {
+	color: rgb(255,132,33);
+}
+.coach-judge .coach-judge-head p span:nth-child(2) {
+	padding-left: 25px;
+}
+.coach-judge .coach-judge-head p span {
+	font-size: 12px;
+	color: #ababaa;
+}
+.coach-judge .coach-judge-body,.coach-judge-single,.coach-judge-whole
+{
+	padding-top:10px;
+	border-bottom: 1px solid #eee;
+	background-color:white;
+}
+.coach-judge .coach-judge-body .col-md-3,.coach-judge .coach-judge-body .col-md-9,.coach-judge .coach-judge-body .col-md-12
+{
+	padding:0px 12px;
+}
+.coach-judge .coach-judge-body .col-md-3 img
+{
+	height:34px;
+	width:auto;
+}
+.coach-judge .coach-judge-body .col-md-9
+{
+	padding-left:0px;
+	margin-left:-25px;
+	padding-right:0px;
+}
+.coach-judge .coach-judge-body .col-md-9 p,.coach-judge .coach-judge-body .col-md-12 p
+{
+	margin:0px;
+	padding:0px;
+	font-size:12px;
+}
+.coach-judge .coach-judge-body .col-md-3 p:first-child
+{
+	color:#535353;
+	margin:0px;
+}
+/*.coach-judge .coach-judge-body .col-md-9 p:last-child >i
+{
+	color:rgb(255,132,33);
+}*/
+.coach-judge .coach-judge-body .col-md-9 p:first-child span
+{
+	color:#ababaa;
+	margin-right:-14px;
+}
+.coach-judge .coach-judge-body .col-md-12
+{
+	color:#6e6e6e;
+}
+.coach-judge .coach-judge-body .col-md-12 p
+{
+	line-height:25px;
+}
+
+
+/*单个用户评价详情页面*/
+.coach-judge-single:first-child
+{
+	margin-top:8px;
+}
+.coach-judge-single:last-child
+{
+	border-bottom:none;
+}
+.coach-judge-single
+{
+	padding: 5px 0px;
+}
+.coach-judge-single p
+{
+	margin:0px;
+	padding:0px;
+}
+.coach-judge-single .col-md-8 p>i
+{
+	color:rgb(255,132,33);
+	padding-right:5px;
+}
+.coach-judge-single  .col-md-12 p
+{
+	margin-top:5px;
+}
+
+/*所有用户评价页面*/
+.coach-judge-whole:first-child
+{
+	margin-top:8px;
+}
+.coach-judge-whole:last-child
+{
+	border-bottom:none;
+}
+/*the little icons*/
+.icon-right
+{
+	content:url(../images/right-icon.png);
+	width:7px;
+	top:3px;
+	margin-left:10px;
+}

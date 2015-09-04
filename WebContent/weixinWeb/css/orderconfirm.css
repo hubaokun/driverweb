@@ -1,0 +1,348 @@
+/* CSS Document */
+body {
+	background-color: rgb(247,247,247);
+}
+/*.head-row-1
+{
+	background-color:white;
+	font-size:13px;
+	color:rgb(33,41,43);
+	text-align:center;
+}
+.head-row-1 span
+{
+	line-height:38px;
+}*/
+.head-row-2 {
+	background-color: rgb(211,235,244);
+	text-align: center;
+	color: rgb(35,173,229);
+	font-size: 12px;
+}
+.head-row-2 span {
+	line-height: 28px;
+}
+.link-coach-row {
+	margin-top: 7px;
+	border-top: 1px solid #eee;
+	border-bottom: 1px solid #eee;
+	background-color: white;
+	text-align: left;
+}
+.link-coach-row .col-md-12 {
+	padding: 0px 12px;
+}
+.link-coach-row a {
+	text-decoration: none;
+	color: #616161;
+	display: block;
+}
+.link-coach-row a span {
+	line-height: 44px;
+}
+.confirm-icon {
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: contain;
+	display: block;
+}
+.icon-telphone {
+  background-image: url(../images/icon-telphone.png);
+  line-height: 44px;
+  width: 30px;
+  height: 44px;
+  float: right;
+  text-align: center;
+  display: block;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.confirm-order-content {
+	border-top: solid #eee 1px;
+	border-bottom: 1px solid #eee;
+	margin-bottom: 12px;
+	margin-top: 12px;
+	background-color: white;
+}
+.confirm-order-content .col-md-12 {
+	padding: 0px 12px;
+}
+.confirm-order-content hr, .confirm-order-content p {
+	margin: 0px;
+	padding: 0px;
+}
+.confirm-order-content .confirm-order-content-head {
+	line-height: 43px;
+}
+.confirm-order-content .confirm-order-content-head p {
+	margin: 0px;
+}
+.confirm-order-content .confirm-order-content-head time {
+	font-size: 16px;
+	color: rgb(35,173,229);
+}
+.confirm-order-content .confirm-order-content-head span {
+	font-size: 15px;
+	color: rgb(254,138,0);
+}
+.confirm-order-content .confirm-order-content-body {
+	background-color: rgb(253,254,255);
+	color: rgb(77,77,77);
+	font-size: 12px;
+}
+.confirm-order-content .confirm-order-content-body p {
+	line-height: 35px;
+}
+.confirm-order-content .confirm-order-pay {
+}
+.confirm-order-content .confirm-order-pay a {
+	text-decoration: none;
+	color: #232728;
+	display: block;
+}
+.confirm-order-content .confirm-order-pay a i.icon-chevron-right {
+	float: right;
+	line-height: 43px;
+	color: rgb(237,237,237);
+	text-align: center;/*  margin-right: 20px;*/
+}
+.confirm-order-content .confirm-order-pay a span {
+	line-height: 43px;
+}
+.confirm-order-content .confirm-order-foot {
+	text-align: right;
+	font-size: 12px;
+	line-height: 43px;
+}
+.confirm-order-content .confirm-order-foot p {
+	color: #616161;
+}
+.confirm-order-content .confirm-order-foot p span {
+	color: #fe8a00;
+	font-size: 15px;
+}
+.confirm-pay-row {
+	background-color: white;
+	border-top: 1px solid #eee;
+	border-bottom: 1px solid #eee;
+	text-align: right;
+	font-size: 13px;
+	color: #737373;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0px;
+}
+.confirm-pay-row .col-md-8 p {
+	margin: 0px;
+	font-size: 13px;
+	color: rgb(115,115,115);
+	line-height: 43px;
+	padding: 0px;
+}
+.confirm-pay-row .col-md-8 p span:first-child, .confirm-pay-row .col-md-8 p span:last-child {
+	color: rgb(35,173,229);
+}
+.confirm-pay-row .col-md-4 {
+	text-align: center;
+	padding: 0px;
+}
+.confirm-pay-row .col-md-4 span {
+	font-size: 16px;
+	color: white;
+	background-color: rgb(35,173,229);
+	display: block;
+	line-height: 12px;
+	padding: 16px 10px;
+}
+/*小巴币*/
+.coupon-content {
+	margin-top: 23px;
+}
+.coupon-content .row {
+	margin-left: 0px;
+	margin-right: 0px;
+}
+.coupon-content .coupon-detail {
+	height: 78px;
+	margin-bottom: 9px;
+}
+.coupon-content .border-blue {
+	border-top: 1px solid rgb(35,173,229);
+	border-right: 1px solid rgb(35,173,229);
+	border-bottom: 1px solid rgb(35,173,229);
+}
+.coupon-content .border-grey {
+	border-top: 1px solid rgb(207,207,207);
+	border-right: 1px solid rgb(207,207,207);
+	border-bottom: 1px solid rgb(207,207,207);
+}
+.coupon-content .coupon-detail .coupon-detail-left {
+	background-repeat: no-repeat;
+	background-position: center left;
+	background-size: contain;
+	height: 78px;
+	color: white;
+	line-height: 66px;
+}
+.coupon-content .coupon-detail .coupon-detail-left-off {
+	background-image: url(../images/grey-left-wheel.png);
+}
+.coupon-content .coupon-detail .coupon-detail-left-on {
+	background-image: url(../images/blue-left-wheel.png);
+}
+.coupon-content .coupon-detail .coupon-detail-left-off span:first-child, .coupon-content .coupon-detail .coupon-detail-left-on span:first-child {
+	font-size: 13px;
+}
+.coupon-content .coupon-detail .coupon-detail-left-off span:last-child, .coupon-content .coupon-detail .coupon-detail-left-on span:last-child {
+	font-size: 35px;
+}
+.coupon-content .coupon-detail .coupon-detail-mid-off {
+	text-align: left;
+	color: #cccccc;
+	padding-left: 10px;
+	padding-right: 0px;
+}
+.coupon-content .coupon-detail .coupon-detail-mid p {
+	margin: 0px;
+	font-size: 10px;
+	line-height: 25px;
+}
+.coupon-content .coupon-detail .coupon-detail-mid-off p:first-child {
+	font-size: 13px;
+}
+.coupon-content .coupon-detail .coupon-detail-mid-on p {
+	color: #777777;
+}
+.coupon-content .coupon-detail .coupon-detail-mid-on p:first-child {
+	font-size: 13px;
+	color: rgb(35,173,229);
+}
+.coupon-content .coupon-detail .coupon-detail-right-off {
+	padding-left: 0px;
+	padding-right: 10px;
+	background-image: url(../images/used-coupon.png);
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: contain;
+	height: 78px;
+	width: 35px;
+}
+.coupon-content .coupon-detail .un-coupon-detail-right {
+	padding-left: 0px;
+	padding-right: 10px;
+	background-image: url(../images/timed-coupon.png);
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: contain;
+	height: 78px;
+	width: 35px;
+}
+.coupon-content .coupon-detail .coupon-detail-right-on {
+	background-repeat: no-repeat;
+	background-position: bottom right;
+	background-size: 30px 30px;
+	height: 78px;
+	  padding: 0px;
+}
+.active {
+	background-image: url(../images/down-mark.png);
+}
+.active-check
+{
+	color:rgb(31,186,214);
+	display:block;
+}
+/* pop up window*/
+.overlay,.overlay-inner {
+	width: 100%;
+	height: 100%;
+	background: rgba(27,27,27,0.5);
+	position: absolute;
+	top: 0;
+	display: none;
+	z-index: 100;
+}
+.overlay .overlay-content {
+	width: 100%;
+	min-height: 173px;
+	background: #FFF;
+	position:fixed;
+	bottom: 0;
+}
+.overlay .overlay-content hr {
+	margin: 0px;
+	padding: 0px;
+	border: none;
+	border-top: 1px solid rgb(220,220,220);
+}
+.overlay .overlay-content p {
+	margin: 0px;
+	padding: 0px;
+}
+.overlay .overlay-content .overlay-content-title {
+	background-color: rgb(245,245,245);
+}
+.overlay .overlay-content .overlay-content-body {
+	background-color: rgb(251,251,251);
+	border-bottom:1px solid rgb(220,220,220);
+}
+.overlay .overlay-content .overlay-content-title a {
+	text-decoration: none;
+	display: block;
+	color: #010101;
+	font-size: 13px;
+	line-height: 43px;
+}
+.overlay .overlay-content .overlay-content-title a i.icon-remove {
+	float: right;
+	line-height: 43px;
+	color: rgb(227,229,232);
+	text-align: center;
+}
+.overlay .overlay-content p:first-child {
+	color: black;
+	font-size: 13px;
+	line-height: 25px;
+}
+.overlay .overlay-content p:last-child {
+	color: #ababab;
+	font-size: 10px;
+}
+.overlay .overlay-content .overlay-content-body ul
+{
+	list-style:none;
+	margin:0px;
+	padding:0px;
+}
+.overlay .overlay-content .overlay-content-body ul li
+{
+	height:44px;
+}
+.overlay .overlay-content .overlay-content-body ul li:first-child .row
+{
+	border-bottom:1px solid rgb(220,220,220);
+}
+
+/*.overlay .overlay-content i.icon-chevron-right {
+	color: rgb(227,229,232);
+	float: right;
+	line-height: 44px;
+}*/
+.overlay .overlay-content i.glyphicon-ban-circle{
+	color:red;
+	float: right;
+	line-height: 44px;
+
+}
+.overlay .overlay-content .overlay-content-body ul li.active-check i.icon-ok
+{
+	display:block;
+}
+.overlay .overlay-content .overlay-content-body ul li i.icon-ok {
+	color: rgb(31,186,214);
+	float: right;
+	line-height: 37px;
+	display:none;
+}

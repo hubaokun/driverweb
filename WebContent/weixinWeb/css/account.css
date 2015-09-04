@@ -1,0 +1,198 @@
+/* CSS Document */
+body
+{
+	background-color:rgb(247,247,247);
+}
+.account-head,.coin-head
+{
+	background-color:rgb(35,173,229);
+	text-align:center;
+}
+.account-head .col-md-12 p,.coin-head .col-md-12 p
+{
+	margin:0px;
+	padding:0px;
+		color:#f7f7f7;
+}
+.account-head .col-md-12 p:first-child,.coin-head .col-md-12 p:first-child
+{
+
+	font-size:11px;
+	padding-top:23px;
+	padding-bottom:11px;
+	line-height:13px;
+}
+.account-head .col-md-12 p:last-child,.coin-head .col-md-12 p:last-child
+{
+	font-size:32px;
+	padding-bottom:26px;
+	line-height:23px;
+}
+.account-money
+{
+	border-bottom:1px solid rgb(239,239,239);
+	background-color:white;
+	font-size:12px;
+	text-align:center;
+}
+.account-money .divider-line
+{
+	  width: 1px;
+  height: 32px;
+  background: rgb(239,239,239);
+  margin: 0 auto;
+  margin-top: 6px;
+}
+.account-money .col-md-5 a
+{
+		color:#9b9b9b;
+		display:block;
+		text-decoration:none;
+}
+.account-money .col-md-5 a>i
+{
+	margin-right:20px;
+	display:inline-block;
+}
+.account-money .col-md-5 a span
+{
+	position:absolute;
+	line-height:40px;
+}
+
+.account-icon
+{
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-size:contain;
+	width:21px;
+	height:40px;
+}
+.icon-charge
+{
+	background-image:url(../images/charge-icon.png);
+}
+.icon-cash
+{
+	background-image:url(../images/cash-icon.png);
+}
+
+.account-bill,.coin-detail
+{
+	border-top:1px solid rgb(239,239,239);
+	border-bottom:1px solid rgb(239,239,239);
+}
+.account-bill hr,.coin-detail hr
+{
+	margin:0px;
+	border:none;
+	border-top:1px solid rgb(239,239,239);
+}
+.account-bill .account-bill-head,.coin-detail .coin-detail-head
+{
+	background-color:rgb(251,251,251);
+	margin-top:7px;
+	font-size: 12px;
+	color: #5e5e5e;
+	line-height: 30px;
+}
+.account-bill .account-bill-head .col-md-12,.coin-detail .coin-detail-head .col-md-12
+{
+	padding-left:12px;
+	padding-right:12px;
+}
+
+.account-bill .account-bill-body,.coin-detail .coin-detail-body
+{
+	background-color:white;
+}
+.account-bill .account-bill-body p,.coin-detail .coin-detail-body p
+{
+	margin:0px;
+	padding:0px;
+}
+.account-bill .account-bill-body .col-md-12,.coin-detail .coin-detail-body .col-md-12
+{
+	padding-left:12px;
+	padding-right:12px;
+}
+.account-bill .account-bill-body  .col-md-12 p:first-child,.coin-detail .coin-detail-body  .col-md-12 p:first-child
+{
+	line-height:15px;
+	padding-top:7px;
+	padding-bottom:9px;
+		font-size:12px;
+			color:black;
+}
+.account-bill .account-bill-body  .col-md-12 p:first-child span.decrease,.coin-detail .coin-detail-body  .col-md-12 p:first-child span.decrease
+{
+	color:rgb(243,146,20);
+
+}
+.account-bill .account-bill-body  .col-md-12 p:first-child span.add,.coin-detail .coin-detail-body  .col-md-12 p:first-child span.add
+{
+	color:#00d1a4;
+}
+.account-bill .account-bill-body  .col-md-12 p:last-child,.coin-detail .coin-detail-body  .col-md-12 p:last-child
+{
+	line-height:11px;
+	padding-bottom:13px;
+	font-size:11px;
+	border-bottom:1px solid rgb(239,239,239);
+}
+.account-bill .account-bill-body .col-md-12:last-child p:last-child,.coin-detail .coin-detail-body .col-md-12:last-child p:last-child
+{
+	border-bottom:none;
+}
+.account-bill .account-bill-body  .col-md-12 p:last-child span:first-child,.coin-detail .coin-detail-body  .col-md-12 p:last-child span:first-child
+{
+	color:#a9a9a9;
+}
+.account-bill .account-bill-body  .col-md-12 p:last-child span:last-child,.coin-detail .coin-detail-body  .col-md-12 p:last-child span:last-child
+{
+	color:#b7b7b7;
+}
+
+
+/*小巴币样式*/
+.coin-origin
+{
+
+	margin-top:5px;
+}
+.coin-origin p
+{
+	margin:0px;
+	padding:0px;
+}
+.coin-origin .coin-origin-group
+{
+	margin-top:5px;
+	margin-bottom:5px;
+		background-color:white;
+		border-top:1px solid rgb(237,237,237);
+		border-bottom:1px solid rgb(237,237,237);
+}
+.coin-origin .coin-origin-group .coin-origin-single
+{
+padding:0px 12px;
+}
+.coin-origin .coin-origin-group .coin-origin-single p
+{
+		border-bottom:1px solid rgb(239,239,239);
+		line-height:43px;
+}
+.coin-origin .coin-origin-group .coin-origin-single p span:first-child
+{
+	font-size:14px;color:rgb(35,173,229);
+	
+}
+.coin-origin .coin-origin-group .coin-origin-single p span:last-child
+{
+	font-size:13px;color:#8a8a8a;
+	
+}
+.coin-origin .coin-origin-group .coin-origin-single p:last-child
+{
+	border-bottom:none;
+}

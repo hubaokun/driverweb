@@ -1,0 +1,367 @@
+/* CSS Document */
+body {
+	background-color: rgb(247,247,247);
+	text-shadow: none;
+	font-weight: normal;
+	overflow: hidden;
+	font-size:90%;
+}
+.container {
+	position: relative;
+}
+.course-head {
+	margin: 0px;
+	position: fixed;
+	display: table;
+	width: 100%;
+	top: 0;
+	left: 0;
+	z-index:100;
+}
+.course-head .course-head-top {
+	background-color: rgb(35,173,229);
+	color: rgb(247,247,247);
+	padding: 0px 12px;
+}
+.course-head p {
+	margin: 0px;
+	padding: 0px;
+	line-height: 25px;
+}
+.course-head .course-head-top .col-md-10 p:first-child {
+	font-size: 14px;
+	padding-top: 3px;
+}
+.course-head .course-head-top .col-md-10 p:first-child span:last-child {
+	color: rgb(255,193,3);
+	padding-left: 10px;
+}
+.course-head .course-head-top .col-md-10 p:last-child {
+	font-size: 13px;
+}
+.course-head .course-head-top .col-md-2 i {
+	line-height: 53px;
+	color: rgb(15,135,138);
+}
+.course-head .course-head-bottom {
+	background-color: white;
+	border-bottom: 1px solid rgb(240,240,240);
+}
+
+
+/*课程表日期选择 starts——————————————————————————————————————————————————————————————*/
+.course-scroll
+{
+	margin-top:147px;
+}
+.course-tips {
+	padding: 8px 0px;
+/*	background: white;*/
+}
+.course-tips p {
+	margin: 0px;
+	padding: 0px;
+	font-size: 10px;
+	line-height: 12px;
+}
+.course-tips p span:first-child {
+	color: rgb(221,221,221);
+}
+.course-tips p span:nth-child(2) {
+ color:rgb(92,208,255);
+}
+.course-tips p span:last-child {
+	color: rgb(0,209,164);
+}
+.course-choose-date
+{
+	background:white;
+}
+.course-choose-date-inner
+{
+	/*overflow-x:scroll;*/
+	overflow-y:hidden;
+	background-image:url(images/shadow1.png);
+	background-repeat:no-repeat;
+	background-position:center right;
+	background-size:contain;
+}
+.course-choose-date p
+{
+	margin:0px;
+	padding:0px;
+}
+.course-choose-date ul.course-choose-ul
+{
+	list-style:none;
+	height:93px;
+	width:1338px;
+	padding: 4px 12px 0px 12px;
+    background-color:white;
+	margin-bottom:0px;
+}
+.course-choose-date ul.course-choose-ul li
+{
+	float:left;
+	/*width:80px;*/
+	text-align:center;
+	color:rgb(214,214,214);
+	padding-top:4px;
+	padding-right:8px;
+}
+.course-choose-date ul.course-choose-ul li:last-child
+{
+	padding-right:0px;
+}
+.course-choose-date ul.course-choose-ul li:first-child
+{
+/*	background-image:url(images/shadow.png);
+	background-repeat:no-repeat;
+	background-position:center left;
+	background-size:contain;*/
+}
+.course-choose-date ul.course-choose-ul li:last-child
+{
+    /*background-image:url(images/shadow1.png);
+*/	background-repeat:no-repeat;
+	background-position:center right;
+	background-size:contain;
+
+}
+.course-choose-date ul.course-choose-ul li p:first-child
+{
+	font-size:12px;
+	line-height:10px;
+		padding-top:6px;
+		width:36px;
+}
+.course-choose-date ul.course-choose-ul li p:first-child  span:first-child
+{
+	border-radius:22px;
+	margin-bottom:8px;
+	padding:5px;
+
+}
+.course-choose-date ul.course-choose-ul li.active p:first-child  span:first-child
+{
+	background-color:rgb(35,173,229);
+	color:white;
+}
+.course-choose-date ul.course-choose-ul li p:first-child span:nth-child(2)
+{
+	display:block;
+	border: 1px solid #d6d6d6;
+	border-radius: 4px;
+	padding-top:8px;
+	margin-top:12px;
+	height:42px;
+}
+.course-choose-date ul.course-choose-ul li.active p:first-child span:nth-child(2) 
+{
+	border-color:rgb(35,173,229);
+}
+.course-choose-date ul.course-choose-ul li p:first-child span:nth-child(2)>i
+{
+	font-style:normal;
+}
+.course-choose-date ul.course-choose-ul li p:last-child
+{
+	font-size:10px;
+	display:none;
+	width:36px;
+	line-height: 12px;
+}
+.course-choose-date ul.course-choose-ul li.active
+{
+    color:rgb(35,173,229);
+    /*transform: scale(1, 1.2);*/
+}
+.course-choose-date ul.course-choose-ul li.active p:last-child
+{
+	display:block;
+}
+
+.course-date-list {
+	/*overflow-y:scroll;*/
+}
+.course-date-list p {
+	margin: 5px 0px;
+	padding: 0px;
+	line-height:17px;
+}
+.course-date-list .col-md-12 {
+	padding-right: 0px;
+	padding-left: 0px;
+}
+.course-date-list .course-date-list-group {
+	margin: 0px 10px 22px 10px;
+}
+.course-date-list .course-date-list-group .col-md-3 {
+	text-align: center;
+	padding-left: 0px;
+	padding-right: 0px;
+	padding: 0px 5px;
+}
+.course-date-list .course-date-list-group .col-md-3 
+{
+	width:25%;
+}
+.course-date-list .course-date-list-group .col-md-3 a {
+	/*border: 1px solid #d6d6d6;*/
+	border-radius: 4px;
+	text-align: center;
+	display: block;
+	text-decoration: none;
+	color: #b1b1b1;
+	font-weight: normal;
+	text-shadow: none;
+	background-color:#e6e6e6;
+	font-size:1.3em;
+	padding:5px 0px;
+}
+.course-date-list .course-date-list-group .col-md-3 a.unavailable
+{
+	
+}
+.course-date-list .course-date-list-group .col-md-3 a.unavailable p:last-child
+{
+	line-height:42px;
+}
+.course-date-list .course-date-list-group .col-md-3 a  p:first-child
+{
+	font-size:1.7em;
+}
+
+/*自己已经预约状态的a*/
+.course-date-list .course-date-list-group .col-md-3 a.appointment
+{
+	
+}
+.course-date-list .course-date-list-group .col-md-3 a.appointment p:last-child
+{
+	color:rgb(240,113,0);
+}
+
+/*可选状态的a*/
+.course-date-list .course-date-list-group .col-md-3 a.available
+{
+	color:rgb(27,133,205);
+	background-color:rgb(115,196,253);
+}
+.course-date-list .course-date-list-group .col-md-3 a.available p:last-child {
+	display: none;
+}
+.course-date-list .course-date-list-group .col-md-3 a.available p:first-child
+{
+	color:white;
+	font-size:1.7em;
+}
+
+/*选中状态的a*/
+
+.course-date-list .course-date-list-group .col-md-3 a.active p:first-child
+{
+	color:white;
+}
+.course-date-list .course-date-list-group .col-md-3 a.active
+{
+	color:white;
+	border-color:rgb(0,209,164);
+	background-color:rgb(0,209,164);
+}
+.course-date-list .course-date-list-group .col-md-3 a.active p:nth-child(2)
+{
+	display:none;
+}
+.course-date-list .course-date-list-group .col-md-3 a.active p:nth-child(3)
+{
+	display:none;
+}
+.course-date-list .course-date-list-group .col-md-3 a.active p:last-child {
+  display: block;
+  height: 39px;
+  font-size: 1.7em;
+  line-height:34px;
+}
+
+.course-date-list .course-date-list-group-top {
+	margin-bottom: 14px;
+}
+/*课程表日期选择 ends——————————————————————————————————————————————————————————————*/
+
+/*footer starts*/
+.course-foot {
+	background-color: #FFF;
+	position:fixed;
+	bottom: 0;
+	left:0;
+	right:0px;
+	border-top: 1px solid rgb(239,239,239);
+	border-bottom: none;
+	text-align: center;
+	border-color: rgb(239,239,239);
+	display:none;
+}
+.course-foot p
+{
+	display:inline-block;
+	margin:0px;
+}
+.course-foot .col-md-8 p 
+{
+	font-size:13px;
+	color:rgb(115,115,115);
+	line-height:43px;
+}
+.course-foot .col-md-8 p span:first-child
+{
+	color:rgb(35,173,229);
+}
+.course-foot .col-md-8 p span:last-child
+{
+	font-size:16px;
+	color:rgb(35,173,229);
+}
+.ourse-foot .col-md-4
+{
+	padding-right:0px;
+	padding-left:0px;
+}
+.course-foot .col-md-4 a {
+	font-size: 16px;
+	color: white;
+	background-color: rgb(35,173,229);
+	display: block;
+	line-height: 12px;
+	padding: 16px 10px;
+	font-weight: normal;
+	text-decoration:none;
+	
+}
+/*footer ends*/
+
+
+
+/*兼容移动设备的样式设置*/
+
+@media (min-width:360px) and (max-width:432px) {
+	body
+	{
+		/*background-color:black;*/
+	}
+.course-date-list p {
+  margin: 10px 0px;
+}
+.course-date-list .course-date-list-group .col-md-3 a.active p:last-child {
+	height:44px;
+}
+@media (width:384px)
+{
+	body
+	{
+		background-color:#30C;
+	}
+}
+@media (min-width:320px) and (max-width:480px)
+{
+}
