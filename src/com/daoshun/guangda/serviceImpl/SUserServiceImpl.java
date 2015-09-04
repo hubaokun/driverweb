@@ -1100,8 +1100,13 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		if (setInfo != null && setInfo.getLogin_vcode_time() != null && setInfo.getLogin_vcode_time() > 0) {
 			login_vcode_time = setInfo.getLogin_vcode_time();
 		}
-
-		String content = content ="【小巴科技】"+ vercode.toString() + "(小巴学车验证码," + login_vcode_time + "天登陆有效)";
+		String m="";
+		if("1".equals(type)){
+			m="教练";
+		}else if("2".equals(type)){
+			m="学员";
+		}
+		String content = content ="【小巴科技】"+ vercode.toString() + "(小巴学车"+m+"验证码," + login_vcode_time + "天登陆有效)";
 		System.out.print(content);
 		String result = CommonUtils.sendSms(phone, content);
 

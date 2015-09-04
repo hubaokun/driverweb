@@ -361,7 +361,12 @@ public class SuserServlet extends BaseServlet {
 			}
 		}*/
 		
-		
+		if(user.getEnrollpay()==null){
+			user.setEnrollpay(0);
+		}
+		if(user.getEnrollstate()==null){
+			user.setEnrollstate(0);
+		}
 		resultMap.put("enrollpay",user.getEnrollpay());//0未支付 1 已支付 -1 不需要付款
 		resultMap.put("enrollstate",user.getEnrollstate());//0 未报名  1 已报名
 		resultMap.put("model", user.getModel());
