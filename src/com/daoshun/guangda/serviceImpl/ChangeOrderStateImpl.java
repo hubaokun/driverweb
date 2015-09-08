@@ -56,7 +56,7 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 		now.add(Calendar.SECOND, -1);
 
 		// 首先查询出订单相关的几个时间配置
-		String hqlset = "from SystemSetInfo where 1 = 1";
+		String hqlset = "from SystemSetInfo ";
 		SystemSetInfo setInfo = (SystemSetInfo) dataDao.getFirstObjectViaParam(hqlset, null);
 
 		int s_order_end = 2880;// 订单结束时间多久之后自动结算默认48小时
@@ -70,7 +70,7 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 		c.add(Calendar.MINUTE, -s_order_end);
 		String afterTwo = CommonUtils.getTimeFormat(c.getTime(), "yyyy-MM-dd HH:mm:ss");
 		// 查询出需要结算的订单：条件为(订单的结束时间距离现在已经超过结算时间且订单没有投诉且订单的状态不是已经结算 且 教练已经确认下车过了)
-		String hql = "from OrderInfo o where o.end_time < '" + afterTwo + "' and (select count(*) from ComplaintInfo c where c.order_id = o.orderid " + "and c.state = 0) = 0 and o.over_time is NULL";
+		String hql = "from OrderInfo o where o.end_time < '" + afterTwo + "' and (select count(*) from ComplaintInfo c where c.order_id = o.orderid " + " and c.state = 0) = 0 and o.over_time is NULL";
 		//String hql="from OrderInfo o WHERE o.paytype = 3 AND time(o.over_time) = '00:59:59'";
 		//String hql="from OrderInfo o where o.over_time is null and o.studentid=30088";
 		//System.out.println(hql);
@@ -85,9 +85,8 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 				String[] params = { "orderid" };
 				OrderRecordInfo recordinfo = (OrderRecordInfo) dataDao.getFirstObjectViaParam(hql1, params, order.getOrderid());
 				if (recordinfo != null) {// 如果教练确认下车过的话
-					// 教练金额的修改
+					//设置订单的结束时间
 					order.setOver_time(new Date());
-					
 					if (cuser != null) {
 						if(order.getPaytype()==PayType.MONEY){
 							BigDecimal b1=new BigDecimal(order.getTotal().intValue());
@@ -204,23 +203,19 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 					        coinRecordInfo.setOrderid(order.getOrderid());//设置小巴币所属的订单的ID
 					        dataDao.addObject(coinRecordInfo);*/
 					        //###############处理 小巴币 结束###################
-					      //###############处理余额 开始###################
+					        //###############处理余额 开始###################
 					        BigDecimal mmoney=new BigDecimal(order.getMixMoney());
 							//设置学员冻结金额为
 							student.setFmoney(student.getFmoney().subtract(mmoney));
 							mmoney=mmoney.add(cuser.getMoney());
 							cuser.setMoney(mmoney);
-					      //###############处理余额 结束###################
+					        //###############处理余额 结束###################
 						}
 						cuser.setTotaltime(cuser.getTotaltime() + order.getTime());
 						student.setLearn_time(student.getLearn_time() + order.getTime());
 						dataDao.updateObject(cuser);
 						dataDao.updateObject(student);
 					}
-					 	
-					
-					
-					
 					if(cuser!=null){
 						// 教练的流水修改
 						BalanceCoachInfo balanceCoach = new BalanceCoachInfo();
@@ -258,14 +253,10 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 						info.setStudentid(order.getStudentid());
 						dataDao.addObject(info);
 					}
-					
 				}
 				dataDao.updateObject(order);
-			
-				
 				/*
 				order.setStudentstate(3);// 设置订单状态为已结算
-
 				String hql1 = "from OrderRecordInfo where operation = 4 and orderid = :orderid";
 				String[] params = { "orderid" };
 				OrderRecordInfo recordinfo = (OrderRecordInfo) dataDao.getFirstObjectViaParam(hql1, params, order.getOrderid());
@@ -357,10 +348,8 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 				}
 				dataDao.updateObject(order);
 			*/
-				
 			}
 		}
-
 		// 记录所有教练和学员的账户余额信息,在订单结算之后再去记录用户的余额等情况
 		List<CuserInfo> cUserList = dataDao.getAllObject(CuserInfo.class);
 		for (CuserInfo cuser : cUserList) {
@@ -392,7 +381,6 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 				dataDao.deleteObject(orderNotiRecord);
 			}
 		}
-		
 		//重置教练开课状态
 		dataDao.callUpdatecoursestate();
 		System.out.println("##################定时任务执行结束#################");
@@ -431,7 +419,6 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 				orderRecord.setOrderid(evaluation.getOrder_id());
 				orderRecord.setUserid(evaluation.getFrom_user());
 				dataDao.addObject(orderRecord);
-				
 			} 
 		}
 	}
