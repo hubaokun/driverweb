@@ -85,7 +85,7 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 				String[] params = { "orderid" };
 				OrderRecordInfo recordinfo = (OrderRecordInfo) dataDao.getFirstObjectViaParam(hql1, params, order.getOrderid());
 				if (recordinfo != null) {// 如果教练确认下车过的话
-					//设置订单的结束时间
+					//设置订单的over_time
 					order.setOver_time(new Date());
 					if (cuser != null) {
 						if(order.getPaytype()==PayType.MONEY){

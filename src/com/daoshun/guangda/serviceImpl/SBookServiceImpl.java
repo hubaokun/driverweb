@@ -3336,8 +3336,6 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		}
 		List<EvaluationInfo> listCount = (List<EvaluationInfo>) dataDao.getObjectsViaParam(hql, params, CommonUtils.parseInt(coachid, 0),CommonUtils.parseInt(studentid,0));
 		result.put("evalist", list);
-		result.put("code", 1);
-		result.put("message", "操作成功");
 		if (listCount != null)
 			result.put("count", listCount.size());
 		else
