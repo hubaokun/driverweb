@@ -5,6 +5,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +37,7 @@ import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.pojo.SystemSetInfo;
 import com.daoshun.guangda.pojo.VersionInfo;
 import com.daoshun.guangda.service.ICtaskService;
+import com.daoshun.guangda.service.ISUserService;
 
 /**
  * @author liukn
@@ -43,7 +46,9 @@ import com.daoshun.guangda.service.ICtaskService;
 @Service("ctaskService")
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
-
+	
+	@Resource
+	ISUserService suserService;
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<OrderInfo> getOrderInfoListBycoachid(String coachid, int page, int count) {
@@ -449,6 +454,7 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 		DriveSchoolInfo driveschool = dataDao.getObjectById(DriveSchoolInfo.class, schoolid);
 		return driveschool;
 	}
+	
 	/**
 	 * 订单结算分为两种情况
 		1、自动结算时间未到，此时学员评价和教练确认下车的后完成的动作触发订单结算
@@ -519,14 +525,17 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 						if(student.getFcoinnum().intValue()>=b1.intValue()){
 							student.setFcoinnum(student.getFcoinnum().subtract(b1));
 						}else{
-							System.out.println("小巴币结算：结算SettlementOrder方法中：小巴币解冻时发现数量小于订单额!停止结算");
+							System.out.println("小巴币结算：自动结算方法中：学员小巴币解冻时发现数量小于订单额!停止结算");
+							System.out.println("studentid="+student.getStudentid()+",本次结算学员被冻结的小巴币："+student.getFcoinnum().intValue());
+							System.out.println("studentid="+student.getStudentid()+",本次结算订单额："+b1.intValue());
 							return;
 						}
 						
 						b1=b1.add(new BigDecimal(cuser.getCoinnum()));
 						//教练小巴币增加
 						cuser.setCoinnum(b1.intValue());
-						CoinRecordInfo coinRecordInfo = new CoinRecordInfo ();
+						suserService.addCoinForSettlement(order, cuser, student,1);
+						/*CoinRecordInfo coinRecordInfo = new CoinRecordInfo ();
 				        coinRecordInfo.setReceiverid(cuser.getCoachid());
 				        coinRecordInfo.setReceivertype(UserType.COAH);
 				        coinRecordInfo.setReceivername(cuser.getRealname());
@@ -543,7 +552,7 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 				        coinRecordInfo.setCoinnum(order.getTotal().intValue());
 				        coinRecordInfo.setAddtime(new Date());
 				        coinRecordInfo.setOrderid(order.getOrderid());//设置小巴币所属的订单的ID
-				        dataDao.addObject(coinRecordInfo);
+				        dataDao.addObject(coinRecordInfo);*/
 					}else if(order.getPaytype()==PayType.COIN_MONEY){
 						//混合支付
 						//###############处理 小巴币 开始###################
@@ -552,15 +561,19 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 						if(student.getFcoinnum().intValue()>=b1.intValue()){
 							student.setFcoinnum(student.getFcoinnum().subtract(b1));
 						}else{
-							System.out.println("小巴币+余额结算：结算SettlementOrder方法中：小巴币解冻时发现数量小于订单额!停止结算");
+							System.out.println("小巴币+余额混合支付结算小巴币结算部分：自动结算方法中：学员小巴币解冻时发现数量小于订单额!停止结算");
+							System.out.println("studentid="+student.getStudentid()+",本次结算学员被冻结的小巴币："+student.getFcoinnum().intValue());
+							System.out.println("studentid="+student.getStudentid()+",本次结算订单额："+b1.intValue());
 							return;
 						}
 						
 						b1=b1.add(new BigDecimal(cuser.getCoinnum()));
 						//教练小巴币增加
 						cuser.setCoinnum(b1.intValue());
+						//
+						suserService.addCoinForSettlement(order, cuser, student,2);
 						
-						CoinRecordInfo coinRecordInfo = new CoinRecordInfo ();
+						/*CoinRecordInfo coinRecordInfo = new CoinRecordInfo ();
 				        coinRecordInfo.setReceiverid(cuser.getCoachid());
 				        coinRecordInfo.setReceivertype(UserType.COAH);
 				        coinRecordInfo.setReceivername(cuser.getRealname());
@@ -577,22 +590,18 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 				        coinRecordInfo.setCoinnum(order.getMixCoin());
 				        coinRecordInfo.setAddtime(new Date());
 				        coinRecordInfo.setOrderid(order.getOrderid());//设置小巴币所属的订单的ID
-				        dataDao.addObject(coinRecordInfo);
+				        dataDao.addObject(coinRecordInfo);*/
 				        //###############处理 小巴币 结束###################
-				      //###############处理余额 开始###################
+				        //###############处理余额 开始###################
 				        BigDecimal mmoney=new BigDecimal(order.getMixMoney());
 						//设置学员冻结金额为
 						student.setFmoney(student.getFmoney().subtract(mmoney));
 						mmoney=mmoney.add(cuser.getMoney());
 						cuser.setMoney(mmoney);
-				        
 				      //###############处理余额 结束###################
-				        
 					}
-						
 					cuser.setTotaltime(cuser.getTotaltime() + order.getTime());
 					student.setLearn_time(student.getLearn_time() + order.getTime());
-					
 					//取消教练的冻结小巴币
 					/*if(cuser.getFcoinnum()-order.getTotal().intValue()>=0){
 						cuser.setFcoinnum(cuser.getFcoinnum()-order.getTotal().intValue());

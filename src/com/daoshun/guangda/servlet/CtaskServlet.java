@@ -589,12 +589,15 @@ public class CtaskServlet extends BaseServlet {
 
 					//CuserInfo cuser = ctaskService.getCoachInfoById(orderInfo.getCoachid());
 					if (cuser != null) {
-						List<EvaluationInfo> list = ctaskService.getEvaluationList(CommonUtils.parseInt(userid, 0), 1);
+						/*List<EvaluationInfo> list = ctaskService.getEvaluationList(CommonUtils.parseInt(userid, 0), 1);
 						int count = 0;
 						if (list != null)
 							count = list.size();
 						float score = (CommonUtils.parseFloat(score1, 0) + CommonUtils.parseFloat(score2, 0) + CommonUtils.parseFloat(score3, 0) + cuser.getScore() * count) / (count + 1);
-						float num = (float) (Math.round(score * 100) / 100f);//
+						float num = (float) (Math.round(score * 100) / 100f);*/
+						//更新教练的星级 
+						float score=(CommonUtils.parseFloat(score1, 0) + CommonUtils.parseFloat(score2, 0) + CommonUtils.parseFloat(score3, 0) + cuser.getScore())/4 ;
+						float num=Math.round(score);
 						cuser.setScore(num);
 						ctaskService.updateCoachInfo(cuser);
 					}

@@ -10,7 +10,9 @@ import com.daoshun.guangda.pojo.CoachStudentInfo;
 import com.daoshun.guangda.pojo.CouponInfo;
 import com.daoshun.guangda.pojo.CouponRecord;
 import com.daoshun.guangda.pojo.CuserInfo;
+import com.daoshun.guangda.pojo.DriveSchoolInfo;
 import com.daoshun.guangda.pojo.NoticesInfo;
+import com.daoshun.guangda.pojo.OrderInfo;
 import com.daoshun.guangda.pojo.StudentApplyInfo;
 import com.daoshun.guangda.pojo.StudentCheckInfo;
 import com.daoshun.guangda.pojo.SuserInfo;
@@ -334,4 +336,6 @@ public interface ISUserService {
     public void addAlipayCallBack(String qs,String ru);
     public void promoEnrollCallback(String out_trade_no);
     public HashMap<String, Object> getCoinAffiliation(String studentid);
+    public DriveSchoolInfo getCoinForDriveSchool(int studentid);
+    public void addCoinForSettlement(OrderInfo order,CuserInfo cuser,SuserInfo student,int type);
 }

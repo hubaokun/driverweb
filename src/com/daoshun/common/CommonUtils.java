@@ -522,20 +522,44 @@ public class CommonUtils {
 		// System.out.println(result);
 		return result;
 	}
+	/**
+	 * 杭州示远科技短信平台(暂时未使用)
+	 * @param phone
+	 * @param content
+	 * @return
+	 * @author 卢磊
+	 */
 	public static String sendSms2(String phone, String content) {
-		// http://202.91.244.252/qd/SMSSendYD?usr=***&pwd=***&mobile=***&sms=***&extdsrcid=***
 		StringBuilder url = new StringBuilder();
 		url.append("http://120.26.69.248/msg/HttpSendSM?account=002006&pswd=Sd123456789&mobile=13958109962&needstatus=false&msg=");
-		/*url.append(Constant.SMS_USER);
-		url.append("&pwd=");
-		url.append(Constant.SMS_PWD);
-		url.append("&mobile=");
-		url.append(phone);
-		url.append("&sms=");*/
 		try {
 			url.append(java.net.URLEncoder.encode(content, "utf-8"));
 		} catch (UnsupportedEncodingException e) {
 		}
+		String result = HttpRequest.sendGet(url.toString(), null);
+		 //System.out.println(result);
+		return result;
+	}
+	/**
+	 * 梦网科技短信平台(暂时未使用)
+	 * @param phone
+	 * @param content
+	 * @return
+	 * @author 卢磊
+	 */
+	public static String sendSms3(String phone, String content) {
+		//员工您好，感谢您对此次测试的配合。
+		StringBuilder url = new StringBuilder();
+		url.append("http://61.145.229.29:9003/MWGate/wmgw.asmx/MongateSendSubmit?userId=JC2422&"
+				+ "password=820036&pszMobis=");
+		url.append(phone);
+		url.append("&pszMsg=");
+		try {
+			url.append(java.net.URLEncoder.encode(content, "utf-8"));
+		} catch (UnsupportedEncodingException e) {
+		}
+		url.append("&iMobiCount=1&pszSubPort=*&MsgId=0");
+		System.out.println(url);
 		String result = HttpRequest.sendGet(url.toString(), null);
 		// System.out.println(result);
 		return result;
@@ -649,7 +673,8 @@ public class CommonUtils {
     	/*String phone="18758234668";
     	String code=CommonUtils.getInviteCode(phone);
     	System.out.print(code);*/
-    	sendSms2("","【小巴科技】你的验证码是232323");
+    	sendSms3("13958109962","员工您好，感谢您对此次测试的配合。");
+    	//sendSms2("","【小巴科技】");
     }
     
 }

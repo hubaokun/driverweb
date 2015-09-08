@@ -2579,12 +2579,13 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					String hql5 = "from UserPushInfo where userid =:userid and usertype = 1";
 					String params5[] = { "userid" };
 					UserPushInfo userpush = (UserPushInfo) dataDao.getFirstObjectViaParam(hql5, params5, CommonUtils.parseInt(coachid, 0));
+					String msg="您有新的订单了,学员"+student.getRealname()+"预约了你的课程";
 					if (userpush != null) {
 						if (userpush.getType() == 0 && !CommonUtils.isEmptyString(userpush.getJpushid())) {// 安卓
 							PushtoSingle pushsingle = new PushtoSingle();
-							pushsingle.pushsingle(userpush.getJpushid(), 1, "{\"message\":\"" + "您有新的订单哦" + "\",\"type\":\"1\"}");
+							pushsingle.pushsingle(userpush.getJpushid(), 1, "{\"message\":\"" + msg + "\",\"type\":\"1\"}");
 						} else if (userpush.getType() == 1 && !CommonUtils.isEmptyString(userpush.getDevicetoken())) {
-							ApplePushUtil.sendpush(userpush.getDevicetoken(), "{\"aps\":{\"alert\":\"" + "您有新的订单哦" + "\",\"sound\":\"default\"},\"userid\":" + coachid + "}", 1, 1);
+							ApplePushUtil.sendpush(userpush.getDevicetoken(), "{\"aps\":{\"alert\":\"" + msg + "\",\"sound\":\"default\"},\"userid\":" + coachid + "}", 1, 1);
 						}
 					}
 					

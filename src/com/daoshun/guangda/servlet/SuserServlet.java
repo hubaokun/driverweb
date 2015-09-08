@@ -190,7 +190,9 @@ public class SuserServlet extends BaseServlet {
 						return false;
 					}
 				} else {
-					return true;
+					resultMap.put(Constant.CODE, 95);
+					resultMap.put(Constant.MESSAGE, "您的登录信息已经过期,请重新登录.");
+					return false;
 				}
 			} else {
 				resultMap.put(Constant.CODE, 99);
