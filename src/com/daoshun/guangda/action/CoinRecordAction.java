@@ -121,7 +121,9 @@ public class CoinRecordAction extends BaseAction{
     public String goSchoolGrantCoupon() {
     	HttpSession session = ServletActionContext.getRequest().getSession();
 		int schoolid = CommonUtils.parseInt(String.valueOf(session.getAttribute("schoolid")), 0);
-		driveSchoollist = cuserService.getDriveSchoolListById(schoolid);
+		if(schoolid!=0 ){
+			driveSchoollist = cuserService.getDriveSchoolListById(schoolid);
+		}
 		
         return SUCCESS;
     }
