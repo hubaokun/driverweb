@@ -25,8 +25,8 @@
     </script>
     <title>驾校发放小巴券</title>
 </head>
-<input type="hidden" id="index" value="8"/>
-<input type="hidden" id="change_id" value="2"/>
+<input type="hidden" id="index" value="9"/>
+<input type="hidden" id="change_id" value="5"/>
 
 <body>
 <div id="content">
@@ -42,7 +42,7 @@
                             <div style="height:50%; line-height: 75px; float:left; margin-left: 20px;">
                             <select name="addownertype" id="addownertype" onchange="showsearchschoolowner()" class="searchdiv"
                                     style="  height: 50px;  border: 1px solid #cfd9df;margin-top:10px;">
-                                <option value="1">驾校发放</option>
+                               <!--  <option value="1">驾校发放</option>-->
                                 <option value="2">教练发放</option>
                             </select>
                         </div>
@@ -55,7 +55,7 @@
                             <select name="addcoupontype" id="addcoupontype"  class="searchdiv"
                                     style="  height: 50px;  border: 1px solid #cfd9df;margin-top:10px;">
                                 <option value="1">时间券</option>
-                                <option value="2">抵价券</option>
+                                <!-- <option value="2">抵价券</option>-->
                             </select>
                         </div>
                     </div>
@@ -68,6 +68,7 @@
 					</div>
 					</div>
                     
+                    <!-- 显示驾校
                     <s:iterator value="driveSchoollist" var="driveSchool">
                     <div  id="bigsearch2" style="width: 100%; height: 75px; border-bottom: 1px solid #eaeff2;">
                     <div style="float:left; width: 143px; height: 100%; line-height: 75px; border-right: 1px solid #eaeff2;text-align: right;">驾校名称<span style="color:#f83a22; margin-right:16px; margin-left: 8px;">*</span></div>
@@ -77,6 +78,15 @@
                     </div><input type="hidden" id="addownerid" name="addownerid" value="${schoolid }">
                     </div>
                     </s:iterator>
+                    -->
+                    
+                    <div id="bigsearch" style="width: 100%; height: 75px; border-bottom: 1px solid #eaeff2;">
+                    <div style="float:left; width: 143px; height: 100%; line-height: 75px; border-right: 1px solid #eaeff2;text-align: right;">教练名称或手机<span style="color:#f83a22; margin-right:16px; margin-left: 8px;">*</span></div>
+                    <div style="height: 100%; line-height: 75px; float:left; margin-left: 20px;">
+                    <input value="" name="owenersearch" id="searchname" onkeyup="searchCuser();" autocomplete="off"  required="required" style="width: 800px; height: 33px; padding-left:5px; border: 1px solid #eaeff2; margin-top: 20px;">
+                    </div><div class="binding_detail"  style="  left: 164px;top:-20px;clear:both;" id="gartenDetail" >
+                    </div><input type="hidden" id="addownerid" name="addownerid" >
+                    </div>
                     
                     <div id="searchbefore" style="width: 100%; height: 75px; border-bottom: 1px solid #eaeff2;">
                         <div style="float:left; width: 143px; height: 100%; line-height: 75px; border-right: 1px solid #eaeff2;text-align: right;">

@@ -64,6 +64,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		CuserInfo cuser = dataDao.getObjectById(CuserInfo.class, CommonUtils.parseInt(coachid, 0));
 		if (cuser != null) {
 			cuser.setAvatarurl(getFilePathById(cuser.getAvatar()));// 头像
+			cuser.setTelphone(cuser.getPhone());
 			// 年龄
 			if (!CommonUtils.isEmptyString(cuser.getBirthday())) {
 				String birthday = cuser.getBirthday();

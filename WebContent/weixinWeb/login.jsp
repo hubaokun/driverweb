@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
+<%@page import="com.weixin.action.*" %>
 <!doctype html>
 <html>
 <head>
@@ -8,15 +9,22 @@ pageEncoding="UTF-8"%>
 <title>登录</title>
 <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <link href="css/login.css" rel="stylesheet" type="text/css" >
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script src="js/jquery-1.11.2.min.js"></script>
 <style type="text/css"></style>
+<script src="http://api.map.baidu.com/api?v=2.0&ak=MGt8L6pnsrogzRS6u4TKMGcX" type="text/javascript"></script>
 </head>
 
 <body>
+<input type="hidden" id="code" name="code" value="${param.code}" />
+<input type="hidden" id="state" name="state" value="${param.state}" /> 
+<div id="allmap"></div>
 <div class="container">
   <div class="row logo-row">
     <div class="col-md-12 col-sm-12 col-xs-12"> <img src="images/new-logo.png" class="img-responsive center-block" /> </div>
   </div>
   <form>
+  
     <div class="row form-row">
       <div class="col-md-12 col-sm-12 col-xs-12">
         <input type="text" placeholder="手机号" id="mobile" value="" class="center-block" onKeyUp="handle();" />
@@ -27,7 +35,7 @@ pageEncoding="UTF-8"%>
       </div>
     </div>
     <div class="row login-row">
-      <div class="col-md-12 col-sm-12 col-xs-12"> <a href="coachlist.jsp">登录</a> </div>
+      <div class="col-md-12 col-sm-12 col-xs-12"> <a href="../weixinlogin?code=${param.code}">登录</a> </div>
     </div>
   </form>
 </div>
