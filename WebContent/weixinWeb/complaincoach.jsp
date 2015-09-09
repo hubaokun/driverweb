@@ -39,7 +39,7 @@ pageEncoding="UTF-8"%>
                   <span>投诉还未完成，您确定要离开？</span>
               </div>
               <div class="no col-md-6 col-sm-6 col-xs-6" style="border-right:1px solid rgb(218,218,218);"><span >取消</span></div>
-              <div class="yes col-md-6 col-sm-6 col-xs-6"><span>确定</span></div>
+              <div class="yes col-md-6 col-sm-6 col-xs-6"><span class="btn-sure">确定</span></div>
               
         </div>
       </div>
@@ -51,22 +51,26 @@ pageEncoding="UTF-8"%>
 <script>
 $(document).ready(function()
 {
+	var height = $(window).height();
+	var width = $(window).width();
 	$('.complain-content-foot span').on('click',function()
 	{
 		$('.overlay').css('display','block');
+		var width1 = $('.overlay-content').width();
+		var height1 = $('.overlay-content').height();
+		//alert (height);
+		var h = (height-height1)/2;
+		var w = (width-width1)/2;
+		$('.overlay-content').css('top',h);
+		$('.overlay-content').css('left',w);
 	})
 	$('.yes,.no').on('click',function()
 	{
 		$('.overlay').css('display','none');
 	})
 	
-	var height = $(window).height();
-	var width = $(window).width();
-	//alert (height);
-	var h = (height-90)/2;
-	var w = (width-296)/2;
-	$('.overlay-content').css('top',h);
-	$('.overlay-content').css('left',w);
+
+
 	
 	
 	//星星插件

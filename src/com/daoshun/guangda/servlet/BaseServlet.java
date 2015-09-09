@@ -46,7 +46,7 @@ public class BaseServlet extends HttpServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	ApplicationContext applicationContext;
+    protected ApplicationContext applicationContext;
 	IBaseService baseService;
 	private Map<String, Object> paramMap = null;
 
