@@ -5,6 +5,8 @@ package com.daoshun.common;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -76,7 +78,70 @@ public class CommonUtils {
 	public static String getAliSet() {
 		return properties.getProperty("aliset");
 	}
-
+	public static String getAppid() {
+		return properties.getProperty("appid");
+	}
+	
+	public static String getAppsecret() {
+		return properties.getProperty("appsecret");
+	}
+	public static String getServiceAccessToken() {
+		return properties.getProperty("service_access_token");
+	}
+	public static String getWebAccessToken() {
+		return properties.getProperty("web_access_token");
+	}
+	public static String getServiceAccessTokenExpire() {
+		return properties.getProperty("service_access_token_expire");
+	}
+	public static String getWebAccessTokenExpire() {
+		return properties.getProperty("web_access_token_expire");
+	}
+	public static String getMenu() {
+		return properties.getProperty("menu");
+	}
+	public static void setServiceAccessToken(String value) {
+		properties.setProperty("service_access_token", value);
+	}
+	public static void setWebAccessToken(String value) {
+		properties.setProperty("web_access_token", value);
+	}
+	public static void setServiceAccessTokenExpire(String value) {
+		properties.setProperty("service_access_token_expire", value);
+	}
+	public static void setWebAccessTokenExpire(String value) {
+		properties.setProperty("web_access_token_expire", value);
+	}
+	public static void setMenu(String value) {
+		properties.setProperty("menu", value);
+	}
+	/**
+	 *  写入服务端微信token的config
+	 */
+	public static void WriteWeiXinTokenConfi(String token,String expiredate){
+		
+	
+		FileOutputStream fos;
+		try {
+			String path = "config.properties";
+		    Properties prop = new Properties();
+			InputStream is = CommonUtils.class.getClassLoader().getResourceAsStream(path);
+			if (is == null) {
+				is = CommonUtils.class.getClassLoader().getResourceAsStream("/" + path);
+			}
+			prop.load(is);
+			is.close();
+			prop.setProperty("service_access_token", token);
+			prop.setProperty("service_access_token_expire", expiredate);
+			fos = new FileOutputStream(path);
+			//将Properties集合保存到流中   
+			prop.store(fos, "Copyright (c) Boxcode Studio");   
+			fos.close();//关闭流   
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}   
+	}
 	/**
 	 * 检查路径是否存在，不存在则创建路径
 	 * 

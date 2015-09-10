@@ -62,7 +62,11 @@ function showBalance(obj){
 	<div class="row account-head">
     	<div class="col-md-12 col-sm-12 col-xs-12">
         	<p>可用余额（元）<i class="icon icon-question-sign"></i></p>
+
             <p id="money"></p>
+
+            <p id="restMoney">￥2545</p>
+
         </div>
     </div>
     

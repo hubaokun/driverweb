@@ -46,7 +46,7 @@ body
 	margin-bottom:11px;
 	margin-top:13px;
 }
-.form-row span.un-active
+.form-row button.un-active
 {
 	color: #e3e3e3;
 	font-size: 12px;
@@ -57,12 +57,14 @@ body
 	position: absolute;
 	top: 14px;
 	right: 11px;
+	border:none;
 }
-.form-row span.active
+.form-row button.active
 {
 	color: white;
 	font-size: 12px;
 	background-color: #1798f2;
+	border:none;
 }
 .div-line
 {

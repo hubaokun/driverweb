@@ -20,8 +20,10 @@
 	<!-- 定时器扫描 -->
 	<!-- <context:annotation-config /> -->
 	<context:component-scan base-package="com.daoshun.guangda.serviceImpl" />
+	<context:component-scan base-package="com.weixin.common" />
 	<!-- 使用 annotation 自动注册bean,并检查@Controller, @Service, @Repository注解已被注入 -->
 	<context:component-scan base-package="com.daoshun" />
+	<context:component-scan base-package="com.weixin" />
 
 	<!-- <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"> -->
 	<bean id="dataSource" 	class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">

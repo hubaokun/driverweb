@@ -95,7 +95,7 @@ function showStudent(obj){
         </div>-->
         <div class="row logout-row">
         	<div class="col-md-12 col-sm-12 col-xs-12 my-nav-item">
-              <span>退出登录</span>
+              <span class="logout">退出登录</span>
     		</div>
         </div>
     </div>

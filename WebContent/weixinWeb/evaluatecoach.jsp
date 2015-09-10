@@ -33,7 +33,7 @@ pageEncoding="UTF-8"%>
     </div>
   </div>
   <div class="row evaluate-content-foot" >
-    <div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-7 col-sm-offset-7 col-xs-offset-7"> <span>发表评价</span> </div>
+    <div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-7 col-sm-offset-7 col-xs-offset-7"> <span class="expressView">发表评价</span> </div>
   </div>
 </div>
 
@@ -58,22 +58,25 @@ pageEncoding="UTF-8"%>
 $(document).ready(function()
 {
 	
+	var height = $(window).height();
+	var width = $(window).width();
 	$('.evaluate-content-foot span').on('click',function()
 	{
 		$('.overlay').css('display','block');
+		var width1 = $('.overlay-content').width();
+		var height1 = $('.overlay-content').height();
+			//alert (height);
+		var h = (height-height1)/2;
+		var w = (width-width1)/2;
+		$('.overlay-content').css('top',h);
+		$('.overlay-content').css('left',w);
 	})
 	$('.yes,.no').on('click',function()
 	{
 		$('.overlay').css('display','none');
 	})
 	
-	var height = $(window).height();
-	var width = $(window).width();
-	//alert (height);
-	var h = (height-90)/2;
-	var w = (width-296)/2;
-	$('.overlay-content').css('top',h);
-	$('.overlay-content').css('left',w);
+
 	
 	
 	//星星插件

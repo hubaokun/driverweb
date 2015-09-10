@@ -1,4 +1,4 @@
-package com.weixin.action;
+package com.weixin.servlet;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,8 +40,8 @@ import com.daoshun.guangda.service.ISUserService;
 import com.daoshun.guangda.service.ISystemService;
 import com.daoshun.guangda.servlet.BaseServlet;
 
-@WebServlet("/weixinl")
-public class WloginAction extends BaseServlet{
+@WebServlet("/weixinver")
+public class WeiXinVerification extends BaseServlet{
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
@@ -52,7 +52,7 @@ public class WloginAction extends BaseServlet{
 	{
 		if (request.getMethod().equals("GET"))
 		{
-			checksuccess(request,response);
+			Verification(request,response);
 		}
 		else
 		{
@@ -79,7 +79,7 @@ public class WloginAction extends BaseServlet{
 		
         
 	}
-    public void checksuccess(HttpServletRequest request, HttpServletResponse response) throws IOException{
+    public void Verification(HttpServletRequest request, HttpServletResponse response) throws IOException{
     	String TOKEN = "mZHlAgNp3zqhNh";
 		 // 微信加密签名
        String signature = request.getParameter("signature");

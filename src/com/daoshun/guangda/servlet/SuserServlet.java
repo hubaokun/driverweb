@@ -13,6 +13,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
@@ -497,6 +498,7 @@ public class SuserServlet extends BaseServlet {
 		String version = getRequestParamter(request, "version");//版本
 		CommonUtils.validateEmpty(phone);
 		CommonUtils.validateEmpty(password);
+		HttpSession session= request.getSession();
 		// 验证验证码的有效性
 		int result = suserService.checkVerCode(phone, password);
 		if (result == 1) {
@@ -539,6 +541,7 @@ public class SuserServlet extends BaseServlet {
 				}
 				user.setLocationname(locationname);
 			}
+			session.setAttribute("studentid", user.getStudentid());
 			resultMap.put("UserInfo", user);
 			int rflag=recommendService.checkRecommendinfo(String.valueOf(user.getStudentid()),2);
 			int cflag=recommendService.isoversixhour(String.valueOf(user.getStudentid()),2);
