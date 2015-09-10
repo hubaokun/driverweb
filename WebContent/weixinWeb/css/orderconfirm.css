@@ -346,3 +346,30 @@ body {
 	line-height: 37px;
 	display:none;
 }
+
+
+/*小巴券的部分样式*/
+#tabs ul.coupon-nav {
+    list-style: none;
+    background-color: white;
+    border-bottom: 1px solid #eee;
+	padding:0px;
+	margin:0px;
+}
+#tabs ul.coupon-nav li {
+    display: inline-block;
+    width: 50%;
+    text-align: center;
+}
+#tabs ul.coupon-nav li a {
+    text-decoration: none;
+    display: block;
+    color: rgb(91,96,102);
+    font-size: 13px;
+    line-height: 42px;
+    border-bottom: 2px solid transparent;
+}
+#tabs ul.coupon-nav li.on a {
+    color: #1798f2;
+    border-bottom: 2px solid #1798f2;
+}

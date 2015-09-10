@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
+<%@ include file="checksession.jsp" %>
 <!doctype html>
 <html>
 <head>
@@ -33,30 +34,30 @@ pageEncoding="UTF-8"%>
     	<div class="row basic-head">
         	<div style="border-bottom:1px solid #eee">
             	<div class="col-md-3 col-sm-3 col-xs-3">
-            	<img src="images/person-one.png" class="img-responsive img-circle center-block" />
+            	<img id="avatarurl" src="images/person-one.png" class="img-responsive img-circle center-block" />
             </div>	
             <div class="col-md-9 col-sm-9 col-xs-9">
             	<label for="avart_img"><i class="icon icon-chevron-right basic-icon"></i></label>
-                <input type="file" id="avart_img" style="display:none;"  />
+               <!--  <input type="file" id="avart_img" style="display:none;"  /> -->
             </div>
             <div class="clearfix"></div>
             </div>
             <div class="col-md-12 col-sm-12 col-xs-12">
-            	<p><span>真实姓名：</span><input type="text"  placeholder="真实姓名"/></p>
+            	<p><span>真实姓名：</span><input type="text" id="realname" placeholder="真实姓名"/></p>
             </div>
             <div class="col-md-12 col-sm-12 col-xs-12">
-            	<p><span>联系电话：</span><input type="text" /></p>
+            	<p><span>联系电话：</span><input type="text" id="phone"/></p>
             </div>
         </div>
         <div class="row basic-data">
         	<div class="col-md-12 col-sm-12 col-xs-12">
-            	<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;性别：<span><input type="text"  placeholder="性别"/></span></p>
+            	<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;性别：<span><input type="text"  placeholder="性别" id="gender"/></span></p>
             </div>
             <div class="col-md-12 col-sm-12 col-xs-12">
             	<p>出生年月：<span><input type="text" placeholder="出生年月" id="birthday" /></span></p>
             </div>
             <div class="col-md-12 col-sm-12 col-xs-12">
-            	<p>所在城市：<span><input type="text" placeholder="入所在城市" /></i></span></p>
+            	<p>所在城市：<span><input type="text" placeholder="所在城市" id="cityname"/></i></span></p>
             </div>
         </div>   
         <div class="row mylearninfo-submit">
@@ -74,8 +75,8 @@ pageEncoding="UTF-8"%>
               <div class="col-md-12 col-sm-12 col-xs-12">
                   <span>是否保存资料的编写？</span>
               </div>
-              <div class="no col-md-6 col-sm-6 col-xs-6" style="border-right:1px solid rgb(218,218,218);"><span class=" grey">否</span></div>
-              <div class="yes col-md-6 col-sm-6 col-xs-6"><span class="blue">是</span></div>
+              <div class="no col-md-6 col-sm-6 col-xs-6" style="border-right:1px solid rgb(218,218,218);"><span class="grey">否</span></div>
+              <div class="yes col-md-6 col-sm-6 col-xs-6" onclick="perfectPersoninfo()"><span class="blue" >是</span></div>
               
         </div>
       </div>
@@ -117,9 +118,6 @@ $(document).ready(function ()
 	var w = (width-296)/2;
 	$('.overlay-content').css('top',h);
 	$('.overlay-content').css('left',w);
-	
-
-	 
 	//时间控件的调用
 //	 $("#birthday").datepicker({
 //	 });
@@ -136,7 +134,7 @@ $(document).ready(function ()
                 preset : 'date', //日期:年 月 日 时 分
                 minDate: new Date(1916,1,1), 
 				maxDate:new Date(nowData.getFullYear(),12,31),
-//              dateFormat: 'yy-mm-dd', // 日期格式
+                dateFormat: 'yy-mm-dd', // 日期格式
 //              dateOrder: 'yymmdd', //面板中日期排列格式
                 stepMinute: 5, //设置分钟步长
                 yearText:'年', 
@@ -149,5 +147,64 @@ $(document).ready(function ()
             $('#birthday').mobiscroll(opt);
         });
     </script>	
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#avatarurl").attr("src",'${sessionScope.avatarurl}');//设置头像图片
+	var sid='${sessionScope.studentid}';
+	sid="18";
+	var params = {action:"GETSTUDENTINFO",studentid:sid};
+	jQuery.post("../suser", params, showStudent, 'json');
+	
+});
+function showStudent(obj){
+	if(obj.code==1){
+		$("#realname").val(obj.data.realname);
+		$("#phone").val(obj.data.phone);
+		$("#cityname").val(obj.data.city);
+		$("#birthday").val(obj.data.birthday);
+		if(obj.data.gender==1){
+			$("#gender").val("男");
+		}else if(obj.data.gender==2){
+			$("#gender").val("女");
+		}
+		$("#cityname").val(obj.data.city);
+	}else{
+		alert(obj.message);
+	}
+}
+
+function perfectPersoninfo(){
+	var sid='${sessionScope.studentid}';
+	sid="18";
+	var gender=$("#gender").val();
+	var g="1";
+	if(gender=='男'){
+		g="1";
+	}else if(gender=='男'){
+		g="2";
+	}
+	var tel = $("#phone").val(); //获取手机号
+	var telReg = !!tel.match(/^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/);
+	if(!telReg){
+		alert("手机号码格式有误!");
+		return false;
+	}
+	//alert($("#realname").val());
+	//cityid:$("#cityid")
+	var params = {
+				  action:"PERFECTPERSONINFO",
+				  studentid:sid,
+				  realname:$("#realname").val(),
+				  phone:$("#phone").val(),
+				  gender:g,
+				  birthday:$("#birthday").val()
+				  
+				  };
+	jQuery.post("../suser", params, showPerfect, 'json');
+}
+function showPerfect(obj){
+	alert(obj.message);
+}
+</script>
 </body>
 </html>

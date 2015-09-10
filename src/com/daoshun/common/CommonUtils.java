@@ -10,7 +10,6 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.security.MessageDigest;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -19,6 +18,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Stack;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -142,6 +143,21 @@ public class CommonUtils {
 		
         return false;  
     }  
+	/**
+	 * 验证是否为手机号码
+	 * @param phone
+	 * @return true 是 ，false 否
+	 * @author 卢磊
+	 */
+	public static boolean isPhone(String phone){
+		Pattern pattern = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[01236789]))\\d{8}$");
+        Matcher matcher = pattern.matcher(phone);
+        if (matcher.matches()) {
+            return true;
+        }else{
+        	return false;
+        }
+	}
 	/**
 	 * 判断字符是否是合法的日期格式
 	 * @param str  日期字符串

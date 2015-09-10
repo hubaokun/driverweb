@@ -597,8 +597,8 @@ public class CtaskServlet extends BaseServlet {
 						float num = (float) (Math.round(score * 100) / 100f);*/
 						//更新教练的星级 
 						float score=(CommonUtils.parseFloat(score1, 0) + CommonUtils.parseFloat(score2, 0) + CommonUtils.parseFloat(score3, 0) + cuser.getScore())/4 ;
-						float num=Math.round(score);
-						cuser.setScore(num);
+						//float num=Math.round(score);
+						cuser.setScore(score);
 						ctaskService.updateCoachInfo(cuser);
 					}
 

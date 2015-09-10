@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
+<%@ include file="checksession.jsp" %>
 <!doctype html>
 <html>
 <head>
@@ -10,8 +11,31 @@ pageEncoding="UTF-8"%>
 <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <link href="css/font-awesome.css" rel="stylesheet" />
 <link href="css/style.css" rel="stylesheet" type="text/css" />
+<script src="js/jquery-1.8.3.min.js"></script>
 <style type="text/css">
 </style>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	var sid='${sessionScope.studentid}';
+	sid="18";
+	var params = {action:"GETSTUDENTINFO",studentid:sid};
+	jQuery.post("../suser", params, showStudent, 'json');
+});
+function showStudent(obj){
+	if(obj.code==1){
+		$("#realname").html(obj.data.realname);
+		$("#phone").html(obj.data.phone);
+		$("#avatarurl").attr("src",'${sessionScope.avatarurl}');//设置头像图片
+		//$("#avatarurl").attr("src",obj.data.avatarurl);//设置头像图片
+		$("#coin").html(obj.data.coinnum+"个");
+		$("#money").html(obj.data.money+"￥");
+		$("#coupon").html(obj.coupon+"小时");
+	}else{
+		alert(obj.message);
+	}
+}
+</script>
 </head>
 
 <body>
@@ -20,23 +44,21 @@ pageEncoding="UTF-8"%>
     <ul class="foot-nav" data-role="footer">
       <li><a href="coachlist.jsp"><span class="coach"></span><p>找教练</p></a></li><li><a href="orderlist.jsp"><span class="order"></span><p>订单</p></a></li><li class="active"><a href="javascript:void(0);"><span class="my"></span><p>我的</p></a></li>
     </ul>
-
     <div id="tabs-3">
     	<div class="row my-head">
         	<a href="mybasicinfo.jsp">
             	<div class="col-md-3 col-sm-3 col-xs-3">
             	<div class="head-avatar center-block">
-                	<img src="images/person-one.png" class="img-responsive img-circle center-block" />
+                	<img id="avatarurl" src="images/person-one.png" class="img-responsive img-circle center-block" />
                 </div>
             </div>
             <div class="col-md-7 col-sm-7 col-xs-7">
-            	<p>童卫军</p>
-                <p>159888865324</p>
+            	<p id="realname">童卫军</p>
+                <p id="phone">159888865324</p>
             </div>
             <div class="col-md-2 col-sm-2 col-xs-2">
             	<i class="icon icon-chevron-right my-head-icon"></i>
             </div>
-            	
             </a>
         </div>
         <div class="row">
@@ -44,22 +66,21 @@ pageEncoding="UTF-8"%>
                 <a href="accountdetail.jsp">
                     <i class="my-nav-icon icon-money-rest"></i>				
                     <span>账户余额</span>
-                    <i class="icon icon-chevron-right"><span>200￥</span></i>	
-                    
+                    <i class="icon icon-chevron-right"><span id="money"></span></i>	
                 </a>
     		</div>
             <div class="col-md-12 col-sm-12 col-xs-12 my-nav-item">
                 <a href="coupon.jsp">
                     <i class="my-nav-icon icon-coupon"></i>				
                     <span>小巴券</span>		
-                    <i class="icon icon-chevron-right"><span>500小时</span></i>
+                    <i class="icon icon-chevron-right"><span id="coupon"></span></i>
                 </a>
     		</div>
             <div class="col-md-12 col-sm-12 col-xs-12 my-nav-item">
                 <a href="coin.jsp">
                     <i class="my-nav-icon icon-coin"></i>				
                     <span>小巴币</span>		
-                    <i class="icon icon-chevron-right"><span>20个</span></i>
+                    <i class="icon icon-chevron-right"><span id="coin">20个</span></i>
                 </a>
     		</div>     
         </div>
@@ -80,10 +101,5 @@ pageEncoding="UTF-8"%>
     </div>
   </div>
 </div>
-
-
-
-<script src="js/jquery-1.8.3.min.js"></script>
-
 </body>
 </html>

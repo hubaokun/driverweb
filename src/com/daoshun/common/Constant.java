@@ -122,6 +122,8 @@ public class Constant {
 	public static final String GETSTUDENTCOINRECORDLIST="GETSTUDENTCOINRECORDLIST";
 	
 	public static final String GETCOINAFFILIATION="GETCOINAFFILIATION";
+	//获取学员基本信息
+	public static final String GETSTUDENTINFO="GETSTUDENTINFO";
 	// 申请提现
 	public static final String APPLYCASH = "APPLYCASH";
 

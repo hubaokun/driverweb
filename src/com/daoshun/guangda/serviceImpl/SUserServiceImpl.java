@@ -1176,7 +1176,10 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		StringBuffer suserhql = new StringBuffer();
 		suserhql.append(" select year(now())-year(birthday) as age  from SuserInfo where studentid = :studentid");
 		String[] params = { "studentid" };
-		int count = (Integer) dataDao.getFirstObjectViaParam(suserhql.toString(), params, id);
+		Integer count = (Integer) dataDao.getFirstObjectViaParam(suserhql.toString(), params, id);
+		if(count==null){
+			count=0;
+		}
 		return count;
 	}
 	
@@ -1476,7 +1479,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	
 	@Override
 	public int getCanUseCoinnum(String coachid, String studentid) {
-			String countinhql = "select sum(coinnum) from CoinRecordInfo where (receiverid ="+studentid+" and receivertype="+ UserType.STUDENT+"and ownertype="+UserType.COAH+" and ownerid="+coachid+")";
+			String countinhql = "select sum(coinnum) from CoinRecordInfo where (receiverid ="+studentid+" and receivertype="+ UserType.STUDENT+" and ownertype="+UserType.COAH+" and ownerid="+coachid+")";
 			Object in= dataDao.getFirstObjectViaParam(countinhql, null);
 			int totalin= in==null?0:CommonUtils.parseInt(in.toString(), 0);
 		String countouthql = "select sum(coinnum) from CoinRecordInfo where (payerid ="+studentid+" and payertype="+ UserType.STUDENT+" and ownertype="+UserType.COAH+"  and ownerid="+coachid+")";
@@ -1576,8 +1579,17 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			for (CoinRecordInfo coinRecordInfo : crlist) {
 				int coachid=coinRecordInfo.getOwnerid();
 				int coachCoin=getCanUseCoinnum(String.valueOf(coachid),studentid);
+				String coachName="";
+				if(coinRecordInfo.getOwnername()!=null){
+					coachName=coinRecordInfo.getOwnername();
+				}else{
+					CuserInfo cuser=dataDao.getObjectById(CuserInfo.class, coachid);
+					if(cuser!=null){
+						coachName=cuser.getRealname();
+					}
+				}
 				if(coachCoin!=0){
-					CoinAffiliation ca=new CoinAffiliation(coachCoin,"仅限:"+coinRecordInfo.getOwnername()+"教练");
+					CoinAffiliation ca=new CoinAffiliation(coachCoin,"仅限:"+coachName+"教练");
 					mList.add(ca);
 				}
 			}

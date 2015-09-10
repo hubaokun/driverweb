@@ -9,6 +9,9 @@ pageEncoding="UTF-8"%>
 <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <link href="css/font-awesome.css" rel="stylesheet" />
 <link href="css/basicinfo.css" rel="stylesheet" type="text/css" />
+<script src="js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="http://cdn.staticfile.org/webuploader/0.1.0/Uploader.swf"></script>
+<script type="text/javascript" src="http://cdn.staticfile.org/webuploader/0.1.0/webuploader.min.js"></script>
 <style type="text/css">
 </style>
 </head>
@@ -38,6 +41,7 @@ pageEncoding="UTF-8"%>
     <div class="col-md-4 col-sm-4 col-xs-4">
      	身份证：
     </div>
+    
     <div class="col-md-6 col-sm-6 col-xs-6">
     	<img src="images/idcard-icon.png" class="img-responsive center-block" />
 		<label for="id_card_v" class="text-center">上传</label>
@@ -52,7 +56,11 @@ pageEncoding="UTF-8"%>
 </form> 
 </div>
 
-
+<div id="uploader-demo">
+    <!--用来存放item-->
+    <div id="fileList" class="uploader-list"></div>
+    <div id="filePicker">选择图片</div>
+</div>
 <div class="overlay">
       <div class="overlay-content">
         <div class="container">
@@ -68,7 +76,7 @@ pageEncoding="UTF-8"%>
   </div>	
 </div>
 
-<script src="js/jquery-1.8.3.min.js"></script>
+
 <script>
 $(document).ready(function ()
 {
