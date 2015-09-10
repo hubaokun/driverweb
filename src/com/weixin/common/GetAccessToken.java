@@ -15,8 +15,8 @@ import com.weixin.serviceImpl.GetYouWannaImpl;
 @Component
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 public class GetAccessToken {
-//	@Scheduled(cron = "0 40 * * * ?")
-	public void checktoken(String code) {
+	@Scheduled(cron = "0 40 * * * ?")
+	public void checktoken() {
 		IGetYouWanna WXmessageService=new GetYouWannaImpl();
 		WXmessageService.getAccessToken();
 	//	WXmessageService.getWebAccessToken(code);

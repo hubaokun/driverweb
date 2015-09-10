@@ -45,16 +45,13 @@ import net.sf.ehcache.CacheManager;
 public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 	public static void main(String[] args) throws IOException, JSONException {
 	
-	//	GetYouWannaImpl g=new GetYouWannaImpl();
-		//g.createmenu("GOoAC265AYFvXMx6dznbCOXK7R_g4dZg1PbECw_58jHewG_Dmx0z227ClZPD1i0uBRObJdvy8PEHPJDqtGbmybz142XveLOUbVR8LnCA4rg", "{\"button\":[{\"type\":\"view\",\"name\":\"\u5C0F\u5DF4\u5B66\u8F66\u5BA2\u6237\u7AEF\",\"url\":\"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx697888f825457533&redirect_uri=http://wx.xiaobaxueche.com/xiaoba/weixinlogin&response_type=code&scope=snsapi_userinfo&state=1#wechat_redirect\"}]}");
+		GetYouWannaImpl g=new GetYouWannaImpl();
+		g.createmenu("-CLFfR2-8CCaUlgzEm5YtgrNzSG7F3bInNP5sorib2VgQQpAYG1IreQfWwKkr5GyUS68D9hkMykfMABr5cykxIKqXfKg1f6ZFubalYFAyMo", "{\"button\":[{\"type\":\"view\",\"name\":\"\u5C0F\u5DF4\u5B66\u8F66\u5BA2\u6237\u7AEF\",\"url\":\"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx697888f825457533&redirect_uri=http://wx.xiaobaxueche.com/xiaoba/weixinWeb/weixinlogin?action=login&response_type=code&scope=snsapi_userinfo&state=1#wechat_redirect\"}]}");
 	}
 	//创建自定义菜单
 	public void createmenu(String service_access_token,String menu)
 	{
-		String url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token="+service_access_token;
-		//String menu ="{\"button\":[{\"type\":\"view\",\"name\":\"小巴学车客户端\",\"url\":\"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx697888f825457533&redirect_uri=http://587698d2.tunnel.mobi/xiaoba/weixinWeb/login.jsp&response_type=code&scope=snsapi_userinfo&state=1#wechat_redirect\"}]}";
-		
-        
+		String url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token="+service_access_token; 
         try {
         	URL u=new URL(url);
             HttpURLConnection uc=(HttpURLConnection)u.openConnection();
@@ -146,6 +143,7 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 		 {
 			 
 			 expired.setTime(CommonUtils.getDateFormat(sdate,"yyyy-MM-dd HH:mm:ss"));
+			 //如果已经过期，那么新申请一个token
 			 if(c.after(expired))
 		     {
 		    	
@@ -177,6 +175,7 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 		         
 		     }
 		 }
+		 //如果为空，那么也新申请一个token
 		 else
 		 {
 			 try {
@@ -207,57 +206,13 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 		 }
 		
 	 }
-	//获取网页端token
-     public void getWebAccessToken(String code)
+	//请求网页端token
+     public boolean getWebAccessToken(String code)
 		 {
 			 Calendar expired=Calendar.getInstance();
 			 Calendar c=Calendar.getInstance();
-			 String sdate=WeiXinMessage.getValue("web_access_token_expire");
 			 String appid=CommonUtils.getAppid();
 			 String appsecret=CommonUtils.getAppsecret();
-			 if(sdate!=null)
-			 {
-				 
-				 expired.setTime(CommonUtils.getDateFormat(sdate,"yyyy-MM-dd HH:mm:ss"));
-				 if(c.after(expired))
-			     {
-			    	
-					   String url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid="+appid+"&secret="+appsecret+"&code="+code+"&grant_type=authorization_code";
-				      
-				        
-				        
-						try {
-						    URL u=new URL(url);
-					        HttpURLConnection uc=(HttpURLConnection) u.openConnection();
-					        uc.setRequestMethod("GET");
-					        uc.setConnectTimeout(3000);
-					        uc.setDoInput(true);
-					        uc.connect();
-					        InputStream is=uc.getInputStream();
-					        int size=is.available();
-					        byte[] result=new byte[size];
-					        is.read(result);
-					        String message=new String(result,"UTF-8");
-					        is.close();
-					        uc.disconnect();
-							JSONObject json = new JSONObject(message);
-							String accessToken= json.getString("access_token");
-							String expires_in=json.getString("expires_in");
-							 Calendar setc=Calendar.getInstance();
-					         setc.add(Calendar.SECOND, CommonUtils.parseInt(expires_in, 0));
-					         Date expiredate=setc.getTime();
-					         WeiXinMessage.setValue("web_access_token", accessToken);
-					         WeiXinMessage.setValue("web_access_token_expire", CommonUtils.getTimeFormat(expiredate,null));
-                           
-						} catch (JSONException | IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-			         
-			     }
-			 }
-			 else
-			 {
 				 String url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid="+appid+"&secret="+appsecret+"&code="+code+"&grant_type=authorization_code";    
 					try {
 					    URL u=new URL(url);
@@ -274,20 +229,28 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 				        is.close();
 				        uc.disconnect();
 						JSONObject json = new JSONObject(message);
-						String accessToken= json.getString("access_token");
-						String expires_in=json.getString("expires_in");
-						 Calendar setc=Calendar.getInstance();
-				         setc.add(Calendar.SECOND, CommonUtils.parseInt(expires_in, 0));
-				         Date expiredate=setc.getTime();
-				         WeiXinMessage.setValue("web_access_token", accessToken);
-				         WeiXinMessage.setValue("web_access_token_expire", CommonUtils.getTimeFormat(expiredate,null));
+						if(!message.contains("errmsg"))
+						{
+							String accessToken= json.getString("access_token");
+							String expires_in=json.getString("expires_in");
+							String openid=json.getString("openid");
+							Calendar setc=Calendar.getInstance();
+					        setc.add(Calendar.SECOND, CommonUtils.parseInt(expires_in, 0));
+					        Date expiredate=setc.getTime();
+					        WeiXinMessage.setValue("web_access_token", accessToken);
+					        WeiXinMessage.setValue("web_access_token_expire", CommonUtils.getTimeFormat(expiredate,null));
+					        WeiXinMessage.setValue("openid", openid);
+						}
+						else
+						{
+							return false;
+						}
                     
 					} catch (JSONException | IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-			 }
-			
+			  return true;
 		 }
 	//获取ticket的token
      @Override
@@ -386,6 +349,7 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 		long rtimestamp=Long.parseLong(timestamp.substring(0, 10));
 		 return rtimestamp;
 	}
+	//获取验证签名
 	@Override
 	public String getSignature(String noncestr, long timestamp,String url) {
 		String jsapi_ticket=WeiXinMessage.getValue("ticket_access_token");
@@ -417,5 +381,33 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 				e.printStackTrace();
 			}
 		return digest;
+	}
+	//设置微信用户信息
+	@Override
+	public JSONObject setCustomerInfo(String openid) {
+		String accesstoken=WeiXinMessage.getValue("web_access_token");
+		 String url = "https://api.weixin.qq.com/sns/userinfo?access_token="+accesstoken+"&openid="+openid+"&lang=zh_CN";    
+		 JSONObject cinfo1=new JSONObject();
+			try {
+			    URL u=new URL(url);
+		        HttpURLConnection uc=(HttpURLConnection) u.openConnection();
+		        uc.setRequestMethod("GET");
+		        uc.setConnectTimeout(3000);
+		        uc.setDoInput(true);
+		        uc.connect();
+		        InputStream is=uc.getInputStream();
+		        int size=is.available();
+		        byte[] result=new byte[size];
+		        is.read(result);
+		        String message=new String(result,"UTF-8");
+		        JSONObject cinfo=new JSONObject(message);
+		        is.close();
+		        uc.disconnect();	    
+		        return cinfo;
+			} catch (IOException | JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return cinfo1;
 	}
 }

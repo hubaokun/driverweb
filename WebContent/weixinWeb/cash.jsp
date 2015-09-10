@@ -16,6 +16,11 @@
 <body>
 <div class="container">
   <form>
+  	<div class="row tips-row">
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <p>提现到<b style="font-size:13px;">张三</b>微信钱包</p>
+      </div>
+    </div>
     <div class="row money-row">
       <div class="col-md-12 col-sm-12 col-xs-12">
         <input type="text" id="count" placeholder="请输入金额" />
@@ -23,10 +28,11 @@
     </div>
     <div class="row tips-row">
       <div class="col-md-12 col-sm-12 col-xs-12">
-        <p>提现到支付宝</p>
+        <p>可提现金额<span style="font-size:14px; color:#eb5811">￥360</span></p>
       </div>
     </div>
-    <div class="row account-row">
+    
+<!--    <div class="row account-row">
       <div class="col-md-12 col-sm-12 col-xs-12">
         <input type="text" placeholder="请输入姓名" />
       </div>
@@ -34,7 +40,7 @@
       <div class="col-md-12 col-sm-12 col-xs-12">
         <input type="text" id="alipay" placeholder="请输入支付宝账号" />
         <span><i class="icon icon-remove-sign"></i></span> </div>
-    </div>
+    </div>-->
     <div class="row sure-row">
       <div class="col-md-12 col-sm-12 col-xs-12"> <span class="cash-sure">确定</span> </div>
     </div>

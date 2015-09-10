@@ -17,13 +17,13 @@
 <body>
 <div class="container">
   <form>
-    <div class="row money-row">
+    <div class="row money-row" style="margin-top:28px;">
       <div class="col-md-12 col-sm-12 col-xs-12">
         <input type="text" placeholder="请输入金额" />
       </div>
     </div>
     <div class="row sure-row">
-      <div class="col-md-12 col-sm-12 col-xs-12"> <span class="cash-sure">去支付宝付款</span> </div>
+      <div class="col-md-12 col-sm-12 col-xs-12"> <span class="cash-sure">微信支付</span> </div>
     </div>
   </form>
 </div>
