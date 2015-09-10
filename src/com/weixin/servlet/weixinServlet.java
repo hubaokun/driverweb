@@ -78,7 +78,7 @@ public class weixinServlet extends BaseServlet{
 			WXmessageService.getAccessToken();
 			WXmessageService.getjsapi_ticket(WeiXinMessage.getValue("service_access_token"));
 		}
-		String url="http://wx.xiaobaxueche.com/xiaoba/weixinWeb/weixinlogin?action=login&code="+code+"&state="+state;
+		String url="http://wx.xiaobaxueche.com/xiaoba/weixinWeb/weixin?action=login&code="+code+"&state="+state;
 		String noncestr=wxmessageService.CreatenNonce_str(16);
 		long timestamp=wxmessageService.CreatenTimestamp();
 		String signature=wxmessageService.getSignature(noncestr, timestamp, url);
@@ -99,7 +99,7 @@ public class weixinServlet extends BaseServlet{
 	}
 	public void getcoachlist(HttpServletRequest request, HttpServletResponse response)
 	{
-		String url="http://wx.xiaobaxueche.com/xiaoba/weixinWeb/weixinlogin?action=coachlist";
+		String url="http://wx.xiaobaxueche.com/xiaoba/weixinWeb/weixin?action=coachlist";
 		String noncestr=wxmessageService.CreatenNonce_str(16);
 		long timestamp=wxmessageService.CreatenTimestamp();
 		String signature=wxmessageService.getSignature(noncestr, timestamp, url);
