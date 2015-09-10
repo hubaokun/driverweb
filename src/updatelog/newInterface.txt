@@ -149,7 +149,7 @@ cityname    城市名称
 enrollstate	报名状态 ：0 未报名  1 已报名
 enrollpay	支付状态：-1 不需要付款的报名  0 未付款  1 已付款
 
-# 获取小巴币归属的个数		 
+# 获取学员小巴币归属的个数		 
 接口名称： /suser?action=GETCOINAFFILIATION
 参数：studentid 学员id
 返回：

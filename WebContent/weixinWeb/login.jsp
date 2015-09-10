@@ -120,6 +120,7 @@ wx.ready(function(){
     </div>
     <div class="row login-row">
       <div class="col-md-12 col-sm-12 col-xs-12" id="s_login" onclick="slogin()"><a href="javascript:void(0)">登录</a> </div>
+      <a href="my.jsp">my.jsp</a>
     </div>
   </form>
 </div>

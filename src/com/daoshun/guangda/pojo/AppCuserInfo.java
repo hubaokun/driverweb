@@ -42,6 +42,8 @@ public class AppCuserInfo implements Serializable {
 	private String realname;
 
 	private float score = 0;
+	private String phone;//手机号
+	private String telphone;//
 
 	// 头像图片地址
 	@Transient
@@ -74,6 +76,22 @@ public class AppCuserInfo implements Serializable {
 	private int coursestate;
 	
 	
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getTelphone() {
+		return telphone;
+	}
+
+	public void setTelphone(String telphone) {
+		this.telphone = telphone;
+	}
+
 	public int getCoursestate() {
 		return coursestate;
 	}

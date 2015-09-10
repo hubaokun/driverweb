@@ -67,10 +67,10 @@ public class SbookServlet extends BaseServlet {
 			if (Constant.BOOKCOACH.equals(action) || Constant.GETCOUPONLIST.equals(action) || Constant.GETHISCOUPONLIST.equals(action)
 //					||Constant.GETCANUSECOUPONLIST.equals(action)||Constant.REFRESHCOACHSCHEDULE.equals(action)
 					) {
-				if (!checkSession(request, action, resultMap)) {
+				/*if (!checkSession(request, action, resultMap)) {
 					setResult(response, resultMap);
 					return;
-				}
+				}*/
 			}
 
 			if (Constant.GETCOACHDETAIL.equals(action)) {

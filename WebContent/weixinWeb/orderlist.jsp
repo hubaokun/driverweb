@@ -31,8 +31,8 @@ pageEncoding="UTF-8"%>
             <div class="row order-content container">
               <ul class="order-timeline">
                 <li>
-                  <div class="point"></div>
-                  <div class="time-wrap">今天 </div>
+                  <!-- <div class="point"></div>
+                  <div class="time-wrap">今天 </div> -->
                   <!--single order detail starts-->                 
                   <div class="order-detail">
                     <div class="order-detail-head">
@@ -150,8 +150,8 @@ pageEncoding="UTF-8"%>
             <div class="row order-content container">
               <ul class="order-timeline">
                 <li>
-                  <div class="point"></div>
-                  <div class="time-wrap"> 明天 </div>
+                  <!-- <div class="point"></div>
+                  <div class="time-wrap"> 明天 </div> -->
                   <!--single order detail starts-->
                   <div class="order-detail">
                     <div class="order-detail-head">
@@ -228,8 +228,8 @@ pageEncoding="UTF-8"%>
             <div class="row order-content container">
               <ul class="order-timeline">
                 <li>
-                  <div class="point"></div>
-                  <div class="time-wrap"> 昨天 </div>
+                 <!--  <div class="point"></div>
+                  <div class="time-wrap"> 昨天 </div> -->
                   <!--single order detail starts-->
                   <div class="order-detail">
                     <div class="order-detail-head">
@@ -298,8 +298,8 @@ pageEncoding="UTF-8"%>
                <div class="row order-content container">
                    <ul class="order-timeline">
                        <li>
-                           <div class="point"></div>
-                           <div class="time-wrap">今天 </div>
+                           <!-- <div class="point"></div>
+                           <div class="time-wrap">今天 </div> -->
                            <!--single order detail starts-->
                            <div class="order-detail">
                                <div class="order-detail-head">

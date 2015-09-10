@@ -1,6 +1,8 @@
 package com.daoshun.guangda.servlet;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -63,10 +65,10 @@ public class SuserServlet extends BaseServlet {
 			if (Constant.PERFECTACCOUNTINFO.equals(action) || Constant.CHANGEAVATAR.equals(action) || Constant.PERFECTSTUDENTINFO.equals(action) || Constant.PERFECTPERSONINFO.equals(action)
 					|| Constant.GETMYBALANCEINFO.equals(action) || Constant.APPLYCASH.equals(action)  || Constant.GETSTUDENTWALLETINFO.equals(action) || Constant.GETSTUDENTCOINRECORDLIST.equals(action) || Constant.GETSTUDENTCOUPONLIST.equals(action)
 					||Constant.SENROLL.equals(action)|| Constant.RECHARGE.equals(action)) {
-				if (!checkSession(request, action, resultMap)) {
+				/*if (!checkSession(request, action, resultMap)) {
 					setResult(response, resultMap);
 					return;
-				}
+				}*/
 			}
 
 			if (Constant.GETVERCODE.equals(action)) {
@@ -120,6 +122,9 @@ public class SuserServlet extends BaseServlet {
 			}else if (Constant.GETCOINAFFILIATION.equals(action)) {
 				// 获取小巴币归属的个数
 				getCoinAffiliation(request, resultMap);
+			}else if (Constant.GETSTUDENTINFO.equals(action)) {
+				// 获取学员基本信息
+				getStudentInfo(request, resultMap);
 			}
 			else {
 				throw new ErrException();
@@ -291,10 +296,35 @@ public class SuserServlet extends BaseServlet {
 		}
 	}
 	/**
+	 * 获取学员基本信息
+	 * @param request
+	 * @param resultMap
+	 * @throws ErrException
+	 * @author 卢磊
+	 */
+	public void getStudentInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String studentid = getRequestParamter(request, "studentid");
+		CommonUtils.validateEmptytoMsg(studentid, "学员ID不能为空");
+		SuserInfo student = suserService.getUserById(studentid);
+		int coupon= suserService.getCouponSum(Integer.parseInt(studentid));
+		if(student!=null){
+			CityInfo cityinfo=locationService.getCityById(student.getCityid());
+			if(cityinfo!=null){
+				student.setCity(cityinfo.getCity());
+			}
+			resultMap.put("data", student);
+			resultMap.put("coupon", coupon);
+		}else{
+			resultMap.put("code", -1);
+			resultMap.put("message", "学员信息不存在");
+		}
+	}
+	/**
 	 * 促销报名
 	 * @param request
 	 * @param resultMap
 	 * @throws ErrException
+	 * @author 卢磊
 	 */
 	public void promoEnroll(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		try
@@ -753,6 +783,8 @@ public class SuserServlet extends BaseServlet {
 		String address = getRequestParamter(request, "address");
 		String urgentperson = getRequestParamter(request, "urgentperson");
 		String urgentphone = getRequestParamter(request, "urgentphone");
+		String phone = getRequestParamter(request, "phone");//手机号码
+		String realname = getRequestParamter(request, "realname");//真实姓名
 		CommonUtils.validateEmpty(studentid);
 		SuserInfo student = suserService.getUserById(studentid);
 		if (student == null) {
@@ -764,25 +796,47 @@ public class SuserServlet extends BaseServlet {
 				student.setGender(CommonUtils.parseInt(gender, 0));
 			}
 			if (birthday != null) {
-				student.setBirthday(birthday);
+				SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
+				try {
+					sf.parse(birthday);
+					//如果能转换成功，说明接收的格式正确，才保存到数据库中，否则插入1990-01-01
+					student.setBirthday(birthday);
+				} catch (ParseException e) {
+					student.setBirthday("1990-01-01");
+				}
+				
 			}
-			if (provinceid != null) {
+			if (!CommonUtils.isEmptyString(phone)) {
+				//手机号码不为空时，判断格式
+				if(CommonUtils.isPhone(phone)){
+					student.setPhone(phone);
+				}else{
+					resultMap.put("code", 3);
+					resultMap.put("message", "手机号码格式有误!");
+					return;
+				}
+			}
+			if (!CommonUtils.isEmptyString(provinceid )) {
 				student.setProvinceid(provinceid);
 			}
-			if (cityid != null) {
+			if (!CommonUtils.isEmptyString(cityid )) {
 				student.setCityid(cityid);
 			}
-			if (areaid != null) {
+			if (!CommonUtils.isEmptyString(areaid )) {
 				student.setAreaid(areaid);
 			}
-			if (address != null) {
+			if (!CommonUtils.isEmptyString(address )) {
 				student.setAddress(address);
 			}
-			if (urgentperson != null) {
+			if (!CommonUtils.isEmptyString(urgentperson)) {
 				student.setUrgent_person(urgentperson);
 			}
-			if (urgentphone != null) {
+			if (!CommonUtils.isEmptyString(urgentphone)) {
 				student.setUrgent_phone(urgentphone);
+			}
+			
+			if (!CommonUtils.isEmptyString(realname)) {
+				student.setRealname(realname);
 			}
 			suserService.updateUserInfo(student);
 		}

@@ -9,6 +9,7 @@
 <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <link href="css/font-awesome.css" rel="stylesheet" />
 <link href="css/cash.css" rel="stylesheet" type="text/css" />
+<script src="js/jquery-1.8.3.min.js"></script>
 <style type="text/css"></style>
 </head>
 
@@ -22,7 +23,7 @@
     </div>
     <div class="row money-row">
       <div class="col-md-12 col-sm-12 col-xs-12">
-        <input type="text" placeholder="请输入金额" />
+        <input type="text" id="count" placeholder="请输入金额" />
       </div>
     </div>
     <div class="row tips-row">
@@ -62,7 +63,7 @@
     </div>
   </div>
 </div>
-<script src="js/jquery-1.8.3.min.js"></script> 
+
 <script>
 $(document).ready(function()
 {
