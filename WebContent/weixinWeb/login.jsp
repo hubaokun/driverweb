@@ -6,10 +6,11 @@ pageEncoding="UTF-8"%>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 <title>登录</title>
-<link href="weixinWeb/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-<link href="weixinWeb/css/login.css" rel="stylesheet" type="text/css" >
+<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="css/login.css" rel="stylesheet" type="text/css" >
 <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
-<script src="js/jquery-1.11.2.min.js"></script>
+<script src="js/jquery-1.8.3.min.js"></script> 
+<script src="js/jquery-ui-1.10.3.min.js"></script> 
 <style type="text/css"></style>
 <script src="http://api.map.baidu.com/api?v=2.0&ak=MGt8L6pnsrogzRS6u4TKMGcX" type="text/javascript"></script>
 <!-- <style type="text/css">
@@ -17,6 +18,7 @@ pageEncoding="UTF-8"%>
 		#allmap {width:100%;height:500px;}
 	</style> -->
 <script>
+var customer=${sessionScope.c_info};
 wx.config({
     debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
     appId: '${appid}', // 必填，公众号的唯一标识
@@ -82,8 +84,7 @@ wx.ready(function(){
 	              		var addComp = rs.addressComponents;
 	              		//alert(addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber);
 	              		$('#city').val(addComp.city);
-	              	});        
-            
+	              	});
       	    }
       	});
          
@@ -104,7 +105,7 @@ wx.ready(function(){
 <input id="city" type="hidden" value=""/>
 <div class="container">
   <div class="row logo-row">
-    <div class="col-md-12 col-sm-12 col-xs-12"> <img src="weixinWeb/images/new-logo.png" class="img-responsive center-block" /> </div>
+    <div class="col-md-12 col-sm-12 col-xs-12"> <img src="images/new-logo.png" class="img-responsive center-block" /> </div>
   </div>
   <form>
   
@@ -160,7 +161,7 @@ function slogin()
 				alert(message);
 			else
 				{
-					$(".login-row a").attr("href","./weixinWeb/coachlist.jsp?city="+city);
+					$(".login-row a").attr("href","weixinlogin?action=coachlist");
 				    $(".login-row a").get(0).click();
 				}
 				
@@ -192,7 +193,7 @@ function sendvcode()
 }
 function handle()
 {
-	var v =  $('#mobile').val();
+	var v = $('#mobile').val();
 	if (v.match("[\u4e00-\u9fa5]") || v.match("[a-zA-Z]"))
 	{
 		alert("手机号只能为数字");
