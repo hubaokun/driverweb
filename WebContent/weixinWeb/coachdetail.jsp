@@ -21,6 +21,8 @@
 <script type="text/javascript">
 var coachinfo;
 var evaluatelist;
+var pagenum=0;
+var hasmore=1;
 $(function(){
 	var action1="GETCOACHDETAIL";
 	$.ajax({		   
@@ -57,7 +59,7 @@ $(function(){
 			action : action2,
 			coachid : <%=coachid%>,
 			studentid : <%=studentid%>,
-			pagenum   : "0"
+			pagenum   : pagenum
 		},
 		success : function(data) {
 			evaluatelist=data.evalist;
@@ -70,11 +72,62 @@ $(function(){
             	
             }
             $("#evaluatelist").html(content_list);
+            hasmore=data.hasmore;
 		}
-	
-	
+   });
+	var winH = $(window).height(); //页面可视区域高度 
+    //var i = 1; //设置当前页数 
+    $(window).scroll(function () { 
+        var pageH = $(document.body).height(); 
+        var scrollT = $(window).scrollTop(); //滚动条top 
+        var aa = (pageH-winH-scrollT)/winH; 
+        if(aa<0.02){ 
+           /* $.getJSON("pro.json",{},function(data){ 
+                if(data)
+                {  
+                   str = "<div style=width:100%; height:100px; background-color:grey;><h1>7</h1></div><div style='width:100%; height:100px; background-color:yellow;'></div>";
+                   $("body").append(str); 
+                    
+                   i++; 
+                }else{ 
+                    //没有数据了做点什么事情 
+                    return false; 
+                } 
+            }); */
+            if(hasmore==1)
+            {
+            	var action2="getCoachComments";
+            	pagenum++;
+            	$.ajax({		   
+            		type : "POST",
+            		url : "/xiaoba/sbook",
+            		dataType: "json",
+            		data : {
+            			action : action2,
+            			coachid : <%=coachid%>,
+            			studentid : <%=studentid%>,
+            			pagenum   : pagenum
+            		},
+            		success : function(data) {
+            			evaluatelist=data.evalist;
+            			var content_list="";
+                        for(var i=0;i<evaluatelist.length;i++)
+                        {
+                        	var adddate=evaluatelist[i].addtime;
+                        	adddate=adddate.substring(0,10);
+                        	content_list=content_list+"<div class='row coach-judge-body'><a href='evaluatesingle.jsp'><div class='col-md-3 col-sm-3 col-xs-3'><p>"+evaluatelist[i].nickname+"</p></div><div class='col-md-9 col-sm-9 col-xs-9'><p><span class='pull-right'>"+adddate+"<i class='glyphicon icon-right'></i></span></p></div><div class='col-md-12 col-sm-12 col-xs-12'><p>"+evaluatelist[i].content+"</p></div></a></div>";
+                        	
+                        }
+                        $("#evaluatelist").append(content_list);
+                        hasmore=data.hasmore;
+            		}
+               });
+            }
+        	
+        } 
+    }); 
 });
-});
+
 </script>
 </head>
 

@@ -12,66 +12,15 @@ pageEncoding="UTF-8"%>
 <link href="css/scrollbar.css" rel="stylesheet" type="text/css" />
 <link href="css/iscroll.css" rel="stylesheet" type="text/css" />
 <link href="css/style.css" rel="stylesheet" type="text/css" />
-<style type="text/css">
-</style>
-<%
-   HttpSession s=request.getSession();
-   String studentid=s.getAttribute("studentid").toString();
-%>
 <script src="js/jquery-1.8.3.min.js"></script> 
 <script src="js/jquery-ui-1.10.3.min.js"></script> 
 <script src="js/jquery.raty.min.js"></script>
 <script src="js/iscroll.js"></script>
-<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
-<style type="text/css">
-</style>
 <script type="text/javascript">
-wx.config({
-    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-    appId: '${appid}', // 必填，公众号的唯一标识
-    timestamp:'${timestamp}', // 必填，生成签名的时间戳
-    nonceStr: '${noncestr}', // 必填，生成签名的随机串
-    signature:'${signature}',// 必填，签名，见附录1
-    jsApiList: [
-				'checkJsApi',
-				'onMenuShareTimeline',
-				'onMenuShareAppMessage',
-				'onMenuShareQQ',
-				'onMenuShareWeibo',
-				'onMenuShareQZone',
-				'hideMenuItems',
-				'showMenuItems',
-				'hideAllNonBaseMenuItem',
-				'showAllNonBaseMenuItem',
-				'translateVoice',
-				'startRecord',
-				'stopRecord',
-				'onVoiceRecordEnd',
-				'playVoice',
-				'onVoicePlayEnd',
-				'pauseVoice',
-				'stopVoice',
-				'uploadVoice',
-				'downloadVoice',
-				'chooseImage',
-				'previewImage',
-				'uploadImage',
-				'downloadImage',
-				'getNetworkType',
-				'openLocation',
-				'getLocation',
-				'hideOptionMenu',
-				'showOptionMenu',
-				'closeWindow',
-				'scanQRCode',
-				'chooseWXPay',
-				'openProductSpecificView',
-				'addCard',
-				'chooseCard',
-				'openCard'
-				] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
-    
-});
+var active_url = "../sbook?action=GETCOACHLIST";
+var studentid =44506;
+var pagenum=0;
+
 var myScroll,
 	pullDownEl, pullDownOffset,
 	pullUpEl, pullUpOffset,
@@ -83,16 +32,18 @@ var myScroll,
  */
 function pullDownAction () {
 	setTimeout(function () {	// <-- Simulate network congestion, remove setTimeout from production!
-		var el, li, i;
-		el = document.getElementById('thelist');
+// 		var el, li, i;
+// 		el = document.getElementById('thelist');
 
-		for (i=0; i<3; i++) {
-			li = document.createElement('li');
-			li.innerText = 'Generated row ' + (++generatedCount);
-			el.insertBefore(li, el.childNodes[0]);
-		}
-		
-		myScroll.refresh();		//数据加载完成后，调用界面更新方法   Remember to refresh when contents are loaded (ie: on ajax completion)
+// 		for (i=0; i<3; i++) {
+// 			li = document.createElement('li');
+// 			li.innerText = 'Generated row ' + (++generatedCount);
+// 			el.insertBefore(li, el.childNodes[0]);
+// 		}
+pagenum=0;
+//load_coachlist();
+search_com();
+		//myScroll.refresh();		//数据加载完成后，调用界面更新方法   Remember to refresh when contents are loaded (ie: on ajax completion)
 	}, 1000);	// <-- Simulate network congestion, remove setTimeout from production!
 }
 
@@ -102,16 +53,20 @@ function pullDownAction () {
  */
 function pullUpAction () {
 	setTimeout(function () {	// <-- Simulate network congestion, remove setTimeout from production!
-		var el, li, i;
-		el = document.getElementById('thelist');
+// 		var el, li, i;
+// 		el = document.getElementById('thelist');
 
-		for (i=0; i<3; i++) {
-			li = document.createElement('li');
-			li.innerText = 'Generated row ' + (++generatedCount);
-			el.appendChild(li, el.childNodes[0]);
-		}
+// 		for (i=0; i<3; i++) {
+// 			li = document.createElement('li');
+// 			li.innerText = 'Generated row ' + (++generatedCount);
+// 			el.appendChild(li, el.childNodes[0]);
+// 		}
+
+pagenum++;
+//search_com();
+load_more();
 		
-		myScroll.refresh();		// 数据加载完成后，调用界面更新方法 Remember to refresh when contents are loaded (ie: on ajax completion)
+		//myScroll.refresh();		// 数据加载完成后，调用界面更新方法 Remember to refresh when contents are loaded (ie: on ajax completion)
 	}, 1000);	// <-- Simulate network congestion, remove setTimeout from production!
 }
 
@@ -183,7 +138,7 @@ document.addEventListener('DOMContentLoaded', loaded, false);
 <div class="container" >
   <div id="tabs" >
     <ul class="foot-nav" data-role="footer">
-      <li class="active"><a href="javascript:void(0);"><span class="coach"></span><p>找教练</p></a></li><li><a href="getmyorder(<%=studentid%>)"><span class="order"></span><p>订单</p></a></li><li><a href="my.html"><span class="my"></span><p>我的</p></a></li>
+      <li class="active"><a href="javascript:void(0);"><span class="coach"></span><p>找教练</p></a></li><li><a href="orderlist.jsp"><span class="order"></span><p>订单</p></a></li><li><a href="my.jsp"><span class="my"></span><p>我的</p></a></li>
     </ul>
     <div id="tabs-1">
       <div class="row search-wrap">
@@ -204,90 +159,20 @@ document.addEventListener('DOMContentLoaded', loaded, false);
           <div id="pullDown"> <span class="pullDownIcon"></span><span class="pullDownLabel">下拉刷新...</span> </div>
           <div class="row content-wrap">
             <ul id="thelist">
+              <!--
               <li>
-                <div class="col-md-12 col-sm-12 col-xs-12">
-                  <div class="row detail-wrap">
-                    <div class="col-md-3 col-sm-3 col-xs-3"> <img src="images/person-one.png" class="img-responsive img-circle " /> </div>
-                    <div class="col-md-9 col-sm-9 col-xs-9">
-                      <p>童卫军<span class="pull-right"><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i></span></p>
-                      <p>浙江省杭州市余杭区海曙路58号</p>
-                    </div>
-                  </div>
-                  <hr/>
-                </div>
+		        <div class="col-md-12 col-sm-12 col-xs-12">
+		          <div class="row detail-wrap">
+		            <div class="col-md-3 col-sm-3 col-xs-3"> <img src="images/person-one.png" class="img-responsive img-circle " /> </div>
+		            <div class="col-md-9 col-sm-9 col-xs-9">
+		              <p>童卫军<span class="pull-right"><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i></span></p>
+		              <p>浙江省杭州市余杭区海曙路58号</p>
+		            </div>
+		          </div>
+		          <hr/>
+		        </div>
               </li>
-              <li>
-                <div class="col-md-12 col-sm-12 col-xs-12">
-                  <div class="row detail-wrap">
-                    <div class="col-md-3 col-sm-3 col-xs-3"> <img src="images/person-one.png" class="img-responsive img-circle " /> </div>
-                    <div class="col-md-9 col-sm-9 col-xs-9">
-                      <p>童卫军<span class="pull-right"><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i></span></p>
-                      <p>浙江省杭州市余杭区海曙路58号</p>
-                    </div>
-                  </div>
-                  <hr/>
-                </div>
-              </li>
-              <li>
-                <div class="col-md-12 col-sm-12 col-xs-12">
-                  <div class="row detail-wrap">
-                    <div class="col-md-3 col-sm-3 col-xs-3"> <img src="images/person-one.png" class="img-responsive img-circle " /> </div>
-                    <div class="col-md-9 col-sm-9 col-xs-9">
-                      <p>童卫军<span class="pull-right"><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i></span></p>
-                      <p>浙江省杭州市余杭区海曙路58号</p>
-                    </div>
-                  </div>
-                  <hr/>
-                </div>
-              </li>
-              <li>
-                <div class="col-md-12 col-sm-12 col-xs-12">
-                  <div class="row detail-wrap">
-                    <div class="col-md-3 col-sm-3 col-xs-3"> <img src="images/person-one.png" class="img-responsive img-circle " /> </div>
-                    <div class="col-md-9 col-sm-9 col-xs-9">
-                      <p>童卫军<span class="pull-right"><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i></span></p>
-                      <p>浙江省杭州市余杭区海曙路58号</p>
-                    </div>
-                  </div>
-                  <hr/>
-                </div>
-              </li>
-              <li>
-                <div class="col-md-12 col-sm-12 col-xs-12">
-                  <div class="row detail-wrap">
-                    <div class="col-md-3 col-sm-3 col-xs-3"> <img src="images/person-one.png" class="img-responsive img-circle " /> </div>
-                    <div class="col-md-9 col-sm-9 col-xs-9">
-                      <p>童卫军<span class="pull-right"><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i></span></p>
-                      <p>浙江省杭州市余杭区海曙路58号</p>
-                    </div>
-                  </div>
-                  <hr/>
-                </div>
-              </li>
-              <li>
-                <div class="col-md-12 col-sm-12 col-xs-12">
-                  <div class="row detail-wrap">
-                    <div class="col-md-3 col-sm-3 col-xs-3"> <img src="images/person-one.png" class="img-responsive img-circle " /> </div>
-                    <div class="col-md-9 col-sm-9 col-xs-9">
-                      <p>童卫军<span class="pull-right"><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i></span></p>
-                      <p>浙江省杭州市余杭区海曙路58号</p>
-                    </div>
-                  </div>
-                  <hr/>
-                </div>
-              </li>
-              <li>
-                <div class="col-md-12 col-sm-12 col-xs-12">
-                  <div class="row detail-wrap">
-                    <div class="col-md-3 col-sm-3 col-xs-3"> <img src="images/person-one.png" class="img-responsive img-circle " /> </div>
-                    <div class="col-md-9 col-sm-9 col-xs-9">
-                      <p>童卫军<span class="pull-right"><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i></span></p>
-                      <p>浙江省杭州市余杭区海曙路58号</p>
-                    </div>
-                  </div>
-                  <hr/>
-                </div>
-              </li>
+              -->
             </ul>
           </div>
           <div id="pullUp"> <span class="pullUpIcon"></span><span class="pullUpLabel">上拉加载更多...</span> </div>
@@ -301,8 +186,7 @@ document.addEventListener('DOMContentLoaded', loaded, false);
 <div class="overlay">
   <div class="overlay-content ">
     <div class="container"  id="coach_detail">
-      <div class="row content-wrap"> 
-        <!--一行的数据显示 starts-->
+       <!--<div class="row content-wrap"> 
         <div class="col-md-12 col-sm-12 col-xs-12">
           <div class="row detail-wrap">
             <div class="col-md-3 col-sm-3 col-xs-3"> <img src="images/person-one.png" class="img-responsive img-circle " /> </div>
@@ -314,8 +198,8 @@ document.addEventListener('DOMContentLoaded', loaded, false);
           <hr/>
         </div>
       </div>
-      <section class="overlay-button-group"> <a href="coursearrange.html">预约课程</a><a href="">教练详情</a> </section>
-      <!--<div style="width:100px; height:50px; display:block;"></div>-->
+      <section class="overlay-button-group"> <a href="coursearrange.html">预约课程</a><a href="coachdetail.html">教练详情</a> </section>
+     -->
     </div>
   </div>
 </div>
@@ -396,6 +280,7 @@ $(document).ready(function()
 	{
 		$("#tabs-1 div.content-wrap").css("display","none");
 		$('.foot-nav').css("display","none");
+		$("#pullUp").css("display","none");
 	});
 	
 	$("#search_coach").on('blur',function ()
@@ -428,26 +313,33 @@ $(document).ready(function()
 	
 });
 
-var active_url = "../sbook?action=GETCOACHLIST";
-var studentid =0;
 
 
 function load_coachlist(search_condition){
 	$.getJSON(active_url,search_condition,function(data){
 		$("#thelist").html("");		  
+		binddate2coachlist(data);
+	});
+}
+
+function binddate2coachlist(data){	  
 		$.each(data.coachlist, function(i, item) {
 			var score_int = 0;
 			var score_html= "";
 			var avatar_url = "";
 			avatar_url = item.avatarurl?item.avatarurl:"http://xiaobaxueche.com/dadmin/weixinWeb/images/caoch_avart_defalt.jpg"
-			scope_int= parseInt(item.score);
-			scope_int= scope_int>5?5:scope_int;
-			var score_html = generateScoreView(scope_int);
-            
+			score_int= parseInt(item.score);
+			score_int= score_int>5?5:score_int;
+			var score_html = "";
+
+			for(var i =0;i<score_int;i++){
+				score_html+="<i class='glyphicon glyphicon-star'></i>";
+		    };
+
             $("#thelist").append(
             		 "<li>"+"<div class='col-md-12 col-sm-12 col-xs-12' coachid="+item.coachid+">"+
                      "<div class='row detail-wrap' onclick='dispalyDetail(this)'>" +
-                       "<div class='col-md-3 col-sm-3 col-xs-3'> <img src='"+avatar_url+"' class='img-responsive img-circle ' /> </div>"+
+                       "<div class='col-md-3 col-sm-3 col-xs-3'> <img src='"+avatar_url+"' class='img-responsive img-circle ' /></div>"+
                        "<div class='col-md-9 col-sm-9 col-xs-9'>" +
                          "<p>" +item.realname+"<span class='pull-right'>"+
                          score_html+
@@ -461,8 +353,16 @@ function load_coachlist(search_condition){
 
         });
 		
-	});
+		$("#pullUp").html("");
+		if(data.coachlist.length<10){
+			$("#pullUp").append("<span class='pullUpLabel'></span>");
+		}else{
+			$("#pullUp").append("<span class='pullUpIcon'></span><span class='pullUpLabel'>上拉加载更多...</span>");
+		}
+		
+		myScroll.refresh();	
 }
+
 
 function generateScoreView(scope){
 	var score_str="";
@@ -476,14 +376,25 @@ function search_coache(){
 	var search_str = $("#search_coach").val();
 	var search_condition = {"condition1":search_str};
 	load_coachlist(search_condition);
+	
 };
 
 function search_com(){
 	var condition1 = $("#search_coach").val();//condition1
 	var condition6 = $("input[name='subject']:checked").val();;//condition6
 	var driverschoolid = $("#driverschoolid").val();//driverschoolid
-	var search_condition = {"condition1":condition1,"condition6":condition6,"driverschoolid":driverschoolid};
+	var search_condition = {"condition1":condition1,"condition6":condition6,"driverschoolid":driverschoolid,"pagenum":pagenum};
 	load_coachlist(search_condition);
+};
+
+function load_more(){
+	var condition1 = $("#search_coach").val();//condition1
+	var condition6 = $("input[name='subject']:checked").val();;//condition6
+	var driverschoolid = $("#driverschoolid").val();//driverschoolid
+	var search_condition = {"condition1":condition1,"condition6":condition6,"driverschoolid":driverschoolid,"pagenum":pagenum};
+	$.getJSON(active_url,search_condition,function(data){	  
+		binddate2coachlist(data);
+	});
 };
 
 function getSchoolByCity(){
@@ -509,44 +420,8 @@ function dispalyDetail(event){
 			);
 	$(".overlay").css('display','block');
 }
-function getmyorder(studentid)
-{
-	var action="GetUnCompleteOrder";
-	$.ajax({
-		  type:"post",
-		  dataType:"json",
-		  url:"/sorder",
-		  data:{
-			    action:action,
-			    studentid :studentid
-		  },
-		success:function(data){
-			var result=data;
-			
-		}	
-		
-	});
-	
-}
-function getcoachdetail(studentid)
-{
-	var action="GetUnCompleteOrder";
-	$.ajax({
-		  type:"post",
-		  dataType:"json",
-		  url:"/sorder",
-		  data:{
-			    action:action,
-			    studentid :studentid
-		  },
-		success:function(data){
-			var result=data;
-			
-		}	
-		
-	});
-	
-}
+
+
 </script>
 </body>
 </html>
