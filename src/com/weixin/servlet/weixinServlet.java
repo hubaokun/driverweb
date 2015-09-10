@@ -81,7 +81,9 @@ public class weixinServlet extends BaseServlet{
 			WXmessageService.getAccessToken();
 			WXmessageService.getjsapi_ticket(WeiXinMessage.getValue("service_access_token"));
 		}
+
 		String url=baseUrl+"login&code="+code+"&state="+state;
+
 		String noncestr=wxmessageService.CreatenNonce_str(16);
 		long timestamp=wxmessageService.CreatenTimestamp();
 		String signature=wxmessageService.getSignature(noncestr, timestamp, url);
@@ -105,8 +107,6 @@ public class weixinServlet extends BaseServlet{
 		String noncestr=wxmessageService.CreatenNonce_str(16);
 		long timestamp=wxmessageService.CreatenTimestamp();
 		String signature=wxmessageService.getSignature(noncestr, timestamp, url);
-		
-
 		request.setAttribute("noncestr", noncestr);
 		request.setAttribute("timestamp", timestamp);
 		request.setAttribute("signature", signature); 

@@ -1151,6 +1151,17 @@ public class CuserAction extends BaseAction {
 		map.put("driveSchoollist", driveSchoollist);
 		strToJson(map);
 	}
+	
+	/**
+	 * 修改驾校中的关键字搜索教校
+	 */
+	@Action(value = "/searchDriverSchoolByCity")
+	public void searchDriverSchoolByCity() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		driveSchoollist = cuserService.getDriveSchoolListBycity(schoolkeyword,provinceid,cityid);
+		map.put("driveSchoollist", driveSchoollist);
+		strToJson(map);
+	}
 
 	/**
 	 * 得到一个教练的详情

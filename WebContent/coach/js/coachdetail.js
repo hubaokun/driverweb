@@ -31,7 +31,40 @@ var areaid;
 			var params = {provinceid:provinceid};
 			jQuery.post("getCityByProvinceId.do", params, showEditCity,'json');
 		}
-		//设置修改页面的城市内容
+		
+		
+//初始化所属驾校的省下拉列表
+		function initSchoolProvinceCityArea(provinceid,cid,aid)
+		{
+			cityid=cid;
+			areaid=aid;
+			//填充省选项,并且选中原来的省选项
+		var params = {};
+		jQuery.post("getProvinceToJson.do", params, function(obj){
+				 //填充省选项
+			    document.getElementById("schoolprovince").length=0;
+			    var o1=new Option('请选择','0');
+	        	document.getElementById("schoolprovince").add(o1);
+		        for(var i=0;i<obj.length;i++)
+		        {
+		        	var o=new Option(obj[i].province,obj[i].provinceid);
+		        	document.getElementById("schoolprovince").add(o);
+		        }
+				//选中省
+				var objSelect= $("#schoolprovince").get(0);
+				for(var i=0;i<objSelect.options.length;i++) {  
+			        if(objSelect.options[i].value == provinceid) {  
+			            objSelect.options[i].selected = true;  
+			            break;  
+			        }  
+			    }  
+		    }, 'json');
+		//填充市，设置选中市选项
+		var params = {provinceid:provinceid};
+		jQuery.post("getCityByProvinceId.do", params, showSchoolEditCity,'json');
+	}		
+		
+//设置修改页面的城市内容
 function showEditCity(obj)
 		{
 			//填充市
@@ -43,6 +76,28 @@ function showEditCity(obj)
 		    }
 		    //选中市
 			var objSelect= $("#city").get(0);
+			for(var i=0;i<objSelect.options.length;i++) {  
+		        if(objSelect.options[i].value == cityid) { 
+		            objSelect.options[i].selected = true; 
+		           // var citysid=objSelect.options[i].value;//
+		            setAreainfo(cityid,areaid)
+		            break;
+		        }  
+		    }  
+		}
+
+//设置驾校修改页面的城市内容
+function showSchoolEditCity(obj)
+		{
+			//填充市
+			document.getElementById("schoolcity").length=0;
+		    for(var i=0;i<obj.length;i++)
+		    {
+		    	var o=new Option(obj[i].city,obj[i].cityid);
+		    	document.getElementById("schoolcity").add(o);
+		    }
+		    //选中市
+			var objSelect= $("#schoolcity").get(0);
 			for(var i=0;i<objSelect.options.length;i++) {  
 		        if(objSelect.options[i].value == cityid) { 
 		            objSelect.options[i].selected = true; 
@@ -86,6 +141,13 @@ function tofindCity(v)
 	var params = {provinceid:v};
 	jQuery.post("getCityByProvinceId.do", params, showCity, 'json');
 }
+function tofindSchoolCity(v)
+{
+	//发送异步请求
+	
+	var params = {provinceid:v};
+	jQuery.post("getCityByProvinceId.do", params, showSchoolCity, 'json');
+}
 
 function showCity(obj)
 {	
@@ -102,6 +164,22 @@ function showCity(obj)
          tofindArea(cityOneId);
 	
 }
+function showSchoolCity(obj)
+{	
+	
+		var citys=document.getElementById("schoolcity");
+		citys.length=0;
+		for(var i=0;i<obj.length;i++)
+         {
+        	var o=new Option(obj[i].city,obj[i].cityid);
+         	document.getElementById("schoolcity").add(o);
+         	
+         }
+         var cityOneId=obj[0].cityid;//得到第一个城市的ID
+         //tofindArea(cityOneId);
+	
+}
+
 function tofindArea(v)
 {
 	//发送异步请求
@@ -555,6 +633,24 @@ function changeSchool() {
 function searchDriverSchool() {
 	var schoolkeyword = $("#schoolkeyword").val();
 	$.post("searchDriverSchool.do",{schoolkeyword:schoolkeyword},function(data){
+		$("#driveschool_id").empty();
+		var html = "";
+		var list = data.driveSchoollist;
+		for(var i = 0;i<list.length;i++){
+			html += "<option value='"+list[i].schoolid+"'>"+list[i].name+"</option>";
+		}
+		$("#driveschool_id").append(html);
+	},"json")
+}
+
+//修改驾校中的关键字搜索教校
+function searchDriverSchoolByCity() {
+	var schoolkeyword = $("#schoolkeyword").val();
+	var provinceid = document.getElementById("schoolprovince").value;
+	var cityid = document.getElementById("schoolcity").value;
+	
+	$.post("searchDriverSchoolByCity.do",{schoolkeyword:schoolkeyword,provinceid : provinceid,
+		cityid : cityid},function(data){
 		$("#driveschool_id").empty();
 		var html = "";
 		var list = data.driveSchoollist;
