@@ -52,7 +52,7 @@ public class weixinServlet extends BaseServlet{
 		else if(action.equals("coachlist"))
 			getcoachlist(request, response);
 		else if("mylearninfo".equals(action)){
-			mylearninfo(request, response);
+			//mylearninfo(request, response);
 		}
 		
 	}
@@ -119,7 +119,7 @@ public class weixinServlet extends BaseServlet{
 			e.printStackTrace();
 		}
 	}
-	public void mylearninfo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+	/*public void mylearninfo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		String url=baseUrl+"mylearninfo";
 		String noncestr=wxmessageService.CreatenNonce_str(16);
 		long timestamp=wxmessageService.CreatenTimestamp();
@@ -130,5 +130,5 @@ public class weixinServlet extends BaseServlet{
 		request.setAttribute("appid", CommonUtils.getAppid());
 		
 		request.getRequestDispatcher("/weixinWeb/mylearninfo.jsp").forward(request, response);
-	}
+	}*/
 }
