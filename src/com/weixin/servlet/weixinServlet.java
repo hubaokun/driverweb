@@ -29,7 +29,7 @@ import com.weixin.service.IGetYouWanna;
 import com.weixin.serviceImpl.GetYouWannaImpl;
 
 
-@WebServlet("/weixinWeb/weixinlogin")
+@WebServlet("/weixinWeb/weixin")
 public class weixinServlet extends BaseServlet{
 	/**
 	 * 
