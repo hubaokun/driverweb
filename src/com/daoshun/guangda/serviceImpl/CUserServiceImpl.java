@@ -1466,6 +1466,22 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
     }
 
     @Override
+    public List<DriveSchoolInfo> getDriveSchoolListBycity(String keyword,String provinceid,String cityid) {
+        String hql = "from DriveSchoolInfo";
+        if (keyword != null) {
+            hql += " where name like '%" + keyword + "%'";
+        }
+        if (provinceid != null) {
+            hql += " and provinceid ="+provinceid;
+        }
+        if (cityid != null) {
+            hql += " and cityid="+cityid;
+        }
+        List<DriveSchoolInfo> schoollist = (List<DriveSchoolInfo>) dataDao.getObjectsViaParam(hql, null);
+        return schoollist;
+    }
+
+    @Override
     public QueryResult<BalanceCoachInfo> getRechargeRecordList(int pageIndex, int pagesize) {
 
         StringBuffer cuserhql = new StringBuffer();

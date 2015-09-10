@@ -41,7 +41,8 @@
 			//cid="330400";
 			//aid="330481";
 			initProvinceCityArea(pid,cid,aid);
-		});  
+			initSchoolProvinceCityArea(pid,cid,aid);
+		}); 
 
 	</script>
 
@@ -479,10 +480,19 @@
 <div id="alertbox_sec" style="position: fixed; width: 100%; height: 300px;z-index: 500;">
 	<div id="alertbox_last" class="alertbox_last" style="">
 		<div style="position: fixed; width: 400px; height: 200px;background: #4cc2ff;margin-left: 50px;margin-top: 50px;">
+			<div style="font-size: 16px;margin-top: 5px;float: left;margin-left: 20px;">省市区：</div>
+			<div style="width:400px;font-size: 16px;margin-top: 5px;float: left;margin-left: 20px;">
+			省
+			<select  id="schoolprovince" style="width:70px;"
+			  onchange="tofindSchoolCity(this.value)" name="schoolprovinceid"></select>
+			 市<select id="schoolcity" name="schoolcityid" ></select>
+			<!--  区<select id="schoolarea" name="schoolareaid"  ></select>-->
+			</div>
+			
 			<div style="font-size: 16px;margin-top: 5px;width: 320px;float: left;margin-left: 20px;">
 				关键字：<input type="text" style="height: 25px;width: 230px;" id="schoolkeyword" />
 			</div>
-			<div onclick="searchDriverSchool();" style="float:left;cursor:pointer;">
+			<div onclick="searchDriverSchoolByCity();" style="float:left;cursor:pointer;">
 				<img src="imgs/common/searchicon.png" width=22px height=22px style="margin-top: 9px;">
 			</div>
 			<div style="width: 230px;margin: auto;margin-top: 50px;">

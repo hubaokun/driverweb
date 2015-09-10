@@ -31,6 +31,7 @@ public class LocationAction extends BaseAction {
 	private List<ProvinceInfo> provincelist;
 	
 	private String provinceid;//省id
+	private String schoolprovinceid;//所属驾校的省id
 	private String cityid;//市id
 	private String hotkey;//热键
 	private String provinceName;//省名称
@@ -53,6 +54,13 @@ public class LocationAction extends BaseAction {
 		List<CityInfo> list=locationService.getCityByProvinceId(provinceid);
 		strToJson(list);
 	}
+//驾校按省ID查询市
+	/*@Action(value = "getSchoolCityByProvinceId")
+	public void getSchoolCityByProvinceId(){
+		List<CityInfo> list=locationService.getCityByProvinceId(provinceid);
+		strToJson(list);
+	}*/
+	
 	//按省名称查询市
 	@Action(value = "getCityByProvinceName")
 	public void getCityByProvinceName(){
@@ -83,6 +91,13 @@ public class LocationAction extends BaseAction {
 	}
 	public void setProvinceid(String provinceid) {
 		this.provinceid = provinceid;
+	}
+	
+	public String getSchoolprovinceid() {
+		return schoolprovinceid;
+	}
+	public void setSchoolprovinceid(String schoolprovinceid) {
+		this.schoolprovinceid = schoolprovinceid;
 	}
 	public String getCityid() {
 		return cityid;
