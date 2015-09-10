@@ -27,7 +27,6 @@ $(document).ready(function(){
 	
 });
 function showCoin(obj){
-	//alert(obj.message);
 	var h="";
 	var coins=obj.coinaffiliationlist;
 	if(coins.length>0){
@@ -43,6 +42,7 @@ function coinrecordlist(obj)
 {
 	if(obj.code==1){
 		$("#coinnum").html(obj.coinnum+"个");
+		$("#fcoinnum").html("（冻结金额￥"+obj.fcoinnum+"）");
 		var rs=obj.recordlist;
 		
 		if(rs.length>0){
@@ -70,10 +70,17 @@ function coinrecordlist(obj)
 
 <body>
 <div class="container">
-  <div class="row coin-head">
+  <!-- <div class="row coin-head">
     <div class="col-md-12 col-sm-12 col-xs-12">
       <p>小巴币<i class="icon icon-question-sign"></i></p>
       <p id="coinnum">2545个</p>
+    </div>
+  </div> -->
+  <div class="row coin-head">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <p>小巴币<i class="icon icon-question-sign"></i></p>
+      <p  id="coinnum">2545<i>个</i></p>
+      <p id="fcoinnum"></p>
     </div>
   </div>
   <div class="row coin-origin">

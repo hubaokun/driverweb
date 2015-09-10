@@ -22,7 +22,8 @@ $(document).ready(function(){
 function showBalance(obj){
 	if(obj.code==1){
 		//设置当前余额
-		$("#money").html(obj.balance);
+		$("#money").html('<i>￥</i>'+obj.balance);
+		$("#fmoney").html('（冻结金额￥'+obj.fmoney+'）');
 		var rs=obj.recordlist;
 		if(rs.length>0){
 			var h="";
@@ -43,7 +44,13 @@ function showBalance(obj){
 					type="提现不通过";
 					op="+";
 				}
-				h=h+'<div class="col-md-12 col-sm-12 col-xs-12"><p><span>'+type+'</span><span class="pull-right add">';
+				h=h+'<div class="col-md-12 col-sm-12 col-xs-12"><p><span>'+type+'</span><span class="pull-right ';
+				if(op=='+'){
+					h=h+'add">';
+				}else{
+					h=h+'decrease">';
+				}
+				
 				h=h+op+rs[i].amount+'</span></p><p><span>'+rs[i].addtime+'</span><span class="pull-right"></span></p></div>';
 			}
 			//alert(h);
@@ -59,17 +66,20 @@ function showBalance(obj){
 
 <body>
 <div class="container">
-	<div class="row account-head">
+	<!-- <div class="row account-head">
     	<div class="col-md-12 col-sm-12 col-xs-12">
         	<p>可用余额（元）<i class="icon icon-question-sign"></i></p>
-
-            <p id="money"></p>
-
+            <p id="money">1111</p>
             <p id="restMoney">￥2545</p>
-
+        </div>
+    </div> -->
+    <div class="row account-head">
+    	<div class="col-md-12 col-sm-12 col-xs-12">
+        	<p>可用余额（元）<i class="icon icon-question-sign"></i></p>
+            <p id="money"><i>￥</i></p>
+            <p id="fmoney"></p>
         </div>
     </div>
-    
     <div class="row account-money">
     	<div class="col-md-5 col-sm-5 col-xs-5">
 			<a href="charge.jsp">

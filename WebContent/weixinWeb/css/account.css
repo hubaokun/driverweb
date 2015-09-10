@@ -24,9 +24,20 @@ body
 }
 .account-head .col-md-12 p:last-child,.coin-head .col-md-12 p:last-child
 {
-	font-size:32px;
-	padding-bottom:26px;
+	font-size:12px;
+	color:#dbf5ff;
+	padding-bottom:16px;
+}
+.account-head .col-md-12 p:nth-child(2),.coin-head .col-md-12 p:nth-child(2)
+{
+	font-size:25px;
+	padding-bottom:12px;
 	line-height:23px;
+}
+.account-head .col-md-12 p:nth-child(2)>i,.coin-head .col-md-12 p:nth-child(2)>i
+{
+	font-style:normal;
+	font-size:20px;
 }
 .account-money
 {
@@ -131,7 +142,7 @@ body
 }
 .account-bill .account-bill-body  .col-md-12 p:first-child span.add,.coin-detail .coin-detail-body  .col-md-12 p:first-child span.add
 {
-	color:#00d1a4;
+	color:#000000;
 }
 .account-bill .account-bill-body  .col-md-12 p:last-child,.coin-detail .coin-detail-body  .col-md-12 p:last-child
 {
@@ -154,7 +165,7 @@ body
 }
 
 
-/*小巴币样式*/
+/*С�ͱ���ʽ*/
 .coin-origin
 {
 

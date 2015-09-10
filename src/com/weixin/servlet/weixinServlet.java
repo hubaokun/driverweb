@@ -29,14 +29,14 @@ import com.weixin.service.IGetYouWanna;
 import com.weixin.serviceImpl.GetYouWannaImpl;
 
 
-@WebServlet("/weixinWeb/weixinlogin")
+@WebServlet("/weixinWeb/weixin")
 public class weixinServlet extends BaseServlet{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private IGetYouWanna wxmessageService;
-	
+	private String baseUrl="http://wx.xiaobaxueche.com/xiaoba/weixinWeb/weixin?action=";
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
@@ -51,6 +51,9 @@ public class weixinServlet extends BaseServlet{
 			weixinlogin(request, response);
 		else if(action.equals("coachlist"))
 			getcoachlist(request, response);
+		else if("mylearninfo".equals(action)){
+			mylearninfo(request, response);
+		}
 		
 	}
 	public void weixinlogin(HttpServletRequest request, HttpServletResponse response)
@@ -78,7 +81,7 @@ public class weixinServlet extends BaseServlet{
 			WXmessageService.getAccessToken();
 			WXmessageService.getjsapi_ticket(WeiXinMessage.getValue("service_access_token"));
 		}
-		String url="http://wx.xiaobaxueche.com/xiaoba/weixinWeb/weixinlogin?action=login&code="+code+"&state="+state;
+		String url=baseUrl+"login&code="+code+"&state="+state;
 		String noncestr=wxmessageService.CreatenNonce_str(16);
 		long timestamp=wxmessageService.CreatenTimestamp();
 		String signature=wxmessageService.getSignature(noncestr, timestamp, url);
@@ -93,13 +96,12 @@ public class weixinServlet extends BaseServlet{
 		try {
 			dispatcher.forward(request, response);
 		} catch (ServletException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	public void getcoachlist(HttpServletRequest request, HttpServletResponse response)
 	{
-		String url="http://wx.xiaobaxueche.com/xiaoba/weixinWeb/weixinlogin?action=coachlist";
+		String url=baseUrl+"coachlist";
 		String noncestr=wxmessageService.CreatenNonce_str(16);
 		long timestamp=wxmessageService.CreatenTimestamp();
 		String signature=wxmessageService.getSignature(noncestr, timestamp, url);
@@ -107,15 +109,26 @@ public class weixinServlet extends BaseServlet{
 
 		request.setAttribute("noncestr", noncestr);
 		request.setAttribute("timestamp", timestamp);
-		request.setAttribute("signature", signature);
+		request.setAttribute("signature", signature); 
 		request.setAttribute("appid", CommonUtils.getAppid());
 		
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/weixinWeb/coachlist.jsp");
 		try {
 			dispatcher.forward(request, response);
 		} catch (ServletException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	public void mylearninfo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		String url=baseUrl+"mylearninfo";
+		String noncestr=wxmessageService.CreatenNonce_str(16);
+		long timestamp=wxmessageService.CreatenTimestamp();
+		String signature=wxmessageService.getSignature(noncestr, timestamp, url);
+		request.setAttribute("noncestr", noncestr);
+		request.setAttribute("timestamp", timestamp);
+		request.setAttribute("signature", signature); 
+		request.setAttribute("appid", CommonUtils.getAppid());
+		
+		request.getRequestDispatcher("/weixinWeb/mylearninfo.jsp").forward(request, response);
 	}
 }

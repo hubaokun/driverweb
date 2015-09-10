@@ -1631,10 +1631,15 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		SuserInfo user = dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
 		if (user != null) {
 			int coinnum=0;
+			int fcoinnum=0;
 			if(user.getCoinnum()!=null){
 				coinnum=user.getCoinnum();
 			}
+			if(user.getFcoinnum()!=null){
+				fcoinnum=user.getFcoinnum().intValue();
+			}
 			result.put("coinnum", coinnum);
+			result.put("fcoinnum", fcoinnum);
 			String hql = "from CoinRecordInfo where (receiverid =:receiverid and receivertype="+ UserType.STUDENT+" ) or (payerid =:payerid and payertype="+ UserType.STUDENT+")  order by addtime desc";
 			String[] params = {"receiverid", "payerid"};
             
