@@ -252,6 +252,8 @@ public interface ICUserService {
 	public abstract CuserInfo getCuserByBrive_cardnum(String drive_cardnum);
 
 	public abstract List<DriveSchoolInfo> getDriveSchoolList(String keyword);
+	
+	public abstract List<DriveSchoolInfo> getDriveSchoolListBycity(String keyword,String provinceid,String cityid);
 
 	public abstract List<TeachcarInfo> getTeachcarInfolist();
 
