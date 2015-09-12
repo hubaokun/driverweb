@@ -9,11 +9,11 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link href="css/style.css" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="css/page.css" type="text/css"
-	media="screen" />
+    <link rel="stylesheet" href="css/page.css" type="text/css" media="screen" />
     <script src="js/jquery-1.11.2.min.js"></script>
     <script type="text/javascript" src="js/common.js"></script>
     <script type="text/javascript" src="coupon/js/coupon.js"></script>
+    <script type="text/javascript" src="js/My97DatePicker/WdatePicker.js"></script>
     <script type="text/javascript" src="js/page.js"></script>
     <script type="text/javascript">
         $(function () {

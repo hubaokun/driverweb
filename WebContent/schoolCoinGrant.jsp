@@ -54,7 +54,7 @@
                     <div style="height: 100%; line-height: 75px; float:left; margin-left: 20px;">
                     <input value="${name }" name="owenersearch" id="searchname"  autocomplete="off"  required="required" readonly="readonly" style="color:grey; height: 33px; padding-left:5px; border: 1px solid #eaeff2; margin-top: 20px;">
                     </div><div class="binding_detail" style="  left: 164px;top:-20px;clear:both;" id="gartenDetail" >
-                    </div><input type="hidden" id="schoolownerid" name="schoolownerid" value="${schoolid }" required="required">
+                    </div><input type="hidden" id="ownerid" name="ownerid" value="${schoolid }" required="required">
                     </div>
                     </s:iterator>
                     
