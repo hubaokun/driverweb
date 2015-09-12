@@ -1864,7 +1864,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				result.put("message", "你预约的教练是测试教练，请选择其他教练预约");
 				result.put("code", 22);
 				return result;
-			}
+			} 
 		}
 		/*if(student!=null && "18888888888".equals(student.getPhone())){
 			result.put("message", "测试账号不能预约");

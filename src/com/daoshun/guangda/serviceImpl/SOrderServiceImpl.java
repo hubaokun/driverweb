@@ -600,8 +600,6 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				order.setCarlicense(user.getCarlicense());
 			}
 			
-			
-			
 			// 是否已经确认上车
 			StringBuffer cuserhql1 = new StringBuffer();
 			cuserhql1.append("from OrderRecordInfo where orderid =:orderid and userid =:userid and operation = 1");
@@ -657,7 +655,13 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 			List<OrderPrice> orderpricelist = (List<OrderPrice>) dataDao.getObjectsViaParam(cuserhql3.toString(), params3, order.getOrderid());
 			if (orderpricelist != null && orderpricelist.size() > 0) {
 				order.setOrderprice(orderpricelist);
+				OrderPrice op=orderpricelist.get(0);
+				if(op!=null){
+					//设置科目
+					order.setSubjectname(op.getSubject());
+				}
 			}
+			
 			// 是否可以投诉
 			order.setCan_complaint(OrderState.CANNOT_COMPLAINT);//不能投诉
 			
@@ -797,7 +801,7 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 			order.setHours(-2);// 学车已经完成
 
 			// 是否可以投诉
-			order.setCan_complaint(OrderState.CAN_COMPLAINT);
+			order.setCan_complaint(OrderState.CANNOT_COMPLAINT);
 			String hql2 = "from ComplaintInfo c where c.order_id =:order_id and c.type = 1 and c.state = 0";
 			String[] p2 = { "order_id" };
 			List<ComplaintInfo> cList = (List<ComplaintInfo>) dataDao.getObjectsViaParam(hql2, p2, order.getOrderid());
