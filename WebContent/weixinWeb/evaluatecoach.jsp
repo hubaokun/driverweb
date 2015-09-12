@@ -13,6 +13,7 @@ pageEncoding="UTF-8"%>
 </head>
 
 <body>
+<input type="hidden" id="orderid" value="${param.orderid}">
 <div class="container evaluate-content">
   <div class="row evaluate-content-head">
     <div class="col-md-12 col-sm-12 col-xs-12"> <span class="title">教学态度</span>
@@ -28,7 +29,7 @@ pageEncoding="UTF-8"%>
   <div class="row evaluate-content-body">
     <div class="col-md-12 col-sm-12 col-xs-12">
       <form>
-        <textarea placeholder="快来评价您的教练吧"  class=" col-md-12 col-sm-12 col-xs-12"></textarea>
+        <textarea id="content" placeholder="快来评价您的教练吧"  class=" col-md-12 col-sm-12 col-xs-12"></textarea>
       </form>
     </div>
   </div>
@@ -43,10 +44,10 @@ pageEncoding="UTF-8"%>
         <div class="container">
             <div class="row">
               <div class="col-md-12 col-sm-12 col-xs-12">
-                  <span>评价还未完成，您确定要离开？</span>
+                  <span>确定要评价？</span>
               </div>
               <div class="no col-md-6 col-sm-6 col-xs-6" style="border-right:1px solid rgb(218,218,218);"><span >取消</span></div>
-              <div class="yes col-md-6 col-sm-6 col-xs-6"><span>确定</span></div>
+              <div class="yes col-md-6 col-sm-6 col-xs-6"><span onclick="return evaluationTask()">确定</span></div>
               
         </div>
       </div>
@@ -115,6 +116,35 @@ $(document).ready(function()
 		size:24
       });
 });
+
+function evaluationTask(){
+		var studentid='${sessionScope.studentid}';//学员Id
+		studentid='18';
+		var token='${sessionScope.token}';
+		var type='2';//评价类型  2 学员评价教练
+		var score1=$('.e-mark-a').html();
+		var score2=$('.e-mark-q').html();
+		var score3=$('.e-mark-c').html();
+		var orderid=$('#orderid').val();
+		var content=$('#content').val();
+		var params = {
+						action:"evaluationTask",
+						userid:studentid,
+						orderid:orderid,
+						type:type,
+						score1:score1,
+						score2:score2,
+						score3:score3,
+						content:content,
+						token:token};
+		jQuery.post("../ctask", params, showEvaluationTask, 'json');
+	
+}
+function showEvaluationTask(obj){
+	if(obj.code==1){//取消成功
+		window.location.href='orderlist.jsp';
+	}
+}
 </script>
 </body>
 </html>

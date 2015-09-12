@@ -13,15 +13,14 @@ pageEncoding="UTF-8"%>
 </head>
 
 <body>
+<input type="hidden" id="orderid" value="${param.orderid}">
 <div class="container complain-content">
   <div class="row complain-content-head">
     <span>投诉处理完成之前，订单金额将暂留在小巴平台</span>
   </div>
   <div class="row complain-content-body">
     <div class="col-md-12 col-sm-12 col-xs-12">
-      <form>
-        <textarea placeholder="一不小心被投诉了~哪里做的不够好？快告诉小巴吧~"  class=" col-md-12 col-sm-12 col-xs-12"></textarea>
-      </form>
+        <textarea id="content" placeholder="一不小心被投诉了~哪里做的不够好？快告诉小巴吧~"  class=" col-md-12 col-sm-12 col-xs-12"></textarea>
     </div>
   </div>
   <div class="row complain-content-foot" >
@@ -29,17 +28,15 @@ pageEncoding="UTF-8"%>
   </div>
 </div>
 
-
-
 <div class="overlay" >
       <div class="overlay-content" style="top: 195px; left: 12px;">
         <div class="container">
             <div class="row">
               <div class="col-md-12 col-sm-12 col-xs-12">
-                  <span>投诉还未完成，您确定要离开？</span>
+                  <span id="cmsg">确定要投诉？</span>
               </div>
               <div class="no col-md-6 col-sm-6 col-xs-6" style="border-right:1px solid rgb(218,218,218);"><span >取消</span></div>
-              <div class="yes col-md-6 col-sm-6 col-xs-6"><span class="btn-sure">确定</span></div>
+              <div class="yes col-md-6 col-sm-6 col-xs-6"><span class="btn-sure" onclick="return complaint()">确定</span></div>
               
         </div>
       </div>
@@ -109,6 +106,38 @@ $(document).ready(function()
 		size:24
       });
 });
+
+//投诉
+function complaint()
+{
+	var studentid='${sessionScope.studentid}';//学员Id
+	studentid='18';
+	var orderid=$('#orderid').val();
+	var token='';
+	var type='1';
+	var reason='2';
+	var content=$('#content').val();
+	if(content==''){
+		alert("投诉内容不能为空!");
+		return false;
+	}
+	var params = {	action:"complaint",
+					userid:studentid,
+					orderid:orderid,
+					token:token,
+					type:type,
+					reason:reason,
+					content:content
+				 };
+	jQuery.post("../sorder", params, showComplaint, 'json');
+}
+function showComplaint(obj)
+{
+	if(obj.code==1){
+		alert(obj.message);
+		window.location.href='orderlist.jsp';
+	}
+}
 </script>
 </body>
 </html>

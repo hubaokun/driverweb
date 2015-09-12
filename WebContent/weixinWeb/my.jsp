@@ -16,17 +16,37 @@ pageEncoding="UTF-8"%>
 </style>
 
 <script type="text/javascript">
+/* var x={
+		   "openid":" OPENID",
+		   "nickname": "NICKNAME",
+		   "sex":"1",
+		   "province":"PROVINCE",
+		   "city":"CITY",
+		   "country":"COUNTRY",
+		    "headimgurl":"http://wx.qlogo.cn/mmopen/g3MonUZtNHkdmzicIlibx6iaFqAc56vxLSUfpb6n5WKSYVY0ChQKkiaJSgQ1dZuTOgvLLrhJbERQQ4eMsv84eavHiaiceqxibJxCfHe/46", 
+			"privilege":[
+			"PRIVILEGE1",
+			"PRIVILEGE2"
+		    ],
+		    "unionid": "o6_bmasdasdsad6_2sgVt7hMZOPfL"
+		};
+var y=$.parseJSON(x); */
+
 $(document).ready(function(){
 	var sid='${sessionScope.studentid}';
+	var c_info='${sessionScope.c_info}';
+	var wxinfo=$.parseJSON(c_info);
+	$("#realname").html(wxinfo.nickname);
+	$("#avatarurl").attr("src",wxinfo.headimgurl);
 	sid="18";
 	var params = {action:"GETSTUDENTINFO",studentid:sid};
 	jQuery.post("../suser", params, showStudent, 'json');
 });
 function showStudent(obj){
 	if(obj.code==1){
-		$("#realname").html(obj.data.realname);
+		//$("#realname").html(obj.data.realname);
 		$("#phone").html(obj.data.phone);
-		$("#avatarurl").attr("src",'${sessionScope.avatarurl}');//设置头像图片
+		//$("#avatarurl").attr("src",'${sessionScope.avatarurl}');//设置头像图片
 		//$("#avatarurl").attr("src",obj.data.avatarurl);//设置头像图片
 		$("#coin").html(obj.data.coinnum+"个");
 		$("#money").html(obj.data.money+"￥");
@@ -42,7 +62,7 @@ function showStudent(obj){
 <div class="container" >
   <div id="tabs" >
     <ul class="foot-nav" data-role="footer">
-      <li><a href="coachlist.jsp"><span class="coach"></span><p>找教练</p></a></li><li><a href="orderlist.jsp"><span class="order"></span><p>订单</p></a></li><li class="active"><a href="javascript:void(0);"><span class="my"></span><p>我的</p></a></li>
+      <li><a href="coachlist.jsp"><span class="coach"></span><p>找教练</p></a></li><li><a href="uncompleorder.jsp"><span class="order"></span><p>订单</p></a></li><li class="active"><a href="javascript:void(0);"><span class="my"></span><p>我的</p></a></li>
     </ul>
     <div id="tabs-3">
     	<div class="row my-head">
@@ -53,8 +73,8 @@ function showStudent(obj){
                 </div>
             </div>
             <div class="col-md-7 col-sm-7 col-xs-7">
-            	<p id="realname">童卫军</p>
-                <p id="phone">159888865324</p>
+            	<p id="realname"></p>
+                <p id="phone"></p>
             </div>
             <div class="col-md-2 col-sm-2 col-xs-2">
             	<i class="icon icon-chevron-right my-head-icon"></i>
@@ -80,7 +100,7 @@ function showStudent(obj){
                 <a href="coin.jsp">
                     <i class="my-nav-icon icon-coin"></i>				
                     <span>小巴币</span>		
-                    <i class="icon icon-chevron-right"><span id="coin">20个</span></i>
+                    <i class="icon icon-chevron-right"><span id="coin">个</span></i>
                 </a>
     		</div>     
         </div>
@@ -93,11 +113,11 @@ function showStudent(obj){
               </a>
     		</div>
         </div>-->
-        <div class="row logout-row">
+       <!--  <div class="row logout-row">
         	<div class="col-md-12 col-sm-12 col-xs-12 my-nav-item">
               <span class="logout">退出登录</span>
     		</div>
-        </div>
+        </div> -->
     </div>
   </div>
 </div>
