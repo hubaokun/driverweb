@@ -160,7 +160,10 @@ public class CtaskServlet extends BaseServlet {
 							return false;
 						}
 					} else {
-						return true;
+						resultMap.put(Constant.CODE, 96);
+						resultMap.put(Constant.MESSAGE, "您的登录信息已经过期,请重新登录.");
+						return false;
+						//return true;
 					}
 				} else {
 					resultMap.put(Constant.CODE, 99);
@@ -201,8 +204,8 @@ public class CtaskServlet extends BaseServlet {
 						return true;
 					}
 				} else {
-					resultMap.put(Constant.CODE, 99);
-					resultMap.put(Constant.MESSAGE, "用户参数错误");
+					resultMap.put(Constant.CODE, 96);
+					resultMap.put(Constant.MESSAGE, "您的登录信息已经过期,请重新登录.");
 					return false;
 				}
 			}
@@ -596,12 +599,16 @@ public class CtaskServlet extends BaseServlet {
 						float score = (CommonUtils.parseFloat(score1, 0) + CommonUtils.parseFloat(score2, 0) + CommonUtils.parseFloat(score3, 0) + cuser.getScore() * count) / (count + 1);
 						float num = (float) (Math.round(score * 100) / 100f);*/
 						//更新教练的星级 
-						float score=(CommonUtils.parseFloat(score1, 0) + CommonUtils.parseFloat(score2, 0) + CommonUtils.parseFloat(score3, 0) + cuser.getScore())/4 ;
+						float score=0;
+						if(cuser.getScore()<=0){
+							score=(CommonUtils.parseFloat(score1, 0) + CommonUtils.parseFloat(score2, 0) + CommonUtils.parseFloat(score3, 0))/3 ;
+						}else{
+							score=(CommonUtils.parseFloat(score1, 0) + CommonUtils.parseFloat(score2, 0) + CommonUtils.parseFloat(score3, 0) + cuser.getScore())/4 ;
+						}
 						//float num=Math.round(score);
 						cuser.setScore(score);
 						ctaskService.updateCoachInfo(cuser);
 					}
-
 				} else {
 					resultMap.put("code", 2);
 					resultMap.put("message", "您已经对该任务评价过了");

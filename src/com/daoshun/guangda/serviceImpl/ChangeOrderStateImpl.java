@@ -419,6 +419,16 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 				orderRecord.setOrderid(evaluation.getOrder_id());
 				orderRecord.setUserid(evaluation.getFrom_user());
 				dataDao.addObject(orderRecord);
+				
+				//评价后更新教练的星级
+				float score=0;
+				if(cuser.getScore()<=0){
+					score=5.0f ;//5分好评
+				}else{
+					score=(15.0f + cuser.getScore())/4 ;
+				}
+				cuser.setScore(score);
+				dataDao.updateObject(cuser);
 			} 
 		}
 	}

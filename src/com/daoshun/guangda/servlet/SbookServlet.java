@@ -67,10 +67,10 @@ public class SbookServlet extends BaseServlet {
 			if (Constant.BOOKCOACH.equals(action) || Constant.GETCOUPONLIST.equals(action) || Constant.GETHISCOUPONLIST.equals(action)
 //					||Constant.GETCANUSECOUPONLIST.equals(action)||Constant.REFRESHCOACHSCHEDULE.equals(action)
 					) {
-				/*if (!checkSession(request, action, resultMap)) {
+				if (!checkSession(request, action, resultMap)) {
 					setResult(response, resultMap);
 					return;
-				}*/
+				}
 			}
 
 			if (Constant.GETCOACHDETAIL.equals(action)) {
@@ -187,7 +187,10 @@ public class SbookServlet extends BaseServlet {
 							return false;
 						}
 					} else {
-						return true;
+						resultMap.put(Constant.CODE, 96);
+						resultMap.put(Constant.MESSAGE, "您的登录信息已经过期,请重新登录.");
+						return false;
+						//return true;
 					}
 				} else {
 					resultMap.put(Constant.CODE, 99);
@@ -211,12 +214,12 @@ public class SbookServlet extends BaseServlet {
 					resultMap.put(Constant.MESSAGE, "版本太低,请升级!");
 					return false;
 				}*/
-				else if ( CommonUtils.isEmptyString(token))
+				/*else if (CommonUtils.isEmptyString(token))
 				{
 					resultMap.put(Constant.CODE, -1);
 					resultMap.put(Constant.MESSAGE, "您必须升级才能下订单!");
 					return false;
-				}
+				}*/
 
 
 				if (!CommonUtils.isEmptyString(token)) {
@@ -245,9 +248,11 @@ public class SbookServlet extends BaseServlet {
 						return false;
 					}
 				} else {
-					return true;
+					resultMap.put(Constant.CODE, 96);
+					resultMap.put(Constant.MESSAGE, "您的登录信息已经过期,请重新登录.");
+					return false;
+					//return true;
 				}
-
 			}
 		} else {
 			resultMap.put(Constant.CODE, 99);

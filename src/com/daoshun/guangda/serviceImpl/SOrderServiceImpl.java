@@ -884,6 +884,11 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 			List<OrderPrice> orderpricelist = (List<OrderPrice>) dataDao.getObjectsViaParam(cuserhql1.toString(), params1, CommonUtils.parseInt(orderid, 0));
 			if (orderpricelist != null && orderpricelist.size() > 0) {// 价格信息设置
 				orderinfo.setOrderprice(orderpricelist);
+				OrderPrice op=orderpricelist.get(0);
+				if(op!=null){
+					//设置科目
+					orderinfo.setSubjectname(op.getSubject());
+				}
 			}
 
 			String hql2 = "from ComplaintInfo c where c.order_id =:order_id and c.type = 1 and c.state = 0";

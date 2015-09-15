@@ -64,7 +64,7 @@ public class SuserServlet extends BaseServlet {
 
 			if (Constant.PERFECTACCOUNTINFO.equals(action) || Constant.CHANGEAVATAR.equals(action) || Constant.PERFECTSTUDENTINFO.equals(action) || Constant.PERFECTPERSONINFO.equals(action)
 					|| Constant.GETMYBALANCEINFO.equals(action) || Constant.APPLYCASH.equals(action)  || Constant.GETSTUDENTWALLETINFO.equals(action) || Constant.GETSTUDENTCOINRECORDLIST.equals(action) || Constant.GETSTUDENTCOUPONLIST.equals(action)
-					||Constant.SENROLL.equals(action)|| Constant.RECHARGE.equals(action)) {
+					||Constant.SENROLL.equals(action)|| Constant.RECHARGE.equals(action) ||Constant.GETCOINAFFILIATION.equals(action)) {
 				if (!checkSession(request, action, resultMap)) {
 					setResult(response, resultMap);
 					return;
@@ -156,13 +156,13 @@ public class SuserServlet extends BaseServlet {
 			userid = getRequestParamter(request, "studentid");
 		} else if (Constant.RECHARGE.equals(action)) {
 			userid = getRequestParamter(request, "studentid");
-		}
-		else if (Constant.GETSTUDENTWALLETINFO.equals(action)||Constant.GETSTUDENTCOINRECORDLIST.equals(action)) {
+		}else if (Constant.GETSTUDENTWALLETINFO.equals(action)||Constant.GETSTUDENTCOINRECORDLIST.equals(action)) {
+			userid = getRequestParamter(request, "studentid");
+		}else if (Constant.SENROLL.equals(action)) {
+			userid = getRequestParamter(request, "studentid");
+		}else if(Constant.GETCOINAFFILIATION.equals(action)){
 			userid = getRequestParamter(request, "studentid");
 		}
-		else if (Constant.SENROLL.equals(action)) {
-			userid = getRequestParamter(request, "studentid");
-			}
 
 		if (!CommonUtils.isEmptyString(userid)) {
 			SuserInfo suser = suserService.getUserById(userid);
@@ -196,7 +196,7 @@ public class SuserServlet extends BaseServlet {
 						return false;
 					}
 				} else {
-					resultMap.put(Constant.CODE, 95);
+					resultMap.put(Constant.CODE, 96);
 					resultMap.put(Constant.MESSAGE, "您的登录信息已经过期,请重新登录.");
 					return false;
 				}
@@ -543,6 +543,7 @@ public class SuserServlet extends BaseServlet {
 				user.setLocationname(locationname);
 			}
 			session.setAttribute("studentid", user.getStudentid());
+			session.setAttribute("token", token);
 			resultMap.put("UserInfo", user);
 			int rflag=recommendService.checkRecommendinfo(String.valueOf(user.getStudentid()),2);
 			int cflag=recommendService.isoversixhour(String.valueOf(user.getStudentid()),2);

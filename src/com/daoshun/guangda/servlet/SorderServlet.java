@@ -57,7 +57,8 @@ public class SorderServlet extends BaseServlet {
 
 			if (Constant.GETCOMPLAINTTOMY.equals(action) || Constant.GETMYCOMPLAINT.equals(action) || Constant.GETWAITEVALUATIONORDER.equals(action) || Constant.GETUNCOMPLETEORDER.equals(action)
 					|| Constant.GETCOMPLETEORDER.equals(action) || Constant.GETORDERDETAIL.equals(action) || Constant.COMPLAINT.equals(action) || Constant.CANCELORDER.equals(action)
-					|| Constant.CANCELCOMPLAINT.equals(action) || Constant.CONFIRMON.equals(action) || Constant.CONFIRMDOWN.equals(action) || Constant.CANCELORDERAGREE.equals(action)) {
+					|| Constant.CANCELCOMPLAINT.equals(action) || Constant.CONFIRMON.equals(action) || Constant.CONFIRMDOWN.equals(action) || Constant.CANCELORDERAGREE.equals(action)
+					||Constant.GETCOMPLAINTORDER.equals(action)) {
 				if (!checkSession(request, action, resultMap)) {
 					setResult(response, resultMap);
 					return;
@@ -80,7 +81,7 @@ public class SorderServlet extends BaseServlet {
 				// 获取被投诉订单
 				getComplaintOrder(request, resultMap);
 			}else if (Constant.GETWAITDEALWITHORDER.equals(action)) {
-				// #########特殊订单：获取待处理订单---》现在移到投诉列表中了#############
+				// #########特殊订单：获取待处理订单---》现在移到投诉列表中getComplaintOrder了#############
 				getWaitDealwithOrder(request, resultMap);
 			} else if (Constant.GETCOMPLETEORDER.equals(action)) {
 				// 获取已完成订单
@@ -170,11 +171,15 @@ public class SorderServlet extends BaseServlet {
 			// 确认上车
 			userid = getRequestParamter(request, "studentid");
 			usertype = "2";
-		} else if (Constant.CONFIRMDOWN.equals(action)) {
+		} else if (Constant.CONFIRMDOWN.equals(action)) {//
 			// 确认下车
 			userid = getRequestParamter(request, "studentid");
 			usertype = "2";
-		}
+		}else if (Constant.GETCOMPLAINTORDER.equals(action)) {
+			// 待处理订单列表
+			userid = getRequestParamter(request, "studentid");
+			usertype = "2";
+		} 
 
 		if (!CommonUtils.isEmptyString(userid) && !CommonUtils.isEmptyString(usertype)) {
 			if (CommonUtils.parseInt(usertype, 0) == 1) {
@@ -209,7 +214,10 @@ public class SorderServlet extends BaseServlet {
 							return false;
 						}
 					} else {
-						return true;
+						resultMap.put(Constant.CODE, 96);
+						resultMap.put(Constant.MESSAGE, "您的登录信息已经过期,请重新登录.");
+						return false;
+						//return true;
 					}
 				} else {
 					resultMap.put(Constant.CODE, 99);
@@ -251,7 +259,10 @@ public class SorderServlet extends BaseServlet {
 							return false;
 						}
 					} else {
-						return true;
+						resultMap.put(Constant.CODE, 96);
+						resultMap.put(Constant.MESSAGE, "您的登录信息已经过期,请重新登录.");
+						return false;
+						//return true;
 					}
 				} else {
 					resultMap.put(Constant.CODE, 99);
