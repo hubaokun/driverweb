@@ -437,10 +437,8 @@ $(document).ready(function ()
 </script>
 <script type="text/javascript">
 $(document).ready(function(){
-	//$("#avatarurl").attr("src",'${sessionScope.avatarurl}');//设置头像图片
-	
 	var sid='${sessionScope.studentid}';
-	sid="18";
+	//sid="18";
 	var params = {action:"GETSTUDENTINFO",studentid:sid};
 	jQuery.post("../suser", params, showStudent, 'json');
 	
@@ -468,7 +466,7 @@ function showStudent(obj){
 
 function perfectPersoninfo(){
 	var sid='${sessionScope.studentid}';
-	sid="18";
+	//sid="18";
 	var gender=$("#gender").val();
 	var g="1";
 	if(gender=='男'){
@@ -482,16 +480,16 @@ function perfectPersoninfo(){
 		alert("手机号码格式有误!");
 		return false;
 	}
-	//alert($("#realname").val());
-	//cityid:$("#cityid")
+	var token='${sessionScope.token}';
 	var params = {
 				  action:"PERFECTPERSONINFO",
 				  studentid:sid,
 				  realname:$("#realname").val(),
 				  phone:$("#phone").val(),
 				  gender:g,
-				  birthday:$("#birthday").val()
-				  
+				  birthday:$("#birthday").val(),
+				  token:token,
+				  cityid:$("#selectedcity").val()
 				  };
 	jQuery.post("../suser", params, showPerfect, 'json');
 }

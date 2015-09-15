@@ -38,7 +38,7 @@ $(document).ready(function(){
 	var wxinfo=$.parseJSON(c_info);
 	$("#realname").html(wxinfo.nickname);
 	$("#avatarurl").attr("src",wxinfo.headimgurl);
-	sid="18";
+	//sid="18";
 	var params = {action:"GETSTUDENTINFO",studentid:sid};
 	jQuery.post("../suser", params, showStudent, 'json');
 });

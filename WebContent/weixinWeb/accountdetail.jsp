@@ -11,12 +11,15 @@
 <link href="css/account.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
 <script type="text/javascript">
+var studentid='${sessionScope.studentid}';
+var token='${sessionScope.token}';
 $(document).ready(function(){
-	var params = {action:"GETMYBALANCEINFO",studentid:18};
+	var params = {
+					action:"GETMYBALANCEINFO",
+					studentid:studentid,
+					token:token
+				  };
 	jQuery.post("../suser", params, showBalance, 'json');
-	
-	/* var params2 = {action:"GETSTUDENTCOINRECORDLIST",studentid:18};
-	jQuery.post("../suser", params2, coinrecordlist, 'json'); */
 });
 
 function showBalance(obj){
@@ -24,6 +27,7 @@ function showBalance(obj){
 		//设置当前余额
 		$("#money").html('<i>￥</i>'+obj.balance);
 		$("#fmoney").html('（冻结金额￥'+obj.fmoney+'）');
+		$("#cash").attr("href","cash.jsp?money="+obj.balance);
 		var rs=obj.recordlist;
 		if(rs.length>0){
 			var h="";
@@ -82,7 +86,7 @@ function showBalance(obj){
     </div>
     <div class="row account-money">
     	<div class="col-md-5 col-sm-5 col-xs-5">
-			<a href="charge.jsp">
+			<a href="weixin?action=charge">
             	<i class="account-icon icon-charge"></i>
             <span>充值</span>
             </a>
@@ -91,7 +95,7 @@ function showBalance(obj){
         	<div class="divider-line"></div>
         </div>
         <div class="col-md-5 col-sm-5 col-xs-5">
-        	<a href="cash.jsp" style="  margin-left: -40px;">
+        	<a id="cash" href="cash.jsp?money=" style="  margin-left: -40px;">
             	<i class="account-icon icon-cash"></i>
             <span>提现</span>
             </a>

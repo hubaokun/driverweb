@@ -111,23 +111,26 @@ $(document).ready(function()
 function complaint()
 {
 	var studentid='${sessionScope.studentid}';//学员Id
-	studentid='18';
+	//studentid='18';
+	var token='${sessionScope.token}';
 	var orderid=$('#orderid').val();
-	var token='';
-	var type='1';
+	var token='${sessionScope.token}';
+	var type='2';
 	var reason='2';
 	var content=$('#content').val();
 	if(content==''){
 		alert("投诉内容不能为空!");
 		return false;
 	}
-	var params = {	action:"complaint",
+	var params = {	
+					action:"complaint",
 					userid:studentid,
 					orderid:orderid,
 					token:token,
 					type:type,
 					reason:reason,
-					content:content
+					content:content,
+					token:token
 				 };
 	jQuery.post("../sorder", params, showComplaint, 'json');
 }
@@ -135,7 +138,7 @@ function showComplaint(obj)
 {
 	if(obj.code==1){
 		alert(obj.message);
-		window.location.href='orderlist.jsp';
+		window.location.href='waitevaluationorder.jsp';
 	}
 }
 </script>

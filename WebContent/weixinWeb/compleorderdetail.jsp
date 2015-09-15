@@ -5,7 +5,7 @@ pageEncoding="UTF-8"%>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<title>学车中</title>
+<title>已结束订单</title>
 <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <link href="css/font-awesome.css" rel="stylesheet" />
 <link href="css/orderdetail.css" rel="stylesheet" type="text/css" />
@@ -15,9 +15,15 @@ $(document).ready(function(){
 	var studentid='${sessionScope.studentid}';
 	//studentid="18";
 	var orderid='${param.orderid}';
-	//orderid='24261';
+	//orderid='24618';
 	$("#orderid").html(orderid);
-	var params = {action:"getOrderDetail",studentid:studentid,orderid:orderid};
+	var token='${sessionScope.token}';
+	var params = {	
+					action:"getOrderDetail",
+					studentid:studentid,
+					orderid:orderid,
+					token:token
+				 };
 	jQuery.post("../sorder", params, showOrderDetail, 'json');
 });
 
@@ -30,6 +36,10 @@ function showOrderDetail(obj){
 		$("#realname").html(order.cuserinfo.realname);
 		$("#phone").html(order.cuserinfo.phone);
 		$("#detail").html(order.detail);
+		var content_list="";
+		content_list=content_list+'<a href="coursearrange.jsp?coachid='+order.coachid+'"><span class="sure-btn">继续预约</span></a>';
+    	
+		$("#unorder").html(content_list);
 	}else{
 		alert(obj.message);
 	}
@@ -39,9 +49,9 @@ function showOrderDetail(obj){
 
 <body>
 <div class="container">
-      <div class="row carlearn-head carlearn-head-blue">
-          <span>学车中</span>
-      </div>
+      <!-- <div class="row carlearn-head carlearn-head-blue">
+          <span>已结束订单</span>
+      </div> -->
       <div class="row carlearn-detail">
 		<div class="col-md-12 col-sm-12 col-xs-12">
           <div class="carlearn-detail-inner carlearn-detail-inner-grey">
@@ -64,20 +74,20 @@ function showOrderDetail(obj){
       </div>
       <div class="row carlearn-sure-btn">
       	<div class="col-md-12 col-sm-12 col-xs-12">
-        	<p>
-               <span class="complain-btn">投诉</span>
-               <span class="sure-btn">确认上车</span>
+        	<p id="unorder">
+              <!--  <span class="complain-btn">投诉</span>
+               <span class="sure-btn">确认上车</span> -->
              </p> 
         </div>
       </div>  
       <div class="row carlearn-list">
-      	<div class="col-md-12 col-sm-12 col-xs-12">
+      	<!-- <div class="col-md-12 col-sm-12 col-xs-12">
         	<div class="carlearn-list-inner">
               <p>订单标号：123456789</p>
               <p>付款时间：2015-09-09 15:30:03</p>
               <p>付款方式：支付宝</p>
             </div>
-        </div>
+        </div> -->
       </div>    
       
       

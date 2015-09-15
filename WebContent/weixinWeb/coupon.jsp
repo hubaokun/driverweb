@@ -17,11 +17,21 @@ pageEncoding="UTF-8"%>
 <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-	//
-	var params = {action:"GETCOUPONLIST",studentid:18};
+	var studentid='${sessionScope.studentid}';
+	var token='${sessionScope.token}';
+	//studentid='18';
+	var params = {
+					action:"GETCOUPONLIST",
+					studentid:studentid,
+					token:token				
+				 };
 	jQuery.post("../sbook", params, showCoupon, 'json');
 	
-    var params2 = {action:"GETHISCOUPONLIST",studentid:18};
+    var params2 = {
+    				action:"GETHISCOUPONLIST",
+    				studentid:studentid,
+    				token:token
+    			  };
 	jQuery.post("../sbook", params2, showHisCoupon, 'json');
 });
 

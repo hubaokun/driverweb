@@ -17,12 +17,12 @@ var orderlist;
 var pagenum=0;
 var hasmore=0;
 var studentid='${sessionScope.studentid}';
-studentid='18';
+//studentid='18';
 var action1="GetUnCompleteOrder";//未完成订单
 var action2="GetWaitEvaluationOrder";//待评价订单
 var action3="GetCompleteOrder";//已评价订单
 var action4="GETCOMPLAINTORDER";//待处理订单
-
+var token='${sessionScope.token}';
 $(function(){
 	var pagenum=0;
 	getOrderlist(action1,pagenum);
@@ -32,9 +32,9 @@ $(function(){
         var scrollT = $(window).scrollTop(); //滚动条top 
         var aa = (pageH-winH-scrollT)/winH; 
         if(aa<0.02){  
-        	pagenum++;
             if(hasmore==1)
             {
+            	pagenum++;
             	getOrderlist(action1,pagenum);
             } 
         } 
@@ -49,7 +49,8 @@ function getOrderlist(at,pagenum){
 		data : {
 			action : at,
 			studentid : studentid,
-			pagenum   : pagenum
+			pagenum   : pagenum,
+			token	  : token
 		},
 		success : function(data) {
 			orderlist=data.orderlist;
@@ -84,13 +85,12 @@ function getOrderlist(at,pagenum){
         		}else if(hours<60 && hours>0){
         			hours="距学车还有"+hours+"分钟";
         		}
-            	/* content_list=content_list+"<div class=\"order-detai\"><div class=\"order-detail-head\"><div class=\"row\"><div class=\"col-md-6 col-sm-6 col-xs-6\"><p class=\"text-left\">"
-            	+starthour+"-"+endhour+"</p></div><div class=\"col-md-6 col-sm-6 col-xs-6\"><p class=\"text-right learning\">正在学车</p></div><div class=\"col-md-12 col-sm-12 col-xs-12\"><hr/></div></div></div><div class=\"order-detail-body\"> <div class=\"row\"><div class=\"col-md-12 col-sm-12 col-xs-12\"><a href=\"ordercarlearning.jsp\"><ul class=\"order-items\"><li><span>科目：</span><span>"+orderlist[i].subjectname+"</span></li><li><span>教练：</span><span>"+orderlist[i].cuserinfo.realname+"</span></li><li><span>地址：</span><span>"+orderlist[i].detail+"</span></li></ul></a><hr/><p class=\"text-right compute\">合计：<span>￥"+orderlist[i].total+"</span></p><p><a href=\"complaincoach.jsp\"><span class=\"span-btn complain-btn\">投诉</span></a><span class=\"span-btn sure-btn\">确认上车</span></p></div></div></div></div>"; */
+            	
             	content_list=content_list+'<div class="order-detail"><div class="order-detail-head"><div class="row"><div class="col-md-6 col-sm-6 col-xs-6">';
             	content_list=content_list+'<p class="text-left">'+starthour+"-"+endhour+'</p></div><div class="col-md-6 col-sm-6 col-xs-6">';
             	content_list=content_list+'<p class="text-right learning">'+hours+'</p></div><div class="col-md-12 col-sm-12 col-xs-12"><hr/></div></div></div>';
             	content_list=content_list+'<div class="order-detail-body"><div class="row"><div class="col-md-12 col-sm-12 col-xs-12">';
-            	content_list=content_list+'<a href="ordercarlearning.jsp"><ul class="order-items"><li><span>科目：</span><span>';
+            	content_list=content_list+'<a href="uncompleorderdetail.jsp?orderid='+orderlist[i].orderid+'"><ul class="order-items"><li><span>科目：</span><span>';
             	content_list=content_list+orderlist[i].subjectname;
             	content_list=content_list+'</span></li><li><span>教练：</span><span>'+orderlist[i].cuserinfo.realname;
             	content_list=content_list+'</span></li><li><span>地址：</span><span>'+orderlist[i].detail;
@@ -135,18 +135,33 @@ function getOrderlist(at,pagenum){
 <script type="text/javascript">
 	//取消订单
 	function cancelOrder(orderid){
-		/* $('.overlay-cancle').css('display','block');
+		$('.overlay-cancle').css('display','block');
 		var heightC = $('.overlay-cancle-content').height();
 		var heightW = $(window).height();
 		var w = (heightW-heightC)/2;
-		$('.overlay-cancle-content').css('top',w); */
-		if(confirm("确认取消此订单")){
+		$('.overlay-cancle-content').css('top',w);
+		$('.overlay-cancle .overlay-cancle-content .col-md-12:last-child span').click(function ()
+				{
+					$('.overlay-cancle').css('display','none');
+					var studentid='${sessionScope.studentid}';//学员Id
+					studentid='18';
+					var token='${sessionScope.token}';
+					var params = {
+									action:"cancelOrder",
+									studentid:studentid,
+									orderid:orderid,
+									token:token
+								 };
+					jQuery.post("../sorder", params, showCancelOrder, 'json');
+					
+				});
+		/* if(confirm("确认取消此订单")){
 			var studentid='${sessionScope.studentid}';//学员Id
 			studentid='18';
 			var token='${sessionScope.token}';
 			var params = {action:"cancelOrder",studentid:studentid,orderid:orderid,token:token};
 			jQuery.post("../sorder", params, showCancelOrder, 'json');
-		}
+		} */
 	}
 	function showCancelOrder(obj){
 		if(obj.code==1){//取消成功
@@ -213,7 +228,7 @@ function getOrderlist(at,pagenum){
                   </div>          -->         
                   <!--single order ends-->    
                   <!--single order detail starts-->                  
-                  <div class="order-detail">
+                  <!-- <div class="order-detail">
                     <div class="order-detail-head">
                       <div class="row">
                         <div class="col-md-6 col-sm-6 col-xs-6">
@@ -248,7 +263,7 @@ function getOrderlist(at,pagenum){
                     </div>
                   </div>
                   
-                  <!--single order ends-->
+                  single order ends
                   
                   <div class="order-detail">
                     <div class="order-detail-head">
@@ -284,7 +299,7 @@ function getOrderlist(at,pagenum){
                   <div style="width:100px; height:50px; display:block;"></div>
                 </li>
               </ul>
-            </div>
+            </div> -->
             <!--******************************************--> 
           </div>
                            <!--single order ends-->
@@ -358,7 +373,7 @@ $(document).ready(function()
 		$(this).addClass('active').siblings().removeClass('active');		
 	});
 	//取消订单的提示弹框
-	$(".un-sure-btn").click(function ()
+	$("#cancelbtns").click(function ()
 	{
 		$('.overlay-cancle').css('display','block');
 		var heightC = $('.overlay-cancle-content').height();
@@ -369,11 +384,13 @@ $(document).ready(function()
 	$('.icon-remove').click(function ()
 	{
 		$('.overlay-cancle').css('display','none');
+		
 	});
-	$('.overlay-cancle .overlay-cancle-content .col-md-12:last-child span').click(function ()
+	/* $('.overlay-cancle .overlay-cancle-content .col-md-12:last-child span').click(function ()
 	{
 		$('.overlay-cancle').css('display','none');
-	});
+		
+	}); */
 
 });
 

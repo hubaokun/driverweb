@@ -119,7 +119,7 @@ $(document).ready(function()
 
 function evaluationTask(){
 		var studentid='${sessionScope.studentid}';//学员Id
-		studentid='18';
+		//studentid='18';
 		var token='${sessionScope.token}';
 		var type='2';//评价类型  2 学员评价教练
 		var score1=$('.e-mark-a').html();
@@ -142,7 +142,7 @@ function evaluationTask(){
 }
 function showEvaluationTask(obj){
 	if(obj.code==1){//取消成功
-		window.location.href='orderlist.jsp';
+		window.location.href='waitevaluationorder.jsp';
 	}
 }
 </script>

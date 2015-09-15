@@ -19,10 +19,21 @@ body
 </style>
 <script type="text/javascript">
 $(document).ready(function(){
-	var params = {action:"GETCOINAFFILIATION",studentid:18};
+	var studentid='${sessionScope.studentid}';
+	var token='${sessionScope.token}';
+	//studentid='18';
+	var params = {	
+					action:"GETCOINAFFILIATION",
+					studentid:studentid,
+					token:token			
+				  };
 	jQuery.post("../suser", params, showCoin, 'json');
 	
-	var params2 = {action:"GETSTUDENTCOINRECORDLIST",studentid:18};
+	var params2 = {
+					action:"GETSTUDENTCOINRECORDLIST",
+					studentid:studentid,
+					token:token
+					};
 	jQuery.post("../suser", params2, coinrecordlist, 'json');
 	
 });
@@ -79,19 +90,19 @@ function coinrecordlist(obj)
   <div class="row coin-head">
     <div class="col-md-12 col-sm-12 col-xs-12">
       <p>小巴币<i class="icon icon-question-sign"></i></p>
-      <p  id="coinnum">2545<i>个</i></p>
+      <p  id="coinnum"><i>个</i></p>
       <p id="fcoinnum"></p>
     </div>
   </div>
   <div class="row coin-origin">
   	<div class="col-md-12 col-sm-12 col-xs-12"> 
-    	<div class="row coin-origin-group">
+    	<!-- <div class="row coin-origin-group">
         	<div id="coindetail" class="col-md-12 col-sm-12 col-xs-12 coin-origin-single">
             	<p><span>3625个</span><span class="pull-right">限广大驾校</span></p>
                 <p><span>234个</span><span class="pull-right">限西湖驾校</span></p>
             </div>
         </div>
-       <!--  <div class="row coin-origin-group">
+        <div class="row coin-origin-group">
         	<div class="col-md-12 col-sm-12 col-xs-12 coin-origin-single">
             	<p><span>344个</span><span class="pull-right">限刘华教练</span></p>
             </div>
