@@ -170,7 +170,7 @@ function getAllPayTypeBlance()
 			money_available= data.money;
 			coinnum_available_local= data.coinnum;
 			money_availabl_local= data.money;
-			couponlist_available_local=couponlist_available.concat();//jQuery.extend(true, {}, couponlist_available); 
+			couponlist_available_local=couponlist_available;
 			init_order_list();
 		});
 	}
@@ -251,8 +251,8 @@ function showPayType(hour,price,scheduleid)
 	choosed_hour_price= price;
 	choosed_scheduleid= scheduleid;
 	
-	if(couponlist_available_local && couponlist_available_local.length>0){
-		$("#coupon_available").html("可用小巴券"+couponlist_available_local.length+"张");
+	if(couponlist_available && couponlist_available.length>0){
+		$("#coupon_available").html("可用小巴券"+couponlist_available.length+"张");
 		$("#icon_coupon i").attr("class", "icon icon-ok");
 	 	$('#icon_coupon').attr("onclick","setPayTypeChooseWay(this)");
 	}else{
@@ -261,8 +261,8 @@ function showPayType(hour,price,scheduleid)
 		$('#icon_coupon').attr("onclick","");
 	}
 	
-	if(coinnum_available_local && coinnum_available_local>0){
-		$("#coin_available").html("可用小巴币"+coinnum_available_local+"个");
+	if(coinnum_available && coinnum_available>0){
+		$("#coin_available").html("可用小巴币"+coinnum_available+"个");
 		$("#icon_coin i").className="icon icon-ok";
 		$('#icon_coin').attr("onclick","setPayTypeChooseWay(this)");
 	}else{
@@ -271,8 +271,8 @@ function showPayType(hour,price,scheduleid)
 		$('#icon_coin').attr("onclick","");
 	}
 	
-	if(money_available_local && money_available_local>0){
-		$("#money_available").html("账户可用余额"+money_available_local+"元");
+	if(money_available && money_available>0){
+		$("#money_available").html("账户可用余额"+money_available+"元");
 		$("#icon_money i").className="icon icon-ok";
 		$('#icon_money').attr("onclick","setPayTypeChooseWay(this)");
 	}else{
@@ -303,8 +303,12 @@ function setPayTypeChooseWay(event){
 	
 	if($(event).attr("id")=="icon_coupon"){
 		$(event).addClass('active-check').siblings().removeClass('active-check');
+		
 		new_pay_type= 2;
 		paytype_name="学时券";
+		
+		
+		
 	}else if($(event).attr("id")=="icon_money"){
 		$(event).addClass('active-check').siblings().removeClass('active-check');
 		paytype_name="账户余额";
@@ -331,8 +335,8 @@ function getcouponDetailByRecordId(recordId){
 	var old_coupon_detail;
 
 	for(var i=0 ;i<couponlist_available.length;i++){
-		if(couponlist_available[i].recordid==recordId){
-			old_coupon_detail= jQuery.extend(true, {}, couponlist_available[i]); ;
+		if(couponlist_available[i].recordId==recordId){
+			old_coupon_detail= couponlist_available[i];
 			return old_coupon_detail;
 		}
 	}
@@ -364,7 +368,7 @@ function recalculatePayType(i,new_pay_type,old_pay_type){
 			money_sum+=choosed_hour_price;
 			//更新本地可用余额信息
 			money_available_local-=choosed_hour_price;
-		}else if(new_pay_type==3 && coinnum_available_local>=choosed_hour_price){
+		}else if(new_pay_type==3 && coinnum_available_local>choosed_hour_price){
 			//更改本课时相应订单的支付方式
 			order_list[i].paytype=new_pay_type;
 			order_list[i].delmoney=choosed_hour_price;
@@ -401,7 +405,7 @@ function recalculatePayType(i,new_pay_type,old_pay_type){
 			}else if(old_pay_type==2){
 				//原来使用小巴币支付，那么首先把合计中的小巴币数量减去，然后增加本地可用小巴币数量
 				coupon_sum-=choosed_hour_price;				
-				couponlist_available_local.unshift(getcouponDetailByRecordId(old_recordid));
+				couponlist_available_local.unshift(couponlist_available[getcouponDetailByRecordId(old_recordid)]);
 			}else if(old_pay_type==4){
 				//原来使用混合支付，那么首先把合计中的小巴币数量减去，然后增加本地可用小巴币数量
 				coin_sum-=coin_used;
@@ -422,7 +426,7 @@ function recalculatePayType(i,new_pay_type,old_pay_type){
 			}else if(old_pay_type==2){
 				//原来使用小巴币支付，那么首先把合计中的小巴币数量减去，然后增加本地可用小巴币数量
 				coupon_sum-=choosed_hour_price;				
-				couponlist_available_local.unshift(getcouponDetailByRecordId(old_recordid));
+				couponlist_available_local.unshift(couponlist_available[getcouponDetailByRecordId(old_recordid)]);
 			}else if(old_pay_type==4){
 				//原来使用混合支付，那么首先把合计中的小巴币数量减去，然后增加本地可用小巴币数量
 				coin_sum-=old_delmoney;

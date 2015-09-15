@@ -19,6 +19,7 @@ pageEncoding="UTF-8"%>
 	</style> -->
 <script>
 var customer=${sessionScope.c_info};
+var openid=customer.openid;
 wx.config({
     debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
     appId: '${appid}', // 必填，公众号的唯一标识
@@ -120,7 +121,6 @@ wx.ready(function(){
     </div>
     <div class="row login-row">
       <div class="col-md-12 col-sm-12 col-xs-12" id="s_login" onclick="slogin()"><a href="javascript:void(0)">登录</a> </div>
-      <a href="my.jsp">my.jsp</a>
     </div>
   </form>
 </div>
@@ -133,6 +133,7 @@ function slogin()
 	var version=$('#version').val();
 	var action="LOGIN";
 	var city=$('#city').val();
+	//city='330100'
 	if(phone=="")
 	{
 	    alert("手机号码不能为空");
@@ -143,6 +144,11 @@ function slogin()
 		 alert("验证码不能为空");
 		 return;
 	}
+	if(city=="")
+	{
+		alert("未读取到当前所在城市,请允许小巴获取您的当前位置！");
+		return;
+	}
 	$.ajax({
 		type : "POST",
 		url : "/xiaoba/suser",
@@ -152,17 +158,20 @@ function slogin()
 			phone : phone,
 			password : password,
 			devicetype : devicetype,
-			version : version
+			version : version,
+			openid : openid,
+			city : city
 		},
 		success : function(data) {
 			var result=data;
 			var code=result.code;
-			var message=result.message;
+			var message=result.message;  
+			var studentid=result.studentid;
 			if(code==2 || code==3)
 				alert(message);
 			else
 				{
-					$(".login-row a").attr("href","weixinlogin?action=coachlist");
+					$(".login-row a").attr("href","weixin?action=coachlist");
 				    $(".login-row a").get(0).click();
 				}
 				
@@ -171,7 +180,7 @@ function slogin()
 	});
 }
 function sendvcode()
-{ 
+{  
 	var action="GETVERCODE";
 	var phone=$('#mobile').val();
 	var type=$('#s_type').val();

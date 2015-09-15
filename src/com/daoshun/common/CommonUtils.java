@@ -81,7 +81,15 @@ public class CommonUtils {
 	public static String getAppid() {
 		return properties.getProperty("appid");
 	}
-	
+	public static String getMchid() {
+		return properties.getProperty("mchid");
+	}
+	public static String getWXKey() {
+		return properties.getProperty("key");
+	}
+	public static String getServerip() {
+		return properties.getProperty("serverip");
+	}
 	public static String getAppsecret() {
 		return properties.getProperty("appsecret");
 	}

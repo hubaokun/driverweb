@@ -38,6 +38,10 @@ public class StudentApplyInfo implements Serializable {
 	@Column(name = "state",length=10,columnDefinition = "INT default 0")
 	private Integer state=0;
 	
+	//来源(0:支付宝 1：微信钱包)
+	@Column(name = "resource",length=10,columnDefinition = "INT default 0")
+	private Integer resource=0;
+	
 	//修改时间
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "updatetime")
@@ -130,6 +134,14 @@ public class StudentApplyInfo implements Serializable {
 
 	public void setAlipay_account(String alipay_account) {
 		this.alipay_account = alipay_account;
+	}
+
+	public Integer getResource() {
+		return resource;
+	}
+
+	public void setResource(Integer resource) {
+		this.resource = resource;
 	}
 
 }

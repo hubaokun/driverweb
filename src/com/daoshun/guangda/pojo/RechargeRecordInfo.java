@@ -33,6 +33,9 @@ public class RechargeRecordInfo implements Serializable {
 	// 1.教练 2.学员充值 3.学员报名
 	@Column(name = "type", length = 1, nullable = false, columnDefinition = "INt default 0")
 	private Integer type;
+	// 0.支付宝 1.微信            ——支付来源
+	@Column(name = "paytype", length = 1, nullable = false, columnDefinition = "INt default 0")
+	private Integer paytype;
 	// 金额
 	@Column(name = "amount", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")
 	private BigDecimal amount;
@@ -53,10 +56,18 @@ public class RechargeRecordInfo implements Serializable {
 
 	@Column(name = "buyer_id", nullable = true, length = 255)
 	private String buyer_id;
+	
+	@Column(name = "openid", nullable = true, length = 255)
+	private String openid;
+	
+	@Column(name = "wxorderid", nullable = true, length = 255)
+	private String wxorderid;
+
 
 	@Column(name = "buyer_email", nullable = true, length = 255)
 	private String buyer_email;
     
+	
 	
 	@Transient
 	private SuserInfo suser;
@@ -139,6 +150,30 @@ public class RechargeRecordInfo implements Serializable {
 
 	public void setSuser(SuserInfo suser) {
 		this.suser = suser;
+	}
+
+	public Integer getPaytype() {
+		return paytype;
+	}
+
+	public void setPaytype(Integer paytype) {
+		this.paytype = paytype;
+	}
+
+	public String getOpenid() {
+		return openid;
+	}
+
+	public void setOpenid(String openid) {
+		this.openid = openid;
+	}
+
+	public String getWxorderid() {
+		return wxorderid;
+	}
+
+	public void setWxorderid(String wxorderid) {
+		this.wxorderid = wxorderid;
 	}
 
 }

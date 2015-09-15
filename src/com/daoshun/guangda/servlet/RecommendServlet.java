@@ -29,6 +29,7 @@ import com.daoshun.guangda.service.ICtaskService;
 import com.daoshun.guangda.service.IRecommendService;
 import com.daoshun.guangda.service.ISUserService;
 import com.daoshun.guangda.service.ISystemService;
+import com.weixin.service.IGetYouWanna;
 /**
  *
  * @author wjr
@@ -47,6 +48,7 @@ public class RecommendServlet extends BaseServlet {
 	private ISUserService suserService;
 	private ICUserService cuserService;
 	private ISystemService systemService;
+	private IGetYouWanna aaaaaa;
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
@@ -54,6 +56,7 @@ public class RecommendServlet extends BaseServlet {
 		suserService = (ISUserService) applicationContext.getBean("suserService");
 		cuserService = (ICUserService) applicationContext.getBean("cuserService");
 		systemService = (ISystemService) applicationContext.getBean("systemService");
+		aaaaaa= (IGetYouWanna) applicationContext.getBean("WXmessageService");
 	}
 	@Override
 	public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
@@ -69,6 +72,7 @@ public class RecommendServlet extends BaseServlet {
 //					return;
 //				}
 //			}
+			//System.out.println(aaaaaa.getCustomerIP(request));
 			if(action.equals(Constant.CGETRECOMMENDLIST))
 			{
 				getRecommendList(request,resultMap);

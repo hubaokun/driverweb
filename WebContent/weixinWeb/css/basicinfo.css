@@ -130,7 +130,7 @@ input[type="text"] {
 .overlay {
 	width: 100%;
 	height: 100%;
-	background: rgba(27,27,27,0.84);
+	background: rgba(27,27,27,0.2);
 	position: fixed;
 	top: 0;
 	display: none;
@@ -171,22 +171,21 @@ input[type="text"] {
 	line-height: 44px;
 }
 /*性别选择 弹框*/
-.overlay-gender {
+.overlay-gender,.overlay-location {
 	width: 100%;
 	height: 100%;
-	background: rgba(27,27,27,0.84);
+	background: rgba(27,27,27,0.2);
 	position: fixed;
 	top: 0;
 	display: none;
 	z-index: 100;
 }
-.overlay-gender .overlay-gender-content {
+.overlay-gender .overlay-gender-content,.overlay-location .overlay-location-content {
 	background-color: rgb(247,247,247);
 	text-align: center;
 	position: absolute;
 	bottom: 0px;
 	width: 100%;
-	height: 120px;
 }
 .overlay-gender .overlay-gender-content .radio-wrap {
 	margin-bottom: 15px;
@@ -210,10 +209,10 @@ input[type="text"] {
 	background-position: top left;
 	background-size: 17px;
 }
-.overlay-gender .overlay-gender-content .button-wrap {
+.overlay-gender .overlay-gender-content .button-wrap,.overlay-location .overlay-location-content .button-wrap {
 	border-bottom: 1px solid #999999;
 }
-.overlay-gender .overlay-gender-content .button-wrap .col-md-6 span {
+.overlay-gender .overlay-gender-content .button-wrap .col-md-6 span,.overlay-location .overlay-location-content .button-wrap .col-md-6 span {
 	color: #1798f2;
 	font-size: 17px;
 	height: 40px;
@@ -223,17 +222,17 @@ input[type="text"] {
 
 /*城市选择*/
 .province-wrap {
-	background-color: white;
+	/*background-color: white;*/
 	margin-top: 8px;
-	border-top: 1px solid rgb(218,218,218);
+	/*border-top: 1px solid rgb(218,218,218);*/
 	border-bottom: 1px solid rgb(218,218,218);
 }
 .city-wrap,.area-wrap {
-	background-color: white;
+	/*background-color: white;*/
 	border-bottom: 1px solid rgb(218,218,218);
 }
 .province-wrap .col-md-3 span,.city-wrap .col-md-3 span,.area-wrap .col-md-3 span {
-	color: #999999;
+	color: #666666;
 	font-size: 13px;
 	line-height: 40px;
 }
@@ -241,6 +240,7 @@ input[type="text"] {
 	width: 100%;
 	color: #333333;
 	font-size: 14px;
+	background-color: rgb(247,247,247);
 	background-image: url(../images/right-icon.png);
 	background-repeat: no-repeat;
 	background-position: center right;

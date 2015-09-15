@@ -41,7 +41,9 @@ public class SuserInfo implements Serializable {
 	@Column(name = "invitecode", length = 20, unique = true)
 	private String invitecode;
 	
-
+	//微信openid
+	@Column(name = "openid", length = 100, unique = false)
+	private String openid;
 
 	// 头像id
 	@Column(name = "avatar", length = 10, columnDefinition = "INT default 0")
@@ -787,6 +789,14 @@ public class SuserInfo implements Serializable {
 
 	public void setDschoolname(String dschoolname) {
 		this.dschoolname = dschoolname;
+	}
+
+	public String getOpenid() {
+		return openid;
+	}
+
+	public void setOpenid(String openid) {
+		this.openid = openid;
 	}
 	
 }

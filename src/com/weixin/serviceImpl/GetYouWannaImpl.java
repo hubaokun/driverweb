@@ -5,11 +5,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -26,7 +30,13 @@ import java.util.Random;
 import javax.persistence.Cache;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.SAXParser;
 
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,7 +56,10 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 	public static void main(String[] args) throws IOException, JSONException {
 	
 		GetYouWannaImpl g=new GetYouWannaImpl();
-		g.createmenu("-CLFfR2-8CCaUlgzEm5YtgrNzSG7F3bInNP5sorib2VgQQpAYG1IreQfWwKkr5GyUS68D9hkMykfMABr5cykxIKqXfKg1f6ZFubalYFAyMo", "{\"button\":[{\"type\":\"view\",\"name\":\"\u5C0F\u5DF4\u5B66\u8F66\u5BA2\u6237\u7AEF\",\"url\":\"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx697888f825457533&redirect_uri=http://wx.xiaobaxueche.com/xiaoba/weixinWeb/weixinlogin?action=login&response_type=code&scope=snsapi_userinfo&state=1#wechat_redirect\"}]}");
+	//	g.createmenu("-CLFfR2-8CCaUlgzEm5YtgrNzSG7F3bInNP5sorib2VgQQpAYG1IreQfWwKkr5GyUS68D9hkMykfMABr5cykxIKqXfKg1f6ZFubalYFAyMo", "{\"button\":[{\"type\":\"view\",\"name\":\"\u5C0F\u5DF4\u5B66\u8F66\u5BA2\u6237\u7AEF\",\"url\":\"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx697888f825457533&redirect_uri=http://wx.xiaobaxueche.com/xiaoba/weixinWeb/weixinlogin?action=login&response_type=code&scope=snsapi_userinfo&state=1#wechat_redirect\"}]}");
+		//g.invokePublicPayIF();
+		 String aa="<xml><appid>wxabb11606edd48e8c</appid><body>小巴学员账户充值</body><mch_id>1268831501</mch_id><nonce_str>aTE5S7nGag5BE8VI2UMZsvYaU</nonce_str><notify_url>http://wx.xiaobaxueche.com/xiaoba/weixinWeb/weixinpaycb</notify_url><openid>oH0m8vhOOGZV4RbxDE-FBkSQxwSA</openid><out_trade_no>1330</out_trade_no><spbill_create_ip>122.233.42.240</spbill_create_ip><total_fee>1</total_fee><trade_type>JSAPI</trade_type><sign>2D0E93B768CAE58C4D0756086948135A</sign></xml>";
+		 System.out.println(java.net.URLEncoder.encode(aa));
 	}
 	//创建自定义菜单
 	public void createmenu(String service_access_token,String menu)
@@ -96,36 +109,6 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 	         is.read(result);
 	         String message=new String(result,"UTF-8");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-         
-	}
-	public void getip(String ip)
-	{
-		
-		try {
-			 String url = "http://api.map.baidu.com/location/ip?ak=MGt8L6pnsrogzRS6u4TKMGcX&ip="+ip+"&coor=bd09ll";
-	         URL u=new URL(url);
-	         HttpURLConnection uc=(HttpURLConnection) u.openConnection();
-	         uc.setRequestMethod("GET");
-	         uc.setConnectTimeout(3000);
-	         uc.setDoInput(true);
-	         uc.connect();
-	         InputStream is;
-			 is = uc.getInputStream();
-			 int size=is.available();
-	         byte[] result=new byte[size];
-	         is.read(result);
-	         String message=new String(result,"UTF-8");
-
-	         JSONObject json = new JSONObject(message);
-	         String accessToken = json.getString("address");
-	         JSONObject json1=json.getJSONObject("content");
-	         JSONObject json2=json1.getJSONObject("address_detail");
-	        // String time = json.getString("expires_in");
-	         System.out.println(accessToken+"      "+json2.getString("city"));
-		} catch (IOException | JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -209,14 +192,14 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 	//请求网页端token
      public boolean getWebAccessToken(String code)
 		 {
-			 Calendar expired=Calendar.getInstance();
-			 Calendar c=Calendar.getInstance();
+//			 Calendar expired=Calendar.getInstance();
+//			 Calendar c=Calendar.getInstance();
 			 String appid=CommonUtils.getAppid();
 			 String appsecret=CommonUtils.getAppsecret();
 				 String url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid="+appid+"&secret="+appsecret+"&code="+code+"&grant_type=authorization_code";    
 					try {
 					    URL u=new URL(url);
-				        HttpURLConnection uc=(HttpURLConnection) u.openConnection();
+				        HttpURLConnection uc=(HttpURLConnection)u.openConnection();
 				        uc.setRequestMethod("GET");
 				        uc.setConnectTimeout(3000);
 				        uc.setDoInput(true);
@@ -409,5 +392,195 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 				e.printStackTrace();
 			}
 			return cinfo1;
+	}
+	//微信支付公共接口算法
+	@Override
+	public String getSignForPrePay(String openid,String total_fee,String out_trade_no,String spbill_create_ip) throws UnsupportedEncodingException {
+		String appid=CommonUtils.getAppid();
+		 String mch_id=CommonUtils.getMchid();
+		 String nonce_str=CreatenNonce_str(25);
+		 String body="小巴科技学员账户充值";
+//		try {
+//			body = new String(java.net.URLEncoder.encode("小巴学员账户充值","utf-8"));
+//		} catch (UnsupportedEncodingException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+		 String cbody=new String(body.getBytes("gbk"),"utf-8");
+		 String notify_url="http://wx.xiaobaxueche.com/xiaoba/weixinWeb/weixinpaycb";
+		 String trade_type="JSAPI";
+		 HashMap<String,String> map=new HashMap<String,String>();
+		 StringBuffer sb=new StringBuffer();
+		 BigDecimal bd=new BigDecimal(total_fee);
+		 bd=bd.multiply(new BigDecimal(100));
+		 String Stotal_fee=bd.toString();
+		 map.put("appid", CommonUtils.getAppid());
+		 map.put("mch_id", CommonUtils.getMchid());
+		 map.put("nonce_str", nonce_str);
+		 map.put("body",cbody);
+		 map.put("out_trade_no", out_trade_no);
+		 map.put("total_fee","1");
+		 map.put("spbill_create_ip", spbill_create_ip);
+		 map.put("notify_url",notify_url);
+		 map.put("trade_type", trade_type);
+		 map.put("openid",openid);
+		 Collection<String> keyset= map.keySet();
+		    List<String> list = new ArrayList<String>(keyset);  
+		       
+		     //对key键值按字典升序排序  
+		     Collections.sort(list); 
+		     for (int i = 0; i < list.size(); i++) {  
+		    	 if(i==list.size()-1)
+		    		 sb.append(list.get(i)+"="+map.get(list.get(i)));  
+		    	 else	 
+		    		 sb.append(list.get(i)+"="+map.get(list.get(i))+"&");  
+		     }
+		   String  stringA=sb.toString();
+		   String  stringSignTemp=stringA+"&key="+CommonUtils.getWXKey();
+		   // MD5加密
+	       MessageDigest md;
+	       String digest="";
+			try {
+				md = MessageDigest.getInstance("MD5");
+				digest = CommonUtils.byteToString(md.digest(stringSignTemp.toString().getBytes()));
+			} catch (NoSuchAlgorithmException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			String sign=digest.toUpperCase();
+		    String xml="<xml><appid><![CDATA["+appid+"]]></appid><body><![CDATA["+cbody+"]]></body><mch_id><![CDATA["+mch_id+"]]></mch_id><nonce_str><![CDATA["+nonce_str+"]]></nonce_str><notify_url><![CDATA["+notify_url+"]]></notify_url><openid><![CDATA["+openid+"]]></openid><out_trade_no><![CDATA["+out_trade_no+"]]></out_trade_no>"+
+			"<spbill_create_ip><![CDATA["+spbill_create_ip+"]]></spbill_create_ip><total_fee><![CDATA[1]]></total_fee><trade_type><![CDATA["+trade_type+"]]></trade_type><sign><![CDATA["+sign+"]]></sign></xml>";
+		    String url = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+	        URL u;
+	        String result="FAIL";
+			try {
+				 u = new URL(url);
+				 HttpURLConnection uc=(HttpURLConnection)u.openConnection();
+		         uc.setRequestMethod("POST");
+		         uc.setRequestProperty("Accept-Charset","UTF-8");
+		         uc.setConnectTimeout(3000);
+		         uc.setDoInput(true);
+		         uc.setDoOutput(true);
+		         OutputStream os=uc.getOutputStream();
+		         os.write(xml.getBytes());
+		         os.flush();
+		         os.close();
+		         uc.connect();
+		         InputStream is=uc.getInputStream();
+				 SAXReader saxReader = new SAXReader();
+				 Document document;
+			     document = saxReader.read(is);
+				 Element root = document.getRootElement();
+				 List<Element> elements=root.elements();
+				 for(Element e:elements)
+				 {
+               //     System.out.println(e.getName()+":"+e.getText());
+					if(e.getText().equals("FAIL"))
+						return result;
+					else if(e.getName().equals("prepay_id"))
+						return e.getText();
+				 }
+				is.close();
+			} catch (IOException | DocumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	     return result;
+	}
+	//生成0-9的随机数
+	@Override
+	public String CreateRandomMath(int length) {
+		 String str="0123456789";  
+	        Random random = new Random();  
+	        StringBuffer sb = new StringBuffer();     
+	        for(int i = 0 ; i < length; ++i){  
+	            int number = random.nextInt(10);//[0,62)  s
+	              
+	            sb.append(str.charAt(number));  
+	        }  
+	        return sb.toString();  
+	}
+	//获取客户端IP地址
+	@Override
+	public String getCustomerIP(HttpServletRequest request) {
+		String ip = request.getHeader("x-forwarded-for");
+		if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+		ip = request.getHeader("Proxy-Client-IP");
+		}
+		if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+		ip = request.getHeader("WL-Proxy-Client-IP");
+		}
+		if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+		ip = request.getRemoteAddr();
+		}
+		return ip;
+	}
+	//微信支付签名算法
+	@Override
+	public String getSignForPay(String appid, long timeStamp, String nonceStr, String signType, String prepay_id) {
+		 HashMap map=new HashMap();
+		 StringBuffer sb=new StringBuffer();
+		 map.put("appId", appid);
+		 map.put("nonceStr", nonceStr);
+		 map.put("timeStamp",timeStamp);
+		 map.put("signType", signType);
+		 map.put("package", "prepay_id="+prepay_id);
+		 
+		 
+			Collection<String> keyset= map.keySet();
+		    List<String> list = new ArrayList<String>(keyset);  
+		       
+		     //对key键值按字典升序排序  
+		     Collections.sort(list); 
+		     for (int i = 0; i < list.size(); i++) {  
+		    	 if(i==list.size()-1)
+		    		 sb.append(list.get(i)+"="+map.get(list.get(i)));  
+		    	 else	 
+		    		 sb.append(list.get(i)+"="+map.get(list.get(i))+"&");  
+		     }
+		   String  stringA=sb.toString();
+		   String  stringSignTemp=stringA+"&key="+CommonUtils.getWXKey();
+		   // MD5加密
+	       MessageDigest md;
+	       String digest="";
+			try {
+				md = MessageDigest.getInstance("MD5");
+				digest = CommonUtils.byteToString(md.digest(stringSignTemp.toString().getBytes()));
+			} catch (NoSuchAlgorithmException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			String sign=digest.toUpperCase();
+		return sign;
+	}
+	//获取多客服详情
+	@Override
+	public void getservicelist() {
+		getAccessToken();
+		String accesstoken=WeiXinMessage.getValue("service_access_token");
+		String url="https://api.weixin.qq.com/cgi-bin/customservice/getkflist?access_token="+accesstoken;
+		try {
+			URL u=new URL(url);
+	        HttpURLConnection uc=(HttpURLConnection) u.openConnection();
+	        uc.setRequestMethod("GET");
+	        uc.setConnectTimeout(3000);
+	        uc.setDoInput(true);
+	        uc.connect();
+	        InputStream is;
+			is = uc.getInputStream();
+		    int size=is.available();
+	        byte[] result=new byte[size];
+	        is.read(result);
+	        String message=new String(result,"UTF-8");
+	        System.out.println(message);
+	       
+	        is.close();
+	        uc.disconnect();
+				
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+       
 	}
 }

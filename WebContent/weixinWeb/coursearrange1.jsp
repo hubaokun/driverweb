@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
 <!doctype html>
 <html>
@@ -399,7 +399,9 @@ function getSchedulByDate(event){
 			var sub = $("#course_"+str_hour+" p:nth-child(2)");
 			var money = $("#course_"+str_hour+" p:nth-child(3)");
 			var status=0;
-			course_html.removeClass("active");			
+			//var class_name = course_html.className;
+			course_html.removeClass("active");//.className = class_name.replace(" active","");
+			
 			if(item.subject==null)
 			{
 				sub.html("");
@@ -543,7 +545,7 @@ function choose_course(event)
 	}
 	var order_url;
 	
-	order_url="orderconfirm.jsp?data_list_choose="+ JSON.stringify(data_list_choose)+"&coachid="+coachid+"&realname="+coach_detail.realname+"&phone="+coach_detail.phone+"&studentid="+studentid+"&counttime="+counttime+"&countmoney="+countmoney;
+	order_url="orderconfirm1.jsp?data_list_choose="+ JSON.stringify(data_list_choose)+"&coachid="+coachid+"&realname="+coach_detail.realname+"&phone="+coach_detail.phone+"&studentid="+studentid+"&counttime="+counttime+"&countmoney="+countmoney;
 	$("#btn_order_confirm").attr("href",order_url);
 	
 }

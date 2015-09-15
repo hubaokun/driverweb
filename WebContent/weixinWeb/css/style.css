@@ -35,6 +35,7 @@ ul {
 	z-index: 2000;
 	border: 1px solid #eee;
 	padding-top: 6px;
+	height:50px;
 }
 #tabs ul.foot-nav li {
 	width: 33.3333%;
@@ -105,7 +106,7 @@ ul {
 #tabs-1 .search-wrap .col-md-2 span
 {
 	font-size:13px;
-	color:#1798f2;
+	color: #858585;
 }
 #tabs-1 .search-wrap .col-md-3 span {
 	color: #858585;
@@ -157,7 +158,6 @@ ul {
 {
 	padding-left:0px;
 	padding-right:12px;
-	text-align: left;
 }
 .detail-wrap .col-md-3 img
 {
@@ -279,12 +279,12 @@ ul {
 {
 	margin-bottom:15px;
 }
-.overlay-select .overlay-content .gender-wrap,.overlay-select .overlay-content .car-year-wrap,.overlay-select .overlay-content .car-school
+.overlay-select .overlay-content .cartype-wrap,.overlay-select .overlay-content .car-year-wrap,.overlay-select .overlay-content .car-school,.overlay-select .overlay-content .subject-wrap
 {
 	padding:0px 12px;
 	text-align:left;
 }
-.overlay-select .overlay-content .gender-wrap p,.overlay-select .overlay-content .car-year-wrap p,.overlay-select .overlay-content .car-school p
+.overlay-select .overlay-content .cartype-wrap p,.overlay-select .overlay-content .car-year-wrap p,.overlay-select .overlay-content .car-school p,.overlay-content .subject-wrap p
 {
 	font-size:12px;
 	color: #1789f2;
@@ -299,22 +299,22 @@ ul {
 	width:65%;
 	border:none;
 }
-.overlay-select .overlay-content .subject-wrap .col-md-4,.overlay-select .overlay-content .gender-wrap .col-md-4,.overlay-select .overlay-content .car-year-wrap .col-md-3
+.overlay-select .overlay-content .subject-wrap .col-md-4,.overlay-select .overlay-content .cartype-wrap .col-md-4,.overlay-select .overlay-content .car-year-wrap .col-md-3
 {
 	padding:0px;
 	margin-bottom:15px;
 }
-.overlay-select .overlay-content .subject-wrap input[type="radio"],.overlay-select .overlay-content .gender-wrap input[type="radio"], .overlay-select .overlay-content .car-year-wrap input[type="radio"]
+.overlay-select .overlay-content .subject-wrap input[type="radio"],.overlay-select .overlay-content .cartype-wrap input[type="radio"], .overlay-select .overlay-content .car-year-wrap input[type="radio"]
 {
 	opacity:0;
 	position:absolute;
 }
-.overlay-select .overlay-content .gender-wrap input[type="radio"]:checked + label, .overlay-select .overlay-content .car-year-wrap input[type="radio"]:checked + label
+.overlay-select .overlay-content .cartype-wrap input[type="radio"]:checked + label, .overlay-select .overlay-content .car-year-wrap input[type="radio"]:checked + label,.overlay-select .overlay-content .subject-wrap input[type="radio"]:checked + label
 {
 	background-color: #1789f2;
 	color:white;
 }
-.overlay-select .overlay-content .subject-wrap label
+/*.overlay-select .overlay-content .subject-wrap label
 {
 	font-weight:normal;
 	height:17px;
@@ -328,8 +328,8 @@ ul {
 .overlay-select .overlay-content .subject-wrap input[type="radio"]:checked + label
 {
 	background-position: bottom left;
-}
-.overlay-select .overlay-content .gender-wrap label,.overlay-select .overlay-content .car-year-wrap label
+}*/
+.overlay-select .overlay-content .cartype-wrap label,.overlay-select .overlay-content .car-year-wrap label,.overlay-select .overlay-content .subject-wrap label
 {
 	background-color: white;
 	color:black;
@@ -340,6 +340,8 @@ ul {
     padding: 3px 0px;
     width: 90%;
 	text-align:center;
+	line-height: 30px;
+    height: 40px;
 }
 .overlay-select .overlay-content .button-wrap
 {
@@ -361,6 +363,7 @@ ul {
     border-radius: 4px;
     padding: 5px;
     width: 60px;
+    text-align: center;
 }
 /*tabs one ends*/
 
@@ -375,6 +378,7 @@ ul {
 	list-style: none;
 	background-color: white;
 	border-bottom: 1px solid #eee;
+	height:45px;
 }
 #order_tabs ul.order-nav li {
 	display: inline-block;
@@ -412,7 +416,7 @@ ul {
 	padding-top: 10px;
 	margin: 0px 10px;
 }
-.order-content ul.order-timeline:before {
+/*.order-content ul.order-timeline:before {
 	content: '';
 	position: absolute;
 	top: 0;
@@ -420,7 +424,7 @@ ul {
 	width: 1px;
 	background: #eee;
 	left: 0;
-}
+}*/
 .order-content ul.order-timeline li {
 }
 .order-content ul.order-timeline li div.point {
@@ -443,8 +447,8 @@ ul {
 	background-color: white;
 	border-radius: 4px;
 	border: 1px solid #eee;
-	margin-top: 10px;
-	margin-bottom: 10px;
+	margin:10px 0px;
+
 }
 .order-content ul.order-timeline li div.order-detail hr {
 	margin-top: 8px;
@@ -550,7 +554,7 @@ text-align: center;
 }*/
 
 
-/*ç’‡å‹ªç¯å¯®ç‘°åš­ç»ï¿½*/
+/*è¯„ä»·å¼¹å‡ºçª—*/
 .overlay-e .overlay-content-e p
 {
 	margin:0px;
@@ -629,7 +633,7 @@ text-align: center;
 	  margin: 0px 3px;
 }
 
-/*é»æ„®ãšå¯®ç‘°åš­å¦—ï¿½*/
+/*æç¤ºå¼¹å‡ºæ¡†*/
 .overlay-tips,.overlay-tips-inner
 {
 	width: 100%;
@@ -662,8 +666,8 @@ text-align: center;
 	height: 44px;
     line-height: 42px;
 }
-/*È¡Ïû¶©µ¥µ¯´°*/
-/*±à¼­×ÊÁÏ ÌáÊ¾µ¯¿ò*/
+/*æç¤ºå¼¹å‡ºæ¡†*/
+/*å–æ¶ˆè®¢å•å¼¹çª—*/
 .overlay-cancle {
 	width: 100%;
 	height: 100%;

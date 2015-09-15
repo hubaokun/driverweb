@@ -33,6 +33,7 @@ import com.daoshun.guangda.service.IRecommendService;
 import com.daoshun.guangda.service.ISBookService;
 import com.daoshun.guangda.service.ISUserService;
 import com.daoshun.guangda.service.ISystemService;
+import com.weixin.service.IGetYouWanna;
 
 @WebServlet("/suser")
 public class SuserServlet extends BaseServlet {
@@ -44,6 +45,7 @@ public class SuserServlet extends BaseServlet {
 	private ILocationService locationService;
 	private IRecommendService recommendService;
 	private ISBookService sbookService;
+	private IGetYouWanna wxmessageService;
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -54,6 +56,7 @@ public class SuserServlet extends BaseServlet {
 		systemService = (ISystemService) applicationContext.getBean("systemService");
 		locationService = (ILocationService) applicationContext.getBean("locationService");
 		recommendService=(IRecommendService) applicationContext.getBean("recommendService");
+		wxmessageService=(IGetYouWanna)applicationContext.getBean("WXmessageService");
 	}
 
 	@Override
@@ -85,7 +88,7 @@ public class SuserServlet extends BaseServlet {
 				thirdLogin(request, resultMap);
 			} else if (Constant.BINDACCOUNT.equals(action)) {
 				// 绑定已有账号
-				bindAccount(request, resultMap);
+				//bindAccount(request, resultMap);
 			} else if (Constant.PERFECTACCOUNTINFO.equals(action)) {
 				// 完善账号信息
 				perfectAccountInfo(request, resultMap);
@@ -446,8 +449,8 @@ public class SuserServlet extends BaseServlet {
 		} else {
 
 			String token = request.getSession().getId().toLowerCase();
-			SuserInfo user1 = suserService.registerUser(phone, token);
-			resultMap.put("UserInfo", user1);
+			//SuserInfo user1 = suserService.registerUser(phone, token);
+			//resultMap.put("UserInfo", user1);
 		}
 	}
 
@@ -497,6 +500,8 @@ public class SuserServlet extends BaseServlet {
 		String password = getRequestParamter(request, "password");// 验证码
 		String devicetype = getRequestParamter(request, "devicetype");//设备类型  1 IOS  2 ADNROID
 		String version = getRequestParamter(request, "version");//版本
+		String openid=getRequestParamter(request, "openid");//微信openid
+		String wxcity=getRequestParamter(request, "city");//微信用户所在城市
 		CommonUtils.validateEmpty(phone);
 		CommonUtils.validateEmpty(password);
 		HttpSession session= request.getSession();
@@ -509,7 +514,7 @@ public class SuserServlet extends BaseServlet {
 			SuserInfo user = suserService.getUserByPhone(phone);
 			if (user == null) {
 //				System.out.println("do not save token to db "+token);
-				user = suserService.registerUser(phone, token);// 注册
+				user = suserService.registerUser(phone, token,openid);// 注册
 				user.setPassword(password);
 				
 				resultMap.put("isregister", 1);
@@ -528,7 +533,9 @@ public class SuserServlet extends BaseServlet {
 			if(version!=null && !"".equals(version)){
 				user.setVersion(version);//设置版本号
 			}
-			
+			if(openid!=null && !"".equals(openid)){
+				user.setOpenid(openid);//设置版本号
+			}
 			suserService.updateUserInfo(user);
 			//根据省市区ID查询对应的名称
 			if(user.getProvinceid()!=null && user.getCityid()!=null && user.getAreaid()!=null){
@@ -544,6 +551,7 @@ public class SuserServlet extends BaseServlet {
 			}
 			session.setAttribute("studentid", user.getStudentid());
 			session.setAttribute("token", token);
+			session.setAttribute("city", wxcity);
 			resultMap.put("UserInfo", user);
 			int rflag=recommendService.checkRecommendinfo(String.valueOf(user.getStudentid()),2);
 			int cflag=recommendService.isoversixhour(String.valueOf(user.getStudentid()),2);
@@ -593,45 +601,45 @@ public class SuserServlet extends BaseServlet {
 		resultMap.put("UserInfo", user);
 	}
 
-	public void bindAccount(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
-		String phone = getRequestParamter(request, "phone");
-		String password = getRequestParamter(request, "password");
-		String openid = getRequestParamter(request, "openid");
-		String type = getRequestParamter(request, "type");
-		CommonUtils.validateEmpty(phone);
-		CommonUtils.validateEmpty(password);
-		CommonUtils.validateEmpty(openid);
-		CommonUtils.validateEmpty(type);
-
-		// 首先验证验证码
-		int result = suserService.checkVerCode(phone, password);
-		if (result == 1) {
-			SuserInfo user = suserService.getUserByPhone(phone);
-			if (user == null) {
-				String token = request.getSession().getId().toLowerCase();
-				user = suserService.registerUser(phone, token);// 注册
-				resultMap.put("isregister", 1);
-			} else {
-				resultMap.put("isregister", 0);
-			}
-			if (type.equals("1")) {
-				user.setQq_openid(openid);
-			} else if (type.equals("2")) {
-				user.setWx_openid(openid);
-			} else {
-				user.setWb_openid(openid);
-			}
-			suserService.updateUserInfo(user);
-
-			resultMap.put("UserInfo", user);
-		} else if (result == 0) {
-			resultMap.put("code", 2);
-			resultMap.put("message", "验证码错误,请重新输入");
-		} else {
-			resultMap.put("code", 3);
-			resultMap.put("message", "您的验证码已经过期,请重新获取");
-		}
-	}
+//	public void bindAccount(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+//		String phone = getRequestParamter(request, "phone");
+//		String password = getRequestParamter(request, "password");
+//		String openid = getRequestParamter(request, "openid");
+//		String type = getRequestParamter(request, "type");
+//		CommonUtils.validateEmpty(phone);
+//		CommonUtils.validateEmpty(password);
+//		CommonUtils.validateEmpty(openid);
+//		CommonUtils.validateEmpty(type);
+//
+//		// 首先验证验证码
+//		int result = suserService.checkVerCode(phone, password);
+//		if (result == 1) {
+//			SuserInfo user = suserService.getUserByPhone(phone);
+//			if (user == null) {
+//				String token = request.getSession().getId().toLowerCase();
+//				user = suserService.registerUser(phone, token);// 注册
+//				resultMap.put("isregister", 1);
+//			} else {
+//				resultMap.put("isregister", 0);
+//			}
+//			if (type.equals("1")) {
+//				user.setQq_openid(openid);
+//			} else if (type.equals("2")) {
+//				user.setWx_openid(openid);
+//			} else {
+//				user.setWb_openid(openid);
+//			}
+//			suserService.updateUserInfo(user);
+//
+//			resultMap.put("UserInfo", user);
+//		} else if (result == 0) {
+//			resultMap.put("code", 2);
+//			resultMap.put("message", "验证码错误,请重新输入");
+//		} else {
+//			resultMap.put("code", 3);
+//			resultMap.put("message", "您的验证码已经过期,请重新获取");
+//		}
+//	}
 
 	public void bindNewAccount(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String phone = getRequestParamter(request, "phone");
@@ -939,6 +947,7 @@ public class SuserServlet extends BaseServlet {
 	public void applyCash(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
 		String count = getRequestParamter(request, "count");
+		String resource=getRequestParamter(request, "resource");
 		CommonUtils.validateEmpty(studentid);
 		CommonUtils.validateEmpty(count);
 		SuserInfo student = suserService.getUserById(studentid);
@@ -959,16 +968,19 @@ public class SuserServlet extends BaseServlet {
 			return;
 		}
 		
-		suserService.applyCash(studentid, count);
+		suserService.applyCash(studentid, count,resource);
 	}
 
 	// 账户充值
-	public void recharge(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+	public void recharge(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException, IOException {
 		String studentid = getRequestParamter(request, "studentid");// 教练ID
 		String amount = getRequestParamter(request, "amount");// 充值金额
+		String resource=getRequestParamter(request, "resource");// 支付来源
 		CommonUtils.validateEmpty(studentid);
 		CommonUtils.validateEmpty(amount);
-		HashMap<String, Object> rechargeResult = suserService.recharge(studentid, amount);
+		CommonUtils.validateEmpty(resource);
+		String cip=wxmessageService.getCustomerIP(request);
+		HashMap<String, Object> rechargeResult = suserService.recharge(studentid, amount,resource,cip);
 		resultMap.putAll(rechargeResult);
 	}
 	

@@ -1,5 +1,6 @@
 package com.daoshun.guangda.service;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public interface ISUserService {
 	// 验证登陆验证码的有效性 返回：1.验证码正常 0：验证码不存在或者错误 2:验证码已经过期
 	public abstract int checkVerCode(String phone, String vcode);
 
-	public abstract SuserInfo registerUser(String phone, String token);
+	public abstract SuserInfo registerUser(String phone, String token,String openid);
 
 	public abstract int sendMessageCode(String phone, String type);
 
@@ -166,7 +167,7 @@ public interface ISUserService {
 	 * @param studentid
 	 * @param count
 	 */
-	public abstract void applyCash(String studentid, String count);
+	public abstract void applyCash(String studentid, String count,String resource);
 
 	/******************************************************************************************/
 
@@ -292,7 +293,7 @@ public interface ISUserService {
 
 	public abstract List<SuserInfo> getStudentList();
 
-	public abstract HashMap<String, Object> recharge(String coachid, String amount);
+	public abstract HashMap<String, Object> recharge(String studentid, String amount,String resource,String ip) throws IOException;
 
 	public abstract QueryResult<BalanceStudentInfo> searchStudentRecharge(String searchname, String searchphone, String amount, String inputamount, String minsdate, String maxsdate,
 			Integer pageIndex, int pagesize);

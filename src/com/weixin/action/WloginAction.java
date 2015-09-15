@@ -1,9 +1,7 @@
-package com.weixin.servlet;
+package com.weixin.action;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -41,15 +39,12 @@ import com.daoshun.guangda.service.IRecommendService;
 import com.daoshun.guangda.service.ISUserService;
 import com.daoshun.guangda.service.ISystemService;
 import com.daoshun.guangda.servlet.BaseServlet;
-import com.weixin.service.IGetYouWanna;
 
-@WebServlet("/weixinverification")
-public class WeiXinVerification extends BaseServlet{
-	IGetYouWanna wxmessageService;
+@WebServlet("/weixinl")
+public class WloginAction extends BaseServlet{
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-		wxmessageService=(IGetYouWanna)applicationContext.getBean("WXmessageService");
 	}
 	
 	@Override
@@ -57,67 +52,77 @@ public class WeiXinVerification extends BaseServlet{
 	{
 		if (request.getMethod().equals("GET"))
 		{
-			Verification(request,response);
+			String TOKEN = "mZHlAgNp3zqhNh";
+			 // 微信加密签名
+	        String signature = request.getParameter("signature");
+	        // 随机字符串
+	        String echostr = request.getParameter("echostr");
+	        // 时间戳
+	        String timestamp = request.getParameter("timestamp");
+	        // 随机数
+	        String nonce = request.getParameter("nonce");
+	       
+	      
+	        String[] str = { TOKEN, timestamp, nonce };
+	        Arrays.sort(str); // 字典序排序
+	        String bigStr = str[0] + str[1] + str[2];
+	        // SHA1加密
+	        MessageDigest md;
+	        String digest="";
+			try {
+				md = MessageDigest.getInstance("SHA-1");
+				digest = CommonUtils.byteToString(md.digest(bigStr.getBytes()));
+			} catch (NoSuchAlgorithmException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	        
+
+	        // 确认请求来至微信
+	        if (digest.equals(signature)) {
+	            response.getWriter().print(echostr);
+	        }
 		}
 		else
-		{  // System.out.println("进入小巴学车后台");
-			request.setCharacterEncoding("utf-8");
-			response.setCharacterEncoding("utf-8");
+		{
 			InputStream is=request.getInputStream();
 			SAXReader saxReader = new SAXReader();
 			Document document;
-			String ToUserName="";
-			String FromUserName="";
-			String CreateTime="";
-			String MsgType="";
 			try {
 				document = saxReader.read(is);
 				Element root = document.getRootElement();
 				List<Element> elements=root.elements();
 				for(Element e:elements)
 				{
-					//System.out.println("小巴学车反馈信息="+e.getName()+" : "+e.getText());
-					if(e.getName().equals("ToUserName"))
-						ToUserName=e.getText();
-					if(e.getName().equals("FromUserName"))
-						FromUserName=e.getText();
-					if(e.getName().equals("CreateTime"))
-						CreateTime=e.getText();
-					if(e.getName().equals("MsgType"))
-						MsgType=e.getText();
+					System.out.println(e.getText());
 				}
 				//System.out.println(root.getName());
 			} catch (DocumentException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
-			
-			
-			
-			if(MsgType.equals("text"))
-			{
-				String xml="<xml><ToUserName><![CDATA["+FromUserName+"]]></ToUserName><FromUserName><![CDATA["+ToUserName+"]]></FromUserName><CreateTime>"+CreateTime+"</CreateTime><MsgType><![CDATA[transfer_customer_service]]></MsgType></xml>";
-				PrintWriter pw=response.getWriter();
-				is.close();
-				pw.write(xml);
-				pw.close();
-			}
+			is.close();
+			is = null;
 			
 		}
 		
         
 	}
-    public void Verification(HttpServletRequest request, HttpServletResponse response) throws IOException{
-    	String TOKEN = "zIGlhfZKqNYp4t";
+
+	/*@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		super.doGet(req, resp);
+		System.out.println("进入get");
+		String TOKEN = "mZHlAgNp3zqhNh";
 		 // 微信加密签名
-       String signature = request.getParameter("signature");
+       String signature = req.getParameter("signature");
        // 随机字符串
-       String echostr = request.getParameter("echostr");
+       String echostr = req.getParameter("echostr");
        // 时间戳
-       String timestamp = request.getParameter("timestamp");
+       String timestamp = req.getParameter("timestamp");
        // 随机数
-       String nonce = request.getParameter("nonce");
+       String nonce = req.getParameter("nonce");
       
      
        String[] str = { TOKEN, timestamp, nonce };
@@ -133,12 +138,20 @@ public class WeiXinVerification extends BaseServlet{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-       
-
+		 System.out.println(req.getMethod());
        // 确认请求来至微信
        if (digest.equals(signature)) {
-           response.getWriter().print(echostr);
+    	   resp.getWriter().print(echostr);
        }
-    }
+	}*/
+	/*@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		super.doPost(req, resp);
+		System.out.println("进入post");
+		  String xml1=(String) req.getAttribute("xml");
+	      System.out.println(xml1);
+		
+	}*/
 	
 }

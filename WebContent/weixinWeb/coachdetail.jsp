@@ -23,6 +23,8 @@ var coachinfo;
 var evaluatelist;
 var pagenum=0;
 var hasmore=1;
+var type=1;
+var c_id=<%=coachid%>;
 $(function(){
 	var action1="GETCOACHDETAIL";
 	$.ajax({		   
@@ -36,7 +38,9 @@ $(function(){
 			success : function(data) {
 				coachinfo=data.coachinfo;
 				var model_list="";
-	            $("#c_name").html("<p>"+coachinfo.realname+"<span class='coach-mark'><i class='icon icon-man'></i>"+coachinfo.coachid+"</span></p><p><i class='glyphicon glyphicon-star'></i><i class='glyphicon glyphicon-star'></i><i class='glyphicon glyphicon-star'></i><i class='glyphicon glyphicon-star'></i><i class='glyphicon glyphicon-star'></i></p>");
+				
+				$("#avatar").html("<div class='head-avatar center-block'> <img src="+coachinfo.avatarurl+" class='img-responsive img-circle center-block' /> </div>")
+	            $("#c_name").html("<p>"+coachinfo.realname+"<span class='coach-mark'><i class='icon icon-man'></i>"+coachinfo.age+"</span></p><p><i class='glyphicon glyphicon-star'></i><i class='glyphicon glyphicon-star'></i><i class='glyphicon glyphicon-star'></i><i class='glyphicon glyphicon-star'></i><i class='glyphicon glyphicon-star'></i></p>");
 	            $("#c_card").html("<p>教练证号：<span>"+coachinfo.coach_cardnum+"</span></p>");
 	            for(var i=0;i<coachinfo.modellist.length;i++)
 	            {
@@ -58,17 +62,19 @@ $(function(){
 		data : {
 			action : action2,
 			coachid : <%=coachid%>,
-			studentid : <%=studentid%>,
+			type : type,
 			pagenum   : pagenum
 		},
 		success : function(data) {
 			evaluatelist=data.evalist;
-			var content_list="<div class='row coach-judge-head'><a href='evaluatewhole.jsp'><div id='evaluatestar' class='col-md-12 col-sm-12 col-xs-12'><p><span><i class='icon icon-star'></i><i class='icon icon-star'></i><i class='icon icon-star'></i><i class='icon icon-star'></i><i class='icon  icon-star-empty'></i></span><span>"+coachinfo.score+"</span><span class='pull-right'>"+data.count+"人评价<i class='glyphicon icon-right'></i></span></p></div></a></div><div class='row'><hr/></div>";
+			
+			var content_list="<div class=\"row coach-judge-head\"><a href=\"evaluatewhole.jsp?coachid="+c_id+"\"><div id=\"evaluatestar\" class=\"col-md-12 col-sm-12 col-xs-12\"><p><span><i class=\"icon icon-star\"></i><i class=\"icon icon-star\"></i><i class=\"icon icon-star\"></i><i class=\"icon icon-star\"></i><i class=\"icon  icon-star-empty\"></i></span><span>"+coachinfo.score+"</span><span class=\"pull-right\">"+data.count+"人评价<i class=\"glyphicon icon-right\"></i></span></p></div></a></div><div class=\"row\"><hr/></div>";
             for(var i=0;i<evaluatelist.length;i++)
             {
             	var adddate=evaluatelist[i].addtime;
+            	var fromstudentid=evaluatelist[i].from_user;
             	adddate=adddate.substring(0,10);
-            	content_list=content_list+"<div class='row coach-judge-body'><a href='evaluatesingle.jsp'><div class='col-md-3 col-sm-3 col-xs-3'><p>"+evaluatelist[i].nickname+"</p></div><div class='col-md-9 col-sm-9 col-xs-9'><p><span class='pull-right'>"+adddate+"<i class='glyphicon icon-right'></i></span></p></div><div class='col-md-12 col-sm-12 col-xs-12'><p>"+evaluatelist[i].content+"</p></div></a></div>";
+            	content_list=content_list+"<div class='row coach-judge-body'><a href='evaluatesingle.jsp?coachid="+c_id+"&studentid="+fromstudentid+"'><div class='col-md-3 col-sm-3 col-xs-3'><p>"+evaluatelist[i].nickname+"</p></div><div class='col-md-9 col-sm-9 col-xs-9'><p><span class='pull-right'>"+adddate+"<i class='glyphicon icon-right'></i></span></p></div><div class='col-md-12 col-sm-12 col-xs-12'><p>"+evaluatelist[i].content+"</p></div></a></div>";
             	
             }
             $("#evaluatelist").html(content_list);
@@ -105,7 +111,7 @@ $(function(){
             		data : {
             			action : action2,
             			coachid : <%=coachid%>,
-            			studentid : <%=studentid%>,
+            			type : type,
             			pagenum   : pagenum
             		},
             		success : function(data) {
@@ -114,8 +120,9 @@ $(function(){
                         for(var i=0;i<evaluatelist.length;i++)
                         {
                         	var adddate=evaluatelist[i].addtime;
+                        	var fromstudentid=evaluatelist[i].from_user;
                         	adddate=adddate.substring(0,10);
-                        	content_list=content_list+"<div class='row coach-judge-body'><a href='evaluatesingle.jsp'><div class='col-md-3 col-sm-3 col-xs-3'><p>"+evaluatelist[i].nickname+"</p></div><div class='col-md-9 col-sm-9 col-xs-9'><p><span class='pull-right'>"+adddate+"<i class='glyphicon icon-right'></i></span></p></div><div class='col-md-12 col-sm-12 col-xs-12'><p>"+evaluatelist[i].content+"</p></div></a></div>";
+                        	content_list=content_list+"<div class='row coach-judge-body'><a href='evaluatesingle.jsp?coachid="+c_id+"&studentid="+fromstudentid+"'><div class='col-md-3 col-sm-3 col-xs-3'><p>"+evaluatelist[i].nickname+"</p></div><div class='col-md-9 col-sm-9 col-xs-9'><p><span class='pull-right'>"+adddate+"<i class='glyphicon icon-right'></i></span></p></div><div class='col-md-12 col-sm-12 col-xs-12'><p>"+evaluatelist[i].content+"</p></div></a></div>";
                         	
                         }
                         $("#evaluatelist").append(content_list);
@@ -134,8 +141,8 @@ $(function(){
 <body>
 <div class="container">
   <div class="row coach-head">
-    <div class="col-md-3 col-sm-3 col-xs-3">
-      <div class="head-avatar center-block"> <img src="images/person-one.png" class="img-responsive img-circle center-block" /> </div>
+    <div id="avatar" class="col-md-3 col-sm-3 col-xs-3">
+      
     </div>
     <div id="c_name" class="col-md-7 col-sm-7 col-xs-7">
       
@@ -169,10 +176,10 @@ $(function(){
         </a>
       </div>
       <div class="row"><hr/></div>
-      <div class="row coach-judge-body">
+      <!--  <div class="row coach-judge-body">
         <a href="evaluatesingle.jsp">
           <div class="col-md-3 col-sm-3 col-xs-3">
-            <!--<img src="images/coach-avart.png" class="img-responsive" />-->
+            <img src="images/coach-avart.png" class="img-responsive" />
             <p>YOYO</p>
           </div>
           <div class="col-md-9 col-sm-9 col-xs-9">
@@ -186,7 +193,7 @@ $(function(){
       <div class="row coach-judge-body">
         <a href="evaluatesingle.jsp">
           <div class="col-md-3 col-sm-3 col-xs-3">
-            <!--<img src="images/coach-avart.png" class="img-responsive" />-->
+            <img src="images/coach-avart.png" class="img-responsive" />
             <p>YOYO</p>
           </div>
           <div class="col-md-9 col-sm-9 col-xs-9">
@@ -196,7 +203,7 @@ $(function(){
             <p>教练很有耐心，不随便发火，五星点赞</p>
           </div>
         </a>
-      </div>
+      </div>-->
     </div>
   </div>
 </div>

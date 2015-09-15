@@ -18,6 +18,7 @@ import com.daoshun.guangda.pojo.DriveSchoolInfo;
 import com.daoshun.guangda.pojo.LogInfo;
 import com.daoshun.guangda.pojo.ModelsInfo;
 import com.daoshun.guangda.pojo.PermissionSetInfo;
+import com.daoshun.guangda.pojo.RechargeRecordInfo;
 import com.daoshun.guangda.pojo.SchoolBalance;
 import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.pojo.SystemSetInfo;
@@ -82,8 +83,10 @@ public interface ICUserService {
 
 	public abstract HashMap<String, Object> recharge(String coachid, String amount);
 
-	/******* 购买成功的回调 ******/
+	/******* 购买成功的回调  支付宝******/
 	public abstract void buySuccess(String out_trade_no, String buyer_id, String buyer_email);
+	/******* 购买成功的回调  微信 ******/
+	public abstract void buySuccessbyweixin(String out_trade_no, String openid,String weixinorderid);
 
 	/******* 获取教练的充值历史和余额 ******/
 	public abstract HashMap<String, Object> getBalanceList(String coachid);
@@ -294,4 +297,5 @@ public interface ICUserService {
 	 public int getCanUseCoinnumForDriveSchool( String coachid);
 	 public int getCanUseCoinnumForCoach(String coachid) ;
 	 public HashMap<String, Object> getCoinAffiliation(String coachid);
+	 public RechargeRecordInfo getrechargerecord(String recordid);
 }

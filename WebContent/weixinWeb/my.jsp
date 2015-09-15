@@ -61,8 +61,11 @@ function showStudent(obj){
 <body>
 <div class="container" >
   <div id="tabs" >
-    <ul class="foot-nav" data-role="footer">
+   <!--  <ul class="foot-nav" data-role="footer">
       <li><a href="coachlist.jsp"><span class="coach"></span><p>找教练</p></a></li><li><a href="uncompleorder.jsp"><span class="order"></span><p>订单</p></a></li><li class="active"><a href="javascript:void(0);"><span class="my"></span><p>我的</p></a></li>
+    </ul> -->
+    <ul class="foot-nav" data-role="footer">
+      <li><a href="coachlist.jsp"><span class="coach"></span><p>找教练</p></a></li><li><a href="uncompleorder.jsp"><span class="order"></span><p>订单</p></a></li><li class="active"><a href="my.jsp"><span class="my"></span><p>我的</p></a></li>
     </ul>
     <div id="tabs-3">
     	<div class="row my-head">

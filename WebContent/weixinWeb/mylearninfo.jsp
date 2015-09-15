@@ -9,58 +9,8 @@ pageEncoding="UTF-8"%>
 <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <link href="css/font-awesome.css" rel="stylesheet" />
 <link href="css/basicinfo.css" rel="stylesheet" type="text/css" />
-<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
-<script src="js/jquery-1.8.3.min.js"></script>
 <style type="text/css">
 </style>
-<script type="text/javascript">
-wx.config({
-    debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-    appId: '${appid}', // 必填，公众号的唯一标识
-    timestamp:'${timestamp}', // 必填，生成签名的时间戳
-    nonceStr: '${noncestr}', // 必填，生成签名的随机串
-    signature:'${signature}',// 必填，签名，见附录1
-    jsApiList: [
-				'checkJsApi',
-				'onMenuShareTimeline',
-				'onMenuShareAppMessage',
-				'onMenuShareQQ',
-				'onMenuShareWeibo',
-				'onMenuShareQZone',
-				'hideMenuItems',
-				'showMenuItems',
-				'hideAllNonBaseMenuItem',
-				'showAllNonBaseMenuItem',
-				'translateVoice',
-				'startRecord',
-				'stopRecord',
-				'onVoiceRecordEnd',
-				'playVoice',
-				'onVoicePlayEnd',
-				'pauseVoice',
-				'stopVoice',
-				'uploadVoice',
-				'downloadVoice',
-				'chooseImage',
-				'previewImage',
-				'uploadImage',
-				'downloadImage',
-				'getNetworkType',
-				'openLocation',
-				'getLocation',
-				'hideOptionMenu',
-				'showOptionMenu',
-				'closeWindow',
-				'scanQRCode',
-				'chooseWXPay',
-				'openProductSpecificView',
-				'addCard',
-				'chooseCard',
-				'openCard'
-				] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
-    
-});
-</script>
 </head>
 
 <body>
@@ -88,11 +38,10 @@ wx.config({
     <div class="col-md-4 col-sm-4 col-xs-4">
      	身份证：
     </div>
-    
     <div class="col-md-6 col-sm-6 col-xs-6">
     	<img src="images/idcard-icon.png" class="img-responsive center-block" />
-		<label for="id_card_v" class="text-center" onclick="toopen()">上传</label>
-       
+		<label for="id_card_v" class="text-center">上传</label>
+        <input type="file" id="id_card_v" />
     </div>
   </div>
   <div class="row mylearninfo-submit">
@@ -102,6 +51,8 @@ wx.config({
   </div>  
 </form> 
 </div>
+
+
 <div class="overlay">
       <div class="overlay-content">
         <div class="container">
@@ -117,26 +68,8 @@ wx.config({
   </div>	
 </div>
 
-
-<script type="text/javascript">
-
-// 5 图片接口
-// 5.1 拍照、本地选图
-var images = {
-  localId: [],
-  serverId: []
-};
-function toopen(){
-	wx.chooseImage({
-	      success: function (res) {
-	        images.localId = res.localIds;
-	        alert('已选择 ' + res.localIds.length + ' 张图片');
-	      }
-	    });
-}
-
-
-
+<script src="js/jquery-1.8.3.min.js"></script>
+<script>
 $(document).ready(function ()
 {
 	$("#allow_card_v").change(function ()

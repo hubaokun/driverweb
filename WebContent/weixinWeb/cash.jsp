@@ -9,8 +9,16 @@
 <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <link href="css/font-awesome.css" rel="stylesheet" />
 <link href="css/cash.css" rel="stylesheet" type="text/css" />
-<script src="js/jquery-1.8.3.min.js"></script>
-<style type="text/css"></style>
+<script src="js/jquery-1.8.3.min.js"></script> 
+<script src="js/jquery-ui-1.10.3.min.js"></script> 
+<script type="text/javascript">
+var customer=${sessionScope.c_info};
+var studentid =${sessionScope.studentid};
+var token='${sessionScope.token}';
+$(function(){
+		$("#cname").html(customer.nickname);
+}); 
+</script>
 </head>
 
 <body>
@@ -18,31 +26,21 @@
   <form>
   	<div class="row tips-row">
       <div class="col-md-12 col-sm-12 col-xs-12">
-        <p>提现到<b style="font-size:13px;">张三</b>微信钱包</p>
+        <p>提现到<b id="cname" style="font-size:13px;">张三</b>微信钱包</p>
       </div>
     </div>
     <div class="row money-row">
       <div class="col-md-12 col-sm-12 col-xs-12">
-        <input type="text" id="count" placeholder="请输入金额" />
+        <input id="amount" type="text" placeholder="请输入金额" maxlength="5"/>
       </div>
     </div>
     <div class="row tips-row">
       <div class="col-md-12 col-sm-12 col-xs-12">
-        <p>可提现金额<span style="font-size:14px; color:#eb5811">￥360</span></p>
+        <p>可提现金额<span style="font-size:14px; color:#eb5811">￥${param.money}</span></p>
       </div>
     </div>
-    
-<!--    <div class="row account-row">
-      <div class="col-md-12 col-sm-12 col-xs-12">
-        <input type="text" placeholder="请输入姓名" />
-      </div>
-      <div class="col-md-12 col-sm-12 col-xs-12  pull-right div-line"></div>
-      <div class="col-md-12 col-sm-12 col-xs-12">
-        <input type="text" id="alipay" placeholder="请输入支付宝账号" />
-        <span><i class="icon icon-remove-sign"></i></span> </div>
-    </div>-->
     <div class="row sure-row">
-      <div class="col-md-12 col-sm-12 col-xs-12"> <span class="cash-sure">确定</span> </div>
+      <div class="col-md-12 col-sm-12 col-xs-12"> <span id="confirm" onclick="applycash()" class="cash-sure">确定</span></div>
     </div>
   </form>
 </div>
@@ -63,13 +61,12 @@
     </div>
   </div>
 </div>
-
 <script>
 $(document).ready(function()
 {
 	$('.account-row .col-md-12:last-child span').on('click',function()
 	{
-		$("#alipay").val("");
+		//alert("3333");
 		$('.account-row .col-md-12:last-child span').css('display','none');
 	})
 	$('#alipay').keydown(function ()
@@ -92,20 +89,51 @@ $(document).ready(function()
 
 	//控制确定弹框位置
 	var height = $(window).height();
-	
-	$('.cash-sure').click(function ()
-	{
-		$('.overlay').css('display','block');
-		var h_content = $('.overlay-content').height();
-		var hh = (height-h_content)/2;
-		$('.overlay-content').css('margin-top',hh);
-	})
 	$('.sure-btn').click(function ()
 	{
 		$('.overlay').css('display','none');
 	})
 });
-
+function applycash()
+{
+	var amount=$("#amount").val();
+	var action="APPLYCASH";
+	if(parseInt(amount)==amount)
+	{   
+		$.ajax({
+			type : "POST",
+			url : "/xiaoba/suser",
+			dataType: "json",
+			data : {
+				action : action,
+				studentid : studentid,
+				count : amount,
+				resource : 1,
+				token : token
+			},
+			success : function(data) {
+				var code=data.code;
+				if(code!=1)
+				{
+					var message=data.message;
+				    alert(message);	
+				}
+				else
+				{
+					$('.overlay').css('display','block');
+					var h_content = $('.overlay-content').height();
+					var hh = (height-h_content)/2;
+					$('.overlay-content').css('margin-top',hh);
+				}
+			}
+		})
+	}
+	else
+	{
+		alert("提现金额必须是整数");
+		$("#amount").val("");
+	}
+}
 </script>
 </body>
 </html>

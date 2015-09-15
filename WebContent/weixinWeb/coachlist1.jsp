@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
 <!doctype html>
 <html>
@@ -21,7 +21,7 @@ pageEncoding="UTF-8"%>
 <script src="js/jquery.flexselect.js"></script>
 <script type="text/javascript">
 var active_url = "../sbook?action=GETCOACHLIST";
-var studentid=${sessionScope.studentid};
+var studentid=44506;
 var pagenum=0;
 
 var myScroll,
@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', loaded, false);
     <div id="tabs-1">
       <div class="row search-wrap">
         <form>
-          <div class="col-md-3 col-sm-3 col-xs-3"> <span><a href="citychoose.html">${sessionScope.city}</a><i class="glyphicon icon-citydown"></i></span> </div>
+          <div class="col-md-3 col-sm-3 col-xs-3"> <span><a href="citychoose.html">杭州</a><i class="glyphicon icon-citydown"></i></span> </div>
           <div class="col-md-7 col-sm-7 col-xs-7">
             <div class="input-group">
               <input type="text" id="search_coach" class="form-control" placeholder="" aria-describedby="basic-addon2">
@@ -463,7 +463,7 @@ function dispalyDetail(event){
 			event.outerHTML+
           "</div>"+
 		      "</div>"+
-		      "<section class='overlay-button-group'> <a href='coursearrange.jsp?coachid="+coachid+"&studentid="+studentid+"'>预约课程</a><a href='coachdetail.jsp?coachid="+coachid+"'>教练详情</a> </section>"
+		      "<section class='overlay-button-group'> <a href='coursearrange1.jsp?coachid="+coachid+"&studentid="+studentid+"'>预约课程</a><a href='coachdetail.jsp?coachid="+coachid+"'>教练详情</a> </section>"
 			);
 	$(".overlay").css('display','block');
 }

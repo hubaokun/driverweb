@@ -19,6 +19,7 @@ body {
 	z-index:100;
 }
 .course-head .course-head-top {
+
 	background-color: rgb(35,173,229);
 	color: rgb(247,247,247);
 	padding: 0px 12px;
@@ -61,8 +62,12 @@ body {
 .course-tips p {
 	margin: 0px;
 	padding: 0px;
-	font-size: 10px;
+	font-size: 13px;
 	line-height: 12px;
+}
+.course-tips p span
+{
+	padding-right:3px;
 }
 .course-tips p span:first-child {
 	color: rgb(221,221,221);
@@ -81,7 +86,7 @@ body {
 {
 	/*overflow-x:scroll;*/
 	overflow-y:hidden;
-	background-image:url(images/shadow1.png);
+	background-image:url(../images/shadow1.png);
 	background-repeat:no-repeat;
 	background-position:center right;
 	background-size:contain;
@@ -95,7 +100,7 @@ body {
 {
 	list-style:none;
 	height:93px;
-	width:1338px;
+	width:460px;
 	padding: 4px 12px 0px 12px;
     background-color:white;
 	margin-bottom:0px;
@@ -187,14 +192,14 @@ body {
 .course-date-list p {
 	margin: 5px 0px;
 	padding: 0px;
-	line-height:17px;
+	line-height:18px;
 }
 .course-date-list .col-md-12 {
 	padding-right: 0px;
 	padding-left: 0px;
 }
 .course-date-list .course-date-list-group {
-	margin: 0px 10px 22px 10px;
+	margin: 0px 10px 15px 10px;
 }
 .course-date-list .course-date-list-group .col-md-3 {
 	text-align: center;
@@ -223,9 +228,14 @@ body {
 {
 	
 }
-.course-date-list .course-date-list-group .col-md-3 a.unavailable p:last-child
+.course-date-list .course-date-list-group .col-md-3 a.unavailable p:nth-child(2)
 {
-	line-height:42px;
+	line-height:40px;
+	font-size:10px;
+}
+.course-date-list .course-date-list-group .col-md-3 a.unavailable p:nth-child(3),.course-date-list .course-date-list-group .col-md-3 a.unavailable p:nth-child(4)
+{
+	display:none;
 }
 .course-date-list .course-date-list-group .col-md-3 a  p:first-child
 {
@@ -237,7 +247,7 @@ body {
 {
 	
 }
-.course-date-list .course-date-list-group .col-md-3 a.appointment p:last-child
+.course-date-list .course-date-list-group .col-md-3 a.appointment p:nth-child(2)
 {
 	color:rgb(240,113,0);
 }
@@ -257,7 +267,17 @@ body {
 	font-size:1.7em;
 }
 
-/*选中状态的a*/
+.course-date-list .course-date-list-group .col-md-3 a.available p:nth-child(2),.course-date-list .course-date-list-group .col-md-3 a.available p:nth-child(3)
+{
+	font-size:1.3em;
+}
+
+.subjec3
+{
+	color:rgb(240,113,0);
+}
+
+/*閫変腑鐘舵�佺殑a*/
 
 .course-date-list .course-date-list-group .col-md-3 a.active p:first-child
 {
@@ -279,13 +299,13 @@ body {
 }
 .course-date-list .course-date-list-group .col-md-3 a.active p:last-child {
   display: block;
-  height: 39px;
+  height: 41px;
   font-size: 1.7em;
   line-height:34px;
 }
 
 .course-date-list .course-date-list-group-top {
-	margin-bottom: 14px;
+	margin-bottom: 10px;
 }
 /*课程表日期选择 ends——————————————————————————————————————————————————————————————*/
 

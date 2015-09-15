@@ -1,5 +1,6 @@
 package com.daoshun.guangda.serviceImpl;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,6 +38,8 @@ import com.daoshun.guangda.pojo.SuserState;
 import com.daoshun.guangda.pojo.SystemSetInfo;
 import com.daoshun.guangda.pojo.VerifyCodeInfo;
 import com.daoshun.guangda.service.ISUserService;
+import com.weixin.service.IGetYouWanna;
+import com.weixin.serviceImpl.GetYouWannaImpl;
 
 @Service("suserService")
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
@@ -268,7 +271,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override
-	public void applyCash(String studentid, String count) {
+	public void applyCash(String studentid, String count,String resource) {
 		// 修改学员的余额信息
 		SuserInfo student = dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
 		if (student != null) {
@@ -282,6 +285,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			apply.setAmount(new BigDecimal(CommonUtils.parseFloat(count, 0f)));
 			apply.setState(0);
 			apply.setAddtime(new Date());
+			apply.setResource(CommonUtils.parseInt(resource, 0));
 			dataDao.addObject(apply);
 		}
 	}
@@ -910,7 +914,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-	public HashMap<String, Object> recharge(String coachid, String amount) {
+	public HashMap<String, Object> recharge(String studentid, String amount,String resource,String cip) throws IOException {
 		HashMap<String, Object> result = new HashMap<String, Object>();
 
 		// 插入数据
@@ -918,24 +922,48 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		info.setAddtime(new Date());
 		info.setAmount(new BigDecimal(CommonUtils.parseFloat(amount, 0.0f)));
 		info.setType(2);
-		info.setUserid(CommonUtils.parseInt(coachid, 0));
+		info.setUserid(CommonUtils.parseInt(studentid, 0));
+		info.setPaytype(CommonUtils.parseInt(resource, 0));
 		dataDao.addObject(info);
+        if(resource.equals("0"))
+        {
+        	if ("1".equals(CommonUtils.getAliSet())) {
+    			result.put("partner", AlipayConfig.partner);
+    			result.put("seller_id", AlipayConfig.seller_id);
+    			result.put("private_key", AlipayConfig.private_key);
+    		} else {
+    			result.put("partner", AlipayConfig.partner_formal);
+    			result.put("seller_id", AlipayConfig.seller_id_formal);
+    			result.put("private_key", AlipayConfig.private_key_formal);
+    		}
 
-		if ("1".equals(CommonUtils.getAliSet())) {
-			result.put("partner", AlipayConfig.partner);
-			result.put("seller_id", AlipayConfig.seller_id);
-			result.put("private_key", AlipayConfig.private_key);
-		} else {
-			result.put("partner", AlipayConfig.partner_formal);
-			result.put("seller_id", AlipayConfig.seller_id_formal);
-			result.put("private_key", AlipayConfig.private_key_formal);
-		}
-
-		result.put("notify_url", CommonUtils.getWebRootUrl() + "alipay_callback");
-		result.put("out_trade_no", info.getRechargeid());
-		result.put("subject", "小巴教练充值：" + amount + "元");
-		result.put("total_fee", amount);
-		result.put("body", "小巴教练充值：" + amount + "元");
+    		result.put("notify_url", CommonUtils.getWebRootUrl() + "alipay_callback");
+    		result.put("out_trade_no", info.getRechargeid());
+    		result.put("subject", "小巴教练充值：" + amount + "元");
+    		result.put("total_fee", amount);
+    		result.put("body", "小巴教练充值：" + amount + "元");
+        }
+        else if(resource.equals("1"))
+        {
+        	SuserInfo suser=dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
+        	IGetYouWanna wxmessageService=new GetYouWannaImpl();
+        	String prepay_id=wxmessageService.getSignForPrePay(suser.getOpenid(), amount, info.getRechargeid().toString(), cip);
+        	long timeStamp=wxmessageService.CreatenTimestamp();
+        	String nonceStr=wxmessageService.CreatenNonce_str(25);
+        	String appid=CommonUtils.getAppid();
+        	String signType="MD5";
+        	String paySign=wxmessageService.getSignForPay(appid, timeStamp, nonceStr, signType, prepay_id);
+        	if(paySign.equals("FAIL") || prepay_id.equals("FAIL"))
+        	{
+        		result.put("ERROR", "FAIL");
+        	}
+        	result.put("appId", appid);
+        	result.put("prepay_id", prepay_id);
+        	result.put("timeStamp", timeStamp);
+        	result.put("nonceStr", nonceStr);       	
+        	result.put("signType", signType);
+        	result.put("paySign", paySign);
+        }
 
 		return result;
 	}
@@ -1058,7 +1086,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override
-	public SuserInfo registerUser(String phone, String token) {
+	public SuserInfo registerUser(String phone, String token,String openid) {
 		// 首先查询出订单相关的几个时间配置
 		String hqlset = "from SystemSetInfo where 1 = 1";
 		SystemSetInfo setInfo = (SystemSetInfo) dataDao.getFirstObjectViaParam(hqlset, null);
@@ -1080,6 +1108,9 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		user1.setToken(token);
 		user1.setToken_time(new Date());
 		user1.setFcoinnum(new BigDecimal(0));
+		if(openid!=null && !"".equals(openid)){
+			user1.setOpenid(openid);//设置版本号
+		}
 		dataDao.addObject(user1);
 		return user1;
 	}

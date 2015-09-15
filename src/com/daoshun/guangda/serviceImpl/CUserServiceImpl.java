@@ -1800,4 +1800,56 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 		return result;
 	}
 
+	@Override
+	public RechargeRecordInfo getrechargerecord(String recordid) {
+		 RechargeRecordInfo info = dataDao.getObjectById(RechargeRecordInfo.class, CommonUtils.parseInt(recordid, 0));
+		return info;
+	}
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	@Override
+	public void buySuccessbyweixin(String out_trade_no, String openid,String weixinorderid) {
+		RechargeRecordInfo info = dataDao.getObjectById(RechargeRecordInfo.class, CommonUtils.parseInt(out_trade_no, 0));
+        if (info != null) {
+
+            int type = info.getType();
+            if (type == 1) {
+                CuserInfo user = dataDao.getObjectById(CuserInfo.class, info.getUserid());
+                if (user != null) {
+                    user.setMoney(user.getMoney().add(info.getAmount()));
+                    dataDao.updateObject(user);
+                    // 插入充值记录
+                    BalanceCoachInfo balance = new BalanceCoachInfo();
+                    balance.setAddtime(new Date());
+                    balance.setAmount(info.getAmount());
+                    balance.setUserid(user.getCoachid());
+                    balance.setType(3);
+                    balance.setAmount_out1(new BigDecimal(0));
+                    balance.setAmount_out2(new BigDecimal(0));
+                    dataDao.addObject(balance);
+                }
+            }
+            else if (type == 2) {
+                SuserInfo user = dataDao.getObjectById(SuserInfo.class, info.getUserid());
+                if (user != null) {
+                    user.setMoney(user.getMoney().add(info.getAmount()));
+                    dataDao.updateObject(user);
+                    // 插入充值记录
+                    BalanceStudentInfo balance = new BalanceStudentInfo();
+                    balance.setAddtime(new Date());
+                    balance.setAmount(info.getAmount());
+                    balance.setUserid(user.getStudentid());
+                    balance.setType(5);
+                    dataDao.addObject(balance);
+                }
+            }
+
+            info.setUpdatetime(new Date());
+            info.setOpenid(openid);
+            info.setWxorderid(weixinorderid);
+            info.setState(1);
+            dataDao.updateObject(info);
+
+        }
+	}
+
 }

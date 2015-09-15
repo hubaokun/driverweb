@@ -45,7 +45,7 @@ public class weixinServlet extends BaseServlet{
 	
 	@Override
 	public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-	{
+	{  //此处action名字必须与方法中url中action名相同
 		String action=request.getParameter("action");
 		if(action.equals("login"))
 			weixinlogin(request, response);
@@ -54,27 +54,25 @@ public class weixinServlet extends BaseServlet{
 		else if("mylearninfo".equals(action)){
 			//mylearninfo(request, response);
 		}
-		
+		else if(action.equals("charge"))
+			gotocharge(request, response);
 	}
 	public void weixinlogin(HttpServletRequest request, HttpServletResponse response)
 	{
 		String code=request.getParameter("code");
 		String state=request.getParameter("state");
 		IGetYouWanna WXmessageService=new GetYouWannaImpl();
-		
-		if(WeiXinMessage.getValue("web_access_token_expire")==null)
+		if(WXmessageService.getWebAccessToken(code)==false)
 		{
-			if(WXmessageService.getWebAccessToken(code)==false)
-			{
-				request.getSession().setAttribute("CInfo", "");
-				System.out.println("请求网页授权接口出错,请检查！");	
-			}
-			else
-			{
-				request.getSession().setAttribute("c_info",WXmessageService.setCustomerInfo(WeiXinMessage.getValue("openid")));
-			}
-				
+			request.getSession().setAttribute("c_info", "");
+			System.out.println("请求网页授权接口出错,请检查！");	
 		}
+		else
+		{
+			request.getSession().setAttribute("c_info",WXmessageService.setCustomerInfo(WeiXinMessage.getValue("openid")));
+		}
+				
+
 		
 		if(WeiXinMessage.getValue("service_access_token")==null)
 		{		
@@ -111,13 +109,32 @@ public class weixinServlet extends BaseServlet{
 		request.setAttribute("timestamp", timestamp);
 		request.setAttribute("signature", signature); 
 		request.setAttribute("appid", CommonUtils.getAppid());
-		
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/weixinWeb/coachlist.jsp");
 		try {
 			dispatcher.forward(request, response);
 		} catch (ServletException | IOException e) {
 			e.printStackTrace();
 		}
+	}
+	public void gotocharge(HttpServletRequest request, HttpServletResponse response)
+	{
+		String url=baseUrl+"charge";
+		String noncestr=wxmessageService.CreatenNonce_str(16);
+		long timestamp=wxmessageService.CreatenTimestamp();
+		String signature=wxmessageService.getSignature(noncestr, timestamp, url);
+		
+		request.setAttribute("noncestr", noncestr);
+		request.setAttribute("timestamp", timestamp);
+		request.setAttribute("signature", signature); 
+		request.setAttribute("appid", CommonUtils.getAppid());
+		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/weixinWeb/charge.jsp");
+		try {
+			dispatcher.forward(request, response);
+		} catch (ServletException | IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 	/*public void mylearninfo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		String url=baseUrl+"mylearninfo";

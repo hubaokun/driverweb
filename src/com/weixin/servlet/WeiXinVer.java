@@ -43,8 +43,8 @@ import com.daoshun.guangda.service.ISystemService;
 import com.daoshun.guangda.servlet.BaseServlet;
 import com.weixin.service.IGetYouWanna;
 
-@WebServlet("/weixinverification")
-public class WeiXinVerification extends BaseServlet{
+@WebServlet("/weixinver")
+public class WeiXinVer extends BaseServlet{
 	IGetYouWanna wxmessageService;
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -60,7 +60,7 @@ public class WeiXinVerification extends BaseServlet{
 			Verification(request,response);
 		}
 		else
-		{  // System.out.println("进入小巴学车后台");
+		{
 			request.setCharacterEncoding("utf-8");
 			response.setCharacterEncoding("utf-8");
 			InputStream is=request.getInputStream();
@@ -76,7 +76,7 @@ public class WeiXinVerification extends BaseServlet{
 				List<Element> elements=root.elements();
 				for(Element e:elements)
 				{
-					//System.out.println("小巴学车反馈信息="+e.getName()+" : "+e.getText());
+					System.out.println(e.getName()+" : "+e.getText());
 					if(e.getName().equals("ToUserName"))
 						ToUserName=e.getText();
 					if(e.getName().equals("FromUserName"))
@@ -109,7 +109,7 @@ public class WeiXinVerification extends BaseServlet{
         
 	}
     public void Verification(HttpServletRequest request, HttpServletResponse response) throws IOException{
-    	String TOKEN = "zIGlhfZKqNYp4t";
+    	String TOKEN = "mZHlAgNp3zqhNh";
 		 // 微信加密签名
        String signature = request.getParameter("signature");
        // 随机字符串
