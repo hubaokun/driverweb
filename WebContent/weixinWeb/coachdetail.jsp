@@ -15,11 +15,10 @@
 </style>
 <%
     String coachid=request.getParameter("coachid");
-	HttpSession s=request.getSession();
-	String studentid=s.getAttribute("studentid").toString();
 %>
 <script type="text/javascript">
 var coachinfo;
+var studentid=${sessionScope.studentid};
 var evaluatelist;
 var pagenum=0;
 var hasmore=1;
