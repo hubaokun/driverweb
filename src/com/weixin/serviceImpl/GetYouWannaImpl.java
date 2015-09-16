@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
@@ -32,6 +33,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.SAXParser;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -399,14 +411,11 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 		String appid=CommonUtils.getAppid();
 		 String mch_id=CommonUtils.getMchid();
 		 String nonce_str=CreatenNonce_str(25);
-		 String body="小巴科技学员账户充值";
-//		try {
-//			body = new String(java.net.URLEncoder.encode("小巴学员账户充值","utf-8"));
-//		} catch (UnsupportedEncodingException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
-		 String cbody=new String(body.getBytes("gbk"),"utf-8");
+		 
+		 
+		 String body="hzxiaoba";
+		// body=new String(body.getBytes("unicode"),"UTF-8");
+		// System.out.println(body);
 		 String notify_url="http://wx.xiaobaxueche.com/xiaoba/weixinWeb/weixinpaycb";
 		 String trade_type="JSAPI";
 		 HashMap<String,String> map=new HashMap<String,String>();
@@ -417,7 +426,7 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 		 map.put("appid", CommonUtils.getAppid());
 		 map.put("mch_id", CommonUtils.getMchid());
 		 map.put("nonce_str", nonce_str);
-		 map.put("body",cbody);
+		 map.put("body",body);
 		 map.put("out_trade_no", out_trade_no);
 		 map.put("total_fee","1");
 		 map.put("spbill_create_ip", spbill_create_ip);
@@ -448,40 +457,101 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 				e.printStackTrace();
 			}
 			String sign=digest.toUpperCase();
-		    String xml="<xml><appid><![CDATA["+appid+"]]></appid><body><![CDATA["+cbody+"]]></body><mch_id><![CDATA["+mch_id+"]]></mch_id><nonce_str><![CDATA["+nonce_str+"]]></nonce_str><notify_url><![CDATA["+notify_url+"]]></notify_url><openid><![CDATA["+openid+"]]></openid><out_trade_no><![CDATA["+out_trade_no+"]]></out_trade_no>"+
-			"<spbill_create_ip><![CDATA["+spbill_create_ip+"]]></spbill_create_ip><total_fee><![CDATA[1]]></total_fee><trade_type><![CDATA["+trade_type+"]]></trade_type><sign><![CDATA["+sign+"]]></sign></xml>";
-		    String url = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+			
+//			sb1.append("<xml><appid><![CDATA["+appid+"]]></appid><body><![CDATA["+body+"]]></body><mch_id><![CDATA["+mch_id+"]]></mch_id><nonce_str><![CDATA["+nonce_str+"]]></nonce_str><notify_url><![CDATA["+notify_url+"]]></notify_url><openid><![CDATA["+openid+"]]></openid><out_trade_no><![CDATA["+out_trade_no+"]]></out_trade_no>"+
+//			"<spbill_create_ip><![CDATA["+spbill_create_ip+"]]></spbill_create_ip><total_fee><![CDATA[1]]></total_fee><trade_type><![CDATA["+trade_type+"]]></trade_type><sign><![CDATA["+sign+"]]></sign></xml>");
+//			String xml=new String(sb1.toString().getBytes(),"utf-8");
+//			System.out.println(xml);
+			String xml="<xml><appid><![CDATA["+appid+"]]></appid><body><![CDATA["+body+"]]></body><mch_id><![CDATA["+mch_id+"]]></mch_id><nonce_str><![CDATA["+nonce_str+"]]></nonce_str><notify_url><![CDATA["+notify_url+"]]></notify_url><openid><![CDATA["+openid+"]]></openid><out_trade_no><![CDATA["+out_trade_no+"]]></out_trade_no>"+
+			"<spbill_create_ip><![CDATA["+spbill_create_ip+"]]></spbill_create_ip><total_fee>1</total_fee><trade_type><![CDATA["+trade_type+"]]></trade_type><sign><![CDATA["+sign+"]]></sign></xml>";
+			//xml=new String(xml.getBytes("UTF-8"),"ISO8859-1");
+//			System.out.println(xml);
+			String url = "https://api.mch.weixin.qq.com/pay/unifiedorder";
 	        URL u;
 	        String result="FAIL";
 			try {
-				 u = new URL(url);
-				 HttpURLConnection uc=(HttpURLConnection)u.openConnection();
-		         uc.setRequestMethod("POST");
-		         uc.setRequestProperty("Accept-Charset","UTF-8");
-		         uc.setConnectTimeout(3000);
-		         uc.setDoInput(true);
-		         uc.setDoOutput(true);
-		         OutputStream os=uc.getOutputStream();
-		         os.write(xml.getBytes());
-		         os.flush();
-		         os.close();
-		         uc.connect();
-		         InputStream is=uc.getInputStream();
-				 SAXReader saxReader = new SAXReader();
-				 Document document;
-			     document = saxReader.read(is);
-				 Element root = document.getRootElement();
-				 List<Element> elements=root.elements();
-				 for(Element e:elements)
-				 {
-               //     System.out.println(e.getName()+":"+e.getText());
-					if(e.getText().equals("FAIL"))
-						return result;
-					else if(e.getName().equals("prepay_id"))
-						return e.getText();
-				 }
-				is.close();
-			} catch (IOException | DocumentException e) {
+//				 u = new URL(url);
+//				 HttpURLConnection uc=(HttpURLConnection)u.openConnection();
+//		         uc.setRequestMethod("POST");
+//		         //uc.setRequestProperty("Accept-Charset","ISO8859-1");
+//		         uc.setConnectTimeout(3000);
+//		         uc.setDoInput(true);
+//		         uc.setDoOutput(true);
+//		         
+//		       //  OutputStream os=uc.getOutputStream();
+//		         PrintWriter pw=new PrintWriter(uc.getOutputStream());
+////		         os.write(xml.getBytes("ISO8859-1"));
+////		         os.flush();
+////		         os.close();
+////		         uc.connect();
+//		 
+//		         pw.write(xml);
+//		         pw.flush();
+//		         pw.close();
+//		         InputStream is=uc.getInputStream();
+//				 SAXReader saxReader = new SAXReader();
+//				 Document document;
+//			     document = saxReader.read(is);
+//				 Element root = document.getRootElement();
+//				 List<Element> elements=root.elements();
+//				 for(Element e:elements)
+//				 {
+//                    System.out.println(e.getName()+":"+e.getText());
+////					if(e.getText().equals("FAIL"))
+////						return result;
+////					else if(e.getName().equals("prepay_id"))
+////						return e.getText();
+//				 }
+//				is.close();        
+				//HttpPost连接对象          
+				HttpPost httpRequest = new HttpPost(url);          
+
+//				//使用NameValuePair来保存要传递的Post参数          
+//				List<NameValuePair> params = new ArrayList<NameValuePair>();          
+//
+//				//添加要传递的参数          
+//				params.add(new BasicNameValuePair("xml",xml));          
+
+				//设置字符集             
+				StringEntity httpentity = new StringEntity(xml);              
+				 httpentity.setContentEncoding("utf-8");
+				 httpentity.setContentType("text/xml");
+				//请求httpRequest       
+				 httpRequest.setEntity(httpentity);              
+
+				//取得默认的HttpClient              
+				HttpClient httpclient = new DefaultHttpClient();             
+
+				
+				 //取得HttpResponse             
+				 HttpResponse httpResponse = httpclient.execute(httpRequest);              
+				//HttpStatus.SC_OK表示连接成功              
+				if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK)              
+				{                 
+				 //取得返回的字符串                  
+				//String strResult = EntityUtils.toString(httpResponse.getEntity());  
+					HttpEntity resultentity=httpResponse.getEntity();
+					InputStream is=resultentity.getContent();
+					SAXReader saxReader = new SAXReader();
+					 Document document;
+				     document = saxReader.read(is);
+					 Element root = document.getRootElement();
+					 List<Element> elements=root.elements();
+					 for(Element e:elements)
+					 {
+	                  //  System.out.println(e.getName()+":"+e.getText());
+						if(e.getText().equals("FAIL"))
+							return result;
+						else if(e.getName().equals("prepay_id"))
+							return e.getText();
+					 }
+					is.close();    
+				}              
+				else             
+				{                  
+				     
+				}  
+			} catch (IOException | DocumentException  e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -540,6 +610,7 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 		     }
 		   String  stringA=sb.toString();
 		   String  stringSignTemp=stringA+"&key="+CommonUtils.getWXKey();
+		//   System.out.println(stringSignTemp);
 		   // MD5加密
 	       MessageDigest md;
 	       String digest="";
@@ -551,6 +622,7 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 				e.printStackTrace();
 			}
 			String sign=digest.toUpperCase();
+			//System.out.println(sign);
 		return sign;
 	}
 	//获取多客服详情

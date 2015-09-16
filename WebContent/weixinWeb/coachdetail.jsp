@@ -28,7 +28,7 @@ $(function(){
 	var action1="GETCOACHDETAIL";
 	$.ajax({		   
 			type : "POST",
-			url : "/xiaoba/sbook",
+			url : "../sbook",
 			dataType: "json",
 			data : {
 				action : action1,
@@ -56,7 +56,7 @@ $(function(){
 	var action2="getCoachComments";
 	$.ajax({		   
 		type : "POST",
-		url : "/xiaoba/sbook",
+		url : "../sbook",
 		dataType: "json",
 		data : {
 			action : action2,
@@ -105,7 +105,7 @@ $(function(){
             	pagenum++;
             	$.ajax({		   
             		type : "POST",
-            		url : "/xiaoba/sbook",
+            		url : "../sbook",
             		dataType: "json",
             		data : {
             			action : action2,

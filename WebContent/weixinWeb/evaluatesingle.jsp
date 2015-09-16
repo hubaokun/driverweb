@@ -40,7 +40,7 @@ var action="GETCOMMENTSFORSTUDENT";
 $(function(){
 	$.ajax({		   
 		type : "POST",
-		url : "/xiaoba/sbook",
+		url : "../sbook",
 		dataType: "json",
 		data : {
 			action : action,
@@ -77,7 +77,7 @@ function pullDownAction () {
 setTimeout(function () {	// <-- Simulate network congestion, remove setTimeout from production!
 	$.ajax({		   
 		type : "POST",
-		url : "/xiaoba/sbook",
+		url : "../sbook",
 		dataType: "json",
 		data : {
 			action : action,
@@ -115,7 +115,7 @@ setTimeout(function () {	// <-- Simulate network congestion, remove setTimeout f
     	pagenum++;
     	$.ajax({		   
     		type : "POST",
-    		url : "/xiaoba/sbook",
+    		url : "../sbook",
     		dataType: "json",
     		data : {
     			action : action,
