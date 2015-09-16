@@ -127,8 +127,9 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
          
 	}
 	//获取服务端token
-	 public void getAccessToken()
+	 public boolean getAccessToken()
 	 {
+		 boolean flag=true;
 		 Calendar expired=Calendar.getInstance();
 		 Calendar c=Calendar.getInstance();
 		 String sdate=WeiXinMessage.getValue("service_access_token_expire");
@@ -164,7 +165,7 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 			         WeiXinMessage.setValue("service_access_token", accessToken);
 			         WeiXinMessage.setValue("service_access_token_expire", CommonUtils.getTimeFormat(expiredate,null));
 				} catch (IOException | JSONException e) {
-					// TODO Auto-generated catch block
+					flag=false;
 					e.printStackTrace();
 				}
 		         
@@ -195,11 +196,11 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 		         WeiXinMessage.setValue("service_access_token", accessToken);
 		         WeiXinMessage.setValue("service_access_token_expire", CommonUtils.getTimeFormat(expiredate,null));
 			} catch (IOException | JSONException e) {
-				
+				flag=false;
 				e.printStackTrace();
 			}
 		 }
-		
+		return flag;
 	 }
 	//请求网页端token
      public boolean getWebAccessToken(String code)
@@ -249,7 +250,8 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 		 }
 	//获取ticket的token
      @Override
-	 public void getjsapi_ticket(String accesstoken) {
+	 public boolean getjsapi_ticket(String accesstoken) {
+    	 boolean flag=true;
     	 Calendar expired=Calendar.getInstance();
 		 Calendar c=Calendar.getInstance();
 		 String sdate=WeiXinMessage.getValue("ticket_access_token_expire");
@@ -284,7 +286,7 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 				         WeiXinMessage.setValue("ticket_access_token_expire", CommonUtils.getTimeFormat(expiredate,null));
 			           
 					} catch (JSONException | IOException e) {
-						// TODO Auto-generated catch block
+						flag=false;
 						e.printStackTrace();
 					}
 		         
@@ -317,10 +319,11 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 			         WeiXinMessage.setValue("ticket_access_token_expire", CommonUtils.getTimeFormat(expiredate,null));
 		           
 				} catch (JSONException | IOException e) {
-					// TODO Auto-generated catch block
+					flag=false;
 					e.printStackTrace();
 				}
 		 }
+		 return flag;
 	}
 	//生成随机字符串
      @Override

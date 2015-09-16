@@ -551,6 +551,10 @@ public class SuserServlet extends BaseServlet {
 			}
 			session.setAttribute("studentid", user.getStudentid());
 			session.setAttribute("token", token);
+			if(wxcity!=null)
+			{
+				wxcity=wxcity.replace("市", "");
+			}
 			session.setAttribute("city", wxcity);
 			resultMap.put("UserInfo", user);
 			int rflag=recommendService.checkRecommendinfo(String.valueOf(user.getStudentid()),2);
