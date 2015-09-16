@@ -11,24 +11,21 @@ pageEncoding="UTF-8"%>
 <link href="css/font-awesome.css" rel="stylesheet" />
 <link href="css/scrollbar.css" rel="stylesheet" type="text/css" />
 <link href="css/iscroll.css" rel="stylesheet" type="text/css" />
-<link href="css/flexselect.css" rel="stylesheet" type="text/css">
+
 <link href="css/style.css" rel="stylesheet" type="text/css" />
 <script src="js/jquery-1.8.3.min.js"></script> 
 <script src="js/jquery-ui-1.10.3.min.js"></script> 
 <script src="js/jquery.raty.min.js"></script>
 <script src="js/iscroll.js"></script>
-<script src="js/liquidmetal.js"></script>
-<script src="js/jquery.flexselect.js"></script>
+
 <script type="text/javascript">
 var active_url = "../sbook?action=GETCOACHLIST";
 var studentid=${sessionScope.studentid};
 var pagenum=0;
-
 var myScroll,
 	pullDownEl, pullDownOffset,
 	pullUpEl, pullUpOffset,
 	generatedCount = 0;
-
 /**
  * 下拉刷新 （自定义实现此方法）
  * myScroll.refresh();		// 数据加载完成后，调用界面更新方法
@@ -37,7 +34,6 @@ function pullDownAction () {
 	setTimeout(function () {	// <-- Simulate network congestion, remove setTimeout from production!
 // 		var el, li, i;
 // 		el = document.getElementById('thelist');
-
 // 		for (i=0; i<3; i++) {
 // 			li = document.createElement('li');
 // 			li.innerText = 'Generated row ' + (++generatedCount);
@@ -49,7 +45,6 @@ search_com();
 		//myScroll.refresh();		//数据加载完成后，调用界面更新方法   Remember to refresh when contents are loaded (ie: on ajax completion)
 	}, 1000);	// <-- Simulate network congestion, remove setTimeout from production!
 }
-
 /**
  * 滚动翻页 （自定义实现此方法）
  * myScroll.refresh();		// 数据加载完成后，调用界面更新方法
@@ -58,13 +53,11 @@ function pullUpAction () {
 	setTimeout(function () {	// <-- Simulate network congestion, remove setTimeout from production!
 // 		var el, li, i;
 // 		el = document.getElementById('thelist');
-
 // 		for (i=0; i<3; i++) {
 // 			li = document.createElement('li');
 // 			li.innerText = 'Generated row ' + (++generatedCount);
 // 			el.appendChild(li, el.childNodes[0]);
 // 		}
-
 pagenum++;
 //search_com();
 load_more();
@@ -72,7 +65,6 @@ load_more();
 		//myScroll.refresh();		// 数据加载完成后，调用界面更新方法 Remember to refresh when contents are loaded (ie: on ajax completion)
 	}, 1000);	// <-- Simulate network congestion, remove setTimeout from production!
 }
-
 /**
  * 初始化iScroll控件
  */
@@ -129,11 +121,9 @@ function loaded() {
 	
 	setTimeout(function () { document.getElementById('wrapper').style.left = '0'; }, 800);
 }
-
 //初始化绑定iScroll控件 
 document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 document.addEventListener('DOMContentLoaded', loaded, false); 
-
 </script>
 </head>
 
@@ -236,8 +226,8 @@ document.addEventListener('DOMContentLoaded', loaded, false);
                     	<p>驾校</p>
                         <div class="row">
                         	<div class="col-md-12 col-sm-12 col-xs-12">
-                            	<select type="text" id="selectSchool" placeholder="请选择驾校"  class="flexselect" onchange="getSelectedSchoolId(this)" >
-                            		<option/>
+                            	<select type="text" id="selectSchool" placeholder="请选择驾校"  onchange="getSelectedSchoolId(this)" >
+                            		
                             	</select>
                             </div>
                             
@@ -270,11 +260,9 @@ var cityIdArr = new Array();
 $(document).ready(function()
 {
 	load_coachlist();
-
 	$('#order_tabs').tabs();
 	
 	getSchoolByCity();
-
 // 	//pop up
 // 	$(".detail-wrap").on('click',function ()
 // 	{
@@ -322,7 +310,6 @@ $(document).ready(function()
 		//getSchoolByCity();
 		var school;
 		$('.overlay-select').css("display","block");
-
 		for (var i=0;i<cityNameArr.length;i++)
 		{
 			school += '<option id="'+ cityIdArr[i] +'"  value="' + cityNameArr[i] + '">' +  cityNameArr[i] + '</option>'; 
@@ -330,7 +317,7 @@ $(document).ready(function()
 		
 		$('#selectSchool').append(school);
 		
-		$("select.flexselect").flexselect();
+		//$("select.flexselect").flexselect();
 		
 	});
 	$('#select-finish').on('click',function()
@@ -353,16 +340,12 @@ $(document).ready(function()
 	
 	
 });
-
-
-
 function load_coachlist(search_condition){
 	$.getJSON(active_url,search_condition,function(data){
 		$("#thelist").html("");		  
 		binddate2coachlist(data);
 	});
 }
-
 function binddate2coachlist(data){	  
 		$.each(data.coachlist, function(i, item) {
 			var score_int = 0;
@@ -372,11 +355,9 @@ function binddate2coachlist(data){
 			score_int= parseInt(item.score);
 			score_int= score_int>5?5:score_int;
 			var score_html = "";
-
 			for(var i =0;i<score_int;i++){
 				score_html+="<i class='glyphicon glyphicon-star'></i>";
 		    };
-
             $("#thelist").append(
             		 "<li>"+"<div class='col-md-12 col-sm-12 col-xs-12' coachid="+item.coachid+">"+
                      "<div class='row detail-wrap' onclick='dispalyDetail(this)'>" +
@@ -391,7 +372,6 @@ function binddate2coachlist(data){
                      "<hr/>"+
                    "</div>"+"</li>"
             );
-
         });
 		
 		$("#pullUp").html("");
@@ -403,8 +383,6 @@ function binddate2coachlist(data){
 		
 		myScroll.refresh();	
 }
-
-
 function generateScoreView(scope){
 	var score_str="";
 	for(var i =0;i<scope;i++){
@@ -412,7 +390,6 @@ function generateScoreView(scope){
     };
     return score_str;
 }
-
 function search_coache(){
 	var search_str = $("#search_coach").val();
 	var search_condition = {"condition1":search_str};
@@ -428,7 +405,6 @@ function search_com(){
 	var search_condition = {"condition1":condition1,"condition6":condition6,"condition10":condition10,"driverschoolid":driverschoolid,"pagenum":pagenum};
 	load_coachlist(search_condition);
 };
-
 function load_more(){
 	var condition1 = $("#search_coach").val();//condition1
 	var condition6 = $("input[name='subject']:checked").val();;//condition6
@@ -438,7 +414,6 @@ function load_more(){
 		binddate2coachlist(data);
 	});
 };
-
 function getSchoolByCity(){
 	var city_url = "../sbook?action=GETDRIVERSCHOOLBYCITYNAME";
 	var search_condition = {"cityname":"杭州"};
@@ -451,9 +426,7 @@ function getSchoolByCity(){
 		}
 	});
 	
-
 };
-
 function dispalyDetail(event){
 	var coachid=0;
 	coachid = event.parentElement.getAttribute("coachid");
@@ -467,12 +440,9 @@ function dispalyDetail(event){
 			);
 	$(".overlay").css('display','block');
 }
-
 function getSelectedSchoolId(event){
 	driverschoolid = $(event).find("option:selected").attr("id");
 }
-
-
 </script>
 </body>
 </html>

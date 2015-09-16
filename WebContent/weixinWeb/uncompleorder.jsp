@@ -10,6 +10,10 @@ pageEncoding="UTF-8"%>
 <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <link href="css/font-awesome.css" rel="stylesheet" />
 <link href="css/style.css" rel="stylesheet" type="text/css" />
+<link href="css/scrollbar.css" rel="stylesheet" type="text/css" />
+<link href="css/iscroll.css" rel="stylesheet" type="text/css" />
+<link href="css/coachdetail.css" rel="stylesheet" type="text/css" />
+<script src="js/iscroll.js"></script>
 <script src="js/jquery-1.8.3.min.js"></script> 
 <script src="js/jquery-ui-1.10.3.min.js"></script> 
 <script type="text/javascript">
@@ -26,22 +30,10 @@ var token='${sessionScope.token}';
 $(function(){
 	var pagenum=0;
 	getOrderlist(action1,pagenum);
-	var winH = $(window).height(); //页面可视区域高度 
-    $(window).scroll(function () { 
-        var pageH = $(document.body).height(); 
-        var scrollT = $(window).scrollTop(); //滚动条top 
-        var aa = (pageH-winH-scrollT)/winH; 
-        if(aa<0.02){  
-            if(hasmore==1)
-            {
-            	pagenum++;
-            	getOrderlist(action1,pagenum);
-            } 
-        } 
-    });  
 });
 
 function getOrderlist(at,pagenum){
+	//$("ul#uncomplete li").html("");
 	$.ajax({		   
 		type : "POST",
 		url : "../sorder",
@@ -53,9 +45,12 @@ function getOrderlist(at,pagenum){
 			token	  : token
 		},
 		success : function(data) {
+			if(data.orderlist==undefined || data.orderlist.length==0){
+				$('#noOrder').css('display','block');
+				$('#wrapper').css('display','none');
+				return;
+			}
 			orderlist=data.orderlist;
-			
-			hasmore=data.hasmore;
 			var content_list="";
             for(var i=0;i<orderlist.length;i++)
             {
@@ -86,7 +81,7 @@ function getOrderlist(at,pagenum){
         			hours="距学车还有"+hours+"分钟";
         		}
             	
-            	content_list=content_list+'<div class="order-detail"><div class="order-detail-head"><div class="row"><div class="col-md-6 col-sm-6 col-xs-6">';
+            	content_list=content_list+'<li><div class="order-detail"><div class="order-detail-head"><div class="row"><div class="col-md-6 col-sm-6 col-xs-6">';
             	content_list=content_list+'<p class="text-left">'+starthour+"-"+endhour+'</p></div><div class="col-md-6 col-sm-6 col-xs-6">';
             	content_list=content_list+'<p class="text-right learning">'+hours+'</p></div><div class="col-md-12 col-sm-12 col-xs-12"><hr/></div></div></div>';
             	content_list=content_list+'<div class="order-detail-body"><div class="row"><div class="col-md-12 col-sm-12 col-xs-12">';
@@ -109,7 +104,7 @@ function getOrderlist(at,pagenum){
             	}
             	if(orderlist[i].can_down==1){
             		content_list=content_list+'<a href="complaincoach.jsp?orderid='+orderlist[i].orderid+'"><span class="span-btn complain-btn">投诉</span></a>';
-            		content_list=content_list+'<span class="span-btn sure-btn">确认下车</span>';
+            		content_list=content_list+'<a href="evaluatecoach.jsp?orderid='+orderlist[i].orderid+'"><span class="span-btn sure-btn">确认下车</span></a>';
             	}
             	if(at=='GetWaitEvaluationOrder'){
             		content_list=content_list+'<a href="evaluatecoach.jsp?orderid='+orderlist[i].orderid+'"><span class="span-btn sure-btn">立即评价</span></a>';
@@ -117,17 +112,18 @@ function getOrderlist(at,pagenum){
             	if(at=='GetCompleteOrder'){
             		content_list=content_list+'<a href="coursearrange.jsp?coachid='+orderlist[i].coachid+'"><span class="span-btn sure-btn">继续预约</span></a>';
                 }
-            	content_list=content_list+'</p></div></div></div></div>';
+            	content_list=content_list+'</p></div></div></div></div></li>';
             }
-            if(at=='GetUnCompleteOrder'){
-            	 $("ul#uncomplete li").html(content_list);
-            }else if(at=='GetWaitEvaluationOrder'){
-            	$("ul#waitevaluation li").html(content_list);
-            }else if(at=='GetCompleteOrder'){
-            	$("ul#completeOrder li").html(content_list);
-            }else if(at=='GETCOMPLAINTORDER'){
-            	$("ul#complaint li").html(content_list);
-            }
+           
+           $("#uncomplete").append(content_list);
+		   hasmore=data.hasmore;
+		   $("#pullUp").html("");
+	   		if(data.orderlist.length<10){
+	   			$("#pullUp").append("<span class='pullUpLabel'>没有更多了</span>");
+	   		}else{
+	   			$("#pullUp").append("<span class='pullUpIcon'></span><span class='pullUpLabel'>上拉加载更多...</span>");
+	   		} 
+	   		myScroll.refresh();	
 		}
    });
 }
@@ -155,19 +151,107 @@ function getOrderlist(at,pagenum){
 					jQuery.post("../sorder", params, showCancelOrder, 'json');
 					
 				});
-		/* if(confirm("确认取消此订单")){
-			var studentid='${sessionScope.studentid}';//学员Id
-			studentid='18';
-			var token='${sessionScope.token}';
-			var params = {action:"cancelOrder",studentid:studentid,orderid:orderid,token:token};
-			jQuery.post("../sorder", params, showCancelOrder, 'json');
-		} */
+		
 	}
 	function showCancelOrder(obj){
 		if(obj.code==1){//取消成功
 			getOrderlist(action1);
 		}
 	}
+</script>
+<script type="text/javascript">
+var myScroll,
+pullDownEl, pullDownOffset,
+pullUpEl, pullUpOffset,
+generatedCount = 0;
+/**
+ * 顶部向下拉动
+ */
+function pullDownAction () {
+	setTimeout(function () {	// <-- Simulate network congestion, remove setTimeout from production!
+		pagenum=0;
+		$("#uncomplete").html("");
+		getOrderlist(action1,pagenum);
+		//myScroll.refresh();		//数据加载完成后，调用界面更新方法   Remember to refresh when contents are loaded (ie: on ajax completion)
+	}, 1000);	// <-- Simulate network congestion, remove setTimeout from production!
+	}
+/**
+* 顶部向上拉动，滚动翻页
+* myScroll.refresh();		// 数据加载完成后，调用界面更新方法
+*/
+function pullUpAction () {
+setTimeout(function () {	// <-- Simulate network congestion, remove setTimeout from production!
+	if(hasmore==1)
+    {
+    	pagenum++;
+    	getOrderlist(action1,pagenum);
+    }else{
+    	$("#pullUp").html("<span class='pullUpLabel'>真的没有更多了</span>");
+    }
+	//myScroll.refresh();		// 数据加载完成后，调用界面更新方法 Remember to refresh when contents are loaded (ie: on ajax completion)
+}, 1000);	// <-- Simulate network congestion, remove setTimeout from production!
+}
+
+/**
+* 初始化iScroll控件
+*/
+function loaded() {
+pullDownEl = document.getElementById('pullDown');
+pullDownOffset = pullDownEl.offsetHeight;
+pullUpEl = document.getElementById('pullUp');	
+pullUpOffset = pullUpEl.offsetHeight;
+
+myScroll = new iScroll('wrapper', {
+	scrollbarClass: 'myScrollbar', /* 重要样式 */
+	useTransition: false, /* 此属性不知用意，本人从true改为false */
+	topOffset: pullDownOffset,
+	onRefresh: function () {
+		if (pullDownEl.className.match('loading')) {
+			pullDownEl.className = '';
+			pullDownEl.querySelector('.pullDownLabel').innerHTML = '下拉刷新...';
+		} else if (pullUpEl.className.match('loading')) {
+			pullUpEl.className = '';
+			pullUpEl.querySelector('.pullUpLabel').innerHTML = '上拉加载更多...';
+		}
+	},
+	onScrollMove: function () {
+		if (this.y > 5 && !pullDownEl.className.match('flip')) {
+			pullDownEl.className = 'flip';
+			pullDownEl.querySelector('.pullDownLabel').innerHTML = '松手开始更新...';
+			this.minScrollY = 0;
+		} else if (this.y < 5 && pullDownEl.className.match('flip')) {
+			pullDownEl.className = '';
+			pullDownEl.querySelector('.pullDownLabel').innerHTML = '下拉刷新...';
+			this.minScrollY = -pullDownOffset;
+		} else if (this.y < (this.maxScrollY - 5) && !pullUpEl.className.match('flip')) {
+			pullUpEl.className = 'flip';
+			pullUpEl.querySelector('.pullUpLabel').innerHTML = '松手开始更新...';
+			this.maxScrollY = this.maxScrollY;
+		} else if (this.y > (this.maxScrollY + 5) && pullUpEl.className.match('flip')) {
+			pullUpEl.className = '';
+			pullUpEl.querySelector('.pullUpLabel').innerHTML = '上拉加载更多...';
+			this.maxScrollY = pullUpOffset;
+		}
+	},
+	onScrollEnd: function () {
+		if (pullDownEl.className.match('flip')) {
+			pullDownEl.className = 'loading';
+			pullDownEl.querySelector('.pullDownLabel').innerHTML = '加载中...';				
+			pullDownAction();	// Execute custom function (ajax call?)
+		} else if (pullUpEl.className.match('flip')) {
+			pullUpEl.className = 'loading';
+			pullUpEl.querySelector('.pullUpLabel').innerHTML = '加载中...';				
+			pullUpAction();	// Execute custom function (ajax call?)
+		}
+	}
+});
+setTimeout(function () { document.getElementById('wrapper').style.left = '0'; }, 800);
+}
+
+//初始化绑定iScroll控件 
+document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+document.addEventListener('DOMContentLoaded', loaded, false); 
+
 </script>
 </head>
 <body>
@@ -185,134 +269,22 @@ function getOrderlist(at,pagenum){
           <div id="order_tabs-1"> 
             <!--******************************************-->
             <div class="row order-content container">
+             <div id="wrapper">
+              <div id="scroller">
+              <div id="pullDown"> <span class="pullDownIcon"></span><span class="pullDownLabel">下拉刷新...</span> </div>
               <ul class="order-timeline" id="uncomplete">
-                <li>
-                  <!-- <div class="point"></div>
-                  <div class="time-wrap">今天 </div> -->
-                  <!--single order detail starts--> 
-                                  
-                  <!-- <div class="order-detail">
-                    <div class="order-detail-head">
-                      <div class="row">
-                        <div class="col-md-6 col-sm-6 col-xs-6">
-                          <p class="text-left">16:00-17:00</p>
-                        </div>
-                        <div class="col-md-6 col-sm-6 col-xs-6">
-                          <p class="text-right learning">正在学车</p>
-                        </div>
-                        <div class="col-md-12 col-sm-12 col-xs-12">
-                        	<hr/>
-                        </div>
-                      </div>
-                      
-                    </div>
-                    <div class="order-detail-body"> 
-						<div class="row">
-                        	<div class="col-md-12 col-sm-12 col-xs-12">
-                            	<a href="ordercarlearning.jsp">
-                            	<ul class="order-items">
-                                  <li><span>科目：</span><span>科目二1</span></li>
-                                  <li><span>教练：</span><span>张伟华1</span></li>
-                                  <li><span>地址：</span><span>杭州文艺西路222号1</span></li>
-                                </ul>
-                                </a>
-                                <hr/>
-                                <p class="text-right compute">合计：<span>￥180.001</span></p>
-                                <p>
-                               	  <a href="complaincoach.jsp"><span class="span-btn complain-btn">投诉1</span></a>
-                                  <span class="span-btn sure-btn">确认上车1</span>
-                                </p> 
-                            </div>
-                        </div>
-                    </div>
-                  </div>          -->         
-                  <!--single order ends-->    
-                  <!--single order detail starts-->                  
-                  <!-- <div class="order-detail">
-                    <div class="order-detail-head">
-                      <div class="row">
-                        <div class="col-md-6 col-sm-6 col-xs-6">
-                          <p class="text-left">16:00-17:00</p>
-                        </div>
-                        <div class="col-md-6 col-sm-6 col-xs-6">
-                          <p class="text-right learning">正在学车</p>
-                        </div>
-                        <div class="col-md-12 col-sm-12 col-xs-12">
-                        	<hr/>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="order-detail-body"> 
-						<div class="row">
-                        	<div class="col-md-12 col-sm-12 col-xs-12">
-                            	<a href="ordercarlearning.jsp">
-                            	<ul class="order-items">
-                                  <li><span>科目：</span><span>科目二</span></li>
-                                  <li><span>教练：</span><span>张伟华</span></li>
-                                  <li><span>地址：</span><span>杭州文艺西路222号</span></li>
-                                </ul>
-                                </a>
-                                <hr/>
-                                <p class="text-right compute">合计：<span>￥180.00</span></p>
-                                <p>
-                               	  <a href="complaincoach.jsp"><span class="span-btn complain-btn">投诉</span></a>
-                                  <span class="span-btn sure-btn">确认上车</span>
-                                </p> 
-                            </div>
-                        </div>
-                    </div>
-                  </div>
-                  
-                  single order ends
-                  
-                  <div class="order-detail">
-                    <div class="order-detail-head">
-                      <div class="row">
-                        <div class="col-md-6 col-sm-6 col-xs-6">
-                          <p class="text-left">16:00-17:00</p>
-                        </div>
-                        <div class="col-md-6 col-sm-6 col-xs-6">
-                          <p class="text-right beforelearn">学车未开始</p>
-                        </div>
-                        <div class="col-md-12 col-sm-12 col-xs-12">
-                        	<hr/>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="order-detail-body"> 
-						<div class="row">
-                        	<div class="col-md-12 col-sm-12 col-xs-12">
-                            <a href="ordercarlearnbefore.jsp">
-                            	<ul class="order-items">
-                                  <li><span>科目：</span><span>科目二</span></li>
-                                  <li><span>教练：</span><span>张伟华</span></li>
-                                  <li><span>地址：</span><span>杭州文艺西路222号</span></li>
-                                </ul>
-                                </a>
-                                <hr/>
-                                <p class="text-right compute">合计：<span>￥180.00</span></p>
-                                <span class="span-btn un-sure-btn">取消订单</span></span> 
-                            </div>
-                        </div>
-                    </div>
-                  </div>
-                  <div style="width:100px; height:50px; display:block;"></div>
-                </li>
+               <!-- <li>
+               
+               </li> -->
               </ul>
-            </div> -->
-            <!--******************************************--> 
-          </div>
-                           <!--single order ends-->
-                           <div style="width:100px; height:50px; display:block;"></div>
-                       </li>
-                   </ul>
-               </div>
-           </div>
+              <div id="pullUp" style="margin-top:15px;"> <span class="pullUpIcon"></span><span class="pullUpLabel">上拉加载更多...</span> </div>
+            </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+	  </div></div>
 
 
 <!--提示框：未点击确认上车 starts-->
@@ -342,6 +314,15 @@ function getOrderlist(at,pagenum){
     </div>
   </div>
 </div>
+<!--没有订单时显示的--> 
+<div id="noOrder" class="container" style="margin-top:50px;display:none">
+	<div class="row">
+    	<div class="col-md-12 col-sm-12 col-xs-12">
+        	<img src="images/emptyorder.png" class="img-responsive center-block" style="width:20%;" />
+            <p class="text-center" style="color:rgb(217,217,217); font-size:13px; margin-top:8px;">您还没有相关订单</p>
+        </div>
+    </div>
+</div>
 <!--点击取消订单按钮的提示弹框 starts-->
 <script src="js/jquery-1.8.3.min.js"></script> 
 <script src="js/jquery-ui-1.10.3.min.js"></script> 
@@ -350,12 +331,10 @@ function getOrderlist(at,pagenum){
 	function timeTips()
 	{
 		setTimeout("hideTips()",4000) // 这个是主要参数，设置消失的时间
-		
 	}
 	function hideTips()
 	{
 		$('.overlay-tips,.overlay-tips-inner').css('display','none');
-		
 	}
 </script>
 
