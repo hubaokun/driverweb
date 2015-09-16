@@ -11,9 +11,9 @@ public interface IGetYouWanna {
 	public abstract void createmenu(String service_access_token,String menu);
 	
 	public abstract void deletemenu(String service_access_token);
-	public abstract void getAccessToken();
+	public abstract boolean getAccessToken();
 	public abstract boolean getWebAccessToken(String code);
-	public abstract void getjsapi_ticket(String accesstoken);
+	public abstract boolean getjsapi_ticket(String accesstoken);
 	public abstract String CreatenNonce_str(int length);
 	public abstract long CreatenTimestamp();
 	public abstract String getSignature(String noncestr,long timestamp,String url);

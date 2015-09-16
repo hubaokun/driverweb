@@ -15,11 +15,42 @@ import com.weixin.serviceImpl.GetYouWannaImpl;
 @Component
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 public class GetAccessToken {
-	@Scheduled(cron = "0 40 * * * ?")
+	private int tokencount=0;
+	private int ticketcount=0;
+	//每5分钟检查一次token是否过期
+	@Scheduled(cron = "0 0/5 * * * ?")
 	public void checktoken() {
+		System.out.println("##################微信token定时任务执行开始#################");
 		IGetYouWanna WXmessageService=new GetYouWannaImpl();
-		WXmessageService.getAccessToken();
-	//	WXmessageService.getWebAccessToken(code);
-		WXmessageService.getjsapi_ticket(WeiXinMessage.getValue("service_access_token"));
+		if(WXmessageService.getAccessToken())
+		{
+			if(WXmessageService.getjsapi_ticket(WeiXinMessage.getValue("service_access_token")))
+			{
+				System.out.println("##################微信token定时任务执行结束#################");
+			}
+			else
+			{
+				if(ticketcount==3)
+				{
+					System.out.println("ticketcount="+ticketcount+"连续请求接口失败,请稍后再试!");
+					return;
+				}
+				ticketcount++;
+				checktoken();
+			}
+		}
+		else
+		{
+			if(tokencount==3)
+			{
+				System.out.println("tokencount="+tokencount+"连续请求接口失败,请稍后再试!");
+				return;
+			}
+			tokencount++;
+			checktoken();
+		}
+
+		
+		
 	}
 }

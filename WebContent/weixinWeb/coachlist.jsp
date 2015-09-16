@@ -22,7 +22,7 @@ pageEncoding="UTF-8"%>
 var active_url = "../sbook?action=GETCOACHLIST";
 var studentid=${sessionScope.studentid};
 var pagenum=0;
-
+var city="${sessionScope.city}";
 var myScroll,
 	pullDownEl, pullDownOffset,
 	pullUpEl, pullUpOffset,
@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', loaded, false);
     <div id="tabs-1">
       <div class="row search-wrap">
         <form>
-          <div class="col-md-3 col-sm-3 col-xs-3"> <span><a href="citychoose.html">${sessionScope.city}</a><i class="glyphicon icon-citydown"></i></span> </div>
+          <div class="col-md-3 col-sm-3 col-xs-3"> <span><a href="javascript:void(0);">${sessionScope.city}</a><i class="glyphicon icon-citydown"></i></span> </div>
           <div class="col-md-7 col-sm-7 col-xs-7">
             <div class="input-group">
               <input type="text" id="search_coach" class="form-control" placeholder="" aria-describedby="basic-addon2">
@@ -268,7 +268,7 @@ var cityNameArr = new Array();
 var cityIdArr = new Array();
 $(document).ready(function()
 {
-	load_coachlist();
+	load_coachlist("'fixedposition':"+city);
 
 	$('#order_tabs').tabs();
 	
@@ -424,7 +424,7 @@ function search_com(){
 	var condition6 = $("input[name='subject']:checked").attr("subjectid");//condition6
 	var condition10 = $("input[name='cartype']:checked").attr("modelid");//condition10
 	//driverschoolid = $("#driverschoolid").val();//driverschoolid
-	var search_condition = {"condition1":condition1,"condition6":condition6,"condition10":condition10,"driverschoolid":driverschoolid,"pagenum":pagenum};
+	var search_condition = {"condition1":condition1,"condition6":condition6,"condition10":condition10,"driverschoolid":driverschoolid,"pagenum":pagenum,"fixedposition":city};
 	load_coachlist(search_condition);
 };
 
@@ -432,7 +432,7 @@ function load_more(){
 	var condition1 = $("#search_coach").val();//condition1
 	var condition6 = $("input[name='subject']:checked").val();;//condition6
 	//var driverschoolid = $("#driverschoolid").val();//driverschoolid
-	var search_condition = {"condition1":condition1,"condition6":condition6,"driverschoolid":driverschoolid,"pagenum":pagenum};
+	var search_condition = {"condition1":condition1,"condition6":condition6,"driverschoolid":driverschoolid,"pagenum":pagenum,"fixedposition":city};
 	$.getJSON(active_url,search_condition,function(data){	  
 		binddate2coachlist(data);
 	});
@@ -440,7 +440,7 @@ function load_more(){
 
 function getSchoolByCity(){
 	var city_url = "../sbook?action=GETDRIVERSCHOOLBYCITYNAME";
-	var search_condition = {"cityname":"杭州"};
+	var search_condition = {"cityname":city};
 	$.getJSON(city_url,search_condition,function(data){
 		//alert(data.dslist); 
 		for (var i=0;i<data.dslist.length;i++)
