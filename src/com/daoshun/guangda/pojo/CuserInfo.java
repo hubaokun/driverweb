@@ -398,6 +398,9 @@ public class CuserInfo implements Serializable {
 	@Column(name = "usertype", length = 1, columnDefinition = "INT default 0")
 	private Integer usertype;
 	
+	// 小巴券发放权限0.不可发放1.可发放
+	@Column(name = "couponlimit", length = 1, columnDefinition = "INT default 0")
+	private Integer couponlimit;
 	
 	
 	public Integer getDevicetype() {
@@ -1137,6 +1140,14 @@ public class CuserInfo implements Serializable {
 
 	public void setDisplaydriverschool(String displaydriverschool) {
 		this.displaydriverschool = displaydriverschool;
+	}
+
+	public Integer getCouponlimit() {
+		return couponlimit;
+	}
+
+	public void setCouponlimit(Integer couponlimit) {
+		this.couponlimit = couponlimit;
 	}
 	
 }

@@ -322,7 +322,23 @@
 						<input  name="editusertype" type="radio" value="1" ${cuser.usertype=='1'?'checked':'' }/>是
 							<%--<input name="editaddtime" value="<s:date name="cuser.addtime" format="yyyy-MM-dd HH:mm:ss" />" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})"/>--%>
 						</td>
-						<td></td>
+						<td>小巴券发放权限：</td>
+						<s:if test="cuser.couponlimit==0">
+							<td >
+								<select  name="couponlimit" >
+									<option selected="selected"  value="0" >未开通</option>
+									<option   value="1" >开通</option>
+								</select>
+							</td>
+						</s:if>
+						<s:else>
+							<td>
+								<select  name="couponlimit">
+									<option   value="0" >未开通</option>
+									<option   selected="selected" value="1" >开通</option>
+								</select>
+							</td>
+						</s:else>
 						<td></td>
 					</tr>
 				</table>
