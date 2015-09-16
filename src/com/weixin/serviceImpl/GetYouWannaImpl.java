@@ -416,7 +416,7 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 		 String body="hzxiaoba";
 		// body=new String(body.getBytes("unicode"),"UTF-8");
 		// System.out.println(body);
-		 String notify_url="http://wx.xiaobaxueche.com/xiaoba/weixinWeb/weixinpaycb";
+		 String notify_url="http://wx.xiaobaxueche.com/dadmin/weixinWeb/weixinpaycb";
 		 String trade_type="JSAPI";
 		 HashMap<String,String> map=new HashMap<String,String>();
 		 StringBuffer sb=new StringBuffer();

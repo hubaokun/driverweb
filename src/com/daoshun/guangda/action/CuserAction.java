@@ -276,6 +276,8 @@ public class CuserAction extends BaseAction {
 
 	private int frozecoachtype;
 	
+	private Integer couponlimit;
+	
 	private String provinceid;//省ID
 	private String cityid;//市ID
 	private String areaid;//区ID
@@ -1638,6 +1640,10 @@ public class CuserAction extends BaseAction {
 		// 修改性别
 		if (editgender != null) {
 			cuser.setGender(editgender);
+		}
+		// 修改小巴券发放权限
+		if (couponlimit != null) {
+			cuser.setCouponlimit(couponlimit);
 		}
 		// 修改教龄
 		if (edityears != null) {
@@ -3060,6 +3066,14 @@ public class CuserAction extends BaseAction {
 
 	public void setRecharglist(List<RechargeRecordInfo> recharglist) {
 		this.recharglist = recharglist;
+	}
+
+	public Integer getCouponlimit() {
+		return couponlimit;
+	}
+
+	public void setCouponlimit(Integer couponlimit) {
+		this.couponlimit = couponlimit;
 	}
 	
 	

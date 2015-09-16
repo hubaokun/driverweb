@@ -88,9 +88,9 @@ $(function(){
 </style>
 
 
-<title>教练列表</title>
+<title>教练余额管理</title>
 </head>
-<input type="hidden" id="change_id" value="4"/>
+<input type="hidden" id="change_id" value="8"/>
 <input type="hidden" id="index" value="1" />
 <input type="hidden" id=checkstatus value="${checkstate}">
 <input type="hidden" id=schoolstate value="${driveSchoolname}">
@@ -132,9 +132,12 @@ $(function(){
 	<div class="serchcontentdiv"style="float: left; margin-left: 50px; width: 160px"  >
 <input  type="text" class="searchdiv" style="width:70px;font-family: 微软雅黑;text-align: center;" value="审核状态" readonly="readonly"/>
 		<select id="checkstate" class="searchdiv" style="width: 85px;">
-				<option value="0" selected="selected">不限</option>
-				<option id="check1" value="1">审核未通过</option>
-				<option id="check2" value="2">审核通过</option>
+				<option value="4" selected="selected">不限</option>
+				<option id="check1" value="0">资料不完善</option>
+				<option id="check2" value="1">等待审核</option>
+				<option id="check3" value="2">审核通过</option>
+				<option id="check4" value="3">审核未通过</option>
+				
 		</select>
 	</div>
 	
