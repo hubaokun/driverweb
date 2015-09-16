@@ -36,7 +36,7 @@ public class weixinServlet extends BaseServlet{
 	 */
 	private static final long serialVersionUID = 1L;
 	private IGetYouWanna wxmessageService;
-	private String baseUrl="http://wx.xiaobaxueche.com/xiaoba/weixinWeb/weixin?action=";
+	private String baseUrl="http://wx.xiaobaxueche.com/dadmin/weixinWeb/weixin?action=";
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
@@ -86,7 +86,7 @@ public class weixinServlet extends BaseServlet{
 		long timestamp=wxmessageService.CreatenTimestamp();
 		String signature=wxmessageService.getSignature(noncestr, timestamp, url);
 		
-
+      //  System.out.println("noncestr="+noncestr+"  timestamp="+timestamp+"  signature="+signature+" appid="+CommonUtils.getAppid());
 		request.setAttribute("noncestr", noncestr);
 		request.setAttribute("timestamp", timestamp);
 		request.setAttribute("signature", signature);

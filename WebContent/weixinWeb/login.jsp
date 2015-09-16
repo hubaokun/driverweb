@@ -151,7 +151,7 @@ function slogin()
 	}
 	$.ajax({
 		type : "POST",
-		url : "/xiaoba/suser",
+		url : "../suser",
 		dataType: "json",
 		data : {
 			action : action,
@@ -186,7 +186,7 @@ function sendvcode()
 	var type=$('#s_type').val();
 	$.ajax({
 		type : "POST",
-		url : "/xiaoba/suser",
+		url : "../suser",
 		dataType: "json",
 		data : {
 			action : action,

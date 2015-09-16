@@ -103,7 +103,7 @@ function applycash()
 	{   
 		$.ajax({
 			type : "POST",
-			url : "/xiaoba/suser",
+			url : "../suser",
 			dataType: "json",
 			data : {
 				action : action,
