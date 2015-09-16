@@ -17,6 +17,28 @@ pageEncoding="UTF-8"%>
 <script src="js/jquery-1.8.3.min.js"></script> 
 <script src="js/jquery-ui-1.10.3.min.js"></script> 
 <script src="js/jquery.raty.min.js"></script>
+<style type="text/css">
+	.order-content ul.order-timeline li div.order-detail .order-detail-head .order-detail-head-date p
+	{
+	    text-align: left;
+	    font-size: 14px;
+	    color: #1798f2;
+	    padding-top: 5px;
+	}
+	.order-content ul.order-timeline li div.order-detail .order-detail-head .order-detail-head-date p >i
+	{
+		padding-right:5px;
+	}
+	.order-content ul.order-timeline li div.order-detail .order-detail-body p.order-canceled-tips{
+    font-size: 13px;
+    color: #fe0000;
+    margin-top: 10px;
+    padding: 20px 0px 20px 0px;
+    border-top: 1px solid #eee;
+    text-align:center;
+    
+}
+</style>
 <script type="text/javascript">
 var orderlist;
 var pagenum=0;
@@ -81,7 +103,7 @@ function getOrderlist(at,pagenum){
         			hours="距学车还有"+hours+"分钟";
         		}
             	
-            	content_list=content_list+'<li><div class="order-detail"><div class="order-detail-head"><div class="row"><div class="col-md-6 col-sm-6 col-xs-6">';
+            	content_list=content_list+'<li><div class="order-detail"><div class="order-detail-head"><div class="row order-detail-head-date"><div class="col-md-12 col-sm-12 col-xs-12"><p><i class="icon icon-calendar"></i>'+start_time+'</p></div></div><div class="row"><div class="col-md-6 col-sm-6 col-xs-6">';
             	content_list=content_list+'<p class="text-left">'+starthour+"-"+endhour+'</p></div><div class="col-md-6 col-sm-6 col-xs-6">';
             	content_list=content_list+'<p class="text-right learning">'+hours+'</p></div><div class="col-md-12 col-sm-12 col-xs-12"><hr/></div></div></div>';
             	content_list=content_list+'<div class="order-detail-body"><div class="row"><div class="col-md-12 col-sm-12 col-xs-12">';
@@ -97,7 +119,7 @@ function getOrderlist(at,pagenum){
             	}
             	if(at=='GetUnCompleteOrder'){
 	            	if(orderlist[i].studentstate==4){
-	            		content_list=content_list+'<span class="span-btn sure-btn">已提交取消订单申请,等待教练确认中!</span>';
+	            		content_list=content_list+'<p class="order-canceled-tips">已提交取消订单申请，等待教练确认中</p>';
 	            	}else if(orderlist[i].can_cancel==1){
 	            		content_list=content_list+'<span class="span-btn complain-btn" onclick="cancelOrder('+orderlist[i].orderid+')">取消订单</span>';
 	            	}
