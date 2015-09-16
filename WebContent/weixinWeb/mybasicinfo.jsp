@@ -60,16 +60,10 @@ pageEncoding="UTF-8"%>
             <div class="col-md-12 col-sm-12 col-xs-12">
             	<p>出生年月：<span><input type="text" placeholder="出生年月" id="birthday" /></span></p>
             </div>
-            <!-- <div class="col-md-12 col-sm-12 col-xs-12">
-            	<p>所在城市：<span><input type="text" placeholder="所在城市" id="cityname"/></i></span></p>
-            </div> -->
-             <!-- <div class="col-md-12 col-sm-12 col-xs-12 ">
-		      <p>所在城市：<a href="chooselocation.jsp"/>浙江省杭州市余杭区</a></p>
-		    </div> -->
-		    <p>所在城市：
+            <div class="col-md-12 col-sm-12 col-xs-12"><p>所在城市：
 		        <input type="text" placeholder="省-市-区/县" id="location"/>
 		        <input type="hidden" id="selectedcity" />
-		    </p>
+		    </p></div>
         </div>   
         <div class="row mylearninfo-submit">
   	<div class="col-md-12 col-sm-12 col-xs-12">
@@ -157,7 +151,7 @@ pageEncoding="UTF-8"%>
 <script src="mobiscroll/js/mobiscroll.scroller.js"></script> 
 <script src="mobiscroll/js/mobiscroll.util.datetime.js"></script> 
 <script src="mobiscroll/js/mobiscroll.datetimebase.js"></script> 
-<script src="moscroll/js/mobiscroll.i18n.zh.js"></script> 
+<script src="mobiscroll/js/mobiscroll.i18n.zh.js"></script> 
 <script src="mobiscroll/js/mobiscroll.widget.ios.js"></script> 
 <!--<script src="js/bootstrap-datepicker.js"></script>--> 
 <script>
@@ -471,7 +465,7 @@ function perfectPersoninfo(){
 	var g="1";
 	if(gender=='男'){
 		g="1";
-	}else if(gender=='男'){
+	}else if(gender=='女'){
 		g="2";
 	}
 	var tel = $("#phone").val(); //获取手机号

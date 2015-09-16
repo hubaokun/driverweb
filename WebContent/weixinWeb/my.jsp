@@ -6,13 +6,17 @@ pageEncoding="UTF-8"%>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<title>小巴学车</title>
+<title>我的账户</title>
 <link href="css/reset.css" rel="stylesheet" type="text/css" />
 <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <link href="css/font-awesome.css" rel="stylesheet" />
 <link href="css/style.css" rel="stylesheet" type="text/css" />
 <script src="js/jquery-1.8.3.min.js"></script>
 <style type="text/css">
+.container
+{
+	overflow:hidden;
+}
 </style>
 
 <script type="text/javascript">
@@ -49,7 +53,7 @@ function showStudent(obj){
 		//$("#avatarurl").attr("src",'${sessionScope.avatarurl}');//设置头像图片
 		//$("#avatarurl").attr("src",obj.data.avatarurl);//设置头像图片
 		$("#coin").html(obj.data.coinnum+"个");
-		$("#money").html(obj.data.money+"￥");
+		$("#money").html(obj.data.money+"元");
 		$("#coupon").html(obj.coupon+"小时");
 	}else{
 		alert(obj.message);

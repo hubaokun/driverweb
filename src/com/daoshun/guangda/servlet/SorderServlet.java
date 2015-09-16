@@ -244,7 +244,6 @@ public class SorderServlet extends BaseServlet {
 							tokenTime.add(Calendar.DAY_OF_YEAR, login_vcode_time);
 							if (now.after(tokenTime)) {
 								resultMap.put(Constant.CODE, 95);
-//								System.out.print("SorderServlet suser != null checkSession-----111111111");
 								resultMap.put(Constant.MESSAGE, "您的登录信息已经过期,请重新登录.");
 								return false;
 							} else {
@@ -252,9 +251,6 @@ public class SorderServlet extends BaseServlet {
 							}
 						} else {
 							resultMap.put(Constant.CODE, 95);
-							System.out.println(token.toString());
-							System.out.println(suser.getToken().toString());
-//							System.out.print("SorderServlet 2user != null checkSession-----22222222");
 							resultMap.put(Constant.MESSAGE, "您的登录信息已经过期,请重新登录.");
 							return false;
 						}

@@ -34,7 +34,7 @@ function showBalance(obj){
 			for (var i = 0; i < rs.length; i++) {
 				var type='';
 				var op='';
-				//1:支付宝充值  2：提现  3：订单支付 4:提现不通过
+				//1:支付宝充值  2：提现  3：订单支付 4:提现不通过 5 
 				if(rs[i].type==1){
 					type="支付宝充值";
 					op="+";
@@ -46,6 +46,9 @@ function showBalance(obj){
 					op="-";
 				}else if(rs[i].type==4){
 					type="提现不通过";
+					op="+";
+				}else if(rs[i].type==5){
+					type="微信充值";
 					op="+";
 				}
 				h=h+'<div class="col-md-12 col-sm-12 col-xs-12"><p><span>'+type+'</span><span class="pull-right ';

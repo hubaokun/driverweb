@@ -18,7 +18,7 @@ pageEncoding="UTF-8"%>
 <script src="js/jquery-ui-1.10.3.min.js"></script>
 <script type="text/javascript">
 var orderlist;
-var pagenum=4;
+var pagenum=0;
 var hasmore=0;
 var studentid='${sessionScope.studentid}';
 //studentid='18';
@@ -86,7 +86,7 @@ function getOrderlist(at,pagenum){
             	content_list=content_list+'<div class="order-detail-body"><div class="row"><div class="col-md-12 col-sm-12 col-xs-12">';
             	content_list=content_list+'<a href="compleorderdetail.jsp?orderid='+orderlist[i].orderid+'"><ul class="order-items"><li><span>科目：</span><span>';
             	content_list=content_list+orderlist[i].subjectname;
-            	content_list=content_list+'</span></li><li><span>教练：</span><span>'+orderlist[i].cuserinfo.realname+'******'+orderlist[i].orderid;
+            	content_list=content_list+'</span></li><li><span>教练：</span><span>'+orderlist[i].cuserinfo.realname;
             	content_list=content_list+'</span></li><li><span>地址：</span><span>'+orderlist[i].detail;
             	content_list=content_list+'</span></li></ul></a><hr/><p class="text-right compute">合计：<span>';
             	content_list=content_list+orderlist[i].total+'</span></p><p>';

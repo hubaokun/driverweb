@@ -16,6 +16,7 @@ pageEncoding="UTF-8"%>
 <script src="js/iscroll.js"></script>
 <script src="js/jquery-1.8.3.min.js"></script> 
 <script src="js/jquery-ui-1.10.3.min.js"></script> 
+<script src="js/jquery.raty.min.js"></script>
 <script type="text/javascript">
 var orderlist;
 var pagenum=0;
@@ -33,7 +34,6 @@ $(function(){
 });
 
 function getOrderlist(at,pagenum){
-	//$("ul#uncomplete li").html("");
 	$.ajax({		   
 		type : "POST",
 		url : "../sorder",
@@ -129,33 +129,36 @@ function getOrderlist(at,pagenum){
 }
 </script>
 <script type="text/javascript">
+	var orderinfoId=0;
 	//取消订单
 	function cancelOrder(orderid){
+		orderinfoId=orderid;//赋值订单号
 		$('.overlay-cancle').css('display','block');
 		var heightC = $('.overlay-cancle-content').height();
 		var heightW = $(window).height();
 		var w = (heightW-heightC)/2;
 		$('.overlay-cancle-content').css('top',w);
-		$('.overlay-cancle .overlay-cancle-content .col-md-12:last-child span').click(function ()
-				{
-					$('.overlay-cancle').css('display','none');
-					var studentid='${sessionScope.studentid}';//学员Id
-					studentid='18';
-					var token='${sessionScope.token}';
-					var params = {
-									action:"cancelOrder",
-									studentid:studentid,
-									orderid:orderid,
-									token:token
-								 };
-					jQuery.post("../sorder", params, showCancelOrder, 'json');
-					
-				});
-		
 	}
+	function toCancelOrder(){
+		$('.overlay-cancle').css('display','none');
+		var studentid='${sessionScope.studentid}';//学员Id
+		studentid='18';
+		var token='${sessionScope.token}';
+		var params = {
+						action:"cancelOrder",
+						studentid:studentid,
+						orderid:orderinfoId,
+						token:token
+					 };
+		jQuery.post("../sorder", params, showCancelOrder, 'json');
+	}
+	/* $('.overlay-cancle .overlay-cancle-content .col-md-12:last-child span').click(function ()
+			{
+	}); */
 	function showCancelOrder(obj){
-		if(obj.code==1){//取消成功
-			getOrderlist(action1);
+		alert(obj.message);
+		if(obj.code==1){
+			window.location.href="uncompleorder.jsp";
 		}
 	}
 </script>
@@ -274,7 +277,6 @@ document.addEventListener('DOMContentLoaded', loaded, false);
               <div id="pullDown"> <span class="pullDownIcon"></span><span class="pullDownLabel">下拉刷新...</span> </div>
               <ul class="order-timeline" id="uncomplete">
                <!-- <li>
-               
                </li> -->
               </ul>
               <div id="pullUp" style="margin-top:15px;"> <span class="pullUpIcon"></span><span class="pullUpLabel">上拉加载更多...</span> </div>
@@ -309,7 +311,7 @@ document.addEventListener('DOMContentLoaded', loaded, false);
       </div>
       <div class="row">
         <div class="col-md-12 col-sm-12 col-xs-12"> <span>教练确认以后才能取消成功</span> </div>
-        <div class="col-md-12 col-sm-12 col-xs-12"><span>请教练确认</span></div>
+        <div class="col-md-12 col-sm-12 col-xs-12" onclick="toCancelOrder()"><span>请教练确认</span></div>
       </div>
     </div>
   </div>
@@ -324,9 +326,7 @@ document.addEventListener('DOMContentLoaded', loaded, false);
     </div>
 </div>
 <!--点击取消订单按钮的提示弹框 starts-->
-<script src="js/jquery-1.8.3.min.js"></script> 
-<script src="js/jquery-ui-1.10.3.min.js"></script> 
-<script src="js/jquery.raty.min.js"></script>
+
 <script>
 	function timeTips()
 	{
@@ -370,7 +370,6 @@ $(document).ready(function()
 		$('.overlay-cancle').css('display','none');
 		
 	}); */
-
 });
 
 </script>
