@@ -11,14 +11,11 @@ pageEncoding="UTF-8"%>
 <link href="css/font-awesome.css" rel="stylesheet" />
 <link href="css/scrollbar.css" rel="stylesheet" type="text/css" />
 <link href="css/iscroll.css" rel="stylesheet" type="text/css" />
-<link href="css/flexselect.css" rel="stylesheet" type="text/css">
 <link href="css/style.css" rel="stylesheet" type="text/css" />
 <script src="js/jquery-1.8.3.min.js"></script> 
 <script src="js/jquery-ui-1.10.3.min.js"></script> 
 <script src="js/jquery.raty.min.js"></script>
 <script src="js/iscroll.js"></script>
-<script src="js/liquidmetal.js"></script>
-<script src="js/jquery.flexselect.js"></script>
 <script type="text/javascript">
 var active_url = "../sbook?action=GETCOACHLIST";
 var studentid=44506;
@@ -236,8 +233,8 @@ document.addEventListener('DOMContentLoaded', loaded, false);
                     	<p>驾校</p>
                         <div class="row">
                         	<div class="col-md-12 col-sm-12 col-xs-12">
-                            	<select type="text" id="selectSchool" placeholder="请选择驾校"  class="flexselect" onchange="getSelectedSchoolId(this)" >
-                            		<option/>
+                            	<select type="text" id="selectSchool" placeholder="请选择驾校"   onchange="getSelectedSchoolId(this)" >
+                            		
                             	</select>
                             </div>
                             
@@ -330,7 +327,7 @@ $(document).ready(function()
 		
 		$('#selectSchool').append(school);
 		
-		$("select.flexselect").flexselect();
+		//$("select.flexselect").flexselect();
 		
 	});
 	$('#select-finish').on('click',function()

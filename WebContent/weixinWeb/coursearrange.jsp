@@ -9,7 +9,7 @@ pageEncoding="UTF-8"%>
 <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <link href="css/font-awesome.css" rel="stylesheet" />
 <link href="css/course.css" rel="stylesheet" type="text/css" />
-<link href="css/course.css" rel="stylesheet" type="text/css" />
+<link href="css/loader.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 <div class="container">
@@ -261,6 +261,15 @@ pageEncoding="UTF-8"%>
 </div>
 <!--提示框：未点击确认上车 ends-->
 
+<div class="overlay-wait">
+  <div class="overlay-wait-content">
+  	<div class="text-center">
+      <p>正在加载</p>
+      <div class="loader1"> <span></span> <span></span> <span></span> <span></span> <span></span> </div>
+    </div>
+  </div>
+</div>
+
 <script src="js/jquery-1.8.3.min.js"></script>
 
 <!--课程表的日期选择JS函数 starts-->
@@ -373,6 +382,7 @@ function getFormattedDate(date_str) {
 var data_list_all;
 
 function getSchedulByDate(event){
+	show_loading();
 	var str_date ="";
 	
 	if(event){
@@ -475,7 +485,7 @@ function getSchedulByDate(event){
 			}	
 		}
 
-			
+		hide_loading();	
 		});
 	}
 }
@@ -556,6 +566,18 @@ function timeTips()
 function hideTips()
 {
 	$('.overlay-tips,.overlay-tips-inner').css('display','none');	
+}
+
+function show_loading(){
+	$('.overlay-wait').css('display','block');
+	var heightC = $('.overlay-wait-content').height();
+	var height = $(window).height();
+	var h = (height-heightC)/2;
+	$('.overlay-wait-content').css('margin-top',h);
+}
+
+function hide_loading(){
+	$('.overlay-wait').css('display','none');
 }
 
 $(document).ready(function()

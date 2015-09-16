@@ -9,6 +9,7 @@
 <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <link href="css/font-awesome.css" rel="stylesheet" />
 <link href="css/cash.css" rel="stylesheet" type="text/css" />
+<link href="css/loader.css" rel="stylesheet" type="text/css" />
 <script src="js/jquery-1.8.3.min.js"></script> 
 <script src="js/jquery-ui-1.10.3.min.js"></script> 
 <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
@@ -98,6 +99,16 @@ wx.config({
     </div>
   </div>
 </div>
+
+<div class="overlay-wait">
+  <div class="overlay-wait-content">
+  	<div class="text-center">
+      <p>正在支付中</p>
+      <div class="loader1"> <span></span> <span></span> <span></span> <span></span> <span></span> </div>
+    </div>
+  </div>
+</div>
+
 <script src="js/jquery-1.8.3.min.js"></script>
 <script>
 $(document).ready(function()
@@ -105,6 +116,8 @@ $(document).ready(function()
 	//控制确定弹框位置
 	var height = $(window).height();
 
+
+	
 	$('.cash-sure').click(function ()
 	{
 		var action ="RECHARGE";
@@ -121,7 +134,7 @@ $(document).ready(function()
 			return;
 		}
 		if(parseInt(amount)==amount)
-		{   
+		{   show_loading();
 			$.ajax({
 				type : "POST",
 				url : "/xiaoba/suser",
@@ -134,7 +147,7 @@ $(document).ready(function()
 					token : token
 				},
 				success : function(data) {
-					
+					hide_loading();
 					var code=data.code;
 					if(code!=1)
 					{
@@ -164,11 +177,16 @@ $(document).ready(function()
 							    paySign: paySign, // 支付签名
 							    success: function (res) {
 							       // 支付成功后的回调函数 
+							       window.location.href="my.jsp";
+							    },
+							    cancel:function(res)
+							    {
+							    	window.location.href="my.jsp";
 							    }
 							});
 						}
 					}
-					
+					 hide_loading();
 					
 				}
 			});
@@ -198,6 +216,18 @@ function displaywindow()
 function hidewindow()
 {
 	$('.overlay').css('display','none');
+}
+
+function show_loading(){
+	$('.overlay-wait').css('display','block');
+	var heightC = $('.overlay-wait-content').height();
+	var height = $(window).height();
+	var h = (height-heightC)/2;
+	$('.overlay-wait-content').css('margin-top',h);
+}
+
+function hide_loading(){
+	$('.overlay-wait').css('display','none');
 }
 </script>
 </body>

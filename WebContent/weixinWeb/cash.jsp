@@ -92,6 +92,7 @@ $(document).ready(function()
 	$('.sure-btn').click(function ()
 	{
 		$('.overlay').css('display','none');
+		window.location.href="my.jsp";
 	})
 });
 function applycash()
@@ -124,6 +125,7 @@ function applycash()
 					var h_content = $('.overlay-content').height();
 					var hh = (height-h_content)/2;
 					$('.overlay-content').css('margin-top',hh);
+					 
 				}
 			}
 		})
