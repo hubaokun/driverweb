@@ -6,6 +6,7 @@ if(studentid==null){
 	//response.sendRedirect("login.jsp");
 } */
 //session.setAttribute("studentid", "18");
+//*************暂未使用到******************
 %>
 <!doctype html>
 <html>
