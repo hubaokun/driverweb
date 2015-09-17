@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
-<%@ include file="checksession.jsp" %>
 <!doctype html>
 <html>
 <head>
@@ -15,6 +14,7 @@ pageEncoding="UTF-8"%>
 <link href="mobiscroll/css/mobiscroll.scroller.css" rel="stylesheet" type="text/css" />
 <link href="mobiscroll/css/mobiscroll.scroller.ios.css" rel="stylesheet" type="text/css" />
 <link href="css/basicinfo.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/checksession.js"></script>
 <style type="text/css">
 .mbsc-ios .dw-sel {
 	color: #1798f2;
@@ -122,22 +122,22 @@ pageEncoding="UTF-8"%>
       <div class="row province-wrap">
         <div class="col-md-3 col-sm-3 col-xs-3"><span class="pull-right">省份</span></div>
         <div class="col-md-9 col-sm-9 col-xs-9">
-          <input type="text" id="province" list="prvlist" placeholder="省/自治区/直辖市" onblur="changeProvince();" />
-          <datalist id="prvlist" style="height:50px;"></datalist>
+          <select id="province"  placeholder="省/自治区/直辖市" onblur="changeProvince();" />
+          <option>--选择省份--</option>
+          </select>
         </div>
       </div>
       <div class="row city-wrap">
-        <div class="col-md-3 col-sm-3 col-xs-3"><span class="pull-right">市</span></div>
+        <div class="col-md-3 col-sm-3 col-xs-3"><span class="pull-right">市?</span></div>
         <div class="col-md-9 col-sm-9 col-xs-9">
-          <input type="text" id="city" list="citylist" placeholder="市" onblur="changeCity();" >
-          <datalist id="citylist"> </datalist>
+          <select id="city"  placeholder="市" onblur="changeCity();" >
+         </select>
         </div>
       </div>
       <div class="row area-wrap">
         <div class="col-md-3 col-sm-3 col-xs-3"><span class="pull-right">区/县</span></div>
         <div class="col-md-9 col-sm-9 col-xs-9">
-          <input type="text" id="area" list="arealist" placeholder="区">
-          <datalist id="arealist"> </datalist>
+          <select id="area"  placeholder="区"></select>
         </div>
       </div>
     </div>
@@ -274,11 +274,11 @@ function initProvinceData()
 		
 		for(var i=0;i<data.RECORDS.length;i++)
 		{
-			Aprovince += '<option id=" ' + data.RECORDS[i].provinceid + '" value="' + data.RECORDS[i].province + '">'; 	
+			Aprovince += '<option id=" ' + data.RECORDS[i].provinceid + '" value="' + data.RECORDS[i].province + '">' + data.RECORDS[i].province + '</option>'; 	
 		}
 		//alert (typeof Afather);
 		
-		$("#prvlist").append(Aprovince);
+		$("#province").append(Aprovince);
 		//alert (data);
 	}); 
 
@@ -290,7 +290,7 @@ function changeProvince()
 
 	//先去清空city中的数据，再进行新城市数据的加载    
     $('#city').val("");
-    $('#citylist').empty();
+    $('#city').empty();
 	
     $.getJSON(dataroot_pro, function(data)
     { 
@@ -319,7 +319,7 @@ function changeCity()
 
 	//先去清空city中的数据，再进行新城市数据的加载    
     $('#area').val("");
-    $('#arealist').empty();
+    $('#area').empty();
 	
     $.getJSON(dataroot_pro, function(data)
     { 
@@ -365,7 +365,7 @@ function setCity(val)
 { 
     var Acity; 
     
-    var $listcity = $("#citylist"); 
+    var $listcity = $("#city"); 
     
     var dataroot_pro="json/t_cities.json";
     
@@ -376,7 +376,7 @@ function setCity(val)
         if (data.RECORDS[n].provinceid == val) 
         { 
           //alert(data.RECORDS[n].provinceid); 
-          Acity += '<option id=" ' + data.RECORDS[n].cityid + '" value="' + data.RECORDS[n].city + '">'; 
+          Acity += '<option id=" ' + data.RECORDS[n].cityid + '" value="' + data.RECORDS[n].city + '">' + data.RECORDS[n].city + '</option>'; 
         } 
       } 
       $listcity.append(Acity); 
@@ -405,7 +405,7 @@ function setCity(val)
   function setArea(Aval)
   { 
     var Aarea; 
-    var $listarea = $("#arealist"); 
+    var $listarea = $("#area"); 
     
     //alert ("拿到的城市的id为：" + Aval);
     
@@ -415,7 +415,7 @@ function setCity(val)
       { 
         if (data.RECORDS[m].cityid == Aval) 
         { 
-          Aarea += '<option id=" ' + data.RECORDS[m].areaid + '" value="' + data.RECORDS[m].area + '">'; 
+          Aarea += '<option id=" ' + data.RECORDS[m].areaid + '" value="' + data.RECORDS[m].area + '">' + data.RECORDS[m].area + '</option>'; 
         } 
       } 
       $listarea.append(Aarea); 

@@ -10,6 +10,7 @@
 <link href="css/font-awesome.css" rel="stylesheet" />
 <link href="css/account.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="js/checksession.js"></script>
 <script type="text/javascript">
 var studentid='${sessionScope.studentid}';
 var token='${sessionScope.token}';
@@ -64,6 +65,9 @@ function showBalance(obj){
 			$("#balanceDetail").html(h);
 			
 		}
+	}else{
+		alert(obj.message);
+		window.location.href=redirect_login;
 	}
 }
 

@@ -16,6 +16,7 @@ pageEncoding="UTF-8"%>
 <script src="js/iscroll.js"></script>
 <script src="js/jquery-1.8.3.min.js"></script> 
 <script src="js/jquery-ui-1.10.3.min.js"></script> 
+<script type="text/javascript" src="js/checksession.js"></script>
 <style type="text/css">
 	.order-content ul.order-timeline li div.order-detail .order-detail-head .order-detail-head-date p
 	{
@@ -66,6 +67,10 @@ function getOrderlist(at,pagenum){
 			token	  : token
 		},
 		success : function(data) {
+			if(data.code!=1){
+				window.location.href=redirect_login;
+				return ;
+			}
 			if(data.orderlist==undefined || data.orderlist.length==0){
 				$('#noOrder').css('display','block');
 				$('#wrapper').css('display','none');
@@ -109,7 +114,7 @@ function getOrderlist(at,pagenum){
             	content_list=content_list+orderlist[i].subjectname;
             	content_list=content_list+'</span></li><li><span>教练：</span><span>'+orderlist[i].cuserinfo.realname;
             	content_list=content_list+'</span></li><li><span>地址：</span><span>'+orderlist[i].detail;
-            	content_list=content_list+'</span></li></ul></a><hr/><p class="text-right compute">合计：<span>';
+            	content_list=content_list+'</span></li></ul></a><hr/><p class="text-right compute">合计：<span>￥';
             	content_list=content_list+orderlist[i].total+'</span></p><p>';
             	
             	if(orderlist[i].can_complaint==1){

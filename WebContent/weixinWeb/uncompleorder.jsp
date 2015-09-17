@@ -17,6 +17,7 @@ pageEncoding="UTF-8"%>
 <script src="js/jquery-1.8.3.min.js"></script> 
 <script src="js/jquery-ui-1.10.3.min.js"></script> 
 <script src="js/jquery.raty.min.js"></script>
+<script type="text/javascript" src="js/checksession.js"></script>
 <style type="text/css">
 	.order-content ul.order-timeline li div.order-detail .order-detail-head .order-detail-head-date p
 	{
@@ -44,12 +45,15 @@ var orderlist;
 var pagenum=0;
 var hasmore=0;
 var studentid='${sessionScope.studentid}';
+//alert("studentid="+studentid);
 //studentid='18';
 var action1="GetUnCompleteOrder";//未完成订单
 var action2="GetWaitEvaluationOrder";//待评价订单
 var action3="GetCompleteOrder";//已评价订单
 var action4="GETCOMPLAINTORDER";//待处理订单
 var token='${sessionScope.token}';
+//alert("token="+token);
+//token="b5637c43baaf73994c784e22b2588b30";
 $(function(){
 	var pagenum=0;
 	getOrderlist(action1,pagenum);
@@ -67,85 +71,89 @@ function getOrderlist(at,pagenum){
 			token	  : token
 		},
 		success : function(data) {
-			if(data.orderlist==undefined || data.orderlist.length==0){
-				$('#noOrder').css('display','block');
-				$('#wrapper').css('display','none');
-				return;
+			if(data.code!=1){
+				window.location.href=redirect_login;
+				return ;
 			}
-			orderlist=data.orderlist;
-			var content_list="";
-            for(var i=0;i<orderlist.length;i++)
-            {
-            	var start_time=orderlist[i].start_time.substring(0,10);
-            	var starthour=orderlist[i].start_time.substring(11,16);
-            	var end_time=orderlist[i].end_time.substring(0,10);
-            	var endhour=orderlist[i].end_time.substring(11,16);
-        		var hours=orderlist[i].hours;
-            	if(hours==0){
-            		hours="此车单即将开始";
-            	}else if(hours==-1){
-            		hours="正在学车";
-				}else if(hours==-2){
-            		hours="学车完成";
-				}else if(hours==-3){
-            		hours="正在学车";
-				}else if(hours==-4){
-            		hours="等待确认下车";
-				}else if(hours==-5){
-            		hours="投诉处理中";
-				}else if(hours==-6){
-            		hours="客服协商中";
-				}else if(hours>=1440){
-        			hours="距学车还有"+( Math.floor(hours/1440))+"天";
-        		}else if(hours<1440 && hours>=60){
-        			hours="距学车还有"+( Math.floor(hours/60))+"小时";
-        		}else if(hours<60 && hours>0){
-        			hours="距学车还有"+hours+"分钟";
-        		}
-            	
-            	content_list=content_list+'<li><div class="order-detail"><div class="order-detail-head"><div class="row order-detail-head-date"><div class="col-md-12 col-sm-12 col-xs-12"><p><i class="icon icon-calendar"></i>'+start_time+'</p></div></div><div class="row"><div class="col-md-6 col-sm-6 col-xs-6">';
-            	content_list=content_list+'<p class="text-left">'+starthour+"-"+endhour+'</p></div><div class="col-md-6 col-sm-6 col-xs-6">';
-            	content_list=content_list+'<p class="text-right learning">'+hours+'</p></div><div class="col-md-12 col-sm-12 col-xs-12"><hr/></div></div></div>';
-            	content_list=content_list+'<div class="order-detail-body"><div class="row"><div class="col-md-12 col-sm-12 col-xs-12">';
-            	content_list=content_list+'<a href="uncompleorderdetail.jsp?orderid='+orderlist[i].orderid+'"><ul class="order-items"><li><span>科目：</span><span>';
-            	content_list=content_list+orderlist[i].subjectname;
-            	content_list=content_list+'</span></li><li><span>教练：</span><span>'+orderlist[i].cuserinfo.realname;
-            	content_list=content_list+'</span></li><li><span>地址：</span><span>'+orderlist[i].detail;
-            	content_list=content_list+'</span></li></ul></a><hr/><p class="text-right compute">合计：<span>';
-            	content_list=content_list+orderlist[i].total+'</span></p><p>';
-            	
-            	if(orderlist[i].can_complaint==1){
-            		content_list=content_list+'<a href="complaincoach.jsp?orderid='+orderlist[i].orderid+'"><span class="span-btn complain-btn">投诉</span></a>';
-            	}
-            	if(at=='GetUnCompleteOrder'){
-	            	if(orderlist[i].studentstate==4){
-	            		content_list=content_list+'<p class="order-canceled-tips">已提交取消订单申请，等待教练确认中</p>';
-	            	}else if(orderlist[i].can_cancel==1){
-	            		content_list=content_list+'<span class="span-btn complain-btn" onclick="cancelOrder('+orderlist[i].orderid+')">取消订单</span>';
+				if(data.orderlist==undefined || data.orderlist.length==0){
+					$('#noOrder').css('display','block');
+					$('#wrapper').css('display','none');
+					return;
+				}
+				orderlist=data.orderlist;
+				var content_list="";
+	            for(var i=0;i<orderlist.length;i++)
+	            {
+	            	var start_time=orderlist[i].start_time.substring(0,10);
+	            	var starthour=orderlist[i].start_time.substring(11,16);
+	            	var end_time=orderlist[i].end_time.substring(0,10);
+	            	var endhour=orderlist[i].end_time.substring(11,16);
+	        		var hours=orderlist[i].hours;
+	            	if(hours==0){
+	            		hours="此车单即将开始";
+	            	}else if(hours==-1){
+	            		hours="正在学车";
+					}else if(hours==-2){
+	            		hours="学车完成";
+					}else if(hours==-3){
+	            		hours="正在学车";
+					}else if(hours==-4){
+	            		hours="等待确认下车";
+					}else if(hours==-5){
+	            		hours="投诉处理中";
+					}else if(hours==-6){
+	            		hours="客服协商中";
+					}else if(hours>=1440){
+	        			hours="距学车还有"+( Math.floor(hours/1440))+"天";
+	        		}else if(hours<1440 && hours>=60){
+	        			hours="距学车还有"+( Math.floor(hours/60))+"小时";
+	        		}else if(hours<60 && hours>0){
+	        			hours="距学车还有"+hours+"分钟";
+	        		}
+	            	
+	            	content_list=content_list+'<li><div class="order-detail"><div class="order-detail-head"><div class="row order-detail-head-date"><div class="col-md-12 col-sm-12 col-xs-12"><p><i class="icon icon-calendar"></i>'+start_time+'</p></div></div><div class="row"><div class="col-md-6 col-sm-6 col-xs-6">';
+	            	content_list=content_list+'<p class="text-left">'+starthour+"-"+endhour+'</p></div><div class="col-md-6 col-sm-6 col-xs-6">';
+	            	content_list=content_list+'<p class="text-right learning">'+hours+'</p></div><div class="col-md-12 col-sm-12 col-xs-12"><hr/></div></div></div>';
+	            	content_list=content_list+'<div class="order-detail-body"><div class="row"><div class="col-md-12 col-sm-12 col-xs-12">';
+	            	content_list=content_list+'<a href="uncompleorderdetail.jsp?orderid='+orderlist[i].orderid+'"><ul class="order-items"><li><span>科目：</span><span>';
+	            	content_list=content_list+orderlist[i].subjectname;
+	            	content_list=content_list+'</span></li><li><span>教练：</span><span>'+orderlist[i].cuserinfo.realname;
+	            	content_list=content_list+'</span></li><li><span>地址：</span><span>'+orderlist[i].detail;
+	            	content_list=content_list+'</span></li></ul></a><hr/><p class="text-right compute">合计：<span>￥';
+	            	content_list=content_list+orderlist[i].total+'</span></p><p>';
+	            	
+	            	if(orderlist[i].can_complaint==1){
+	            		content_list=content_list+'<a href="complaincoach.jsp?orderid='+orderlist[i].orderid+'"><span class="span-btn complain-btn">投诉</span></a>';
 	            	}
-            	}
-            	if(orderlist[i].can_down==1){
-            		content_list=content_list+'<a href="complaincoach.jsp?orderid='+orderlist[i].orderid+'"><span class="span-btn complain-btn">投诉</span></a>';
-            		content_list=content_list+'<a href="evaluatecoach.jsp?orderid='+orderlist[i].orderid+'"><span class="span-btn sure-btn">确认下车</span></a>';
-            	}
-            	if(at=='GetWaitEvaluationOrder'){
-            		content_list=content_list+'<a href="evaluatecoach.jsp?orderid='+orderlist[i].orderid+'"><span class="span-btn sure-btn">立即评价</span></a>';
-                }
-            	if(at=='GetCompleteOrder'){
-            		content_list=content_list+'<a href="coursearrange.jsp?coachid='+orderlist[i].coachid+'"><span class="span-btn sure-btn">继续预约</span></a>';
-                }
-            	content_list=content_list+'</p></div></div></div></div></li>';
-            }
-           
-           $("#uncomplete").append(content_list);
-		   hasmore=data.hasmore;
-		   $("#pullUp").html("");
-	   		if(data.orderlist.length<10){
-	   			$("#pullUp").append("<span class='pullUpLabel'>没有更多了</span>");
-	   		}else{
-	   			$("#pullUp").append("<span class='pullUpIcon'></span><span class='pullUpLabel'>上拉加载更多...</span>");
-	   		} 
-	   		myScroll.refresh();	
+	            	if(at=='GetUnCompleteOrder'){
+		            	if(orderlist[i].studentstate==4){
+		            		content_list=content_list+'<p class="order-canceled-tips">已提交取消订单申请，等待教练确认中</p>';
+		            	}else if(orderlist[i].can_cancel==1){
+		            		content_list=content_list+'<span class="span-btn complain-btn" onclick="cancelOrder('+orderlist[i].orderid+')">取消订单</span>';
+		            	}
+	            	}
+	            	if(orderlist[i].can_down==1){
+	            		content_list=content_list+'<a href="complaincoach.jsp?orderid='+orderlist[i].orderid+'"><span class="span-btn complain-btn">投诉</span></a>';
+	            		content_list=content_list+'<a href="evaluatecoach.jsp?orderid='+orderlist[i].orderid+'"><span class="span-btn sure-btn">确认下车</span></a>';
+	            	}
+	            	if(at=='GetWaitEvaluationOrder'){
+	            		content_list=content_list+'<a href="evaluatecoach.jsp?orderid='+orderlist[i].orderid+'"><span class="span-btn sure-btn">立即评价</span></a>';
+	                }
+	            	if(at=='GetCompleteOrder'){
+	            		content_list=content_list+'<a href="coursearrange.jsp?coachid='+orderlist[i].coachid+'"><span class="span-btn sure-btn">继续预约</span></a>';
+	                }
+	            	content_list=content_list+'</p></div></div></div></div></li>';
+	            }
+	           
+	           $("#uncomplete").append(content_list);
+			   hasmore=data.hasmore;
+			   $("#pullUp").html("");
+		   		if(data.orderlist.length<10){
+		   			$("#pullUp").append("<span class='pullUpLabel'>没有更多了</span>");
+		   		}else{
+		   			$("#pullUp").append("<span class='pullUpIcon'></span><span class='pullUpLabel'>上拉加载更多...</span>");
+		   		} 
+		   		myScroll.refresh();	
 		}
    });
 }
