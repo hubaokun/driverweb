@@ -432,6 +432,7 @@ $(document).ready(function ()
 <script type="text/javascript">
 $(document).ready(function(){
 	var sid='${sessionScope.studentid}';
+	var token='${sessionScope.token}';
 	//sid="18";
 	var params = {action:"GETSTUDENTINFO",studentid:sid};
 	jQuery.post("../suser", params, showStudent, 'json');
@@ -452,9 +453,10 @@ function showStudent(obj){
 		}else if(obj.data.gender==2){
 			$("#gender").val("女");
 		}
-		$("#cityname").val(obj.data.city);
+		$("#location").val(obj.data.city);
 	}else{
 		alert(obj.message);
+		window.location.href=redirect_login;
 	}
 }
 

@@ -71,6 +71,7 @@ function showStudent(obj){
 		$("#coupon").html(obj.coupon+"小时");
 	}else{
 		alert(obj.message);
+		window.location.href=redirect_login;
 	}
 }
 </script>
