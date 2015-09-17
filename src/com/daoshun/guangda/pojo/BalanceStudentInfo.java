@@ -34,7 +34,7 @@ public class BalanceStudentInfo implements Serializable {
 	@Column(name = "amount", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")
 	private BigDecimal amount;
 	
-	//类型(1:支付宝充值  2：提现  3：订单支付 4:提现不通过 5:微信充值)
+	//类型(1:支付宝充值  2：支付宝提现  3：订单支付 4:支付宝提现不通过 5:微信充值 6:微信提现 7：微信提现不通过)
 	@Column(name = "type",length=10,columnDefinition = "INT default 0")
 	private Integer type=0;
 	
@@ -58,6 +58,15 @@ public class BalanceStudentInfo implements Serializable {
 	// 支付宝
 	@Transient
 	private String alipay_account;
+	//来源
+	//@Transient
+	//private Integer resource=0;
+	//@Column(name = "resource",length=10,columnDefinition = "INT default 0")
+	//private Integer resource=0;
+	
+	//微信账号
+	@Transient
+	private String weixin_account;
 
 	public int getRecordid() {
 		return recordid;
@@ -130,6 +139,15 @@ public class BalanceStudentInfo implements Serializable {
 
 	public void setAlipay_account(String alipay_account) {
 		this.alipay_account = alipay_account;
+	}
+
+	
+	public String getWeixin_account() {
+		return weixin_account;
+	}
+
+	public void setWeixin_account(String weixin_account) {
+		this.weixin_account = weixin_account;
 	}
 	
 

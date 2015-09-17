@@ -217,14 +217,14 @@ public interface ISUserService {
 	 * @param coachid
 	 * @param type
 	 */
-	public abstract void applyCheckPass(int coachid);
+	public abstract void applyCheckPass(int coachid,int resource);
 	/**
 	 * 提现申请审核不通过
 	 * 
 	 * @param coachid
 	 * @param type
 	 */
-	public abstract void applyCheckNoPass(int coachid);
+	public abstract void applyCheckNoPass(int coachid,int resource);
 	/**
 	 * 提现申请审核作废
 	 * 
