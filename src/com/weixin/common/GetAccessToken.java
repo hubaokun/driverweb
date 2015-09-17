@@ -17,22 +17,20 @@ import com.weixin.serviceImpl.GetYouWannaImpl;
 public class GetAccessToken {
 	private int tokencount=0;
 	private int ticketcount=0;
-	//每5分钟检查一次token是否过期
+	//寰俊token瀹氭椂浠诲姟
 	@Scheduled(cron = "0 0/5 * * * ?")
 	public void checktoken() {
-		System.out.println("##################微信token定时任务执行开始#################");
 		IGetYouWanna WXmessageService=new GetYouWannaImpl();
 		if(WXmessageService.getAccessToken())
 		{
 			if(WXmessageService.getjsapi_ticket(WeiXinMessage.getValue("service_access_token")))
 			{
-				System.out.println("##################微信token定时任务执行结束#################");
 			}
 			else
 			{
 				if(ticketcount==3)
 				{
-					System.out.println("ticketcount="+ticketcount+"连续请求接口失败,请稍后再试!");
+					System.out.println("ticketcount="+ticketcount+"澶氭璇锋眰杩炴帴澶辫触!");
 					return;
 				}
 				ticketcount++;
@@ -43,7 +41,7 @@ public class GetAccessToken {
 		{
 			if(tokencount==3)
 			{
-				System.out.println("tokencount="+tokencount+"连续请求接口失败,请稍后再试!");
+				System.out.println("tokencount="+tokencount+"澶氭璇锋眰杩炴帴澶辫触!");
 				return;
 			}
 			tokencount++;
