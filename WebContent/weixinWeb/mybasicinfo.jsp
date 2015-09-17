@@ -434,7 +434,7 @@ $(document).ready(function(){
 	var sid='${sessionScope.studentid}';
 	var token='${sessionScope.token}';
 	//sid="18";
-	var params = {action:"GETSTUDENTINFO",studentid:sid};
+	var params = {action:"GETSTUDENTINFO",studentid:sid,token:token};
 	jQuery.post("../suser", params, showStudent, 'json');
 	
 	var c_info='${sessionScope.c_info}';
@@ -490,7 +490,12 @@ function perfectPersoninfo(){
 	jQuery.post("../suser", params, showPerfect, 'json');
 }
 function showPerfect(obj){
-	alert(obj.message);
+	if(obj.code==1){
+		alert(obj.message);
+	}else{
+		alert(obj.message);
+		window.location.href=redirect_login;
+	}
 }
 </script>
 </body>
