@@ -11,13 +11,11 @@ pageEncoding="UTF-8"%>
 <link href="css/font-awesome.css" rel="stylesheet" />
 <link href="css/scrollbar.css" rel="stylesheet" type="text/css" />
 <link href="css/iscroll.css" rel="stylesheet" type="text/css" />
-
 <link href="css/style.css" rel="stylesheet" type="text/css" />
 <script src="js/jquery-1.8.3.min.js"></script> 
 <script src="js/jquery-ui-1.10.3.min.js"></script> 
 <script src="js/jquery.raty.min.js"></script>
 <script src="js/iscroll.js"></script>
-
 <script type="text/javascript">
 var active_url = "../sbook?action=GETCOACHLIST";
 var studentid=${sessionScope.studentid};
@@ -27,6 +25,7 @@ var myScroll,
 	pullDownEl, pullDownOffset,
 	pullUpEl, pullUpOffset,
 	generatedCount = 0;
+	city=city.length>2?city.substr(0,2):city;
 
 /**
  * 下拉刷新 （自定义实现此方法）
