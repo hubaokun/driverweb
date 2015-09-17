@@ -63,6 +63,9 @@ public class StudentApplyInfo implements Serializable {
 	@Transient
 	private String alipay_account;
 	
+	@Transient
+	private String weixin_account;
+	
 	
 	public Integer getApplyid() {
 		return applyid;
@@ -143,5 +146,15 @@ public class StudentApplyInfo implements Serializable {
 	public void setResource(Integer resource) {
 		this.resource = resource;
 	}
+
+	public String getWeixin_account() {
+		return weixin_account;
+	}
+
+	public void setWeixin_account(String weixin_account) {
+		this.weixin_account = weixin_account;
+	}
+	
+	
 
 }

@@ -369,6 +369,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 					studentapply.setRealname(student.getRealname());
 					studentapply.setPhone(student.getPhone());
 					studentapply.setAlipay_account(student.getAlipay_account());
+					studentapply.setWeixin_account(student.getOpenid());
 				}
 			}
 		}
@@ -630,7 +631,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override
-	public void applyCheckPass(int coachid) {
+	public void applyCheckPass(int coachid,int resource) {
 		StudentApplyInfo studentApply = dataDao.getObjectById(StudentApplyInfo.class, coachid);
 		if (studentApply != null) {
 			studentApply.setState(1);
@@ -642,7 +643,12 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 				dataDao.updateObject(student);
 			}
 			BalanceStudentInfo balancestudent = new BalanceStudentInfo();
-			balancestudent.setType(2);
+			if(resource==0){
+				balancestudent.setType(2);
+			}else if(resource==1){
+				balancestudent.setType(6);
+			}
+			
 			balancestudent.setAddtime(new Date());
 			balancestudent.setAmount(studentApply.getAmount());
 			balancestudent.setUserid(studentApply.getUserid());
@@ -652,7 +658,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override
-	public void applyCheckNoPass(int coachid) {
+	public void applyCheckNoPass(int coachid,int resource) {
 		StudentApplyInfo studentApply = dataDao.getObjectById(StudentApplyInfo.class, coachid);
 		if (studentApply != null) {
 			studentApply.setState(2);
@@ -668,7 +674,11 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	         }
 	         
 	         BalanceStudentInfo balanStudentInfo = new BalanceStudentInfo();
-	         balanStudentInfo.setType(4);
+	         if(resource==0){
+	        	 balanStudentInfo.setType(4);
+			 }else if(resource==1){
+				 balanStudentInfo.setType(7);
+			 }
 	         balanStudentInfo.setAddtime(new Date());
 	         balanStudentInfo.setAmount(studentApply.getAmount());
 	         balanStudentInfo.setUserid(studentApply.getUserid());
@@ -759,7 +769,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	@Override
 	public QueryResult<BalanceStudentInfo> getApplyRecordList(Integer pageIndex, int pagesize) {
 		StringBuffer cuserhql = new StringBuffer();
-		cuserhql.append("from BalanceStudentInfo where type = 2 or type = 4");
+		cuserhql.append("from BalanceStudentInfo where type = 2 or type = 4 or type = 6 or type = 7");
 		List<BalanceStudentInfo> balancecoachlist = (List<BalanceStudentInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), pagesize, pageIndex, null);
 		if (balancecoachlist != null && balancecoachlist.size() > 0) {
 			for (BalanceStudentInfo balanceCoach : balancecoachlist) {
@@ -768,6 +778,10 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 					balanceCoach.setRealname(coach.getRealname());
 					balanceCoach.setPhone(coach.getPhone());
 					balanceCoach.setAlipay_account(coach.getAlipay_account());
+					//System.out.print(balanceCoach.getResource());
+					if(coach.getOpenid() != null){
+						balanceCoach.setWeixin_account(coach.getOpenid());
+					}
 				}
 			}
 		}
