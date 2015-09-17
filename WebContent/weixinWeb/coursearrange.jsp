@@ -76,7 +76,7 @@ pageEncoding="UTF-8"%>
   <div class="course-scroll">
   <div class="row course-tips">
     <div class="col-md-12 col-sm-12 col-xs-12">
-      <p> <span><i class="icon  icon-stop"></i>正在加载</span> <span><i class="icon  icon-stop"></i>可预约</span> <span><i class="icon  icon-stop"></i>已选择</span> </p>
+      <p> <span><i class="icon  icon-stop"></i>不可约</span> <span><i class="icon  icon-stop"></i>可预约</span> <span><i class="icon  icon-stop"></i>已选择</span> </p>
     </div>
   </div>
   <div class="row course-date-list">
@@ -253,7 +253,7 @@ pageEncoding="UTF-8"%>
     	<div class="container">
         	<div class="row">
             	<div class="col-md-12 col-sm-12 col-xs-12 content-tips">
-                	<span><i class="icon icon-exclamation-sign"></i>连续上课会很累的哦，慎重考虑哦亲</span>
+                	<span><i class="icon icon-exclamation-sign"></i> 连续上课会很累的哦，慎重考虑哦亲</span>
                 </div>
             </div>
         </div>
@@ -276,9 +276,7 @@ pageEncoding="UTF-8"%>
 <script>
 var coachid= <%=request.getParameter("coachid")%>;
 var studentid= <%=request.getParameter("studentid")%>;
-
 var date = new Date();
-
 
 year = date.getFullYear();
 
@@ -383,12 +381,17 @@ var data_list_all;
 
 function getSchedulByDate(event){
 	show_loading();
+	
 	var str_date ="";
 	
 	if(event){
 		str_date = event.children("p").children('span:nth-child(2)').children('i:first-child').html();
 	}
-
+	counttime = 0;
+	countmoney=0;
+	$(".course-foot .col-md-8 p span:first-child").empty().html(counttime);
+	$(".course-foot .col-md-8 p span:last-child").empty().html(countmoney);
+	$('.course-foot').slideUp();
 	
 	var query_date = getFormattedDate(str_date);
 	var active_url= "../sbook?action=REFRESHCOACHSCHEDULE";
@@ -409,7 +412,10 @@ function getSchedulByDate(event){
 			var sub = $("#course_"+str_hour+" p:nth-child(2)");
 			var money = $("#course_"+str_hour+" p:nth-child(3)");
 			var status=0;
-			course_html.removeClass("active");			
+			course_html.removeClass("active");
+			course_html.className="unavailable";
+			course_html.attr("onclick","");
+			
 			if(item.subject==null)
 			{
 				sub.html("");
@@ -444,7 +450,7 @@ function getSchedulByDate(event){
 					course_html.removeClass('available');
 					course_html.removeClass('appointment');
 					course_html.addClass('unavailable');
-					sub.html("已预约其他教练");//您已预约其他教练
+					sub.html("已约其他教练");//您已预约其他教练
 					status=0;
 				} else {
 					course_html.removeClass('unavailable');
@@ -534,7 +540,7 @@ function choose_course(event)
 		counttime++;
 		$(".course-foot .col-md-8 p span:first-child").empty().html(counttime);
 		var money;
-		money = parseInt($(this).find('p:nth-child(3)').html());//parseInt($('.course-date-list .course-date-list-group .col-md-3 a p:nth-child(3)').html());
+		money = parseInt($(this).find('p:nth-child(3)').html());
 		countmoney += money;
 		hour_str = $(this).children().first().html();
 		hout_int= parseInt(hour_str.substring(0,hour_str.indexOf(":")));
