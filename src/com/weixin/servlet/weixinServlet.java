@@ -51,8 +51,8 @@ public class weixinServlet extends BaseServlet{
 			weixinlogin(request, response);
 		else if(action.equals("coachlist"))
 			getcoachlist(request, response);
-		else if("mylearninfo".equals(action)){
-			//mylearninfo(request, response);
+		else if("closewindow".equals(action)){
+			//closewindow(request, response);
 		}
 		else if(action.equals("charge"))
 			gotocharge(request, response);
@@ -136,8 +136,16 @@ public class weixinServlet extends BaseServlet{
 		}
 		
 	}
-	/*public void mylearninfo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		String url=baseUrl+"mylearninfo";
+	/**
+	 * 关闭微信窗口：当session超时时
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 * @author 卢磊
+	 */
+	/*public void closewindow(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		String url=baseUrl+"closewindow";
 		String noncestr=wxmessageService.CreatenNonce_str(16);
 		long timestamp=wxmessageService.CreatenTimestamp();
 		String signature=wxmessageService.getSignature(noncestr, timestamp, url);
@@ -146,6 +154,6 @@ public class weixinServlet extends BaseServlet{
 		request.setAttribute("signature", signature); 
 		request.setAttribute("appid", CommonUtils.getAppid());
 		
-		request.getRequestDispatcher("/weixinWeb/mylearninfo.jsp").forward(request, response);
+		request.getRequestDispatcher("/weixinWeb/closewindow.jsp").forward(request, response);
 	}*/
 }

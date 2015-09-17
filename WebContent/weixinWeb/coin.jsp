@@ -10,6 +10,7 @@ pageEncoding="UTF-8"%>
 <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <link href="css/font-awesome.css" rel="stylesheet" />
 <link href="css/account.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/checksession.js"></script>
 <style type="text/css">
 body
 {
@@ -38,15 +39,21 @@ $(document).ready(function(){
 	
 });
 function showCoin(obj){
-	var h="";
-	var coins=obj.coinaffiliationlist;
-	if(coins.length>0){
-		//如果有记录时
-		for(var i=0;i<coins.length;i++){
-			h=h+"<p><span>"+coins[i].coin+"个</span><span class='pull-right'>"+coins[i].msg+"</span></p>";
+	if(obj.code==1){
+		var h="";
+		var coins=obj.coinaffiliationlist;
+		if(coins.length>0){
+			//如果有记录时
+			for(var i=0;i<coins.length;i++){
+				h=h+"<p><span>"+coins[i].coin+"个</span><span class='pull-right'>"+coins[i].msg+"</span></p>";
+			}
 		}
+		$("#coindetail").html(h);
+	}else{
+		alert(obj.message);
+		window.location.href=redirect_login;
 	}
-	$("#coindetail").html(h);
+	
 }
 
 function coinrecordlist(obj)
@@ -74,6 +81,9 @@ function coinrecordlist(obj)
 			$("#recorddetail").html(h);
 			
 		}	
+	}else{
+		/* alert(obj.message);
+		window.location.href=redirect_login; */
 	}
 }
 </script>

@@ -1,14 +1,15 @@
 
 //审核
-function stuCheckPass(applyid,index,pageIndex,change_id) {
+function stuCheckPass(applyid,index,pageIndex,change_id,resource) {
 	if(confirm("确认通过审核？")){
-		window.location.href="studentApplyCheckPass.do?applyid="+applyid+"&index="+index+"&pageIndex="+pageIndex+"&change_id="+change_id;
+		//alert(resource);
+		window.location.href="studentApplyCheckPass.do?resource="+resource+"&applyid="+applyid+"&index="+index+"&pageIndex="+pageIndex+"&change_id="+change_id;
 	}
 }
 //审核不通过
-function stuCheckNoPass(applyid,index,pageIndex,change_id) {
+function stuCheckNoPass(applyid,index,pageIndex,change_id,resource) {
 	if(confirm("确认审核不通过？")){
-		window.location.href="studentApplyCheckNoPass.do?applyid="+applyid+"&index="+index+"&pageIndex="+pageIndex+"&change_id="+change_id;
+		window.location.href="studentApplyCheckNoPass.do?applyid="+applyid+"&index="+index+"&pageIndex="+pageIndex+"&change_id="+change_id+"&resource="+resource;
 	}
 }
 //作废

@@ -99,7 +99,7 @@ $(function(){
 						<th>电话号码</th>
 						<th>提现金额</th>
 						<th>申请时间</th>
-						<th>支付宝</th>
+						<th>提现账号</th>
 						<th>操作</th>
 
 					</tr>
@@ -116,18 +116,26 @@ $(function(){
 							<td style="width: 150px;" class="border_right_bottom">${phone}</td>
 							<td style="width: 100px;" class="border_right_bottom">${amount}</td>
 							<td style="width: 200px;" class="border_right_bottom"><s:date name="addtime" format="yyyy-MM-dd HH:mm:ss"/></td>
-							<td style="width: 150px;" class="border_right_bottom">${alipay_account}</td>
+							<!-- <td style="width: 150px;" class="border_right_bottom">${alipay_account}</td> -->
+							
+							<s:if test="resource==0">
+							<td style="width: 150px;" class="border_right_bottom">支付宝：${alipay_account}</td>
+							</s:if>
+							<s:else>
+							<td style="width: 150px;" class="border_right_bottom">微信：${weixin_account}</td>
+							</s:else>
+							
 							<td style="width: 200px;" class="border_noright_bottom">
 							<s:if test="state==0">
 								<div class="table_edit_button" style="width: 80px;">
 									<div class="table_button_edit_icon"></div>
 									<div class="table_button_text"
-										onclick="stuCheckPass(${applyid},${index},${pageIndex},${change_id})">审核通过</div>
+										onclick="stuCheckPass(${applyid},${index},${pageIndex},${change_id},${resource})">审核通过</div>
 								</div>
 								<div class="table_edit_button" style="width: 90px;background:#f83a22">
 									<div class="table_button_edit_icon"></div>
 									<div class="table_button_text"
-										onclick="stuCheckNoPass(${applyid},${index},${pageIndex},${change_id})">审核不通过</div>
+										onclick="stuCheckNoPass(${applyid},${index},${pageIndex},${change_id},${resource})">审核不通过</div>
 								</div>
 								<div class="table_edit_button" style="width: 80px;background:#999999">
 									<div class="table_button_edit_icon"></div>

@@ -118,6 +118,8 @@ public class SuserAction extends BaseAction {
 	
 	// 学员提现申请id
 	private int applyid;
+	
+	private int resource;
 
 	private int checknum;
 
@@ -646,7 +648,8 @@ public String getStudentDetailByPhone() {
 	 */
 	@Action(value = "/studentApplyCheckPass", results = { @Result(name = SUCCESS, location = "/getStudentApplyList.do?index=${index}&pageIndex=${pageIndex}", type = "redirect") })
 	public String studentApplyCheckPass() {
-		suserService.applyCheckPass(applyid);
+		//System.out.println("action:"+resource+"applyid:"+applyid);
+		suserService.applyCheckPass(applyid,resource);
 		return SUCCESS;
 	}
 	
@@ -657,7 +660,7 @@ public String getStudentDetailByPhone() {
 	 */
 	@Action(value = "/studentApplyCheckNoPass", results = { @Result(name = SUCCESS, location = "/getStudentApplyList.do?index=${index}&pageIndex=${pageIndex}", type = "redirect") })
 	public String studentApplyCheckNoPass() {
-		suserService.applyCheckNoPass(applyid);
+		suserService.applyCheckNoPass(applyid,resource);
 		return SUCCESS;
 	}
 	
@@ -1770,6 +1773,18 @@ public String getStudentDetailByPhone() {
 	public void setStuApplyList(List<StudentApplyInfo> stuApplyList) {
 		this.stuApplyList = stuApplyList;
 	}
+	
+	
+
+	public int getResource() {
+		return resource;
+	}
+
+
+	public void setResource(int resource) {
+		this.resource = resource;
+	}
+
 
 	public int getApplyid() {
 		return applyid;

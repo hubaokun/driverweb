@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
-<%@ include file="checksession.jsp" %>
 <!doctype html>
 <html>
 <head>
@@ -12,6 +11,7 @@ pageEncoding="UTF-8"%>
 <link href="css/font-awesome.css" rel="stylesheet" />
 <link href="css/style.css" rel="stylesheet" type="text/css" />
 <script src="js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="js/checksession.js"></script>
 <style type="text/css">
 .container
 {
@@ -38,25 +38,40 @@ var y=$.parseJSON(x); */
 
 $(document).ready(function(){
 	var sid='${sessionScope.studentid}';
-	var c_info='${sessionScope.c_info}';
-	var wxinfo=$.parseJSON(c_info);
-	$("#realname").html(wxinfo.nickname);
-	$("#avatarurl").attr("src",wxinfo.headimgurl);
+	var token='${sessionScope.token}';
+	/* var c_info='${sessionScope.c_info}';
+	var wxinfo=$.parseJSON(c_info); */
 	//sid="18";
-	var params = {action:"GETSTUDENTINFO",studentid:sid};
+	var params = {action:"GETSTUDENTINFO",studentid:sid,token:token};
 	jQuery.post("../suser", params, showStudent, 'json');
 });
 function showStudent(obj){
 	if(obj.code==1){
-		//$("#realname").html(obj.data.realname);
+		var c_info='${sessionScope.c_info}';
+		var wxinfo=$.parseJSON(c_info);
+		$("#avatarurl").attr("src",wxinfo.headimgurl);
+		$("#realname").html(wxinfo.nickname);
+		//alert(obj.data.realname+"#"+obj.data.avatarurl);
+		/* if(obj.data.avatarurl==''){
+			$("#avatarurl").attr("src",wxinfo.headimgurl);
+		}else{
+			$("#avatarurl").attr("src",obj.data.avatarurl);//设置头像图片
+		}
+		$("#avatarurl").attr("src",wxinfo.headimgurl);
+		if(obj.data.realname==''){
+			$("#realname").html(wxinfo.nickname);
+		}else{
+			$("#realname").html(obj.data.realname);
+		} */
 		$("#phone").html(obj.data.phone);
 		//$("#avatarurl").attr("src",'${sessionScope.avatarurl}');//设置头像图片
-		//$("#avatarurl").attr("src",obj.data.avatarurl);//设置头像图片
+		//$("#avatarurl").attr("src","https://www.baidu.com/img/bdlogo.png");//设置头像图片
 		$("#coin").html(obj.data.coinnum+"个");
 		$("#money").html(obj.data.money+"元");
 		$("#coupon").html(obj.coupon+"小时");
 	}else{
 		alert(obj.message);
+		window.location.href=redirect_login;
 	}
 }
 </script>

@@ -8,6 +8,7 @@ pageEncoding="UTF-8"%>
 <title>小巴券</title>
 <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <link href="css/orderconfirm.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/checksession.js"></script>
 <style type="text/css">
 .container
 {
@@ -49,7 +50,11 @@ function showCoupon(obj){
 				}
 				$("#couponlist").html(h);
 			}
+		}else{
+			alert(obj.message);
+			window.location.href=redirect_login;
 		}
+		
 }
 
 function showHisCoupon(obj){

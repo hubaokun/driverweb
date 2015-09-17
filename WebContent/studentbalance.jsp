@@ -80,7 +80,7 @@ $(function(){
 						<th>真实姓名</th>
 						<th>电话号码</th>
 						<th>提现金额</th>
-						<th>支付宝</th>
+						<th>提现账号</th>
 						<th>申请处理时间</th>
 					</tr>
 					<s:iterator value="balanceStudentList" var="cuser" status="st">
@@ -89,7 +89,16 @@ $(function(){
 							<td style="width: 100px;" class="border_right_bottom">${realname}</td>
 							<td style="width: 150px;" class="border_right_bottom">${phone}</td>
 							<td style="width: 100px;" class="border_right_bottom">${amount}</td>
-							<td style="width: 100px;" class="border_right_bottom">${alipay_account}</td>
+							<!-- <td style="width: 100px;" class="border_right_bottom">${alipay_account}</td> -->
+							<s:if test="type==2 || type==4">
+							<td style="width: 150px;" class="border_right_bottom">支付宝：${alipay_account}</td>
+							</s:if>
+							<s:else>
+							<td style="width: 150px;" class="border_right_bottom">微信：${weixin_account}</td>
+							</s:else>
+							
+							
+							
 							<td style="width: 200px;" class="border_right_bottom"><s:date name="addtime" format="yyyy-MM-dd HH:mm:ss"/></td>
 <!-- 							<td style="width: 100px;" class="border_noright_bottom"> -->
 <!-- 							</td> -->
