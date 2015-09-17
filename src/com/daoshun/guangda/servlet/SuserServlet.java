@@ -67,7 +67,7 @@ public class SuserServlet extends BaseServlet {
 
 			if (Constant.PERFECTACCOUNTINFO.equals(action) || Constant.CHANGEAVATAR.equals(action) || Constant.PERFECTSTUDENTINFO.equals(action) || Constant.PERFECTPERSONINFO.equals(action)
 					|| Constant.GETMYBALANCEINFO.equals(action) || Constant.APPLYCASH.equals(action)  || Constant.GETSTUDENTWALLETINFO.equals(action) || Constant.GETSTUDENTCOINRECORDLIST.equals(action) || Constant.GETSTUDENTCOUPONLIST.equals(action)
-					||Constant.SENROLL.equals(action)|| Constant.RECHARGE.equals(action) ||Constant.GETCOINAFFILIATION.equals(action)) {
+					||Constant.SENROLL.equals(action)|| Constant.RECHARGE.equals(action) ||Constant.GETCOINAFFILIATION.equals(action) ||Constant.GETSTUDENTINFO.equals(action)) {
 				if (!checkSession(request, action, resultMap)) {
 					setResult(response, resultMap);
 					return;
@@ -164,6 +164,9 @@ public class SuserServlet extends BaseServlet {
 		}else if (Constant.SENROLL.equals(action)) {
 			userid = getRequestParamter(request, "studentid");
 		}else if(Constant.GETCOINAFFILIATION.equals(action)){
+			userid = getRequestParamter(request, "studentid");
+		}else if (Constant.GETSTUDENTINFO.equals(action)) {
+			// 获取学员基本信息
 			userid = getRequestParamter(request, "studentid");
 		}
 
@@ -315,6 +318,17 @@ public class SuserServlet extends BaseServlet {
 			if(cityinfo!=null){
 				student.setCity(cityinfo.getCity());
 			}
+			//根据省市区ID查询对应的名称
+			/*if(student.getProvinceid()!=null && student.getCityid()!=null && student.getAreaid()!=null){
+				ProvinceInfo pro=locationService.getProvincesById(student.getProvinceid());
+				CityInfo city=locationService.getCityById(student.getCityid());
+				AreaInfo area=locationService.getAreaById(student.getAreaid());
+				String locationname="";
+				if(pro!=null && city!=null && area!=null){
+					locationname=pro.getProvince()+"-"+city.getCity()+"-"+area.getArea();
+				}
+				student.setLocationname(locationname);
+			}*/
 			student.setPassword(null);
 			resultMap.put("data", student);
 			resultMap.put("coupon", coupon);
