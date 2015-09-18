@@ -13,7 +13,7 @@ body {
 	padding-left: 12px;
 	padding-right: 12px;
 }
-.money-row .col-md-12 input[type="text"] {
+.money-row .col-md-12 input[type="number"] {
 	color: rgb(38,38,38);
 	font-size: 15px;
 	line-height: 15px;

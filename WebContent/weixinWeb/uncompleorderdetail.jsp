@@ -45,7 +45,6 @@ function showOrderDetail(obj){
 		$("#unorder").html(content_list);
 	}else{
 		alert(obj.message);
-		
 	}
 }
 </script>

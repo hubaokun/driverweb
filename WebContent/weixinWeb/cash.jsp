@@ -5,7 +5,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<title>提现固定账号修改</title>
+<title>提现</title>
 <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <link href="css/font-awesome.css" rel="stylesheet" />
 <link href="css/cash.css" rel="stylesheet" type="text/css" />
@@ -17,7 +17,19 @@ var studentid =${sessionScope.studentid};
 var token='${sessionScope.token}';
 $(function(){
 		$("#cname").html(customer.nickname);
+		var params = {
+				action:"GETMYBALANCEINFO",
+				studentid:studentid,
+				token:token
+			  };
+		jQuery.post("../suser", params, showBalance, 'json');
 }); 
+function showBalance(obj){
+	if(obj.code==1){
+		//设置当前余额
+		$("#cash").html("￥"+obj.balance);
+	}
+}
 </script>
 </head>
 
@@ -31,12 +43,12 @@ $(function(){
     </div>
     <div class="row money-row">
       <div class="col-md-12 col-sm-12 col-xs-12">
-        <input id="amount" type="text" placeholder="请输入金额" maxlength="5"/>
+        <input id="amount" type="number" placeholder="请输入金额" maxlength="3"/>
       </div>
     </div>
     <div class="row tips-row">
       <div class="col-md-12 col-sm-12 col-xs-12">
-        <p>可提现金额<span style="font-size:14px; color:#eb5811">￥${param.money}</span></p>
+        <p>可提现金额<span style="font-size:14px; color:#eb5811" id="cash">￥${param.money}</span></p>
       </div>
     </div>
     <div class="row sure-row">
@@ -98,6 +110,12 @@ $(document).ready(function()
 function applycash()
 {
 	var amount=$("#amount").val();
+	if(amount==0)
+	{
+	   alert("提现金额不能为0");
+	   $("#amount").val("");
+	   return;
+	}
 	var action="APPLYCASH";
 	if(parseInt(amount)==amount)
 	{   
@@ -136,6 +154,14 @@ function applycash()
 		$("#amount").val("");
 	}
 }
+
+$('#amount').keydown(function ()
+	{
+		if ($('#amount').val().length > 2)
+		{
+			$('#amount').blur();
+		}
+	});
 </script>
 </body>
 </html>

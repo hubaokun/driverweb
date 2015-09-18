@@ -11,6 +11,8 @@ import java.util.List;
 public interface ICoinRecordService {
 
     public abstract QueryResult<CoinRecordInfo> getCoinRecordListByPage(int pageIndex, int pageSize, String starttime, String endtime,  Integer ownertype,  String ownerid,String receiverid);
+    
+    public abstract QueryResult<CoinRecordInfo> getSchoolCoinRecordListByPage(int pageIndex, int pageSize, String starttime, String endtime,  Integer ownertype,  String ownerid,String receiverid);
 
     public abstract void addCoinRecord(CoinRecordInfo coinRecordInfo);
     /**
@@ -18,6 +20,11 @@ public interface ICoinRecordService {
      * @param receiverid
      */
     public void reclaimCoin(int receiverid);
+    /**
+     * 回收驾校发放小巴币
+     * @param receiverid
+     */
+    public void reclaimSchoolCoin(int receiverid,int schoolid,String schoolname);
 
 //    public abstract void delCouponById(int id);
 //

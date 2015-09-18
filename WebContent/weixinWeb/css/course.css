@@ -168,6 +168,8 @@ body {
 .course-choose-date ul.course-choose-ul li p:first-child span:nth-child(2)>i
 {
 	font-style:normal;
+	padding-top: 7px;
+    display: block;
 }
 .course-choose-date ul.course-choose-ul li p:last-child
 {

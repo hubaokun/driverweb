@@ -60,6 +60,14 @@ $(function(){
             }
             $("#thelist").html(content_list);
             hasmore=data.hasmore;
+
+			$("#pullUp").html("");
+				if(evaluatelist.length<10){
+					$("#pullUp").append("<span class='pullUpLabel'></span>");
+				}else{
+					$("#pullUp").append("<span class='pullUpIcon'></span><span class='pullUpLabel'>上拉加载更多...</span>");
+				}
+
 		}
    });
 });
@@ -97,6 +105,13 @@ setTimeout(function () {	// <-- Simulate network congestion, remove setTimeout f
             }
             $("#thelist").html(content_list);
             hasmore=data.hasmore;
+
+			$("#pullUp").html("");
+				if(evaluatelist.length<10){
+					$("#pullUp").append("<span class='pullUpLabel'></span>");
+				}else{
+					$("#pullUp").append("<span class='pullUpIcon'></span><span class='pullUpLabel'>上拉加载更多...</span>");
+				}
 		}
    });
 	
@@ -134,9 +149,19 @@ setTimeout(function () {	// <-- Simulate network congestion, remove setTimeout f
                 }
                 $("#thelist").append(content_list);
                 hasmore=data.hasmore;
+
+				$("#pullUp").html("");
+				if(evaluatelist.length<10){
+					$("#pullUp").append("<span class='pullUpLabel'></span>");
+				}else{
+					$("#pullUp").append("<span class='pullUpIcon'></span><span class='pullUpLabel'>上拉加载更多...</span>");
+				}
+
     		}
        });
     }
+
+
 	
 	myScroll.refresh();		// 数据加载完成后，调用界面更新方法 Remember to refresh when contents are loaded (ie: on ajax completion)
 }, 1000);	// <-- Simulate network congestion, remove setTimeout from production!
@@ -211,64 +236,9 @@ document.addEventListener('DOMContentLoaded', loaded, false);
     <div id="scroller">
       <div id="pullDown"> <span class="pullDownIcon"></span><span class="pullDownLabel">下拉刷新...</span> </div>
       <ul id="thelist">
-        <li>
-          <div class="row coach-judge-single">
-            <div class="col-md-8 col-sm-8 col-xs-8"> 
-              <!--<img src="images/coach-avart.png" class="img-responsive" />-->
-              <p><i class="icon icon-star"></i><i class="icon icon-star"></i><i class="icon icon-star"></i><i class="icon icon-star"></i><i class="icon icon-star-empty"></i></p>
-            </div>
-            <div class="col-md-4 col-sm-4 col-xs-4">
-              <p><span class="pull-right">2015-01-01</span></p>
-            </div>
-            <div class="col-md-12 col-sm-12 col-xs-12">
-              <p>教练很有耐心，不随便发火，五星点赞</p>
-            </div>
-          </div>
-        </li>
-        <li>
-          <div class="row coach-judge-single">
-            <div class="col-md-8 col-sm-8 col-xs-8"> 
-              <!--<img src="images/coach-avart.png" class="img-responsive" />-->
-              <p><i class="icon icon-star"></i><i class="icon icon-star"></i><i class="icon icon-star"></i><i class="icon icon-star"></i><i class="icon icon-star-empty"></i></p>
-            </div>
-            <div class="col-md-4 col-sm-4 col-xs-4">
-              <p><span class="pull-right">2015-01-01</span></p>
-            </div>
-            <div class="col-md-12 col-sm-12 col-xs-12">
-              <p>教练很有耐心，不随便发火，五星点赞</p>
-            </div>
-          </div>
-        </li>
-        <li>
-          <div class="row coach-judge-single">
-            <div class="col-md-8 col-sm-8 col-xs-8"> 
-              <!--<img src="images/coach-avart.png" class="img-responsive" />-->
-              <p><i class="icon icon-star"></i><i class="icon icon-star"></i><i class="icon icon-star"></i><i class="icon icon-star"></i><i class="icon icon-star-empty"></i></p>
-            </div>
-            <div class="col-md-4 col-sm-4 col-xs-4">
-              <p><span class="pull-right">2015-01-01</span></p>
-            </div>
-            <div class="col-md-12 col-sm-12 col-xs-12">
-              <p>教练很有耐心，不随便发火，五星点赞</p>
-            </div>
-          </div>
-        </li>
-        <li>
-          <div class="row coach-judge-single">
-            <div class="col-md-8 col-sm-8 col-xs-8"> 
-              <!--<img src="images/coach-avart.png" class="img-responsive" />-->
-              <p><i class="icon icon-star"></i><i class="icon icon-star"></i><i class="icon icon-star"></i><i class="icon icon-star"></i><i class="icon icon-star-empty"></i></p>
-            </div>
-            <div class="col-md-4 col-sm-4 col-xs-4">
-              <p><span class="pull-right">2015-01-01</span></p>
-            </div>
-            <div class="col-md-12 col-sm-12 col-xs-12">
-              <p>教练很有耐心，不随便发火，五星点赞</p>
-            </div>
-          </div>
-        </li>
+
       </ul>
-      <div id="pullUp"> <span class="pullUpIcon"></span><span class="pullUpLabel">上拉加载更多...</span> </div>
+      <div id="pullUp" style="margin-top:15px;"> <span class="pullUpIcon"></span><span class="pullUpLabel">上拉加载更多...</span> </div>
     </div>
   </div> 
  

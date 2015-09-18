@@ -18,13 +18,14 @@ pageEncoding="UTF-8"%>
 <script src="js/iscroll.js"></script>
 <script type="text/javascript">
 var active_url = "../sbook?action=GETCOACHLIST";
-var studentid=${sessionScope.studentid};
+var studentid=18;//${sessionScope.studentid};
 var pagenum=0;
-var city="${sessionScope.city}";
+var city="杭州";//"${sessionScope.city}";
 var myScroll,
 	pullDownEl, pullDownOffset,
 	pullUpEl, pullUpOffset,
 	generatedCount = 0;
+
 	city=city.length>2?city.substr(0,2):city;
 
 /**
@@ -160,20 +161,6 @@ document.addEventListener('DOMContentLoaded', loaded, false);
           <div id="pullDown"> <span class="pullDownIcon"></span><span class="pullDownLabel">下拉刷新...</span> </div>
           <div class="row content-wrap">
             <ul id="thelist">
-              <!--
-              <li>
-		        <div class="col-md-12 col-sm-12 col-xs-12">
-		          <div class="row detail-wrap">
-		            <div class="col-md-3 col-sm-3 col-xs-3"> <img src="images/person-one.png" class="img-responsive img-circle " /> </div>
-		            <div class="col-md-9 col-sm-9 col-xs-9">
-		              <p>童卫军<span class="pull-right"><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i></span></p>
-		              <p>浙江省杭州市余杭区海曙路58号</p>
-		            </div>
-		          </div>
-		          <hr/>
-		        </div>
-              </li>
-              -->
             </ul>
           </div>
           <div id="pullUp"> <span class="pullUpIcon"></span><span class="pullUpLabel">上拉加载更多...</span> </div>
@@ -186,21 +173,8 @@ document.addEventListener('DOMContentLoaded', loaded, false);
 <!--单个教练选择弹出框 starts-->
 <div class="overlay">
   <div class="overlay-content ">
-    <div class="container"  id="coach_detail">
-       <!--<div class="row content-wrap"> 
-        <div class="col-md-12 col-sm-12 col-xs-12">
-          <div class="row detail-wrap">
-            <div class="col-md-3 col-sm-3 col-xs-3"> <img src="images/person-one.png" class="img-responsive img-circle " /> </div>
-            <div class="col-md-9 col-sm-9 col-xs-9">
-              <p>童卫军<span class="pull-right"><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i><i class="glyphicon glyphicon-star"></i></span></p>
-              <p>浙江省杭州市余杭区海曙路58号</p>
-            </div>
-          </div>
-          <hr/>
-        </div>
-      </div>
-      <section class="overlay-button-group"> <a href="coursearrange.html">预约课程</a><a href="coachdetail.html">教练详情</a> </section>
-     -->
+    <div class="container"  >
+       <div class="row content-wrap" id="coach_detail"></div>
     </div>
   </div>
 </div>
