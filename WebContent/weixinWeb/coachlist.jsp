@@ -25,6 +25,7 @@ var myScroll,
 	pullDownEl, pullDownOffset,
 	pullUpEl, pullUpOffset,
 	generatedCount = 0;
+
 	city=city.length>2?city.substr(0,2):city;
 
 /**
@@ -186,9 +187,9 @@ document.addEventListener('DOMContentLoaded', loaded, false);
 <!--单个教练选择弹出框 starts-->
 <div class="overlay">
   <div class="overlay-content ">
-    <div class="container"  id="coach_detail">
-       <!--<div class="row content-wrap"> 
-        <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="container"  >
+       <div class="row content-wrap" id="coach_detail"> 
+        <!--<div class="col-md-12 col-sm-12 col-xs-12">
           <div class="row detail-wrap">
             <div class="col-md-3 col-sm-3 col-xs-3"> <img src="images/person-one.png" class="img-responsive img-circle " /> </div>
             <div class="col-md-9 col-sm-9 col-xs-9">
