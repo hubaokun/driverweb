@@ -20,21 +20,6 @@ pageEncoding="UTF-8"%>
 </style>
 
 <script type="text/javascript">
-/* var x={
-		   "openid":" OPENID",
-		   "nickname": "NICKNAME",
-		   "sex":"1",
-		   "province":"PROVINCE",
-		   "city":"CITY",
-		   "country":"COUNTRY",
-		    "headimgurl":"http://wx.qlogo.cn/mmopen/g3MonUZtNHkdmzicIlibx6iaFqAc56vxLSUfpb6n5WKSYVY0ChQKkiaJSgQ1dZuTOgvLLrhJbERQQ4eMsv84eavHiaiceqxibJxCfHe/46", 
-			"privilege":[
-			"PRIVILEGE1",
-			"PRIVILEGE2"
-		    ],
-		    "unionid": "o6_bmasdasdsad6_2sgVt7hMZOPfL"
-		};
-var y=$.parseJSON(x); */
 
 $(document).ready(function(){
 	var sid='${sessionScope.studentid}';
@@ -51,18 +36,24 @@ function showStudent(obj){
 		var wxinfo=$.parseJSON(c_info);
 		$("#avatarurl").attr("src",wxinfo.headimgurl);
 		$("#realname").html(wxinfo.nickname);
+		/* if(c_info!=''){
+			var wxinfo=$.parseJSON(c_info);
+			$("#avatarurl").attr("src",wxinfo.headimgurl);
+			$("#realname").html(wxinfo.nickname);
+		} */
+		 //alert(obj.data.realname);
 		//alert(obj.data.realname+"#"+obj.data.avatarurl);
 		/* if(obj.data.avatarurl==''){
 			$("#avatarurl").attr("src",wxinfo.headimgurl);
 		}else{
 			$("#avatarurl").attr("src",obj.data.avatarurl);//设置头像图片
 		}
-		$("#avatarurl").attr("src",wxinfo.headimgurl);
 		if(obj.data.realname==''){
 			$("#realname").html(wxinfo.nickname);
 		}else{
 			$("#realname").html(obj.data.realname);
 		} */
+		//$("#avatarurl").attr("src",obj.data.avatarurl);//设置头像图片
 		$("#phone").html(obj.data.phone);
 		//$("#avatarurl").attr("src",'${sessionScope.avatarurl}');//设置头像图片
 		//$("#avatarurl").attr("src","https://www.baidu.com/img/bdlogo.png");//设置头像图片
@@ -74,6 +65,8 @@ function showStudent(obj){
 		window.location.href=redirect_login;
 	}
 }
+
+
 </script>
 </head>
 
