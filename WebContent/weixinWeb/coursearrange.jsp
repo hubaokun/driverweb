@@ -18,7 +18,7 @@ pageEncoding="UTF-8"%>
       <div class="row">
         <div class="col-md-10 col-sm-12 col-xs-10" id="coach_detail">
         </div>
-        <div class="col-md-2 col-sm-2 col-xs-2"> <i class="icon icon-chevron-right pull-right"></i> </div>
+        <div class="col-md-2 col-sm-2 col-xs-2" onclick="gotoCoachDetail()"> <i class="icon icon-chevron-right pull-right"></i> </div>
       </div>
     </div>
     <!--课程表的日期选择 starts-->
@@ -275,7 +275,7 @@ pageEncoding="UTF-8"%>
 <!--课程表的日期选择JS函数 starts-->
 <script>
 var coachid= <%=request.getParameter("coachid")%>;
-var studentid= <%=request.getParameter("studentid")%>;
+var studentid= ${sessionScope.studentid};
 var date = new Date();
 
 year = date.getFullYear();
@@ -584,6 +584,10 @@ function show_loading(){
 
 function hide_loading(){
 	$('.overlay-wait').css('display','none');
+}
+
+function gotoCoachDetail(){
+	location.href="coachdetail.jsp?coachid="+coachid;
 }
 
 $(document).ready(function()
