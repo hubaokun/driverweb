@@ -1996,7 +1996,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 	@Override
 	public HashMap<String, Object> getcoachcouponlist(String coachid,String pagenum) {
 		HashMap<String, Object> returnResult = new HashMap<String, Object>();
-		String querystring="from CouponRecord where ownerid=:coachid GROUP BY gettime";
+		String querystring="from CouponRecord where ownerid=:coachid GROUP BY gettime order by gettime desc";
 		String[] params={"coachid"};
 		List<CouponRecord> list=(List<CouponRecord>) dataDao.pageQueryViaParam(querystring,Constant.COUNT_NUM,CommonUtils.parseInt(pagenum, 0), params, CommonUtils.parseInt(coachid, 0));
 		String querystring1="select count(*) "+querystring;
