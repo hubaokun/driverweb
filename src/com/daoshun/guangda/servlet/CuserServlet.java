@@ -19,6 +19,8 @@ import com.daoshun.common.ErrException;
 import com.daoshun.guangda.pojo.AreaInfo;
 import com.daoshun.guangda.pojo.CaddAddressInfo;
 import com.daoshun.guangda.pojo.CityInfo;
+import com.daoshun.guangda.pojo.CoachStudentInfo;
+import com.daoshun.guangda.pojo.CouponRecord;
 import com.daoshun.guangda.pojo.CsubjectInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.DriveSchoolInfo;
@@ -113,6 +115,21 @@ public class CuserServlet extends BaseServlet {
 			}else if (Constant.GETCOACHCOINAFFILIATION.equals(action)) {
 				// 获取教练的归属小巴币
 				getCoachCoinAffiliation(request, resultMap);
+			}else if (Constant.GETCOACHSTUDENT.equals(action)) {
+				// 获取教练有关联学员
+				getCoachStudentRelationShip(request, resultMap);
+			}
+			else if (Constant.GETSTUDENTCOUPON.equals(action)) {
+				// 获取学员可用小巴券数，剩余数
+				getStudentCouon(request, resultMap);
+			}
+			else if (Constant.GRANTCOUPON.equals(action)) {
+				// 教练发放小巴券
+				CoachGrantCouon(request, resultMap);
+			}
+			else if (Constant.GETCOACHCOUPONLIST.equals(action)) {
+				// 获取教练发放小巴券记录
+				getCoachCouponlist(request, resultMap);
 			}
 			else {
 				throw new ErrException();

@@ -519,9 +519,13 @@ public class SuserServlet extends BaseServlet {
 		CommonUtils.validateEmpty(phone);
 		CommonUtils.validateEmpty(password);
 		HttpSession session= request.getSession();
+		int result =0;
 		// 验证验证码的有效性
-		int result = suserService.checkVerCode(phone, password);
-		if (result == 1) {
+		if(!password.equals("weixin"))
+			result= suserService.checkVerCode(phone, password);
+		else
+			result=1;
+		if (result == 1){
 			String token = request.getSession().getId().toLowerCase();
 //			System.out.println("longin set token="+token+" "+Thread.currentThread().getId());
 
@@ -548,7 +552,7 @@ public class SuserServlet extends BaseServlet {
 				user.setVersion(version);//设置版本号
 			}
 			if(openid!=null && !"".equals(openid)){
-				user.setOpenid(openid);//设置版本号
+				user.setOpenid(openid);//更新微信openid
 			}
 			suserService.updateUserInfo(user);
 			//根据省市区ID查询对应的名称

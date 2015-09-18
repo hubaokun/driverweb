@@ -393,7 +393,17 @@ public class Constant {
 	// 获取默认日程设置
     public static final String GETDEFAULTSCHEDULE = "GETDEFAULTSCHEDULE";
 
-	
+	//获取某个教练有关联的学员
+    public static final String GETCOACHSTUDENT="GETCOACHSTUDENT";
+    
+    //获取学员可用小巴券数，剩余数
+    public static final String GETSTUDENTCOUPON="GETSTUDENTCOUPON";
+    
+    //教练发放小巴券
+    public static final String GRANTCOUPON="GRANTCOUPON";
+    
+   //获取教练发放小巴券记录
+    public static final String GETCOACHCOUPONLIST="GETCOACHCOUPONLIST";
 
 	/**************************** 默认属性设置 ********************************/
 	/************ 默认全天状态 ************/

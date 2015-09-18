@@ -322,6 +322,7 @@ public class CouponAction extends BaseAction {
 		coupon.setEnd_time(newendtime);
 		coupon.setAddtime(new Date());
 		couponService.addCoupon(coupon);
+		cuserService.updateCoachCoupon(String.valueOf(addownerid),pub_count);
 		return SUCCESS;
 	}
 
@@ -582,7 +583,69 @@ public class CouponAction extends BaseAction {
 					nUser.setUserid(userinfo.getStudentid());
 					cuserService.addObject(nUser);
 				}
-
+//			SuserInfo userinfo = suserService.getUserById(searchsuserid);
+//			if(cuserinfo.getCouponlimit()==0)
+//			{
+//				return "ERROR0";
+//			}
+//			if (userinfo == null) {
+//				return "ERROR1";
+//			}
+//			if (cuserinfo.getCouponrest() < pubnum) {
+//				return "ERROR2";
+//			} else {
+//				Calendar c=Calendar.getInstance();
+//				Date now=c.getTime();
+//				c.add(Calendar.DAY_OF_MONTH, 30);	
+//				for (int i = 0; i < pubnum; i++) {
+//					CouponRecord couponrecord = new CouponRecord();
+//					couponrecord.setCouponid(0);
+//					couponrecord.setUserid(userinfo.getStudentid());
+//					couponrecord.setGettime(now);
+//					couponrecord.setValue(1);
+//					couponrecord.setOwnertype(2);
+//					couponrecord.setState(0);
+//					couponrecord.setOwnerid(CommonUtils.parseInt(coachid,0));
+//					couponrecord.setCoupontype(1);
+//					couponrecord.setEnd_time(c.getTime());
+//					couponService.addCouponRecord(couponrecord);
+//					couponrecord.setUsetime(null);
+//					cuser.setCouponrest(cuser.getCouponrest()-1);
+//					updateCuser(cuser);
+//				}
+//				String message = "您收到" + pubnum + "张小巴券哦,请注意查收";
+//
+////				if (pushtype == 1) {// 短信
+////					CommonUtils.sendSms(userinfo.getPhone(), message);
+////				} else {
+//					// 推送通知
+//					UserPushInfo userPushInfo = getUserPushInfo(userinfo.getStudentid(), 2);
+//					if (userPushInfo != null && userPushInfo.getDevicetoken() != null) {
+//						if (userPushInfo.getType() ==DeviceType.ANDROID && !CommonUtils.isEmptyString(userPushInfo.getJpushid())) {
+//							PushtoSingle push = new PushtoSingle();
+//							push.pushsingle(userPushInfo.getJpushid(), 2, "{\"message\":\"" + message + "\",\"type\":\"4\"}");
+//						} else if (userPushInfo.getType() == DeviceType.IOS && !CommonUtils.isEmptyString(userPushInfo.getDevicetoken())) {
+//							ApplePushUtil.sendpush(userPushInfo.getDevicetoken(), "{\"aps\":{\"alert\":\"" + message + "\",\"sound\":\"default\"},\"userid\":" + userinfo.getStudentid() + "}", 1, 2);
+//						}
+//					}
+//			//	}
+//
+//				String	pushcontent="小巴券已发放";
+//					// 如果消息不为空的话,生成系统通知
+//					NoticesInfo noticeInfo = new NoticesInfo();
+//					noticeInfo.setAddtime(new Date());
+//					noticeInfo.setType(2);
+//					noticeInfo.setContent(pushcontent);
+//					noticeInfo.setCategory("小巴券领取");
+//					addObject(noticeInfo);
+//
+//					NoticesUserInfo nUser = new NoticesUserInfo();
+//					nUser.setNoticeid(noticeInfo.getNoticeid());
+//					nUser.setReadstate(0);
+//					nUser.setUserid(userinfo.getStudentid());
+//					addObject(nUser);
+//				
+//			}
 				return SUCCESS;
 			}
 		}

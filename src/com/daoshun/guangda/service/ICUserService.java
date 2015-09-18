@@ -1,6 +1,7 @@
 package com.daoshun.guangda.service;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +12,9 @@ import com.daoshun.guangda.pojo.BalanceCoachInfo;
 import com.daoshun.guangda.pojo.CApplyCashInfo;
 import com.daoshun.guangda.pojo.CaddAddressInfo;
 import com.daoshun.guangda.pojo.CoachLevelInfo;
+import com.daoshun.guangda.pojo.CoachStudentInfo;
 import com.daoshun.guangda.pojo.ComplaintSetInfo;
+import com.daoshun.guangda.pojo.CouponRecord;
 import com.daoshun.guangda.pojo.CsubjectInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.DriveSchoolInfo;
@@ -298,4 +301,30 @@ public interface ICUserService {
 	 public int getCanUseCoinnumForCoach(String coachid) ;
 	 public HashMap<String, Object> getCoinAffiliation(String coachid);
 	 public RechargeRecordInfo getrechargerecord(String recordid);
+	/**
+	 * 增加教练可发放小巴券总数
+	 * @param coachid  教练ID
+	 * @param pub_count 新增可发放数
+	 */
+	 public abstract void updateCoachCoupon(String coachid,Integer pub_count);
+	 /**
+	  * 获取教练所有学员信息
+	  */
+	 public abstract List<SuserInfo> getCoachStudent(String coachid);
+	 /**
+	  * 获取学员小巴券可用张数
+	  */
+	 public abstract Integer getstudentCoupontotal(String studentid,String coachid);
+	 /**
+	  * 获取学员小巴券剩余张数
+	  */
+	 public abstract Integer getstudentCouponrest(String studentid,String coachid);
+	 /**
+	  * 教练发放小巴券
+	  */
+	 public abstract String coachgrantcoupon(String coachid,String phone,Integer pubnum);
+	 /**
+	  * 获取教练发放小巴券记录
+	  */
+	 public abstract HashMap<String, Object> getcoachcouponlist(String coachid,String pagenum);
 }
