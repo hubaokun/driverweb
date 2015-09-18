@@ -23,6 +23,7 @@ import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
 import com.daoshun.common.CscheduleCompare;
 import com.daoshun.common.ErrException;
+import com.daoshun.guangda.pojo.AutoPositionInfo;
 import com.daoshun.guangda.pojo.CBookTimeInfo;
 import com.daoshun.guangda.pojo.CaddAddressInfo;
 import com.daoshun.guangda.pojo.CscheduleInfo;
@@ -1442,8 +1443,20 @@ public class CscheduleServlet extends BaseServlet {
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
-				//locationService.getAutoPositionInfoByCityId(cityid);
-              if(Integer.parseInt(price)<50 || Integer.parseInt(price)>500)
+			  AutoPositionInfo ap=locationService.getAutoPositionInfoByCityId(cityid);
+			  if(ap!=null){
+				  if(ap.getMaxprice()!=null && ap.getMinprice()!=null){
+					  if(Integer.parseInt(price)<ap.getMinprice().intValue() || Integer.parseInt(price)>ap.getMaxprice().intValue()){
+						  resultMap.put("code", 3);
+		      			  resultMap.put("message", "超过课程价格范围，请重新设置");
+		      			  return;
+					  }
+				  }else if(Integer.parseInt(price)<50 || Integer.parseInt(price)>500){
+	            	  resultMap.put("code", 3);
+	      			  resultMap.put("message", "订单额不能少于50或者大于500，请重新设置");
+	      			  return;
+	              }
+			  }else if(Integer.parseInt(price)<50 || Integer.parseInt(price)>500)
               {
             	  resultMap.put("code", 3);
       			  resultMap.put("message", "订单额不能少于50或者大于500，请重新设置");

@@ -141,7 +141,7 @@ public class LocationServlet extends BaseServlet{
 	public void getAutoPosition(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException, UnsupportedEncodingException {
 		String cityid=getRequestParamter(request,"cityid");
 		String provinceid=getRequestParamter(request,"provinceid");
-		AutoPositionInfo tempAutoPositionInfo=locationService.getAutoPositionInfo(cityid,provinceid);
+		AutoPositionInfo tempAutoPositionInfo=locationService.getAutoPositionInfoByCityId(cityid);
 		if(tempAutoPositionInfo!=null){
 			resultMap.put("simulateUrl", tempAutoPositionInfo.getSimulateexamurl());
 			resultMap.put("bookreceptionUrl", tempAutoPositionInfo.getBookreceptionurl());

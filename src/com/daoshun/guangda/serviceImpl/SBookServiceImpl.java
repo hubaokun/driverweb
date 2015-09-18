@@ -1844,7 +1844,60 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		}
 		return result;
 	}
-	
+	public boolean checkCanPay(JSONArray json){
+		int moneySum=0;//所有订单需要消耗的余额
+		int coinSum=0;//
+		try {
+			for (int i = 0; i < json.length(); i++) {// 每个循环是一个订单
+				JSONObject array = json.getJSONObject(i);
+				JSONArray times = array.getJSONArray("time");// 订单的时间点数组
+				String date1 = array.getString("date");// 订单的日期
+				String paytype = array.getString("paytype");// 订单的日期
+				String recordid="";
+				int delmoney=0;
+				//int orderPrice=0;
+				int mixMoney=0;//混合支付时余额支付额
+				int mixCoin=0;//混合支付时的小巴币数量
+				if(String.valueOf(PayType.MONEY).equals(paytype)){
+					delmoney= array.getInt("delmoney");
+					moneySum+=delmoney;
+				}else if(String.valueOf(PayType.COUPON).equals(paytype)){
+					/*delmoney= array.getInt("delmoney");
+					//orderPrice=array.getInt("total");
+					recordid= array.getString("recordid");
+					boolean recordFlag=false;
+					String[] recordidArray = recordid.split(",");
+					if(recordidArray.length>1){
+						recordFlag=true;//一次性传入多张券
+					}
+					for (int recoridn = 0; recoridn < recordidArray.length; recoridn++) {
+						int cid = CommonUtils.parseInt(recordidArray[recoridn], 0);
+						CouponRecord record = dataDao.getObjectById(CouponRecord.class, cid);//该券已经被使用过或者不存在
+						if(record==null || record.getState()==1 ){
+							recordFlag=true;
+						}
+					}*/
+				}else if(String.valueOf(PayType.COIN).equals(paytype)){//小巴币支付
+					delmoney= array.getInt("delmoney");
+					coinSum+=delmoney;
+				}else if(String.valueOf(PayType.COIN_MONEY).equals(paytype)){//小巴币支付
+					delmoney= array.getInt("delmoney");//小巴币
+					mixCoin=delmoney;//小巴币数量
+					coinSum+=mixCoin;
+					
+					int total=array.getInt("total");//订单总额
+					mixMoney=total-delmoney;//余额支付=订单总额-小巴币支付额
+					moneySum+=mixMoney;
+				}
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		
+		
+		return true;
+	}
 	
 	@Transactional(readOnly = false, propagation = Propagation.SUPPORTS)
 	public HashMap<String, Object> bookCoachNew(String coachid, String studentid, String date) {

@@ -9,6 +9,8 @@ pageEncoding="UTF-8"%>
 <title>小巴券</title>
 <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <link href="css/orderconfirm.css" rel="stylesheet" type="text/css" />
+<script src="js/jquery-1.8.3.min.js"></script>
+<script src="js/jquery-ui-1.10.3.min.js"></script>
 <style type="text/css">
 .container
 {
