@@ -124,7 +124,7 @@ function getOrderlist(at,pagenum){
 	            	if(orderlist[i].studentstate==4){
 	            		content_list=content_list+'<span class="span-btn sure-btn">已提交取消订单申请,等待教练确认中!</span>';
 	            	}else if(orderlist[i].can_cancel==1){
-	            		content_list=content_list+'<span class="span-btn complain-btn" onclick="cancelOrder('+orderlist[i].orderid+')">取消订单</span>';
+	            		content_list=content_list+'<span class="span-btn un-sure-btn" onclick="cancelOrder('+orderlist[i].orderid+')">取消订单</span>';
 	            	}
             	}
             	if(orderlist[i].can_down==1){
@@ -133,10 +133,10 @@ function getOrderlist(at,pagenum){
             	}
             	if(at=='GetWaitEvaluationOrder'){
             		//<a href="evaluatecoach.jsp" class="evaluate-btn span-btn judge-btn pull-right"><i class="icon  icon-edit"></i>评价</a>
-            		content_list=content_list+'<a class="evaluate-btn span-btn judge-btn pull-right" href="evaluatecoach.jsp?orderid='+orderlist[i].orderid+'"><i class="icon  icon-edit"></i>立即评价</a>';
+            		content_list=content_list+'<a class="evaluate-btn span-btn judge-btn pull-right" href="evaluatecoach.jsp?orderid='+orderlist[i].orderid+'">立即评价</a>';
                 }
             	if(at=='GetCompleteOrder'){
-            		content_list=content_list+'<a href="coursearrange.jsp?coachid='+orderlist[i].coachid+'"><span class="span-btn sure-btn">继续预约</span></a>';
+            		content_list=content_list+'<a href="coursearrange.jsp?coachid='+orderlist[i].coachid+'"><span class="span-btn sure-btn pull-right">继续预约</span></a>';
                 }
             	content_list=content_list+'</p></div></div></div></div></li>';
             }
