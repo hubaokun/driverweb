@@ -30,7 +30,7 @@
 
 <body>
 <div id="content">
-	
+	<jsp:include page="left.jsp" />
     <div id="content_form">
         <div id="content_form_blank" >
             <form id="addcoinrecordForm" action="" enctype="multipart/form-data" method="post">
