@@ -73,7 +73,7 @@ wx.config({
   <form>
     <div class="row money-row" style="margin-top:28px;">
       <div class="col-md-12 col-sm-12 col-xs-12">
-        <input id="amount" type="text" placeholder="请输入金额"  maxlength="5"/>
+        <input id="amount" type="number" placeholder="请输入金额"  maxlength="4"/>
       </div>
     </div>
     <div class="row sure-row">
@@ -229,6 +229,14 @@ function show_loading(){
 function hide_loading(){
 	$('.overlay-wait').css('display','none');
 }
+
+$('#amount').keydown(function ()
+	{
+		if ($('#amount').val().length > 3)
+		{
+			$('#amount').blur();
+		}
+	});
 </script>
 </body>
 </html>
