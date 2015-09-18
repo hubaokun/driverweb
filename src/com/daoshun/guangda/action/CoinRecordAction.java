@@ -51,6 +51,9 @@ public class CoinRecordAction extends BaseAction{
     // 小巴币的接受者id
     private Integer receiverid;
     
+    // 登陆驾校id
+    private Integer schoolid;
+    
     // 小巴币的接受者姓名
     private String receivername;
 
@@ -147,12 +150,53 @@ public class CoinRecordAction extends BaseAction{
 		}
         return SUCCESS;
     }
+    
+    //驾校小巴币发放记录
+    @Action(value = "goSchoolCoinRecord", results = { @Result(name = SUCCESS, location = "/schoolcoinrecord.jsp") })
+    public String goSchoolCoinRecord() {
+    	HttpSession session = ServletActionContext.getRequest().getSession();
+		int schoolid = CommonUtils.parseInt(String.valueOf(session.getAttribute("schoolid")), 0);
+    	QueryResult<CoinRecordInfo> result = coinRecordService.getSchoolCoinRecordListByPage(pageIndex, 10, starttime, endtime, 1,String.valueOf(schoolid) ,String.valueOf(receiverid));
+    	if(receiverid!=null && !"".equals(receiverid) && !"null".equals(receiverid)){
+        	SuserInfo suser=suserService.getUserById(String.valueOf(receiverid));
+        	coinnum=suser.getCoinnum();
+        	receivername=suser.getRealname();
+        }
+    	coinrecordlist = result.getDataList();
+		total = (int) result.getTotal();
+		pageCount = (total + 9) / 10;
+		if (pageIndex > 1) {
+			if (coinrecordlist == null || coinrecordlist.size() == 0) {
+				pageIndex--;
+				getCoinrecordlist();
+			}
+		}
+        return SUCCESS;
+    }
+    
+    
     //回收小巴币
     @Action(value = "reclaimCoin", results = { @Result(name = SUCCESS, type = "redirect" ,location = "goCoinRecord.do?receiverid=${receiverid}") })
     public String reclaimCoin() {
     	coinRecordService.reclaimCoin(receiverid);
         return SUCCESS;
     }
+    
+  //回收驾校发放小巴币
+    @Action(value = "reclaimSchoolCoin", results = { @Result(name = SUCCESS, type = "redirect" ,location = "goCoinRecord.do?receiverid=${receiverid}") })
+    public String reclaimSchoolCoin() {
+    	HttpSession session = ServletActionContext.getRequest().getSession();
+		int schoolid = CommonUtils.parseInt(String.valueOf(session.getAttribute("schoolid")), 0);
+		driveSchoollist = cuserService.getDriveSchoolListById(schoolid);
+		String schoolname="";
+		for(int i=0;i<driveSchoollist.size();i++){
+			DriveSchoolInfo school = driveSchoollist.get(i);
+			schoolname = school.getName();
+		}
+    	coinRecordService.reclaimSchoolCoin(receiverid,schoolid,schoolname);
+        return SUCCESS;
+    }
+    
     //小巴币月报记录
     @Action(value = "CoinReport", results = { @Result(name = SUCCESS, type = "redirect" ,location = "goCoinRecord.do?receiverid=${receiverid}") })
     public String CoinReport() {
@@ -424,6 +468,14 @@ public class CoinRecordAction extends BaseAction{
 
 	public void setDriveSchoollist(List<DriveSchoolInfo> driveSchoollist) {
 		this.driveSchoollist = driveSchoollist;
+	}
+
+	public Integer getSchoolid() {
+		return schoolid;
+	}
+
+	public void setSchoolid(Integer schoolid) {
+		this.schoolid = schoolid;
 	}
     
     

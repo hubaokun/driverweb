@@ -76,6 +76,54 @@ public class CoinRecordServiceImpl extends BaseServiceImpl implements ICoinRecor
         QueryResult<CoinRecordInfo> result = new QueryResult<CoinRecordInfo>(coinRecordList, count);
         return result;
     }
+    
+    //驾校小巴币发放记录
+    public  QueryResult<CoinRecordInfo> getSchoolCoinRecordListByPage(int pageIndex, int pageSize, String starttime,
+    		String endtime,  Integer ownertype,  String ownerid,String receiverid)
+    {
+        StringBuffer coinsql = new StringBuffer();
+        coinsql.append(" from CoinRecordInfo where 1=1 ");
+        if (!CommonUtils.isEmptyString(starttime)) {
+            coinsql.append(" and addtime > '" + starttime + "'");
+        }
+ 
+        if (!CommonUtils.isEmptyString(endtime)) {
+            coinsql.append(" and addtime <= '" + endtime + " 23:59:59'");
+        }
+        if (ownertype != null) {
+            coinsql.append(" and ownertype = " + ownertype);
+            if (ownertype == 1) {
+                if (!CommonUtils.isEmptyString(ownerid)) {
+                    coinsql.append(" and ownerid = " + ownerid);
+                }
+            } else if (ownertype == 2) {
+                if (!CommonUtils.isEmptyString(ownerid)) {
+                    coinsql.append(" and ownerid = " + ownerid);
+                }
+            }
+        }
+        
+        if(receiverid!=null && !"".equals(receiverid) && !"null".equals(receiverid)){
+        	coinsql.append(" and receiverid="+receiverid);
+        	coinsql.append(" or payerid="+receiverid);
+        	
+        }
+        System.out.println(coinsql);
+        List<CoinRecordInfo> coinRecordList = (List<CoinRecordInfo>) dataDao.pageQueryViaParam(coinsql.toString() + " order by addtime desc", pageSize, pageIndex, null);
+
+        if (coinRecordList != null && coinRecordList.size() > 0) {
+            for (CoinRecordInfo coinrecordinfo : coinRecordList) {
+                if(coinrecordinfo.getOwnertype() == 0){
+                	coinrecordinfo.setOwnername("小巴");
+                }
+            }
+        }
+        
+        String counthql = coinsql.insert(0, " select count(*) ").toString();
+        long count = (Long) dataDao.getFirstObjectViaParam(counthql, null);
+        QueryResult<CoinRecordInfo> result = new QueryResult<CoinRecordInfo>(coinRecordList, count);
+        return result;
+    }
 
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override
@@ -112,4 +160,42 @@ public class CoinRecordServiceImpl extends BaseServiceImpl implements ICoinRecor
 	        
     	}
 	}
+    
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+   	@Override
+   	public void reclaimSchoolCoin(int receiverid,int schoolid,String schoolname) {
+       	SuserInfo suser=dataDao.getObjectById(SuserInfo.class, receiverid);
+       	if(suser!=null){
+       		if(suser.getCoinnum()!=null && suser.getCoinnum()>0){
+   				//回收即学员向驾校支付剩余所有的小巴币
+   				CoinRecordInfo coinRecordInfo = new CoinRecordInfo ();
+   		        coinRecordInfo.setReceiverid(schoolid);
+   		        coinRecordInfo.setReceivertype(UserType.DRIVESCHOOL);
+   		        coinRecordInfo.setReceivername(schoolname);
+   		       
+   		        
+   		        coinRecordInfo.setPayerid(receiverid);
+   		        coinRecordInfo.setPayertype(UserType.STUDENT);
+   		        coinRecordInfo.setPayername(suser.getRealname());
+   		        coinRecordInfo.setType(CoinType.REFUND);
+   		        
+   		        
+   		        coinRecordInfo.setOwnerid(0);
+   		        coinRecordInfo.setOwnertype(UserType.PLATFORM);
+   		        coinRecordInfo.setOwnername("平台");
+   		        
+   		        coinRecordInfo.setCoinnum(suser.getCoinnum());
+   		        coinRecordInfo.setAddtime(new Date());
+   		        
+   		        dataDao.addObject(coinRecordInfo);
+   		        if(suser.getCoinnum()!=null){
+   		        	suser.setCoinnum(0);
+   		        }
+   		        dataDao.updateObject(suser);
+       		}
+   	        
+       	}
+   	}
+    
+    
 }

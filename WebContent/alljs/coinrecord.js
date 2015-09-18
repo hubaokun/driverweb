@@ -433,10 +433,20 @@ function grantCoinRecord(){
 function goCoinRecord(){
 	 $("#addcoinrecordForm").attr("action","goCoinRecord.do").submit();
 }
+function goSchoolCoinRecord(){
+	 $("#addcoinrecordForm").attr("action","goSchoolCoinRecord.do").submit();
+}
 //回收小巴币
 function reclaimCoin(v1,v2)
 {
 	if(confirm("确认要回收"+v1+"的所有小巴币吗?")){
 		window.location.href="reclaimCoin.do?receiverid="+v2;
+	}
+}
+
+//回收驾校发放小巴币
+function reclaimSchoolCoin(v1,v2){
+	if(confirm("确认要回收"+v1+"的所有小巴币吗?")){
+		window.location.href="reclaimSchoolCoin.do?receiverid="+v2;
 	}
 }
