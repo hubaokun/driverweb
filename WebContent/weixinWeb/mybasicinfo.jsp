@@ -36,7 +36,7 @@ pageEncoding="UTF-8"%>
             	<img id="avatarurl" src="images/person-one.png" class="img-responsive img-circle center-block" />
             </div>	
             <div class="col-md-9 col-sm-9 col-xs-9">
-            	<label for="avart_img"><i class="icon icon-chevron-right basic-icon"></i></label>
+            	<label for="avart_img"><!--<i class="icon icon-chevron-right basic-icon"></i>--></label>
                <!--  <input type="file" id="avart_img" style="display:none;"  /> -->
             </div>
             <div class="clearfix"></div>
