@@ -85,7 +85,10 @@ public class CouponRecord implements Serializable {
 	private int totalcount;
 	
 	@Transient
-	private int usecount;
+	private long usecount;
+	
+	@Transient
+	private String usename;
 	
 	@Transient
 	private String userphone;
@@ -234,11 +237,11 @@ public class CouponRecord implements Serializable {
 		this.totalcount = totalcount;
 	}
 
-	public int getUsecount() {
+	public long getUsecount() {
 		return usecount;
 	}
 
-	public void setUsecount(int usecount) {
+	public void setUsecount(long usecount) {
 		this.usecount = usecount;
 	}
 	
@@ -249,6 +252,14 @@ public class CouponRecord implements Serializable {
 
 	public void setUserphone(String userphone) {
 		this.userphone = userphone;
+	}
+
+	public String getUsename() {
+		return usename;
+	}
+
+	public void setUsename(String usename) {
+		this.usename = usename;
 	}
 	
 

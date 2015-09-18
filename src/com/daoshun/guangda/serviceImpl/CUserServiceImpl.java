@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,24 +19,31 @@ import com.daoshun.common.ApplePushUtil;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
 import com.daoshun.common.DeviceType;
+import com.daoshun.common.PushtoSingle;
 import com.daoshun.common.QueryResult;
 import com.daoshun.common.UserType;
 import com.daoshun.guangda.pojo.AdminInfo;
 import com.daoshun.guangda.pojo.BalanceCoachInfo;
 import com.daoshun.guangda.pojo.BalanceStudentInfo;
 import com.daoshun.guangda.pojo.CApplyCashInfo;
+import com.daoshun.guangda.pojo.CBookTimeInfo;
 import com.daoshun.guangda.pojo.CaddAddressInfo;
 import com.daoshun.guangda.pojo.CoachLevelInfo;
+import com.daoshun.guangda.pojo.CoachStudentInfo;
 import com.daoshun.guangda.pojo.CoinAffiliation;
 import com.daoshun.guangda.pojo.CoinRecordInfo;
 import com.daoshun.guangda.pojo.ComplaintSetInfo;
 import com.daoshun.guangda.pojo.CouponCoach;
+import com.daoshun.guangda.pojo.CouponRecord;
 import com.daoshun.guangda.pojo.CsubjectInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.DriveSchoolInfo;
 import com.daoshun.guangda.pojo.LogInfo;
 import com.daoshun.guangda.pojo.ModelsInfo;
+import com.daoshun.guangda.pojo.NoticesInfo;
+import com.daoshun.guangda.pojo.NoticesUserInfo;
 import com.daoshun.guangda.pojo.OrderInfo;
+import com.daoshun.guangda.pojo.OrderPrice;
 import com.daoshun.guangda.pojo.PermissionSetInfo;
 import com.daoshun.guangda.pojo.RechargeRecordInfo;
 import com.daoshun.guangda.pojo.RecommendInfo;
@@ -45,6 +54,8 @@ import com.daoshun.guangda.pojo.TeachcarInfo;
 import com.daoshun.guangda.pojo.UserPushInfo;
 import com.daoshun.guangda.pojo.VerifyCodeInfo;
 import com.daoshun.guangda.service.ICUserService;
+import com.daoshun.guangda.service.ICouponService;
+import com.daoshun.guangda.service.ISUserService;
 
 /**
  * @author liukn
@@ -52,7 +63,11 @@ import com.daoshun.guangda.service.ICUserService;
 @Service("cuserService")
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
-
+	@Resource
+	private ICouponService couponService;
+	@Resource
+	private ISUserService suserService;
+	
     @Override
     public CuserInfo getCuserByPhone(String loginname) {
         StringBuffer cuserhql = new StringBuffer();
@@ -1851,5 +1866,162 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 
         }
 	}
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	@Override
+	public void updateCoachCoupon(String coachid,Integer pub_count) {
+		CuserInfo cuser=getCoachByid(CommonUtils.parseInt(coachid, 0));
+		Integer total=cuser.getCoupontotal();
+		Integer rest=cuser.getCouponrest();
+		total+=pub_count;
+		rest+=pub_count;
+		cuser.setCoupontotal(total);
+		cuser.setCouponrest(rest);
+		updateCuser(cuser);
+	}
 
+	@Override
+	public List<SuserInfo> getCoachStudent(String coachid) {
+		StringBuffer querybuffer=new StringBuffer();
+		//querybuffer.append("from SuserInfo t1 left join CoachStudentInfo t2 on t1.studentid=t2.studentid where t2.coachid=:coachid");
+		querybuffer.append("from CoachStudentInfo where coachid=:coachid");
+		String[] params={"coachid"};
+		List<CoachStudentInfo> relationlist=(List<CoachStudentInfo>)dataDao.getObjectsViaParam(querybuffer.toString(), params, CommonUtils.parseInt(coachid, 0));
+        List<Integer> studentidlist=new ArrayList<Integer>();	
+		if(relationlist!=null &relationlist.size()>0)
+		{
+			  for (CoachStudentInfo s:relationlist)
+				{
+					studentidlist.add(s.getStudentid());
+				}
+				String querystring="from SuserInfo where studentid in(:studentid)";
+				String[] params1={"studentid"};
+				List<SuserInfo> studentlist=(List<SuserInfo>) dataDao.getObjectsViaParam(querystring, params1, studentidlist);
+				return studentlist;
+		}
+		return null;
+		
+	}
+
+	@Override
+	public Integer getstudentCoupontotal(String studentid,String coachid) {
+		String querystring="from CouponRecord where userid=:studentid and ownerid=:coachid and NOW()<end_time and state=1";
+		String[] params={"studentid","coachid"};
+		List<CouponRecord> temp=(List<CouponRecord>) dataDao.getObjectsViaParam(querystring, params,CommonUtils.parseInt(studentid, 0),CommonUtils.parseInt(coachid,0));
+		if(temp!=null && temp.size()>0)
+		   return temp.size();
+		else
+		   return 0;
+	}
+
+	@Override
+	public Integer getstudentCouponrest(String studentid,String coachid) {
+		String querystring="from CouponRecord where userid=:studentid and ownerid=:coachid and NOW()<end_time and state=0";
+		String[] params={"studentid","coachid"};
+		List<CouponRecord> temp=(List<CouponRecord>) dataDao.getObjectsViaParam(querystring, params,CommonUtils.parseInt(studentid, 0),CommonUtils.parseInt(coachid,0));
+		if(temp!=null && temp.size()>0)
+			   return temp.size();
+			else
+			   return 0;
+	}
+
+	@Override
+	public String coachgrantcoupon(String coachid,String phone,Integer pubnum) {
+		SuserInfo userinfo =suserService.getUserByPhone(phone);
+		CuserInfo cuserinfo=dataDao.getObjectById(CuserInfo.class, CommonUtils.parseInt(coachid, 0));
+		if(cuserinfo.getCouponlimit()==0)
+		{
+			return "ERROR0";
+		}
+		if (userinfo == null) {
+			return "ERROR1";
+		}
+		if (cuserinfo.getCouponrest() < pubnum) {
+			return "ERROR2";
+		} else {
+			Calendar c=Calendar.getInstance();
+			Date now=c.getTime();
+			c.add(Calendar.DAY_OF_MONTH, 30);	
+			for (int i = 0; i < pubnum; i++) {
+				CouponRecord couponrecord = new CouponRecord();
+				couponrecord.setCouponid(0);
+				couponrecord.setUserid(userinfo.getStudentid());
+				couponrecord.setGettime(now);
+				couponrecord.setValue(1);
+				couponrecord.setOwnertype(2);
+				couponrecord.setState(0);
+				couponrecord.setOwnerid(CommonUtils.parseInt(coachid,0));
+				couponrecord.setCoupontype(1);
+				couponrecord.setEnd_time(c.getTime());
+				couponrecord.setUsetime(null);
+				couponService.addCouponRecord(couponrecord);
+				cuserinfo.setCouponrest(cuserinfo.getCouponrest()-1);
+				updateCuser(cuserinfo);
+			}
+			String message = "您收到" + pubnum + "张小巴券哦,请注意查收";
+
+//			if (pushtype == 1) {// 短信
+//				CommonUtils.sendSms(userinfo.getPhone(), message);
+//			} else {
+				// 推送通知
+				UserPushInfo userPushInfo = getUserPushInfo(userinfo.getStudentid(), 2);
+				if (userPushInfo != null && userPushInfo.getDevicetoken() != null) {
+					if (userPushInfo.getType() ==DeviceType.ANDROID && !CommonUtils.isEmptyString(userPushInfo.getJpushid())) {
+						PushtoSingle push = new PushtoSingle();
+						push.pushsingle(userPushInfo.getJpushid(), 2, "{\"message\":\"" + message + "\",\"type\":\"4\"}");
+					} else if (userPushInfo.getType() == DeviceType.IOS && !CommonUtils.isEmptyString(userPushInfo.getDevicetoken())) {
+						ApplePushUtil.sendpush(userPushInfo.getDevicetoken(), "{\"aps\":{\"alert\":\"" + message + "\",\"sound\":\"default\"},\"userid\":" + userinfo.getStudentid() + "}", 1, 2);
+					}
+				}
+		//	}
+
+			String	pushcontent="小巴券已发放";
+				// 如果消息不为空的话,生成系统通知
+				NoticesInfo noticeInfo = new NoticesInfo();
+				noticeInfo.setAddtime(new Date());
+				noticeInfo.setType(2);
+				noticeInfo.setContent(pushcontent);
+				noticeInfo.setCategory("小巴券领取");
+				addObject(noticeInfo);
+
+				NoticesUserInfo nUser = new NoticesUserInfo();
+				nUser.setNoticeid(noticeInfo.getNoticeid());
+				nUser.setReadstate(0);
+				nUser.setUserid(userinfo.getStudentid());
+				addObject(nUser);
+			
+		}
+		return "SUCCESS";
+	}
+
+	@Override
+	public HashMap<String, Object> getcoachcouponlist(String coachid,String pagenum) {
+		HashMap<String, Object> returnResult = new HashMap<String, Object>();
+		String querystring="from CouponRecord where ownerid=:coachid GROUP BY gettime";
+		String[] params={"coachid"};
+		List<CouponRecord> list=(List<CouponRecord>) dataDao.pageQueryViaParam(querystring,Constant.COUNT_NUM,CommonUtils.parseInt(pagenum, 0), params, CommonUtils.parseInt(coachid, 0));
+		String querystring1="select count(*) "+querystring;
+		List countlist=dataDao.pageQueryViaParam(querystring1, Constant.COUNT_NUM, CommonUtils.parseInt(pagenum, 0), params,CommonUtils.parseInt(coachid, 0));
+		if(list!=null && list.size()>0)
+		{
+			for(int i=0;i<list.size();i++)
+			{
+				CouponRecord temp=list.get(i);
+				temp.setUsecount((long)countlist.get(i));
+				SuserInfo suser=dataDao.getObjectById(SuserInfo.class, temp.getUserid());
+				temp.setUsename(suser.getRealname());
+				temp.setUserphone(suser.getPhone());
+			}
+			
+			returnResult.put("CouponRecordList", list) ;
+		}
+		List<CouponRecord> nextPage = (List<CouponRecord>) dataDao.pageQueryViaParam(querystring,Constant.COUNT_NUM, (CommonUtils.parseInt(pagenum, 1) + 1), params, CommonUtils.parseInt(coachid, 0));
+		if (nextPage != null && nextPage.size() > 0) {
+			returnResult.put("hasmore", 1);
+		} else {
+			returnResult.put("hasmore", 0);
+		}
+		
+		return returnResult;
+	}
+	
 }

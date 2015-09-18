@@ -1843,6 +1843,16 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		dataDao.addObject(ac);
 		
 	}
+
+	@Override
+	public String checkopenid(String openid) {
+		  String querystring="from SuserInfo where openid=:openid";
+		  String[] params={"openid"};
+		  SuserInfo suser=(SuserInfo) dataDao.getFirstObjectViaParam(querystring, params,openid);
+		  if(suser!=null)
+			  return suser.getPhone();
+		  return "";
+	}
   	
   	
 

@@ -402,6 +402,13 @@ public class CuserInfo implements Serializable {
 	@Column(name = "couponlimit", length = 1, columnDefinition = "INT default 0")
 	private Integer couponlimit;
 	
+	// 教练收到小巴券总额
+	@Column(name = "coupontotal", columnDefinition = "INT default 0")
+	private Integer coupontotal;
+	
+	// 教练剩余可用小巴券总额
+	@Column(name = "couponrest", columnDefinition = "INT default 0")
+	private Integer couponrest;
 	
 	public Integer getDevicetype() {
 		return devicetype;
@@ -1148,6 +1155,22 @@ public class CuserInfo implements Serializable {
 
 	public void setCouponlimit(Integer couponlimit) {
 		this.couponlimit = couponlimit;
+	}
+
+	public Integer getCoupontotal() {
+		return coupontotal;
+	}
+
+	public void setCoupontotal(Integer coupontotal) {
+		this.coupontotal = coupontotal;
+	}
+
+	public Integer getCouponrest() {
+		return couponrest;
+	}
+
+	public void setCouponrest(Integer couponrest) {
+		this.couponrest = couponrest;
 	}
 	
 }

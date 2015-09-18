@@ -19,6 +19,8 @@ import com.daoshun.common.ErrException;
 import com.daoshun.guangda.pojo.AreaInfo;
 import com.daoshun.guangda.pojo.CaddAddressInfo;
 import com.daoshun.guangda.pojo.CityInfo;
+import com.daoshun.guangda.pojo.CoachStudentInfo;
+import com.daoshun.guangda.pojo.CouponRecord;
 import com.daoshun.guangda.pojo.CsubjectInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.DriveSchoolInfo;
@@ -113,6 +115,21 @@ public class CuserServlet extends BaseServlet {
 			}else if (Constant.GETCOACHCOINAFFILIATION.equals(action)) {
 				// 获取教练的归属小巴币
 				getCoachCoinAffiliation(request, resultMap);
+			}else if (Constant.GETCOACHSTUDENT.equals(action)) {
+				// 获取教练有关联学员
+				getCoachStudentRelationShip(request, resultMap);
+			}
+			else if (Constant.GETSTUDENTCOUPON.equals(action)) {
+				// 获取学员可用小巴券数，剩余数
+				getStudentCouon(request, resultMap);
+			}
+			else if (Constant.GRANTCOUPON.equals(action)) {
+				// 教练发放小巴券
+				CoachGrantCouon(request, resultMap);
+			}
+			else if (Constant.GETCOACHCOUPONLIST.equals(action)) {
+				// 获取教练发放小巴券记录
+				getCoachCouponlist(request, resultMap);
 			}
 			else {
 				throw new ErrException();
@@ -862,5 +879,65 @@ public class CuserServlet extends BaseServlet {
 		CommonUtils.validateEmpty(coachid);
 		HashMap<String, Object> result=cuserService.getCoinAffiliation(coachid);
 		resultMap.putAll(result);
+	}
+	//获取教练有关联学员信息
+	public void getCoachStudentRelationShip(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException
+	{
+		String coachid = getRequestParamter(request, "coachid");// 教练ID
+		CommonUtils.validateEmpty(coachid);
+		List<SuserInfo> suser=cuserService.getCoachStudent(coachid);
+		  resultMap.put("studentlist", suser);
+	}
+    //获取学员小巴券可用，剩余张数
+	public void getStudentCouon(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException
+	{
+		String coachid = getRequestParamter(request, "coachid");// 教练ID
+		String studentid = getRequestParamter(request, "studentid");// 学员ID
+		CommonUtils.validateEmpty(coachid);
+		CommonUtils.validateEmpty(studentid);
+		Integer total=cuserService.getstudentCoupontotal(studentid, coachid);
+		Integer rest=cuserService.getstudentCouponrest(studentid, coachid);
+		resultMap.put("total", total);
+		resultMap.put("rest", rest);
+	}
+	//教练发放小巴券
+	public void CoachGrantCouon(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException
+	{
+		String coachid = getRequestParamter(request, "coachid");// 教练ID
+		String phone = getRequestParamter(request, "phone");// 学员ID
+		String pubnum= getRequestParamter(request, "pubnum");// 发放张数
+		CommonUtils.validateEmpty(coachid);
+		CommonUtils.validateEmpty(phone);
+		CommonUtils.validateEmpty(pubnum);
+		String result=cuserService.coachgrantcoupon(coachid,phone,CommonUtils.parseInt(pubnum, 0));
+		if(result.equals("ERROR0"))
+		{
+			resultMap.put("code", 9);
+			resultMap.put("message", "教练没有发放小巴券权限，请在提交申请后再进行发放");
+		}
+		else if(result.equals("ERROR1"))
+		{
+			resultMap.put("code", 10);
+			resultMap.put("message", "该学员不存在");
+		}
+		else if(result.equals("ERROR2"))
+		{
+			resultMap.put("code", 11);
+			resultMap.put("message", "教练可用小巴券不足");
+		}
+	}
+	//获取教练发放小巴券记录
+	public void  getCoachCouponlist(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException
+	{
+		String coachid = getRequestParamter(request, "coachid");// 教练ID
+		String pagenum = getRequestParamter(request, "pagenum");//当前页
+		CommonUtils.validateEmpty(coachid);
+		CommonUtils.validateEmpty(pagenum);
+		HashMap<String, Object> cm=cuserService.getcoachcouponlist(coachid,pagenum);
+		if(cm!=null)
+		{
+			resultMap.put("recordlist", cm.get("CouponRecordList"));
+			resultMap.put("hasmore", cm.get("hasmore"));
+		}
 	}
 }
