@@ -147,6 +147,7 @@ ul {
 }
  .content-wrap .detail-wrap, .overlay .content-wrap .detail-wrap {
     padding: 7px 0px 0px 0px;
+        background-color: #eee;
 	
 }
 .detail-wrap .col-md-3
@@ -158,6 +159,7 @@ ul {
 {
 	padding-left:0px;
 	padding-right:12px;
+	text-align:left;
 }
 .detail-wrap .col-md-3 img
 {
@@ -829,7 +831,7 @@ text-align: center;
 
 .icon-citydown
 {
-	content:url(../images/arrow-down.png);
+	/*content:url(../images/arrow-down.png);*/
 	top:3px;
 	width:6px;
 }
