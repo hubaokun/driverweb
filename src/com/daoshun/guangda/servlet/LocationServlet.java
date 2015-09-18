@@ -145,6 +145,21 @@ public class LocationServlet extends BaseServlet{
 		if(tempAutoPositionInfo!=null){
 			resultMap.put("simulateUrl", tempAutoPositionInfo.getSimulateexamurl());
 			resultMap.put("bookreceptionUrl", tempAutoPositionInfo.getBookreceptionurl());
+			if(tempAutoPositionInfo.getMaxprice()==null){
+				resultMap.put("maxprice", 0);
+			}else{
+				resultMap.put("maxprice", tempAutoPositionInfo.getMaxprice().doubleValue());
+			}
+			if(tempAutoPositionInfo.getMinprice()==null){
+				resultMap.put("minprice", 0);
+			}else{
+				resultMap.put("minprice", tempAutoPositionInfo.getMinprice().doubleValue());
+			}
+			/*if(tempAutoPositionInfo.getDefaultprice()==null){
+				resultMap.put("defaultprice", 0);
+			}else{
+				resultMap.put("defaultprice", tempAutoPositionInfo.getDefaultprice().doubleValue());
+			}*/
 		}else{
 			resultMap.put(Constant.CODE, 2);
 			resultMap.put(Constant.MESSAGE, "cityid对应的数据不存在");

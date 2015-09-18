@@ -123,6 +123,25 @@ public class LocationServiceImpl extends BaseServiceImpl implements ILocationSer
 		return null;
 	}
 	@Override
+	public AutoPositionInfo getAutoPositionInfoByCityId(String cityid) {
+		//CityInfo tempCityInfo=getCityByBaiduID(baiduid);
+		String querystring="from AutoPositionInfo where cityid=:cityid ";
+		String[] params={"cityid"};
+		List<AutoPositionInfo> tempAutoPositionInfo=(List<AutoPositionInfo>) dataDao.getObjectsViaParam(querystring, params,CommonUtils.parseInt(cityid, 0));
+		if(tempAutoPositionInfo.size()>0)
+		{
+			return tempAutoPositionInfo.get(0);
+		
+		}
+		else
+		{
+		      Logger logger=Logger.getRootLogger();
+		      logger.warn("AutoPosition Exception cityid="+cityid);
+		}
+		       
+		return null;
+	}
+	@Override
 	public CityInfo getCityByBaiduID(String baiduid) {
 		String querystring="from CityInfo where baiduid=:baiduid";
 		String[] params={"baiduid"};

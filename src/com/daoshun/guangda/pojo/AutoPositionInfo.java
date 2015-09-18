@@ -1,5 +1,7 @@
 package com.daoshun.guangda.pojo;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -40,6 +42,17 @@ public class AutoPositionInfo implements java.io.Serializable {
     @Column(name="marks",length=200)
     private String marks;
     
+    //教练课程最低单价
+ 	@Column(name = "minprice", nullable = true, columnDefinition = "Decimal(20,2) default 0.00")
+ 	private BigDecimal minprice;
+ 	
+ 	//教练课程最高单价
+ 	@Column(name = "maxprice", nullable = true, columnDefinition = "Decimal(20,2) default 0.00")
+ 	private BigDecimal maxprice;
+ 	
+ 	//教练课程默认单价
+ 	/*@Column(name = "defaultprice", nullable = true, columnDefinition = "Decimal(20,2) default 0.00")
+ 	private BigDecimal defaultprice;*/
     
 
 	public int getAid() {
@@ -97,5 +110,28 @@ public class AutoPositionInfo implements java.io.Serializable {
 	public void setMarks(String marks) {
 		this.marks = marks;
 	}
+
+	public BigDecimal getMinprice() {
+		return minprice;
+	}
+
+	public void setMinprice(BigDecimal minprice) {
+		this.minprice = minprice;
+	}
+
+	public BigDecimal getMaxprice() {
+		return maxprice;
+	}
+
+	public void setMaxprice(BigDecimal maxprice) {
+		this.maxprice = maxprice;
+	}
+
+	/*public BigDecimal getDefaultprice() {
+		return defaultprice;
+	}
+	public void setDefaultprice(BigDecimal defaultprice) {
+		this.defaultprice = defaultprice;
+	}*/
     
 }

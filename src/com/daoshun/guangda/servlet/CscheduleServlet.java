@@ -32,6 +32,7 @@ import com.daoshun.guangda.pojo.DefaultSchedule;
 import com.daoshun.guangda.pojo.SystemSetInfo;
 import com.daoshun.guangda.service.ICUserService;
 import com.daoshun.guangda.service.ICscheduleService;
+import com.daoshun.guangda.service.ILocationService;
 import com.daoshun.guangda.service.ISystemService;
 
 /**
@@ -49,6 +50,7 @@ public class CscheduleServlet extends BaseServlet {
 	private ICscheduleService cscheduleService;
 	private ICUserService cuserService;
 	private ISystemService systemService;
+	private ILocationService locationService;
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -56,6 +58,7 @@ public class CscheduleServlet extends BaseServlet {
 		cscheduleService = (ICscheduleService) applicationContext.getBean("cscheduleService");
 		cuserService = (ICUserService) applicationContext.getBean("cuserService");
 		systemService = (ISystemService) applicationContext.getBean("systemService");
+		locationService = (ILocationService) applicationContext.getBean("locationService");
 	}
 
 	@Override
@@ -1401,6 +1404,7 @@ public class CscheduleServlet extends BaseServlet {
 	 */
 	public void setDateTimeNew(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");
+		String cityid = getRequestParamter(request, "cityid");
 		CommonUtils.validateEmpty(coachid);
 		String day = getRequestParamter(request, "day");
 		CommonUtils.validateEmpty(day);
@@ -1438,7 +1442,7 @@ public class CscheduleServlet extends BaseServlet {
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
-				
+				//locationService.getAutoPositionInfoByCityId(cityid);
               if(Integer.parseInt(price)<50 || Integer.parseInt(price)>500)
               {
             	  resultMap.put("code", 3);
