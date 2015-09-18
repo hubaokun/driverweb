@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
+<%@ include file="checksession.jsp" %>
 <!doctype html>
 <html>
 <head>
@@ -14,7 +15,6 @@ pageEncoding="UTF-8"%>
 <link href="mobiscroll/css/mobiscroll.scroller.css" rel="stylesheet" type="text/css" />
 <link href="mobiscroll/css/mobiscroll.scroller.ios.css" rel="stylesheet" type="text/css" />
 <link href="css/basicinfo.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="js/checksession.js"></script>
 <style type="text/css">
 .mbsc-ios .dw-sel {
 	color: #1798f2;

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
+<%@ include file="checksession.jsp" %>
 <!doctype html>
 <html>
 <head>
@@ -11,7 +12,6 @@ pageEncoding="UTF-8"%>
 <link href="css/font-awesome.css" rel="stylesheet" />
 <link href="css/style.css" rel="stylesheet" type="text/css" />
 <script src="js/jquery-1.8.3.min.js"></script>
-<script type="text/javascript" src="js/checksession.js"></script>
 <style type="text/css">
 .container
 {
@@ -53,6 +53,7 @@ function showStudent(obj){
 		}else{
 			$("#realname").html(obj.data.realname);
 		} */
+		$("#realname").html(obj.data.realname);
 		//$("#avatarurl").attr("src",obj.data.avatarurl);//设置头像图片
 		$("#phone").html(obj.data.phone);
 		//$("#avatarurl").attr("src",'${sessionScope.avatarurl}');//设置头像图片
@@ -62,7 +63,7 @@ function showStudent(obj){
 		$("#coupon").html(obj.coupon+"小时");
 	}else{
 		alert(obj.message);
-		window.location.href=redirect_login;
+		//window.location.href=redirect_login;
 	}
 }
 
