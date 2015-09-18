@@ -58,6 +58,13 @@ $(function(){
             }
             $("#thelist").html(content_list);
             hasmore=data.hasmore;
+
+			$("#pullUp").html("");
+				if(evaluatelist.length<10){
+					$("#pullUp").append("<span class='pullUpLabel'></span>");
+				}else{
+					$("#pullUp").append("<span class='pullUpIcon'></span><span class='pullUpLabel'>上拉加载更多...</span>");
+				}
 		}
    });
 });
@@ -95,6 +102,13 @@ setTimeout(function () {	// <-- Simulate network congestion, remove setTimeout f
             }
             $("#thelist").html(content_list);
             hasmore=data.hasmore;
+
+			$("#pullUp").html("");
+				if(evaluatelist.length<10){
+					$("#pullUp").append("<span class='pullUpLabel'></span>");
+				}else{
+					$("#pullUp").append("<span class='pullUpIcon'></span><span class='pullUpLabel'>上拉加载更多...</span>");
+				}
 		}
    });
 	
@@ -132,6 +146,13 @@ setTimeout(function () {	// <-- Simulate network congestion, remove setTimeout f
                 }
                 $("#thelist").append(content_list);
                 hasmore=data.hasmore;
+
+				$("#pullUp").html("");
+				if(evaluatelist.length<10){
+					$("#pullUp").append("<span class='pullUpLabel'></span>");
+				}else{
+					$("#pullUp").append("<span class='pullUpIcon'></span><span class='pullUpLabel'>上拉加载更多...</span>");
+				}
     		}
        });
     }
@@ -210,58 +231,7 @@ document.addEventListener('DOMContentLoaded', loaded, false);
     <div id="scroller">
       <div id="pullDown"> <span class="pullDownIcon"></span><span class="pullDownLabel">下拉刷新...</span> </div>
       <ul id="thelist">
-        <li>
-          <div class="row coach-judge-whole">
-            <div class="col-md-3 col-sm-3 col-xs-3">
-              <p>YOYO</p>
-            </div>
-            <div class="col-md-9 col-sm-9 col-xs-9">
-              <p><span class="pull-right">2015-01-01</span></p>
-            </div>
-            <div class="col-md-12 col-sm-12 col-xs-12">
-              <p>教练很有耐心，不随便发火，五星点赞</p>
-            </div>
-          </div>
-        </li>
-        <li>
-          <div class="row coach-judge-whole">
-            <div class="col-md-3 col-sm-3 col-xs-3">
-              <p>YOYO</p>
-            </div>
-            <div class="col-md-9 col-sm-9 col-xs-9">
-              <p><span class="pull-right">2015-01-01</span></p>
-            </div>
-            <div class="col-md-12 col-sm-12 col-xs-12">
-              <p>教练很有耐心，不随便发火，五星点赞</p>
-            </div>
-          </div>
-        </li>
-        <li>
-          <div class="row coach-judge-whole">
-            <div class="col-md-3 col-sm-3 col-xs-3">
-              <p>YOYO</p>
-            </div>
-            <div class="col-md-9 col-sm-9 col-xs-9">
-              <p><span class="pull-right">2015-01-01</span></p>
-            </div>
-            <div class="col-md-12 col-sm-12 col-xs-12">
-              <p>教练很有耐心，不随便发火，五星点赞</p>
-            </div>
-          </div>
-        </li>
-        <li>
-          <div class="row coach-judge-whole">
-            <div class="col-md-3 col-sm-3 col-xs-3">
-              <p>YOYO</p>
-            </div>
-            <div class="col-md-9 col-sm-9 col-xs-9">
-              <p><span class="pull-right">2015-01-01</span></p>
-            </div>
-            <div class="col-md-12 col-sm-12 col-xs-12">
-              <p>教练很有耐心，不随便发火，五星点赞</p>
-            </div>
-          </div>
-        </li>
+
       </ul>
       <div id="pullUp" style="margin-top:15px;"> <span class="pullUpIcon"></span><span class="pullUpLabel">上拉加载更多...</span> </div>
     </div>
