@@ -9,7 +9,7 @@ pageEncoding="UTF-8"%>
 <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <link href="css/font-awesome.css" rel="stylesheet" />
 <link href="css/orderdetail.css" rel="stylesheet" type="text/css" />
-
+<script type="text/javascript" src="js/checksession.js"></script>
 <style type="text/css">
 .carlearn-list
 {

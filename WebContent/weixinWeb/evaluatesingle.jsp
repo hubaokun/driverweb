@@ -11,6 +11,7 @@ pageEncoding="UTF-8"%>
 <link href="css/scrollbar.css" rel="stylesheet" type="text/css" />
 <link href="css/iscroll.css" rel="stylesheet" type="text/css" />
 <link href="css/coachdetail.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/checksession.js"></script>
 <script src="js/iscroll.js"></script>
 <style type="text/css">
 #wrapper

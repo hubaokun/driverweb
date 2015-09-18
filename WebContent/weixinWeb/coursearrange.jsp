@@ -10,6 +10,7 @@ pageEncoding="UTF-8"%>
 <link href="css/font-awesome.css" rel="stylesheet" />
 <link href="css/course.css" rel="stylesheet" type="text/css" />
 <link href="css/loader.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/checksession.js"></script>
 </head>
 <body>
 <div class="container">

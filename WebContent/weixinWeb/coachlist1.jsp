@@ -16,6 +16,7 @@ pageEncoding="UTF-8"%>
 <script src="js/jquery-ui-1.10.3.min.js"></script> 
 <script src="js/jquery.raty.min.js"></script>
 <script src="js/iscroll.js"></script>
+<script type="text/javascript" src="js/checksession.js"></script>
 <script type="text/javascript">
 var active_url = "../sbook?action=GETCOACHLIST";
 var studentid=44506;
