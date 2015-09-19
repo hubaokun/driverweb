@@ -24,6 +24,7 @@ body {
 	color: rgb(247,247,247);
 	padding: 0px 12px;
 }
+
 .course-head p {
 	margin: 0px;
 	padding: 0px;
@@ -39,6 +40,10 @@ body {
 }
 .course-head .course-head-top .col-md-10 p:last-child {
 	font-size: 13px;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+    -o-text-overflow:ellipsis;
+    overflow: hidden;
 }
 .course-head .course-head-top .col-md-2 i {
 	line-height: 53px;
@@ -233,7 +238,7 @@ body {
 .course-date-list .course-date-list-group .col-md-3 a.unavailable p:nth-child(2)
 {
 	line-height:40px;
-	font-size:10px;
+	font-size:14px;
 }
 .course-date-list .course-date-list-group .col-md-3 a.unavailable p:nth-child(3),.course-date-list .course-date-list-group .col-md-3 a.unavailable p:nth-child(4)
 {
