@@ -34,7 +34,7 @@ public class RechargeRecordInfo implements Serializable {
 	@Column(name = "type", length = 1, nullable = false, columnDefinition = "INt default 0")
 	private Integer type;
 	// 0.支付宝 1.微信            ——支付来源
-	@Column(name = "paytype", length = 1, nullable = false, columnDefinition = "INt default 0")
+	@Column(name = "paytype", length = 1 , columnDefinition = "INt default 0")
 	private Integer paytype;
 	// 金额
 	@Column(name = "amount", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")

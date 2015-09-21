@@ -737,6 +737,9 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			if (state == 2) {
 				cuserhql.append(" and state = 2");
 			}
+			if (state == 3) {
+				cuserhql.append(" and state = 3");
+			}
 		}
 		if (!CommonUtils.isEmptyString(minsdate)) {
 			cuserhql.append("and addtime >'" + minsdate + "'");

@@ -19,7 +19,7 @@ pageEncoding="UTF-8"%>
 <script src="js/iscroll.js"></script>
 <script type="text/javascript">
 var active_url = "../sbook?action=GETCOACHLIST";
-var studentid=18;//${sessionScope.studentid};
+var studentid=${sessionScope.studentid};
 var pagenum=0;
 var city="杭州";//"${sessionScope.city}";
 var myScroll,
@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', loaded, false);
                         <div class="row">
                         	<div class="col-md-12 col-sm-12 col-xs-12">
                             	<select type="text" id="selectSchool" placeholder="请选择驾校"  onchange="getSelectedSchoolId(this)" >
-                            		
+                            		<option>--不限--</option>
                             	</select>
                             </div>
                             

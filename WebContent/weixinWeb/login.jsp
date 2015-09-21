@@ -8,6 +8,7 @@ pageEncoding="UTF-8"%>
 <title>登录</title>
 <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <link href="css/login.css" rel="stylesheet" type="text/css" >
+<link href="css/loader.css" rel="stylesheet" type="text/css" />
 <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 <script src="js/jquery-1.8.3.min.js"></script> 
 <script src="js/jquery-ui-1.10.3.min.js"></script> 
@@ -20,52 +21,58 @@ pageEncoding="UTF-8"%>
 <script>
 var customer=${sessionScope.c_info};
 var openid=customer.openid;
-wx.config({
-    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-    appId: '${appid}', // 必填，公众号的唯一标识
-    timestamp:'${timestamp}', // 必填，生成签名的时间戳
-    nonceStr: '${noncestr}', // 必填，生成签名的随机串
-    signature:'${signature}',// 必填，签名，见附录1
-    jsApiList: [
-				'checkJsApi',
-				'onMenuShareTimeline',
-				'onMenuShareAppMessage',
-				'onMenuShareQQ',
-				'onMenuShareWeibo',
-				'onMenuShareQZone',
-				'hideMenuItems',
-				'showMenuItems',
-				'hideAllNonBaseMenuItem',
-				'showAllNonBaseMenuItem',
-				'translateVoice',
-				'startRecord',
-				'stopRecord',
-				'onVoiceRecordEnd',
-				'playVoice',
-				'onVoicePlayEnd',
-				'pauseVoice',
-				'stopVoice',
-				'uploadVoice',
-				'downloadVoice',
-				'chooseImage',
-				'previewImage',
-				'uploadImage',
-				'downloadImage',
-				'getNetworkType',
-				'openLocation',
-				'getLocation',
-				'hideOptionMenu',
-				'showOptionMenu',
-				'closeWindow',
-				'scanQRCode',
-				'chooseWXPay',
-				'openProductSpecificView',
-				'addCard',
-				'chooseCard',
-				'openCard'
-				] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
-    
-});
+var phone='${phone}';
+$(function(){
+	if(phone!="")
+		show_loading();
+	wx.config({
+	    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+	    appId: '${appid}', // 必填，公众号的唯一标识
+	    timestamp:'${timestamp}', // 必填，生成签名的时间戳
+	    nonceStr: '${noncestr}', // 必填，生成签名的随机串
+	    signature:'${signature}',// 必填，签名，见附录1
+	    jsApiList: [
+					'checkJsApi',
+					'onMenuShareTimeline',
+					'onMenuShareAppMessage',
+					'onMenuShareQQ',
+					'onMenuShareWeibo',
+					'onMenuShareQZone',
+					'hideMenuItems',
+					'showMenuItems',
+					'hideAllNonBaseMenuItem',
+					'showAllNonBaseMenuItem',
+					'translateVoice',
+					'startRecord',
+					'stopRecord',
+					'onVoiceRecordEnd',
+					'playVoice',
+					'onVoicePlayEnd',
+					'pauseVoice',
+					'stopVoice',
+					'uploadVoice',
+					'downloadVoice',
+					'chooseImage',
+					'previewImage',
+					'uploadImage',
+					'downloadImage',
+					'getNetworkType',
+					'openLocation',
+					'getLocation',
+					'hideOptionMenu',
+					'showOptionMenu',
+					'closeWindow',
+					'scanQRCode',
+					'chooseWXPay',
+					'openProductSpecificView',
+					'addCard',
+					'chooseCard',
+					'openCard'
+					] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+	    
+	});
+	
+})
 wx.ready(function(){
     // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
     //  alert("验证成功");
@@ -85,6 +92,39 @@ wx.ready(function(){
 	              		var addComp = rs.addressComponents;
 	              		//alert(addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber);
 	              		$('#city').val(addComp.city);
+	              		if(phone!="")
+              			{     
+	              			$.ajax({
+		              			type : "POST",
+		              			url : "../suser",
+		              			dataType: "json",
+		              			data : {
+		              				action : "LOGIN",
+		              				phone : phone,
+		              				password : "weixin",
+		              				devicetype : "3",
+		              				version : "1.0",
+		              				openid : openid,
+		              				city : addComp.city
+		              			},
+		              			success : function(data) {
+		              				var result=data;
+		              				var code=result.code;
+		              				var message=result.message;  
+		              				var studentid=result.studentid;
+		              				$('#v_code').val("********");
+		              				if(code==2 || code==3)
+		              					alert(message);
+		              				else
+		              					{
+		              						$(".login-row a").attr("href","weixin?action=coachlist");
+		              					    $(".login-row a").get(0).click();
+		              					}
+		              					
+		              				
+		              			}
+              			     });
+              			}
 	              	});
       	    }
       	});
@@ -112,7 +152,7 @@ wx.ready(function(){
   
     <div class="row form-row">
       <div class="col-md-12 col-sm-12 col-xs-12">
-        <input type="text" placeholder="手机号" id="mobile" value="" class="center-block" onKeyUp="handle();" maxlength="11" />
+        <input type="text" placeholder="手机号" id="mobile" value="${phone}" class="center-block" onKeyUp="handle();" maxlength="11" />
         <button id="s_vcode" onclick="sendvcode()" type="button" class="un-active" disabled>发送验证码</button></div>
       <div class="col-md-12 col-sm-12 col-xs-12  pull-right div-line"></div>
       <div class="col-md-12 col-sm-12 col-xs-12">
@@ -123,8 +163,42 @@ wx.ready(function(){
       <div class="col-md-12 col-sm-12 col-xs-12" id="s_login" onclick="slogin()"><a href="javascript:void(0)">登录</a> </div>
     </div>
   </form>
+  <a href="http://xiaobaxueche.com/wx/">
+  <div class="row ad-app">
+  		<div class="col-md-12 col-sm-12 col-xs-12">
+  	</div>
+  </div>
+  </a>
+<<<<<<< HEAD
+</div>
+<div class="overlay-wait">
+  <div class="overlay-wait-content">
+  	<div class="text-center">
+      <p>正在自动登录.....</p>
+      <div class="loader1"> <span></span> <span></span> <span></span> <span></span> <span></span> </div>
+    </div>
+  </div>
+=======
+  
+  
+<<<<<<< HEAD
+>>>>>>> 429fefb99380dfb9f1504f0e693cc46ce55bb29c
+=======
+>>>>>>> 664cd1b947f686cd9e0a6913b1d591dd7b116a19
+>>>>>>> 2f2066cfe93a4cf833e95cb3caec1eddc8385b95
 </div>
 <script>
+function show_loading(){
+	$('.overlay-wait').css('display','block');
+	var heightC = $('.overlay-wait-content').height();
+	var height = $(window).height();
+	var h = (height-heightC)/2;
+	$('.overlay-wait-content').css('margin-top',h);
+}
+
+function hide_loading(){
+	$('.overlay-wait').css('display','none');
+}
 function slogin()
 {
 	var phone=$('#mobile').val();

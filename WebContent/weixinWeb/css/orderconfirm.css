@@ -104,7 +104,7 @@ body {
 .confirm-order-content .confirm-order-pay a i.icon-chevron-right {
 	float: right;
 	line-height: 43px;
-	color: rgb(237,237,237);
+	color: #999999;
 	text-align: center;/*  margin-right: 20px;*/
 }
 .confirm-order-content .confirm-order-pay a span {
@@ -133,6 +133,7 @@ body {
 	font-size: 13px;
 	color: #737373;
 	position: fixed;
+	height:54px;
 	bottom: 0;
 	left: 0;
 	right: 0px;
@@ -141,8 +142,9 @@ body {
 	margin: 0px;
 	font-size: 13px;
 	color: rgb(115,115,115);
-	line-height: 20px;
+	line-height: 25px;
 	padding: 0px 12px;
+	text-align:right;
 }
 .confirm-pay-row .col-md-8 p span:first-child, .confirm-pay-row .col-md-8 p span:last-child {
 	color: rgb(35,173,229);
@@ -157,7 +159,7 @@ body {
 	background-color: rgb(35,173,229);
 	display: block;
 	line-height: 12px;
-	padding: 16px 10px;
+	padding: 21px 10px;
 }
 /*小巴币*/
 .coupon-content {
@@ -298,6 +300,15 @@ body {
 	font-size: 13px;
 	line-height: 43px;
 }
+#set_pay_type_btn
+{
+    color: #1789f2;
+    line-height: 18px;
+    border: 1px solid #1798f2;
+    border-radius: 4px;
+    padding: 5px 18px;
+    margin-top: 7px;
+}
 .overlay .overlay-content .overlay-content-title a i.icon-remove {
 	float: right;
 	line-height: 43px;
@@ -310,7 +321,7 @@ body {
 	line-height: 25px;
 }
 .overlay .overlay-content p:last-child {
-	color: #ababab;
+	color: #999999;
 	font-size: 10px;
 }
 .overlay .overlay-content .overlay-content-body ul
@@ -321,11 +332,12 @@ body {
 }
 .overlay .overlay-content .overlay-content-body ul li
 {
-	height:44px;
+	
 }
 .overlay .overlay-content .overlay-content-body ul li .row
 {
 	border-bottom:1px solid rgb(220,220,220);
+	height:50px;
 }
 .overlay .overlay-content .overlay-content-body ul li:last-child .row
 {
@@ -348,9 +360,10 @@ body {
 	display:block;
 }
 .overlay .overlay-content .overlay-content-body ul li i.icon-ok {
-	color: rgb(31,186,214);
+	color: #1789f2;
 	float: right;
-	line-height: 37px;
+	font-size:20px;
+	line-height: 45px;
 	display:none;
 }
 
@@ -361,7 +374,7 @@ body {
     background-color: white;
     border-bottom: 1px solid #eee;
 	padding:0px;
-	margin:0px;
+	margin: 0px -12px;
 }
 #tabs ul.coupon-nav li {
     display: inline-block;
@@ -394,11 +407,20 @@ body {
 	z-index: 100;
 }
 .overlay-cancle .overlay-cancle-content {
-	background-color: white;
+
 	text-align: center;
 	position: absolute;
 	border-radius:4px;
+	width:100%;
 
+}
+
+.overlay-cancle .overlay-cancle-content .container
+{
+    background-color: white;
+    padding: 0px;
+    margin: 0px 12px;
+    border-radius: 4px;
 }
 .overlay-cancle .overlay-cancle-content .icon-remove
 {
@@ -408,15 +430,25 @@ body {
 	/*border-bottom: 1px solid rgb(218,218,218);*/
 }
 .overlay-cancle .overlay-cancle-content .col-md-12:first-child span {
-	color: #666666;
+	color: #1798f2;
 	font-size: 13px;
 	line-height: 43px;
 }
 .overlay-cancle .overlay-cancle-content .col-md-12:last-child span {
-	    color: white;
+	color: white;
     font-size: 13px;
-    line-height: 52px;
-    background-color: rgb(0,209,164);
+    display:block;
+<<<<<<< HEAD
+    line-height: 44px;
+=======
+    line-height: 24px;
+<<<<<<< HEAD
+>>>>>>> b3eed5202bf05f05533a59360b49785f1b4744d8
+=======
+>>>>>>> 664cd1b947f686cd9e0a6913b1d591dd7b116a19
+>>>>>>> 2f2066cfe93a4cf833e95cb3caec1eddc8385b95
+    background-color: #1798f2;
     padding: 7px 26px;
     border-radius: 4px;
+    margin:15px 50px;
 }

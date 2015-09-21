@@ -33,6 +33,7 @@ input[type="text"] {
 .basic-data .col-md-12 select 
 {
 	border-bottom:1px solid #eee;
+	margin: 4px 0px;
 }
 .basic-data .col-md-12 input[cate="2"],.basic-data .col-md-12 select[cate="2"]
 {
@@ -101,6 +102,12 @@ input[type="text"] {
 {
 	padding-left:0px;
 	padding-right:12px;
+}
+#birthday
+{
+    border: 1px solid #eee;
+    margin: 4px 0px;
+    width: 100%;
 }
 /*学驾信息*/
 .mylearninfo-head {

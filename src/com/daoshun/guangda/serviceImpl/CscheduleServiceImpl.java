@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.daoshun.common.CommonUtils;
+import com.daoshun.guangda.pojo.AutoPositionInfo;
 import com.daoshun.guangda.pojo.CBookTimeInfo;
 import com.daoshun.guangda.pojo.CaddAddressInfo;
 import com.daoshun.guangda.pojo.CscheduleInfo;
@@ -383,5 +384,23 @@ public class CscheduleServiceImpl extends BaseServiceImpl implements ICscheduleS
 			return 1;
 		else
 			return 0;
+	}
+
+	@Override
+	public HashMap getPriceRange(String cityid) {
+		String querystring="from AutoPositionInfo where cityid=:cityid";
+		String[] params={"cityid"};
+		AutoPositionInfo ap=(AutoPositionInfo) dataDao.getFirstObjectViaParam(querystring, params, CommonUtils.parseInt(cityid, 0));
+		HashMap result=new HashMap();
+		result.put("maxprice", ap.getMaxprice().doubleValue());
+		result.put("minprice", ap.getMinprice().doubleValue());
+		result.put("defaultprice", ap.getDefaultprice().doubleValue());
+		return result;
+	}
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	@Override
+	public void updateDefaultSchedule(DefaultSchedule ds) {
+		  dataDao.updateObject(ds);
+		
 	}
 }

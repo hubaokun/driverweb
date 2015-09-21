@@ -58,16 +58,17 @@ function showStudent(obj){
 		$("#phone").html(obj.data.phone);
 		//$("#avatarurl").attr("src",'${sessionScope.avatarurl}');//设置头像图片
 		//$("#avatarurl").attr("src","https://www.baidu.com/img/bdlogo.png");//设置头像图片
-		$("#coin").html(obj.data.coinnum+"个");
-		$("#money").html(obj.data.money+"元");
-		$("#coupon").html(obj.coupon+"小时");
+// 		$("#coin").html(obj.data.coinnum+"个");
+// 		$("#money").html(obj.data.money+"元");
+// 		$("#coupon").html(obj.coupon+"小时");
+		$("#coin").html(obj.data.coinnum);
+		$("#money").html(obj.data.money);
+		$("#coupon").html(obj.coupon);
 	}else{
 		alert(obj.message);
 		//window.location.href=redirect_login;
 	}
 }
-
-
 </script>
 </head>
 
@@ -102,23 +103,50 @@ function showStudent(obj){
                 <a href="accountdetail.jsp">
                     <i class="my-nav-icon icon-money-rest"></i>				
                     <span>账户余额</span>
-                    <i class="icon icon-chevron-right"><span id="money"></span></i>	
+                    <!-- <i class="glyphicon icon-right"><span id="money"></span></i> -->
+<<<<<<< HEAD
+                    <span class="pull-right"><span id="money"></span><i class="glyphicon icon-right"></i></span>	
+=======
+                    <span class="pull-right"><span id="money" style="margin-left: -20px;"></span><span class="unit-tips">元</span><i class="glyphicon icon-right"></i></span>	
+<<<<<<< HEAD
+>>>>>>> b3eed5202bf05f05533a59360b49785f1b4744d8
+=======
+>>>>>>> 664cd1b947f686cd9e0a6913b1d591dd7b116a19
+>>>>>>> 2f2066cfe93a4cf833e95cb3caec1eddc8385b95
                 </a>
     		</div>
             <div class="col-md-12 col-sm-12 col-xs-12 my-nav-item">
                 <a href="coupon.jsp">
                     <i class="my-nav-icon icon-coupon"></i>				
                     <span>小巴券</span>		
-                    <i class="icon icon-chevron-right"><span id="coupon"></span></i>
+                    <!-- <i class="glyphicon icon-right"><span id="coupon"></span></i> -->
+<<<<<<< HEAD
+                    <span class="pull-right"><span id="coupon"></span><i class="glyphicon icon-right"></i></span>
+=======
+                    <span class="pull-right"><span id="coupon" style="margin-left: -20px;"></span><span class="unit-tips">小时</span><i class="glyphicon icon-right"></i></span>
+<<<<<<< HEAD
+>>>>>>> b3eed5202bf05f05533a59360b49785f1b4744d8
+=======
+>>>>>>> 664cd1b947f686cd9e0a6913b1d591dd7b116a19
+>>>>>>> 2f2066cfe93a4cf833e95cb3caec1eddc8385b95
                 </a>
-    		</div>
+    		</div> 
             <div class="col-md-12 col-sm-12 col-xs-12 my-nav-item">
                 <a href="coin.jsp">
                     <i class="my-nav-icon icon-coin"></i>				
                     <span>小巴币</span>		
-                    <i class="icon icon-chevron-right"><span id="coin">个</span></i>
+                    <!-- <i class="glyphicon icon-right"><span id="coin"></span></i> -->
+<<<<<<< HEAD
+                    <span class="pull-right"><span id="coin">个</span><i class="glyphicon icon-right"></i></span>
+=======
+                    <span class="pull-right"><span id="coin" style="margin-left: -20px;"></span><span class="unit-tips">个</span><i class="glyphicon icon-right"></i></span>
+<<<<<<< HEAD
+>>>>>>> b3eed5202bf05f05533a59360b49785f1b4744d8
+=======
+>>>>>>> 664cd1b947f686cd9e0a6913b1d591dd7b116a19
+>>>>>>> 2f2066cfe93a4cf833e95cb3caec1eddc8385b95
                 </a>
-    		</div>     
+    		</div>   
         </div>
 <!--        <div class="row drive-row">
         	<div class="col-md-12 col-sm-12 col-xs-12 my-nav-item">
