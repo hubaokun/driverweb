@@ -20,6 +20,33 @@ $(function(){
 	var j = $("#change_id").val();
 	$("#change_"+j+index).addClass('left_list_mask');
 })
+function addcoupon()
+{
+	var flag=false;
+	var addvalue=$("#addvalue").val();
+	var pub_count=$("#pub_count").val();
+	var addendtime=$("#addendtime").val();	
+	if(addvalue=="")
+	{
+	   alert("请输入面值");	
+	   return;
+	}
+	if(pub_count=="")
+	{
+	   alert("请输入数量");	
+	   return;
+	}
+	if(addendtime=="")
+	{
+	   alert("请输入过期时间");	
+	   return;
+	}
+	if(flag==false)
+	{   
+		$("#addmerchantForm").attr("action","addcoupon.do").submit();
+		flag=true;
+	}
+}
 </script>
 <title>小巴券编辑</title>
 </head>
@@ -30,7 +57,7 @@ $(function(){
 <jsp:include page="left.jsp"/>
 <div id="content_form">
 <div id="content_form_blank">
-<form id="addmerchantForm" action="addcoupon.do" enctype="multipart/form-data" method="post">
+<form id="addmerchantForm" action="" enctype="multipart/form-data" method="post">
 	<div class="addscenic_center">
 		<div class="addscenic_center_top">
 			<div class="title_icon"></div>
@@ -41,7 +68,7 @@ $(function(){
 		<div style="width: 100%; height: 75px; border-bottom: 1px solid #eaeff2;">
 			<div style="float:left; width: 143px; height: 100%; line-height: 75px; border-right: 1px solid #eaeff2;text-align: right;">面值<span style="color:#f83a22; margin-right:16px; margin-left: 8px;">*</span></div>
 			<div style="height: 100%; line-height: 75px; float:left; margin-left: 20px;">
-				<input value="" name="addvalue"  onkeyup="value=value.replace(/[^\d]/g,'')" required="required" style="width: 800px; height: 33px; padding-left:5px; border: 1px solid #eaeff2; margin-top: 20px;">
+				<input value="" id="addvalue" name="addvalue"  onkeyup="value=value.replace(/[^\d]/g,'')" required="required" style="width: 800px; height: 33px; padding-left:5px; border: 1px solid #eaeff2; margin-top: 20px;">
 			</div>
 		</div>
 		
@@ -67,7 +94,7 @@ $(function(){
 		<div id="searchbefore" style="width: 100%; height: 75px; border-bottom: 1px solid #eaeff2;">
 			<div style="float:left; width: 143px; height: 100%; line-height: 75px; border-right: 1px solid #eaeff2;text-align: right;">发放数量<span style="color:#f83a22; margin-right:16px; margin-left: 8px;">*</span></div>
 			<div style="height: 100%; line-height: 75px; float:left; margin-left: 20px;">
-				<input value="" required="required" onkeyup="value=value.replace(/[^\d]/g,'')"   name="pub_count" style="width: 800px; height: 33px; padding-left:5px; border: 1px solid #eaeff2; margin-top: 20px;">
+				<input value="" required="required" onkeyup="value=value.replace(/[^\d]/g,'')" id="pub_count"  name="pub_count" style="width: 800px; height: 33px; padding-left:5px; border: 1px solid #eaeff2; margin-top: 20px;">
 			</div>
 		</div>
 <!-- 		<div style="width: 100%; height: 75px; border-bottom: 1px solid #eaeff2;"> -->
@@ -79,10 +106,10 @@ $(function(){
 		<div style="width: 100%; height: 75px; border-bottom: 1px solid #eaeff2;">
 			<div style="float:left; width: 143px; height: 100%; line-height: 75px; border-right: 1px solid #eaeff2;text-align: right;">截止有效日期<span style="color:#f83a22; margin-right:16px; margin-left: 8px;">*</span></div>
 			<div style="height: 100%; line-height: 75px; float:left; margin-left: 20px;">
-				<input value="" required="required"  name="addendtime" style="width: 800px; height: 33px; padding-left:5px; border: 1px solid #eaeff2; margin-top: 20px;"onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})">
+				<input value="" required="required" id="addendtime"  name="addendtime" style="width: 800px; height: 33px; padding-left:5px; border: 1px solid #eaeff2; margin-top: 20px;"onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})">
 			</div>
 		</div>
-			<input type="submit" value="提交" style="clear: both;height: 60px;width: 184px;background: #4cc2ff; color: #fff; font-size: 16px;text-align: center; line-height: 60px;margin-left: 248px;margin-top: 20px;cursor: pointer;" >
+			<input type="button" onclick="addcoupon();" value="提交" style="clear: both;height: 60px;width: 184px;background: #4cc2ff; color: #fff; font-size: 16px;text-align: center; line-height: 60px;margin-left: 248px;margin-top: 20px;cursor: pointer;" >
 			<div style="height:60px"></div>
 	</div>
 </form>
