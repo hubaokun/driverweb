@@ -1955,9 +1955,10 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 				couponrecord.setEnd_time(c.getTime());
 				couponrecord.setUsetime(null);
 				couponService.addCouponRecord(couponrecord);
-				cuserinfo.setCouponrest(cuserinfo.getCouponrest()-1);
-				updateCuser(cuserinfo);
+				cuserinfo.setCouponrest(cuserinfo.getCouponrest()-1);	
+				
 			}
+			dataDao.updateObject(cuserinfo);
 			String message = "您收到" + pubnum + "张小巴券哦,请注意查收";
 
 //			if (pushtype == 1) {// 短信
