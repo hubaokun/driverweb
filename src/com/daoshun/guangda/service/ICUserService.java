@@ -327,4 +327,8 @@ public interface ICUserService {
 	  * 获取教练发放小巴券记录
 	  */
 	 public abstract HashMap<String, Object> getcoachcouponlist(String coachid,String pagenum);
+	 /**
+	  * 获取教练是否拥有发放小巴券权限
+	  */
+	 public abstract Integer getcoachcouponlimit(String coachid);
 }

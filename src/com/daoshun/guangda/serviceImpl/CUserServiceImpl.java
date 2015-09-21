@@ -1940,7 +1940,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 		} else {
 			Calendar c=Calendar.getInstance();
 			Date now=c.getTime();
-			c.add(Calendar.DAY_OF_MONTH, 30);	
+			c.add(Calendar.DAY_OF_MONTH, 90);	
 			for (int i = 0; i < pubnum; i++) {
 				CouponRecord couponrecord = new CouponRecord();
 				couponrecord.setCouponid(0);
@@ -2008,8 +2008,18 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 				CouponRecord temp=list.get(i);
 				temp.setUsecount((long)countlist.get(i));
 				SuserInfo suser=dataDao.getObjectById(SuserInfo.class, temp.getUserid());
-				temp.setUsename(suser.getRealname());
-				temp.setUserphone(suser.getPhone());
+				if(suser!=null)
+				{
+					 temp.setUsename(suser.getRealname());
+					 temp.setUserphone(suser.getPhone());
+				}
+				else
+				{
+					temp.setUsename("");
+					temp.setUserphone("");
+				}
+				 
+				 
 			}
 			
 			returnResult.put("CouponRecordList", list) ;
@@ -2022,6 +2032,15 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 		}
 		
 		return returnResult;
+	}
+
+	@Override
+	public Integer getcoachcouponlimit(String coachid) {
+		 CuserInfo cuser=dataDao.getObjectById(CuserInfo.class, CommonUtils.parseInt(coachid, 0));
+		 if(cuser.getCouponlimit()==0)
+			 return 0;
+		 else
+			 return 1;
 	}
 	
 }

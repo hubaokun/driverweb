@@ -237,11 +237,11 @@ ul {
 }
 .overlay .overlay-content .container section.overlay-button-group span,.overlay .overlay-content .container section.overlay-button-group a {
 	display: block;
-	line-height: 32px;
+	line-height: 44px;
 	border-radius: 5px;
 	width: 90%;
 	margin: 0 auto;
-		text-decoration:none;
+	text-decoration:none;
 	color:white;
 }
 .overlay .overlay-content .container section.overlay-button-group a:first-child {
@@ -776,16 +776,28 @@ text-align: center;
 #tabs-3 .my-nav-item a span.pull-right
 {
 	right:12px;
+<<<<<<< HEAD
+=======
+	font-size:15px;
+}
+#tabs-3 .my-nav-item a span.unit-tips
+{
+	font-size:10px;
+>>>>>>> 664cd1b947f686cd9e0a6913b1d591dd7b116a19
 }
 #tabs-3 .my-nav-item a i {
-	margin-right: 20px;
+	margin-right: 10px;
 	display: inline-block;
 	transition: all 400ms ease;
 }
 #tabs-3 .my-nav-item a i.icon-right
 {
 	margin-right:0px;
+<<<<<<< HEAD
 	margin-left:16px;
+=======
+	margin-left:26px;
+>>>>>>> 664cd1b947f686cd9e0a6913b1d591dd7b116a19
 }
 /* #tabs-3 .my-nav-item a i.icon-chevron-right {
 	float: right;
