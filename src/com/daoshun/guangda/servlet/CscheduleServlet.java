@@ -2140,9 +2140,22 @@ public class CscheduleServlet extends BaseServlet {
 	 */
 	public void getDefaultNew(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid=getRequestParamter(request,"coachid");
+		String cityid=getRequestParamter(request,"cityid");
+		CommonUtils.validateEmpty(coachid);
+		CommonUtils.validateEmpty(cityid);
 		List<DefaultSchedule> tempDefaultSchedule =cscheduleService.getDefaultNew(coachid);
+		HashMap pricelist=cscheduleService.getPriceRange(cityid);
+	    Double maxprice=(Double) pricelist.get("maxprice");
+		Double minprice=(Double) pricelist.get("minprice");
+		Double defaultprice=(Double) pricelist.get("defaultprice");
 		for(DefaultSchedule d:tempDefaultSchedule)
 		{
+			   //查询价格是否在允许价格区间内
+			   if(d.getPrice().doubleValue()<minprice || d.getPrice().doubleValue()>maxprice)
+			   {
+				   d.setPrice(new BigDecimal(defaultprice));
+				   cscheduleService.updateDefaultSchedule(d);
+			   }
 				// 查询地址信息
 				CaddAddressInfo address = cuserService.getaddress(d.getAddressid());
 				if (address != null) {

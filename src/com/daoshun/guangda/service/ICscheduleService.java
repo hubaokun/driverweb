@@ -132,6 +132,14 @@ public interface ICscheduleService {
 	 */
 	public abstract List<DefaultSchedule> getDefaultNew(String coachid);
 	/**
+	 * 2.0新版 获取价格区间
+	 */
+	public abstract HashMap getPriceRange(String cityid);
+	/**
+	 * 2.0新版 更新默认日程设置
+	 */
+	public abstract void updateDefaultSchedule(DefaultSchedule ds);
+	/**
 	 * 2.0新版 根据预订信息获取预订学员姓名
 	 */
 	public abstract String getBookederName(String coachid,String date,String hour);

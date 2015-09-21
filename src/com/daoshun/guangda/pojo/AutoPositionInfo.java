@@ -51,8 +51,8 @@ public class AutoPositionInfo implements java.io.Serializable {
  	private BigDecimal maxprice;
  	
  	//教练课程默认单价
- 	/*@Column(name = "defaultprice", nullable = true, columnDefinition = "Decimal(20,2) default 0.00")
- 	private BigDecimal defaultprice;*/
+ 	@Column(name = "defaultprice", nullable = true, columnDefinition = "Decimal(20,2) default 0.00")
+ 	private BigDecimal defaultprice;
     
 
 	public int getAid() {
@@ -127,11 +127,11 @@ public class AutoPositionInfo implements java.io.Serializable {
 		this.maxprice = maxprice;
 	}
 
-	/*public BigDecimal getDefaultprice() {
+	public BigDecimal getDefaultprice() {
 		return defaultprice;
 	}
 	public void setDefaultprice(BigDecimal defaultprice) {
 		this.defaultprice = defaultprice;
-	}*/
+	}
     
 }
