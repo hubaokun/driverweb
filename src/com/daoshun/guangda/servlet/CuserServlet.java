@@ -131,6 +131,10 @@ public class CuserServlet extends BaseServlet {
 				// 获取教练发放小巴券记录
 				getCoachCouponlist(request, resultMap);
 			}
+			else if (Constant.GETCOACHCOUPONLIMIT.equals(action)) {
+				// 获取教练是否有发放小巴券权限
+				getCoachCouponlimit(request, resultMap);
+			}
 			else {
 				throw new ErrException();
 			}
@@ -856,9 +860,9 @@ public class CuserServlet extends BaseServlet {
 	public void recharge(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");// 教练ID
 		String amount = getRequestParamter(request, "amount");// 充值金额
+	
 		CommonUtils.validateEmpty(coachid);
 		CommonUtils.validateEmpty(amount);
-
 		HashMap<String, Object> rechargeResult = cuserService.recharge(coachid, amount);
 		resultMap.putAll(rechargeResult);
 	}
@@ -945,5 +949,12 @@ public class CuserServlet extends BaseServlet {
 			resultMap.put("recordlist", cm.get("CouponRecordList"));
 			resultMap.put("hasmore", cm.get("hasmore"));
 		}
+	}
+	public void  getCoachCouponlimit(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException
+	{
+		String coachid = getRequestParamter(request, "coachid");// 教练ID
+		CommonUtils.validateEmpty(coachid);
+		Integer flag=cuserService.getcoachcouponlimit(coachid);
+		resultMap.put("grantlimit",flag);
 	}
 }

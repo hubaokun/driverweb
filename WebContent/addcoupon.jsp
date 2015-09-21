@@ -20,9 +20,9 @@ $(function(){
 	var j = $("#change_id").val();
 	$("#change_"+j+index).addClass('left_list_mask');
 })
+var flag=false;
 function addcoupon()
 {
-	var flag=false;
 	var addvalue=$("#addvalue").val();
 	var pub_count=$("#pub_count").val();
 	var addendtime=$("#addendtime").val();	
@@ -43,8 +43,9 @@ function addcoupon()
 	}
 	if(flag==false)
 	{   
-		$("#addmerchantForm").attr("action","addcoupon.do").submit();
 		flag=true;
+		$("#addmerchantForm").attr("action","addcoupon.do").submit();
+		
 	}
 }
 </script>

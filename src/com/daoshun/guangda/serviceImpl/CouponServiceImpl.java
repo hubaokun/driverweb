@@ -76,6 +76,11 @@ public class CouponServiceImpl extends BaseServiceImpl implements ICouponService
 					coupon.setCusername(cuserinfo.getRealname());
 				}
 			}
+			CuserInfo cuser=dataDao.getObjectById(CuserInfo.class, coupon.getOwnerid());
+			if(cuser!=null)
+			{
+				coupon.setCoach_rest(cuser.getCouponrest());
+			}
 		}
 		String counthql = couponhql.insert(0, " select count(*) ").toString();
 		long count = (Long) dataDao.getFirstObjectViaParam(counthql, null);
@@ -271,11 +276,10 @@ public class CouponServiceImpl extends BaseServiceImpl implements ICouponService
 		for (CouponRecord couponrecord : CouponRecordlist) {
 			SuserInfo suserinfo = dataDao.getObjectById(SuserInfo.class, couponrecord.getUserid());
 			
-			couponrecord.setUserphone(suserinfo.getPhone());
-			
 			if (suserinfo != null) {
 				if (CommonUtils.isEmptyString(suserinfo.getRealname())) {
 					couponrecord.setUsernick("未设置:" + suserinfo.getPhone());
+					couponrecord.setUserphone(suserinfo.getPhone());
 				} else {
 					couponrecord.setUsernick(suserinfo.getRealname() + ":" + suserinfo.getPhone());
 				}

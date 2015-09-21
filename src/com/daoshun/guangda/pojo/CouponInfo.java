@@ -48,10 +48,13 @@ public class CouponInfo implements Serializable {
 	// 发放数量
 	@Column(name = "pub_count", length = 10, nullable = false, columnDefinition = "INT default 0")
 	private Integer pub_count;
-	// 剩余数量
+	// 剩余数量——已废弃
 	@Column(name = "rest_count", length = 10, nullable = false, columnDefinition = "INT default 0")
 	private Integer rest_count;
-
+    //教练可发放小巴券剩余张数
+	@Transient
+	private Integer coach_rest;
+	
 	@Transient
 	private String schoolname;
 	
@@ -144,6 +147,14 @@ public class CouponInfo implements Serializable {
 
 	public void setCusername(String cusername) {
 		this.cusername = cusername;
+	}
+
+	public Integer getCoach_rest() {
+		return coach_rest;
+	}
+
+	public void setCoach_rest(Integer coach_rest) {
+		this.coach_rest = coach_rest;
 	}
 
 }

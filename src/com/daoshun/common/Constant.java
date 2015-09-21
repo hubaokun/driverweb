@@ -404,6 +404,9 @@ public class Constant {
     
    //获取教练发放小巴券记录
     public static final String GETCOACHCOUPONLIST="GETCOACHCOUPONLIST";
+    
+    //获取教练是否有小巴券发放权限
+    public static final String GETCOACHCOUPONLIMIT="GETCOACHCOUPONLIMIT";
 
 	/**************************** 默认属性设置 ********************************/
 	/************ 默认全天状态 ************/
