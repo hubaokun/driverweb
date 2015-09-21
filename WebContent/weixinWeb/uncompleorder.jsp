@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
+<%@ include file="checksession.jsp" %>
 <!doctype html>
 <html>
 <head>
@@ -17,7 +18,6 @@ pageEncoding="UTF-8"%>
 <script src="js/jquery-1.8.3.min.js"></script> 
 <script src="js/jquery-ui-1.10.3.min.js"></script> 
 <script src="js/jquery.raty.min.js"></script>
-<script type="text/javascript" src="js/checksession.js"></script>
 <style type="text/css">
 	.order-content ul.order-timeline li div.order-detail .order-detail-head .order-detail-head-date p
 	{
