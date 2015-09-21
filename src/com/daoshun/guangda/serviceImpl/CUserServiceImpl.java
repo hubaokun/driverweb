@@ -593,7 +593,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 	              coach.setFmoney(coach.getFmoney().subtract(capplyCash.getAmount()));
 	              dataDao.updateObject(coach);
 	          }
-            dataDao.updateObject(capplyCash);
+            dataDao.updateObject(capplyCash); 
  
             BalanceCoachInfo balancoach = new BalanceCoachInfo();
             balancoach.setType(7);
@@ -1361,6 +1361,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
         cuser.setToken_time(new Date());
         cuser.setCoinnum(0);
         cuser.setFcoinnum(0);
+        cuser.setGender(1);
         dataDao.addObject(cuser);
         return cuser;
     }

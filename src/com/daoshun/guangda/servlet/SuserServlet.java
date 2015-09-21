@@ -345,8 +345,6 @@ public class SuserServlet extends BaseServlet {
 	 * @author 卢磊
 	 */
 	public void promoEnroll(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
-		try
-		{
 		String studentid = getRequestParamter(request, "studentid");
 		String model = getRequestParamter(request, "model");//车型
 		String cityid = getRequestParamter(request, "cityid");//车型
@@ -366,11 +364,6 @@ public class SuserServlet extends BaseServlet {
 		resultMap.put("code", 1);
 		resultMap.put("message", "报名成功");
 		resultMap.putAll(rechargeResult);
-		}catch(Exception ex)
-		{
-			resultMap.put("code", 2);
-			resultMap.put("message", "报名失败");
-		}
 	}
 	//促销报名支付回调，由支付宝服务器调用--》此回调已迁移到EnrollAliPayServlet类中
 	/*public void promoEnrollCallback(HttpServletRequest request, HttpServletResponse response){

@@ -26,6 +26,7 @@ import com.daoshun.common.DeviceType;
 import com.daoshun.common.PayType;
 import com.daoshun.common.PushtoSingle;
 import com.daoshun.guangda.pojo.AppCuserInfo;
+import com.daoshun.guangda.pojo.AutoPositionInfo;
 import com.daoshun.guangda.pojo.CBookTimeInfo;
 import com.daoshun.guangda.pojo.CaddAddressInfo;
 import com.daoshun.guangda.pojo.CityInfo;
@@ -49,6 +50,7 @@ import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.pojo.SystemSetInfo;
 import com.daoshun.guangda.pojo.UserPushInfo;
 import com.daoshun.guangda.service.ICscheduleService;
+import com.daoshun.guangda.service.ILocationService;
 import com.daoshun.guangda.service.ISBookService;
 
 @Service("sbookService")
@@ -57,6 +59,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 //	@Resource
 //	public RedisCoachDao redisCoachDao;
 	
+	private ILocationService locationService;
 	@Resource
 	public ICscheduleService cscheduleService;
 	@Override
@@ -660,8 +663,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			hqlCoach.append("select u.*  from app_coach_list u where isnew=1  and coachid in ");
 			hqlCoach.append(cs.toString());
 			if(!CommonUtils.isEmptyString(driverschoolid)){
-				hqlCoach.append("  and drive_schoolid  = "+driverschoolid+" or drive_schoolid in (select schoolid");
-				hqlCoach.append("  from t_drive_school_info where schoolid = "+driverschoolid+")");
+				hqlCoach.append("  and (drive_schoolid  = "+driverschoolid+" or drive_schoolid in (select schoolid");
+				hqlCoach.append("  from t_drive_school_info where schoolid = "+driverschoolid+"))");
 			}
 			/*if (!CommonUtils.isEmptyString(fixedposition)) {
 				String findCityIdHql="from CityInfo where city like '%"+fixedposition+"%'";
@@ -1118,8 +1121,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		cuserhql.append("select u.*  from app_coach_list u where isnew=1 ");
 		//cuserhql.append("select u.*  from app_coach_list u where state = 2 and id_cardexptime > curdate() and coach_cardexptime > curdate() and drive_cardexptime > curdate() and car_cardexptime > curdate() and (select count(*) from t_teach_address a where u.coachid = a.coachid and iscurrent = 1) > 0");
 		if(!CommonUtils.isEmptyString(driverschoolid)){
-			cuserhql.append("  and drive_schoolid  = "+driverschoolid+" or drive_schoolid in (select schoolid");
-			cuserhql.append("  from t_drive_school_info where schoolid = "+driverschoolid+")");
+			cuserhql.append("  and (drive_schoolid  = "+driverschoolid+" or drive_schoolid in (select schoolid");
+			cuserhql.append("  from t_drive_school_info where schoolid = "+driverschoolid+"))");
 		}
 		if (!CommonUtils.isEmptyString(fixedposition)) {
 			String findCityIdHql="from CityInfo where city like '%"+fixedposition+"%'";
@@ -1194,7 +1197,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			cuserhql.append(" and usertype=0 ");
 		}
 		cuserhql.append(" and money >= gmoney and isquit = 0  order by coursestate desc,sumnum desc,score desc");
-		//System.out.println(cuserhql.toString());
+		System.out.println(cuserhql.toString());
 		List<AppCuserInfo> coachlist = (List<AppCuserInfo>) dataDao.SqlPageQuery(cuserhql.toString(), Constant.USERLIST_SIZE+1, CommonUtils.parseInt(pagenum, 0) + 1,AppCuserInfo.class, null);
 		if (coachlist != null && coachlist.size() > 0) {
 			for (AppCuserInfo coach : coachlist) {
@@ -2393,11 +2396,12 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					}
 				//}
 				//判断订单总价格，如果没有在50到500价格之间，返回预订失败
-				if(total.doubleValue()>500 ||total.doubleValue()<50){
+				/*if(total.doubleValue()>500 ||total.doubleValue()<50){
 					result.put("code", 26);
 					result.put("message", "订单额非法");
 					return result;
-				}
+				}*/
+					
 			}
 			
 			if (!hasError) {
@@ -2525,6 +2529,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 								}else{
 									//System.out.println("教练获取小巴币失败"+total.intValue());
 								}
+								//suserService.addCoinForSettlement(order, cuser, student,1);
 								//向小巴币记录表中插入数据 已修改，移动到结算方法中
 								/////////////////////////////////////////////
 								/* CoinRecordInfo coinRecordInfo = new CoinRecordInfo ();

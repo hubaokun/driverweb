@@ -1451,17 +1451,14 @@ public class CscheduleServlet extends BaseServlet {
 		      			  resultMap.put("message", "超过课程价格范围，请重新设置");
 		      			  return;
 					  }
-				  }else if(Integer.parseInt(price)<50 || Integer.parseInt(price)>500){
-	            	  resultMap.put("code", 3);
-	      			  resultMap.put("message", "订单额不能少于50或者大于500，请重新设置");
-	      			  return;
-	              }
-			  }else if(Integer.parseInt(price)<50 || Integer.parseInt(price)>500)
+				  }
+			  }
+			 /* else if(Integer.parseInt(price)<50 || Integer.parseInt(price)>500)
               {
             	  resultMap.put("code", 3);
       			  resultMap.put("message", "订单额不能少于50或者大于500，请重新设置");
       			  return;
-              }
+              }*/
 				if (hour == null || price == null || isrest == null || addressid == null || subjectid == null) {
 					resultMap.put("code", 2);
 					resultMap.put("message", "设置失败,数据错误");

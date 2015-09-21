@@ -996,12 +996,14 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		
 		// 插入数据
-		RechargeRecordInfo info = new RechargeRecordInfo();
-		info.setAddtime(new Date());
-		info.setAmount(new BigDecimal(CommonUtils.parseFloat(amount, 0.0f)));
-		info.setType(3);
-		info.setUserid(CommonUtils.parseInt(studentid, 0));
-		dataDao.addObject(info);
+		RechargeRecordInfo info=null;
+			info = new RechargeRecordInfo();
+			info.setAddtime(new Date());
+			info.setAmount(new BigDecimal(CommonUtils.parseFloat(amount, 0.0f)));
+			info.setType(3);
+			info.setPaytype(0);//支付宝支付
+			info.setUserid(CommonUtils.parseInt(studentid, 0));
+			dataDao.addObject(info);
 
 		if ("1".equals(CommonUtils.getAliSet())) {
 			result.put("partner", AlipayConfig.partner);
@@ -1426,7 +1428,8 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	}*/
 	public void addCoinForSettlement(OrderInfo order,CuserInfo cuser,SuserInfo student,int type){
 		//可用教练小巴币
-		int coinnumForCoach=getCanUseCoinnum(String.valueOf(order.getCoachid()),String.valueOf(order.getStudentid()));
+		//int coinnumForCoach=getCanUseCoinnum(String.valueOf(order.getCoachid()),);
+		int coinnumForCoach=getCanUseCoinnumForCoach(String.valueOf(order.getStudentid()));
 		//获取驾校可用小巴币
 		int coinnumForSchool=getCanUseCoinnumForDriveSchool(String.valueOf(order.getStudentid()));
 		//获取平台发送的小巴币
@@ -1509,6 +1512,64 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			//}
 		}
 	}
+	/**
+	 * 小巴币冻结归属
+	 * @param student
+	 * @param total
+	 * @return 
+	 */
+	public int[] getFrozenCoinAffiliation(int studentid,int total){
+		int coinAn[]=new int[3];//小巴币归属数组，0 教练小巴币  1 驾校小巴币  2 平台小巴币
+		int frozenCoach=0;
+		int frozenSchool=0;
+		int frozenPlatform=0;
+		//可用教练小巴币
+		//int coinnumForCoach=getCanUseCoinnum(String.valueOf(order.getCoachid()),String.valueOf(order.getStudentid()));
+		int coinnumForCoach=getCanUseCoinnumForCoach(String.valueOf(studentid));
+		//获取驾校可用小巴币
+		int coinnumForSchool=getCanUseCoinnumForDriveSchool(String.valueOf(studentid));
+		//获取平台发送的小巴币
+		int coinnumForPlatform=getCanUseCoinnumForPlatform("0",String.valueOf(studentid));//获取平台可用小巴币
+		//订单额
+		/*int total=0;
+		if(type==1){
+			total=order.getTotal().intValue();
+		}else if(type==2){
+			total=order.getMixCoin();
+		}*/
+		
+		//小巴币结算优先顺序 ：教练--驾校--平台
+		if(coinnumForCoach>=total){//驾校小巴币大于等于订单额时，使用平台小巴币结算
+	        frozenCoach+=total;
+		}else if((coinnumForCoach+coinnumForSchool)>=total){//教练小巴币与驾校小巴币大于等于订单额时，使用教练小巴币和驾校小巴币结算
+			//需要插入2条记录
+			//教练的小巴币全部结算掉
+			if(coinnumForCoach>0){
+		        frozenCoach+=coinnumForCoach;
+			}
+			if(coinnumForSchool>0){
+		        frozenSchool+=total-coinnumForCoach;
+			}
+		}else if((coinnumForCoach+coinnumForSchool+coinnumForPlatform)>=total){
+			//最多需要插入3条记录
+			//if(coinnumForPlatform>0 && coinnumForSchool>0 && coinnumForCoach>0 && (coinnumForPlatform+coinnumForSchool)<total){
+				if(coinnumForCoach>0){
+			        frozenCoach+=coinnumForCoach;
+				}
+		        //剩余其中一部分由驾校小巴币结算
+				if(coinnumForSchool>0){
+				    frozenSchool+=coinnumForSchool;
+				}
+				if(coinnumForPlatform>0){
+			        frozenPlatform+=total-coinnumForCoach-coinnumForSchool;
+				}
+			//}
+		}
+		coinAn[0]=frozenCoach;
+		coinAn[1]=frozenSchool;
+		coinAn[2]=frozenPlatform;
+		return coinAn;
+	}
 	//创建RecordInfo对象
 	private CoinRecordInfo createRecordInfo(OrderInfo order,CuserInfo cuser,SuserInfo student){
 		CoinRecordInfo coinRecordInfo = new CoinRecordInfo ();
@@ -1524,13 +1585,34 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
         coinRecordInfo.setOrderid(order.getOrderid());//设置小巴币所属的订单的ID
         return coinRecordInfo;
 	}
-	
+	/**
+	 * 获取学员针对某个教练的可用小巴币
+	 * @param coachid 教练ID
+	 * @param studentid 学员ID
+	 * @return 小巴币个数
+	 */
 	@Override
 	public int getCanUseCoinnum(String coachid, String studentid) {
 			String countinhql = "select sum(coinnum) from CoinRecordInfo where (receiverid ="+studentid+" and receivertype="+ UserType.STUDENT+" and ownertype="+UserType.COAH+" and ownerid="+coachid+")";
 			Object in= dataDao.getFirstObjectViaParam(countinhql, null);
 			int totalin= in==null?0:CommonUtils.parseInt(in.toString(), 0);
 		String countouthql = "select sum(coinnum) from CoinRecordInfo where (payerid ="+studentid+" and payertype="+ UserType.STUDENT+" and ownertype="+UserType.COAH+"  and ownerid="+coachid+")";
+		Object out= dataDao.getFirstObjectViaParam(countouthql, null);
+		int totalout = (out==null) ? 0: CommonUtils.parseInt(out.toString(),0);
+		return (int) (totalin-totalout);
+	}
+	/**
+	 * 获取学员针对所有教练的可用小巴币
+	 * @param coachid 教练ID
+	 * @param studentid 学员ID
+	 * @return 小巴币个数
+	 * @author 卢磊
+	 */
+	public int getCanUseCoinnumForCoach(String studentid) {
+		String countinhql = "select sum(coinnum) from CoinRecordInfo where (receiverid ="+studentid+" and receivertype="+ UserType.STUDENT+" and ownertype="+UserType.COAH+")";
+		Object in= dataDao.getFirstObjectViaParam(countinhql, null);
+		int totalin= in==null?0:CommonUtils.parseInt(in.toString(), 0);
+		String countouthql = "select sum(coinnum) from CoinRecordInfo where (payerid ="+studentid+" and payertype="+ UserType.STUDENT+" and ownertype="+UserType.COAH+")";
 		Object out= dataDao.getFirstObjectViaParam(countouthql, null);
 		int totalout = (out==null) ? 0: CommonUtils.parseInt(out.toString(),0);
 		return (int) (totalin-totalout);
@@ -1618,15 +1700,27 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	public HashMap<String, Object> getCoinAffiliation(String studentid){
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		
-		List<CoinAffiliation> mList=new ArrayList<CoinAffiliation>();
+		SuserInfo suser=dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
 		
+		//获取冻结小巴币数量
+		int frozenCoin=0;
+		if(suser.getFcoinnum()!=null){
+			frozenCoin=suser.getFcoinnum().intValue();
+		}
+		//获取冻结扣除数量
+		int[] coinAn=getFrozenCoinAffiliation(CommonUtils.parseInt(studentid, 0),frozenCoin);
+		List<CoinAffiliation> mList=new ArrayList<CoinAffiliation>();
+		//getFrozenCoinAffiliation(studentid,100);
 		String hql="from CoinRecordInfo where receiverid =:receiverid and receivertype=3 and ownertype=:ownertype GROUP BY ownerid";
 		String params[]={"receiverid","ownertype"};
 		List<CoinRecordInfo> crlist= (List<CoinRecordInfo>) dataDao.getObjectsViaParam(hql, params, CommonUtils.parseInt(studentid, 0),2);
+		//int sumCoachCoin=0;//教练小巴币总数
+		
 		if(crlist!=null && crlist.size()>0){
 			for (CoinRecordInfo coinRecordInfo : crlist) {
 				int coachid=coinRecordInfo.getOwnerid();
 				int coachCoin=getCanUseCoinnum(String.valueOf(coachid),studentid);
+				//sumCoachCoin+=coachCoin;
 				String coachName="";
 				if(coinRecordInfo.getOwnername()!=null){
 					coachName=coinRecordInfo.getOwnername();
@@ -1636,7 +1730,11 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 						coachName=cuser.getRealname();
 					}
 				}
-				if(coachCoin!=0){
+				//针对教练的可用小巴币减去冻结
+				///////////////////////
+				coachCoin-=coinAn[0];
+				///////////////////////
+				if(coachCoin>0){
 					CoinAffiliation ca=new CoinAffiliation(coachCoin,"仅限:"+coachName+"教练");
 					mList.add(ca);
 				}
@@ -1645,10 +1743,16 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		String dschoolhql="from CoinRecordInfo where receiverid =:receiverid and receivertype=3 and ownertype=:ownertype GROUP BY ownerid";
 		String dparams[]={"receiverid","ownertype"};
 		List<CoinRecordInfo> slist= (List<CoinRecordInfo>)dataDao.getObjectsViaParam(dschoolhql, dparams, CommonUtils.parseInt(studentid, 0),1);
+		//int sumSchoolCoin=0;//驾校小巴币总数
 		if(slist!=null && slist.size()>0){
 			for (CoinRecordInfo coinRecordInfo : slist) {
 				int schoolCoin=getCanUseCoinnumForDriveSchool(studentid);
-				if(schoolCoin!=0){
+				//sumSchoolCoin+=schoolCoin;
+				//针对驾校的可用小巴币减去冻结
+				///////////////////////
+				schoolCoin-=coinAn[1];
+				///////////////////////
+				if(schoolCoin>0){
 					CoinAffiliation ca=new CoinAffiliation(schoolCoin,"仅限:"+coinRecordInfo.getOwnername());
 					mList.add(ca);
 				}
@@ -1656,7 +1760,8 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		}
 		//平台小巴币
 		int numForPlatform=getCanUseCoinnumForPlatform("0",studentid);
-		if(numForPlatform!=0){
+		numForPlatform-=coinAn[2];
+		if(numForPlatform>0){
 			CoinAffiliation cf=new CoinAffiliation(numForPlatform,"适用:所有教练");
 			mList.add(cf);//通用
 		}
