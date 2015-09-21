@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
+<%@ include file="checksession.jsp" %>
 <!doctype html>
 <html>
 <head>
@@ -8,14 +9,15 @@ pageEncoding="UTF-8"%>
 <title>小巴券</title>
 <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <link href="css/orderconfirm.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="js/checksession.js"></script>
+<script src="js/jquery-1.8.3.min.js"></script>
+<script src="js/jquery-ui-1.10.3.min.js"></script>
 <style type="text/css">
 .container
 {
 	padding:0px 12px;
 }
 </style>
-<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+
 <script type="text/javascript">
 $(document).ready(function(){
 	var studentid='${sessionScope.studentid}';
