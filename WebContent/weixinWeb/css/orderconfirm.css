@@ -438,7 +438,11 @@ body {
 	color: white;
     font-size: 13px;
     display:block;
+<<<<<<< HEAD
     line-height: 44px;
+=======
+    line-height: 24px;
+>>>>>>> b3eed5202bf05f05533a59360b49785f1b4744d8
     background-color: #1798f2;
     padding: 7px 26px;
     border-radius: 4px;

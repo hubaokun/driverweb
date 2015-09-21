@@ -70,9 +70,13 @@ body {
 	font-size: 13px;
 	line-height: 12px;
 }
+.icon-stop
+{
+	padding-right:5px;
+}
 .course-tips p span
 {
-	padding-right:3px;
+	padding-right:10px;
 }
 .course-tips p span:first-child {
 	color: rgb(221,221,221);
@@ -83,6 +87,7 @@ body {
 .course-tips p span:last-child {
 	color: rgb(0,209,164);
 }
+
 .course-choose-date
 {
 	background:white;
