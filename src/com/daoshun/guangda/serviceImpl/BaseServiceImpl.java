@@ -38,7 +38,7 @@ public class BaseServiceImpl implements IBaseService {
 			FileInfo file = (FileInfo) dataDao.getObjectById(FileInfo.class, i);
 			// 拼接文件访问路径
 			if (file != null) {
-				String path = "http://www.xiaobaxueche.com/upload/" + file.getFile_url() + file.getFile_name();
+				String path = CommonUtils.getFileRootUrl() + file.getFile_url() + file.getFile_name();
 				return path.replace(File.separator, "/");
 			}
 		}

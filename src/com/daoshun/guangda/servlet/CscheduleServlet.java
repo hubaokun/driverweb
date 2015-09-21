@@ -2142,7 +2142,10 @@ public class CscheduleServlet extends BaseServlet {
 		String coachid=getRequestParamter(request,"coachid");
 		String cityid=getRequestParamter(request,"cityid");
 		CommonUtils.validateEmpty(coachid);
-		CommonUtils.validateEmpty(cityid);
+		if(cityid==null)
+		{
+			cityid="330100";
+		}
 		List<DefaultSchedule> tempDefaultSchedule =cscheduleService.getDefaultNew(coachid);
 		HashMap pricelist=cscheduleService.getPriceRange(cityid);
 	    Double maxprice=(Double) pricelist.get("maxprice");
