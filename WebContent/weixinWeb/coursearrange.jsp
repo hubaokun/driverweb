@@ -254,7 +254,7 @@ pageEncoding="UTF-8"%>
     	<div class="container">
         	<div class="row">
             	<div class="col-md-12 col-sm-12 col-xs-12 content-tips">
-                	<span><i class="icon icon-exclamation-sign"></i> 连续上课会很累的哦，慎重考虑哦亲</span>
+                	<span>连续上课会很累的哦，慎重考虑哦亲</span>
                 </div>
             </div>
         </div>
@@ -380,29 +380,38 @@ function getFormattedDate(date_str) {
 	
 var data_list_all;
 
-function getSchedulByDate(event){
+function getSchedulByDate(event)
+{
 	show_loading();
 	
 	var str_date ="";
 	
-	if(event){
+	//获得选中的那个li上显示的日期
+	if(event)
+	{
 		str_date = event.children("p").children('span:nth-child(2)').children('i:first-child').html();
 	}
+	
+	//纪录选中课程的总时长和总价钱
 	counttime = 0;
 	countmoney=0;
+	
 	$(".course-foot .col-md-8 p span:first-child").empty().html(counttime);
 	$(".course-foot .col-md-8 p span:last-child").empty().html(countmoney);
 	$('.course-foot').slideUp();
 	
 	var query_date = getFormattedDate(str_date);
-	var active_url= "../sbook?action=REFRESHCOACHSCHEDULE";
+	var active_url = "../sbook?action=REFRESHCOACHSCHEDULE";
 	
-	var search_condition={"coachid":coachid,"studentid":studentid,"date":query_date};
-	if(parseInt(coachid)>0 && studentid>0){
+	var search_condition = {"coachid":coachid,"studentid":studentid,"date":query_date};
+	if(parseInt(coachid)>0 && studentid>0)
+	{
 		$.getJSON(active_url,search_condition,function(data)
 		{
-			data_list_all= data.datelist;
-		for(var i = 0 ;i<data.datelist.length;i++){
+			data_list_all = data.datelist;
+			
+		for(var i = 0 ;i<data.datelist.length;i++)
+		{
 			var item = data.datelist[i];
 			var str_hour=item.hour?item.hour:i+5;
 			
@@ -432,6 +441,7 @@ function getSchedulByDate(event){
 			if (item.isrest == 1) {
 				course_html.removeClass('available');
 				course_html.addClass('unavailable');
+				sub.removeClass('subjec3');
 				sub.html("不可约");//休息
 				status=0;
 			} else if (item.isrest == 0) {
@@ -439,18 +449,21 @@ function getSchedulByDate(event){
 					course_html.removeClass('available');
 					course_html.removeClass('appointment');
 					course_html.addClass('unavailable');
+					sub.removeClass('subjec3');
 					sub.html("不可约");//教练已被别人预约
 					status=0;
 				} else if (item.isbooked == 2) {
 					course_html.removeClass('available');
 					course_html.addClass('unavailable');
 					course_html.addClass('appointment');
+					sub.removeClass('subjec3');
 					sub.html("已预约");//您已预约这个教练
 					status=0;
 				} else if (item.isbooked == 3) {
 					course_html.removeClass('available');
 					course_html.removeClass('appointment');
 					course_html.addClass('unavailable');
+					sub.removeClass('subjec3');
 					sub.html("已约其他教练");//您已预约其他教练
 					status=0;
 				} else {
@@ -468,6 +481,7 @@ function getSchedulByDate(event){
 						course_html.removeClass('appointment');
 						course_html.addClass('unavailable');
 						sub.removeClass('subjec3');
+						sub.html("不可约");//教练已被别人预约
 						status=0;
 					}else{
 						// 正常状态，蓝色
@@ -550,8 +564,6 @@ function choose_course(event)
 		data_list_choose[counttime-1]=data_list_all[hout_int-5];
 	});
 
-	
-
 	//选中之后，付款的账单弹出
 	$('.course-foot').slideDown();
 	if (counttime < 1)
@@ -567,8 +579,7 @@ function choose_course(event)
 
 function timeTips()
 {
-	setTimeout("hideTips()",4000) // 这个是主要参数，设置消失的时间
-	
+	setTimeout("hideTips()",1000) // 这个是主要参数，设置消失的时间	
 }
 function hideTips()
 {
@@ -594,13 +605,17 @@ function gotoCoachDetail(){
 $(document).ready(function()
 {
 	
-	getCoachDetail();
-	 getSchedulByDate();
+			getCoachDetail();
+			
+			//初始化加载一次
+	 		getSchedulByDate();
 	 
 			var chooseddate;
 			$('.course-choose-date ul.course-choose-ul li').on('click',function()
 			{
 				$(this).addClass('active').siblings().removeClass('active');
+				
+				//根据每次点击的日期加载一次
 				getSchedulByDate($(this));
 				
 			});	
@@ -621,6 +636,9 @@ $(document).ready(function()
 			 var width = $(document).width();
 			 $('.course-choose-date-inner').width(width);
 
+			 //根据移动设备窗口的大小动态赋值给p的宽度，实现在不同的移动设备上，多余部分的字体省略
+			 var widthC = $('#coach_detail').width();
+			 $('.course-head .course-head-top .col-md-10 p:last-child').width(widthC);
 });
 </script>
 </body>

@@ -19,7 +19,7 @@
 %>
 <script type="text/javascript">
 var coachinfo;
-var studentid=${sessionScope.studentid};
+var studentid="${sessionScope.studentid}";
 var evaluatelist;
 var pagenum=0;
 var hasmore=1;

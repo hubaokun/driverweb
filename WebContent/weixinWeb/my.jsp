@@ -66,8 +66,6 @@ function showStudent(obj){
 		//window.location.href=redirect_login;
 	}
 }
-
-
 </script>
 </head>
 
@@ -102,23 +100,26 @@ function showStudent(obj){
                 <a href="accountdetail.jsp">
                     <i class="my-nav-icon icon-money-rest"></i>				
                     <span>账户余额</span>
-                    <i class="icon icon-chevron-right"><span id="money"></span></i>	
+                    <!-- <i class="glyphicon icon-right"><span id="money"></span></i> -->
+                    <span class="pull-right"><span id="money"></span><i class="glyphicon icon-right"></i></span>	
                 </a>
     		</div>
             <div class="col-md-12 col-sm-12 col-xs-12 my-nav-item">
                 <a href="coupon.jsp">
                     <i class="my-nav-icon icon-coupon"></i>				
                     <span>小巴券</span>		
-                    <i class="icon icon-chevron-right"><span id="coupon"></span></i>
+                    <!-- <i class="glyphicon icon-right"><span id="coupon"></span></i> -->
+                    <span class="pull-right"><span id="coupon"></span><i class="glyphicon icon-right"></i></span>
                 </a>
-    		</div>
+    		</div> 
             <div class="col-md-12 col-sm-12 col-xs-12 my-nav-item">
                 <a href="coin.jsp">
                     <i class="my-nav-icon icon-coin"></i>				
                     <span>小巴币</span>		
-                    <i class="icon icon-chevron-right"><span id="coin">个</span></i>
+                    <!-- <i class="glyphicon icon-right"><span id="coin"></span></i> -->
+                    <span class="pull-right"><span id="coin">个</span><i class="glyphicon icon-right"></i></span>
                 </a>
-    		</div>     
+    		</div>   
         </div>
 <!--        <div class="row drive-row">
         	<div class="col-md-12 col-sm-12 col-xs-12 my-nav-item">

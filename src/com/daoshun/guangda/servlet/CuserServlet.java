@@ -75,11 +75,11 @@ public class CuserServlet extends BaseServlet {
 			String action = getAction(request);
 
 			if (Constant.CPERFECTACCOUNTINFO.equals(action) || Constant.CCHANGEAVATAR.equals(action) || Constant.CPERFECTPERSONINFO.equals(action) || Constant.CPERFECTCOACHINFO.equals(action)
-					|| Constant.RECHARGE.equals(action) || Constant.GETMYBALANCEINFO.equals(action) || Constant.GETMYCOINRECORD.equals(action)) {
-				/*if (!checkSession(request, action, resultMap)) {
+					|| Constant.RECHARGE.equals(action) || Constant.GETMYBALANCEINFO.equals(action) || Constant.GETMYCOINRECORD.equals(action) || Constant.GRANTCOUPON.equals(action) || Constant.GETCOACHCOUPONLIST.equals(action)) {
+				if (!checkSession(request, action, resultMap)) {
 					setResult(response, resultMap);
 					return;
-				}*/
+				}
 			}
 
 			if (Constant.CLOGIN.equals(action)) {
@@ -168,6 +168,12 @@ public class CuserServlet extends BaseServlet {
 			userid = getRequestParamter(request, "coachid");
 			usertype = "1";
 		}else if (Constant.GETMYCOINRECORD.equals(action)) {
+			userid = getRequestParamter(request, "coachid");
+			usertype = "1";
+		}else if (Constant.GRANTCOUPON.equals(action)) {
+			userid = getRequestParamter(request, "coachid");
+			usertype = "1";
+		}else if (Constant.GETCOACHCOUPONLIST.equals(action)) {
 			userid = getRequestParamter(request, "coachid");
 			usertype = "1";
 		}

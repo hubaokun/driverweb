@@ -80,7 +80,6 @@ public class weixinServlet extends BaseServlet{
 		{
 			phone=suserservice.checkopenid(openid);
 		}
-		System.out.println("phone="+phone);
 		
 		if(WeiXinMessage.getValue("service_access_token")==null)
 		{		

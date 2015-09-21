@@ -76,7 +76,7 @@ pageEncoding="UTF-8"%>
             			<p>出生年月</p>
             		</div>
             		<div class="col-md-8 col-sm-8 col-xs-8">
-            			<input type="text" cate="1" id="birthdaySave" disabled value="1999-01-01" /><input type="text" placeholder="出生年月" id="birthday" cate="2" value="1999-01-01" />
+            			<input type="text" cate="1" placeholder="出生年月" id="birthdaySave" disabled value="" /><input type="text" placeholder="出生年月" id="birthday" cate="2" value="" />
             		</div>
             	</div>
             	<div class="row basic-data-content">
@@ -294,7 +294,7 @@ function changeProvince()
 			}
 		}
 		//alert (pro_id);
-		
+		getJson(pro_id);
     }); 
 }
 
