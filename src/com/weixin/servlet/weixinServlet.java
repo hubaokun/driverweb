@@ -22,6 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.daoshun.common.CommonUtils;
+import com.daoshun.guangda.service.ISUserService;
 import com.daoshun.guangda.servlet.BaseServlet;
 import com.weixin.common.GetAccessToken;
 import com.weixin.common.WeiXinMessage;
@@ -36,11 +37,13 @@ public class weixinServlet extends BaseServlet{
 	 */
 	private static final long serialVersionUID = 1L;
 	private IGetYouWanna wxmessageService;
+	private ISUserService suserservice;
 	private String baseUrl="http://wx.xiaobaxueche.com/dadmin/weixinWeb/weixin?action=";
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		wxmessageService=(IGetYouWanna)applicationContext.getBean("WXmessageService");
+		suserservice=(ISUserService)applicationContext.getBean("suserService");
 	}
 	
 	@Override
@@ -62,6 +65,7 @@ public class weixinServlet extends BaseServlet{
 		String code=request.getParameter("code");
 		String state=request.getParameter("state");
 		IGetYouWanna WXmessageService=new GetYouWannaImpl();
+		String phone="";
 		if(WXmessageService.getWebAccessToken(code)==false)
 		{
 			request.getSession().setAttribute("c_info", "");
@@ -71,8 +75,12 @@ public class weixinServlet extends BaseServlet{
 		{
 			request.getSession().setAttribute("c_info",WXmessageService.setCustomerInfo(WeiXinMessage.getValue("openid")));
 		}
-				
-
+		String openid=WeiXinMessage.getValue("openid");
+		if(openid!=null)
+		{
+			phone=suserservice.checkopenid(openid);
+		}
+		System.out.println("phone="+phone);
 		
 		if(WeiXinMessage.getValue("service_access_token")==null)
 		{		
@@ -91,6 +99,7 @@ public class weixinServlet extends BaseServlet{
 		request.setAttribute("timestamp", timestamp);
 		request.setAttribute("signature", signature);
 		request.setAttribute("appid", CommonUtils.getAppid());
+		request.setAttribute("phone", phone);
 		
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/weixinWeb/login.jsp");
 		try {

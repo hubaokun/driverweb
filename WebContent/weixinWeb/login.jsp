@@ -20,6 +20,7 @@ pageEncoding="UTF-8"%>
 <script>
 var customer=${sessionScope.c_info};
 var openid=customer.openid;
+var phone='${phone}';
 wx.config({
     debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
     appId: '${appid}', // 必填，公众号的唯一标识
@@ -85,6 +86,39 @@ wx.ready(function(){
 	              		var addComp = rs.addressComponents;
 	              		//alert(addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber);
 	              		$('#city').val(addComp.city);
+	              		if(phone!="")
+              			{
+	              			$.ajax({
+		              			type : "POST",
+		              			url : "../suser",
+		              			dataType: "json",
+		              			data : {
+		              				action : "LOGIN",
+		              				phone : phone,
+		              				password : "weixin",
+		              				devicetype : "3",
+		              				version : "1.0",
+		              				openid : openid,
+		              				city : addComp.city
+		              			},
+		              			success : function(data) {
+		              				var result=data;
+		              				var code=result.code;
+		              				var message=result.message;  
+		              				var studentid=result.studentid;
+		              				$('#v_code').val("weixin");
+		              				if(code==2 || code==3)
+		              					alert(message);
+		              				else
+		              					{
+		              						$(".login-row a").attr("href","weixin?action=coachlist");
+		              					    $(".login-row a").get(0).click();
+		              					}
+		              					
+		              				
+		              			}
+              			     });
+              			}
 	              	});
       	    }
       	});
@@ -112,7 +146,7 @@ wx.ready(function(){
   
     <div class="row form-row">
       <div class="col-md-12 col-sm-12 col-xs-12">
-        <input type="text" placeholder="手机号" id="mobile" value="" class="center-block" onKeyUp="handle();" maxlength="11" />
+        <input type="text" placeholder="手机号" id="mobile" value="${phone}" class="center-block" onKeyUp="handle();" maxlength="11" />
         <button id="s_vcode" onclick="sendvcode()" type="button" class="un-active" disabled>发送验证码</button></div>
       <div class="col-md-12 col-sm-12 col-xs-12  pull-right div-line"></div>
       <div class="col-md-12 col-sm-12 col-xs-12">
