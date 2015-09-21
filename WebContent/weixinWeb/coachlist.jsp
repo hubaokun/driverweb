@@ -19,7 +19,7 @@ pageEncoding="UTF-8"%>
 <script src="js/iscroll.js"></script>
 <script type="text/javascript">
 var active_url = "../sbook?action=GETCOACHLIST";
-var studentid=18;//${sessionScope.studentid};
+var studentid=${sessionScope.studentid};
 var pagenum=0;
 var city="杭州";//"${sessionScope.city}";
 var myScroll,

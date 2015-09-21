@@ -169,6 +169,7 @@ wx.ready(function(){
   	</div>
   </div>
   </a>
+<<<<<<< HEAD
 </div>
 <div class="overlay-wait">
   <div class="overlay-wait-content">
@@ -177,6 +178,10 @@ wx.ready(function(){
       <div class="loader1"> <span></span> <span></span> <span></span> <span></span> <span></span> </div>
     </div>
   </div>
+=======
+  
+  
+>>>>>>> 429fefb99380dfb9f1504f0e693cc46ce55bb29c
 </div>
 <script>
 function show_loading(){
