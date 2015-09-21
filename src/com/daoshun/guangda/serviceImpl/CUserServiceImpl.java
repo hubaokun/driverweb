@@ -408,7 +408,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
     @Override
     public QueryResult<CApplyCashInfo> getCoachApplyListFinance(Integer pageIndex, int pagesize) {
         StringBuffer cuserhql = new StringBuffer();
-        cuserhql.append("from CApplyCashInfo where state = 1 order by addtime desc");
+        cuserhql.append("from CApplyCashInfo where state = 1 and Date(addtime)>'2015-09-01' order by addtime desc");
         List<CApplyCashInfo> applycashlist = (List<CApplyCashInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), pagesize, pageIndex, null);
         if (applycashlist != null && applycashlist.size() > 0) {
             for (CApplyCashInfo capplyCash : applycashlist) {
