@@ -84,6 +84,7 @@ $(function(){
  		<select id="state" class="searchdiv" style="width: 85px;"> 
 			<option value="0" >申请中</option> 
  			<option value="2" >申请不通过</option> 
+ 			<option value="3" >作废</option> 
  		</select> <input type="hidden" id="hidstate" value="${state}" />
  	</div> 
  	
