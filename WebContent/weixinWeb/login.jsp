@@ -123,6 +123,14 @@ wx.ready(function(){
       <div class="col-md-12 col-sm-12 col-xs-12" id="s_login" onclick="slogin()"><a href="javascript:void(0)">登录</a> </div>
     </div>
   </form>
+  <a href="http://xiaobaxueche.com/wx/">
+  <div class="row ad-app">
+  		<div class="col-md-12 col-sm-12 col-xs-12">
+  	</div>
+  </div>
+  </a>
+  
+  
 </div>
 <script>
 function slogin()
