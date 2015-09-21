@@ -70,9 +70,13 @@ body {
 	font-size: 13px;
 	line-height: 12px;
 }
+.icon-stop
+{
+	padding-right:5px;
+}
 .course-tips p span
 {
-	padding-right:3px;
+	padding-right:10px;
 }
 .course-tips p span:first-child {
 	color: rgb(221,221,221);
@@ -83,6 +87,7 @@ body {
 .course-tips p span:last-child {
 	color: rgb(0,209,164);
 }
+
 .course-choose-date
 {
 	background:white;
@@ -238,7 +243,7 @@ body {
 .course-date-list .course-date-list-group .col-md-3 a.unavailable p:nth-child(2)
 {
 	line-height:40px;
-	font-size:14px;
+	font-size:10px;
 }
 .course-date-list .course-date-list-group .col-md-3 a.unavailable p:nth-child(3),.course-date-list .course-date-list-group .col-md-3 a.unavailable p:nth-child(4)
 {
@@ -392,16 +397,17 @@ body {
 	overflow:hidden;
 }
 .content-tips
-{	padding:0px 95px;
+{	padding:0px 55px;
 
 }
 .content-tips span
 {
-	background-color:rgba(0,0,0,0.84);
-	display:block;
-	border-radius:4px;
-	height: 44px;
-    line-height: 42px;
+	background-color: rgba(0,0,0,0.70);
+    display: block;
+    border-radius: 4px;
+    height: 50px;
+    line-height: 47px;
+    font-size: 14px;
 }
 /*兼容移动设备的样式设置*/
 
