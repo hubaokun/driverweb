@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
+<%@ include file="checksession.jsp" %>
 <!doctype html>
 <html>
 <head>
@@ -11,7 +12,6 @@ pageEncoding="UTF-8"%>
 <link href="css/font-awesome.css" rel="stylesheet" />
 <link href="css/style.css" rel="stylesheet" type="text/css" />
 <script src="js/jquery-1.8.3.min.js"></script>
-<script type="text/javascript" src="js/checksession.js"></script>
 <style type="text/css">
 .container
 {
@@ -20,21 +20,6 @@ pageEncoding="UTF-8"%>
 </style>
 
 <script type="text/javascript">
-/* var x={
-		   "openid":" OPENID",
-		   "nickname": "NICKNAME",
-		   "sex":"1",
-		   "province":"PROVINCE",
-		   "city":"CITY",
-		   "country":"COUNTRY",
-		    "headimgurl":"http://wx.qlogo.cn/mmopen/g3MonUZtNHkdmzicIlibx6iaFqAc56vxLSUfpb6n5WKSYVY0ChQKkiaJSgQ1dZuTOgvLLrhJbERQQ4eMsv84eavHiaiceqxibJxCfHe/46", 
-			"privilege":[
-			"PRIVILEGE1",
-			"PRIVILEGE2"
-		    ],
-		    "unionid": "o6_bmasdasdsad6_2sgVt7hMZOPfL"
-		};
-var y=$.parseJSON(x); */
 
 $(document).ready(function(){
 	var sid='${sessionScope.studentid}';
@@ -51,27 +36,37 @@ function showStudent(obj){
 		var wxinfo=$.parseJSON(c_info);
 		$("#avatarurl").attr("src",wxinfo.headimgurl);
 		$("#realname").html(wxinfo.nickname);
+		/* if(c_info!=''){
+			var wxinfo=$.parseJSON(c_info);
+			$("#avatarurl").attr("src",wxinfo.headimgurl);
+			$("#realname").html(wxinfo.nickname);
+		} */
+		 //alert(obj.data.realname);
 		//alert(obj.data.realname+"#"+obj.data.avatarurl);
 		/* if(obj.data.avatarurl==''){
 			$("#avatarurl").attr("src",wxinfo.headimgurl);
 		}else{
 			$("#avatarurl").attr("src",obj.data.avatarurl);//设置头像图片
 		}
-		$("#avatarurl").attr("src",wxinfo.headimgurl);
 		if(obj.data.realname==''){
 			$("#realname").html(wxinfo.nickname);
 		}else{
 			$("#realname").html(obj.data.realname);
 		} */
+		$("#realname").html(obj.data.realname);
+		//$("#avatarurl").attr("src",obj.data.avatarurl);//设置头像图片
 		$("#phone").html(obj.data.phone);
 		//$("#avatarurl").attr("src",'${sessionScope.avatarurl}');//设置头像图片
 		//$("#avatarurl").attr("src","https://www.baidu.com/img/bdlogo.png");//设置头像图片
-		$("#coin").html(obj.data.coinnum+"个");
-		$("#money").html(obj.data.money+"元");
-		$("#coupon").html(obj.coupon+"小时");
+// 		$("#coin").html(obj.data.coinnum+"个");
+// 		$("#money").html(obj.data.money+"元");
+// 		$("#coupon").html(obj.coupon+"小时");
+		$("#coin").html(obj.data.coinnum);
+		$("#money").html(obj.data.money);
+		$("#coupon").html(obj.coupon);
 	}else{
 		alert(obj.message);
-		window.location.href=redirect_login;
+		//window.location.href=redirect_login;
 	}
 }
 </script>
@@ -108,23 +103,26 @@ function showStudent(obj){
                 <a href="accountdetail.jsp">
                     <i class="my-nav-icon icon-money-rest"></i>				
                     <span>账户余额</span>
-                    <i class="icon icon-chevron-right"><span id="money"></span></i>	
+                    <!-- <i class="glyphicon icon-right"><span id="money"></span></i> -->
+                    <span class="pull-right"><span id="money" style="margin-left: -20px;"></span><span class="unit-tips">元</span><i class="glyphicon icon-right"></i></span>	
                 </a>
     		</div>
             <div class="col-md-12 col-sm-12 col-xs-12 my-nav-item">
                 <a href="coupon.jsp">
                     <i class="my-nav-icon icon-coupon"></i>				
                     <span>小巴券</span>		
-                    <i class="icon icon-chevron-right"><span id="coupon"></span></i>
+                    <!-- <i class="glyphicon icon-right"><span id="coupon"></span></i> -->
+                    <span class="pull-right"><span id="coupon" style="margin-left: -20px;"></span><span class="unit-tips">小时</span><i class="glyphicon icon-right"></i></span>
                 </a>
-    		</div>
+    		</div> 
             <div class="col-md-12 col-sm-12 col-xs-12 my-nav-item">
                 <a href="coin.jsp">
                     <i class="my-nav-icon icon-coin"></i>				
                     <span>小巴币</span>		
-                    <i class="icon icon-chevron-right"><span id="coin">个</span></i>
+                    <!-- <i class="glyphicon icon-right"><span id="coin"></span></i> -->
+                    <span class="pull-right"><span id="coin" style="margin-left: -20px;"></span><span class="unit-tips">个</span><i class="glyphicon icon-right"></i></span>
                 </a>
-    		</div>     
+    		</div>   
         </div>
 <!--        <div class="row drive-row">
         	<div class="col-md-12 col-sm-12 col-xs-12 my-nav-item">
