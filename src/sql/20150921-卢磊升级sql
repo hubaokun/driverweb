@@ -1,0 +1,1 @@
+update t_autoposition set maxprice=150,minprice=50,defaultprice=100;
