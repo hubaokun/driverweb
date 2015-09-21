@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
+<%@ include file="checksession.jsp" %>
 <!doctype html>
 <html>
 <head>
@@ -14,7 +15,6 @@ pageEncoding="UTF-8"%>
 <link href="mobiscroll/css/mobiscroll.scroller.css" rel="stylesheet" type="text/css" />
 <link href="mobiscroll/css/mobiscroll.scroller.ios.css" rel="stylesheet" type="text/css" />
 <link href="css/basicinfo.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="js/checksession.js"></script>
 <style type="text/css">
 .mbsc-ios .dw-sel {
 	color: #1798f2;
@@ -36,38 +36,79 @@ pageEncoding="UTF-8"%>
             	<img id="avatarurl" src="images/person-one.png" class="img-responsive img-circle center-block" />
             </div>	
             <div class="col-md-9 col-sm-9 col-xs-9">
-            	<label for="avart_img"><!--<i class="icon icon-chevron-right basic-icon"></i>--></label>
+            	<label for="avart_img"></label>
                <!--  <input type="file" id="avart_img" style="display:none;"  /> -->
             </div>
             <div class="clearfix"></div>
             </div>
             <div class="col-md-12 col-sm-12 col-xs-12">
-            	<p><span>真实姓名：</span><input type="text" id="realname" placeholder="真实姓名"/></p>
-            </div>
-            <div class="col-md-12 col-sm-12 col-xs-12">
-            	<p><span>联系电话：</span><input type="text" id="phone"/></p>
+            	<div class="row basic-data-content">
+            		<div class="col-md-4 col-sm-4 col-xs-4">
+            			<p>联系电话</p>
+            		</div>
+            		<div class="col-md-8 col-sm-8 col-xs-8">
+            			<input type="text" id="phone" disabled value="13757187548"/>
+            		</div>
+            	</div>
             </div>
         </div>
         <div class="row basic-data">
-        	<!-- <div class="col-md-12 col-sm-12 col-xs-12">
-            	<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;性别：<span><input type="text"  placeholder="性别" id="gender"/></span></p>
-            </div> -->
-            <div class="col-md-12 col-sm-12 col-xs-12">
-		      <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;性别：
-		        <input type="text"  placeholder="性别" id="gender" />
-		      </p>
-		    </div>
-            <div class="col-md-12 col-sm-12 col-xs-12">
-            	<p>出生年月：<span><input type="text" placeholder="出生年月" id="birthday" /></span></p>
+        	<div class="col-md-12 col-sm-12 col-xs-12">	
+            	<div class="row basic-data-content">
+            		<div class="col-md-4 col-sm-4 col-xs-4">
+            			<p>真实姓名</p>
+            		</div>
+            		<div class="col-md-8 col-sm-8 col-xs-8">
+            			<input type="text" id="nameSave" cate="1" disabled value="莉莉"/>
+            			<input type="text"  placeholder="输入姓名" id="name" cate=2 />
+            		</div>
+            	</div>
+            	<div class="row basic-data-content">
+            		<div class="col-md-4 col-sm-4 col-xs-4">
+            			<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;性别</p>
+            		</div>
+            		<div class="col-md-8 col-sm-8 col-xs-8">
+            			<input type="text" id="genderSave" cate="1" disabled value="女" /> <select  placeholder="性别" id="genderEdit" cate="2"  style="border:none;"/><option value="男">男</option><option value="女">女</option></select>
+            		</div>
+            	</div>
+            	<div class="row basic-data-content">
+            		<div class="col-md-4 col-sm-4 col-xs-4">
+            			<p>出生年月</p>
+            		</div>
+            		<div class="col-md-8 col-sm-8 col-xs-8">
+            			<input type="text" cate="1" placeholder="出生年月" id="birthdaySave" disabled value="" /><input type="text" placeholder="出生年月" id="birthday" cate="2" value="" />
+            		</div>
+            	</div>
+            	<div class="row basic-data-content">
+            		<div class="col-md-4 col-sm-4 col-xs-4">
+            			<p>所在城市</p>
+            		</div>
+            		<div class="col-md-8 col-sm-8 col-xs-8">
+            			<input type="text" placeholder="省-市-区/县" id="location" disabled cate="1" value="浙江省杭州市余杭区"/>
+		        		<select id="province"  placeholder="省/自治区/直辖市" onblur="changeProvince();" cate="2" />
+          					<option>--选择省份--</option>
+          				</select>
+          				<select id="city"  placeholder="市" onblur="changeCity();"  cate="2">
+          					<option>--选择市--</option>
+         				</select>
+         				<select id="area"  placeholder="区" cate="2">
+         					<option>--选择区--</option>
+         				</select>		
+         				<input type="hidden" id="selectedprovince" />
+		       			<input type="hidden" id="selectedcity" />
+		       			<input type="hidden" id="selectedarea" />
+            		</div>
+            	</div>
+            	
+            	
             </div>
-            <div class="col-md-12 col-sm-12 col-xs-12"><p>所在城市：
-		        <input type="text" placeholder="省-市-区/县" id="location"/>
-		        <input type="hidden" id="selectedcity" />
-		    </p></div>
-        </div>   
+
+        </div> 
+          
         <div class="row mylearninfo-submit">
   	<div class="col-md-12 col-sm-12 col-xs-12">
     	<span class="save-data">保存信息</span>
+    	<span class="edit-data">编辑信息</span>
     </div>
   </div>  
     </div>
@@ -81,68 +122,12 @@ pageEncoding="UTF-8"%>
                   <span>是否保存资料的编写？</span>
               </div>
               <div class="no col-md-6 col-sm-6 col-xs-6" style="border-right:1px solid rgb(218,218,218);"><span class="grey">否</span></div>
-              <div class="yes col-md-6 col-sm-6 col-xs-6" onclick="perfectPersoninfo()"><span class="blue" >是</span></div>
+              <div class="yes col-md-6 col-sm-6 col-xs-6" onclick="perfectPersoninfo()" id="span-save"><span class="blue" >是</span></div>
               
         </div>
       </div>
   </div>	
 </div> 
-
-<div class="overlay-gender" style="display:none;">
-  <div class="overlay-gender-content">
-    <div class="container">
-      <div class="row button-wrap">
-        <div class="col-md-6 col-sm-6 col-xs-6 text-left"> <span class="cancel">取消</span> </div>
-        <div class="col-md-6 col-sm-6 col-xs-6 text-right"> <span class="sure">确定</span> </div>
-      </div>
-      <div class="row radio-wrap">
-        <div class="col-md-6 col-sm-6 col-xs-6">
-          <input type="radio" id="male" name="gender" value="男" checked>
-          <label for="male">男</label>
-        </div>
-        <div class="col-md-6 col-sm-6 col-xs-6">
-          <input type="radio" id="female" value="女" name="gender">
-          <label for="female">女</label>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="overlay-location">
-  <div class="overlay-location-content">
-    <div class="container">
-    <div class="row button-wrap">
-              <div class="col-md-6 col-sm-6 col-xs-6 text-left">
-                  <span class="cancel-location">取消</span>
-              </div>
-              <div class="col-md-6 col-sm-6 col-xs-6 text-right">
-                  <span class="sure-location">确定</span>
-              </div>
-            </div>
-      <div class="row province-wrap">
-        <div class="col-md-3 col-sm-3 col-xs-3"><span class="pull-right">省份</span></div>
-        <div class="col-md-9 col-sm-9 col-xs-9">
-          <select id="province"  placeholder="省/自治区/直辖市" onblur="changeProvince();" />
-          <option>--选择省份--</option>
-          </select>
-        </div>
-      </div>
-      <div class="row city-wrap">
-        <div class="col-md-3 col-sm-3 col-xs-3"><span class="pull-right">市?</span></div>
-        <div class="col-md-9 col-sm-9 col-xs-9">
-          <select id="city"  placeholder="市" onblur="changeCity();" >
-         </select>
-        </div>
-      </div>
-      <div class="row area-wrap">
-        <div class="col-md-3 col-sm-3 col-xs-3"><span class="pull-right">区/县</span></div>
-        <div class="col-md-9 col-sm-9 col-xs-9">
-          <select id="area"  placeholder="区"></select>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
 <script src="js/jquery-1.8.3.min.js"></script> 
 <script src="js/bootstrap.min.js"></script> 
@@ -157,6 +142,7 @@ pageEncoding="UTF-8"%>
 <script>
 $(document).ready(function ()
 {
+		
 	$("#avart_img").change(function ()
 	{
 		var img_v = $(this).val();
@@ -181,26 +167,6 @@ $(document).ready(function ()
 		$('.overlay').css('display','none');
 	})
 	
-	
-	//性别选择的弹框
-	$('#gender').click(function ()
-	{
-		$('.overlay-gender').css('display','block');
-	});
-
-	$('.cancel').click(function ()
-	{
-		$('.overlay-gender').css('display','none');
-	});
-	
-	$('.sure').click(function ()
-	{
-		$('.overlay-gender').css('display','none');
-		var str = $("input[name='gender']:checked").val();
-		//alert (str);
-		$("#gender").val(str);
-	});
-	
 	//城市选择的弹框
 	$('#location').click(function ()
 	{
@@ -213,7 +179,7 @@ $(document).ready(function ()
 		
 	});
 	
-	$('.sure-location').click(function ()
+/* 	$('.sure-location').click(function ()
 	{
 		$('.overlay-location').css('display','none');
 		
@@ -222,15 +188,33 @@ $(document).ready(function ()
 		var area = $("#area").val();
 		
 		//获得选中城市的ID
-		var obj = $('#citylist option').attr("id");
+		var obj = $('#city option').attr("id");
+		alert (obj);
 		
 		var str = pro + city + area;
 		$('#location').val(str);
 		$("#selectedcity").val(obj);
 		//$('#location').
 		
-	});
+	}); */
 	 
+	//控制编辑和保存页面的切换
+	$('span.edit-data').click(function ()
+	{
+		$('input[cate="1"]').css('display','none');
+		$('input[cate="2"]').css('display','block');
+		$('select[cate="2"]').css('display','block');
+		$('span.save-data').css('display','block');
+		$('span.edit-data').css('display','none');
+	});
+	$('#span-save').click(function ()
+	{
+		$('input[cate="1"]').css('display','block');
+		$('input[cate="2"]').css('display','none');
+		$('select[cate="2"]').css('display','none');
+		$('span.save-data').css('display','none');
+		$('span.edit-data').css('display','block');
+	});
 
 	
 });
@@ -245,7 +229,7 @@ $(document).ready(function ()
                 preset : 'date', //日期:年 月 日 时 分
                 minDate: new Date(1916,1,1), 
 				maxDate:new Date(nowData.getFullYear(),12,31),
-//              dateFormat: 'yy-mm-dd', // 日期格式
+                dateFormat: 'yy-mm-dd', // 日期格式
 //              dateOrder: 'yymmdd', //面板中日期排列格式
                 stepMinute: 5, //设置分钟步长
                 yearText:'年', 
@@ -305,6 +289,7 @@ function changeProvince()
 			{
 				//alert (data.RECORDS[i].province);
 				pro_id = data.RECORDS[i].provinceid;
+				setCity(pro_id);
 				break;
 			}
 		}
@@ -342,7 +327,7 @@ function changeCity()
     }); 
 } 
 
-function getJson(id)
+/* function getJson(id)
 { 
 	var dataroot_pro="json/t_cities.json"; 
     var provinceID; 
@@ -358,8 +343,7 @@ function getJson(id)
       } 
       setCity(provinceID); 
     }); 
-} 
-
+}  */
 
 function setCity(val)
 { 
@@ -429,29 +413,40 @@ $(document).ready(function ()
 });
  
 </script>
+
 <script type="text/javascript">
 $(document).ready(function(){
 	var sid='${sessionScope.studentid}';
-	var token='${sessionScope.token}';
 	//sid="18";
+	var token='${sessionScope.token}';
 	var params = {action:"GETSTUDENTINFO",studentid:sid,token:token};
 	jQuery.post("../suser", params, showStudent, 'json');
 	
-	var c_info='${sessionScope.c_info}';
+	/* var c_info='${sessionScope.c_info}';
 	var wxinfo=$.parseJSON(c_info);
-	$("#avatarurl").attr("src",wxinfo.headimgurl);
+	$("#avatarurl").attr("src",wxinfo.headimgurl); */
 	
 });
 function showStudent(obj){
 	if(obj.code==1){
-		$("#realname").val(obj.data.realname);
+		var c_info='${sessionScope.c_info}';
+		var wxinfo=$.parseJSON(c_info);
+		/* if(obj.data.avatarurl==''){
+			$("#avatarurl").attr("src",wxinfo.headimgurl);
+		}else{
+			$("#avatarurl").attr("src",obj.data.avatarurl);//设置头像图片
+		} */
+		$("#avatarurl").attr("src",wxinfo.headimgurl);
+		
+		$("#nameSave").val(obj.data.realname);
 		$("#phone").val(obj.data.phone);
 		$("#cityname").val(obj.data.city);
 		$("#birthday").val(obj.data.birthday);
+		$("#birthdaySave").val(obj.data.birthday);
 		if(obj.data.gender==1){
-			$("#gender").val("男");
+			$("#genderSave").val("男");
 		}else if(obj.data.gender==2){
-			$("#gender").val("女");
+			$("#genderSave").val("女");
 		}
 		$("#location").val(obj.data.city);
 	}else{
@@ -463,7 +458,23 @@ function showStudent(obj){
 function perfectPersoninfo(){
 	var sid='${sessionScope.studentid}';
 	//sid="18";
-	var gender=$("#gender").val();
+	var gender = $("#genderEdit").find("option:selected").val();
+	//alert (gender);
+	
+	
+	
+	
+	//获得选中城市的ID
+	var objProvinceId = $('#province').find("option:selected").attr("id");
+	//alert (objProvinceId);
+	$("#selectedprovince").val(objProvinceId);
+	var objCityId = $('#city option').attr("id");
+	$("#selectedcity").val(objCityId);
+	//alert (objCityId);
+	var objAreaId = $('#area option').attr("id");
+	//alert (objAreaId);
+	$("#selectedarea").val(objAreaId);
+
 	var g="1";
 	if(gender=='男'){
 		g="1";
@@ -476,22 +487,26 @@ function perfectPersoninfo(){
 		alert("手机号码格式有误!");
 		return false;
 	}
+	//alert(" selectedcity="+$("#selectedcity").val()+" gender="+g);
 	var token='${sessionScope.token}';
+	var cityid=$.trim($("#selectedcity").val());
 	var params = {
 				  action:"PERFECTPERSONINFO",
 				  studentid:sid,
-				  realname:$("#realname").val(),
-				  phone:$("#phone").val(),
+				  realname:$("#name").val(),
 				  gender:g,
 				  birthday:$("#birthday").val(),
 				  token:token,
-				  cityid:$("#selectedcity").val()
+				  cityid:cityid,
+				  provinceid:$("#provinceid").val(),
+				  areaid:$("#areaid").val()
 				  };
 	jQuery.post("../suser", params, showPerfect, 'json');
 }
 function showPerfect(obj){
 	if(obj.code==1){
 		alert(obj.message);
+		window.location.href="mybasicinfo.jsp";
 	}else{
 		alert(obj.message);
 		window.location.href=redirect_login;
