@@ -163,7 +163,7 @@ function getOrderlist(at,pagenum){
 		$('.overlay-cancle-content').css('top',w); */
 		if(confirm("确认取消此订单")){
 			var studentid='${sessionScope.studentid}';//学员Id
-			studentid='18';
+			//studentid='18';
 			var token='${sessionScope.token}';
 			var params = {action:"cancelOrder",studentid:studentid,orderid:orderid,token:token};
 			jQuery.post("../sorder", params, showCancelOrder, 'json');
@@ -171,7 +171,10 @@ function getOrderlist(at,pagenum){
 	}
 	function showCancelOrder(obj){
 		if(obj.code==1){//取消成功
-			getOrderlist(action1);
+			window.location.href="waitevaluationorder.jsp";
+		}else{
+			alert(obj.message);
+			window.location.href=redirect_login;
 		}
 	}
 </script>

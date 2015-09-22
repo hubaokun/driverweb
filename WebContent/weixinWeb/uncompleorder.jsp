@@ -172,7 +172,7 @@ function getOrderlist(at,pagenum){
 	function toCancelOrder(){
 		$('.overlay-cancle').css('display','none');
 		var studentid='${sessionScope.studentid}';//学员Id
-		studentid='18';
+		//studentid='18';
 		var token='${sessionScope.token}';
 		var params = {
 						action:"cancelOrder",
@@ -186,9 +186,11 @@ function getOrderlist(at,pagenum){
 			{
 	}); */
 	function showCancelOrder(obj){
-		alert(obj.message);
 		if(obj.code==1){
 			window.location.href="uncompleorder.jsp";
+		}else{
+			alert(obj.message);
+			window.location.href=redirect_login;
 		}
 	}
 </script>
