@@ -439,6 +439,7 @@ function showStudent(obj){
 		$("#avatarurl").attr("src",wxinfo.headimgurl);
 		
 		$("#nameSave").val(obj.data.realname);
+		$("#name").val(obj.data.realname);
 		$("#phone").val(obj.data.phone);
 		$("#cityname").val(obj.data.city);
 		$("#birthday").val(obj.data.birthday);
