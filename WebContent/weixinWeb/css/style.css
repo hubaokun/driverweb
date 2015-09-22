@@ -776,18 +776,11 @@ text-align: center;
 #tabs-3 .my-nav-item a span.pull-right
 {
 	right:12px;
-<<<<<<< HEAD
-=======
 	font-size:15px;
 }
 #tabs-3 .my-nav-item a span.unit-tips
 {
 	font-size:10px;
-<<<<<<< HEAD
->>>>>>> b3eed5202bf05f05533a59360b49785f1b4744d8
-=======
->>>>>>> 664cd1b947f686cd9e0a6913b1d591dd7b116a19
->>>>>>> 2f2066cfe93a4cf833e95cb3caec1eddc8385b95
 }
 #tabs-3 .my-nav-item a i {
 	margin-right: 10px;
@@ -797,15 +790,7 @@ text-align: center;
 #tabs-3 .my-nav-item a i.icon-right
 {
 	margin-right:0px;
-<<<<<<< HEAD
-	margin-left:16px;
-=======
 	margin-left:26px;
-<<<<<<< HEAD
->>>>>>> b3eed5202bf05f05533a59360b49785f1b4744d8
-=======
->>>>>>> 664cd1b947f686cd9e0a6913b1d591dd7b116a19
->>>>>>> 2f2066cfe93a4cf833e95cb3caec1eddc8385b95
 }
 /* #tabs-3 .my-nav-item a i.icon-chevron-right {
 	float: right;
