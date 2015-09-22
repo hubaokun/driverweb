@@ -300,7 +300,11 @@ body {
 	font-size: 13px;
 	line-height: 43px;
 }
-#set_pay_type_btn
+#cancle_pay_type_btn
+{
+	margin-left:5px;
+}
+#set_pay_type_btn,#cancle_pay_type_btn
 {
     color: #1789f2;
     line-height: 18px;

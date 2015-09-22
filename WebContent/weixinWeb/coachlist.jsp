@@ -219,7 +219,7 @@ document.addEventListener('DOMContentLoaded', loaded, false);
                     <div class="col-md-12 col-sm-12 col-xs-12 cartype-wrap">
                         <p>准驾车型</p>
                         <div class="row">
-                            <div class="col-md-4 col-sm-4 col-xs-4"><input type="radio" id="cartype_no" name="cartype" modelid="0" checked /><label for="cartype_no">不限</label></div>
+                            <div class="col-md-4 col-sm-4 col-xs-4"><input type="radio" id="cartype_no" name="cartype" modelid="" checked /><label for="cartype_no">不限</label></div>
                             <div class="col-md-4 col-sm-4 col-xs-4"><input type="radio" id="cartype_c1" name="cartype" modelid="17" /><label for="cartype_c1">C1</label></div>
                             <div class="col-md-4 col-sm-4 col-xs-4"><input type="radio" id="cartype_c2" name="cartype" modelid="18" /><label for="cartype_c2">C2</label></div>
                         </div>
@@ -396,9 +396,9 @@ var driverschoolid;
 function search_com(){
 	var condition1 = $("#search_coach").val();//condition1
 	var condition6 = $("input[name='subject']:checked").attr("subjectid");//condition6
-	var condition10 = $("input[name='cartype']:checked").attr("modelid");//condition10
+	var condition11 = $("input[name='cartype']:checked").attr("modelid");//condition11
 	//driverschoolid = $("#driverschoolid").val();//driverschoolid
-	var search_condition = {"condition1":condition1,"condition6":condition6,"condition10":condition10,"driverschoolid":driverschoolid,"pagenum":pagenum,"fixedposition":city};
+	var search_condition = {"condition1":condition1,"condition6":condition6,"condition11":condition11,"driverschoolid":driverschoolid,"pagenum":pagenum,"fixedposition":city};
 	load_coachlist(search_condition);
 };
 
