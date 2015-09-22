@@ -187,6 +187,7 @@ function getOrderlist(at,pagenum){
 	}); */
 	function showCancelOrder(obj){
 		if(obj.code==1){
+			alert(obj.message);
 			window.location.href="uncompleorder.jsp";
 		}else{
 			alert(obj.message);
