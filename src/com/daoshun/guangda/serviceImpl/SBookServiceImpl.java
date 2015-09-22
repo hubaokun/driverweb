@@ -52,16 +52,19 @@ import com.daoshun.guangda.pojo.UserPushInfo;
 import com.daoshun.guangda.service.ICscheduleService;
 import com.daoshun.guangda.service.ILocationService;
 import com.daoshun.guangda.service.ISBookService;
+import com.daoshun.guangda.service.ISUserService;
 
 @Service("sbookService")
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 //	@Resource
 //	public RedisCoachDao redisCoachDao;
-	
+	@Resource
 	private ILocationService locationService;
 	@Resource
 	public ICscheduleService cscheduleService;
+	@Resource
+	private ISUserService suserService;
 	@Override
 	public CuserInfo getCoachDetail(String coachid) {
 		CuserInfo cuser = dataDao.getObjectById(CuserInfo.class, CommonUtils.parseInt(coachid, 0));
@@ -1197,7 +1200,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			cuserhql.append(" and usertype=0 ");
 		}
 		cuserhql.append(" and money >= gmoney and isquit = 0  order by coursestate desc,sumnum desc,score desc");
-		System.out.println(cuserhql.toString());
+		//System.out.println(cuserhql.toString());
 		List<AppCuserInfo> coachlist = (List<AppCuserInfo>) dataDao.SqlPageQuery(cuserhql.toString(), Constant.USERLIST_SIZE+1, CommonUtils.parseInt(pagenum, 0) + 1,AppCuserInfo.class, null);
 		if (coachlist != null && coachlist.size() > 0) {
 			for (AppCuserInfo coach : coachlist) {
@@ -1847,39 +1850,34 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		}
 		return result;
 	}
-	public boolean checkCanPay(JSONArray json){
+	/**
+	 * 检查订单总额是否够支付
+	 * @param json
+	 * @return true 可以  false 不可以
+	 * @author 卢磊
+	 */
+	public int checkCanPay(JSONArray json,String coachid,String studentid) throws JSONException{
 		int moneySum=0;//所有订单需要消耗的余额
-		int coinSum=0;//
-		try {
+		int coinSum=0;//所有的订单需要消耗的小巴币
+		int couponSum=0;//上传的小巴券Id的个数必须与订单个数相同
+		int couponPayNum=0;//小巴券支付的订单数量
 			for (int i = 0; i < json.length(); i++) {// 每个循环是一个订单
 				JSONObject array = json.getJSONObject(i);
-				JSONArray times = array.getJSONArray("time");// 订单的时间点数组
-				String date1 = array.getString("date");// 订单的日期
 				String paytype = array.getString("paytype");// 订单的日期
 				String recordid="";
 				int delmoney=0;
-				//int orderPrice=0;
 				int mixMoney=0;//混合支付时余额支付额
 				int mixCoin=0;//混合支付时的小巴币数量
 				if(String.valueOf(PayType.MONEY).equals(paytype)){
 					delmoney= array.getInt("delmoney");
+					//需要的余额累加
 					moneySum+=delmoney;
 				}else if(String.valueOf(PayType.COUPON).equals(paytype)){
-					/*delmoney= array.getInt("delmoney");
-					//orderPrice=array.getInt("total");
+					couponPayNum++;
 					recordid= array.getString("recordid");
-					boolean recordFlag=false;
-					String[] recordidArray = recordid.split(",");
-					if(recordidArray.length>1){
-						recordFlag=true;//一次性传入多张券
+					if(!recordid.equals("")){
+						couponSum++;
 					}
-					for (int recoridn = 0; recoridn < recordidArray.length; recoridn++) {
-						int cid = CommonUtils.parseInt(recordidArray[recoridn], 0);
-						CouponRecord record = dataDao.getObjectById(CouponRecord.class, cid);//该券已经被使用过或者不存在
-						if(record==null || record.getState()==1 ){
-							recordFlag=true;
-						}
-					}*/
 				}else if(String.valueOf(PayType.COIN).equals(paytype)){//小巴币支付
 					delmoney= array.getInt("delmoney");
 					coinSum+=delmoney;
@@ -1893,13 +1891,51 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					moneySum+=mixMoney;
 				}
 			}
-		} catch (JSONException e) {
-			e.printStackTrace();
+		
+		int canUseNum[]=getCanUseCoinMoney(coachid,studentid);
+		if(coinSum>canUseNum[0]){
+			//小巴币不足
+			return 1;
 		}
-		
-		
-		
-		return true;
+		if(moneySum>canUseNum[1]){
+			//余额不足
+			return 2;
+		}
+		if(couponSum<couponPayNum){
+			//小巴券不足
+			return 3;
+		}
+		return 0;
+	}
+	/**
+	 * 针对某个教练的可用小巴币及余额
+	 * @param coachid
+	 * @param studentid
+	 * @return int[0] 可用小巴币  int[1] 可用余额
+	 * @author 卢磊
+	 */
+	public int[] getCanUseCoinMoney(String coachid,String studentid){
+				int canUseNum[]=new int[2];
+				//小巴币的总数=教练可用小巴币+驾校可用小巴币+平台可用小巴币
+				int num=suserService.getCanUseCoinnum(coachid,studentid);//获取教练可用小巴币
+				int numForSchool=suserService.getCanUseCoinnumForDriveSchool(studentid);//获取驾校可用小巴币
+				//获取平台发送的小巴币
+				int numForPlatform=suserService.getCanUseCoinnumForPlatform("0",studentid);//获取平台可用小巴币
+				num+=numForSchool;
+				num+=numForPlatform;
+				SuserInfo suser=suserService.getUserById(studentid);//获取余额
+				int coinnum=0;
+				if(suser.getFcoinnum()==null){
+					suser.setFcoinnum(new BigDecimal(0));
+				}
+				if(num>=suser.getFcoinnum().intValue()){//可用小巴币减去冻结小巴币
+					coinnum=num-suser.getFcoinnum().intValue();
+				}else{
+					coinnum=0;
+				}
+				canUseNum[0]=coinnum;//可用小巴币
+				canUseNum[1]=suser.getMoney()==null?0:suser.getMoney().intValue();
+				return canUseNum;
 	}
 	
 	@Transactional(readOnly = false, propagation = Propagation.SUPPORTS)
@@ -1922,14 +1958,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				return result;
 			} 
 		}
-		/*if(student!=null && "18888888888".equals(student.getPhone())){
-			result.put("message", "测试账号不能预约");
-			result.put("code", 20);
-			return result;
-		}*/
 		//################处理测试账号结束#####################
-		
-		
 		
 		String failtimes = "";// 不能预订的时间点集合
 		int successorderid = 0;// 预订成功的第一个订单的ID
@@ -1941,8 +1970,6 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 
 		String hql3 = "from CaddAddressInfo where coachid =:coachid and iscurrent = 1";
 		String params3[] = { "coachid" };
-		
-		 
 		
 		if(student.getMoney().doubleValue()<0.0||student.getFmoney().doubleValue()<0.0||student.getCoinnum()<0)// 余额不够
 		{
@@ -1985,7 +2012,6 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			}
 		}
 
-
 		// 订单的提醒设置
 		String hqlnoti = "from OrderNotiSetInfo where 1 = 1";
 		List<OrderNotiSetInfo> orderNotiList = (List<OrderNotiSetInfo>) dataDao.getObjectsViaParam(hqlnoti, null);
@@ -1999,6 +2025,21 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		try {
 			List<OrderModel> orderList = new ArrayList<OrderModel>();
 			JSONArray json = new JSONArray(date);
+			//支付额是否充足检测
+			int checkResult=checkCanPay(json,coachid,studentid);
+			if(checkResult!=0){
+				if(checkResult==1){
+					result.put("code", 101);
+					result.put("message", "小巴币数量不正确，请重试");
+				}else if(checkResult==2){
+					result.put("code", 102);
+					result.put("message", "账户余额不正确，请重试");
+				}else if(checkResult==3){
+					result.put("code", 103);
+					result.put("message", "小巴券数量不正确，请重试");
+				}
+				return result;
+			}
 			// 教练信息
 			//CuserInfo cUser = dataDao.getObjectById(CuserInfo.class, CommonUtils.parseInt(coachid, 0));
 			boolean hasError = false;
@@ -2086,21 +2127,13 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						return result;
 					}
 				}
-			/*	System.out.println("##############################################");
-				System.out.println("paytype="+paytype);
-				System.out.println("date1="+date1);
-				System.out.println("delmoney="+delmoney);
-				System.out.println("recordid="+recordid);
-				System.out.println("##############################################");*/
 				String start = "", end = "";// 订单的开始时间和结束时间
-
 				BigDecimal total = new BigDecimal(0);// 订单的总价
 				String longitude = null;
 				// 纬度
 				String latitude = null;
 				// 详细地址
 				String detail = null;
-				int cancel = -1;// 订单是否可以取消 默认 为0 可以取消
 				// 判断时间是否还可以预订
 				// 首先查询当天的全天休息情况
 //				List<CscheduleInfo> scheduleinfoList = (List<CscheduleInfo>) dataDao.getObjectsViaParam(hql1, params1, CommonUtils.parseInt(coachid, 0), date1, "0");
@@ -2109,22 +2142,18 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 //					state = scheduleinfoList.get(0).getState();
 //					cancel = scheduleinfoList.get(0).getCancelstate();
 //				}
-
-				
 				// 如果使用了小巴券,但是又没有传delmoney的话,订单预订失败
 				if(String.valueOf(PayType.COUPON).equals(paytype)){
-				
 					if (!CommonUtils.isEmptyString(recordid) && delmoney == 0 && recordid.length()>2 ) {//
 						for (int j = 0; j < times.length(); j++) {
 							if (failtimes.length() == 0) {
-								failtimes = date1 + times.get(j).toString() + "点";
+								failtimes = date1 + " "+times.get(j).toString() + "点";
 							} else {
-								failtimes += "," + date1 + times.get(j).toString() + "点";
+								failtimes += "," + date1 +" "+ times.get(j).toString() + "点";
 							}
 						}
 						canOrder = false;
 					}
-				
 				}
 //				if (state == 0) {// 当天休息的情况
 //					for (int j = 0; j < times.length(); j++) {
@@ -2149,9 +2178,9 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						List<CBookTimeInfo> booktimeList = (List<CBookTimeInfo>) dataDao.getObjectsViaParam(hql2, params2, CommonUtils.parseInt(coachid, 0), hour, date1);
 						if (booktimeList != null && booktimeList.size() > 0) {// 被预订
 							if (failtimes.length() == 0) {
-								failtimes = date1 + hour + "点";
+								failtimes = date1 + " "+hour + "点";
 							} else {
-								failtimes += "," + date1 + hour + "点";
+								failtimes += "," + date1 +" "+ hour + "点";
 							}
 							canOrder = false;
 							result.put("message", failtimes+"已经被别人预约了");
@@ -2162,9 +2191,9 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 							if (scheduleinfoList2 != null && scheduleinfoList2.size() > 0) {
 								if (scheduleinfoList2.get(0).getIsrest() == 1) {
 									if (failtimes.length() == 0) {// 休息
-										failtimes = date1 + hour + "点";
+										failtimes = date1 + " "+hour + "点";
 									} else {
-										failtimes += "," + date1 + hour + "点";
+										failtimes += "," + date1 + " "+hour + "点";
 									}
 									canOrder = false;
 									result.put("message", failtimes+"是休息的，请刷新后再试!");
