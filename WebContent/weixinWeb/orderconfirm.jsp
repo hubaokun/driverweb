@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
+<%@ include file="checksession.jsp" %>
 <!doctype html>
 <html>
 <head>
@@ -9,7 +10,7 @@ pageEncoding="UTF-8"%>
 <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <link href="css/font-awesome.css" rel="stylesheet" />
 <link href="css/orderconfirm.css" rel="stylesheet" type="text/css" />
-<style type="text/css"></style>
+<link href="css/loader.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
@@ -48,7 +49,8 @@ pageEncoding="UTF-8"%>
         	<div class="col-md-12 col-sm-12 col-xs-12">
             	<a href="javascript:;">
                 	<span>支付方式</span>
-                	<i id="set_pay_type_btn" class="icon icon-remove"></i>
+                	<span id="cancle_pay_type_btn" class="pull-right"  >取消</span>
+                	<span id="set_pay_type_btn" class="pull-right"  >确定</span>
                 </a>
             </div>
         </div>
@@ -84,22 +86,32 @@ pageEncoding="UTF-8"%>
 
 <!--确定付款弹窗 starts-->
 <div id="pay_feedback_popup" class="overlay-cancle">
-  <div class="overlay-cancle-content" style="top: 184px;">
+  <div class="overlay-cancle-content">
     <div class="container">
-      <div class="row">
+      <div class="row" style="margin-left:0px; margin-right:0px;">
       	<span class="pull-right"><i class="icon icon-remove" id="pay_feedback_close_btn"></i></span>
       </div>
       <div class="row">
-        <div class="col-md-12 col-sm-12 col-xs-12"> <span id="pay_feedback_message">预定成功</span> </div>
-        <div class="col-md-12 col-sm-12 col-xs-12"><span id="pay_orderid">订单详情</span></div>
+        <div class="col-md-12 col-sm-12 col-xs-12"> <span id="pay_feedback_message">您已预约成功！</span> </div>
+        <div class="col-md-12 col-sm-12 col-xs-12" id="orderDetailBtn"></div>
       </div>
     </div>
   </div>
 </div>
 <!--确定付款弹窗 ends-->
 
+<div class="overlay-wait">
+  <div class="overlay-wait-content">
+  	<div class="text-center">
+      <p>正在提交</p>
+      <div class="loader1"> <span></span> <span></span> <span></span> <span></span> <span></span> </div>
+    </div>
+  </div>
+</div>
+
 <script src="js/jquery-1.8.3.min.js"></script> 
 <script>
+
 var data_list_choose=${param.data_list_choose};
 var coachid = ${param.coachid};
 var studentid = ${param.studentid};
@@ -171,6 +183,14 @@ function getAllPayTypeBlance()
 			coinnum_available_local= data.coinnum;
 			money_available_local= data.money;
 			couponlist_available_local=couponlist_available.concat();
+// 			/*临时调试赋值*/
+// 			 			couponlist_available=null;
+// 						couponlist_available_local=null;
+// 						coinnum_available_local=800;
+// 						coinnum_available=800;
+// 						money_available= 29;
+// 						money_available_local= 29; 
+// 						/*临时调试赋值*/
 			init_order_list();
 		});
 	}
@@ -208,6 +228,7 @@ function init_order_list(){
 			delmoney+=item.price;
 			total=0;
 			couponlist_available_local.shift();
+			
 		}else if(coinnum_available_local>0){
 			//再使用小巴币
 			if(coinnum_available_local>=item.price){
@@ -227,6 +248,7 @@ function init_order_list(){
 				money_available_local -= (item.price-delmoney);
 				coin_sum+=delmoney;
 				money_sum+=item.price-delmoney;
+				
 			}else{
 				//余额不足，提示去充值
 				paytype=0;
@@ -247,11 +269,11 @@ function init_order_list(){
 			paytype_name="余额不足，请充值";
 			need_charge= true;
 		}
-		order_list_str+="{'time':["+item.hour+"],'date':'"+item.date+"','paytype':"+paytype+",'total':"+total+",'delmoney':"+delmoney+",'recordid':"+recordid+"},";
+		order_list_str+="{'time':["+item.hour+"],'date':'"+item.date+"','paytype':"+paytype+",'total':"+total+",'delmoney':"+delmoney+",'recordid':"+recordid+",'needcharge':"+need_charge+"},";
 		//更改相应订单的支付方式显示
 		$("#"+item.scheduleid+"_paytype").html(paytype_name);
 		
-		setConfirmPayView(need_charge);
+		
 		
 	}
 	order_list_str="["+order_list_str.substring(0,order_list_str.length-1)+"]";
@@ -270,6 +292,14 @@ function init_order_list(){
 	
 	$("#coupon_sum").html(sum_str);
 	
+	setConfirmPayView();
+	
+
+/* 	$('#pay_feedback_message').html("您已预约成功");
+	//$('#pay_orderid').css('display','block');
+	//$('#pay_orderid').attr("onclick","location.href='uncompleorderdetail.jsp?orderid='");
+	var str = "<span onclick='location.href='uncompleorderdetail.jsp?orderid="+successorderid+"'>"+"订单详情</span>";
+	$('#orderDetailBtn').append(str); */
 }
 
 function showPayType(hour,price,scheduleid)
@@ -278,7 +308,7 @@ function showPayType(hour,price,scheduleid)
 	choosed_hour_price= price;
 	choosed_scheduleid= scheduleid;
 	
-	need_charge= false;
+	//need_charge= false;
 	
 	if(couponlist_available_local && couponlist_available_local.length>0){
 		$("#coupon_available").html("可用小巴券"+couponlist_available_local.length+"张");
@@ -306,10 +336,10 @@ function showPayType(hour,price,scheduleid)
 		$('#icon_money').attr("onclick","setPayTypeChooseWay(this)");
 	}else{
 		$("#money_available").html("余额不足，请充值");
-		need_charge= true;
+		//need_charge= true;
 	}
 	
-	setConfirmPayView(need_charge);
+	//setConfirmPayView();
 	
 	if($('.overlay .overlay-content .overlay-content-body ul li').hasClass('active-check'))
 	{
@@ -320,37 +350,49 @@ function showPayType(hour,price,scheduleid)
 			$('#pay_type_content').css('display','block');
 }
 
+/*在支付方式选择的弹窗div中只变更该弹窗中的支付方式的选中状态，
+ * 新的支付方式和原有支付方式的数值纪录在js全局变量中
+ *供点击确定按钮后计算使用
+ */
+var paytype_changed_order_num;
+var old_pay_type;
+var new_pay_type;
+var new_recordid;
+var old_delmoney;
+var is_paytype_changed;
+
 function setPayTypeChooseWay(event){
 	//首先找到对应hour的本地临时订单信息
-	var i=0;
-	var old_pay_type;
-	var new_pay_type;
-	var new_recordid;
-	var old_delmoney;
+	//var i=0;	
 	
-	for(i=0 ;i<order_list.length;i++){
+	for(var i=0 ;i<order_list.length;i++){
 		if(order_list[i].time==choosed_hour){
 			old_pay_type= order_list[i].paytype;
 			old_delmoney= order_list[i].delmoney;
+			paytype_changed_order_num=i;
 			break;
 		}
 	}
-	
+	is_paytype_changed=true;
 	if($(event).attr("id")=="icon_coupon"){
 		new_pay_type= 2;
 		if(new_pay_type==old_pay_type){
+			is_paytype_changed=false;
 			return;
 		}
 	}else if($(event).attr("id")=="icon_money"){
 		new_pay_type= 1;
 		if(new_pay_type==old_pay_type){
+			is_paytype_changed=false;
 			return;
 		}
 	}else if($(event).attr("id")=="icon_coin"){
 		new_pay_type= 3;
 		if(new_pay_type==old_pay_type){
+			is_paytype_changed=false;
 			return;
 		}else if(old_pay_type==4){
+			is_paytype_changed=false;
 			return;
 		}
 	}
@@ -365,9 +407,9 @@ function setPayTypeChooseWay(event){
 			paytype_name="账户余额";
 		}else{
 			paytype_name="余额不足，请充值";
-			need_charge= true;
-			$("#pay_or_charge").html("充值");
-			$("#confirm_pay").attr("onclick","gotoCharge()"); 
+			//need_charge= true;
+			//$("#pay_or_charge").html("充值");
+			//$("#confirm_pay").attr("onclick","gotoCharge()"); 
 		}
 		$(event).addClass('active-check').siblings().removeClass('active-check');
 		new_pay_type= 1;
@@ -384,16 +426,16 @@ function setPayTypeChooseWay(event){
 	}else{
 		paytype_name="余额不足，请充值";
 		new_pay_type= 4;
-		need_charge= true;
-		$("#pay_or_charge").html("充值");
-		$("#confirm_pay").attr("onclick","gotoCharge()"); 
-		
+		//need_charge= true;
+		//$("#pay_or_charge").html("充值");
+		//$("#confirm_pay").attr("onclick","gotoCharge()"); 		
 	}	
 	
-	$("#"+choosed_scheduleid+"_paytype").html(paytype_name);
+// 	$("#"+choosed_scheduleid+"_paytype").html(paytype_name);
 	
-	//如果本课时的支付方式改变了
-	 recalculatePayType(i,new_pay_type,old_pay_type,old_delmoney);
+// 	//如果本课时的支付方式改变了
+// 	 recalculatePayType(i,new_pay_type,old_pay_type,old_delmoney);
+	
 }
 
 function getcouponDetailByRecordId(recordId){
@@ -421,6 +463,7 @@ function recalculatePayType(i,new_pay_type,old_pay_type,old_delmoney){
 			order_list[i].total=0;
 			order_list[i].recordid=couponlist_available_local[0].recordid;
 			new_recordid =couponlist_available_local[0].recordid;
+			order_list[i].needcharge=false;
 			//更新合计支付信息
 			coupon_sum+=choosed_hour_price;
 			//更新本地可用余额信息
@@ -433,12 +476,14 @@ function recalculatePayType(i,new_pay_type,old_pay_type,old_delmoney){
 				//更改本课时相应订单的支付方式
 				order_list[i].delmoney=choosed_hour_price;
 				order_list[i].total=0;
+				order_list[i].needcharge=false;
 				//更新合计支付信息
 				money_sum+=choosed_hour_price;
 				//更新本地可用余额信息
 				money_available_local-=choosed_hour_price;
 			}else{
 				order_list[i].delmoney=0;
+				order_list[i].needcharge=true;
 			}
 		}else if(new_pay_type==3 && coinnum_available_local>=choosed_hour_price){
 			//更改本课时相应订单的支付方式
@@ -446,6 +491,7 @@ function recalculatePayType(i,new_pay_type,old_pay_type,old_delmoney){
 			order_list[i].delmoney=choosed_hour_price;
 			order_list[i].total=0;
 			order_list[i].recordid=0;
+			order_list[i].needcharge=false;
 			//更新合计支付信息
 			coin_sum+=choosed_hour_price;
 			//更新本地可用余额信息
@@ -457,6 +503,7 @@ function recalculatePayType(i,new_pay_type,old_pay_type,old_delmoney){
 			order_list[i].delmoney=coinnum_available_local;
 			order_list[i].total=choosed_hour_price;
 			order_list[i].recordid=0;
+			order_list[i].needcharge=false;
 			//更新合计支付信息
 			coin_sum+=coinnum_available_local;
 			coin_used=coinnum_available_local;
@@ -466,7 +513,7 @@ function recalculatePayType(i,new_pay_type,old_pay_type,old_delmoney){
 			//更新本地可用余额信息
 			coinnum_available_local=0;
 		}else{
-			//return;
+			order_list[i].needcharge=true;
 		}
 
 		if(new_pay_type==4){
@@ -526,11 +573,14 @@ function recalculatePayType(i,new_pay_type,old_pay_type,old_delmoney){
 		$("#coupon_sum").html(sum_str);
 	//$("#coin_sum").html("小巴币："+coin_sum);
 	//$("#money_sum").html("账户余额："+money_sum);
+	
+		setConfirmPayView();
 	}
 }
 
 var successorderid=0;
 function confirmPay(){
+	show_loading();
 	var active_url= "../sbook?action=bookCoach";
 	var search_condition={"coachid":coachid,"studentid":studentid,"date":JSON.stringify(order_list),"version":"1.9.4","token" : token};
 	if(parseInt(coachid)>0 && studentid>0){
@@ -542,31 +592,37 @@ function confirmPay(){
 			//弹出提示、关联成功订单信息
 			//成功的div上跳转到课程选择页面
 			
-			if(server_code==1){
+			if(server_code==1)
+			{
 				$('#pay_feedback_message').html("您已预约成功");
-				$('#pay_orderid').css('display','block');
-				$('#pay_orderid').attr("onclick","location.href='uncompleorderdetail.jsp?orderid="+successorderid+"'");
+				var str = "<span onclick=\"location.href=\'uncompleorderdetail.jsp?orderid=" + successorderid +"\'\">" + "订单详情</span>";
+				$('#orderDetailBtn').append(str);
 			}else{
 				$('#pay_feedback_message').html(data.message);
-				$('#pay_orderid').css('display','none');
-				$('#pay_orderid').attr("onclick","");
+				var str = "<span onclick='payFeedbackClose("+server_code+")'>确定</span>";
+				$('#orderDetailBtn').empty().append(str);
+				//$('#pay_orderid').css('display','none');
+				//$('#pay_orderid').attr("onclick","");
 			}
+			hide_loading();	
 			showPaySuccess(server_code);
 		});
 	}
 }
 
+
 function showPaySuccess(server_code)
 {
+	
 	$('.overlay-cancle').css('display','block');
-	var widthC = $('.overlay-cancle-content').width();
-	var heightC = $('.overlay-cancle-content').height();
+	var widthC = $('.overlay-cancle .overlay-cancle-content').width();
+	var heightC = $('.overlay-cancle .overlay-cancle-content').height();
 	var widthW = $(window).width();
 	var heightW = $(window).height();
 	var w = (widthW-widthC)/2;
 	var h = (heightW-heightC)/2;
-	$('.overlay-cancle-content').css('left',w);
-	$('.overlay-cancle-content').css('top',h);
+	$('.overlay-cancle .overlay-cancle-content').css('left',w);
+	$('.overlay-cancle .overlay-cancle-content').css('top',h);
 
 	$('#pay_feedback_close').attr("onclick","payFeedbackClose("+server_code+")");
 }
@@ -574,6 +630,9 @@ function showPaySuccess(server_code)
 function payFeedbackClose(server_code){
 	if(server_code==1){
 		location.href="coursearrange.jsp?coachid="+coachid+"&studentid="+studentid;
+	}else if(server_code==101||server_code==102||server_code==103){
+		var order_origin = ${param.data_list_choose};
+		location.href="orderconfirm.jsp?data_list_choose="+JSON.stringify(order_origin)+"&coachid=${param.coachid}&realname=${param.realname}&phone=${param.phone}&studentid=${param.studentid}&counttime=${param.counttime}&countmoney=${param.countmoney}";
 	}else{
 		$("#pay_feedback_popup").css('display','none');
 	}
@@ -588,8 +647,17 @@ function gotoCharge(){
 	location.href="weixin?action=charge";
 }
 
-function setConfirmPayView(need_charge){
-	if(need_charge==true){
+function setConfirmPayView(){
+	var charge=false;
+	
+	for(i=0 ;i<order_list.length;i++){
+		if(order_list[i].needcharge==true){
+			charge=true
+			break;
+		}
+	}
+	
+	if(charge==true){
 		$("#pay_or_charge").html("充值");
 		$("#confirm_pay").attr("onclick","gotoCharge()"); 
 	}else if(need_charge==false){
@@ -598,16 +666,48 @@ function setConfirmPayView(need_charge){
 	}
 }
 
+function show_loading(){
+	$('.overlay-wait').css('display','block');
+	var heightC = $('.overlay-wait-content').height();
+	var height = $(window).height();
+	var h = (height-heightC)/2;
+	$('.overlay-wait-content').css('margin-top',h);
+}
+
+function hide_loading(){
+	$('.overlay-wait').css('display','none');
+}
+
 $(document).ready(function ()
 {
 	$('.confirm-order-pay').on('click',function ()
 	{
 		$('.overlay,.overlay-inner').css('display','block');
 	})
+	
 	$('#set_pay_type_btn').on('click',function ()
+	{
+		//点击确定按钮后，只有支付方式变更了才进行支付方式的变更和计算
+		if(is_paytype_changed==true){
+			$("#"+choosed_scheduleid+"_paytype").html(paytype_name);
+		 	recalculatePayType(paytype_changed_order_num,new_pay_type,old_pay_type,old_delmoney);
+		}
+		
+		$('.overlay,.overlay-inner').css('display','none');
+		
+	});
+	$('#cancle_pay_type_btn').on('click',function ()
 	{
 		$('.overlay,.overlay-inner').css('display','none');
 	});
+	
+	//$('#pay_feedback_close_btn').parent().attr("onclick","location.href='coursearrange.jsp?coachid="+coachid+"'");
+	
+	$('#pay_feedback_close_btn').click(function ()
+	{
+		$('.overlay-cancle').css('display','none');
+	});
+	
 	
 	var height = $(document).height();
 	var hh = $(window).height();
@@ -623,31 +723,10 @@ $(document).ready(function ()
 	
 	getOrderList();
 	getAllPayTypeBlance();
-	
-// 	$("#paySure").click(function ()
-// 			{
-// 				$('.overlay-cancle').css('display','block');
-// 				var widthC = $('.overlay-cancle-content').width();
-// 				var heightC = $('.overlay-cancle-content').height();
-// 				var widthW = $(window).width();
-// 				var heightW = $(window).height();
-// 				var w = (widthW-widthC)/2;
-// 				var h = (heightW-heightC)/2;
-// 				$('.overlay-cancle-content').css('left',w);
-// 				$('.overlay-cancle-content').css('top',h);
-// 			});
-			$('.icon-remove').click(function ()
-			{
-				$('.overlay-cancle').css('display','none');
-			});
-			
-// 			$('.overlay-cancle .overlay-cancle-content .col-md-12:last-child span').click(function ()
-// 			{
-// 				$('.overlay-cancle').css('display','none');
-// 			});
-	
-	
+
 });
+
+
 </script>
 </body>
 </html>
