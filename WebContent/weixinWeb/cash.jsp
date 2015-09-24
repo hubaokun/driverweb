@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
-<%@ include file="checksession.jsp" %>    
+<%-- <%@ include file="checksession.jsp" %>   --%>  
 <!doctype html>
 <html>
 <head>
@@ -15,7 +15,7 @@
 <script type="text/javascript">
 var customer=${sessionScope.c_info};
 var studentid =${sessionScope.studentid};
-var token='${sessionScope.token}';
+//var token='${sessionScope.token}';
 $(function(){
 		$("#cname").html(customer.nickname);
 		var params = {
@@ -37,7 +37,7 @@ function showBalance(obj){
 <body>
 <div class="container">
   <form>
-  	<div class="row tips-row">
+  	<div class="row tips-row1">
       <div class="col-md-12 col-sm-12 col-xs-12">
         <p>提现到<b id="cname" style="font-size:13px;">张三</b>微信钱包</p>
       </div>
@@ -47,9 +47,9 @@ function showBalance(obj){
         <input id="amount" type="number" placeholder="请输入金额" maxlength="3"/>
       </div>
     </div>
-    <div class="row tips-row">
+    <div class="row tips-row2">
       <div class="col-md-12 col-sm-12 col-xs-12">
-        <p>可提现金额<span style="font-size:14px; color:#eb5811" id="cash">￥${param.money}</span></p>
+        <p>可提现金额<span id="cash">￥${param.money}</span><span>（1次可提现金额最高为999元）</span></p>
       </div>
     </div>
     <div class="row sure-row">
@@ -156,13 +156,16 @@ function applycash()
 	}
 }
 
-$('#amount').keydown(function ()
-	{
-		if ($('#amount').val().length > 2)
-		{
-			$('#amount').blur();
-		}
-	});
+
+//控制输入框中输入的位数
+var amount = $('#amount');
+amount.keydown(function(){
+	var curLength=amount.val().length;	
+	if(curLength>=3){
+		var num=amount.val().substr(0,2);
+		amount.val(num);
+	}
+});
 </script>
 </body>
 </html>

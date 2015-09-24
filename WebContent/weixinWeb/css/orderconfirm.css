@@ -224,35 +224,29 @@ body {
 	font-size: 13px;
 	color: rgb(35,173,229);
 }
-.coupon-content .coupon-detail .coupon-detail-right-off {
+
+.coupon-content .coupon-detail-right-off {
 	padding-left: 0px;
 	padding-right: 10px;
 	background-image: url(../images/used-coupon.png);
 	background-repeat: no-repeat;
-	background-position: center center;
-	background-size: contain;
-	height: 78px;
-	width: 35px;
+	background-position: right center;
+    background-size: 45px;
 }
-.coupon-content .coupon-detail .un-coupon-detail-right {
+.coupon-content .un-coupon-detail-right {
 	padding-left: 0px;
 	padding-right: 10px;
 	background-image: url(../images/timed-coupon.png);
 	background-repeat: no-repeat;
-	background-position: center center;
-	background-size: contain;
-	height: 78px;
-	width: 35px;
+	background-position: right center;
+    background-size: 45px;
 }
-.coupon-content .coupon-detail .coupon-detail-right-on {
+
+.active {
+	background-image: url(../images/down-mark.png);
 	background-repeat: no-repeat;
 	background-position: bottom right;
 	background-size: 30px 30px;
-	height: 78px;
-	  padding: 0px;
-}
-.active {
-	background-image: url(../images/down-mark.png);
 }
 .active-check
 {

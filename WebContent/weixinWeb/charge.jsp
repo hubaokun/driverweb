@@ -77,6 +77,11 @@ wx.config({
         <input id="amount" type="number" placeholder="请输入金额"  maxlength="4"/>
       </div>
     </div>
+    <div class="row tips-row2">
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <p><span></span><span>（1次可充值最高金额为9999元）</span></p>
+      </div>
+    </div>
     <div class="row sure-row">
       <div class="col-md-12 col-sm-12 col-xs-12"> <span class="cash-sure">微信支付</span> </div>
     </div>
@@ -231,13 +236,15 @@ function hide_loading(){
 	$('.overlay-wait').css('display','none');
 }
 
-$('#amount').keydown(function ()
-	{
-		if ($('#amount').val().length > 3)
-		{
-			$('#amount').blur();
-		}
-	});
+//控制输入框中输入的位数
+var amount = $('#amount');
+amount.keydown(function(){
+	var curLength=amount.val().length;	
+	if(curLength>=4){
+		var num=amount.val().substr(0,3);
+		amount.val(num);
+	}
+});
 </script>
 </body>
 </html>

@@ -58,9 +58,6 @@ function showStudent(obj){
 		$("#phone").html(obj.data.phone);
 		//$("#avatarurl").attr("src",'${sessionScope.avatarurl}');//设置头像图片
 		//$("#avatarurl").attr("src","https://www.baidu.com/img/bdlogo.png");//设置头像图片
-// 		$("#coin").html(obj.data.coinnum+"个");
-// 		$("#money").html(obj.data.money+"元");
-// 		$("#coupon").html(obj.coupon+"小时");
 		$("#coin").html(obj.data.coinnum);
 		$("#money").html(obj.data.money);
 		$("#coupon").html(obj.coupon);
@@ -98,70 +95,38 @@ function showStudent(obj){
             </div>
             </a>
         </div>
-        <div class="row">
-			 <div class="col-md-12 col-sm-12 col-xs-12 my-nav-item">
-                <a href="accountdetail.jsp">
-                    <i class="my-nav-icon icon-money-rest"></i>				
-                    <span>账户余额</span>
-                    <!-- <i class="glyphicon icon-right"><span id="money"></span></i> -->
-<<<<<<< HEAD
-                    <span class="pull-right"><span id="money"></span><i class="glyphicon icon-right"></i></span>	
-=======
-                    <span class="pull-right"><span id="money" style="margin-left: -20px;"></span><span class="unit-tips">元</span><i class="glyphicon icon-right"></i></span>	
-<<<<<<< HEAD
->>>>>>> b3eed5202bf05f05533a59360b49785f1b4744d8
-=======
->>>>>>> 664cd1b947f686cd9e0a6913b1d591dd7b116a19
->>>>>>> 2f2066cfe93a4cf833e95cb3caec1eddc8385b95
-                </a>
-    		</div>
-            <div class="col-md-12 col-sm-12 col-xs-12 my-nav-item">
-                <a href="coupon.jsp">
-                    <i class="my-nav-icon icon-coupon"></i>				
-                    <span>小巴券</span>		
-                    <!-- <i class="glyphicon icon-right"><span id="coupon"></span></i> -->
-<<<<<<< HEAD
-                    <span class="pull-right"><span id="coupon"></span><i class="glyphicon icon-right"></i></span>
-=======
-                    <span class="pull-right"><span id="coupon" style="margin-left: -20px;"></span><span class="unit-tips">小时</span><i class="glyphicon icon-right"></i></span>
-<<<<<<< HEAD
->>>>>>> b3eed5202bf05f05533a59360b49785f1b4744d8
-=======
->>>>>>> 664cd1b947f686cd9e0a6913b1d591dd7b116a19
->>>>>>> 2f2066cfe93a4cf833e95cb3caec1eddc8385b95
-                </a>
-    		</div> 
-            <div class="col-md-12 col-sm-12 col-xs-12 my-nav-item">
-                <a href="coin.jsp">
-                    <i class="my-nav-icon icon-coin"></i>				
-                    <span>小巴币</span>		
-                    <!-- <i class="glyphicon icon-right"><span id="coin"></span></i> -->
-<<<<<<< HEAD
-                    <span class="pull-right"><span id="coin">个</span><i class="glyphicon icon-right"></i></span>
-=======
-                    <span class="pull-right"><span id="coin" style="margin-left: -20px;"></span><span class="unit-tips">个</span><i class="glyphicon icon-right"></i></span>
-<<<<<<< HEAD
->>>>>>> b3eed5202bf05f05533a59360b49785f1b4744d8
-=======
->>>>>>> 664cd1b947f686cd9e0a6913b1d591dd7b116a19
->>>>>>> 2f2066cfe93a4cf833e95cb3caec1eddc8385b95
-                </a>
-    		</div>   
+        <div class="row my-nav-wrap"> 
+      	<div class="col-md-12">
+        	<a href="accountdetail.jsp">
+              <div class="row my-nav-item">
+                  <div class="col-md-2 col-sm-2 col-xs-2 rest-money"></div>
+                  <div class="col-md-3 col-sm-3 col-xs-3">账户余额</div>
+                  <div id="money" class="col-md-6 col-sm-6 col-xs-6"></div>
+                  <div class="col-md-1 col-sm-1 col-xs-1">元</div>
+              </div>
+            </a>
         </div>
-<!--        <div class="row drive-row">
-        	<div class="col-md-12 col-sm-12 col-xs-12 my-nav-item">
-              <a href="">
-                  <i class="my-nav-icon icon-infor"></i>				
-                      <span>学驾信息</span>		
-                  <i class="icon icon-chevron-right"></i>
-              </a>
-    		</div>
-        </div>-->
-       <!--  <div class="row logout-row">
-        	<div class="col-md-12 col-sm-12 col-xs-12 my-nav-item">
-              <span class="logout">退出登录</span>
-    		</div>
-        </div> -->
+        <div class="col-md-12">
+        	<a href="coupon.jsp">
+              <div class="row my-nav-item">
+                  <div class="col-md-2 col-sm-2 col-xs-2 coupon"></div>
+                  <div class="col-md-3 col-sm-3 col-xs-3">小巴券</div>
+                  <div id="coupon" class="col-md-6 col-sm-6 col-xs-6"></div>
+                  <div class="col-md-1 col-sm-1 col-xs-1">张</div>
+              </div>
+            </a>
+        </div>
+        <div class="col-md-12">
+        	<a  href="coin.jsp">
+              <div class="row my-nav-item">
+                  <div class="col-md-2 col-sm-2 col-xs-2 coin"></div>
+                  <div class="col-md-3 col-sm-3 col-xs-3">小巴币</div>
+                  <div id="coin" class="col-md-6 col-sm-6 col-xs-6"></div>
+                  <div class="col-md-1 col-sm-1 col-xs-1">枚</div>
+              </div>
+            </a>
+        </div>
+      </div>
     </div>
   </div>
 </div>

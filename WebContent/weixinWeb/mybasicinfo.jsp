@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
-<%@ include file="checksession.jsp" %>
+<%-- <%@ include file="checksession.jsp" %> --%>
 <!doctype html>
 <html>
 <head>
@@ -85,10 +85,10 @@ pageEncoding="UTF-8"%>
             		</div>
             		<div class="col-md-8 col-sm-8 col-xs-8">
             			<input type="text" placeholder="省-市-区/县" id="location" disabled cate="1" value="浙江省杭州市余杭区"/>
-		        		<select id="province"  placeholder="省/自治区/直辖市" onblur="changeProvince();" cate="2" />
+		        		<select id="province"  placeholder="省/自治区/直辖市" onchange="changeProvince();" cate="2" />
           					<option>--选择省份--</option>
           				</select>
-          				<select id="city"  placeholder="市" onblur="changeCity();"  cate="2">
+          				<select id="city"  placeholder="市" onchange="changeCity();"  cate="2">
           					<option>--选择市--</option>
          				</select>
          				<select id="area"  placeholder="区" cate="2">
@@ -242,7 +242,7 @@ $(document).ready(function ()
             $('#birthday').mobiscroll(opt);
         });
     </script>
-    <script> 
+<script> 
 
 var Aprovince;
 
@@ -253,17 +253,13 @@ function initProvinceData()
 	
 	$.getJSON(dataroot_pro, function(data)
 	{ 
-		//alert (data.RECORDS[0].code);
-		//alert (data.RECORDS.length);
-		
+
 		for(var i=0;i<data.RECORDS.length;i++)
 		{
-			Aprovince += '<option id=" ' + data.RECORDS[i].provinceid + '" value="' + data.RECORDS[i].province + '">' + data.RECORDS[i].province + '</option>'; 	
+			Aprovince += '<option id="' + data.RECORDS[i].provinceid + '" value="' + data.RECORDS[i].province + '">' + data.RECORDS[i].province + '</option>'; 	
 		}
-		//alert (typeof Afather);
 		
 		$("#province").append(Aprovince);
-		//alert (data);
 	}); 
 
 }
@@ -278,23 +274,24 @@ function changeProvince()
 	
     $.getJSON(dataroot_pro, function(data)
     { 
-		//alert (data.RECORDS.length);
+
 		var len = data.RECORDS.length;
 		var pro_id;
 		var prv_val = $("#province").val();
 		for (var i=0;i<len;i++)
 		{
-			//alert (data.RECORDS[i]);
 			if (data.RECORDS[i].province == prv_val)
 			{
-				//alert (data.RECORDS[i].province);
 				pro_id = data.RECORDS[i].provinceid;
 				setCity(pro_id);
 				break;
 			}
 		}
-		//alert (pro_id);
-		getJson(pro_id);
+
+		var strC = "<option>--选择市--</option>";
+		var strA = "<option>--选择区--</option>";
+		$("#city").empty().append(strC);
+		$("#area").empty().append(strA);
     }); 
 }
 
@@ -308,42 +305,24 @@ function changeCity()
 	
     $.getJSON(dataroot_pro, function(data)
     { 
-		//alert (data.RECORDS.length);
+
 		var len = data.RECORDS.length;
 		var city_id;
 		var city_val = $("#city").val();
 		for (var i=0;i<len;i++)
 		{
-			//alert (data.RECORDS[i]);
+
 			if (data.RECORDS[i].city == city_val)
 			{
-				//alert (data.RECORDS[i].city);
 				city_id = data.RECORDS[i].cityid;
 				break;
 			}
 		}
-		//alert ( "改变之后的城市id:" + city_id);
 		setArea(city_id);
+		var str = "<option>--选择区--</option>";
+		$("#area").empty().append(str);
     }); 
 } 
-
-/* function getJson(id)
-{ 
-	var dataroot_pro="json/t_cities.json"; 
-    var provinceID; 
-    $.getJSON(dataroot_pro,function (data) 
-    { 
-      for (var i = 0; i < data.RECORDS.length; i++) 
-      { 
-        if (data.RECORDS[i].provinceid == id) 
-        { 
-        	provinceID = data.RECORDS[i].provinceid;
-        	break;
-        } 
-      } 
-      setCity(provinceID); 
-    }); 
-}  */
 
 function setCity(val)
 { 
@@ -359,39 +338,17 @@ function setCity(val)
       { 
         if (data.RECORDS[n].provinceid == val) 
         { 
-          //alert(data.RECORDS[n].provinceid); 
-          Acity += '<option id=" ' + data.RECORDS[n].cityid + '" value="' + data.RECORDS[n].city + '">' + data.RECORDS[n].city + '</option>'; 
+
+          Acity += '<option id="' + data.RECORDS[n].cityid + '" value="' + data.RECORDS[n].city + '">' + data.RECORDS[n].city + '</option>'; 
         } 
       } 
       $listcity.append(Acity); 
     }); 
- } 
-
-/* function getJsonArea(id)
-{ 
-    var areaID; 
-    alert ("从上个函数中拿到的城市id为：" + id);
-    $.getJSON('t_areas.json',function (data) 
-    { 
-      for (var i = 0; i < data.RECORDS.length; i++) 
-      { 
-        if (data.RECORDS[i].cityid == id) 
-        { 
-          areaID=data.RECORDS[i].id; 
-          break;
-        } 
-      } 
-      alert ("getJsonArea中的城市id为：" + areaID);
-      setArea(areaID); 
-    }); 
-  }  */
-  
+ }  
   function setArea(Aval)
   { 
     var Aarea; 
     var $listarea = $("#area"); 
-    
-    //alert ("拿到的城市的id为：" + Aval);
     
     $.get('json/t_areas.json',function (data) 
     { 
@@ -399,7 +356,7 @@ function setCity(val)
       { 
         if (data.RECORDS[m].cityid == Aval) 
         { 
-          Aarea += '<option id=" ' + data.RECORDS[m].areaid + '" value="' + data.RECORDS[m].area + '">' + data.RECORDS[m].area + '</option>'; 
+          Aarea += '<option id="' + data.RECORDS[m].areaid + '" value="' + data.RECORDS[m].area + '">' + data.RECORDS[m].area + '</option>'; 
         } 
       } 
       $listarea.append(Aarea); 
@@ -417,7 +374,7 @@ $(document).ready(function ()
 <script type="text/javascript">
 $(document).ready(function(){
 	var sid='${sessionScope.studentid}';
-	//sid="18";
+	sid="18";
 	var token='${sessionScope.token}';
 	var params = {action:"GETSTUDENTINFO",studentid:sid,token:token};
 	jQuery.post("../suser", params, showStudent, 'json');
@@ -429,14 +386,14 @@ $(document).ready(function(){
 });
 function showStudent(obj){
 	if(obj.code==1){
-		var c_info='${sessionScope.c_info}';
-		var wxinfo=$.parseJSON(c_info);
+		//var c_info='${sessionScope.c_info}';
+		//var wxinfo=$.parseJSON(c_info);
 		/* if(obj.data.avatarurl==''){
 			$("#avatarurl").attr("src",wxinfo.headimgurl);
 		}else{
 			$("#avatarurl").attr("src",obj.data.avatarurl);//设置头像图片
 		} */
-		$("#avatarurl").attr("src",wxinfo.headimgurl);
+		//$("#avatarurl").attr("src",wxinfo.headimgurl);
 		
 		$("#nameSave").val(obj.data.realname);
 		$("#name").val(obj.data.realname);
@@ -446,10 +403,58 @@ function showStudent(obj){
 		$("#birthdaySave").val(obj.data.birthday);
 		if(obj.data.gender==1){
 			$("#genderSave").val("男");
+			$("#genderEdit").val("男");
+			
 		}else if(obj.data.gender==2){
 			$("#genderSave").val("女");
+			$("#genderEdit").val("女");
 		}
 		$("#location").val(obj.data.city);
+		
+		var provinceid = obj.data.provinceid;
+		var cityid = obj.data.cityid;
+		var areaid =  obj.data.areaid;
+		var Acity;
+		var Aarea;
+		
+		//id前面要多加一个空格，因为数据加载出来的时候，id前面多了一个空格？？——未查明原因
+		var OBJ = $('#province').find("option[id='" +provinceid + "']");
+		OBJ.attr('selected',true);
+		
+		var dataroot_city = "json/t_cities.json"; 
+		$.getJSON(dataroot_city,function (data) 
+		{ 
+			for (var n = 0; n < data.RECORDS.length; n++) 
+			{ 
+				if (data.RECORDS[n].provinceid == provinceid) 
+			     { 
+
+			     	Acity += '<option id="' + data.RECORDS[n].cityid + '" value="' + data.RECORDS[n].city + '">' + data.RECORDS[n].city + '</option>'; 
+			     } 
+			 } 
+			 $('#city').append(Acity); 
+			 var OBJ = $('#city').find("option[id='" + cityid + "']");
+			 OBJ.attr('selected',true);
+		}); 
+		
+		var dataroot_area = "json/t_areas.json"; 
+		$.getJSON(dataroot_area,function (data) 
+		{ 
+			for (var n = 0; n < data.RECORDS.length; n++) 
+			{ 
+				if (data.RECORDS[n].cityid == cityid) 
+			     { 
+
+			     	Aarea += '<option id="' + data.RECORDS[n].areaid + '" value="' + data.RECORDS[n].area + '">' + data.RECORDS[n].area + '</option>'; 
+			     } 
+			 } 
+			 $('#area').append(Aarea); 
+			 var OBJ = $('#area').find("option[id='" + areaid + "']");
+			 OBJ.attr('selected',true);
+		}); 
+		
+		
+		
 	}else{
 		alert(obj.message);
 		window.location.href=redirect_login;
@@ -458,7 +463,7 @@ function showStudent(obj){
 
 function perfectPersoninfo(){
 	var sid='${sessionScope.studentid}';
-	//sid="18";
+	sid="18";
 	var gender = $("#genderEdit").find("option:selected").val();
 	//alert (gender);
 	
@@ -475,7 +480,7 @@ function perfectPersoninfo(){
 	var objAreaId = $('#area option').attr("id");
 	//alert (objAreaId);
 	$("#selectedarea").val(objAreaId);
-
+	
 	var g="1";
 	if(gender=='男'){
 		g="1";
@@ -490,7 +495,10 @@ function perfectPersoninfo(){
 	}
 	//alert(" selectedcity="+$("#selectedcity").val()+" gender="+g);
 	var token='${sessionScope.token}';
-	var cityid=$.trim($("#selectedcity").val());
+	//var cityid=$.trim($("#selectedcity").val());
+	var cityid = $('#city').find("option:selected").attr("id");
+	var areaid = $('#area').find("option:selected").attr("id");
+	alert(areaid);
 	var params = {
 				  action:"PERFECTPERSONINFO",
 				  studentid:sid,
@@ -499,8 +507,8 @@ function perfectPersoninfo(){
 				  birthday:$("#birthday").val(),
 				  token:token,
 				  cityid:cityid,
-				  provinceid:$("#provinceid").val(),
-				  areaid:$("#areaid").val()
+				  provinceid:$("#selectedprovince").val(),
+				  areaid:areaid
 				  };
 	jQuery.post("../suser", params, showPerfect, 'json'); 
 
