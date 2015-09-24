@@ -1733,10 +1733,13 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 			String countinhql = "select sum(coinnum) from CoinRecordInfo where (receiverid ="+coachid+" and receivertype="+ UserType.COAH+" and ownertype="+UserType.COAH+" and ownerid="+coachid+")";
 			Object in= dataDao.getFirstObjectViaParam(countinhql, null);
 			int totalin= in==null?0:CommonUtils.parseInt(in.toString(), 0);
-		String countouthql = "select sum(coinnum) from CoinRecordInfo where (payerid ="+coachid+" and payertype="+ UserType.COAH+" and ownertype="+UserType.COAH+"  and ownerid="+coachid+")";
-		Object out= dataDao.getFirstObjectViaParam(countouthql, null);
-		int totalout = (out==null) ? 0: CommonUtils.parseInt(out.toString(),0);
-		return (int) (totalin-totalout);
+			if(totalin==0){
+				return 0;
+			}
+			String countouthql = "select sum(coinnum) from CoinRecordInfo where (payerid ="+coachid+" and payertype="+ UserType.COAH+" and ownertype="+UserType.COAH+"  and ownerid="+coachid+")";
+			Object out= dataDao.getFirstObjectViaParam(countouthql, null);
+			int totalout = (out==null) ? 0: CommonUtils.parseInt(out.toString(),0);
+			return (int) (totalin-totalout);
 	}
 	/**
 	 * 驾校发放的小巴币
@@ -1747,7 +1750,9 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 		String countinhql2 = "select sum(coinnum) from CoinRecordInfo where (receiverid ="+coachid+" and receivertype="+ UserType.COAH+" and ownertype="+UserType.DRIVESCHOOL+")";
 		Object in2= dataDao.getFirstObjectViaParam(countinhql2, null);
 		int totalin2= in2==null?0:CommonUtils.parseInt(in2.toString(), 0);
-
+		if(totalin2==0){
+			return 0;
+		}
 		String countouthql3 = "select sum(coinnum) from CoinRecordInfo where (payerid ="+coachid+" and payertype="+ UserType.COAH+" and ownertype="+UserType.DRIVESCHOOL+")";
 		Object out2= dataDao.getFirstObjectViaParam(countouthql3, null);
 		int totalout2 = (out2==null) ? 0: CommonUtils.parseInt(out2.toString(),0);
@@ -1764,7 +1769,9 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 			String countinhql = "select sum(coinnum) from CoinRecordInfo where (receiverid ="+coachid+" and receivertype="+ UserType.COAH+" and ownertype="+UserType.PLATFORM+")";
 			Object in= dataDao.getFirstObjectViaParam(countinhql, null);
 			int totalin= in==null?0:CommonUtils.parseInt(in.toString(), 0);
-
+			if(totalin==0){
+				return 0;
+			}
 			String countouthql = "select sum(coinnum) from CoinRecordInfo where (payerid = "+coachid+" and payertype="+ UserType.COAH+" and ownertype="+UserType.PLATFORM+")";
 			Object out= dataDao.getFirstObjectViaParam(countouthql, null);
 			int totalout = (out==null) ? 0: CommonUtils.parseInt(out.toString(),0);

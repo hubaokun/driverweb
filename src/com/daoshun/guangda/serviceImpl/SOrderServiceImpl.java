@@ -523,7 +523,10 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 			} else {
 				order.setCan_comment(0);
 			}
-			
+			//如果是被学员取消的订单，不能评论
+			if(order.getStudentstate()==4){
+				order.setCan_comment(0);
+			}
 		}
 
 		return orderlist;

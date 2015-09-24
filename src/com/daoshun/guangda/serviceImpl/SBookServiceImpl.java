@@ -1123,10 +1123,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		StringBuffer cuserhql = new StringBuffer();
 		cuserhql.append("select u.*  from app_coach_list u where isnew=1 ");
 		//cuserhql.append("select u.*  from app_coach_list u where state = 2 and id_cardexptime > curdate() and coach_cardexptime > curdate() and drive_cardexptime > curdate() and car_cardexptime > curdate() and (select count(*) from t_teach_address a where u.coachid = a.coachid and iscurrent = 1) > 0");
-		if(!CommonUtils.isEmptyString(driverschoolid)){
-			cuserhql.append("  and (drive_schoolid  = "+driverschoolid+" or drive_schoolid in (select schoolid");
-			cuserhql.append("  from t_drive_school_info where schoolid = "+driverschoolid+"))");
-		}
+		
 		if (!CommonUtils.isEmptyString(fixedposition)) {
 			String findCityIdHql="from CityInfo where city like '%"+fixedposition+"%'";
 			List<CityInfo> citylist=(List<CityInfo>) dataDao.getObjectsViaParam(findCityIdHql.toString(),null);
@@ -1140,7 +1137,13 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		if (!CommonUtils.isEmptyString(cityid)) {
 			cuserhql.append(" and cityid = " + cityid);
 		}
-		// 真实姓名和教练所属驾校
+		boolean isfindByDriverSchool=false;//是否有按驾校查询
+		if(!CommonUtils.isEmptyString(driverschoolid)){
+			isfindByDriverSchool=true;
+			cuserhql.append("  and (drive_schoolid  = "+driverschoolid+" or drive_schoolid in (select schoolid");
+			cuserhql.append("  from t_drive_school_info where schoolid = "+driverschoolid+"))");
+		}
+		// 真实姓名和手机号码
 		if (!CommonUtils.isEmptyString(condition1)) {
 			//如果是手机号码
 			if(CommonUtils.isNumber(condition1) && condition1.trim().length()==11){
@@ -1152,7 +1155,9 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						+ " or phone like '%"+condition1+"%') ");
 			}
 		}else{
-			cuserhql.append(" and  coursestate = 1 ");
+			if(!isfindByDriverSchool){
+				cuserhql.append(" and  coursestate = 1 ");
+			}
 		}
 		// 星级
 		if (!CommonUtils.isEmptyString(condition2)) {
