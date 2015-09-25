@@ -79,7 +79,17 @@ public class LocationAction extends BaseAction {
 		List<CityInfo> list=locationService.getCityByHotKey(hotkey);
 		strToJson(list);
 	}
-	
+	//按城市id查省
+		@Action(value="getProvinceByCityId")
+		public void getProvinceByCityId()
+		{
+			String cid=request.getParameter("cid");
+			if(cid!=null && !"".equals(cid))
+			{
+				ProvinceInfo info=locationService.getProvinceByCityId(cid);
+				strToJson(info);
+			}
+		}
 	public List<ProvinceInfo> getProvincelist() {
 		return provincelist;
 	}

@@ -1,6 +1,7 @@
-package com.daoshun.guangda.action;
+﻿package com.daoshun.guangda.action;
 
 import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.struts2.convention.annotation.Action;
@@ -681,6 +683,7 @@ public class SystemConfigAction extends BaseAction {
 		mplist=sbookService.getOpenModelPrice();
 		return SUCCESS;
 	}
+	
 	/**
 	 * 添加开通城市
 	 * @return
@@ -704,7 +707,55 @@ public class SystemConfigAction extends BaseAction {
 		sbookService.addOpenModelPrice(mp);
 		return SUCCESS;
 	}
+	
 
+	//删除开通城市
+	@Action(value = "/deleteOpenModelPrice")
+	public void deleteOpenModelPrice(){
+		String citys=request.getParameter("cities");
+		String flag="-1";
+		if(citys!=null)
+		{
+			sbookService.deleteOpenModelPrice(citys);
+			flag="1";
+		}
+		strToJson(flag);
+	}
+	
+	//通过城市id获取具体
+	@Action(value = "/getOpenModelPriceByCityId")
+	public void getOpenModelPriceByCityId(){
+		String citys=request.getParameter("cid");
+		if(citys!=null)
+		{
+			ModelPrice mp=sbookService.getModelPriceByCityId(Integer.valueOf(citys)).get(0);
+			strToJson(mp);
+		}
+	}
+	
+	//编辑开通城市
+	@Action(value = "/editOpenModelPrice", results = { @Result(name = SUCCESS,type="redirect", location = "/getOpenModelPrice.do") })
+	public String editOpenModelPrice(){
+		String citys=request.getParameter("cid");
+		if(citys!=null)
+		{
+			ModelPrice mp=sbookService.getModelPriceById(Integer.valueOf(citys));
+			mp.setC1marketprice(c1marketprice);
+			mp.setC1xiaobaprice(c1xiaobaprice);
+			mp.setC2marketprice(c2marketprice);
+			mp.setC2xiaobaprice(c2xiaobaprice);
+			mp.setCityid(city);
+			CityInfo cityinfo=locationService.getCityById(String.valueOf(city));
+			if(cityinfo!=null){
+				mp.setCityname(cityinfo.getCity());
+			}
+			sbookService.updateOpenModelPrice(mp);
+		}
+		return SUCCESS;
+	}
+	
+
+	
 	private int c1marketprice;
 	private int c2marketprice;
 	private int c1xiaobaprice;

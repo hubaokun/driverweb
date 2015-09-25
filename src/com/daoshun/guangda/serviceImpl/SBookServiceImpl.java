@@ -3606,4 +3606,20 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 	public void addOpenModelPrice(ModelPrice mp) {
 		dataDao.addObject(mp);
 	}
+	@Override
+	public void deleteOpenModelPrice(String citysId)
+	{
+		dataDao.deleteBySql("delete from t_model_price where cityid in ("+citysId+")");
+	}
+	
+	@Override
+	@Transactional(readOnly = false)
+	public void updateOpenModelPrice(ModelPrice mp)
+	{
+		dataDao.updateObject(mp);
+	}
+	@Override
+	public ModelPrice getModelPriceById(int cityid) {
+		return dataDao.getObjectById(ModelPrice.class, cityid);
+	}
 }

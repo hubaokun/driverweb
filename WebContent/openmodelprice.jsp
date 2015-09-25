@@ -66,11 +66,178 @@ function showProvince(obj)
          	document.getElementById("province").add(o);
          }
 }
+
+
+
 function unshowaddcity() {
 	$("#mask").hide();
 	$("#mask_sec").hide();
 	$("#mask_last").hide();
 }
+//-------------修改
+//显示修改
+function showeditcity() {
+	$("#editForm").show();
+}
+function unshoweditcity() {
+	$("#editForm").hide();
+}
+//点击事件
+function editCitys()
+{
+	var cityid=$('input:radio[name=cityEdit]:checked').val();
+	if(cityid!=null && cityid!="")
+	{
+		showeditcity();
+		getCityInfoByCityId(cityid);
+		
+		
+	}	
+}
+
+
+//设置城市和省的信息
+function getCityInfoByCityId(cityid)
+{
+	var obj;
+	 function parseData(data)
+	 {
+        	 obj=eval(data);
+        	 $("#C1M").attr("value",obj.c1marketprice);
+        	 $("#C1X").attr("value",obj.c1xiaobaprice);
+        	 $("#C2M").attr("value",obj.c2marketprice);
+        	 $("#C2X").attr("value",obj.c2xiaobaprice);
+        	 $("#cid").attr("value",obj.id);
+	 }
+	 //获取价格信息
+	 $.ajax({
+             type: "GET",
+             url: "getOpenModelPriceByCityId.do",
+             data: {cid:cityid},
+             dataType: "json",
+             async : false,
+             success:parseData
+             });
+	 //获取所有省市信息
+	 $.ajax({  
+	         type : "post",  
+	          url : "getProvinceToJson.do",  
+	          data :{}, 
+	          dataType: "json",
+	          async : false,  
+	          success :showProvince2
+	     }); 
+	//显示默认省信息
+		provinceId=setProvinceByCityId(cityid);
+	//显示获取全部市信息，并设置默认市
+		setCityByProvinceId(provinceId);
+		$("#city2").val(cityid);
+}
+//
+function showProvince2(obj)
+{
+		 obj=eval(obj);
+         document.getElementById("province2").length=0;
+         for(var i=0;i<obj.length;i++)
+         {
+         	var o=new Option(obj[i].province,obj[i].provinceid);
+         	document.getElementById("province2").add(o);
+         }
+}
+//通过城市id查找省的信息
+function setProvinceByCityId(cityId)
+{
+	var provinceId;
+	function setSelectInput(data)
+	{
+		  data=eval(data);
+		  $("#province2").val(data.provinceid);
+		  provinceId=data.provinceid;
+
+	}
+	$.ajax({  
+        type : "get",  
+         url : "getProvinceByCityId.do",  
+         data :{cid:cityId},
+         dataType: "json",
+         async : false,  
+         success :setSelectInput
+    }); 
+	return  provinceId;
+}
+//通过省id查找城市列表
+function setCityByProvinceId(provinceId)
+{
+	function setCity(data)
+	{
+		obj=eval(data);
+		document.getElementById("city2").length=0;
+        for(var i=0;i<obj.length;i++)
+        {
+        	var o=new Option(obj[i].city,obj[i].cityid);
+        	document.getElementById("city2").add(o);
+        }
+	}
+	$.ajax({  
+         type : "post",  
+          url : "getCityByProvinceId.do",  
+          data :{provinceid:provinceId},  
+          dataType: "json",
+          async : false,  
+          success :setCity
+     }); 
+}
+
+
+
+
+
+
+
+function citySelect()
+{
+	var cityIds="";
+	$('input:checkbox[name=citySelected]:checked').each(function(i){
+	       if(0==i){
+	    	   cityIds = $(this).val();
+	       }else{
+	    	   cityIds += (","+$(this).val());
+	       }
+	      });
+	return cityIds;
+}
+
+function deleteCitys()
+{
+	var citys=citySelect();
+	if(citys!=0 && citys!="")
+	{
+		if(confirm("确定要删除吗?"))
+		{
+			$.get("deleteOpenModelPrice.do",{cities:citys},
+					  function(data){
+						data=eval(data);
+					    if(data=="-1"){
+					    	alert("操作失败");
+					    }else if(data==1){
+					    	removeListView(citys);
+					    	alert("操作成功");
+					    }
+					  });
+		}
+	}
+}
+
+
+function removeListView(str)
+{
+	var arr=str.split(",");
+	for(var i in arr)
+	{
+		$("#"+arr[i]).remove();
+	}
+}
+
 
 </script>
 <style type="text/css">
@@ -125,12 +292,16 @@ function unshowaddcity() {
 		<div id="content_form">
 			<div id="content_form_top">
 			<div class="addbutton" onclick="showaddcity()">+&nbsp;添加</div>
+			<div class="addbutton" style="background:#f83a22;" onclick="deleteCitys()">-&nbsp;删除</div>
+			<div class="addbutton" style="background:#4cc2ff;" onclick="editCitys()">&nbsp;&nbsp;修改</div>
 			</div>
 			
 			<div id="content_form_table">
 				<table border="0" cellspacing="0" cellpadding="0"
 					style="width: 98%;">
 					<tr class="tr_th">
+					    <th>删</th>
+					    <th>改</th>
 						<th>城市名称</th>
 						<th>城市ID</th>
 						<th>C1小巴价</th>
@@ -139,16 +310,17 @@ function unshowaddcity() {
 						<th>C2市场价</th>
 					</tr>
 					<s:iterator value="mplist" var="suser">
-						<tr class="tr_td">
-							<td style="width: 80px;" class="border_right_bottom">${cityname}</td>
-							<td style="width: 150px;" class="border_right_bottom">${cityid}</td>
-							<td style="width: 150px;" class="border_right_bottom">${c1xiaobaprice}</td>
+						<tr class="tr_td" id="${cityid}">
+						    <td style="width:20px;" class="border_right_bottom"><input type="checkbox" value='${cityid}' name='citySelected'/></td>
+							<td style="width:20px;" class="border_right_bottom"><input type="radio" value='${cityid}' name='cityEdit'/></td>
+							<td style="width: 70px;" class="border_right_bottom">${cityname}</td>
+							<td style="width:70px;" class="border_right_bottom">${cityid}</td>
+							<td style="width:70px;" class="border_right_bottom">${c1xiaobaprice}</td>
 							
-							<td style="width: 80px;" class="border_right_bottom">${c1marketprice}</td>
+							<td style="width: 70px;" class="border_right_bottom">${c1marketprice}</td>
 							
-							<td style="width: 80px;" class="border_right_bottom">${c2xiaobaprice}</td>
-							<td style="width: 100px;" class="border_right_bottom">${c2marketprice}</td>
-							
+							<td style="width: 70px;" class="border_right_bottom">${c2xiaobaprice}</td>
+							<td style="width: 70px;" class="border_right_bottom">${c2marketprice}</td>
 							
 							<%-- <td style="width: 100px;" class="border_noright_bottom">
 							
@@ -315,11 +487,11 @@ function unshowaddcity() {
 <!-- 添加驾校弹框 -->
 	<div id="mask" class="mask"></div>
 	<div id="mask_sec" style="position: fixed; width: 100%; height: 300px;z-index: 300;">
-		<div id="mask_last" class="mask_last">
-		<div style="position: fixed; width: 450px; height: 600px;background: #4cc2ff;margin-left: 100px;margin-top: 10px;">
+		<div id="mask_last" class="mask_last" style="top:10;background:none;">
+		<div style="position: fixed; width: 450px; height: 600px;background: #4cc2ff;margin-left: 100px;margin-top: 10px;border: 5px solid white;">
 		<table>
 		<tr>
-		  <td align="center">
+		  <td align="center" style="width:100%">
 		  <h2>没有的价格项可以不输入</h2>
 		 </td>
 		 </tr>
@@ -353,11 +525,33 @@ function unshowaddcity() {
 						 </table>
 		<input type="submit" style="width: 100px;height: 40px;margin: auto;margin-left: 125px;margin-top: 15px;font-size: 18px" value="确定">
 		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-top: -40px;font-size: 15px" value="取消" onclick="unshowaddcity()">
-	</form>	
+	
+</form>	
 		</div>
 		</div>
 	</div>
-	
-	
+
+<form id="editForm" action="editOpenModelPrice.do" method="post" style="width:100%; height:100%; background-color:rgba(122,122,122,0.5);display:block;z-index:500; position:fixed;top:0px;left:0px;display:block;display:none;">
+    <div style="width:450px;height:600px;margin:auto;margin-top:30px;background:rgb(76,194,255);opacity:1;border:5px white solid;">
+    <span style="width:100%;height:60px; font-size:20px;line-height:60px;text-align:center;clear:both;display:block;">修改</span>
+    <input  id="cid"name="cid" type="hidden"/>
+    <input  id="C1M" name="c1marketprice" type="text" style="width: 240px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;"  placeholder="请输入C1市场价"/>C1市场价
+    <input  id="C1X" name="c1xiaobaprice" type="text" style="width: 240px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;"  placeholder="请输入C1小巴价" maxlength="11"/>C1小巴价
+    <input  id="C2M" name="c2marketprice" type="text" style="width: 240px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;"  placeholder="请输入C2市场价"/>C2市场价
+    <input  id="C2X" name="c2xiaobaprice"  type="text" style="width: 240px;height: 40px;margin: auto;margin-left: 80px;margin-top: 20px;font-size: 18px;text-align: center;"  placeholder="请输入C2小巴价"/>C2小巴价
+    <br/>
+    
+    <span style="width:80px; text-align:right;display:block;height:40px;float:left;margin-top: 20px;line-height:40px;font-size: 18px;">省：</span> <select  id="province2"  onchange="setCityByProvinceId(this.value)" style="width: 240px;height: 40px;margin: auto;margin-left:0px;margin-top: 20px;font-size: 18px;text-align: center;float:left;"></select>
+	<span style="width:80px; text-align:right;display:block;hegiht:40px;float:left;margin-top: 20px;line-height:40px;clear:left;font-size: 18px;">市：</span> <select id="city2" name="city" onchange="tofindArea(this.value)" style="width: 240px;height: 40px;margin: auto;margin-left:0px;margin-top: 20px;font-size: 18px;text-align: center;float:left;"></select>
+	<div style="clear:both;"></div>
+	<span style="width:280px;height:40px;display:block; margin:auto;margin-top:20px;clear:both;">
+	<input type="submit" style="width: 100px;height: 40px;font-size: 18px;float:left; margin-right:20px;" value="确定">
+	<input type="button" style="width: 100px;height: 40px;font-size: 15px;float:left; margin-left:20px;" value="取消" onclick="unshoweditcity()">
+ 	
+ 	</span>
+ </div>
+</form>	
+</div>	
+
 </body>
 </html>

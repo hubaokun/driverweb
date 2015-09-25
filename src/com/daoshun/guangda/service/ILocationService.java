@@ -27,4 +27,5 @@ public interface ILocationService {
 	public AutoPositionInfo getAutoPositionInfo(String cityid,String provinceid);
 	public AutoPositionInfo getAutoPositionInfoByCityId(String cityid);
 	public CityInfo getCityByBaiduID(String baiduid);
+	public ProvinceInfo getProvinceByCityId(String cityId);
 }

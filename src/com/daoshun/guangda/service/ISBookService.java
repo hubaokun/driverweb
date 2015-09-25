@@ -131,4 +131,15 @@ public interface ISBookService {
 	public HashMap<String, Object> getCoachList3(String cityid,String condition1, String condition2, String condition3, String condition4, String condition5, String condition6, String condition8, String condition9,
 			String condition10, String condition11, String pagenum,String studentid,String driveschollid,String fixedposition);
 	public int[] getCanUseCoinMoney(String coachid,String studentid);
+	public ModelPrice getModelPriceById(int cityid);
+	/**
+	 *  删除开通城市
+	 * @param citysId  cityId集合
+	 */
+	public void deleteOpenModelPrice(String citysId);
+	/**
+	 *  更新城市
+	 * @param mp
+	 */
+	public void updateOpenModelPrice(ModelPrice mp);
 }

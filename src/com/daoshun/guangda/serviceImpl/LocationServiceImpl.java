@@ -148,7 +148,21 @@ public class LocationServiceImpl extends BaseServiceImpl implements ILocationSer
 		CityInfo tempCityInfo=(CityInfo) dataDao.getFirstObjectViaParam(querystring, params,CommonUtils.parseInt(baiduid, 0));
 		return tempCityInfo;
 	}
-
+	/**
+	* 根据城市信息查找省的信息
+	*/
+	@Override
+	public ProvinceInfo getProvinceByCityId(String cityId)
+	{
+		String[] params={"cityId"};
+		ProvinceInfo provinceInfo=null;
+		List<ProvinceInfo> list=(List<ProvinceInfo>)dataDao.getObjectsViaParam("from ProvinceInfo where provinceid in(select provinceid from CityInfo where cityid=:cityId)",params,Integer.parseInt(cityId));
+		if(list!=null && list.size()>0)
+		{
+			provinceInfo=list.get(0);
+		}
+		return provinceInfo;
+	}
    
 
 }
