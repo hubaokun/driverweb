@@ -99,7 +99,7 @@ function coinrecordlist(obj)
   </div> -->
   <div class="row coin-head">
     <div class="col-md-12 col-sm-12 col-xs-12">
-      <p>小巴币<i class="icon icon-question-sign"></i></p>
+     <p>小巴币<!-- <i class="icon icon-question-sign"></i> --><a href="coinrules.html"><img src="images/question.png" /></a></p>
       <p  id="coinnum"><i>个</i></p>
       <p id="fcoinnum"></p>
     </div>

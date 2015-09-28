@@ -1,5 +1,6 @@
 /* CSS Document */
 /**/
+
 body {
 	text-align: center;
 	font-size: 12px;
@@ -260,7 +261,7 @@ ul {
 	height:100%;
 	background-color:rgba(0,0,0,0.41);
 	position:absolute;
-	top:0;
+	top:41px;
 	z-index:2000;
 	display:none;
 }
@@ -272,92 +273,128 @@ ul {
 	margin-top:41px;
 }
 
-.overlay-select .overlay-content .subject-wrap
+.select-wrap
 {
-	padding:0px 12px;
-	margin-top:17px;
+	position: absolute;
+    z-index: 2;
+	right:0px;
+	left:0px;
+	top:0px;
+	background-color:white;
+	border-top:1px solid #1789f2;
+	-webkit-transition: all 0.1s ease-in;
+    -moz-transition: all 0.51s ease-in;
+    -ms-transition: all 0.1s ease-in;
+    -o-transition: all 0.1s ease-in;
+    transition: all 0.1s ease-in;
+    list-style: none;
 }
-.overlay-select .overlay-content .car-school
+
+/* .select-wrap:before
 {
-	margin-bottom:15px;
+	content: "";
+    width: 0;
+    height: 0;
+    position: absolute;
+    bottom: 100%;
+    right: 20px;
+    border-width: 0 8px 8px 8px;
+    border-style: solid;
+    border-color: rgb(23,152,242) transparent;
 }
-.overlay-select .overlay-content .cartype-wrap,.overlay-select .overlay-content .car-year-wrap,.overlay-select .overlay-content .car-school,.overlay-select .overlay-content .subject-wrap
+
+.select-wrap:after
 {
-	padding:0px 12px;
+	content: "";
+    width: 0;
+    height: 0;
+    position: absolute;
+    bottom: 100%;
+    right: 22px;
+    border-width: 0 6px 6px 6px;
+    border-style: solid;
+    border-color: #ffffff transparent;
+} */
+.up-arrow
+{
+    background-image: url(../images/up-arrow.png);
+    background-repeat: no-repeat;
+    width: 16px;
+    height: 8px;
+    display: inline-block;
+    /* margin-right: 0px; */
+    position: absolute;
+    right: 17px;
+    top: -8px;
+}
+ .select-wrap .subject-row
+{
+	
+}
+ .select-wrap .subject-row p,.select-wrap .cartype-row p, .select-wrap .school-row p
+{
 	text-align:left;
+	font-size: 12px;
+    color: #1789f2;
+    margin-bottom: 10px;
 }
-.overlay-select .overlay-content .cartype-wrap p,.overlay-select .overlay-content .car-year-wrap p,.overlay-select .overlay-content .car-school p,.overlay-content .subject-wrap p
+ .select-wrap .col-md-12
 {
-	font-size:12px;
-	color: #1789f2;
-	margin-bottom:7px;
+	padding:0px 12px;
 }
-.overlay-select .overlay-content .car-school .col-md-12
+ .select-wrap .col-md-12:first-child
+{
+	margin-top:5px;
+}
+ .select-wrap .col-md-12:last-child
+{
+	margin-bottom:17px;
+}
+ .select-wrap .col-md-12
+{
+	margin-top:18px;
+}
+ .select-wrap .subject-row .col-md-3, .select-wrap .cartype-row .col-md-3, .select-wrap .school-row .col-md-9
 {
 	padding:0px;
+	margin:0px;
 }
-.overlay-select .overlay-content .car-school input
+ .select-wrap .subject-row input[type="radio"], .select-wrap .cartype-row input[type="radio"]
 {
-	width:65%;
-	border:none;
-}
-.overlay-select .overlay-content .subject-wrap .col-md-4,.overlay-select .overlay-content .cartype-wrap .col-md-4,.overlay-select .overlay-content .car-year-wrap .col-md-3
-{
-	padding:0px;
-	margin-bottom:15px;
-}
-.overlay-select .overlay-content .subject-wrap input[type="radio"],.overlay-select .overlay-content .cartype-wrap input[type="radio"], .overlay-select .overlay-content .car-year-wrap input[type="radio"]
-{
-	opacity:0;
 	position:absolute;
+	opacity:0;
 }
-.overlay-select .overlay-content .cartype-wrap input[type="radio"]:checked + label, .overlay-select .overlay-content .car-year-wrap input[type="radio"]:checked + label,.overlay-select .overlay-content .subject-wrap input[type="radio"]:checked + label
-{
-	background-color: #1789f2;
-	color:white;
-}
-/*.overlay-select .overlay-content .subject-wrap label
-{
-	font-weight:normal;
-	height:17px;
-	padding: 3px 0px;
-    width: 90%;
-	background-image:url(../images/radiochecked.png);
-	background-repeat:no-repeat;
-	background-position: top left;
-    background-size: 17px;
-}
-.overlay-select .overlay-content .subject-wrap input[type="radio"]:checked + label
-{
-	background-position: bottom left;
-}*/
-.overlay-select .overlay-content .cartype-wrap label,.overlay-select .overlay-content .car-year-wrap label,.overlay-select .overlay-content .subject-wrap label
+.select-wrap .subject-row label, .select-wrap .cartype-row label
 {
 	background-color: white;
-	color:black;
+    color: black;
     font-size: 12px;
     font-weight: normal;
     border: 1px solid rgb(211,212,215);
     border-radius: 3px;
     padding: 3px 0px;
     width: 90%;
-	text-align:center;
-	line-height: 30px;
+    text-align: center;
+    line-height: 30px;
     height: 40px;
 }
-.overlay-select .overlay-content .button-wrap
+ .select-wrap .subject-row input[type="radio"]:checked +label, .select-wrap .cartype-row input[type="radio"]:checked +label
 {
-	padding:0px 12px;
-	margin-bottom:18px;
+	background-color: #1789f2;
+    color: white;
+	border-color: #1789f2;
 }
-.overlay-select .overlay-content .button-wrap button
+.select-wrap .school-row
+{} 
+
+.select-wrap .school-row select
 {
-	background:none;
-	color:#999999;
-	border:none;
-	font-size:13px;
+	width:100%;
+	height:30px;
+	border:1px solid rgb(211,212,215);
+	border-radius:3px;
 }
-.overlay-select .overlay-content .button-wrap span
+ .select-wrap .button-row span
 {
 	border: 1px solid #1789f2;
     color: #1789f2;
@@ -365,7 +402,6 @@ ul {
     border-radius: 4px;
     padding: 5px;
     width: 60px;
-    text-align: center;
 }
 /*tabs one ends*/
 

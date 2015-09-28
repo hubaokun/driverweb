@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
-<%-- <%@ include file="checksession.jsp" %> --%>
+<%@ include file="checksession.jsp" %>
 <!doctype html>
 <html>
 <head>
@@ -9,23 +9,8 @@ pageEncoding="UTF-8"%>
 <title>基本信息</title>
 <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <link href="css/font-awesome.css" rel="stylesheet" />
-<link href="mobiscroll/css/mobiscroll.animation.css" rel="stylesheet" type="text/css" />
-<link href="mobiscroll/css/mobiscroll.widget.css" rel="stylesheet" type="text/css" />
-<link href="mobiscroll/css/mobiscroll.widget.ios.css" rel="stylesheet" type="text/css" />
-<link href="mobiscroll/css/mobiscroll.scroller.css" rel="stylesheet" type="text/css" />
-<link href="mobiscroll/css/mobiscroll.scroller.ios.css" rel="stylesheet" type="text/css" />
 <link href="css/basicinfo.css" rel="stylesheet" type="text/css" />
-<style type="text/css">
-.mbsc-ios .dw-sel {
-	color: #1798f2;
-}
-.mbsc-ios .dwwc {
-	padding: 30px 0px 10px 40px;
-}
-.mbsc-ios .dwb {
-	color: #1798f2;
-}
-</style>
+
 </head>
 
 <body>
@@ -47,7 +32,7 @@ pageEncoding="UTF-8"%>
             			<p>联系电话</p>
             		</div>
             		<div class="col-md-8 col-sm-8 col-xs-8">
-            			<input type="text" id="phone" disabled value="13757187548"/>
+            			<input type="text" id="phone" disabled />
             		</div>
             	</div>
             </div>
@@ -59,7 +44,7 @@ pageEncoding="UTF-8"%>
             			<p>真实姓名</p>
             		</div>
             		<div class="col-md-8 col-sm-8 col-xs-8">
-            			<input type="text" id="nameSave" cate="1" disabled value="莉莉"/>
+            			<input type="text" id="nameSave" cate="1" disabled />
             			<input type="text"  placeholder="输入姓名" id="name" cate=2 />
             		</div>
             	</div>
@@ -76,7 +61,7 @@ pageEncoding="UTF-8"%>
             			<p>出生年月</p>
             		</div>
             		<div class="col-md-8 col-sm-8 col-xs-8">
-            			<input type="text" cate="1" placeholder="出生年月" id="birthdaySave" disabled value="" /><input type="text" placeholder="出生年月" id="birthday" cate="2" value="" />
+            			<input type="text" cate="1" placeholder="出生年月" id="birthdaySave" disabled value="" /><input type="date" placeholder="出生年月" id="birthday" cate="2" value="" />
             		</div>
             	</div>
             	<div class="row basic-data-content">
@@ -131,13 +116,6 @@ pageEncoding="UTF-8"%>
 
 <script src="js/jquery-1.8.3.min.js"></script> 
 <script src="js/bootstrap.min.js"></script> 
-<script src="mobiscroll/js/mobiscroll.core.js"></script> 
-<script src="mobiscroll/js/mobiscroll.widget.js"></script> 
-<script src="mobiscroll/js/mobiscroll.scroller.js"></script> 
-<script src="mobiscroll/js/mobiscroll.util.datetime.js"></script> 
-<script src="mobiscroll/js/mobiscroll.datetimebase.js"></script> 
-<script src="mobiscroll/js/mobiscroll.i18n.zh.js"></script> 
-<script src="mobiscroll/js/mobiscroll.widget.ios.js"></script> 
 <!--<script src="js/bootstrap-datepicker.js"></script>--> 
 <script>
 $(document).ready(function ()
@@ -219,29 +197,6 @@ $(document).ready(function ()
 	
 });
 </script> 
-<script type="text/javascript">
-        $(function () {
-			var nowData=new Date();
-	        var opt= { 
-	        	theme:'ios', //设置显示主题 
-                mode:'scroller', //设置日期选择方式，这里用滚动
-                display:'bottom', //设置控件出现方式及样式
-                preset : 'date', //日期:年 月 日 时 分
-                minDate: new Date(1916,1,1), 
-				maxDate:new Date(nowData.getFullYear(),12,31),
-                dateFormat: 'yy-mm-dd', // 日期格式
-//              dateOrder: 'yymmdd', //面板中日期排列格式
-                stepMinute: 5, //设置分钟步长
-                yearText:'年', 
-                monthText:'月',
-                dayText:'日',
-                hourText:'时',
-                minuteText:'分',
-                lang:'zh' //设置控件语言};
-            };
-            $('#birthday').mobiscroll(opt);
-        });
-    </script>
 <script> 
 
 var Aprovince;
@@ -374,7 +329,7 @@ $(document).ready(function ()
 <script type="text/javascript">
 $(document).ready(function(){
 	var sid='${sessionScope.studentid}';
-	sid="18";
+	//sid="18";
 	var token='${sessionScope.token}';
 	var params = {action:"GETSTUDENTINFO",studentid:sid,token:token};
 	jQuery.post("../suser", params, showStudent, 'json');
@@ -386,14 +341,14 @@ $(document).ready(function(){
 });
 function showStudent(obj){
 	if(obj.code==1){
-		//var c_info='${sessionScope.c_info}';
-		//var wxinfo=$.parseJSON(c_info);
+		var c_info='${sessionScope.c_info}';
+		var wxinfo=$.parseJSON(c_info);
 		/* if(obj.data.avatarurl==''){
 			$("#avatarurl").attr("src",wxinfo.headimgurl);
 		}else{
 			$("#avatarurl").attr("src",obj.data.avatarurl);//设置头像图片
 		} */
-		//$("#avatarurl").attr("src",wxinfo.headimgurl);
+		$("#avatarurl").attr("src",wxinfo.headimgurl);
 		
 		$("#nameSave").val(obj.data.realname);
 		$("#name").val(obj.data.realname);
@@ -463,7 +418,7 @@ function showStudent(obj){
 
 function perfectPersoninfo(){
 	var sid='${sessionScope.studentid}';
-	sid="18";
+	//sid="18";
 	var gender = $("#genderEdit").find("option:selected").val();
 	//alert (gender);
 	

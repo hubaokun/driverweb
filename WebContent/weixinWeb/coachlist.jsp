@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
-<%@ include file="checksession.jsp" %>
+<%-- <%@ include file="checksession.jsp" %> --%>
 <!doctype html>
 <html>
 <head>
@@ -19,7 +19,7 @@ pageEncoding="UTF-8"%>
 <script src="js/iscroll.js"></script>
 <script type="text/javascript">
 var active_url = "../sbook?action=GETCOACHLIST";
-var studentid=${sessionScope.studentid};
+var studentid="${sessionScope.studentid}";studentid=19930;
 var pagenum=0;
 var city="杭州";//"${sessionScope.city}";
 var myScroll,
@@ -152,8 +152,8 @@ document.addEventListener('DOMContentLoaded', loaded, false);
               <input type="text" id="search_coach" class="form-control" placeholder="" aria-describedby="basic-addon2">
               <span class="input-group-addon" id="basic_addon2" ><i class="glyphicon glyphicon-search"></i></span> </div>
           </div>
-          <div class="col-md-2 col-sm-2 col-xs-2">
-          	<span id="select-coach">筛选</span>
+          <div id="select-coach" class="col-md-2 col-sm-2 col-xs-2">
+          	<span >筛选</span>
           </div>
         </form>
       </div>
@@ -183,56 +183,73 @@ document.addEventListener('DOMContentLoaded', loaded, false);
 
 <!--筛选弹出框 starts-->
 <div class="overlay-select">
-	<div class="overlay-content ">
-    	<div class="container">
-        	<div class="row content-wrap">
-            	<form>
-                	<div class="col-md-12 col-sm-12 col-xs-12 subject-wrap">
-                    	<div class="col-md-12 col-sm-12 col-xs-12 subject-wrap">
-          <p>科目</p>
-            <div class="row">
-              <div class="col-md-4 col-sm-4 col-xs-4" style="width:30%;">
-                <input type="radio" id="subject2" name="subject" subjectid="1" checked />
-                <label for="subject2">科目二</label>
-              </div>
-              <div class="col-md-4 col-sm-4 col-xs-4" style="width:30%;">
-                <input type="radio" id="subject3" name="subject" subjectid="2"/>
-                <label for="subject3">科目三</label>
-              </div>
-              <div class="col-md-4 col-sm-4 col-xs-4" style="width:40%;">
-                <input type="radio" id="subject_no" name="subject" subjectid="3"/>
-                <label for="subject_no" style="padding-left:10px;">考试训练</label>
-              </div>
-            </div>
-          </div>
-                    <div class="col-md-12 col-sm-12 col-xs-12 car-school">
-                    	<p>驾校</p>
-                        <div class="row">
-                        	<div class="col-md-12 col-sm-12 col-xs-12">
-                            	<select type="text" id="selectSchool" placeholder="请选择驾校"  onchange="getSelectedSchoolId(this)" >
-                            		<option>--不限--</option>
-                            	</select>
-                            </div>
-                            
-                        </div>
-                    </div>
-                    <div class="col-md-12 col-sm-12 col-xs-12 cartype-wrap">
-                        <p>准驾车型</p>
-                        <div class="row">
-                            <div class="col-md-4 col-sm-4 col-xs-4"><input type="radio" id="cartype_no" name="cartype" modelid="" checked /><label for="cartype_no">不限</label></div>
-                            <div class="col-md-4 col-sm-4 col-xs-4"><input type="radio" id="cartype_c1" name="cartype" modelid="17" /><label for="cartype_c1">C1</label></div>
-                            <div class="col-md-4 col-sm-4 col-xs-4"><input type="radio" id="cartype_c2" name="cartype" modelid="18" /><label for="cartype_c2">C2</label></div>
-                        </div>
-                    </div>
-                    <div class="col-md-12 col-sm-12 col-xs-12 button-wrap">
-                        <button type="reset" class="pull-left">重置</button>
-                        <span class="pull-right" id="cancel-select" style="margin-left:10px;">取消</span>
-                        <span class="pull-right" id="select-finish" >完成</span>
-                    </div>
-                </form>
+  <div class="overlay-content ">
+    <div class="container">
+      <div class="row content-wrap">
+        <form>
+        <div class="row select-wrap">
+        <span class="up-arrow"></span>
+      	<div class="col-md-12 col-sm-12 col-xs-12">
+        	<div class="row subject-row">
+            	<p>科目</p>
+            	<div class="col-md-3 col-sm-3 col-xs-3">
+                	<input type="radio" id="subject_no" name="subject" checked />
+                	<label for="subject_no">不限</label>
+                </div>
+                <div class="col-md-3 col-sm-3 col-xs-3">
+                	<input type="radio" id="subject2" name="subject"  />
+                	<label for="subject2">科目二</label>
+                </div>
+                <div class="col-md-3 col-sm-3 col-xs-3">
+                	<input type="radio" id="subject3" name="subject"  />
+                	<label for="subject3">科目三</label>
+                </div>
+                <div class="col-md-3 col-sm-3 col-xs-3">
+                	<input type="radio" id="subject_train" name="subject"  />
+                	<label for="subject_train">考试训练</label>
+                </div>
             </div>
         </div>
+        
+        <div class="col-md-12 col-sm-12 col-xs-12">
+        	<div class="row cartype-row">
+            	<p>准驾车型</p>
+                <div class="col-md-3 col-sm-3 col-xs-3">
+                	<input type="radio" id="cartype_no" modelid="" name="cartype" checked/>
+                	<label for="cartype_no">不限</label>
+                </div>
+                <div class="col-md-3 col-sm-3 col-xs-3">
+                	<input type="radio" id="cartype_c1" modelid="17" name="cartype"/>
+                	<label for="cartype_c1">C1</label>
+                </div>
+                <div class="col-md-3 col-sm-3 col-xs-3">
+                	<input type="radio" id="cartype_c2" modelid="18" name="cartype"/>
+                	<label for="cartype_c2">C2</label>
+                </div>
+                
+            </div>
+        </div>
+        <div class="col-md-12 col-sm-12 col-xs-12">
+        	<div class="row school-row">
+            	<p>驾校</p>
+                <div class="col-md-9 col-sm-9 col-xs-9">
+                	<select id="selectSchool" placeholder="请选择驾校"  onchange="getSelectedSchoolId(this)">
+                    	<option>--不限--</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 col-sm-12 col-xs-12">
+        	<div class="row button-row">
+            	<span id="select-cancle" class="pull-left">取消</span>
+                <span id="select-finish" class="pull-right">确定</span>
+            </div>
+        </div>
+      </div>
+        </form>
+      </div>
     </div>
+  </div>
 </div>
 
 <!--筛选弹出框 ends-->
@@ -312,7 +329,7 @@ $(document).ready(function()
 		search_com();
 		$('.overlay-select').css("display","none");
 	});
-	$('#cancel-select').click(function ()
+	$('#select-cancle').click(function ()
 	{
 		$('.overlay-select').css('display','none');
 	});

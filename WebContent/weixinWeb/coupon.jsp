@@ -22,7 +22,7 @@ pageEncoding="UTF-8"%>
 $(document).ready(function(){
 	var studentid='${sessionScope.studentid}';
 	var token='${sessionScope.token}';
-	studentid='18';
+	//studentid='18';
 	var params = {
 					action:"GETCOUPONLIST",
 					studentid:studentid,

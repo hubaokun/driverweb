@@ -8,6 +8,14 @@ body
 	background-color:rgb(35,173,229);
 	text-align:center;
 }
+.coin-head img
+{
+	 position: absolute;
+    right: 24px;
+    top: 9px;
+    max-width: 25px;
+}
+
 .account-head .col-md-12 p,.coin-head .col-md-12 p
 {
 	margin:0px;
