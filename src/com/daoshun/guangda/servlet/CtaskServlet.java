@@ -515,7 +515,7 @@ public class CtaskServlet extends BaseServlet {
 		String score3 = request.getParameter("score3");
 		CommonUtils.validateEmpty(score3);
 		String content = request.getParameter("content");
-
+		
 		Calendar c0 = Calendar.getInstance();
 		if (CommonUtils.parseInt(type, 0) == 1) {// 教练评价学员
 
