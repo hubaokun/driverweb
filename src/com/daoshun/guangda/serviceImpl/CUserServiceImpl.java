@@ -67,8 +67,8 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 	private ICouponService couponService;
 	@Resource
 	private ISUserService suserService;
-	@Resource
-	private SendPushThreadTask sendPushThreadTask;
+	/*@Resource
+	private SendPushThreadTask sendPushThreadTask;*/
     @Override
     public CuserInfo getCuserByPhone(String loginname) {
         StringBuffer cuserhql = new StringBuffer();

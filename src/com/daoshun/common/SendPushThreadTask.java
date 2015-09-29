@@ -21,7 +21,7 @@ import com.daoshun.guangda.pojo.UserPushInfo;
  * @date 2015-09-28
  * @version 1.0
  */
-@Component("sendPushThreadTask")
+//@Component("sendPushThreadTask")
 public class SendPushThreadTask {
 	private static Logger logger = Logger.getLogger(SendPushThreadTask.class
 			.getName());
