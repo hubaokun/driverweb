@@ -990,16 +990,16 @@ public class SuserServlet extends BaseServlet {
 	public void recharge(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException, IOException {
 		String studentid = getRequestParamter(request, "studentid");// 教练ID
 		String amount = getRequestParamter(request, "amount");// 充值金额
-		String resource=getRequestParamter(request, "resource");// 支付来源
+		String resource=getRequestParamter(request, "resource");// 支付来源  0=支付宝  1=微信
+		String trade_type=getRequestParamter(request, "trade_type");// 微信支付方式
+		String paymessage=getRequestParamter(request, "paymessage");// 微信APP支付所需信息
 		CommonUtils.validateEmpty(studentid);
 		CommonUtils.validateEmpty(amount);
 		CommonUtils.validateEmpty(resource);
 		String cip=wxmessageService.getCustomerIP(request);
-		HashMap<String, Object> rechargeResult = suserService.recharge(studentid, amount,resource,cip);
+		HashMap<String, Object> rechargeResult = suserService.recharge(studentid, amount,resource,cip,trade_type,paymessage);
 		resultMap.putAll(rechargeResult);
 	}
-	
-	
 	// 获取账户信息充值
 	public void getWalletInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException 
 	{		

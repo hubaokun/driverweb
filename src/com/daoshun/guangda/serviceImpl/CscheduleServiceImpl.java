@@ -266,12 +266,15 @@ public class CscheduleServiceImpl extends BaseServiceImpl implements ICscheduleS
 	//	String[] params1={"coachid","date"};
 		Date d=new Date();
 		List querylist=dataDao.getCoachState(coachid, datacount,d, starthour, endhour, subjectid);
+		List querylist1=dataDao.getCoachStateAccompany(coachid, datacount,d, starthour, endhour);
+		
 		CuserInfo tempCuserInfo=(CuserInfo)dataDao.getFirstObjectViaParam(querystring, params, CommonUtils.parseInt(coachid, 0));
 		String result=querylist.get(0).toString();
-		
+		String result1=querylist1.get(0).toString();
 		if(tempCuserInfo!=null)
 		{
 				tempCuserInfo.setCoursestate(Integer.parseInt(result));
+				tempCuserInfo.setAccompanycoursestate(Integer.parseInt(result1));
 				dataDao.updateObject(tempCuserInfo);
 		}
 	}

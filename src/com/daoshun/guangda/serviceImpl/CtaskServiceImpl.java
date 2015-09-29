@@ -30,6 +30,7 @@ import com.daoshun.guangda.pojo.FeedBackInfo;
 import com.daoshun.guangda.pojo.NoticesInfo;
 import com.daoshun.guangda.pojo.NoticesUserInfo;
 import com.daoshun.guangda.pojo.OrderInfo;
+import com.daoshun.guangda.pojo.OrderPrice;
 import com.daoshun.guangda.pojo.OrderRecordInfo;
 import com.daoshun.guangda.pojo.RecommendInfo;
 import com.daoshun.guangda.pojo.StudentCheckInfo;
@@ -775,6 +776,24 @@ public class CtaskServiceImpl extends BaseServiceImpl implements ICtaskService {
 		String[] params = { "to_user", "type" };
 
 		return (List<EvaluationInfo>) dataDao.getObjectsViaParam(hql, params, userid, type);
+	}
+	@Override
+	public String setSubjectName(OrderInfo order) {
+		StringBuffer cuserhql1=new StringBuffer();
+		cuserhql1.append("from OrderPrice where orderid =:orderid ");
+		String[] params1 = { "orderid" };
+		List<OrderPrice> orderpricelist = (List<OrderPrice>) dataDao.getObjectsViaParam(cuserhql1.toString(), params1, order.getOrderid());
+		if (orderpricelist != null && orderpricelist.size() > 0) {
+			order.setOrderprice(orderpricelist);
+			OrderPrice op=orderpricelist.get(0);
+			if(op!=null && op.getSubject().equals("陪驾")){
+
+				return op.getSubject();
+			}
+			else
+				return "";
+		}
+		return "";
 	}
 
 }
