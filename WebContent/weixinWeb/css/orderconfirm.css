@@ -161,7 +161,7 @@ body {
 	line-height: 12px;
 	padding: 21px 10px;
 }
-/*小巴币*/
+/*灏忓反甯�*/
 .coupon-content {
 	margin-top: 23px;
 }
@@ -294,9 +294,9 @@ body {
 	font-size: 13px;
 	line-height: 43px;
 }
-#cancle_pay_type_btn
+#set_pay_type_btn
 {
-	margin-left:5px;
+	margin-left:10px;
 }
 #set_pay_type_btn,#cancle_pay_type_btn
 {
@@ -366,7 +366,7 @@ body {
 }
 
 
-/*小巴券的部分样式*/
+/*灏忓反鍒哥殑閮ㄥ垎鏍峰紡*/
 #tabs ul.coupon-nav {
     list-style: none;
     background-color: white;
@@ -393,8 +393,8 @@ body {
 }
 
 
-/*取消订单弹窗*/
-/*编辑资料 提示弹框*/
+/*鍙栨秷璁㈠崟寮圭獥*/
+/*缂栬緫璧勬枡 鎻愮ず寮规*/
 .overlay-cancle {
 	width: 100%;
 	height: 100%;
@@ -419,10 +419,16 @@ body {
     padding: 0px;
     margin: 0px 12px;
     border-radius: 4px;
+    position:relative;
 }
 .overlay-cancle .overlay-cancle-content .icon-remove
 {
-	margin:5px;
+	position:absolute;
+	right:0px;
+}
+.icon-remove:before
+{
+	content:url("../images/close-dialog.png");
 }
 .overlay-cancle .overlay-cancle-content .col-md-12 {
 	/*border-bottom: 1px solid rgb(218,218,218);*/

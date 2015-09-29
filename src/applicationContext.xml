@@ -101,4 +101,18 @@
 	<!-- 配置注解实现管理事务（cglib：proxy-target-class="true"） -->
 	<tx:annotation-driven transaction-manager="transactionManager"
 		proxy-target-class="true" />
+		
+		
+	<!-- 线程队列池，用于执行推送消息，发送邮件等   by卢磊 -->
+	<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+	   <!-- 核心线程数，默认为1 -->
+       <property name="corePoolSize" value="30" />
+       <!-- 最大线程数，默认为Integer.MAX_VALUE -->
+       <property name="maxPoolSize" value="100" />
+       <!-- 队列最大长度，一般需要设置值-->
+       <property name="queueCapacity" value="1000" />
+       <!-- 线程池维护线程所允许的空闲时间，默认为60s -->
+       <property name="keepAliveSeconds" value="300" />
+       <property name="WaitForTasksToCompleteOnShutdown" value="true" />
+  </bean>
 </beans>

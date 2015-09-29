@@ -185,3 +185,16 @@ enrollpay	支付状态：-1 不需要付款的报名  0 未付款  1 已付款
 maxprice 教练课程最高价格
 minprice 教练课程最低价格
 defaultprice 教练课程默认价格
+
+
+# 提现时支付宝手续费说明
+接口名称:/cmy?action=CASHEXPLAIN
+响应：
+   cashexplain  提示说明文字
+# 获取准教车型
+接口：cuser?action=GetCarModel
+参数：version  版本号,如果没有传版本号，只返回c1,c2，如果此参数有值，返回全部（为了与老版本兼容）
+返回：modellist
+   			modelid		车型Id
+   			modelname	车型名称
+   			

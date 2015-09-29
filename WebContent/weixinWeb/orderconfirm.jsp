@@ -49,8 +49,8 @@ pageEncoding="UTF-8"%>
         	<div class="col-md-12 col-sm-12 col-xs-12">
             	<a href="javascript:;">
                 	<span>支付方式</span>
-                	<span id="cancle_pay_type_btn" class="pull-right"  >取消</span>
                 	<span id="set_pay_type_btn" class="pull-right"  >确定</span>
+                	<span id="cancle_pay_type_btn" class="pull-right"  >取消</span>
                 </a>
             </div>
         </div>

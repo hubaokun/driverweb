@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.net.SyslogAppender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,12 +22,12 @@ import com.daoshun.common.Constant;
 import com.daoshun.common.DeviceType;
 import com.daoshun.common.PushtoSingle;
 import com.daoshun.common.QueryResult;
+import com.daoshun.common.SendPushThreadTask;
 import com.daoshun.common.UserType;
 import com.daoshun.guangda.pojo.AdminInfo;
 import com.daoshun.guangda.pojo.BalanceCoachInfo;
 import com.daoshun.guangda.pojo.BalanceStudentInfo;
 import com.daoshun.guangda.pojo.CApplyCashInfo;
-import com.daoshun.guangda.pojo.CBookTimeInfo;
 import com.daoshun.guangda.pojo.CaddAddressInfo;
 import com.daoshun.guangda.pojo.CoachLevelInfo;
 import com.daoshun.guangda.pojo.CoachStudentInfo;
@@ -43,7 +44,6 @@ import com.daoshun.guangda.pojo.ModelsInfo;
 import com.daoshun.guangda.pojo.NoticesInfo;
 import com.daoshun.guangda.pojo.NoticesUserInfo;
 import com.daoshun.guangda.pojo.OrderInfo;
-import com.daoshun.guangda.pojo.OrderPrice;
 import com.daoshun.guangda.pojo.PermissionSetInfo;
 import com.daoshun.guangda.pojo.RechargeRecordInfo;
 import com.daoshun.guangda.pojo.RecommendInfo;
@@ -67,7 +67,8 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 	private ICouponService couponService;
 	@Resource
 	private ISUserService suserService;
-	
+	@Resource
+	private SendPushThreadTask sendPushThreadTask;
     @Override
     public CuserInfo getCuserByPhone(String loginname) {
         StringBuffer cuserhql = new StringBuffer();

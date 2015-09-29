@@ -373,9 +373,10 @@ public class Constant {
 	public static final String GETMYALLSTUDENT = "GETMYALLSTUDENT";
 	
 	public static final String DELALIACCOUNT = "DELALIACCOUNT";
-	
 	public static final String CHANGEAPPLYTYPE = "CHANGEAPPLYTYPE";
-
+	
+	//提现手续费说明
+	public static final String CASHEXPLAIN = "CASHEXPLAIN";
     //获取推荐人员列表
 	public static final String CGETRECOMMENDLIST = "CGETRECOMMENDLIST";
 	//增加推荐人员

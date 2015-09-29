@@ -16,10 +16,25 @@ import javax.servlet.http.HttpServletResponse;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
 import com.daoshun.common.ErrException;
+import com.daoshun.common.SendPushThreadTask;
 import com.daoshun.guangda.NetData.ComplaintNetData;
 import com.daoshun.guangda.NetData.EvaluationNetData;
-import com.daoshun.guangda.pojo.*;
-import com.daoshun.guangda.service.*;
+import com.daoshun.guangda.pojo.CApplyCashInfo;
+import com.daoshun.guangda.pojo.CaddAddressInfo;
+import com.daoshun.guangda.pojo.CouponCoach;
+import com.daoshun.guangda.pojo.CsubjectInfo;
+import com.daoshun.guangda.pojo.CuserInfo;
+import com.daoshun.guangda.pojo.DriveSchoolInfo;
+import com.daoshun.guangda.pojo.NoticesInfo;
+import com.daoshun.guangda.pojo.NoticesUserInfo;
+import com.daoshun.guangda.pojo.SuserInfo;
+import com.daoshun.guangda.pojo.SystemSetInfo;
+import com.daoshun.guangda.pojo.TeachcarInfo;
+import com.daoshun.guangda.service.ICUserService;
+import com.daoshun.guangda.service.ICmyService;
+import com.daoshun.guangda.service.ICoinRecordService;
+import com.daoshun.guangda.service.ISUserService;
+import com.daoshun.guangda.service.ISystemService;
 
 @WebServlet("/cmy")
 public class CmyServlet extends BaseServlet {
@@ -34,7 +49,6 @@ public class CmyServlet extends BaseServlet {
 	private ISystemService systemService;
 	private ISUserService suserService;
 	private ICoinRecordService coinRecordService;
-
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
@@ -124,6 +138,9 @@ public class CmyServlet extends BaseServlet {
 				delAliAccount(request, resultMap);
 			} else if (Constant.CHANGEAPPLYTYPE.equals(action)) {
 				changeApplyType(request, resultMap);
+			}else if (Constant.CASHEXPLAIN.equals(action)) {
+				//提现手续费说明
+				cashExplain(request, resultMap);
 			} else {
 				throw new ErrException();
 			}
@@ -135,7 +152,6 @@ public class CmyServlet extends BaseServlet {
 		}
 		setResult(response, resultMap);
 	}
-
 	private boolean checkSession(HttpServletRequest request, String action, HashMap<String, Object> resultMap) throws ErrException {
 		String userid = "";// 1.教练 2.学员
 		String usertype = "";
@@ -941,6 +957,17 @@ public class CmyServlet extends BaseServlet {
 		CommonUtils.validateEmpty(setvalue);
 		
 		HashMap<String, Object> result = cmyService.changeApplyType(coachid, setvalue);
+		resultMap.putAll(result);
+	}
+	/**
+	 * 提现手续费说明
+	 * @param request
+	 * @param resultMap
+	 * @throws ErrException
+	 */
+	public void cashExplain(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		HashMap<String, Object> result = new HashMap<String, Object>();
+		result.put("cashexplain", "提现时支付宝会扣除手续费");
 		resultMap.putAll(result);
 	}
 }
