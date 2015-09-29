@@ -573,7 +573,14 @@ public class CuserServlet extends BaseServlet {
 	 * @throws ErrException
 	 */
 	public void getCarModel(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		//获取版本号
+		String version=getRequestParamter(request, "version");
+		//如果没有接收到版本号，表示老版本，老版本只返回2个项目
 		List<ModelsInfo> modellist = cuserService.getAllModelInfo();
+		if("".equals(version) || version==null ){
+			modellist=modellist.subList(0, 2);
+		}
+		
 		resultMap.put("modellist", modellist);
 	}
 
