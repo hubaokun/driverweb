@@ -358,7 +358,7 @@ function binddate2coachlist(data){
 			var score_int = 0;
 			var score_html= "";
 			var avatar_url = "";
-			avatar_url = item.avatarurl?item.avatarurl:"http://xiaobaxueche.com/dadmin/weixinWeb/images/caoch_avart_defalt.jpg"
+			avatar_url = item.avatarurl?item.avatarurl:"http://xiaobaxueche.com/dadmin/weixinWeb/images/caoch_avart_defalt.png"
 			score_int= parseInt(item.score);
 			score_int= score_int>5?5:score_int;
 			var score_html = "";
