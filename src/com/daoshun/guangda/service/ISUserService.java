@@ -293,7 +293,7 @@ public interface ISUserService {
 
 	public abstract List<SuserInfo> getStudentList();
 
-	public abstract HashMap<String, Object> recharge(String studentid, String amount,String resource,String ip) throws IOException;
+	public abstract HashMap<String, Object> recharge(String studentid, String amount,String resource,String ip,String trade_type,String paymessage) throws IOException;
 
 	public abstract QueryResult<BalanceStudentInfo> searchStudentRecharge(String searchname, String searchphone, String amount, String inputamount, String minsdate, String maxsdate,
 			Integer pageIndex, int pagesize);

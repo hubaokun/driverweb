@@ -410,7 +410,7 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 	}
 	//微信支付公共接口算法
 	@Override
-	public String getSignForPrePay(String openid,String total_fee,String out_trade_no,String spbill_create_ip) throws UnsupportedEncodingException {
+	public String getSignForPrePay(String openid,String total_fee,String out_trade_no,String spbill_create_ip,String trade_type,String paymessage) throws UnsupportedEncodingException {
 		String appid=CommonUtils.getAppid();
 		 String mch_id=CommonUtils.getMchid();
 		 String nonce_str=CreatenNonce_str(25);
@@ -420,14 +420,25 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 		// body=new String(body.getBytes("unicode"),"UTF-8");
 		// System.out.println(body);
 		 String notify_url="http://wx.xiaobaxueche.com/dadmin/weixinWeb/weixinpaycb";
-		 String trade_type="JSAPI";
+		 if(trade_type!=null && trade_type.equals("APP") && paymessage!=null)
+		 {
+			 try {
+				JSONObject object=new JSONObject(paymessage);
+				spbill_create_ip=object.getString("spbill_create_ip");
+				nonce_str=object.getString("nonce_str");
+				appid=object.getString("appid");
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		 }
 		 HashMap<String,String> map=new HashMap<String,String>();
 		 StringBuffer sb=new StringBuffer();
 		 BigDecimal bd=new BigDecimal(total_fee);
 		 bd=bd.multiply(new BigDecimal(100));
 		 String Stotal_fee=bd.toString();
-		 map.put("appid", CommonUtils.getAppid());
-		 map.put("mch_id", CommonUtils.getMchid());
+		 map.put("appid", appid);
+		 map.put("mch_id",mch_id);
 		 map.put("nonce_str", nonce_str);
 		 map.put("body",body);
 		 map.put("out_trade_no", out_trade_no);
@@ -435,13 +446,14 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 		 map.put("spbill_create_ip", spbill_create_ip);
 		 map.put("notify_url",notify_url);
 		 map.put("trade_type", trade_type);
-		 map.put("openid",openid);
+		 if(openid!=null)
+		   map.put("openid",openid);
 		 Collection<String> keyset= map.keySet();
 		    List<String> list = new ArrayList<String>(keyset);  
 		       
 		     //对key键值按字典升序排序  
 		     Collections.sort(list); 
-		     for (int i = 0; i < list.size(); i++) {  
+		     for (int i = 0; i < list.size(); i++) {
 		    	 if(i==list.size()-1)
 		    		 sb.append(list.get(i)+"="+map.get(list.get(i)));  
 		    	 else	 

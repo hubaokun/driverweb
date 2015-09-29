@@ -1496,6 +1496,7 @@ public class CscheduleServlet extends BaseServlet {
 				cscheduleService.setDefaultNew(coachid, hour, price, addressid, subjectid,isrest);
 				
 			}
+			
 			resultMap.put("code", 1);
 			resultMap.put("message", "修改成功");
 		}

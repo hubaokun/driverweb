@@ -85,7 +85,7 @@ public class SbookServlet extends BaseServlet {
 			} else if (Constant.GETCOACHLIST.equals(action)) {
 				// 获取教练列表
 				getCoachList(request, resultMap);
-			} else if (Constant.BOOKCOACH.equals(action)) {
+			}else if (Constant.BOOKCOACH.equals(action)) {
 				// 预定教练
 				bookCoach(request, resultMap);
 			} else if (Constant.GETCOACHCOMMENTS.equals(action)) {
@@ -269,8 +269,8 @@ public class SbookServlet extends BaseServlet {
 			// 获取教练详细
 		} else if (Constant.REFRESHCOACHSCHEDULE.equals(action)) {
 			// 刷新教练日程安排
-			userid = getRequestParamter(request, "studentid");
-			usertype = "2";
+//			userid = getRequestParamter(request, "studentid");
+//			usertype = "2";
 		} else if (Constant.GETNEARBYCOACH.equals(action)) {
 			// 获取附近教练
 		} else if (Constant.GETCOACHLIST.equals(action)) {
@@ -372,12 +372,14 @@ public class SbookServlet extends BaseServlet {
 		String coachid = getRequestParamter(request, "coachid");
 		String studentid = getRequestParamter(request, "studentid");
 		String date = getRequestParamter(request, "date");
+		String scheduletype = getRequestParamter(request, "scheduletype");
 		CommonUtils.validateEmpty(coachid);
 		CommonUtils.validateEmpty(date);
+		CommonUtils.validateEmpty(scheduletype);
 		Date fdate=CommonUtils.getDateFormat(date, "yyyy-MM-dd");
 		int remindstate=sbookService.getRemindState(coachid,studentid,date);
 		int coachstate=sbookService.getCoachState(coachid, 1,fdate,5,23,0);
-		List<CscheduleInfo> datelist = sbookService.refreshCoachScheduleNew(coachid, date, studentid);
+		List<CscheduleInfo> datelist = sbookService.refreshCoachScheduleNew(coachid, date, studentid,scheduletype);
 		
 		resultMap.put("remindstate", remindstate);//提醒状态 1 已提醒过,  0 未提醒
 		resultMap.put("coachstate", coachstate);//教练在当天的开课状态  1 开课， 0 休息
@@ -449,15 +451,22 @@ public class SbookServlet extends BaseServlet {
 		CommonUtils.validateEmpty(cityid);*/
 		
 		//HashMap<String, Object> result = sbookService.getCoachList(condition1, condition2, condition3, condition4, condition5, condition6, condition8, condition9, condition10, condition11, pagenum);
-		
-		HashMap<String, Object> result = sbookService.getCoachList3(cityid,condition1, condition2, condition3, condition4, condition5, condition6,
-																	condition8, condition9, condition10, condition11, pagenum,studentid,driverschoolid,fixedposition);
-		List<AppCuserInfo> list=(List<AppCuserInfo>) result.get("coachlist");
-		if(studentid==null || !"18".equals(studentid)){
-			for (AppCuserInfo cuserInfo : list) {
-				if(cuserInfo.getCoachid()==13){
-					list.remove(cuserInfo);
-					break;
+		HashMap<String, Object> result=new HashMap<String, Object>();
+		if(condition11!=null && condition11.equals("19"))
+		{
+			result = sbookService.getCoachListAccompany(cityid,pagenum,fixedposition);
+		}
+		else
+		{
+			result = sbookService.getCoachList3(cityid,condition1, condition2, condition3, condition4, condition5, condition6,
+																		condition8, condition9, condition10, condition11, pagenum,studentid,driverschoolid,fixedposition);
+			List<AppCuserInfo> list=(List<AppCuserInfo>) result.get("coachlist");
+			if(studentid==null || !"18".equals(studentid)){
+				for (AppCuserInfo cuserInfo : list) {
+					if(cuserInfo.getCoachid()==13){
+						list.remove(cuserInfo);
+						break;
+					}
 				}
 			}
 		}
@@ -561,9 +570,13 @@ public class SbookServlet extends BaseServlet {
 	public void getCanUseCouponList(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");// 学员ID
 		String coachid = getRequestParamter(request, "coachid");// 预订的教练ID
+		String modelid = getRequestParamter(request, "modelid");// 预订的教练ID
 		CommonUtils.validateEmpty(studentid);
 		CommonUtils.validateEmpty(coachid);
-		List<CouponRecord> list = sbookService.getCanUseCouponList(studentid, coachid);
+		CommonUtils.validateEmpty(modelid);
+		List<CouponRecord> list=new ArrayList<CouponRecord>();
+		if(!modelid.equals("19"))
+		    list = sbookService.getCanUseCouponList(studentid, coachid);
 
 		int canUseDiff = 0;
 		int canUseMaxCount = 1;

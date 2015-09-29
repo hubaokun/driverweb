@@ -65,6 +65,14 @@ public class AppCuserInfo implements Serializable {
 	@Transient
 	private String levelname;
 	private Integer drive_schoolid;
+	
+	// 准教车列表
+	@Transient
+	private List<ModelsInfo> modellist;
+	
+	// 教练准教车型ID集合，逗号隔开
+	@Column(name = "modelid", length = 50)
+	private String modelid;
 	// 总订单数量
 	
 	private Integer sumnum;
@@ -75,7 +83,7 @@ public class AppCuserInfo implements Serializable {
 	
 	private int coursestate;
 	
-	
+	private int accompanycoursestate;
 	public String getPhone() {
 		return phone;
 	}
@@ -238,6 +246,30 @@ public class AppCuserInfo implements Serializable {
 
 	public void setSumnum(Integer sumnum) {
 		this.sumnum = sumnum;
+	}
+
+	public int getAccompanycoursestate() {
+		return accompanycoursestate;
+	}
+
+	public void setAccompanycoursestate(int accompanycoursestate) {
+		accompanycoursestate = accompanycoursestate;
+	}
+
+	public List<ModelsInfo> getModellist() {
+		return modellist;
+	}
+
+	public void setModellist(List<ModelsInfo> modellist) {
+		this.modellist = modellist;
+	}
+
+	public String getModelid() {
+		return modelid;
+	}
+
+	public void setModelid(String modelid) {
+		this.modelid = modelid;
 	}
 
 	

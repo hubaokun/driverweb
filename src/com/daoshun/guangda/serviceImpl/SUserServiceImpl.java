@@ -931,7 +931,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-	public HashMap<String, Object> recharge(String studentid, String amount,String resource,String cip) throws IOException {
+	public HashMap<String, Object> recharge(String studentid, String amount,String resource,String cip,String trade_type,String paymessage) throws IOException {
 		HashMap<String, Object> result = new HashMap<String, Object>();
 
 		// 插入数据
@@ -964,7 +964,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
         {
         	SuserInfo suser=dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
         	IGetYouWanna wxmessageService=new GetYouWannaImpl();
-        	String prepay_id=wxmessageService.getSignForPrePay(suser.getOpenid(), amount, info.getRechargeid().toString(), cip);
+        	String prepay_id=wxmessageService.getSignForPrePay(suser.getOpenid(), amount, info.getRechargeid().toString(), cip,trade_type,paymessage);
         	long timeStamp=wxmessageService.CreatenTimestamp();
         	String nonceStr=wxmessageService.CreatenNonce_str(25);
         	String appid=CommonUtils.getAppid();

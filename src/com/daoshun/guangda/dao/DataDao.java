@@ -454,6 +454,17 @@ public class DataDao {
 		SQLQuery query= session.createSQLQuery("{Call updatecoursestate()}");
 		query.executeUpdate();
 	}
+	/**
+	 * 查看教练是否开课
+	 * @param coachid
+	 * @param datacount
+	 * @param startdate
+	 * @param starthour
+	 * @param endhour
+	 * @param subjectid
+	 * @return
+	 */
+	
 	public List getCoachState(String coachid, int datacount, Date startdate, int starthour, int endhour,int subjectid){
 		Session session=this.getSession();
 		SQLQuery query= session.createSQLQuery("select getcoachstate(?,?,?,?,?,?)");
@@ -463,6 +474,29 @@ public class DataDao {
 		query.setInteger(3, starthour);
 		query.setInteger(4, endhour);
 		query.setInteger(5, subjectid);
+	//		query.executeUpdate();
+		List list = query.list();
+		return list;
+	}
+	/**
+	 * 查看教练陪驾是否开课
+	 * @param coachid
+	 * @param datacount
+	 * @param startdate
+	 * @param starthour
+	 * @param endhour
+	 * @param subjectid
+	 * @return
+	 */
+	
+	public List getCoachStateAccompany(String coachid, int datacount, Date startdate, int starthour, int endhour){
+		Session session=this.getSession();
+		SQLQuery query= session.createSQLQuery("select getcoachaccompanystate(?,?,?,?,?)");
+		query.setString(0, coachid);
+		query.setInteger(1, datacount);
+		query.setDate(2, startdate);
+		query.setInteger(3, starthour);
+		query.setInteger(4, endhour);
 	//		query.executeUpdate();
 		List list = query.list();
 		return list;

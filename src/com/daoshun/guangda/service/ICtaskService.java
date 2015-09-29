@@ -132,4 +132,8 @@ public interface ICtaskService {
 
 	public abstract QueryResult<FeedBackInfo> getFeedbackInfoOfPage(String searchname, String searchphone, String starttime, String endtime, Integer pageIndex, int pageSize);
 	public List<OrderInfo> getHistoryOrderListByCoach( int coachid, int page, int count);
+	/**
+	 * 设置订单列表中如果是陪驾订单的订单项目名
+	 */
+	public abstract String setSubjectName(OrderInfo order);
 }
