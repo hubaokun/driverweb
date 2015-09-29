@@ -20,6 +20,7 @@ import com.daoshun.guangda.pojo.ComplaintInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.EvaluationInfo;
 import com.daoshun.guangda.pojo.OrderInfo;
+import com.daoshun.guangda.pojo.OrderPrice;
 import com.daoshun.guangda.pojo.OrderRecordInfo;
 import com.daoshun.guangda.pojo.StudentCheckInfo;
 import com.daoshun.guangda.pojo.SuserInfo;
@@ -315,6 +316,7 @@ public class CtaskServlet extends BaseServlet {
 				}
 				// orderInfolist.get(i).getStudentinfo().setAvatarurl(cuserService.backUrl(); //cuserService.backUrl(orderInfolist.get(i).getStudentinfo().getAvatar())
 				ctaskService.updateOrderInfo(orderInfolist.get(i));
+				orderInfolist.get(i).setSubjectname(ctaskService.setSubjectName(orderInfolist.get(i)));
 			}
 			resultMap.put("tasklist", orderInfolist);
 		}
@@ -362,6 +364,9 @@ public class CtaskServlet extends BaseServlet {
 			}
 			// 重新得到修改后的list 返回
 			List<OrderInfo> neworderInfolist = ctaskService.getHistoryOrderListByCoach(CommonUtils.parseInt(coachid, 0), CommonUtils.parseInt(page, 0), Constant.COUNT_NUM);
+			for (int j = 0; j < neworderInfolist.size(); j++) {
+				neworderInfolist.get(j).setSubjectname(ctaskService.setSubjectName(neworderInfolist.get(j)));
+			}
 			resultMap.put("tasklist", neworderInfolist);
 		}
 		List<OrderInfo> neworderInfolist = ctaskService.getHistoryOrderListByCoach(CommonUtils.parseInt(coachid, 0), CommonUtils.parseInt(page, 0) + 1, Constant.COUNT_NUM);
