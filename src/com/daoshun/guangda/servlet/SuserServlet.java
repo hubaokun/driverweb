@@ -992,12 +992,17 @@ public class SuserServlet extends BaseServlet {
 		String amount = getRequestParamter(request, "amount");// 充值金额
 		String resource=getRequestParamter(request, "resource");// 支付来源  0=支付宝  1=微信
 		String trade_type=getRequestParamter(request, "trade_type");// 微信支付方式
-		String paymessage=getRequestParamter(request, "paymessage");// 微信APP支付所需信息
+		String appid=getRequestParamter(request, "appid");// 微信APP开放平台appid
+		String spbill_create_ip=getRequestParamter(request, "spbill_create_ip");// 微信APP支付用户端IP
 		CommonUtils.validateEmpty(studentid);
 		CommonUtils.validateEmpty(amount);
 		CommonUtils.validateEmpty(resource);
-		String cip=wxmessageService.getCustomerIP(request);
-		HashMap<String, Object> rechargeResult = suserService.recharge(studentid, amount,resource,cip,trade_type,paymessage);
+		String cip="";
+		if(spbill_create_ip!=null)
+			 cip=spbill_create_ip;
+		else
+			 cip=wxmessageService.getCustomerIP(request);
+		HashMap<String, Object> rechargeResult = suserService.recharge(studentid, amount,resource,cip,trade_type,appid);
 		resultMap.putAll(rechargeResult);
 	}
 	// 获取账户信息充值
