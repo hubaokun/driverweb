@@ -103,15 +103,26 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		}
 		return cuser;
 	}
+	/** 查看教练开课的状态(是否开课及是否开通陪驾)
+	 *  @author 卢磊
+	 *  @return  1  开课， 0  休息
+	 */
 	public int getCoachState(String coachid, int datacount, Date startdate, int starthour, int endhour,int subjectid){
 		List querylist=dataDao.getCoachState(coachid, datacount,startdate, starthour, endhour, subjectid);
 		if(querylist!=null && querylist.size()>0){
 			String result=querylist.get(0).toString();
-			return Integer.parseInt(result);
-		}else{
-			String result=querylist.get(0).toString();
-			return Integer.parseInt(result);
+			if("1".equals(result)){
+				return 1;
+			}
 		}
+		List querylistAcc=dataDao.getCoachStateAccompany(coachid, datacount,startdate, starthour, endhour);
+		if(querylistAcc!=null && querylistAcc.size()>0){
+			String result1=querylistAcc.get(0).toString();
+			if("1".equals(result1)){
+				return 1;
+			}
+		}
+		return 0;
 	}
 	
 	public int getRemindState(String coachid,String studentid,String date){
