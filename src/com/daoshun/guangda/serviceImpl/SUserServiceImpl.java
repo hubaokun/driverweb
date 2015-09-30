@@ -931,7 +931,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-	public HashMap<String, Object> recharge(String studentid, String amount,String resource,String cip,String trade_type,String paymessage) throws IOException {
+	public HashMap<String, Object> recharge(String studentid, String amount,String resource,String cip,String trade_type,String appid) throws IOException {
 		HashMap<String, Object> result = new HashMap<String, Object>();
 
 		// 插入数据
@@ -964,12 +964,16 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
         {
         	SuserInfo suser=dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
         	IGetYouWanna wxmessageService=new GetYouWannaImpl();
-        	String prepay_id=wxmessageService.getSignForPrePay(suser.getOpenid(), amount, info.getRechargeid().toString(), cip,trade_type,paymessage);
+        	String prepay_id=wxmessageService.getSignForPrePay(suser.getOpenid(), amount, info.getRechargeid().toString(), cip,trade_type,appid);
         	long timeStamp=wxmessageService.CreatenTimestamp();
         	String nonceStr=wxmessageService.CreatenNonce_str(25);
-        	String appid=CommonUtils.getAppid();
+        	String appidtemp="";
+        	if(appid==null)
+        	   appidtemp=CommonUtils.getAppid();
+        	else
+        		appidtemp=appid;
         	String signType="MD5";
-        	String paySign=wxmessageService.getSignForPay(appid, timeStamp, nonceStr, signType, prepay_id);
+        	String paySign=wxmessageService.getSignForPay(appidtemp, timeStamp, nonceStr, signType, prepay_id);
         	if(paySign.equals("FAIL") || prepay_id.equals("FAIL"))
         	{
         		result.put("ERROR", "FAIL");

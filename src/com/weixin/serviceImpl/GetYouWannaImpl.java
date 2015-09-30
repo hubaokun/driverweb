@@ -410,8 +410,8 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 	}
 	//微信支付公共接口算法
 	@Override
-	public String getSignForPrePay(String openid,String total_fee,String out_trade_no,String spbill_create_ip,String trade_type,String paymessage) throws UnsupportedEncodingException {
-		String appid=CommonUtils.getAppid();
+	public String getSignForPrePay(String openid,String total_fee,String out_trade_no,String spbill_create_ip,String trade_type,String appidin) throws UnsupportedEncodingException {
+		String appid="";
 		 String mch_id=CommonUtils.getMchid();
 		 String nonce_str=CreatenNonce_str(25);
 		 
@@ -420,18 +420,10 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 		// body=new String(body.getBytes("unicode"),"UTF-8");
 		// System.out.println(body);
 		 String notify_url="http://wx.xiaobaxueche.com/dadmin/weixinWeb/weixinpaycb";
-		 if(trade_type!=null && trade_type.equals("APP") && paymessage!=null)
-		 {
-			 try {
-				JSONObject object=new JSONObject(paymessage);
-				spbill_create_ip=object.getString("spbill_create_ip");
-				nonce_str=object.getString("nonce_str");
-				appid=object.getString("appid");
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		 }
+		 if(trade_type!=null && trade_type.equals("APP") && appidin!=null)
+			 appid=appidin;
+		 else
+			 appid=CommonUtils.getAppid();
 		 HashMap<String,String> map=new HashMap<String,String>();
 		 StringBuffer sb=new StringBuffer();
 		 BigDecimal bd=new BigDecimal(total_fee);

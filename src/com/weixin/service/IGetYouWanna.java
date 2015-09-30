@@ -18,7 +18,7 @@ public interface IGetYouWanna {
 	public abstract long CreatenTimestamp();
 	public abstract String getSignature(String noncestr,long timestamp,String url);
 	public abstract JSONObject  setCustomerInfo(String openid);
-	public abstract String getSignForPrePay(String openid,String total_fee,String out_trade_no,String spbill_create_ip,String trade_type,String paymessage) throws IOException;
+	public abstract String getSignForPrePay(String openid,String total_fee,String out_trade_no,String spbill_create_ip,String trade_type,String appidin) throws IOException;
 	public abstract String CreateRandomMath(int length);
 	public abstract String getCustomerIP(HttpServletRequest request);
 	public abstract String getSignForPay(String appid,long timeStamp,String nonceStr,String signType,String prepay_id);
