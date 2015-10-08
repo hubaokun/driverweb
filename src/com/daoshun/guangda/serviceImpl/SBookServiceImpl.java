@@ -681,7 +681,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			/*hqlCoach.append("select getTeachAddress(u.coachid) as address,getCoachOrderCount(u.coachid) as drive_schoolid, u.*  from t_user_coach u where coachid in "+
 							cs.toString()+" and state = 2 and id_cardexptime > curdate() and coach_cardexptime > curdate() "
 					+ " and drive_cardexptime > curdate() and car_cardexptime > curdate() and money >= gmoney and isquit = 0");*/
-			hqlCoach.append("select u.*  from app_coach_list u where isnew=1  and coachid in ");
+			hqlCoach.append("select u.*  from app_coach_list u where isnew='1'  and coachid in ");
 			hqlCoach.append(cs.toString());
 			if(!CommonUtils.isEmptyString(driverschoolid)){
 				hqlCoach.append("  and (drive_schoolid  = "+driverschoolid+" or drive_schoolid in (select schoolid");

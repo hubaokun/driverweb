@@ -428,6 +428,11 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 			} else {// 订单显示学车已经结束
 				order.setHours(-2);
 			}
+			//如果教练确认上车，则学员端hours=-1 ，订单显示正在学车
+			if(order.getCoachstate()==1){ //coachstate=1表示教练已经确认上车
+				order.setHours(-1);
+			}
+			
 
 			StringBuffer cuserhql3 = new StringBuffer();
 			cuserhql3.append("from OrderPrice where orderid =:orderid ");
@@ -498,13 +503,13 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 			if (orderRecord2 != null) {// 已经确认下车过了
 				order.setCan_down(0);
 			} else {
-				if (orderRecord != null) {
-					if (now.before(right1)) {
+				if (orderRecord != null) {//如果学员已经上车
+					/*if (now.before(right1)) {
 						order.setCan_down(1);
-					} else {
-						order.setCan_down(0);
-					}
-				} else {
+					} else {*/
+						order.setCan_down(0);//不显示“确认上车按钮”
+					//}
+				} else {//如果学员没有上车，并且在订单结束时间之后，下车最晚时间之前
 					if (now.after(right) && now.before(right1)) {
 						order.setCan_down(1);
 					} else {

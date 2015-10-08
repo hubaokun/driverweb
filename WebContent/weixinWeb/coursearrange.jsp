@@ -275,8 +275,10 @@ pageEncoding="UTF-8"%>
 
 <!--课程表的日期选择JS函数 starts-->
 <script>
+
 var coachid= <%=request.getParameter("coachid")%>;
-var studentid= ${sessionScope.studentid};
+var studentid= '${sessionScope.studentid}';
+//var studentid=18;
 var date = new Date();
 
 year = date.getFullYear();
@@ -403,7 +405,7 @@ function getSchedulByDate(event)
 	var query_date = getFormattedDate(str_date);
 	var active_url = "../sbook?action=REFRESHCOACHSCHEDULE";
 	
-	var search_condition = {"coachid":coachid,"studentid":studentid,"date":query_date};
+	var search_condition = {"coachid":coachid,"studentid":studentid,"date":query_date,"scheduletype":"0"};
 	if(parseInt(coachid)>0 && studentid>0)
 	{
 		$.getJSON(active_url,search_condition,function(data)
@@ -604,9 +606,8 @@ function gotoCoachDetail(){
 
 $(document).ready(function()
 {
-	
-			getCoachDetail();
 			
+			getCoachDetail();
 			//初始化加载一次
 	 		getSchedulByDate();
 	 
