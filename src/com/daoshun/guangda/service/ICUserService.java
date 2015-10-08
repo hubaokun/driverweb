@@ -121,7 +121,12 @@ public interface ICUserService {
 
 	/** 得到所有权限 **/
 	public abstract List<PermissionSetInfo> getPermission();
-
+	
+	/**根据权限id字符串获取权限名称**/
+	 public String getPermissionNamesByPString(String pString);
+	/**根据已获得权限，查询所有权限并标记check**/
+	public List<PermissionSetInfo> getPermissionByString(String pString);
+	
 	/** 得到所有教练列表 **/
 	public abstract List<CuserInfo> getCoachlist();
 
@@ -331,4 +336,9 @@ public interface ICUserService {
 	  * 获取教练是否拥有发放小巴券权限
 	  */
 	 public abstract Integer getcoachcouponlimit(String coachid);
+	 	 //获取父权限
+	 public List<PermissionSetInfo> getParentPermissions();
+	 
+	 //添加权限
+	 public boolean addPermission(PermissionSetInfo info);
 }

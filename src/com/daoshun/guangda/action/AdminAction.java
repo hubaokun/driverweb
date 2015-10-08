@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Iterator;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -109,50 +110,18 @@ public class AdminAction extends BaseAction {
 		QueryResult<AdminInfo> result = cuserService.getAdmins(pageIndex, pagesize);
 		total = result.getTotal();
 		adminlist = result.getDataList();
-		for (int i = 0; i < adminlist.size(); i++) {
-			if (adminlist.get(i).getSchoolid() != 0) {
-				driveschool = cuserService.getDriveSchoolInfoByid(adminlist.get(i).getSchoolid());
-				adminlist.get(i).setSchoolname(driveschool.getName());
+		Iterator<AdminInfo> iter=adminlist.iterator();
+		while(iter.hasNext())
+		{
+			AdminInfo temp=iter.next();
+			if(temp.getSchoolid()!=0)
+			{
+				driveschool = cuserService.getDriveSchoolInfoByid(temp.getSchoolid());
+				temp.setSchoolname(driveschool.getName());
 			}
-			if (!CommonUtils.isEmptyString(adminlist.get(i).getPermission())) {
-				String[] per = adminlist.get(i).getPermission().split(",");
-				String perme = "";
-				for (int j = 0; j < per.length; j++) {
-					if (CommonUtils.parseInt(per[j], 0) == 1) {
-						perme = perme + "管理员设置" + " ";
-					}
-					if (CommonUtils.parseInt(per[j], 0) == 2) {
-						perme = perme + "用户管理" + " ";
-					}
-					if (CommonUtils.parseInt(per[j], 0) == 3) {
-						perme = perme + "充值提现管理" + " ";
-					}
-					if (CommonUtils.parseInt(per[j], 0) == 4) {
-						perme = perme + "系统配置" + " ";
-					}
-					if (CommonUtils.parseInt(per[j], 0) == 5) {
-						perme = perme + "系统通知" + " ";
-					}
-					if (CommonUtils.parseInt(per[j], 0) == 6) {
-						perme = perme + "订单管理" + " ";
-					}
-					if (CommonUtils.parseInt(per[j], 0) == 7) {
-						perme = perme + "投诉管理" + " ";
-					}
-					if (CommonUtils.parseInt(per[j], 0) == 8) {
-						perme = perme + "驾校管理" + " ";
-					}
-					if (CommonUtils.parseInt(per[j], 0) == 9) {
-						perme = perme + "小巴券管理" + " ";
-					}
-					if (CommonUtils.parseInt(per[j], 0) == 10) {
-						perme = perme + "日报管理" + " ";
-					}
-					if (CommonUtils.parseInt(per[j], 0) == 11) {
-						perme = perme + "其他" + " ";
-					}
-				}
-				adminlist.get(i).setPermissions(perme);
+			if (!CommonUtils.isEmptyString(temp.getPermission())) {
+				String permit=cuserService.getPermissionNamesByPString(temp.getPermission());
+				temp.setPermissions(permit);
 			}
 		}
 		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
@@ -177,44 +146,18 @@ public class AdminAction extends BaseAction {
 		QueryResult<AdminInfo> result = cuserService.getAdminsBykeyword(searchlogin, searchtelphone, pageIndex, pagesize);
 		total = result.getTotal();
 		adminlist = result.getDataList();
-		for (int i = 0; i < adminlist.size(); i++) {
-			if (adminlist.get(i).getSchoolid() != 0) {
-				driveschool = cuserService.getDriveSchoolInfoByid(adminlist.get(i).getSchoolid());
-				adminlist.get(i).setSchoolname(driveschool.getName());
+		Iterator<AdminInfo> iter=adminlist.iterator();
+		while(iter.hasNext())
+		{
+			AdminInfo temp=iter.next();
+			if(temp.getSchoolid()!=0)
+			{
+				driveschool = cuserService.getDriveSchoolInfoByid(temp.getSchoolid());
+				temp.setSchoolname(driveschool.getName());
 			}
-			if (!CommonUtils.isEmptyString(adminlist.get(i).getPermission())) {
-				String[] per = adminlist.get(i).getPermission().split(",");
-				String perme = "";
-				for (int j = 0; j < per.length; j++) {
-					if (CommonUtils.parseInt(per[j], 0) == 1) {
-						perme = perme + "管理员设置" + " ";
-					}
-					if (CommonUtils.parseInt(per[j], 0) == 2) {
-						perme = perme + "用户管理" + " ";
-					}
-					if (CommonUtils.parseInt(per[j], 0) == 3) {
-						perme = perme + "充值提现管理" + " ";
-					}
-					if (CommonUtils.parseInt(per[j], 0) == 4) {
-						perme = perme + "系统配置" + " ";
-					}
-					if (CommonUtils.parseInt(per[j], 0) == 5) {
-						perme = perme + "系统通知" + " ";
-					}
-					if (CommonUtils.parseInt(per[j], 0) == 6) {
-						perme = perme + "订单管理" + " ";
-					}
-					if (CommonUtils.parseInt(per[j], 0) == 7) {
-						perme = perme + "投诉管理" + " ";
-					}
-					if (CommonUtils.parseInt(per[j], 0) == 8) {
-						perme = perme + "驾校管理" + " ";
-					}
-					if (CommonUtils.parseInt(per[j], 0) == 9) {
-						perme = perme + "其他" + " ";
-					}
-				}
-				adminlist.get(i).setPermissions(perme);
+			if (!CommonUtils.isEmptyString(temp.getPermission())) {
+				String permit=cuserService.getPermissionNamesByPString(temp.getPermission());
+				temp.setPermissions(permit);
 			}
 		}
 		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
@@ -384,6 +327,8 @@ public class AdminAction extends BaseAction {
 		return SUCCESS;
 	}
 
+
+	
 	/**
 	 * 账号验证
 	 */
@@ -398,44 +343,127 @@ public class AdminAction extends BaseAction {
 	}
 
 	@Action(value = "/changePermession", results = { @Result(name = SUCCESS, location = "/getAdminInfolist.do?pageIndex=${pageIndex}", type = "redirect"),
-			@Result(name = ERROR, location = "/getAdminInfolist.do", type = "redirect") })
+			@Result(name = "SUCCESS2", location = "/getAdminInfolistByKeyword.do?searchlogin=${searchlogin}&searchtelphone=${searchtelphone}&index=${index}&change_id=${change_id}", type = "redirect"),@Result(name = ERROR, location = "/getAdminInfolist.do", type = "redirect") })
 	public String changePermession() {
-		admin = cuserService.getAdminInfoByid(formadminid);
+		String returnValue="";
+		if(!CommonUtils.isEmptyString(searchlogin) || !CommonUtils.isEmptyString(searchtelphone))
+		{
+			returnValue="SUCCESS2";
+		}else
+		{
+			returnValue=SUCCESS;
+		}
+		if(formadminid!=0)
+			admin = cuserService.getAdminInfoByid(formadminid);
 		if (admin == null) {
 			return ERROR;
-		} else if (permession.length == 0) {
+		} else if (permession!=null && permession.length == 0) {
 			return ERROR;
 		} else {
-			permessions = "";
-			for (int i = 0; i < permession.length; i++) {
-				if (i != (permession.length - 1)) {
-					permessions = permessions + permession[i] + ",";
-				} else {
-					permessions = permessions + permession[i];
-				}
-			}
+			permessions =stringConversedFrom(permession);
 			admin.setPermission(permessions);
 			cuserService.updateObject(admin);
-			return SUCCESS;
+			return returnValue;
 		}
 	}
+	
+	/**
+	 * 将选选择的权限转化为字符串 
+	 * @param permissions 数据格式1,2  第一位：父id  第二位：子id
+	 * @return
+	 */
+	private String stringConversedFrom(String[] permissions)
+	{
+		String str="";
+		Map<String,String> map=new HashMap<String,String>();
+		if(permissions==null)
+		{
+			return "";
+		}
+		for(int i=0;i<permissions.length;++i)
+		{
+			String[] permission=permissions[i].split(",");
+			String pPermission=permission[0];
+			String cPermission=permission[1];
+			if(map.containsKey(pPermission))
+			{
+				map.put(pPermission, map.get(pPermission)+";"+cPermission);
+			}else
+			{
+				map.put(pPermission, cPermission);
+			}
+		}
+		
+		for (String key : map.keySet()) 
+		{
+			if(str=="")
+			{
+				str+=key+"-"+map.get(key);
+			}else
+			{
+				str+=","+key+"-"+map.get(key);
+			}
+		}
+		
+		return str;
+	}
+	
 	@Action(value = "/getMyPermession")
 	public void getMyPermession(){
 		Map<String, Object> map = new HashMap<String, Object>();
 		permissionSetInfos=cuserService.getPermission();
 		admin=cuserService.getAdminInfoByid(adminid);
 		if(admin!=null){
-			String[] per=admin.getPermission().split(",");
-			map.put("per", per);
-			map.put("permissions", permissionSetInfos);
+			String pString=admin.getPermission();
+			List<PermissionSetInfo> list=cuserService.getPermissionByString(pString);
+			map.put("permissions",list);
 			map.put("code", 1);
 			strToJson(map);
 		}else{
 			map.put("code", 2);
-			strToJson(map);
 		}
 	}
 
+	//获取父权限
+	@Action(value="/getParentPermission")
+	public void getParentPermission()
+	{
+		List<PermissionSetInfo> list=cuserService.getParentPermissions();
+		if(list!=null && list.size()>0)
+		{
+			strToJson(list);
+		}else
+		{
+			strToJson(-1);
+		}
+	}
+	
+	//添加权限
+	@Action(value="/addPermission",results={@Result(name = SUCCESS, location = "/getAdminInfolist.do?error=2", type = "redirect")
+													,@Result(name = ERROR, location = "/getAdminInfolist.do?error=1", type = "redirect")})
+	public String addPermission()
+	{
+		
+		int pid=-1;
+		String name=request.getParameter("permissionName");
+		String mappedAction=request.getParameter("mappedAction");
+		
+		if(!CommonUtils.isEmptyString(name) && !CommonUtils.isEmptyString(mappedAction) && CommonUtils.isNumber(request.getParameter("parentPermission")))
+		{
+			PermissionSetInfo info=new PermissionSetInfo();
+			pid=Integer.parseInt(request.getParameter("parentPermission"));
+			info.setParentPermissionId(pid);
+			info.setMappedAction(mappedAction);
+			info.setName(name);
+			if(cuserService.addPermission(info))
+			{
+				return SUCCESS;
+			}
+		}
+		return ERROR;
+		
+	}
+	
 	public List<AdminInfo> getAdminlist() {
 		return adminlist;
 	}

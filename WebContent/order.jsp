@@ -212,6 +212,46 @@ function dataExport(){
 			</s:else>
 		</select>
 	</div>
+	<div class="serchcontentdiv"style="float: left; margin-left: 50px; width: 158px"  >
+		<input type="text" class="searchdiv" style="width: 80px;text-align: center;font-family: 微软雅黑;" value="订单类型" readonly="readonly">
+		<select id="t_ordertype"  class="searchdiv">
+		      <s:if test="t_ordertype == 1">
+				 <option value="0">不限</option>
+				    <option value="1" selected="selected">科目二</option>
+				    <option value="2">科目三</option>
+				    <option value="3">考场练习</option>
+				    <option value="4">陪驾</option>
+			  </s:if>
+			   <s:elseif test="t_ordertype == 2">
+				     <option value="0">不限</option>
+				    <option value="1">科目二</option>
+				    <option value="2" selected="selected">科目三</option>
+				    <option value="3">考场练习</option>
+				    <option value="4">陪驾</option>
+			   </s:elseif>
+			     <s:elseif test="t_ordertype == 3">
+				    <option value="0">不限</option>
+				    <option value="1">科目二</option>
+				    <option value="2">科目三</option>
+				    <option value="3" selected="selected">考场练习</option>
+				    <option value="4">陪驾</option>
+			   </s:elseif>
+			     <s:elseif test="t_ordertype == 4">
+				    <option value="0">不限</option>
+				    <option value="1">科目二</option>
+				    <option value="2">科目三</option>
+				    <option value="3">考场练习</option>
+				    <option value="4" selected="selected">陪驾</option>
+			   </s:elseif>
+			     <s:else>
+				    <option value="0" selected="selected">不限</option>
+				    <option value="1">科目二</option>
+				    <option value="2">科目三</option>
+				    <option value="3">考场练习</option>
+				    <option value="4">陪驾</option>
+			   </s:else>
+		</select>
+	</div>
 			</div>
 			<div id="content_form_table">
 				<table border="0" cellspacing="0" cellpadding="0" style="width: 100%;">
@@ -226,6 +266,7 @@ function dataExport(){
 						<th>总价</th>
 						<th>支付方式</th>
 						<th>老订单支付方式</th>
+						<th>订单类型</th>
 						<th>订单状态</th>
 						<th>投诉条数</th>
 						<th>预定时间</th>
@@ -264,7 +305,7 @@ function dataExport(){
 							<s:else>
 									<td style="width: 60px;" class="border_right_bottom">未知</td>
 							</s:else>
-							
+							<td style="width: 80px;" class="border_right_bottom">${subjectname}</td>
 							<s:if test="coachstate==2&&over_time!=null&&studentstate==3">
 								<td style="width: 40px;" class="border_right_bottom">已结算</td>
 							</s:if>
@@ -335,6 +376,7 @@ function dataExport(){
 					var t_paytype=$("#t_paytype").val();
 					var index = $("#index").val();
 					var change_id = $("#change_id").val();
+					var t_ordertype=$("#t_ordertype").val();
 					var a = [];
 					  //总页数少于10 全部显示,大于10 显示前3 后3 中间3 其余....
 					  if (pageindex == 1) {
@@ -342,15 +384,15 @@ function dataExport(){
 					    a[a.length] = "<a onclick=\"\" class=\"hide_page_prev unclickprev on\"></a>";
 					  } else {
 					    a[a.length] = "<a onclick=\"previousPage("+pageindex+",'getOrderList.do?coachphone="+coachphone+"&studentphone="+studentphone+"&startminsdate="+startminsdate+"&startmaxsdate="+startmaxsdate+
-						"&endminsdate="+endminsdate+"&endmaxsdate="+endmaxsdate+"&createminsdate="+createminsdate+"&createmaxsdate="+createmaxsdate+"&state="+state+"&ordertotal="+ordertotal+"&inputordertotal="+inputordertotal+"&ishavacomplaint="+ishavacomplaint+"&t_paytype="+t_paytype+"&index="+index+"&change_id="+change_id+"&')\" class=\"page_prev\"></a>";
+						"&endminsdate="+endminsdate+"&endmaxsdate="+endmaxsdate+"&createminsdate="+createminsdate+"&createmaxsdate="+createmaxsdate+"&state="+state+"&ordertotal="+ordertotal+"&inputordertotal="+inputordertotal+"&ishavacomplaint="+ishavacomplaint+"&t_paytype="+t_paytype+"&t_ordertype="+t_ordertype+"&index="+index+"&change_id="+change_id+"&')\" class=\"page_prev\"></a>";
 					  }
 					  function setPageList() {
 					    if (pageindex == i) {
 					      a[a.length] = "<a onclick=\"goPage('getOrderList.do?coachphone="+coachphone+"&studentphone="+studentphone+"&startminsdate="+startminsdate+"&startmaxsdate="+startmaxsdate+
-					  	"&endminsdate="+endminsdate+"&endmaxsdate="+endmaxsdate+"&createminsdate="+createminsdate+"&createmaxsdate="+createmaxsdate+"&state="+state+"&ordertotal="+ordertotal+"&inputordertotal="+inputordertotal+"&ishavacomplaint="+ishavacomplaint+"&t_paytype="+t_paytype+"&index="+index+"&change_id="+change_id+"&',"+i+")\" class=\"on\">" + i + "</a>";
+					  	"&endminsdate="+endminsdate+"&endmaxsdate="+endmaxsdate+"&createminsdate="+createminsdate+"&createmaxsdate="+createmaxsdate+"&state="+state+"&ordertotal="+ordertotal+"&inputordertotal="+inputordertotal+"&ishavacomplaint="+ishavacomplaint+"&t_paytype="+t_paytype+"&t_ordertype="+t_ordertype+"&index="+index+"&change_id="+change_id+"&',"+i+")\" class=\"on\">" + i + "</a>";
 					    } else {
 					      a[a.length] = "<a onclick=\"goPage('getOrderList.do?coachphone="+coachphone+"&studentphone="+studentphone+"&startminsdate="+startminsdate+"&startmaxsdate="+startmaxsdate+
-					  	"&endminsdate="+endminsdate+"&endmaxsdate="+endmaxsdate+"&createminsdate="+createminsdate+"&createmaxsdate="+createmaxsdate+"&state="+state+"&ordertotal="+ordertotal+"&inputordertotal="+inputordertotal+"&ishavacomplaint="+ishavacomplaint+"&t_paytype="+t_paytype+"&index="+index+"&change_id="+change_id+"&',"+i+")\">" + i + "</a>";
+					  	"&endminsdate="+endminsdate+"&endmaxsdate="+endmaxsdate+"&createminsdate="+createminsdate+"&createmaxsdate="+createmaxsdate+"&state="+state+"&ordertotal="+ordertotal+"&inputordertotal="+inputordertotal+"&ishavacomplaint="+ishavacomplaint+"&t_paytype="+t_paytype+"&t_ordertype="+t_ordertype+"&index="+index+"&change_id="+change_id+"&',"+i+")\">" + i + "</a>";
 					    }
 					  }
 					  //总页数小于10
@@ -365,37 +407,37 @@ function dataExport(){
 					        setPageList();
 					      }
 					      a[a.length] = "...<a onclick=\"goPage('getOrderList.do?coachphone="+coachphone+"&studentphone="+studentphone+"&startminsdate="+startminsdate+"&startmaxsdate="+startmaxsdate+
-					  	"&endminsdate="+endminsdate+"&endmaxsdate="+endmaxsdate+"&createminsdate="+createminsdate+"&createmaxsdate="+createmaxsdate+"&state="+state+"&ordertotal="+ordertotal+"&inputordertotal="+inputordertotal+"&ishavacomplaint="+ishavacomplaint+"&index="+index+"&change_id="+change_id+"&',"+count+")\">" + count + "</a>";
+					  	"&endminsdate="+endminsdate+"&endmaxsdate="+endmaxsdate+"&createminsdate="+createminsdate+"&createmaxsdate="+createmaxsdate+"&state="+state+"&ordertotal="+ordertotal+"&inputordertotal="+inputordertotal+"&ishavacomplaint="+ishavacomplaint+"&t_ordertype="+t_ordertype+"&index="+index+"&change_id="+change_id+"&',"+count+")\">" + count + "</a>";
 					    } else if (pageindex >= count - 3) {
 					      a[a.length] = "<a onclick=\"goPage('getOrderList.do?coachphone="+coachphone+"&studentphone="+studentphone+"&startminsdate="+startminsdate+"&startmaxsdate="+startmaxsdate+
-					  	"&endminsdate="+endminsdate+"&endmaxsdate="+endmaxsdate+"&createminsdate="+createminsdate+"&createmaxsdate="+createmaxsdate+"&state="+state+"&ordertotal="+ordertotal+"&inputordertotal="+inputordertotal+"&ishavacomplaint="+ishavacomplaint+"&t_paytype="+t_paytype+"&index="+index+"&change_id="+change_id+"&',1)\">1</a>...";
+					  	"&endminsdate="+endminsdate+"&endmaxsdate="+endmaxsdate+"&createminsdate="+createminsdate+"&createmaxsdate="+createmaxsdate+"&state="+state+"&ordertotal="+ordertotal+"&inputordertotal="+inputordertotal+"&ishavacomplaint="+ishavacomplaint+"&t_paytype="+t_paytype+"&t_ordertype="+t_ordertype+"&index="+index+"&change_id="+change_id+"&',1)\">1</a>...";
 					      for (var i = count - 4; i <= count; i++) {
 					        setPageList();
 					      };
 					    } else { //当前页在中间部分
 					      a[a.length] = "<a onclick=\"goPage('getOrderList.do?coachphone="+coachphone+"&studentphone="+studentphone+"&startminsdate="+startminsdate+"&startmaxsdate="+startmaxsdate+
-					  	"&endminsdate="+endminsdate+"&endmaxsdate="+endmaxsdate+"&createminsdate="+createminsdate+"&createmaxsdate="+createmaxsdate+"&state="+state+"&ordertotal="+ordertotal+"&inputordertotal="+inputordertotal+"&ishavacomplaint="+ishavacomplaint+"&t_paytype="+t_paytype+"&index="+index+"&change_id="+change_id+"&',1)\">1</a>...";
+					  	"&endminsdate="+endminsdate+"&endmaxsdate="+endmaxsdate+"&createminsdate="+createminsdate+"&createmaxsdate="+createmaxsdate+"&state="+state+"&ordertotal="+ordertotal+"&inputordertotal="+inputordertotal+"&ishavacomplaint="+ishavacomplaint+"&t_paytype="+t_paytype+"&t_ordertype="+t_ordertype+"&index="+index+"&change_id="+change_id+"&',1)\">1</a>...";
 					      for (var i = pageindex - 2; i <= pageindex+2; i++) {
 					        setPageList();
 					      }
 					      a[a.length] = "...<a onclick=\"goPage('getOrderList.do?coachphone="+coachphone+"&studentphone="+studentphone+"&startminsdate="+startminsdate+"&startmaxsdate="+startmaxsdate+
-					  	"&endminsdate="+endminsdate+"&endmaxsdate="+endmaxsdate+"&createminsdate="+createminsdate+"&createmaxsdate="+createmaxsdate+"&state="+state+"&ordertotal="+ordertotal+"&inputordertotal="+inputordertotal+"&ishavacomplaint="+ishavacomplaint+"&t_paytype="+t_paytype+"&index="+index+"&change_id="+change_id+"&',"+count+")\">" + count + "</a>";
+					  	"&endminsdate="+endminsdate+"&endmaxsdate="+endmaxsdate+"&createminsdate="+createminsdate+"&createmaxsdate="+createmaxsdate+"&state="+state+"&ordertotal="+ordertotal+"&inputordertotal="+inputordertotal+"&ishavacomplaint="+ishavacomplaint+"&t_paytype="+t_paytype+"&t_ordertype="+t_ordertype+"&index="+index+"&change_id="+change_id+"&',"+count+")\">" + count + "</a>";
 					    }
 					  }
 					  if (pageindex == count) {
 						    a[a.length] = "<a onclick=\"\" class=\"hide_page_next unclicknext\"></a> 共"+count+"页  到第  "+
 						    "<input type=\"text\" class=\"jump_num\" id=\"topage\"/> 页"+
 						    "<a class=\"jump_btn\" onclick=\"gotoPage('getOrderList.do?coachphone="+coachphone+"&studentphone="+studentphone+"&startminsdate="+startminsdate+"&startmaxsdate="+startmaxsdate+
-							"&endminsdate="+endminsdate+"&endmaxsdate="+endmaxsdate+"&createminsdate="+createminsdate+"&createmaxsdate="+createmaxsdate+"&state="+state+"&ordertotal="+ordertotal+"&inputordertotal="+inputordertotal+"&ishavacomplaint="+ishavacomplaint+"&t_paytype="+t_paytype+"&index="+index+"&change_id="+change_id+"&',"+$("#pageSize").val()+")\")\">"+
+							"&endminsdate="+endminsdate+"&endmaxsdate="+endmaxsdate+"&createminsdate="+createminsdate+"&createmaxsdate="+createmaxsdate+"&state="+state+"&ordertotal="+ordertotal+"&inputordertotal="+inputordertotal+"&ishavacomplaint="+ishavacomplaint+"&t_paytype="+t_paytype+"&t_ordertype="+t_ordertype+"&index="+index+"&change_id="+change_id+"&',"+$("#pageSize").val()+")\")\">"+
 						    "<a id='page_msg'></a>";
 						  } else {
 						    a[a.length] = 
 						    	"<a onclick=\"nextPage("+$("#pageIndex").val()+",'getOrderList.do?coachphone="+coachphone+"&studentphone="+studentphone+"&startminsdate="+startminsdate+"&startmaxsdate="+startmaxsdate+
-						    	"&endminsdate="+endminsdate+"&endmaxsdate="+endmaxsdate+"&createminsdate="+createminsdate+"&createmaxsdate="+createmaxsdate+"&state="+state+"&ordertotal="+ordertotal+"&inputordertotal="+inputordertotal+"&ishavacomplaint="+ishavacomplaint+"&t_paytype="+t_paytype+"&index="+index+"&change_id="+change_id+"&')\" "+
+						    	"&endminsdate="+endminsdate+"&endmaxsdate="+endmaxsdate+"&createminsdate="+createminsdate+"&createmaxsdate="+createmaxsdate+"&state="+state+"&ordertotal="+ordertotal+"&inputordertotal="+inputordertotal+"&ishavacomplaint="+ishavacomplaint+"&t_paytype="+t_paytype+"&t_ordertype="+t_ordertype+"&index="+index+"&change_id="+change_id+"&')\" "+
 						    	"class=\"page_next\"></a> 共"+count+"页 到第 "+
 						    "<input type=\"text\" class=\"jump_num\" id=\"topage\"/> 页"+
 						    "<a class=\"jump_btn\" onclick=\"gotoPage('getOrderList.do?coachphone="+coachphone+"&studentphone="+studentphone+"&startminsdate="+startminsdate+"&startmaxsdate="+startmaxsdate+
-							"&endminsdate="+endminsdate+"&endmaxsdate="+endmaxsdate+"&createminsdate="+createminsdate+"&createmaxsdate="+createmaxsdate+"&state="+state+"&ordertotal="+ordertotal+"&inputordertotal="+inputordertotal+"&ishavacomplaint="+ishavacomplaint+"&t_paytype="+t_paytype+"&index="+index+"&change_id="+change_id+"&',"+$("#pageSize").val()+")\">"+
+							"&endminsdate="+endminsdate+"&endmaxsdate="+endmaxsdate+"&createminsdate="+createminsdate+"&createmaxsdate="+createmaxsdate+"&state="+state+"&ordertotal="+ordertotal+"&inputordertotal="+inputordertotal+"&ishavacomplaint="+ishavacomplaint+"&t_paytype="+t_paytype+"&t_ordertype="+t_ordertype+"&index="+index+"&change_id="+change_id+"&',"+$("#pageSize").val()+")\">"+
 						    "<a id='page_msg'></a>";
 						  }
 // 					  a[a.length]="<a href='#' onclick='addunit()' style='float: right;position: relative;right: 50px;padding: 0px; margin: 0px; top: 3px;'><img src='imgs/add_.png'></a>";

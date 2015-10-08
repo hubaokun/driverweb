@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -218,7 +219,162 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
         List<PermissionSetInfo> permissionSetInfo = (List<PermissionSetInfo>) dataDao.getObjectsViaParam(cuserhql.toString(), null);
         return permissionSetInfo;
     }
+    
+    @Override 
+    /**
+     * 获取已获得权限名称
+     * @param pString
+     * @return
+     */
+    public String getPermissionNamesByPString(String pString)
+    {
+    	String result="";
+    	List<PermissionSetInfo> permissionList=getPermissionByString(pString);
+    	Iterator<PermissionSetInfo> iter=permissionList.iterator();
+    	while(iter.hasNext())
+    	{
+    		PermissionSetInfo info=iter.next();
+    		if(info.isChecked())
+    		{
+    			if(result=="")
+    			{
+    				result+=info.getName();
+    			}else
+    			{
+    				result+=","+info.getName();
+    			}
+    			
+    		}
+    	}
+    	return result;
+    }
+    
+    private void clearCheckState(List<PermissionSetInfo> list)
+    {
+    	Iterator <PermissionSetInfo>iter=list.iterator();
+    	while(iter.hasNext())
+    	{
+    		iter.next().setChecked(false);
+    	}
+    }
+//-----权限部分开始---------------------       
+    /**
+     * 根据命令获取权限
+     * @param pString 命令串，例如1-2;3;4,2-1
+     * @return
+     */
+    
+    public List<PermissionSetInfo> getPermissionByString(String pString)
+    {
+    	StringBuffer hql=new StringBuffer();
+    	hql.append("from PermissionSetInfo where 1=1 and parentPermissionId!=0");
+    	List<PermissionSetInfo> infoList =(List<PermissionSetInfo>)dataDao.getObjectsViaParam(hql.toString(),null);
+    	clearCheckState(infoList);
+    	if(infoList!=null)
+    	{
+    		List<PermissionSetInfo> obtainPermission=parsePermissionString(pString);
+    		if(obtainPermission!=null && obtainPermission.size()>0)
+    		{
+    			this.checkPermission(infoList,obtainPermission);
+    		}
+    	}
+    	return infoList;
+    }
 
+	//获取所有权限
+	private List<PermissionSetInfo> parsePermissionString(String pString)
+	{
+		List<PermissionSetInfo> list=new ArrayList<PermissionSetInfo>();
+		if(!CommonUtils.isEmptyString(pString))
+		{
+			String[]permissions=pString.split(",");
+			if(permissions!=null)
+			{
+				for(int i=0;i<permissions.length;++i)
+				{
+					List<PermissionSetInfo>listtmp=parsePermission(permissions[i]);
+					if(listtmp!=null && listtmp.size()>0)
+					{
+						list.addAll(listtmp);
+					}
+				}
+			}
+			
+		}
+		return list;
+	}
+	
+	
+	//获取单条权限
+	private List<PermissionSetInfo> parsePermission(String permission)
+	{
+		List<PermissionSetInfo> permissionList=new ArrayList<PermissionSetInfo>();
+		if(!CommonUtils.isEmptyString(permission))
+		{
+			String pPermission="";
+			String[] firstBlade=permission.split("-");
+			String[]secondBlade=null;
+			if(firstBlade!=null && firstBlade.length!=0)
+			{
+				pPermission=firstBlade[0];
+				if(firstBlade.length>1)
+				{
+					secondBlade=firstBlade[1].split(";");
+				}
+			}
+			if(!CommonUtils.isEmptyString(pPermission))
+			{
+				if(secondBlade!=null && secondBlade.length!=0)
+				{
+					for(int i=0;i<secondBlade.length;++i)
+					{
+							PermissionSetInfo info=new PermissionSetInfo();
+							info.setParentPermissionId(Integer.parseInt(pPermission));
+							info.setPermissionid(Integer.parseInt(secondBlade[i]));
+							permissionList.add(info);
+					}	
+				}
+			}
+			
+		}
+		
+		return permissionList;
+	}
+	
+	/**
+	 * 标记已获得的权限
+	 * @param allPermission
+	 * @param permissions
+	 * @return  
+	 */
+	private void checkPermission(List<PermissionSetInfo>allPermission,List<PermissionSetInfo>permissions)
+	{
+		Iterator<PermissionSetInfo>iterP;
+		Iterator<PermissionSetInfo>iter=permissions.iterator();
+		PermissionSetInfo ptmp=null;
+		PermissionSetInfo ctmp=null;
+		
+		while(iter.hasNext())
+		{
+			ctmp=iter.next();
+			iterP=allPermission.iterator();
+			while(iterP.hasNext())
+			{
+				ptmp=iterP.next();
+				if(ptmp.getParentPermissionId()==ctmp.getParentPermissionId())
+				{
+					if(ptmp.getPermissionid()==ctmp.getPermissionid())
+					{
+						ptmp.setChecked(true);
+						break;
+						
+					}
+				}
+			}
+		}
+	}
+	
+ //-----权限部分结束---------------------   
     @Override
     public AdminInfo getAdminInfoBylogin(String loginname) {
         StringBuffer cuserhql = new StringBuffer();
@@ -2052,5 +2208,38 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 		 else
 			 return 1;
 	}
+		//获取父权限
+	public List<PermissionSetInfo> getParentPermissions()
+	{
+		String hql="from PermissionSetInfo where parentPermissionId=:pPermission";
+		String[] params={"pPermission"};
+		List<PermissionSetInfo> list=(List<PermissionSetInfo>) dataDao.getObjectsViaParam(hql, params,0);
+		return list;
+	}
 	
+	//添加权限
+	public boolean addPermission(PermissionSetInfo info)
+	{
+		if(!isExist(info))
+		{
+			dataDao.addObject(info);
+			return true;
+		}else
+		{
+			return false;
+		}
+	}
+	private boolean isExist(PermissionSetInfo info)
+	{
+		String hql="from PermissionSetInfo where mappedAction=:mappedAction";
+		String[] params={"mappedAction"};
+		List<PermissionSetInfo>list=(List<PermissionSetInfo>) dataDao.getObjectsViaParam(hql, params,info.getMappedAction());
+		if(list==null || list.size()==0)
+		{
+			return false;
+		}else
+		{
+			return true;
+		}
+	}
 }

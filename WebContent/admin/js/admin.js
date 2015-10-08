@@ -354,17 +354,68 @@ for (var int = 0; int < admin_permession.length; int++) {
 		count++;
 	}
 }
-if(count==0){
-	 alert("请选择权限");
-     return false;
-}else{
-	$("#editpower").submit();
-}
+
+$("#editpower").submit();
+
 }
 
+//显示父权限
+function setPid()
+{
+	$.ajax({
+		type : "POST",
+		url : "getParentPermission.do",
+		 async: false,
+		data :{},
+		success : function(data)
+		{
+			
+			var options=document.getElementById("selectPid");
+			options.add(new Option("所有权限",0));
+			parentPermission=eval(data);
+			if(parentPermission!=-1)
+			{
+				for(var i in parentPermission)
+				{
+					var opt=new Option(parentPermission[i].name,parentPermission[i].permissionid);
+					options.add(opt);
+				}
+			}
+			
+		}
+	});
+}
+
+//筛选权限
+function selectPermission()
+{
+	flag=$("#selectPid").val();
+	var form=$("#editpower");
+	var checkboxes=form.find("input[type='checkbox']");
+	checkboxes.each(function(){
+		if(flag==0)
+		{
+			$(this).parent().css("display","block");
+		}else
+		{
+			var str=$(this).val();
+			str=str.split(",");
+			if(str[0]==flag)
+			{
+				$(this).parent().css("display","block");
+			}else
+			{
+				$(this).parent().css("display","none");
+			}
+		}
+	});
+}
 //显示编辑权限
 function showchangepermession(index){
+	str="";
 	$("#admin_idpower").val(index);
+	setPid();
+	var pid=$("#selectPid").val();
 	$.ajax({
 		type : "POST",
 		url : "getMyPermession.do",
@@ -373,28 +424,22 @@ function showchangepermession(index){
 		},
 		success : function(data) {
 			var jsondata = eval("("+data+")");
-			var per=jsondata.per;
 			var permession=jsondata.permissions;
 			$("#changepermession").empty();
 			for (var i = 0; i < permession.length; i++) {
-				var flag=0;
-				for (var j = 0; j < per.length; j++) {
-					if(per[j]==permession[i].permissionid){
-						flag=1;
-						break;
-					}
-				}
-				if(flag==1){
-					$("#changepermession").append("<div style='width:180px;height: 25px;float:left;'>"+
+				if(permession[i].checked){
+					str+=permession[i].name;
+					$("#changepermession").append("<div style='width:180px;height:28px;float:left;margin-top:8px;'>"+
 						
-						"<input value="+permession[i].permissionid+" type='checkbox' style='width: 50px; height: 25px; margin-left: 5px; margin-top: 5px; font-size: 18px; text-align: center;cursor: pointer;' name='permession' checked='checked'/>"
-						+"<span style='width: 100px; position: relative; top: -7px;margin-left: 10px;'>"+permession[i].name+"</span></div>");
+						"<input value="+permession[i].parentPermissionId+","+permession[i].permissionid+" type='checkbox' style='width: 50px; height: 25px; margin-left: 5px; margin-top: 5px; font-size: 18px; text-align: center;cursor: pointer;float:left;' name='permession' checked='checked'/>"
+						+"<span style='width: 100px;height: 25px; position: relative;margin-left: 10px;overflow: hidden;line-height:28px;float:left;' title='"+permession[i].name+"'>"+permession[i].name+"</span></div>");
 				}else{
-					$("#changepermession").append("<div style='width:180px;height: 25px;float:left;'>"+
-							"<input value="+permession[i].permissionid+" type='checkbox' style='width: 50px; height: 25px; margin-left: 5px; margin-top: 5px; font-size: 18px; text-align: center;cursor: pointer;' name='permession' />"
-						+"<span style='width: 100px; position: relative; top: -7px;margin-left: 10px;'>"+permession[i].name+"</span></div>");
+					$("#changepermession").append("<div style='width:180px;height:28px;float:left;margin-top:8px;'>"+
+							"<input value="+permession[i].parentPermissionId+","+permession[i].permissionid+" type='checkbox' style='width: 50px; height: 25px; margin-left: 5px; margin-top: 5px; font-size: 18px; text-align: center;cursor: pointer;float:left;' name='permession' />"
+						+"<span style='width: 100px;height: 28px; position: relative;margin-left: 10px;overflow: hidden;float:left;line-height:28px;'title='"+permession[i].name+"'>"+permession[i].name+"</span></div>");
 				}
 			}
+		$("#changepermession").append("<div style='clear:both;'></div>");
 		}
 	});
 	$("#power").show();
@@ -409,4 +454,66 @@ function unshowchangepermession(){
 	$("#power_last").hide();
 }
 
+//新建权限
+function newPermission(flag)
+{
+	if(flag=="display")
+	{
+		return function display(){
+		obj=document.getElementById("newPermissionForm");
+		obj.style.display="block";
+		setParentPermissions();
+		}
+	}
+	if(flag=="hide")
+	{
+		return function hide()
+		{
+			obj.style.display="none";
+			var options=document.getElementById("parentPermission");
+			options.length=0;
+		}
+	}
+	
+	if(flag=="error")
+	{
+		return function error(code){
+			if(code==1)
+			{
+				alert("新建权限失败");
+			}else if(code==2)
+			{
+				alert("新建权限成功！");
+			}
+			
+		}
+	}
+	
+	//获取父权限
+	function setParentPermissions()
+	{
+		$.ajax({
+			type : "POST",
+			url : "getParentPermission.do",
+			 async: false,
+			data :{},
+			success : function(data)
+			{
+				
+				var options=document.getElementById("parentPermission");
+				options.add(new Option("新建父权限",0));
+				parentPermission=eval(data);
+				if(parentPermission!=-1)
+				{
+					for(var i in parentPermission)
+					{
+						var opt=new Option(parentPermission[i].name,parentPermission[i].permissionid);
+						options.add(opt);
+					}
+				}
+				
+			}
+		});
+	}
+}
 

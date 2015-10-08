@@ -37,6 +37,7 @@ $(function(){
 		<div id="content_form">
 			<div id="content_form_top">
 			<div class="addbutton" onclick="showaddadmin()">+&nbsp;添加</div>
+			<div class="addbutton" onclick="(newPermission('display'))()" style="background: #4cc2ff;">新建权限</div>
 					<div class="searchbutton" onclick="searchadmins()">
 						<img src="imgs/common/searchicon.png" width=22px height=22px
 							style="margin-top: 9px;" >
@@ -378,24 +379,41 @@ $(function(){
 	
 	
 	<!-- 权限编辑弹框-->
-	<div id="power" class="power"></div>
-	<div id="power_sec" style="position: fixed; width: 100%; height: 300px;z-index: 300">
-		<div id="power_last" class="power_last">
-		<div style="position: fixed; width: 600px; height: 300px;background: #4cc2ff;margin-left: 50px;margin-top: 50px;">
+	<div id="power" class="power" style="background-color:rgba(112,112,122,0.5);opacity:1;">
+		<div style="width: 600px; height:auto;background: #4cc2ff;margin:auto;margin-top: 50px;border:10px solid white">
 		<form action="changePermession.do" id="editpower" method="post">
 		<input type="hidden" id="admin_idpower" name="formadminid" value="2"/>
 		<input type="hidden" id="admin_pageIndex" value="" name="pageIndex" />
-		<input  style="width: 300px;height: 40px;margin-top:20px;margin-left:150px;font-size: 18px;background: #e5e5e5;text-align: center;font-family: 微软雅黑" placeholder="请选择新的权限" readonly="readonly"/>
+		<input type="hidden" value="${searchlogin}" name="searchlogin"/>
+		<input type="hidden" value="${searchtelphone}" name="searchtelphone"/>
+		<select id="selectPid"  style="width: 300px;height: 40px;margin-top:20px;margin-left:150px;font-size: 18px;background: #e5e5e5;text-align: center;font-family: 微软雅黑"  readonly="readonly" onchange="selectPermission()"></select>
 		
-		<div id="changepermession" style="width: 540px;height: 110px;margin: auto;margin-left: 25px;margin-top:20px;font-size: 18px;background: #fff;">
-		
+		<div id="changepermession" style="width: 540px;height:auto;margin: auto;margin-left: 25px;margin-top:20px;font-size: 18px;background: #fff;">
 		</div>
 		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 200px;margin-top: 40px;font-size: 18px" value="确定" onclick="changepermession()">
 		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 180x;margin-top: -40px;font-size: 18px" value="取消" onclick="unshowchangepermession()">
 		</form>
 		</div>
-		</div>
+		
 	</div>
 	
+	<!-- 新建权限弹框-->
+	<form id="newPermissionForm" action="addPermission.do" style="width: 100%;height: 100%;z-index: 500;position: fixed;top: 0px;left: 0px;background-color: rgba(122, 122, 122, 0.498039);display:none;">
+		<div style="width:450px;height:300px;margin:auto;margin-top:30px;background:rgb(76,194,255);opacity:1;border:5px white solid;">
+			<span style="width:100%;height:40px;display:block;font-size:20px;font-weight:bolder; line-height:40px; text-align:center;margin-top:20px;">新建权限</span>
+			<span style="width:100%;display:block;height:40px;"><label style="width:100px;display:block;float:left;line-height:40px;text-align:right;font-size:16px;">父权限:</label><select id="parentPermission" style="width:180px;height:40px;float:left;" name="parentPermission"></select></span>
+			<span style="width:100%;display:block;height:40px;margin-top:10px;"><label style="width:100px;display:block;float:left;line-height:40px;text-align:right;font-size:16px;">权限名称:</label><input type="text" style="width:180px;height:40px;float:left;font-size:16px;" name="permissionName"/><label style="line-height:40px; font-size:16px;color:red;display:none;display:${displayflag}">*失败，action已存在</label></span>
+			<span style="width:100%;display:block;height:40px;margin-top:10px;"><label style="width:100px;display:block;float:left;line-height:40px;text-align:right;font-size:16px;">关联Action</label><input type="text" style="width:180px;height:40px;float:left;font-size:16px;text-align:right;" name="mappedAction"/><label style="line-height:40px; font-size:16px;">.do</label></span>
+			<span style="width:280px;height:40px;display:block; margin:auto;margin-top:20px;clear:both;">
+			<input type="submit" style="width: 100px;height: 40px;font-size: 18px;float:left; margin-right:20px;" value="新建">
+			<input type="button" style="width: 100px;height: 40px;font-size: 15px;float:left; margin-left:20px;" value="取消" onclick="(newPermission('hide'))()">
+ 			</span>
+		</div>
+	</form>
+	<script>
+		//检查是否新建权限成功
+		code="<%=request.getParameter("error")%>";
+		(newPermission("error"))(code);
+	</script>
 </body>
 </html>
