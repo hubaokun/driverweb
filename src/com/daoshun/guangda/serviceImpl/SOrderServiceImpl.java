@@ -1657,7 +1657,7 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 
 	@Override
 	public QueryResult<OrderInfo> getOrderList(String coachphone, String studentphone, String startminsdate, String startmaxsdate, String endminsdate, String endmaxsdate,String createminsdate, String createmaxsdate, Integer state,
-			Integer ordertotal, String inputordertotal, Integer ishavacomplaint,Integer paytype, Integer pageIndex, int pagesize) {
+			Integer ordertotal, String inputordertotal, Integer ishavacomplaint,Integer paytype,Integer ordertype, Integer pageIndex, int pagesize) {
 		StringBuffer cuserhql = new StringBuffer();
 		cuserhql.append("from OrderInfo where 1=1");
 		if (!CommonUtils.isEmptyString(coachphone)) {
@@ -1729,23 +1729,46 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				cuserhql.append(" and orderid not in (select orderid from OrderRecordInfo where operation in(7,9))");
 			}
 		}
-		if(paytype!=null)
+		if(paytype!=null && paytype!=0)
 		{
-			if(paytype!=0)
-				cuserhql.append(" and paytype ="+paytype);
+			cuserhql.append(" and paytype ="+paytype);
 		}
+		if(ordertype!=null && ordertype!=0)
+		{
+			if(ordertype==1)
+			{
+				cuserhql.append(" and orderid in (select orderid from OrderPrice where subject='科目二')");
+			}
+			if(ordertype==2)
+			{
+				cuserhql.append(" and orderid in (select orderid from OrderPrice where subject='科目三')");
+			}
+			if(ordertype==3)
+			{
+				cuserhql.append(" and orderid in (select orderid from OrderPrice where subject='考场练习')");
+			}
+			if(ordertype==4)
+			{
+				cuserhql.append(" and orderid in (select orderid from OrderPrice where subject='陪驾')");
+			}
+		}
+		
 		cuserhql.append(" order by creat_time desc");
 		List<OrderInfo> orderlist = (List<OrderInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), pagesize, pageIndex, null);
 		if (orderlist != null && orderlist.size() > 0) {
 			for (OrderInfo order : orderlist) {
 				SuserInfo student = dataDao.getObjectById(SuserInfo.class, order.getStudentid());
 				CuserInfo coach = dataDao.getObjectById(CuserInfo.class, order.getCoachid());
+				String querystring="from OrderPrice where orderid=:orderid";
+				String[] param={"orderid"};
+				OrderPrice orderprice=(OrderPrice) dataDao.getFirstObjectViaParam(querystring, param, order.getOrderid());
 				if (student != null) {
 					order.setStudentinfo(student);
 				}
 				if (coach != null) {
 					order.setCuserinfo(coach);
 				}
+				order.setSubjectname(orderprice.getSubject());
 				StringBuffer cuserhql1 = new StringBuffer();
 				cuserhql1.append("from ComplaintInfo where order_id =:orderid ");
 				String[] params = { "orderid" };

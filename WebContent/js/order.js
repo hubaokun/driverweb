@@ -47,6 +47,7 @@ function searchOrder(){
 	var index = $("#index").val();
 	var change_id = $("#change_id").val();
 	var t_paytype=$("#t_paytype").val();
+	var t_ordertype=$("#t_ordertype").val();
 	window.location.href="getOrderList.do?coachphone="+coachphone+"&studentphone="+studentphone+"&startminsdate="+startminsdate+"&startmaxsdate="+startmaxsdate+
-	"&endminsdate="+endminsdate+"&endmaxsdate="+endmaxsdate+"&createminsdate="+createminsdate+"&createmaxsdate="+createmaxsdate+"&state="+state+"&ordertotal="+ordertotal+"&inputordertotal="+inputordertotal+"&ishavacomplaint="+ishavacomplaint+"&t_paytype="+t_paytype+"&index="+index+"&change_id="+change_id;
+	"&endminsdate="+endminsdate+"&endmaxsdate="+endmaxsdate+"&createminsdate="+createminsdate+"&createmaxsdate="+createmaxsdate+"&state="+state+"&ordertotal="+ordertotal+"&inputordertotal="+inputordertotal+"&ishavacomplaint="+ishavacomplaint+"&t_paytype="+t_paytype+"&t_ordertype="+t_ordertype+"&index="+index+"&change_id="+change_id;
 }

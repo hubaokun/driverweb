@@ -956,9 +956,9 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 
     		result.put("notify_url", CommonUtils.getWebRootUrl() + "alipay_callback");
     		result.put("out_trade_no", info.getRechargeid());
-    		result.put("subject", "小巴教练充值：" + amount + "元");
+    		result.put("subject", "小巴学车充值：" + amount + "元");
     		result.put("total_fee", amount);
-    		result.put("body", "小巴教练充值：" + amount + "元");
+    		result.put("body", "小巴学车充值：" + amount + "元");
         }
         else if(resource.equals("1"))
         {

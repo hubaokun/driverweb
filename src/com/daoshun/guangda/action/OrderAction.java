@@ -98,6 +98,8 @@ public class OrderAction extends BaseAction {
 	private String dataenddate;
 	
 	private Integer t_paytype;
+	
+	private Integer t_ordertype;
 	/**
 	 * 获取订单列表
 	 * @return
@@ -106,7 +108,7 @@ public class OrderAction extends BaseAction {
 	public String getOrderList() {
 		HttpSession session = ServletActionContext.getRequest().getSession();
 		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
-		QueryResult<OrderInfo> result = orderService.getOrderList(coachphone,studentphone,startminsdate,startmaxsdate,endminsdate,endmaxsdate,createminsdate,createmaxsdate,state,ordertotal,inputordertotal,ishavacomplaint,t_paytype, pageIndex, pagesize);
+		QueryResult<OrderInfo> result = orderService.getOrderList(coachphone,studentphone,startminsdate,startmaxsdate,endminsdate,endmaxsdate,createminsdate,createmaxsdate,state,ordertotal,inputordertotal,ishavacomplaint,t_paytype,t_ordertype, pageIndex, pagesize);
 		total = result.getTotal();
 		orderlist = result.getDataList();
 		for(int i=0; i< orderlist.size();i++)
@@ -627,6 +629,14 @@ public class OrderAction extends BaseAction {
 
 	public void setT_paytype(Integer t_paytype) {
 		this.t_paytype = t_paytype;
+	}
+
+	public Integer getT_ordertype() {
+		return t_ordertype;
+	}
+
+	public void setT_ordertype(Integer t_ordertype) {
+		this.t_ordertype = t_ordertype;
 	}
 	
 	
