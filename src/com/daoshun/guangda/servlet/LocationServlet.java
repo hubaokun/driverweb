@@ -155,6 +155,18 @@ public class LocationServlet extends BaseServlet{
 			}else{
 				resultMap.put("minprice", tempAutoPositionInfo.getMinprice().doubleValue());
 			}
+			if(tempAutoPositionInfo.getAttachcarmaxprice()==null)
+			{
+				resultMap.put("attachcarmaxprice", 0);
+			}else{
+				resultMap.put("attachcarmaxprice", tempAutoPositionInfo.getAttachcarmaxprice().doubleValue());
+			}
+			if(tempAutoPositionInfo.getAttachcarminprice()==null)
+			{
+				resultMap.put("attachcarminprice", 0);
+			}else{
+				resultMap.put("attachcarminprice", tempAutoPositionInfo.getAttachcarminprice().doubleValue());
+			}
 			/*if(tempAutoPositionInfo.getDefaultprice()==null){
 				resultMap.put("defaultprice", 0);
 			}else{
