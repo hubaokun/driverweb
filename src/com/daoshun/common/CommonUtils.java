@@ -84,6 +84,9 @@ public class CommonUtils {
 	public static String getMchid() {
 		return properties.getProperty("mchid");
 	}
+	public static String getSmchid() {
+		return properties.getProperty("smchid");
+	}
 	public static String getWXKey() {
 		return properties.getProperty("key");
 	}

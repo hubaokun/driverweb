@@ -197,6 +197,11 @@ public class CuserInfo implements Serializable {
 	// 教练教车单价
 	@Column(name = "price", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")
 	private BigDecimal price;
+	
+	// 教练用车单价
+	@Column(name = "addtionalprice", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")
+	private BigDecimal addtionalprice;
+	
 
 	// 教练默认教学科目 0表示未设置
 	@Column(name = "subjectdef", length = 10, nullable = false, columnDefinition = "INT default 0")

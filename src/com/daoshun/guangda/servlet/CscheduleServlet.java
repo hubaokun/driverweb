@@ -737,6 +737,7 @@ public class CscheduleServlet extends BaseServlet {
 						} else {
 							info.setHasbooked(0);
 						}
+						info.setCuseraddtionalprice(cuser.getAddtionalprice());
 						schedulelist.add(info);
 					}
 					else
@@ -761,9 +762,9 @@ public class CscheduleServlet extends BaseServlet {
 								info.setExpire(1);
 							}
 						}
+						info.setCuseraddtionalprice(cuser.getAddtionalprice());
 						schedulelist.add(info);
-					}
-						
+					}	
 				}
 			}
 			// 获得最新的list
@@ -1426,6 +1427,7 @@ public class CscheduleServlet extends BaseServlet {
 			resultMap.put("message", "设置失败,数据错误");
 			return;
 		} else {
+			String realaddtionalprice="0.00";
 			for (int i = 0; i < json.length(); i++) {
 				JSONObject nextjson = null;
 				String hour = null;
@@ -1433,6 +1435,7 @@ public class CscheduleServlet extends BaseServlet {
 				String isrest = null;
 				String addressid = null;
 				String subjectid = null;
+				String addtionalprice = null;
 				try {
 					nextjson = json.getJSONObject(i);
 					hour = nextjson.getString("hour");
@@ -1440,6 +1443,7 @@ public class CscheduleServlet extends BaseServlet {
 					isrest = nextjson.getString("isrest");
 					addressid = nextjson.getString("addressid");
 					subjectid = nextjson.getString("subjectid");
+					addtionalprice = nextjson.getString("addtionalprice");
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -1465,7 +1469,7 @@ public class CscheduleServlet extends BaseServlet {
 					return;
 				}
 				CscheduleInfo cscheduleInfo = cscheduleService.getCscheduleByday(coachid, day, hour);// 根据时间教练 找到日程信息
-
+                CuserInfo cuser=cuserService.getCoachByid(CommonUtils.parseInt(coachid, 0));
 				if (cscheduleInfo == null) {
 					// 新添加日程
 					CscheduleInfo scheduleInfo = new CscheduleInfo();
@@ -1481,6 +1485,9 @@ public class CscheduleServlet extends BaseServlet {
 					scheduleInfo.setAddressid(CommonUtils.parseInt(addressid, 0)); // 设置地址id
 
 					scheduleInfo.setSubjectid(CommonUtils.parseInt(subjectid, 0));// 设置科目id
+					
+					scheduleInfo.setAddtionalprice(new BigDecimal(CommonUtils.parseDouble(addtionalprice, 0d)));
+					
 					cscheduleService.addScheduleInfo(scheduleInfo);
 				} else {
 					BigDecimal b = new BigDecimal(CommonUtils.parseDouble(price, 0d));
@@ -1491,12 +1498,24 @@ public class CscheduleServlet extends BaseServlet {
 					cscheduleInfo.setAddressid(CommonUtils.parseInt(addressid, 0)); // 设置地址id
 
 					cscheduleInfo.setSubjectid(CommonUtils.parseInt(subjectid, 0));// 设置科目id
+					
+					cscheduleInfo.setAddtionalprice(new BigDecimal(CommonUtils.parseDouble(addtionalprice, 0d)));
+					
 					cscheduleService.updateScheduleInfo(cscheduleInfo);
 				}
-				cscheduleService.setDefaultNew(coachid, hour, price, addressid, subjectid,isrest);
+				
+
+				cscheduleService.setDefaultNew(coachid, hour, price, addressid, subjectid,isrest,addtionalprice);
+				if(!addtionalprice.equals("0"))
+				{
+					cuser.setAddtionalprice(new BigDecimal(CommonUtils.parseDouble(addtionalprice, 0d)));
+				    cuserService.updateCuser(cuser);
+				    realaddtionalprice=addtionalprice;
+				   
+				}
 				
 			}
-			
+			cscheduleService.setDefaultAddtionalPirce(coachid, realaddtionalprice);
 			resultMap.put("code", 1);
 			resultMap.put("message", "修改成功");
 		}
@@ -1673,6 +1692,7 @@ public class CscheduleServlet extends BaseServlet {
 				resultMap.put("message", "设置失败,数据错误");
 				return;
 			} else {
+				String realaddtionalprice="0.00";
 				for (int i = 0; i < json.length(); i++) {
 					JSONObject nextjson = null;
 					String hour = null;
@@ -1680,6 +1700,7 @@ public class CscheduleServlet extends BaseServlet {
 					String isrest = null;
 					String addressid = null;
 					String subjectid = null;
+					String addtionalprice =null;
 					try {
 						nextjson = json.getJSONObject(i);
 						hour = nextjson.getString("hour");
@@ -1687,6 +1708,7 @@ public class CscheduleServlet extends BaseServlet {
 						isrest = nextjson.getString("isrest");
 						addressid = nextjson.getString("addressid");
 						subjectid = nextjson.getString("subjectid");
+						addtionalprice = nextjson.getString("addtionalprice");
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
@@ -1698,7 +1720,7 @@ public class CscheduleServlet extends BaseServlet {
 					}
 	
 					CscheduleInfo cscheduleInfo = cscheduleService.getCscheduleByday(coachid, day, hour);// 根据时间教练 找到日程信息
-	
+					CuserInfo cuser=cuserService.getCoachByid(CommonUtils.parseInt(coachid, 0));
 					if (cscheduleInfo == null) {
 						// 新添加日程
 						CscheduleInfo scheduleInfo = new CscheduleInfo();
@@ -1714,6 +1736,8 @@ public class CscheduleServlet extends BaseServlet {
 						scheduleInfo.setAddressid(CommonUtils.parseInt(addressid, 0)); // 设置地址id
 	
 						scheduleInfo.setSubjectid(CommonUtils.parseInt(subjectid, 0));// 设置科目id
+						
+						scheduleInfo.setAddtionalprice(new BigDecimal(CommonUtils.parseDouble(addtionalprice, 0d)));
 						if(hournow>=CommonUtils.parseInt(hour, 0) && c.getTime().compareTo(CommonUtils.getDateFormat(day, "yyyy-MM-dd"))==1)//设置过期时间
 							scheduleInfo.setExpire(1);
 						else
@@ -1735,10 +1759,20 @@ public class CscheduleServlet extends BaseServlet {
 							cscheduleInfo.setExpire(1);
 						else
 							cscheduleInfo.setExpire(0);
+						
+						cscheduleInfo.setAddtionalprice(new BigDecimal(CommonUtils.parseDouble(addtionalprice, 0d)));
 						cscheduleService.updateScheduleInfo(cscheduleInfo);
 					}
-					cscheduleService.setDefaultNew(coachid, hour, price, addressid, subjectid,isrest);
+					cscheduleService.setDefaultNew(coachid, hour, price, addressid, subjectid,isrest,addtionalprice);
+					if(!addtionalprice.equals("0.00"))
+					{
+						cuser.setAddtionalprice(new BigDecimal(CommonUtils.parseDouble(addtionalprice, 0d)));
+						cuserService.updateCuser(cuser);
+						realaddtionalprice=addtionalprice;
+						
+					}
 				}
+				cscheduleService.setDefaultAddtionalPirce(coachid, realaddtionalprice);
 			}
 		}
 		else if(type.equals("2"))

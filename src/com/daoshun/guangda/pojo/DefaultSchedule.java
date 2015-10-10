@@ -42,6 +42,10 @@ public class DefaultSchedule implements Serializable {
 	@Column(name = "price", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")
 	private BigDecimal price;
 
+	// 教练用车单价，同教练表中的价格
+	@Column(name = "cuseraddtionalprice", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")
+	private BigDecimal cuseraddtionalprice;
+	
 	// 是否休息(0、不休息 1、休息)
 	@Column(name = "isrest", nullable = false, columnDefinition = "INT default 0")
 	private Integer isrest = 0;
@@ -159,6 +163,14 @@ public class DefaultSchedule implements Serializable {
 
 	public void setSubject(String subject) {
 		this.subject = subject;
+	}
+
+	public BigDecimal getCuseraddtionalprice() {
+		return cuseraddtionalprice;
+	}
+
+	public void setCuseraddtionalprice(BigDecimal cuseraddtionalprice) {
+		this.cuseraddtionalprice = cuseraddtionalprice;
 	}
 
 }

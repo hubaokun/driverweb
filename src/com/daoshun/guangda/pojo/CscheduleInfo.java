@@ -75,6 +75,10 @@ public class CscheduleInfo implements Serializable {
 	@Column(name = "bookstate", length = 10,columnDefinition = "INT default 0")
 	private int bookstate;
 	
+	// 附加价格(用来表示陪驾教练用车价)
+	@Column(name = "addtionalprice", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")
+	private BigDecimal addtionalprice;
+	
 	// 地址详细
 	@Transient
 	private String addressdetail;
@@ -96,6 +100,10 @@ public class CscheduleInfo implements Serializable {
 	@Transient
 	private String bookedername;// 预约人的姓名
 
+	@Transient
+	private BigDecimal cuseraddtionalprice;//教练用车价格
+	
+	
 	public String getAddressdetail() {
 		return addressdetail;
 	}
@@ -240,6 +248,22 @@ public class CscheduleInfo implements Serializable {
 
 	public void setBookedername(String bookedername) {
 		this.bookedername = bookedername;
+	}
+
+	public BigDecimal getAddtionalprice() {
+		return addtionalprice;
+	}
+
+	public void setAddtionalprice(BigDecimal addtionalprice) {
+		this.addtionalprice = addtionalprice;
+	}
+
+	public BigDecimal getCuseraddtionalprice() {
+		return cuseraddtionalprice;
+	}
+
+	public void setCuseraddtionalprice(BigDecimal cuseraddtionalprice) {
+		this.cuseraddtionalprice = cuseraddtionalprice;
 	}
 
 }

@@ -978,6 +978,10 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
         	{
         		result.put("ERROR", "FAIL");
         	}
+    	    if(trade_type!=null && trade_type.equals("APP"))
+    	    {
+    	    	result.put("mch_id", CommonUtils.getSmchid());
+    	    }
         	result.put("appId", appid);
         	result.put("prepay_id", prepay_id);
         	result.put("timeStamp", timeStamp);
