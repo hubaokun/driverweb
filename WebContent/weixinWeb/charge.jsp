@@ -127,6 +127,7 @@ $(document).ready(function()
 	$('.cash-sure').click(function ()
 	{
 		var action ="RECHARGE";
+		var trade_type="JSAPI";
 		var amount=$("#amount").val();
 		if(amount=="")
 		{
@@ -150,7 +151,8 @@ $(document).ready(function()
 					studentid : studentid,
 					amount : amount,
 					resource : 1,
-					token : token
+					token : token,
+					trade_type : trade_type
 				},
 				success : function(data) {
 					hide_loading();

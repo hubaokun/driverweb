@@ -2088,7 +2088,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 			else
 			   return 0;
 	}
-
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override
 	public String coachgrantcoupon(String coachid,String phone,Integer pubnum) {
 		SuserInfo userinfo =suserService.getUserByPhone(phone);
