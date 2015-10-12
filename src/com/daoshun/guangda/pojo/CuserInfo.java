@@ -1189,4 +1189,12 @@ public class CuserInfo implements Serializable {
 		this.accompanycoursestate = accompanycoursestate;
 	}
 
+	public BigDecimal getAddtionalprice() {
+		return addtionalprice;
+	}
+
+	public void setAddtionalprice(BigDecimal addtionalprice) {
+		this.addtionalprice = addtionalprice;
+	}
+
 }
