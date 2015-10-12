@@ -1012,7 +1012,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			info.setAddtime(new Date());
 			info.setAmount(new BigDecimal(CommonUtils.parseFloat(amount, 0.0f)));
 			info.setType(3);
-			info.setPaytype(0);//支付宝支付
+			info.setPaytype(CommonUtils.parseInt(resource, 0));
 			info.setUserid(CommonUtils.parseInt(studentid, 0));
 			dataDao.addObject(info);
 		if(resource.equals("0"))

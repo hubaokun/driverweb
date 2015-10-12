@@ -2024,7 +2024,10 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
             }
 
             info.setUpdatetime(new Date());
-            info.setOpenid(openid);
+            if(!openid.equals(""))
+            {
+                info.setOpenid(openid);
+            }
             info.setWxorderid(weixinorderid);
             info.setState(1);
             dataDao.updateObject(info);

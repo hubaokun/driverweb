@@ -47,6 +47,7 @@ public class weixinpayServlet extends BaseServlet{
 			List<Element> elements=root.elements();
 			for(Element e:elements)
 			{
+				//System.out.println(e.getName()+"   "+e.getText());
 				if(e.getName().equals("out_trade_no"))
 				   out_trade_no=e.getText();
 				if(e.getName().equals("transaction_id"))
