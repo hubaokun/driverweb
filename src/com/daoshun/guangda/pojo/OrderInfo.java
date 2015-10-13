@@ -95,6 +95,10 @@ public class OrderInfo implements Serializable {
 
 	@Column(name = "cancancel", length = 1, nullable = false, columnDefinition = "INT default 0")
 	private Integer cancancel;
+	
+	// 是否带车陪驾
+	@Column(name = "attachcar", length = 1, nullable = false, columnDefinition = "INT default 0")
+	private Integer attachcar = 0;
 	// 经度
 	@Column(name = "longitude", length = 50, nullable = false)
 	private String longitude;
@@ -622,6 +626,7 @@ public class OrderInfo implements Serializable {
 		this.order_pull2 = order_pull2;
 	}
 
+
 	public String getRemarks() {
 		return remarks;
 	}
@@ -630,4 +635,13 @@ public class OrderInfo implements Serializable {
 		this.remarks = remarks;
 	}
 	
+
+	public Integer getAttachcar() {
+		return attachcar;
+	}
+
+	public void setAttachcar(Integer attachcar) {
+		this.attachcar = attachcar;
+	}
+
 }

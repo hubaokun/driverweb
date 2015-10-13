@@ -19,7 +19,7 @@ pageEncoding="UTF-8"%>
 <script src="js/iscroll.js"></script>
 <script type="text/javascript">
 var active_url = "../sbook?action=GETCOACHLIST";
-var studentid="${sessionScope.studentid}";studentid=19930;
+var studentid="${sessionScope.studentid}";//studentid=19930;
 var pagenum=0;
 var city="杭州";//"${sessionScope.city}";
 var myScroll,
@@ -340,7 +340,12 @@ $(document).ready(function()
 		search_coache();
 	});
 	
-	
+	$('#search_coach').keydown(function (event) {
+		if(event.keyCode=="13"){
+			search_com();
+			return false;
+		}
+		        });
 	
 });
 
@@ -461,8 +466,6 @@ function dispalyDetail(event){
 function getSelectedSchoolId(event){
 	driverschoolid = $(event).find("option:selected").attr("id");
 }
-
-
 </script>
 </body>
 </html>

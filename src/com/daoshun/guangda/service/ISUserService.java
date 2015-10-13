@@ -333,7 +333,7 @@ public interface ISUserService {
     public QueryResult<SuserInfo> setStudentSchool(Integer pageIndex, int pagesize);
     public int getCanUseCoinnumForPlatform(String coachid, String studentid);
     public HashMap<String, Object> getConsumeAmount(String studentid);
-    public HashMap<String, Object> promoRecharge(String studentid, String amount);
+    public HashMap<String, Object> promoRecharge(String studentid, String amount,String resource,String ip,String trade_type,String appid) throws IOException;
     public void addAlipayCallBack(String qs,String ru);
     public void promoEnrollCallback(String out_trade_no);
     public HashMap<String, Object> getCoinAffiliation(String studentid);

@@ -182,7 +182,9 @@ function getAllPayTypeBlance()
 			money_available= data.money;
 			coinnum_available_local= data.coinnum;
 			money_available_local= data.money;
-			couponlist_available_local=couponlist_available.concat();
+			if(couponlist_available){
+				couponlist_available_local=couponlist_available.concat();
+			}
 // 			/*临时调试赋值*/
 // 			 			couponlist_available=null;
 // 						couponlist_available_local=null;

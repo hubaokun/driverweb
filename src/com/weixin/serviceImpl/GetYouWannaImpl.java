@@ -414,14 +414,16 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 		String appid="";
 		 String mch_id=CommonUtils.getMchid();
 		 String nonce_str=CreatenNonce_str(25);
-		 
+		
 		 
 		 String body="hzxiaoba";
 		// body=new String(body.getBytes("unicode"),"UTF-8");
 		// System.out.println(body);
 		 String notify_url="http://wx.xiaobaxueche.com/dadmin/weixinWeb/weixinpaycb";
-		 if(trade_type!=null && trade_type.equals("APP") && appidin!=null)
+		 if(trade_type!=null && trade_type.equals("APP") && appidin!=null){
 			 appid=appidin;
+		     mch_id=CommonUtils.getSmchid();
+		 }
 		 else
 			 appid=CommonUtils.getAppid();
 		 HashMap<String,String> map=new HashMap<String,String>();

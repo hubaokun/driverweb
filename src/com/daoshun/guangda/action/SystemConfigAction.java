@@ -638,6 +638,8 @@ public class SystemConfigAction extends BaseAction {
 				systemSetInfo.setCrewardamount(new BigDecimal(editvalue));
 			else if(colname.equals("orewardamount_flag"))
 				systemSetInfo.setOrewardamount(new BigDecimal(editvalue));
+			else if(colname.equals("weixinpay_flag"))
+				systemSetInfo.setWeixinpay_flag(Integer.parseInt(editvalue));
 			else if(colname.equals("advertisement_coach"))
 			{
 				String[] value=editvalue.split(",");

@@ -482,7 +482,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					info.setPasttime(2);
 				}
 			}
-
+            info.setCuseraddtionalprice(user.getAddtionalprice());
 			datelist.add(info);
 		}
 		return datelist;
@@ -2136,6 +2136,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				String date1 = array.getString("date");// 订单的日期
 				String paytype = array.getString("paytype");// 订单的日期
 				
+				int attachcar =array.getInt("attachcar");
+				
 				if (paytype == null || paytype.length() == 0)
 				{
 					result.put("code", 3);
@@ -2285,7 +2287,15 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 									result.put("code", 11);
 									return result;
 								} else {// 时间点不休息的话,总价增加这个时间点的价格
-									total = total.add(scheduleinfoList2.get(0).getPrice());
+									if(scheduleinfoList2.get(0).getSubjectid()==4)
+									{
+										total=total.add(new BigDecimal(array.getString("total")));
+									}
+									else
+									{
+										total = total.add(scheduleinfoList2.get(0).getPrice());
+									}
+
 									if (CommonUtils.isEmptyString(latitude) || CommonUtils.isEmptyString(longitude) || CommonUtils.isEmptyString(detail)) {
 										CaddAddressInfo address = dataDao.getObjectById(CaddAddressInfo.class, scheduleinfoList2.get(0).getAddressid());
 										if (address != null) {
@@ -2295,7 +2305,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 										}
 									}
 								}
-							} 
+							}
 //							else {
 //								// 获取教练是否有默认设置
 //								int isrest = getDefaultRest(coachid, hour);
@@ -2380,7 +2390,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						order.setCouponrecordid(recordid);
 						order.setDelmoney(delmoney);
 						order.setPaytype(CommonUtils.parseInt(paytype, 0));
-
+                        order.setAttachcar(attachcar);
 						Date startTime = CommonUtils.getDateFormat(date1, "yyyy-MM-dd");
 						Calendar startC = Calendar.getInstance();
 						startC.setTime(startTime);

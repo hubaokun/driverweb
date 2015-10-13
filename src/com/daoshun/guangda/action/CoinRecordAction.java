@@ -9,7 +9,10 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
 
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.QueryResult;
@@ -26,6 +29,9 @@ import com.daoshun.guangda.service.ISUserService;
 /**
  * Created by tutu on 15/7/24.
  */
+@ParentPackage("default")
+@Controller
+@Scope("prototype")
 public class CoinRecordAction extends BaseAction{
 
 

@@ -343,16 +343,22 @@ public class SuserServlet extends BaseServlet {
 	 * @param resultMap
 	 * @throws ErrException
 	 * @author 卢磊
+	 * @throws IOException 
 	 */
-	public void promoEnroll(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+	public void promoEnroll(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException, IOException {
 		String studentid = getRequestParamter(request, "studentid");
 		String model = getRequestParamter(request, "model");//车型
 		String cityid = getRequestParamter(request, "cityid");//车型
 		String amount = getRequestParamter(request, "amount");// 报名金额
+		String resource=getRequestParamter(request, "resource");// 支付来源  0=支付宝  1=微信
+		String trade_type=getRequestParamter(request, "trade_type");// 微信支付方式
+		String appid=getRequestParamter(request, "appid");// 微信APP开放平台appid
+		String spbill_create_ip=getRequestParamter(request, "spbill_create_ip");// 微信APP支付用户端IP
 		CommonUtils.validateEmpty(studentid);
 		CommonUtils.validateEmpty(amount);
 		CommonUtils.validateEmpty(cityid);
 		CommonUtils.validateEmpty(model);
+		CommonUtils.validateEmpty(resource);
 		SuserInfo student = suserService.getUserById(studentid);
 		student.setState(1);
 		student.setEnrollstate(1);
@@ -360,7 +366,7 @@ public class SuserServlet extends BaseServlet {
 		student.setModel(model);//设置车型c1,c2
 		student.setModelcityid(CommonUtils.parseInt(cityid, 0));
 		suserService.updateUserInfo(student);
-		HashMap<String, Object> rechargeResult = suserService.promoRecharge(studentid, amount);
+		HashMap<String, Object> rechargeResult = suserService.promoRecharge(studentid, amount,resource,spbill_create_ip,trade_type,appid);
 		resultMap.put("code", 1);
 		resultMap.put("message", "报名成功");
 		resultMap.putAll(rechargeResult);

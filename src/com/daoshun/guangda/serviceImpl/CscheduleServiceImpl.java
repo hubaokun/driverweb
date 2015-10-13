@@ -310,7 +310,7 @@ public class CscheduleServiceImpl extends BaseServiceImpl implements ICscheduleS
 	}
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override
-	public void setDefaultNew(String coachid, String hour,String price,String addressid,String subjectid,String isrest) {
+	public void setDefaultNew(String coachid, String hour,String price,String addressid,String subjectid,String isrest,String addtionalprice) {
 		String querystring="from DefaultSchedule where coachid=:coachid and hour=:hour";
 		String[] params={"coachid","hour"};
 		DefaultSchedule tempDefaultSchedule=(DefaultSchedule) dataDao.getFirstObjectViaParam(querystring, params, CommonUtils.parseInt(coachid, 0),hour);
@@ -322,6 +322,7 @@ public class CscheduleServiceImpl extends BaseServiceImpl implements ICscheduleS
 	    	tempDefaultSchedule.setAddressid(CommonUtils.parseInt(addressid,0));
 	    	tempDefaultSchedule.setUpdatetime(new Date());
 	    	tempDefaultSchedule.setIsrest(CommonUtils.parseInt(isrest, 1));
+	    	tempDefaultSchedule.setCuseraddtionalprice(new BigDecimal(CommonUtils.parseDouble(addtionalprice, 0d)));
 	    	dataDao.updateObject(tempDefaultSchedule);
 	    }
 	    else
@@ -335,6 +336,7 @@ public class CscheduleServiceImpl extends BaseServiceImpl implements ICscheduleS
 	    	newDefaultSchedule.setHour(hour);
 	    	newDefaultSchedule.setIsrest(CommonUtils.parseInt(isrest, 1));
 	    	newDefaultSchedule.setCoachid(CommonUtils.parseInt(coachid, 0));
+	    	newDefaultSchedule.setCuseraddtionalprice(new BigDecimal(CommonUtils.parseDouble(addtionalprice, 0d)));
 	    	dataDao.addObject(newDefaultSchedule);
 	    }
 	
@@ -404,6 +406,24 @@ public class CscheduleServiceImpl extends BaseServiceImpl implements ICscheduleS
 	@Override
 	public void updateDefaultSchedule(DefaultSchedule ds) {
 		  dataDao.updateObject(ds);
+		
+	}
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	@Override
+	public void setDefaultAddtionalPirce(String coachid,String addtionalprice) {
+		String querystring="from DefaultSchedule where coachid=:coachid";
+		String[] params={"coachid"};
+		List<DefaultSchedule> tempDefaultSchedule=(List<DefaultSchedule>) dataDao.getObjectsViaParam(querystring, params, CommonUtils.parseInt(coachid, 0));
+	    for(DefaultSchedule d:tempDefaultSchedule)
+	    {
+	    	if(d!=null)
+		    {
+
+		    	d.setCuseraddtionalprice(new BigDecimal(CommonUtils.parseDouble(addtionalprice, 0d)));
+		    	dataDao.updateObject(d);
+		    }
+	    }
+		
 		
 	}
 }

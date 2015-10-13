@@ -2024,7 +2024,10 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
             }
 
             info.setUpdatetime(new Date());
-            info.setOpenid(openid);
+            if(!openid.equals(""))
+            {
+                info.setOpenid(openid);
+            }
             info.setWxorderid(weixinorderid);
             info.setState(1);
             dataDao.updateObject(info);
@@ -2088,7 +2091,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 			else
 			   return 0;
 	}
-
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override
 	public String coachgrantcoupon(String coachid,String phone,Integer pubnum) {
 		SuserInfo userinfo =suserService.getUserByPhone(phone);

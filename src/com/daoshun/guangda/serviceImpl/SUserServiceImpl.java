@@ -967,7 +967,9 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
         	String prepay_id=wxmessageService.getSignForPrePay(suser.getOpenid(), amount, info.getRechargeid().toString(), cip,trade_type,appid);
         	long timeStamp=wxmessageService.CreatenTimestamp();
         	String nonceStr=wxmessageService.CreatenNonce_str(25);
+        	String mch_key=CommonUtils.getWXKey();
         	String appidtemp="";
+        	SystemSetInfo systemset=dataDao.getObjectById(SystemSetInfo.class, 1);
         	if(appid==null)
         	   appidtemp=CommonUtils.getAppid();
         	else
@@ -978,12 +980,18 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
         	{
         		result.put("ERROR", "FAIL");
         	}
+    	    if(trade_type!=null && trade_type.equals("APP"))
+    	    {
+    	    	result.put("mch_id", CommonUtils.getSmchid());
+    	    }
+    	    result.put("weixinpay", systemset.getWeixinpay_flag());
         	result.put("appId", appid);
         	result.put("prepay_id", prepay_id);
         	result.put("timeStamp", timeStamp);
         	result.put("nonceStr", nonceStr);       	
         	result.put("signType", signType);
         	result.put("paySign", paySign);
+        	result.put("mch_key", mch_key);
         }
 
 		return result;
@@ -993,10 +1001,11 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	 * @param coachid
 	 * @param amount
 	 * @return
+	 * @throws IOException 
 	 */
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-	public HashMap<String, Object> promoRecharge(String studentid, String amount) {
+	public HashMap<String, Object> promoRecharge(String studentid, String amount,String resource,String ip,String trade_type,String appid) throws IOException {
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		
 		// 插入数据
@@ -1005,25 +1014,60 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			info.setAddtime(new Date());
 			info.setAmount(new BigDecimal(CommonUtils.parseFloat(amount, 0.0f)));
 			info.setType(3);
-			info.setPaytype(0);//支付宝支付
+			info.setPaytype(CommonUtils.parseInt(resource, 0));
 			info.setUserid(CommonUtils.parseInt(studentid, 0));
 			dataDao.addObject(info);
-
-		if ("1".equals(CommonUtils.getAliSet())) {
-			result.put("partner", AlipayConfig.partner);
-			result.put("seller_id", AlipayConfig.seller_id);
-			result.put("private_key", AlipayConfig.private_key);
-		} else {
-			result.put("partner", AlipayConfig.partner_formal);
-			result.put("seller_id", AlipayConfig.seller_id_formal);
-			result.put("private_key", AlipayConfig.private_key_formal);
+		if(resource.equals("0"))
+		{
+			if ("1".equals(CommonUtils.getAliSet())) {
+				result.put("partner", AlipayConfig.partner);
+				result.put("seller_id", AlipayConfig.seller_id);
+				result.put("private_key", AlipayConfig.private_key);
+			} else {
+				result.put("partner", AlipayConfig.partner_formal);
+				result.put("seller_id", AlipayConfig.seller_id_formal);
+				result.put("private_key", AlipayConfig.private_key_formal);
+			}
+			result.put("notify_url", CommonUtils.getWebRootUrl() + "enroll_callback");
+			//result.put("notify_url", "http://120.25.236.228:8080/dadmin/suser?action=PROMOENROLLCALLBACK");
+			result.put("out_trade_no", info.getRechargeid());
+			result.put("subject", "报名费：" + amount + "元");
+			result.put("total_fee", amount);
+			result.put("body", "报名费：" + amount + "元");
 		}
-		result.put("notify_url", CommonUtils.getWebRootUrl() + "enroll_callback");
-		//result.put("notify_url", "http://120.25.236.228:8080/dadmin/suser?action=PROMOENROLLCALLBACK");
-		result.put("out_trade_no", info.getRechargeid());
-		result.put("subject", "报名费：" + amount + "元");
-		result.put("total_fee", amount);
-		result.put("body", "报名费：" + amount + "元");
+	    else if(resource.equals("1"))
+	        {
+	        	SuserInfo suser=dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
+	        	IGetYouWanna wxmessageService=new GetYouWannaImpl();
+	        	String prepay_id=wxmessageService.getSignForPrePay(suser.getOpenid(), amount, info.getRechargeid().toString(), ip,trade_type,appid);
+	        	long timeStamp=wxmessageService.CreatenTimestamp();
+	        	String nonceStr=wxmessageService.CreatenNonce_str(25);
+	        	String mch_key=CommonUtils.getWXKey();
+	        	String appidtemp="";
+	        	SystemSetInfo systemset=dataDao.getObjectById(SystemSetInfo.class, 1);
+	        	if(appid==null)
+	        	   appidtemp=CommonUtils.getAppid();
+	        	else
+	        		appidtemp=appid;
+	        	String signType="MD5";
+	        	String paySign=wxmessageService.getSignForPay(appidtemp, timeStamp, nonceStr, signType, prepay_id);
+	        	if(paySign.equals("FAIL") || prepay_id.equals("FAIL"))
+	        	{
+	        		result.put("ERROR", "FAIL");
+	        	}
+	    	    if(trade_type!=null && trade_type.equals("APP"))
+	    	    {
+	    	    	result.put("mch_id", CommonUtils.getSmchid());
+	    	    }
+	    	    result.put("weixinpay", systemset.getWeixinpay_flag());
+	        	result.put("appId", appid);
+	        	result.put("prepay_id", prepay_id);
+	        	result.put("timeStamp", timeStamp);
+	        	result.put("nonceStr", nonceStr);       	
+	        	result.put("signType", signType);
+	        	result.put("paySign", paySign);
+	        	result.put("mch_key", mch_key);
+	        }
 
 		return result;
 	}

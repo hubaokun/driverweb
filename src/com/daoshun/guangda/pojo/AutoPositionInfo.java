@@ -55,6 +55,18 @@ public class AutoPositionInfo implements java.io.Serializable {
  	private BigDecimal defaultprice;
     
 
+ 	 //教练用车最低单价
+ 	@Column(name = "attachcarminprice", nullable = true, columnDefinition = "Decimal(20,2) default 0.00")
+ 	private BigDecimal attachcarminprice;
+ 	
+ 	//教练用车最高单价
+ 	@Column(name = "attachcarmaxprice", nullable = true, columnDefinition = "Decimal(20,2) default 0.00")
+ 	private BigDecimal attachcarmaxprice;
+ 	
+ 	//教练用车默认单价
+ 	@Column(name = "attachcardefaultprice", nullable = true, columnDefinition = "Decimal(20,2) default 0.00")
+ 	private BigDecimal attachcardefaultprice;
+ 	
 	public int getAid() {
 		return aid;
 	}
@@ -132,6 +144,30 @@ public class AutoPositionInfo implements java.io.Serializable {
 	}
 	public void setDefaultprice(BigDecimal defaultprice) {
 		this.defaultprice = defaultprice;
+	}
+
+	public BigDecimal getAttachcarminprice() {
+		return attachcarminprice;
+	}
+
+	public void setAttachcarminprice(BigDecimal attachcarminprice) {
+		this.attachcarminprice = attachcarminprice;
+	}
+
+	public BigDecimal getAttachcarmaxprice() {
+		return attachcarmaxprice;
+	}
+
+	public void setAttachcarmaxprice(BigDecimal attachcarmaxprice) {
+		this.attachcarmaxprice = attachcarmaxprice;
+	}
+
+	public BigDecimal getAttachcardefaultprice() {
+		return attachcardefaultprice;
+	}
+
+	public void setAttachcardefaultprice(BigDecimal attachcardefaultprice) {
+		this.attachcardefaultprice = attachcardefaultprice;
 	}
     
 }

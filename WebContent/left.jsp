@@ -99,14 +99,14 @@ function goaction(actionUrl,index,j){
 					<div id="change_59" class="left_list_mask_detail"
 						onclick="goaction('goSchoolGrantCoupon.do','9','5');">
 						<div class="left_list_detail">
-							��У����С��ȯ
+							驾校发放小巴券
 						</div>
 					</div>
 					
 					<div id="change_69" class="left_list_mask_detail"
 						onclick="goaction('goSchoolGrantCoin.do','9','6');">
 						<div class="left_list_detail">
-							��У����С�ͱ�
+							驾校发放小巴币
 						</div>
 					</div>
 				</div>

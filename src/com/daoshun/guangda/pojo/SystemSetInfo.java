@@ -171,6 +171,10 @@ public class SystemSetInfo implements Serializable {
 	//教练弹窗标示位
 	@Column(name = "advertisement_flag", length = 2, columnDefinition = "TINYINT default 0")
 	private Integer advertisement_flag;
+	
+	//启用微信支付标识位
+    @Column(name = "weixinpay_flag", length = 2, columnDefinition = "TINYINT default 0")
+	private Integer weixinpay_flag;
 
 	public int getDataid() {
 		return dataid;
@@ -501,6 +505,14 @@ public class SystemSetInfo implements Serializable {
 
 	public void setAdvertisement_flag(Integer advertisement_flag) {
 		this.advertisement_flag = advertisement_flag;
+	}
+
+	public Integer getWeixinpay_flag() {
+		return weixinpay_flag;
+	}
+
+	public void setWeixinpay_flag(Integer weixinpay_flag) {
+		this.weixinpay_flag = weixinpay_flag;
 	}
 
 

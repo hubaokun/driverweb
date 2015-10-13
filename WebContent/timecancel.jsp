@@ -396,6 +396,24 @@
                 </div>
                 </td>
                 </tr> --%>
+                
+                <!-- 22 是否启用微信支付 -->
+				<tr class="tr_td">
+					<td style="width:500px;" class="border_right_bottom">启用微信支付</td>
+					<s:if test="systemSetInfo.weixinpay_flag==0">
+						<td  style="width:500px;" class="border_right_bottom">启用</td>
+					</s:if>
+					<s:else>
+						<td  style="width:500px;" class="border_right_bottom">关闭</td>
+					</s:else>
+					<td  style="width:120px;" class="border_noright_bottom">
+
+						<div class="table_edit_button">
+							<div class="table_button_edit_icon"></div>
+							<div class="table_button_text" onclick="showweixinpay('${systemSetInfo.dataid}','${systemSetInfo.weixinpay_flag}','weixinpay_flag')">设置</div>
+						</div>
+					</td>
+				</tr>
 			</table>
 
 		</div>
@@ -447,6 +465,23 @@
 			</select>
 			<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 50px;margin-top: 25px;font-size: 18px" value="确定" onclick="updatexiaoba()">
 			<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 180x;margin-top: -40px;font-size: 18px" value="取消" onclick="unupdatexiaoba()">
+		</div>
+	</div>
+</div>
+<!-- 是否启用微信支付-->
+<div id="maskweixin" class="mask"></div>
+<div id="mask_secweixin" style="position: fixed; width: 100%; height: 300px;z-index: 300;top:20%;left:15%;display:none;">
+	<div id="mask_lastweixin" class="mask_last">
+		<div style="position: fixed; width: 300px; height: 200px;background: #4cc2ff;margin-left: 100px;margin-top: 50px;">
+			<input id="systemweixinpayid" type="hidden" >
+			<input id="weixinpayname" type="hidden" >
+			<input id="weixinpayoldvalue" type="text" style="width: 218px;height: 40px;margin: auto;margin-left: 41px;margin-top: 13px;font-size: 18px;text-align: center;" disabled="disabled"/>
+			<select id="diffweixinpay" style="width: 75px; height:25px; margin: auto;margin-left: 110px;margin-top: 20px;">
+				<option value="0">启用</option>
+				<option value="1">关闭</option>
+			</select>
+			<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 50px;margin-top: 25px;font-size: 18px" value="确定" onclick="updateweixinpay()">
+			<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 180x;margin-top: -40px;font-size: 18px" value="取消" onclick="unupdateweixinpay()">
 		</div>
 	</div>
 </div>
