@@ -37,6 +37,7 @@ public class Constant {
 	/****************** 后台分页查询 *******************/
 	public static final int USERLIST_SIZE = 10;
 	public static final int ORDERLIST_SIZE = 10;// 订单每页条数
+	public static final int EXAMINATION_SIZE = 20;// 订单每页条数
 
 	/****************** 后台分页查询 *******************/
 
@@ -434,5 +435,20 @@ public class Constant {
 	
 	/**按区ID获取区信息**/
 	public static final String GETPROCITYAREA = "GETPROCITYAREA"; 
+	
+	/**考驾非模拟题目**/
+	public static final String GETEXAMINATION = "GETEXAMINATION";
+	/**获取考驾模拟题目**/
+	public static final String GETANALOGEXAMINATION = "GETANALOGEXAMINATION";
+	
+	/**考驾题目收藏**/
+	public static final String ADDQUESTIONFAVORITES = "ADDQUESTIONFAVORITES";
+	/**获取学员收藏的题目**/
+	public static final String GETQUESTIONFAVORITES = "GETQUESTIONFAVORITES";
+	/**获取学员收藏题目的数量**/
+	public static final String GETQUESTIONFAVORITESNUM = "GETQUESTIONFAVORITESNUM";
+	
+	/**获取学员收藏题目的数量**/
+	public static final String ADDANSWERRECORDINFO = "ADDANSWERRECORDINFO";
 	
 }

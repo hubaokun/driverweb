@@ -156,8 +156,9 @@ public class OrderInfo implements Serializable {
 	private List<OrderPrice> orderprice;
 	
 	
-	
-	
+	//订单的备注说明
+	@Column(name = "remarks", length = 50, nullable = false)
+	private String remarks;
 	
 
 	// 是否有投诉
@@ -621,4 +622,12 @@ public class OrderInfo implements Serializable {
 		this.order_pull2 = order_pull2;
 	}
 
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+	
 }
