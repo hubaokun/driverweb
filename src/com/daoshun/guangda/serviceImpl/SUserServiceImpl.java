@@ -969,6 +969,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
         	String nonceStr=wxmessageService.CreatenNonce_str(25);
         	String mch_key=CommonUtils.getWXKey();
         	String appidtemp="";
+        	SystemSetInfo systemset=dataDao.getObjectById(SystemSetInfo.class, 1);
         	if(appid==null)
         	   appidtemp=CommonUtils.getAppid();
         	else
@@ -983,6 +984,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
     	    {
     	    	result.put("mch_id", CommonUtils.getSmchid());
     	    }
+    	    result.put("weixinpay", systemset.getWeixinpay_flag());
         	result.put("appId", appid);
         	result.put("prepay_id", prepay_id);
         	result.put("timeStamp", timeStamp);
@@ -1042,6 +1044,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	        	String nonceStr=wxmessageService.CreatenNonce_str(25);
 	        	String mch_key=CommonUtils.getWXKey();
 	        	String appidtemp="";
+	        	SystemSetInfo systemset=dataDao.getObjectById(SystemSetInfo.class, 1);
 	        	if(appid==null)
 	        	   appidtemp=CommonUtils.getAppid();
 	        	else
@@ -1056,6 +1059,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	    	    {
 	    	    	result.put("mch_id", CommonUtils.getSmchid());
 	    	    }
+	    	    result.put("weixinpay", systemset.getWeixinpay_flag());
 	        	result.put("appId", appid);
 	        	result.put("prepay_id", prepay_id);
 	        	result.put("timeStamp", timeStamp);

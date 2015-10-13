@@ -649,7 +649,37 @@ function updatexiaoba(){
 		});
 	}
 }
-
+//修改是否启用微信支付
+function updateweixinpay(){
+	var dataid=$("#systemweixinpayid").val();
+	var editvalue=$("#diffweixinpay").val();
+	var colname=$("#weixinpayname").val();
+	if (confirm("是否修改？")) {
+		$.ajax({
+			type : "POST",
+			url : "editValue.do",
+			data : {
+				dataid : dataid,
+				editvalue : editvalue,
+				colname: colname
+			},
+			success : function(data) {
+				if (data == "error") {
+					alert("修改失败");
+					return;
+				}
+				if (data == "success") {
+					alert("修改成功！");
+					window.location.reload();
+				}
+				if (data == "error1") {
+					alert("修改后的名称已存在");
+					return;
+				}
+			}
+		});
+	}
+}
 
 //修改是否可启用闪屏广告图片
 function updateadv(){
@@ -882,6 +912,19 @@ function showdiffxiaoba(dataid,oldvalue,colname){
 	$("#mask_last").show();
 }
 
+//设置是否开启微信支付
+function showweixinpay(dataid,oldvalue,colname){
+	$("#systemweixinpayid").val(dataid);
+	if(oldvalue==0){
+		$("#weixinpayoldvalue").val('当前值: 启用 ');
+	}else{
+		$("#weixinpayoldvalue").val('当前值: 关闭 ');
+	}
+	$("#weixinpayname").val(colname);
+	$("#maskweixin").show();
+	$("#mask_secweixin").show();
+	$("#mask_lastweixin").show();
+}
 
 //设置是否启用闪屏广告
 function showcoachadv(dataid,oldflag_flash,aoldimg_flash,ioldimg_flash,old_flag,aoldimg,ioldimg,oldurl,colname){
@@ -977,7 +1020,11 @@ function unupdatexiaoba() {
 	$("#mask_sec").hide();
 	$("#mask_last").hide();
 }
-
+function unupdateweixinpay() {
+	$("#maskweixin").hide();
+	$("#mask_secweixin").hide();
+	$("#mask_lastweixin").hide();
+}
 
 function unupdateadv() {
 	$("#maskadv").hide();
