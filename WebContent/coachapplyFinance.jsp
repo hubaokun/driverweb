@@ -81,9 +81,9 @@ function getdetail(applyid,coachid,amount)
 					
 					<div class="serchcontentdiv"style="float: left; margin-left: 50px; width: 405px"  >
 						<input type="text" class="searchdiv" style="width: 119px;text-align: center;font-family: 微软雅黑;" value="提交申请时间区间" readonly="readonly">
-						<input id="minsdate" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})" type="text" class="searchdiv" style="width: 120px;text-align: center;font-family: 微软雅黑;" value="${minsdate}">
+						<input id="minsdate" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd',minDate:'2015-09-01'})" type="text" class="searchdiv" style="width: 120px;text-align: center;font-family: 微软雅黑;" value="${minsdate}">
 						<input type="text" class="searchdiv" style="width: 30px;text-align: center;font-family: 微软雅黑;" value="到" readonly="readonly">
-						<input id="maxsdate" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})" type="text" class="searchdiv" style="width: 120px;text-align: center;font-family: 微软雅黑;" value="${maxsdate}" >
+						<input id="maxsdate" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd',minDate:'2015-09-01'})" type="text" class="searchdiv" style="width: 120px;text-align: center;font-family: 微软雅黑;" value="${maxsdate}" >
 					</div>
 	<s:if test="changetype==1">
 		<input type="hidden" id="driveschoolid" value="${schoolid}" />
