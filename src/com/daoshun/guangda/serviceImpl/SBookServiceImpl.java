@@ -710,7 +710,15 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						+ condition1 + "%')) ");
 				}
 			}else{
-				hqlCoach.append(" and  coursestate = 1 ");
+				if (!CommonUtils.isEmptyString(condition11)) {//C1手动挡 接收到17 ，C2自动挡接收到18
+					if("19".equals(condition11)){//
+						hqlCoach.append(" and  accompanycoursestate= 1 ");
+					}else{
+						hqlCoach.append(" and  coursestate= 1 ");
+					}
+				}else{
+					hqlCoach.append(" and  coursestate= 1 ");
+				}
 			}
 			//cuserhql.append(" and  coursestate = 1 ");
 			// 星级
