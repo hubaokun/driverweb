@@ -120,6 +120,10 @@ public class SuserInfo implements Serializable {
 	//小巴币个数
 	@Column(name = "coinnum", length = 10, columnDefinition = "INT default 0")
 	private Integer coinnum;
+	
+	//标识此学员是否拥有参与体验课资格
+	@Column(name = "freecoursestate", length = 1, columnDefinition = "INT default 0")
+	private Integer freecoursestate;
 
 	// 注册时间
 	@Temporal(TemporalType.TIMESTAMP)
@@ -797,6 +801,14 @@ public class SuserInfo implements Serializable {
 
 	public void setOpenid(String openid) {
 		this.openid = openid;
+	}
+
+	public Integer getFreecoursestate() {
+		return freecoursestate;
+	}
+
+	public void setFreecoursestate(Integer freecoursestate) {
+		this.freecoursestate = freecoursestate;
 	}
 	
 }

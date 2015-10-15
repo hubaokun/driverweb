@@ -341,4 +341,6 @@ public interface ISUserService {
     public void addCoinForSettlement(OrderInfo order,CuserInfo cuser,SuserInfo student,int type);
     //检查是否存在此openid的记录
     public abstract String checkopenid(String openid);
+    //学员是否拥有参与体验课资格的状态
+    public boolean getFreecoursestate(int studentid);
 }

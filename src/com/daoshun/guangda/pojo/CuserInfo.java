@@ -283,6 +283,10 @@ public class CuserInfo implements Serializable {
 	@Column(name = "accompanycoursestate", nullable = false, length = 1, columnDefinition = "INT default 0")
 	private Integer accompanycoursestate = 0;
 	
+	// 教练体验课是否开课
+	@Column(name = "freecoursestate", nullable = false, length = 1, columnDefinition = "INT default 0")
+	private Integer freecoursestate = 0;
+	
 	// 教练陪驾陪驾次数
 	@Column(name = "accompanynum", nullable = true, columnDefinition = "INT default 0")
 	private Integer accompanynum = 0;
@@ -1208,6 +1212,14 @@ public class CuserInfo implements Serializable {
 
 	public void setAccompanynum(Integer accompanynum) {
 		this.accompanynum = accompanynum;
+	}
+
+	public Integer getFreecoursestate() {
+		return freecoursestate;
+	}
+
+	public void setFreecoursestate(Integer freecoursestate) {
+		this.freecoursestate = freecoursestate;
 	}
 	
 }

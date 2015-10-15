@@ -74,6 +74,10 @@ public class CscheduleInfo implements Serializable {
 	// 该时间段是否被预约   0=未预约   1=已预约
 	@Column(name = "bookstate", length = 10,columnDefinition = "INT default 0")
 	private int bookstate;
+
+	// 该时间段是否是体验课   0=不是   1=是
+	@Column(name = "isfreecourse", length = 1,columnDefinition = "INT default 0")
+	private int isfreecourse;
 	
 	// 附加价格(用来表示陪驾教练用车价)
 	@Column(name = "addtionalprice", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")
@@ -264,6 +268,14 @@ public class CscheduleInfo implements Serializable {
 
 	public void setCuseraddtionalprice(BigDecimal cuseraddtionalprice) {
 		this.cuseraddtionalprice = cuseraddtionalprice;
+	}
+
+	public int getIsfreecourse() {
+		return isfreecourse;
+	}
+
+	public void setIsfreecourse(int isfreecourse) {
+		this.isfreecourse = isfreecourse;
 	}
 
 }

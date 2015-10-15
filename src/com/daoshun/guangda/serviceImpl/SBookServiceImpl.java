@@ -725,7 +725,15 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			if (!CommonUtils.isEmptyString(condition2)) {
 				hqlCoach.append(" and score >= " + condition2);
 			}
-			
+			//科目及体验课查询
+			if (!CommonUtils.isEmptyString(condition6)) {
+				//如果condition6=5，表示体验课
+				if("1".equals(condition6) || "2".equals(condition6) || "3".equals(condition6) ){
+					hqlCoach.append("and (select count(*) from t_coach_schedule  where subjectid="+condition6+" and coachid=u.coachid) > 0  ");
+				}else if("5".equals(condition6)){
+					hqlCoach.append(" and freecoursestate=1 ");
+				}
+			}
 			// 开始时间和结束时间
 			/*if (!CommonUtils.isEmptyString(condition3)) {
 
@@ -1189,6 +1197,15 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		if (!CommonUtils.isEmptyString(condition2)) {
 			cuserhql.append(" and score >= " + condition2);
 		}
+		//科目及体验课查询
+		if (!CommonUtils.isEmptyString(condition6)) {
+			//如果condition6=5，表示体验课
+			if("1".equals(condition6) || "2".equals(condition6) || "3".equals(condition6) ){
+				cuserhql.append("and (select count(*) from t_coach_schedule  where subjectid="+condition6+" and coachid=u.coachid) > 0  ");
+			}else if("5".equals(condition6)){
+				cuserhql.append(" and freecoursestate=1 ");
+			}
+		}
 		/*if (!CommonUtils.isEmptyString(condition3)) {
 			int subjectid = CommonUtils.parseInt(condition6, 0);
 			Date start = null;
@@ -1231,7 +1248,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			cuserhql.append(" and usertype=0 ");
 		}
 		cuserhql.append(" and money >= gmoney and isquit = 0  order by coursestate desc,sumnum desc,score desc");
-		//System.out.println(cuserhql.toString());
+		System.out.println(cuserhql.toString());
 		List<AppCuserInfo> coachlist = (List<AppCuserInfo>) dataDao.SqlPageQuery(cuserhql.toString(), Constant.USERLIST_SIZE+1, CommonUtils.parseInt(pagenum, 0) + 1,AppCuserInfo.class, null);
 		if (coachlist != null && coachlist.size() > 0) {
 			for (AppCuserInfo coach : coachlist) {
@@ -2757,6 +2774,20 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						dataDao.addObject(info);
 					}
 				}
+				
+				//设置是否此学员是否拥有参与体验课资格freecoursestate
+				
+				boolean frflag=suserService.getFreecoursestate(CommonUtils.parseInt(studentid, 0));
+				if(frflag){
+					//有资格
+					student.setFreecoursestate(1);
+				}else{
+					//没有资格
+					student.setFreecoursestate(0);
+				}
+				dataDao.updateObject(student);
+				
+				
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();

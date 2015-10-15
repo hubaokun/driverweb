@@ -2037,6 +2037,26 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			  return suser.getPhone();
 		  return "";
 	}
+	/**
+	 * 获取此学员是否拥有参与体验课资格
+	 * @param studentid 学员id
+	 * @return  true 有资格 ，false 无资格
+	 */
+	@Override
+	public boolean getFreecoursestate(int studentid) {
+		String hql10="select count(*) from OrderInfo where studentid=:studentid and  (coachstate!=4 and studentstate!=4)  ";
+		Long n=(Long) dataDao.getFirstObjectViaParam(hql10, new String[]{"studentid"}, studentid);
+		if(n==null){
+			n=0L;
+		}
+		if(studentid==0){
+			return false;
+		}
+		if(n==0){
+			return true;
+		}
+		return false;
+	}
   	
   	
 

@@ -87,7 +87,17 @@ public class AppCuserInfo implements Serializable {
 	
 	private Integer accompanynum;
 	
+	private Integer freecoursestate;
 	
+	
+
+	public Integer getFreecoursestate() {
+		return freecoursestate;
+	}
+
+	public void setFreecoursestate(Integer freecoursestate) {
+		this.freecoursestate = freecoursestate;
+	}
 
 	public Integer getAccompanynum() {
 		return accompanynum;

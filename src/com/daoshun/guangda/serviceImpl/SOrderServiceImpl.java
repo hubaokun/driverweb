@@ -43,6 +43,7 @@ import com.daoshun.guangda.pojo.SystemSetInfo;
 import com.daoshun.guangda.pojo.UserPushInfo;
 import com.daoshun.guangda.service.ICscheduleService;
 import com.daoshun.guangda.service.ISOrderService;
+import com.daoshun.guangda.service.ISUserService;
 
 
 @Service("sorderService")
@@ -50,6 +51,8 @@ import com.daoshun.guangda.service.ISOrderService;
 public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService {
 	@Resource
 	public ICscheduleService cscheduleService;
+	@Resource
+	public ISUserService suserService;
 	@Override
 	public List<ComplaintNetData> getComplaintToMy(String studentid, String pagenum) {
 		List<ComplaintNetData> complaintNetDatalist = new ArrayList<ComplaintNetData>();
@@ -1512,7 +1515,18 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				//order.setStudentstate(4);//学员取消
 				order.setCoachstate(4);//教练同意取消
 				dataDao.updateObject(order);
-
+				
+				boolean frflag=suserService.getFreecoursestate(CommonUtils.parseInt(studentid, 0));
+				if(frflag){
+					//有资格
+					student.setFreecoursestate(1);
+				}else{
+					//没有资格
+					student.setFreecoursestate(0);
+				}
+				dataDao.updateObject(student);
+				
+				
 				// 把订单中原来预订的时间返回回来
 				Calendar start = Calendar.getInstance();
 				start.setTime(order.getStart_time());
@@ -1579,7 +1593,8 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 		}
 		return -1;
 	}
-
+	
+	
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override
 	public void CancelComplaint(String studentid, String orderid) {

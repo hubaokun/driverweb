@@ -99,6 +99,10 @@ public class OrderInfo implements Serializable {
 	// 是否带车陪驾
 	@Column(name = "attachcar", length = 1, nullable = false, columnDefinition = "INT default 0")
 	private Integer attachcar = 0;
+	
+	// 课程类型
+	@Column(name = "coursetype", length = 1, nullable = false, columnDefinition = "INT default 0")
+	private Integer coursetype = 0;
 	// 经度
 	@Column(name = "longitude", length = 50, nullable = false)
 	private String longitude;
@@ -180,15 +184,9 @@ public class OrderInfo implements Serializable {
 	private int can_down;
 	@Transient
 	private int can_comment;
-
 	// 订单距离开始小时数
 	@Transient
 	private int hours;
-	
-	
-	
-	
-
 	//0 教练未同意取消  1 教练已同意取消
 	@Transient
 	private int agreecancel;
@@ -642,6 +640,14 @@ public class OrderInfo implements Serializable {
 
 	public void setAttachcar(Integer attachcar) {
 		this.attachcar = attachcar;
+	}
+
+	public Integer getCoursetype() {
+		return coursetype;
+	}
+
+	public void setCoursetype(Integer coursetype) {
+		this.coursetype = coursetype;
 	}
 
 }

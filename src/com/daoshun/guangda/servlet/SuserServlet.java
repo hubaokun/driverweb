@@ -128,6 +128,9 @@ public class SuserServlet extends BaseServlet {
 			}else if (Constant.GETSTUDENTINFO.equals(action)) {
 				// 获取学员基本信息
 				getStudentInfo(request, resultMap);
+			}else if (Constant.GETFREECOURSESTATE.equals(action)) {
+				// 获取学员是否拥有参与体验课资格
+				getFreecoursestate(request, resultMap);
 			}
 			else {
 				throw new ErrException();
@@ -1055,5 +1058,23 @@ public class SuserServlet extends BaseServlet {
 		HashMap<String, Object> coinRecordResult = suserService.getCoinRecordList(studentid);
 		resultMap.putAll(coinRecordResult);
 	}
-
+	/**
+	 * 查询学员能否参加体验课
+	 * @param request
+	 * @param resultMap
+	 * @throws ErrException
+	 */
+	public void getFreecoursestate(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String studentid = getRequestParamter(request, "studentid");//教练ID
+		CommonUtils.validateEmptytoMsg(studentid, "studentid为空");
+		/*SuserInfo suser=suserService.getUserById(studentid);
+		if(suser!=null ){
+			if(suser.getFreecoursestate()==null){
+				suser.setFreecoursestate(0); 
+			}
+		}*/
+		boolean flag=suserService.getFreecoursestate(CommonUtils.parseInt(studentid, 0));
+		resultMap.put("freecoursestate",flag);
+	}
+	
 }
