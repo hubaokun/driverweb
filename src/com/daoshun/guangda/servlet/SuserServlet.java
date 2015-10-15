@@ -3,6 +3,7 @@ package com.daoshun.guangda.servlet;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -57,6 +58,8 @@ public class SuserServlet extends BaseServlet {
 		locationService = (ILocationService) applicationContext.getBean("locationService");
 		recommendService=(IRecommendService) applicationContext.getBean("recommendService");
 		wxmessageService=(IGetYouWanna)applicationContext.getBean("WXmessageService");
+		
+		
 	}
 
 	@Override
@@ -131,6 +134,9 @@ public class SuserServlet extends BaseServlet {
 			}else if (Constant.GETFREECOURSESTATE.equals(action)) {
 				// 获取学员是否拥有参与体验课资格
 				getFreecoursestate(request, resultMap);
+			}else if (Constant.GETQUERYSUBJECT.equals(action)) {
+				// 显示客户端筛选的按 科目筛选的文字
+				getQuerySubject(request, resultMap);
 			}
 			else {
 				throw new ErrException();
@@ -1077,4 +1083,39 @@ public class SuserServlet extends BaseServlet {
 		resultMap.put("freecoursestate",flag);
 	}
 	
+	public void getQuerySubject(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		Qs  qs1=new Qs("1","科目二");
+		Qs  qs2=new Qs("2","科目三");
+		Qs  qs3=new Qs("3","考场练习");
+		Qs  qs4=new Qs("4","体验课");
+		List<Qs> list=new ArrayList<Qs>();
+		list.add(qs1);
+		list.add(qs2);
+		list.add(qs3);
+		list.add(qs4);
+		resultMap.put("data",list);
+	}
+	class Qs{
+		private String id;
+		private String name;
+		
+		public Qs(String id, String name) {
+			super();
+			this.id = id;
+			this.name = name;
+		}
+		public String getId() {
+			return id;
+		}
+		public void setId(String id) {
+			this.id = id;
+		}
+		public String getName() {
+			return name;
+		}
+		public void setName(String name) {
+			this.name = name;
+		}
+		
+	}
 }

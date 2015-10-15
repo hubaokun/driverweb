@@ -128,6 +128,9 @@ public class Constant {
 	//获取学员基本信息
 	public static final String GETFREECOURSESTATE="GETFREECOURSESTATE";
 	
+	//显示客户端筛选的按 科目筛选的文字
+	public static final String GETQUERYSUBJECT="GETQUERYSUBJECT";
+	
 	// 申请提现
 	public static final String APPLYCASH = "APPLYCASH";
 

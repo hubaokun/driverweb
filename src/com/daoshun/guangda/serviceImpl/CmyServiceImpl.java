@@ -391,13 +391,13 @@ public class CmyServiceImpl extends BaseServiceImpl implements ICmyService {
 		StringBuffer cmyhql = new StringBuffer();
 		cmyhql.append("from CsubjectInfo ");
 		List<CsubjectInfo> subjectInfoList = (List<CsubjectInfo>) dataDao.getObjectsViaParam(cmyhql.toString(), null);
-		List<CsubjectInfo> newlist=new ArrayList<CsubjectInfo>();
+		/*List<CsubjectInfo> newlist=new ArrayList<CsubjectInfo>();
 		for (CsubjectInfo ci : subjectInfoList) {
 			if(ci.getSubjectid()!=4){
 				newlist.add(ci);
 			}
-		}
-		return newlist;
+		}*/
+		return subjectInfoList;
 	}
 
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
