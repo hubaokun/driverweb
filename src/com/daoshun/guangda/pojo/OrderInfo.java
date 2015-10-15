@@ -100,7 +100,7 @@ public class OrderInfo implements Serializable {
 	@Column(name = "attachcar", length = 1, nullable = false, columnDefinition = "INT default 0")
 	private Integer attachcar = 0;
 	
-	// 课程类型
+	// 课程类型  1=科目二  2=科目三  3=考场练习 4=陪驾  5=体验课
 	@Column(name = "coursetype", length = 1, nullable = false, columnDefinition = "INT default 0")
 	private Integer coursetype = 0;
 	// 经度

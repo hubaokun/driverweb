@@ -501,6 +501,29 @@ public class DataDao {
 		List list = query.list();
 		return list;
 	}
+	/**
+	 * 查看教练体验课是否开课
+	 * @param coachid
+	 * @param datacount
+	 * @param startdate
+	 * @param starthour
+	 * @param endhour
+	 * @param subjectid
+	 * @return
+	 */
+	
+	public List getCoachStateFree(String coachid, int datacount, Date startdate, int starthour, int endhour){
+		Session session=this.getSession();
+		SQLQuery query= session.createSQLQuery("select getcoachfreestate(?,?,?,?,?)");
+		query.setString(0, coachid);
+		query.setInteger(1, datacount);
+		query.setDate(2, startdate);
+		query.setInteger(3, starthour);
+		query.setInteger(4, endhour);
+	//		query.executeUpdate();
+		List list = query.list();
+		return list;
+	}
 	public Object getAccountReport(String addtime){
 		Session session=this.getSession();
 		SQLQuery query= session.createSQLQuery("{call accountreportforday(?)}");

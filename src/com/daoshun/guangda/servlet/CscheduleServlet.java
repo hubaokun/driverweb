@@ -1436,6 +1436,7 @@ public class CscheduleServlet extends BaseServlet {
 				String addressid = null;
 				String subjectid = null;
 				String addtionalprice = null;
+				String isfreecourse =null;
 				try {
 					nextjson = json.getJSONObject(i);
 					hour = nextjson.getString("hour");
@@ -1444,11 +1445,12 @@ public class CscheduleServlet extends BaseServlet {
 					addressid = nextjson.getString("addressid");
 					subjectid = nextjson.getString("subjectid");
 					addtionalprice = nextjson.getString("addtionalprice");
+					isfreecourse = nextjson.getString("isfreecourse");
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 			  AutoPositionInfo ap=locationService.getAutoPositionInfoByCityId(cityid);
-			  if(ap!=null){
+			  if(ap!=null  && !isfreecourse.equals("1")){
 				  if(ap.getMaxprice()!=null && ap.getMinprice()!=null){
 					  if(Integer.parseInt(price)<ap.getMinprice().intValue() || Integer.parseInt(price)>ap.getMaxprice().intValue()){
 						  resultMap.put("code", 3);
@@ -1488,6 +1490,8 @@ public class CscheduleServlet extends BaseServlet {
 					
 					scheduleInfo.setAddtionalprice(new BigDecimal(CommonUtils.parseDouble(addtionalprice, 0d)));
 					
+					scheduleInfo.setIsfreecourse(CommonUtils.parseInt(isfreecourse, 0));//设置是否是体验课
+					
 					cscheduleService.addScheduleInfo(scheduleInfo);
 				} else {
 					BigDecimal b = new BigDecimal(CommonUtils.parseDouble(price, 0d));
@@ -1500,6 +1504,8 @@ public class CscheduleServlet extends BaseServlet {
 					cscheduleInfo.setSubjectid(CommonUtils.parseInt(subjectid, 0));// 设置科目id
 					
 					cscheduleInfo.setAddtionalprice(new BigDecimal(CommonUtils.parseDouble(addtionalprice, 0d)));
+					
+					cscheduleInfo.setIsfreecourse(CommonUtils.parseInt(isfreecourse, 0));//设置是否是体验课
 					
 					cscheduleService.updateScheduleInfo(cscheduleInfo);
 				}
@@ -1678,6 +1684,7 @@ public class CscheduleServlet extends BaseServlet {
 		int isbooked=0;
 		Calendar c=Calendar.getInstance();
 		int hournow=c.get(c.HOUR_OF_DAY);
+		//开课
 		if(type.equals("1"))
 		{
 			JSONArray json = null;
@@ -1701,6 +1708,7 @@ public class CscheduleServlet extends BaseServlet {
 					String addressid = null;
 					String subjectid = null;
 					String addtionalprice =null;
+					String isfreecourse =null;
 					try {
 						nextjson = json.getJSONObject(i);
 						hour = nextjson.getString("hour");
@@ -1709,6 +1717,7 @@ public class CscheduleServlet extends BaseServlet {
 						addressid = nextjson.getString("addressid");
 						subjectid = nextjson.getString("subjectid");
 						addtionalprice = nextjson.getString("addtionalprice");
+						isfreecourse = nextjson.getString("isfreecourse");
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
@@ -1737,6 +1746,7 @@ public class CscheduleServlet extends BaseServlet {
 	
 						scheduleInfo.setSubjectid(CommonUtils.parseInt(subjectid, 0));// 设置科目id
 						
+						scheduleInfo.setIsfreecourse(CommonUtils.parseInt(isfreecourse, 0));//设置是否是体验课
 						scheduleInfo.setAddtionalprice(new BigDecimal(CommonUtils.parseDouble(addtionalprice, 0d)));
 						if(hournow>=CommonUtils.parseInt(hour, 0) && c.getTime().compareTo(CommonUtils.getDateFormat(day, "yyyy-MM-dd"))==1)//设置过期时间
 							scheduleInfo.setExpire(1);
@@ -1755,6 +1765,7 @@ public class CscheduleServlet extends BaseServlet {
 	
 						cscheduleInfo.setSubjectid(CommonUtils.parseInt(subjectid, 0));// 设置科目id
 						
+						cscheduleInfo.setIsfreecourse(CommonUtils.parseInt(isfreecourse, 0));//设置是否是体验课
 						if(hournow>=CommonUtils.parseInt(hour, 0) && c.getTime().compareTo(CommonUtils.getDateFormat(day, "yyyy-MM-dd"))==1)//设置过期时间
 							cscheduleInfo.setExpire(1);
 						else
@@ -1775,6 +1786,7 @@ public class CscheduleServlet extends BaseServlet {
 				cscheduleService.setDefaultAddtionalPirce(coachid, realaddtionalprice);
 			}
 		}
+		//停课
 		else if(type.equals("2"))
 		{
 			JSONArray json = null;
