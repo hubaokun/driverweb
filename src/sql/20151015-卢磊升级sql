@@ -1,0 +1,1 @@
+insert into t_teach_subject values (null,now(),'体验课');
