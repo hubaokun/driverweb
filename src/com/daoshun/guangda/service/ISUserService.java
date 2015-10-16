@@ -343,4 +343,5 @@ public interface ISUserService {
     public abstract String checkopenid(String openid);
     //学员是否拥有参与体验课资格的状态
     public boolean getFreecoursestate(int studentid);
+    public int getCoinnumForDriveSchool( String studentid,String coachid);
 }

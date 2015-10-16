@@ -1668,7 +1668,11 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		String countouthql = "select sum(coinnum) from CoinRecordInfo where (payerid ="+studentid+" and payertype="+ UserType.STUDENT+" and ownertype="+UserType.COAH+"  and ownerid="+coachid+")";
 		Object out= dataDao.getFirstObjectViaParam(countouthql, null);
 		int totalout = (out==null) ? 0: CommonUtils.parseInt(out.toString(),0);
-		return (int) (totalin-totalout);
+		if((totalin-totalout)>=0){
+			return (totalin-totalout);
+		}else{
+			return 0;
+		}
 	}
 	/**
 	 * 获取学员针对所有教练的可用小巴币
@@ -1713,6 +1717,35 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		
 		String countinhql2 = "select sum(coinnum) from CoinRecordInfo where (receiverid ="+studentid+" and receivertype="+ UserType.STUDENT+" and ownertype="+UserType.DRIVESCHOOL+")";
 		Object in2= dataDao.getFirstObjectViaParam(countinhql2, null);
+		int totalin2= in2==null?0:CommonUtils.parseInt(in2.toString(), 0);
+		if(totalin2==0){
+			return 0;
+		}
+		String countouthql3 = "select sum(coinnum) from CoinRecordInfo where (payerid ="+studentid+" and payertype="+ UserType.STUDENT+" and ownertype="+UserType.DRIVESCHOOL+")";
+		Object out2= dataDao.getFirstObjectViaParam(countouthql3, null);
+		int totalout2 = (out2==null) ? 0: CommonUtils.parseInt(out2.toString(),0);
+		
+		return (int) (totalin2-totalout2);
+	}
+	/**
+	 * 学员预约时查询可用驾校小巴币
+	 * @param studentid
+	 * @param coachid
+	 * @return
+	 */
+	public int getCoinnumForDriveSchool( String studentid,String coachid) {
+		String hql2="from DriveSchoolInfo where schoolid = (select drive_schoolid from CuserInfo where coachid=:coachid)";
+		DriveSchoolInfo  ds= (DriveSchoolInfo) dataDao.getFirstObjectViaParam(hql2, new String[]{"coachid"},CommonUtils.parseInt(coachid, 0));
+		int ownerid=0;
+		if(ds!=null){
+			ownerid=ds.getSchoolid();
+		}
+		StringBuffer hql=new StringBuffer();
+		hql.append("select sum(coinnum) from CoinRecordInfo where (receiverid =:receiverid and receivertype=:receivertype");
+		hql.append(" and ownertype=:ownertype and ownerid=:ownerid )");
+		String param[]={"receiverid","receivertype","ownertype","ownerid"};
+		
+		Object in2= dataDao.getFirstObjectViaParam(hql.toString(), param,CommonUtils.parseInt(studentid, 0),UserType.STUDENT,UserType.DRIVESCHOOL,ownerid);
 		int totalin2= in2==null?0:CommonUtils.parseInt(in2.toString(), 0);
 		if(totalin2==0){
 			return 0;

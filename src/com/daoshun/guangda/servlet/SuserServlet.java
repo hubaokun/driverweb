@@ -1087,7 +1087,7 @@ public class SuserServlet extends BaseServlet {
 		Qs  qs1=new Qs("1","科目二");
 		Qs  qs2=new Qs("2","科目三");
 		Qs  qs3=new Qs("3","考场练习");
-		Qs  qs4=new Qs("4","体验课");
+		Qs  qs4=new Qs("5","体验课");
 		List<Qs> list=new ArrayList<Qs>();
 		list.add(qs1);
 		list.add(qs2);

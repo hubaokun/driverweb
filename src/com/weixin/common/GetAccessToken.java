@@ -18,7 +18,7 @@ public class GetAccessToken {
 	private int tokencount=0;
 	private int ticketcount=0;
 	//微信token定时任务
-	@Scheduled(cron = "0 0/5 * * * ?")
+	//@Scheduled(cron = "0 0/5 * * * ?")
 	public void checktoken() {
 		IGetYouWanna WXmessageService=new GetYouWannaImpl();
 		if(WXmessageService.getAccessToken())

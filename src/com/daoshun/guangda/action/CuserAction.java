@@ -1707,6 +1707,7 @@ public class CuserAction extends BaseAction {
 		}
 		// 修改教练证号
 		if (!CommonUtils.isEmptyString(editcoach_cardnum)) {
+			
 			cuser.setCoach_cardnum(editcoach_cardnum);
 		}
 		// 修改教练证到期时间
@@ -1715,6 +1716,7 @@ public class CuserAction extends BaseAction {
 		}
 		// 修改驾驶证号
 		if (!CommonUtils.isEmptyString(editdrive_cardnum)) {
+			
 			cuser.setDrive_cardnum(editdrive_cardnum);
 		}
 		// 修改驾驶证到期时间

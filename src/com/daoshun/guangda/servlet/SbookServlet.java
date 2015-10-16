@@ -589,9 +589,9 @@ public class SbookServlet extends BaseServlet {
 			if (info.getCan_use_coupon_count() != null && info.getCan_use_coupon_count() != 0)
 				canUseMaxCount = info.getCan_use_coupon_count();
 		}
-		//小巴币的总数=教练可用小巴币+驾校可用小巴币+平台可用小巴币
+		//可用的小巴币的总数=教练可用小巴币+驾校可用小巴币+平台可用小巴币
 		int num=suserService.getCanUseCoinnum(coachid,studentid);//获取教练可用小巴币
-		int numForSchool=suserService.getCanUseCoinnumForDriveSchool(studentid);//获取驾校可用小巴币
+		int numForSchool=suserService.getCoinnumForDriveSchool(studentid,coachid);//获取驾校可用小巴币
 		//获取平台发送的小巴币
 		int numForPlatform=suserService.getCanUseCoinnumForPlatform("0",studentid);//获取平台可用小巴币
 		num+=numForSchool;
@@ -606,7 +606,7 @@ public class SbookServlet extends BaseServlet {
 		if(suser.getFcoinnum()==null){
 			suser.setFcoinnum(new BigDecimal(0));
 		}
-		if(num>=suser.getFcoinnum().intValue()){//可用余额减去冻结小巴币
+		if(num>=suser.getFcoinnum().intValue()){//可用小巴币减去冻结小巴币
 			coinnum=num-suser.getFcoinnum().intValue();
 		}
 		resultMap.put("couponlist", list);

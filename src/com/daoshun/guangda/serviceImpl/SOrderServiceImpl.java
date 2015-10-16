@@ -1518,11 +1518,11 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				
 				boolean frflag=suserService.getFreecoursestate(CommonUtils.parseInt(studentid, 0));
 				if(frflag){
-					//有资格
-					student.setFreecoursestate(1);
-				}else{
 					//没有资格
 					student.setFreecoursestate(0);
+				}else{
+					//有资格
+					student.setFreecoursestate(1);
 				}
 				dataDao.updateObject(student);
 				

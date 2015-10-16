@@ -2001,12 +2001,22 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					moneySum+=mixMoney;
 				}
 			}
-		
+		//从t_coin_record表查询小巴币是否足够支付
 		int canUseNum[]=getCanUseCoinMoney(coachid,studentid);
 		if(coinSum>canUseNum[0]){
 			//小巴币不足
 			return 1;
 		}
+		//再从t_user_student表的coinnum字段查询小巴币是否足够支付
+		SuserInfo suser=dataDao.getObjectById(SuserInfo.class, studentid);
+		if(suser.getCoinnum()==null){
+			suser.setCoinnum(0);
+		}
+		if(coinSum>suser.getCoinnum()){
+			//小巴币不足
+			return 1;
+		}
+		
 		if(moneySum>canUseNum[1]){
 			//余额不足
 			return 2;
