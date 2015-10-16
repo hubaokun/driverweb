@@ -2281,6 +2281,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 //					canOrder = false;
 //				} else {
 					// 查看时间是否被预订或者是休息的
+					int coursetype=0;
+					int isfreecourse=0;
 					for (int j = 0; j < times.length(); j++) {
 						String hour = times.get(j).toString();
 						if (j == 0) {
@@ -2343,6 +2345,9 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 										return result;
 									}
 								}
+								
+								coursetype=scheduleinfoList2.get(0).getSubjectid();
+								isfreecourse=scheduleinfoList2.get(0).getIsfreecourse();
 							}
 //							else {
 //								// 获取教练是否有默认设置
@@ -2453,6 +2458,13 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						order.setMixMoney(mixMoney);
 						order.setStudentstate(0);// 学生端订单状态
 						order.setCoachstate(0);// 教练段任务状态
+						
+						if(isfreecourse==1){
+							order.setCoursetype(5);//课程类型  1=科目二  2=科目三  3=考场练习 4=陪驾  5=体验课
+						}else{
+							order.setCoursetype(coursetype);//课程类型  1=科目二  2=科目三  3=考场练习 4=陪驾  5=体验课
+						}
+						
 						// 地址相关
 						order.setLatitude(latitude);
 						order.setLongitude(longitude);
