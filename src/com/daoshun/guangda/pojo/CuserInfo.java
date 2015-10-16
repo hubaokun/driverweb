@@ -200,7 +200,7 @@ public class CuserInfo implements Serializable {
 	
 	// 教练用车单价
 	@Column(name = "addtionalprice", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")
-	private BigDecimal addtionalprice;
+	private BigDecimal addtionalprice=new BigDecimal(0);
 	
 
 	// 教练默认教学科目 0表示未设置

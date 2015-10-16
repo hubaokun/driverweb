@@ -81,7 +81,7 @@ public class CscheduleInfo implements Serializable {
 	
 	// 附加价格(用来表示陪驾教练用车价)
 	@Column(name = "addtionalprice", nullable = false, columnDefinition = "Decimal(20,2) default 0.00")
-	private BigDecimal addtionalprice;
+	private BigDecimal addtionalprice=new BigDecimal(0);
 	
 	// 地址详细
 	@Transient
