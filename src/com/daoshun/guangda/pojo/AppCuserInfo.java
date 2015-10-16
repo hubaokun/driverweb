@@ -85,13 +85,15 @@ public class AppCuserInfo implements Serializable {
 	
 	private int accompanycoursestate;
 	
-	private int accompanynum;
+	private Integer accompanynum;
 	
-	public int getAccompanynum() {
+	
+
+	public Integer getAccompanynum() {
 		return accompanynum;
 	}
 
-	public void setAccompanynum(int accompanynum) {
+	public void setAccompanynum(Integer accompanynum) {
 		this.accompanynum = accompanynum;
 	}
 
