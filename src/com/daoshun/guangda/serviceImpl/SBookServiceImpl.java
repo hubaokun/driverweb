@@ -2068,6 +2068,9 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				return result;
 			} 
 		}
+		
+		//boolean flag=suserService.getFreecoursestate(CommonUtils.parseInt(studentid, 0));
+		
 		//################处理测试账号结束#####################
 		
 		String failtimes = "";// 不能预订的时间点集合
@@ -2328,6 +2331,16 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 											longitude = address.getLongitude();
 											detail = address.getDetail();
 										}
+									}
+								}
+								//如果是体验课
+								if(scheduleinfoList2.get(0).getIsfreecourse()==1){
+									//是否有预约体验课的资格
+									boolean frflag=suserService.getFreecoursestate(CommonUtils.parseInt(studentid, 0));
+									if(!frflag){
+										result.put("message", "没有预约体验课的资格!");
+										result.put("code", 111);
+										return result;
 									}
 								}
 							}
@@ -2786,8 +2799,6 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					student.setFreecoursestate(0);
 				}
 				dataDao.updateObject(student);
-				
-				
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();

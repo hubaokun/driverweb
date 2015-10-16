@@ -1093,29 +1093,30 @@ public class SuserServlet extends BaseServlet {
 		list.add(qs2);
 		list.add(qs3);
 		list.add(qs4);
-		resultMap.put("data",list);
+		resultMap.put("subjectlist",list);
 	}
 	class Qs{
-		private String id;
-		private String name;
-		
-		public Qs(String id, String name) {
+		private String subjectid;
+		private String subjectname;
+		public Qs(String subjectid, String subjectname) {
 			super();
-			this.id = id;
-			this.name = name;
+			this.subjectid = subjectid;
+			this.subjectname = subjectname;
 		}
-		public String getId() {
-			return id;
+		public String getSubjectid() {
+			return subjectid;
 		}
-		public void setId(String id) {
-			this.id = id;
+		public void setSubjectid(String subjectid) {
+			this.subjectid = subjectid;
 		}
-		public String getName() {
-			return name;
+		public String getSubjectname() {
+			return subjectname;
 		}
-		public void setName(String name) {
-			this.name = name;
+		public void setSubjectname(String subjectname) {
+			this.subjectname = subjectname;
 		}
+		
+		
 		
 	}
 }
