@@ -2008,7 +2008,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			return 1;
 		}
 		//再从t_user_student表的coinnum字段查询小巴币是否足够支付
-		SuserInfo suser=dataDao.getObjectById(SuserInfo.class, studentid);
+		SuserInfo suser=dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
 		if(suser.getCoinnum()==null){
 			suser.setCoinnum(0);
 		}
