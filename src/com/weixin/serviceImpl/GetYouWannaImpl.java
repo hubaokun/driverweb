@@ -440,7 +440,7 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 		 map.put("spbill_create_ip", spbill_create_ip);
 		 map.put("notify_url",notify_url);
 		 map.put("trade_type", trade_type);
-		 if(openid!=null)
+		 if(!trade_type.equals("APP"))
 		   map.put("openid",openid);
 		 Collection<String> keyset= map.keySet();
 		    List<String> list = new ArrayList<String>(keyset);  
@@ -472,7 +472,7 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 //			String xml=new String(sb1.toString().getBytes(),"utf-8");
 //			System.out.println(xml);
 			String xml="";
-			if(openid!=null)
+			if(!trade_type.equals("APP"))
 			{
 				xml="<xml><appid><![CDATA["+appid+"]]></appid><body><![CDATA["+body+"]]></body><mch_id><![CDATA["+mch_id+"]]></mch_id><nonce_str><![CDATA["+nonce_str+"]]></nonce_str><notify_url><![CDATA["+notify_url+"]]></notify_url><openid><![CDATA["+openid+"]]></openid><out_trade_no><![CDATA["+out_trade_no+"]]></out_trade_no>"+
 				"<spbill_create_ip><![CDATA["+spbill_create_ip+"]]></spbill_create_ip><total_fee>1</total_fee><trade_type><![CDATA["+trade_type+"]]></trade_type><sign><![CDATA["+sign+"]]></sign></xml>";
@@ -483,7 +483,7 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 				xml="<xml><appid><![CDATA["+appid+"]]></appid><body><![CDATA["+body+"]]></body><mch_id><![CDATA["+mch_id+"]]></mch_id><nonce_str><![CDATA["+nonce_str+"]]></nonce_str><notify_url><![CDATA["+notify_url+"]]></notify_url><out_trade_no><![CDATA["+out_trade_no+"]]></out_trade_no>"+
 						"<spbill_create_ip><![CDATA["+spbill_create_ip+"]]></spbill_create_ip><total_fee>1</total_fee><trade_type><![CDATA["+trade_type+"]]></trade_type><sign><![CDATA["+sign+"]]></sign></xml>";
 			}
-			//System.out.println(xml);
+		//	System.out.println(xml);
 			String url = "https://api.mch.weixin.qq.com/pay/unifiedorder";
 	        URL u;
 	        String result="FAIL";
@@ -557,7 +557,7 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 					 List<Element> elements=root.elements();
 					 for(Element e:elements)
 					 {
-	                   // System.out.println(e.getName()+":"+e.getText());
+	                //    System.out.println(e.getName()+":"+e.getText());
 						if(e.getText().equals("FAIL"))
 							return result;
 						else if(e.getName().equals("prepay_id"))

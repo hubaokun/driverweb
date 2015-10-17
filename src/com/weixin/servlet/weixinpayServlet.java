@@ -20,16 +20,19 @@ import org.dom4j.io.SAXReader;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.guangda.pojo.RechargeRecordInfo;
 import com.daoshun.guangda.service.ICUserService;
+import com.daoshun.guangda.service.ISUserService;
 import com.daoshun.guangda.servlet.BaseServlet;
 import com.weixin.service.IGetYouWanna;
 
 @WebServlet("/weixinWeb/weixinpaycb")
 public class weixinpayServlet extends BaseServlet{
 	private ICUserService cuserService;
+	private ISUserService suserService;
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		cuserService = (ICUserService) applicationContext.getBean("cuserService");
+		suserService = (ISUserService) applicationContext.getBean("suserService");
 	}
 	
 	@Override
@@ -56,6 +59,7 @@ public class weixinpayServlet extends BaseServlet{
 					openid=e.getText();
 			}
 			RechargeRecordInfo info = cuserService.getrechargerecord(out_trade_no);
+			suserService.promoEnrollCallback(out_trade_no);
 			if(info.getState()==0)
 			{
 				cuserService.buySuccessbyweixin(out_trade_no, openid, transaction_id);
