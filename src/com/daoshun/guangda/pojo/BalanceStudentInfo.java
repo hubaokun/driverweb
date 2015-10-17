@@ -67,6 +67,11 @@ public class BalanceStudentInfo implements Serializable {
 	//微信账号
 	@Transient
 	private String weixin_account;
+	
+	//支付充值等类型说明
+	@Transient
+	private String type_explain;
+	
 
 	public int getRecordid() {
 		return recordid;
@@ -148,6 +153,14 @@ public class BalanceStudentInfo implements Serializable {
 
 	public void setWeixin_account(String weixin_account) {
 		this.weixin_account = weixin_account;
+	}
+
+	public String getType_explain() {
+		return type_explain;
+	}
+
+	public void setType_explain(String type_explain) {
+		this.type_explain = type_explain;
 	}
 	
 

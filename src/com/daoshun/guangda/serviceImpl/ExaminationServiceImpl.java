@@ -1,9 +1,18 @@
 package com.daoshun.guangda.serviceImpl;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,15 +64,15 @@ public class ExaminationServiceImpl extends BaseServiceImpl implements IExaminat
 		return list;
 	}
 	public int getExaminationMore(String type,String pagenum) {
-		String querystring1="from Examination  where questiontype in (1,2)";
+		String querystring1="select count(*) from Examination  where questiontype in (1,2)";
 		if("1".equals(type)){//1 科目一 顺序练习 
-			querystring1="from Examination  where questiontype in (1,2)";
+			querystring1="select count(*) from Examination  where questiontype in (1,2)";
 		}else if("2".equals(type)){
-			querystring1="from Examination  where questiontype in (3,4,5)";
+			querystring1="select count(*) from Examination  where questiontype in (3,4,5)";
 		}else if("3".equals(type)){
-			querystring1="from Examination  where questiontype =5 ";
+			querystring1="select count(*) from Examination  where questiontype =5 ";
 		}else if("4".equals(type)){
-			querystring1="from Examination  where animationflag=1 ";
+			querystring1="select count(*) from Examination  where animationflag=1 ";
 		}
 		List<Long> list=(List<Long>) dataDao.pageQueryViaParam(querystring1, Constant.EXAMINATION_SIZE, CommonUtils.parseInt(pagenum, 0) + 1, null);
 		if(list!=null && list.size()>0){
@@ -203,6 +212,25 @@ public class ExaminationServiceImpl extends BaseServiceImpl implements IExaminat
 		dataDao.addObject(qf);
 		return true;
 	}
+	/**
+	 * 移除收藏的题目
+	 * @param studentid
+	 * @param questionno
+	 * @return
+	 */
+	public boolean removeQuestionFavorites(int studentid,int questionno){
+		String querystring="from QuestionFavorites where studentid=:studentid and questionno=:questionno";
+		String[] params={"studentid","questionno"};
+		List<QuestionFavorites> list=(List<QuestionFavorites>) dataDao.getObjectsViaParam(querystring, params,studentid,questionno);
+		if(list!=null && list.size()>0){
+			/*QuestionFavorites qf=list.get(0);
+			dataDao.deleteObject(qf);*/
+			dataDao.deleteBySql("delete from t_question_favorites where studentid="+studentid+" and questionno="+questionno);
+			return true;
+		}
+		return false;
+	}
+	
 	
 	@Override
 	/**
@@ -255,7 +283,7 @@ public class ExaminationServiceImpl extends BaseServiceImpl implements IExaminat
 	 * @param lastquestiontype 题类型
 	 * @param score 成绩
 	 * @param analogflag 是否模拟题  0 不是 ，1是
-	 * @param answerinfo 模拟题回答的内容 ：题号#回答选项#正确答案,题号#回答选项#正确答案
+	 * @param answerinfo 模拟题回答的内容 ：以json字符串的形式
 	 */
 	@Override
 	public int addAnswerRecordInfo(int studentid,int lastquestionno,int lastquestiontype,int score,int analogflag,String answerinfo) {
@@ -270,6 +298,7 @@ public class ExaminationServiceImpl extends BaseServiceImpl implements IExaminat
 			ar.setAnalogflag(1);
 			ar.setScore(score);
 			ar.setStudentid(studentid);
+			ar.setAnswerinfo(answerinfo);//设置用户提交的模拟题的所有选择的答案
 		}else{
 			ar.setStudentid(studentid);
 			ar.setLastquestionno(lastquestionno);
@@ -281,4 +310,81 @@ public class ExaminationServiceImpl extends BaseServiceImpl implements IExaminat
 		return 1;
 		
 	}
+	/**
+	 * 获取学员上次的答题记录
+	 * @param studentid
+	 * @return
+	 */
+	public AnswerRecordInfo getAnswerRecordInfo(int studentid){
+		String hql="from AnswerRecordInfo where studentid=:studentid order by addtime desc";
+		String params[]={"studentid"};
+		AnswerRecordInfo ar=(AnswerRecordInfo) dataDao.getFirstObjectViaParam(hql, params, studentid);
+		return ar;
+	}
+	/**
+	 * 把从网上抓取的题库JSON导入数据库
+	 * @author 卢磊
+	 */
+	public  void parserJson() throws JSONException {
+		// 从JSon文件读取数据
+		StringBuffer stringBuffer = new StringBuffer();
+		String line = null;
+		try {
+			File someFile = new File("e:\\JsonFile000.json");
+			//输入流
+			FileInputStream fis = new FileInputStream(someFile);
+			InputStreamReader isr = new InputStreamReader(fis,"UTF-8");
+			BufferedReader br = new BufferedReader(isr);
+			
+			while ((line = br.readLine()) != null) {
+				stringBuffer.append(line);
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		//System.out.println(stringBuffer.toString());
+		// 将Json文件数据形成JSONObject对象
+		JSONObject jsonObject = new JSONObject(stringBuffer.toString());
+		
+		JSONArray provinces = jsonObject.getJSONArray("RECORDS");
+		for (int i = 0; i < provinces.length(); i++) {
+			String questionid = provinces.getJSONObject(i).getString("questionid");
+			String subject = provinces.getJSONObject(i).getString("subject");
+			String option3 = provinces.getJSONObject(i).getString("option3");
+			String animationflag = provinces.getJSONObject(i).getString("animationflag");
+			String answer = provinces.getJSONObject(i).getString("answer");
+			String commentate = provinces.getJSONObject(i).getString("commentate");
+			String questiontype = provinces.getJSONObject(i).getString("questiontype");
+			String questionno = provinces.getJSONObject(i).getString("questionno");
+			String animationimg = provinces.getJSONObject(i).getString("animationimg");
+			String option2 = provinces.getJSONObject(i).getString("option2");
+			
+			String question = provinces.getJSONObject(i).getString("question");
+			String option4 = provinces.getJSONObject(i).getString("option4");
+			String option1 = provinces.getJSONObject(i).getString("option1");
+			
+			
+			Examination ex=new Examination();
+			ex.setAnimationflag(CommonUtils.parseInt(animationflag,0));
+			ex.setAnimationimg(animationimg);
+			ex.setAnswer(answer);
+			ex.setCommentate(commentate);
+			ex.setOption1(option1);
+			ex.setOption2(option2);
+			ex.setOption3(option3);
+			ex.setOption4(option4);
+			ex.setQuestion(question);
+			ex.setQuestionid(CommonUtils.parseInt(questionid,0));
+			ex.setQuestionno(CommonUtils.parseInt(questionno,0));
+			ex.setQuestiontype(CommonUtils.parseInt(questiontype,0));
+			ex.setSubject(subject);
+			dataDao.addObject(ex);
+			
+		}
+
+		//System.out.println(jsonFileInfo);
+	}
+
 }

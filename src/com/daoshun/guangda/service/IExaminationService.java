@@ -3,6 +3,9 @@ package com.daoshun.guangda.service;
 import java.util.HashMap;
 import java.util.List;
 
+import org.json.JSONException;
+
+import com.daoshun.guangda.pojo.AnswerRecordInfo;
 import com.daoshun.guangda.pojo.AreaInfo;
 import com.daoshun.guangda.pojo.AutoPositionInfo;
 import com.daoshun.guangda.pojo.CityInfo;
@@ -22,4 +25,7 @@ public interface IExaminationService {
 	public int getQuestionFavoritesMore(int studentid,String pagenum);
 	public int getQuestionFavoritesNum(int studentid);
 	public int addAnswerRecordInfo(int studentid,int lastquestionno,int lastquestiontype,int score,int analogflag,String answerinfo);
+	public AnswerRecordInfo getAnswerRecordInfo(int studentid);
+	public  void parserJson() throws JSONException;
+	public boolean removeQuestionFavorites(int studentid,int questionno);
 }

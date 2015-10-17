@@ -161,7 +161,7 @@ public class OrderInfo implements Serializable {
 	
 	
 	//订单的备注说明
-	@Column(name = "remarks", length = 50, nullable = false)
+	@Column(name = "remarks", nullable = true)
 	private String remarks;
 	
 

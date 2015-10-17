@@ -282,6 +282,11 @@ public class CuserInfo implements Serializable {
 	// 教练陪驾是否开课,此字段决定学员是否能在陪驾列表中看见教练
 	@Column(name = "accompanycoursestate", nullable = false, length = 1, columnDefinition = "INT default 0")
 	private Integer accompanycoursestate = 0;
+	
+	// 教练陪驾陪驾次数
+	@Column(name = "accompanynum", nullable = true, columnDefinition = "INT default 0")
+	private Integer accompanynum = 0;
+	
 	// 冻结结束时间
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "quittime")
@@ -1197,4 +1202,12 @@ public class CuserInfo implements Serializable {
 		this.addtionalprice = addtionalprice;
 	}
 
+	public Integer getAccompanynum() {
+		return accompanynum;
+	}
+
+	public void setAccompanynum(Integer accompanynum) {
+		this.accompanynum = accompanynum;
+	}
+	
 }

@@ -1,5 +1,9 @@
 package com.daoshun.guangda.servlet;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,12 +15,16 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
 import com.daoshun.common.ErrException;
+import com.daoshun.guangda.pojo.AnswerRecordInfo;
 import com.daoshun.guangda.pojo.Examination;
 import com.daoshun.guangda.service.IExaminationService;
-import com.daoshun.guangda.service.ISUserService;
 /**
  * 考驾题 servlet
  * @author 卢磊
@@ -52,7 +60,13 @@ public class ExaminationServlet extends BaseServlet{
 				getQuestionFavoritesNum(request,resultMap);
 			}else if(Constant.ADDANSWERRECORDINFO.equals(action)){
 				addAnswerRecordInfo(request,resultMap);
+			}else if(Constant.GETANSWERRECORDINFO.equals(action)){
+				getAnswerRecordInfo(request,resultMap);
+			}else if(Constant.REMOVEQUESTIONFAVORITES.equals(action)){
+				removeQuestionFavorites(request,resultMap);
 			}
+			
+			
 		} catch (ErrException e) {
 			e.printStackTrace();
 			setResultWhenException(response, e.getMessage());
@@ -65,6 +79,7 @@ public class ExaminationServlet extends BaseServlet{
 	 */
 	public void getExamination(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		//1 科目1的单选题	2 科目1的判断题      3 科目4的单选题     4 科目4的判断题      5 科目4的多选题 
+		//type的值说明
 		/*1 科目一 顺序练习  ： 1, 2  
 		 *2 科目四顺序练习  ：3,4, 5，
 		 *3 科目四多选练习 ： 5
@@ -72,6 +87,7 @@ public class ExaminationServlet extends BaseServlet{
 		 */
 		String type = getRequestParamter(request, "type");
 		String pagenum = getRequestParamter(request, "pagenum");
+		
 		CommonUtils.validateEmptytoMsg(type, "type为空");
 		List<Examination> list=examinationService.getExamination(type,pagenum);
 		for (Examination examination : list) {
@@ -121,11 +137,26 @@ public class ExaminationServlet extends BaseServlet{
 	 */
 	public void addQuestionFavorites(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException{
 		String studentid = getRequestParamter(request, "studentid");
-		String questionid = getRequestParamter(request, "questionid");
-		boolean issucc=examinationService.addQuestionFavorites(CommonUtils.parseInt(studentid,0), CommonUtils.parseInt(questionid,0));
+		String questionno = getRequestParamter(request, "questionno");
+		boolean issucc=examinationService.addQuestionFavorites(CommonUtils.parseInt(studentid,0), CommonUtils.parseInt(questionno,0));
 		if(!issucc){
 			resultMap.put("code", 2);
 			resultMap.put("message","已经收藏过了" );
+		}
+	}
+	/**
+	 * 移除题目收藏
+	 * @param request
+	 * @param resultMap
+	 * @throws ErrException
+	 */
+	public void removeQuestionFavorites(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException{
+		String studentid = getRequestParamter(request, "studentid");
+		String questionno = getRequestParamter(request, "questionno");
+		boolean issucc=examinationService.removeQuestionFavorites(CommonUtils.parseInt(studentid,0), CommonUtils.parseInt(questionno,0));
+		if(!issucc){
+			resultMap.put("code", 2);
+			resultMap.put("message","移除收藏失败！此题以前没有收藏过" );
 		}
 	}
 	/**
@@ -191,7 +222,6 @@ public class ExaminationServlet extends BaseServlet{
 		int n=examinationService.addAnswerRecordInfo(CommonUtils.parseInt(studentid, 0), 
 														CommonUtils.parseInt(lastquestionno, 0), 
 														CommonUtils.parseInt(lastquestiontype, 0),
-												
 														CommonUtils.parseInt(score, 0),
 														CommonUtils.parseInt(analogflag, 0),answerinfo);
 		if(n==-1){
@@ -199,6 +229,29 @@ public class ExaminationServlet extends BaseServlet{
 			resultMap.put("message", "用户不存在");
 		}
 	}
+	/**
+	 * 获取学员上次的答题记录
+	 * @param request
+	 * @param resultMap
+	 * @throws ErrException
+	 */
+	public void getAnswerRecordInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String studentid = getRequestParamter(request, "studentid");
+		CommonUtils.validateEmptytoMsg(studentid,"studentid为空");
+		AnswerRecordInfo ar=examinationService.getAnswerRecordInfo(CommonUtils.parseInt(studentid,0));
+		if(ar==null){
+			resultMap.put("hasrecord", 0);
+		}else{
+			resultMap.put("hasrecord", 1);
+			resultMap.put("data", ar);
+		}
+		/*try {
+			examinationService.parserJson();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}*/
+	}
+	
 	
 	
 	

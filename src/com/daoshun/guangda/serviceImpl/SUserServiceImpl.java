@@ -266,6 +266,27 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		String[] params = { "studentid" };
 
 		List<BalanceStudentInfo> recordlist = (List<BalanceStudentInfo>) dataDao.getObjectsViaParam(cuserhql.toString(), params, CommonUtils.parseInt(studentid, 0));
+		for (BalanceStudentInfo bi : recordlist) {
+			//类型(1:支付宝充值  2：支付宝提现  3：订单支付 4:支付宝提现不通过 5:微信充值 6:微信提现 7：微信提现不通过)
+			if(bi.getType()==1){
+				bi.setType_explain("充值");
+			}else if(bi.getType()==2){
+				bi.setType_explain("提现");
+				bi.setAmount(new BigDecimal("-"+bi.getAmount().intValue()));
+			}else if(bi.getType()==3){
+				bi.setType_explain("订单支付");
+				bi.setAmount(new BigDecimal("-"+bi.getAmount().intValue()));
+			}else if(bi.getType()==4){
+				bi.setType_explain("提现不通过");
+			}else if(bi.getType()==5){
+				bi.setType_explain("充值");
+			}else if(bi.getType()==6){
+				bi.setType_explain("提现");
+				bi.setAmount(new BigDecimal("-"+bi.getAmount().intValue()));
+			}else if(bi.getType()==7){
+				bi.setType_explain("提现不通过");
+			}
+		}
 		return recordlist;
 	}
 

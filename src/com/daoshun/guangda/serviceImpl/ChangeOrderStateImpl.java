@@ -28,6 +28,7 @@ import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.EvaluationInfo;
 import com.daoshun.guangda.pojo.OrderInfo;
 import com.daoshun.guangda.pojo.OrderNotiRecord;
+import com.daoshun.guangda.pojo.OrderPrice;
 import com.daoshun.guangda.pojo.OrderRecordInfo;
 import com.daoshun.guangda.pojo.StudentBalanceRecord;
 import com.daoshun.guangda.pojo.SuserInfo;
@@ -213,6 +214,20 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 						}
 						cuser.setTotaltime(cuser.getTotaltime() + order.getTime());
 						student.setLearn_time(student.getLearn_time() + order.getTime());
+						
+						if(cuser.getAccompanynum()==null){
+							cuser.setAccompanynum(0);
+						}
+						
+						//如果是陪驾，陪驾次数加一
+						String hql_acc="from OrderPrice where orderid=:orderid";
+						OrderPrice op=(OrderPrice) dataDao.getFirstObjectViaParam(hql_acc, new String[]{"orderid"}, order.getOrderid());
+						if(op!=null){
+							if("陪驾".equals(op.getSubject())){
+								cuser.setAccompanynum(cuser.getAccompanynum()+1);
+							}
+						}
+						
 						dataDao.updateObject(cuser);
 						dataDao.updateObject(student);
 					}

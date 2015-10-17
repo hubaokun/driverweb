@@ -119,5 +119,11 @@ public class AnswerRecordInfo {
 	public void setAnalogquestionno(String analogquestionno) {
 		this.analogquestionno = analogquestionno;
 	}
+	public String getAnswerinfo() {
+		return answerinfo;
+	}
+	public void setAnswerinfo(String answerinfo) {
+		this.answerinfo = answerinfo;
+	}
 	
 }

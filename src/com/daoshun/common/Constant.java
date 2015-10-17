@@ -443,6 +443,10 @@ public class Constant {
 	
 	/**考驾题目收藏**/
 	public static final String ADDQUESTIONFAVORITES = "ADDQUESTIONFAVORITES";
+	
+	/**考驾题目收藏**/
+	public static final String REMOVEQUESTIONFAVORITES = "REMOVEQUESTIONFAVORITES";
+	
 	/**获取学员收藏的题目**/
 	public static final String GETQUESTIONFAVORITES = "GETQUESTIONFAVORITES";
 	/**获取学员收藏题目的数量**/
@@ -450,5 +454,9 @@ public class Constant {
 	
 	/**获取学员收藏题目的数量**/
 	public static final String ADDANSWERRECORDINFO = "ADDANSWERRECORDINFO";
+	
+	/**获取学员收藏题目的数量**/
+	public static final String GETANSWERRECORDINFO = "GETANSWERRECORDINFO";
+	
 	
 }

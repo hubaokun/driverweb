@@ -2,7 +2,7 @@ package com.daoshun.common;
 
 public class PayType {
 	/**
-	 * 余额
+	 * 余额，备注：以前历史订单记录中 余额是 0
 	 */
 	public static int MONEY=1;
 	/**
