@@ -1,0 +1,1 @@
+alter table app_coach_list add accompanynum int;
