@@ -1729,6 +1729,13 @@ public class CscheduleServlet extends BaseServlet {
 					}
 	
 					CscheduleInfo cscheduleInfo = cscheduleService.getCscheduleByday(coachid, day, hour);// 根据时间教练 找到日程信息
+					CaddAddressInfo addressinfo=cuserService.getaddress(CommonUtils.parseInt(addressid, 0));//检查地址是否被删除
+					CaddAddressInfo defaultaddressinfo=cuserService.getcoachaddress(coachid);
+				    //如果地址不存在，已被删除。那么就取默认地址
+					if(addressinfo.getIsused()==1)
+					{
+						addressid=String.valueOf(defaultaddressinfo.getAddressid());
+					}
 					CuserInfo cuser=cuserService.getCoachByid(CommonUtils.parseInt(coachid, 0));
 					if (cscheduleInfo == null) {
 						// 新添加日程

@@ -156,7 +156,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
     @Override
     public CaddAddressInfo getcoachaddress(String coachid) {
         StringBuffer cuserhql = new StringBuffer();
-        cuserhql.append("from CaddAddressInfo where coachid = :coachid and iscurrent = 1");
+        cuserhql.append("from CaddAddressInfo where coachid = :coachid and iscurrent = 1 and isused = 0 ");
         String[] params = {"coachid"};
         CaddAddressInfo addressInfo = (CaddAddressInfo) dataDao.getFirstObjectViaParam(cuserhql.toString(), params, CommonUtils.parseInt(coachid, 0));
         return addressInfo;

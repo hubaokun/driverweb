@@ -55,7 +55,7 @@ public class CmyServiceImpl extends BaseServiceImpl implements ICmyService {
 	@Override
 	public List<CaddAddressInfo> getAddressInfosByCoachid(String coachid) {
 		StringBuffer cmyhql = new StringBuffer();
-		cmyhql.append("from CaddAddressInfo where coachid = :coachid ");
+		cmyhql.append("from CaddAddressInfo where coachid = :coachid and isused = 0 ");
 		String[] params = { "coachid" };
 		List<CaddAddressInfo> cadds = (List<CaddAddressInfo>) dataDao.getObjectsViaParam(cmyhql.toString(), params, CommonUtils.parseInt(coachid, 0));
 		return cadds;
@@ -733,5 +733,11 @@ public class CmyServiceImpl extends BaseServiceImpl implements ICmyService {
 		}
 		result.put("cashtype", cuser.getCashtype());
 		return result;
+	}
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	@Override
+	public void deleteAddressbylogic(CaddAddressInfo cadd) {
+		cadd.setIsused(1);
+		dataDao.updateObject(cadd);
 	}
 }
