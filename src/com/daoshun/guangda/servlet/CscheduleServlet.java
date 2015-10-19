@@ -1527,13 +1527,9 @@ public class CscheduleServlet extends BaseServlet {
 				
 
 				cscheduleService.setDefaultNew(coachid, hour, price, addressid, subjectid,isrest,addtionalprice);
-				if(!addtionalprice.equals("0"))
-				{
-					cuser.setAddtionalprice(new BigDecimal(CommonUtils.parseDouble(addtionalprice, 0d)));
-				    cuserService.updateCuser(cuser);
-				    realaddtionalprice=addtionalprice;
-				   
-				}
+				cuser.setAddtionalprice(new BigDecimal(CommonUtils.parseDouble(addtionalprice, 0d)));
+			    cuserService.updateCuser(cuser);
+			    realaddtionalprice=addtionalprice;
 				
 			}
 			cscheduleService.setDefaultAddtionalPirce(coachid, realaddtionalprice);
