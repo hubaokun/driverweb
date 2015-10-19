@@ -1446,6 +1446,21 @@ public class CscheduleServlet extends BaseServlet {
 					subjectid = nextjson.getString("subjectid");
 					addtionalprice = nextjson.getString("addtionalprice");
 					isfreecourse = nextjson.getString("isfreecourse");
+					if(subjectid.equals("4"))
+					{
+						if(addtionalprice==null)
+						{
+							 resultMap.put("code", 18);
+			      			 resultMap.put("message", "版本太低，无法使用陪驾功能，请升级版本！");
+			      			 return;
+						}
+					}
+					else
+					{
+						addtionalprice="0";
+					}
+					if(isfreecourse==null)
+						isfreecourse="0";
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
