@@ -113,7 +113,9 @@ public class SbookServlet extends BaseServlet {
 			}else if (Constant.GETDRIVERSCHOOLBYCITYNAME.equals(action)) {
 				//按城市ID查询驾校信息
 				getDriveschoolByCityName(request, resultMap);
-			}else {
+			}/*else if ("COIN".equals(action)) {
+				coin(request, resultMap);
+			}*/else {
 				throw new ErrException();
 			}
 
@@ -124,7 +126,9 @@ public class SbookServlet extends BaseServlet {
 		}
 		setResult(response, resultMap);
 	}
-
+	/*public void coin(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		sbookService.getCoinException();
+	}*/
 	private boolean checkSession(HttpServletRequest request, String action, HashMap<String, Object> resultMap) throws ErrException {
 		String userid = "";// 1.教练 2.学员
 		String usertype = "";

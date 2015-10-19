@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -26,11 +27,9 @@ import com.daoshun.common.DeviceType;
 import com.daoshun.common.PayType;
 import com.daoshun.common.PushtoSingle;
 import com.daoshun.guangda.pojo.AppCuserInfo;
-import com.daoshun.guangda.pojo.AutoPositionInfo;
 import com.daoshun.guangda.pojo.CBookTimeInfo;
 import com.daoshun.guangda.pojo.CaddAddressInfo;
 import com.daoshun.guangda.pojo.CityInfo;
-import com.daoshun.guangda.pojo.CityRadius;
 import com.daoshun.guangda.pojo.CoachStudentInfo;
 import com.daoshun.guangda.pojo.CouponRecord;
 import com.daoshun.guangda.pojo.CscheduleInfo;
@@ -2038,7 +2037,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				int canUseNum[]=new int[2];
 				//小巴币的总数=教练可用小巴币+驾校可用小巴币+平台可用小巴币
 				int num=suserService.getCanUseCoinnum(coachid,studentid);//获取教练可用小巴币
-				int numForSchool=suserService.getCanUseCoinnumForDriveSchool(studentid);//获取驾校可用小巴币
+				int numForSchool=suserService.getCoinnumForDriveSchool(studentid,coachid);//获取驾校可用小巴币
 				//获取平台发送的小巴币
 				int numForPlatform=suserService.getCanUseCoinnumForPlatform("0",studentid);//获取平台可用小巴币
 				num+=numForSchool;
@@ -3784,4 +3783,35 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 	public ModelPrice getModelPriceById(int cityid) {
 		return dataDao.getObjectById(ModelPrice.class, cityid);
 	}
+	
+	/*public void getCoinException(){
+		String hql1=" from OrderInfo  where creat_time >'2015-09-01'";
+		List<OrderInfo> list1=(List<OrderInfo>) dataDao.getObjectsViaParam(hql1, null);
+		Map<String,BigDecimal> map1=new HashMap<String,BigDecimal>();
+		for (OrderInfo o : list1) {
+			String hql2="select sum(total) from OrderInfo where paytype=3 and over_time is not null and  studentstate=3 and studentid ="+o.getStudentid();
+			BigDecimal list2=(BigDecimal) dataDao.getFirstObjectViaParam(hql2, null);
+			map1.put(o.getStudentid()+"", list2);
+			
+		}
+		
+		Map<String,Long> map2=new HashMap<String,Long>();
+		for (OrderInfo o : list1) {
+			String hql2="select sum(coinnum) from CoinRecordInfo where receiverid ="+o.getStudentid();
+			Long list2=(Long) dataDao.getFirstObjectViaParam(hql2, null);
+			map2.put(o.getStudentid()+"", list2);
+		}
+		
+		for (String i: map1.keySet()) {
+			BigDecimal orderv=map1.get(i);
+			Long coinv=map2.get(i);
+			if(orderv!=null && coinv!=null){
+				if(orderv.intValue()>coinv.intValue()){
+					System.out.println(i);
+				}
+			}
+			
+		}
+		
+	}*/
 }
