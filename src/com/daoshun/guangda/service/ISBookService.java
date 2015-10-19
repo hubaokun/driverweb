@@ -143,4 +143,5 @@ public interface ISBookService {
 	 * @param mp
 	 */
 	public void updateOpenModelPrice(ModelPrice mp);
+	/*public void getCoinException();*/
 }
