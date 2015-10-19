@@ -1444,22 +1444,22 @@ public class CscheduleServlet extends BaseServlet {
 					isrest = nextjson.getString("isrest");
 					addressid = nextjson.getString("addressid");
 					subjectid = nextjson.getString("subjectid");
-					addtionalprice = nextjson.getString("addtionalprice");
-					isfreecourse = nextjson.getString("isfreecourse");
-					if(subjectid.equals("4"))
+					if(nextjson.has("addtionalprice"))
+					   addtionalprice = nextjson.getString("addtionalprice");
+					else
 					{
-						if(addtionalprice==null)
-						{
+						 addtionalprice="0";
+						 if(subjectid.equals("4"))
+						 {
 							 resultMap.put("code", 18);
 			      			 resultMap.put("message", "版本太低，无法使用陪驾功能，请升级版本！");
 			      			 return;
-						}
-					}
+						 }
+
+					}					
+					if(nextjson.has("isfreecourse"))
+					   isfreecourse = nextjson.getString("isfreecourse");
 					else
-					{
-						addtionalprice="0";
-					}
-					if(isfreecourse==null)
 						isfreecourse="0";
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -1527,13 +1527,9 @@ public class CscheduleServlet extends BaseServlet {
 				
 
 				cscheduleService.setDefaultNew(coachid, hour, price, addressid, subjectid,isrest,addtionalprice);
-				if(!addtionalprice.equals("0"))
-				{
-					cuser.setAddtionalprice(new BigDecimal(CommonUtils.parseDouble(addtionalprice, 0d)));
-				    cuserService.updateCuser(cuser);
-				    realaddtionalprice=addtionalprice;
-				   
-				}
+				cuser.setAddtionalprice(new BigDecimal(CommonUtils.parseDouble(addtionalprice, 0d)));
+			    cuserService.updateCuser(cuser);
+			    realaddtionalprice=addtionalprice;
 				
 			}
 			cscheduleService.setDefaultAddtionalPirce(coachid, realaddtionalprice);
