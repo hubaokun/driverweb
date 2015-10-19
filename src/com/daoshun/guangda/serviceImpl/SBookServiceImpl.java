@@ -699,6 +699,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			if (!CommonUtils.isEmptyString(cityid)) {
 				hqlCoach.append(" and cityid = " + cityid);
 			}
+			boolean accompanycoursestate=false;
 			// 真实姓名和教练所属驾校
 			if (!CommonUtils.isEmptyString(condition1)) {
 				//如果是手机号码
@@ -709,14 +710,21 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						+ condition1 + "%')) ");
 				}
 			}else{
-				if (!CommonUtils.isEmptyString(condition11)) {//C1手动挡 接收到17 ，C2自动挡接收到18
+				if (!CommonUtils.isEmptyString(condition11)) {//C1手动挡 接收到17 ，C2自动挡接收到18 ,19 陪驾
 					if("19".equals(condition11)){//
 						hqlCoach.append(" and  accompanycoursestate= 1 ");
+						accompanycoursestate=true;
 					}else{
 						hqlCoach.append(" and  coursestate= 1 ");
 					}
 				}else{
 					hqlCoach.append(" and  coursestate= 1 ");
+				}
+			}
+			
+			if (!CommonUtils.isEmptyString(condition11)) {//C1手动挡 接收到17 ，C2自动挡接收到18,19 陪驾
+				if(!accompanycoursestate){
+					hqlCoach.append(" and modelid like '%" + condition11 + "%'");
 				}
 			}
 			//cuserhql.append(" and  coursestate = 1 ");
@@ -730,7 +738,10 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				if("1".equals(condition6) || "2".equals(condition6) || "3".equals(condition6) ){
 					hqlCoach.append("and (select count(*) from t_coach_schedule  where subjectid="+condition6+" and coachid=u.coachid) > 0  ");
 				}else if("5".equals(condition6)){
-					hqlCoach.append(" and freecoursestate=1 ");
+					//如果是陪驾，不显示体验课数据
+					if(!accompanycoursestate){
+						hqlCoach.append(" and freecoursestate=1 ");
+					}
 				}
 			}
 			// 开始时间和结束时间
@@ -777,9 +788,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				hqlCoach.append(" and usertype=0 ");
 			}
 			
-			if (!CommonUtils.isEmptyString(condition11)) {//C1手动挡 接收到17 ，C2自动挡接收到18
-				hqlCoach.append(" and modelid like '%" + condition11 + "%'");
-			}
+			
 
 			// if (!CommonUtils.isEmptyString(condition3) && !CommonUtils.isEmptyString(condition4)) {
 			//
@@ -855,6 +864,9 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			//List<CuserInfo> cuserlist = (List<CuserInfo>) dataDao.getObjectsViaParam(hqlCoach.toString(), paramsCoach, cids, now, now, now, now, now);
 			if (cuserlist != null && cuserlist.size() > 0) {
 				for (AppCuserInfo cuser : cuserlist) {
+					if(accompanycoursestate){
+						cuser.setFreecoursestate(0);
+					}
 					if (cuser.getMoney().doubleValue() >= cuser.getGmoney().doubleValue()) {
 						coachlist.add(cuser);
 					}
@@ -1297,6 +1309,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		List<AppCuserInfo> coachlist = (List<AppCuserInfo>) dataDao.SqlPageQuery(cuserhql.toString(), Constant.USERLIST_SIZE+1, CommonUtils.parseInt(pagenum, 0) + 1,AppCuserInfo.class, null);
 		if (coachlist != null && coachlist.size() > 0) {
 			for (AppCuserInfo coach : coachlist) {
+				coach.setFreecoursestate(0);
 				if(coach.getAddress()!=null){
 					String str[]=coach.getAddress().split("#");
 					coach.setAddress("");

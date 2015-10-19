@@ -2077,8 +2077,9 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	 */
 	@Override
 	public boolean getFreecoursestate(int studentid) {
-		String hql10="select count(*) from OrderInfo where studentid=:studentid and  (coachstate!=4 and studentstate!=4)  ";
-		Long n=(Long) dataDao.getFirstObjectViaParam(hql10, new String[]{"studentid"}, studentid);
+		String hql10="select count(*) from OrderInfo where studentid=:studentid and orderid not in "+
+					 " (select orderid from OrderInfo where coachstate=4 and studentstate=4 and studentid=:studentid) ";
+		Long n=(Long) dataDao.getFirstObjectViaParam(hql10, new String[]{"studentid","studentid"}, studentid,studentid);
 		if(n==null){
 			n=0L;
 		}
