@@ -119,4 +119,7 @@ public interface ICmyService {
 	public abstract void updateSubject(CsubjectInfo subject);
 	public void updateNoticeState(int userid,int noticeid);
 	public HashMap<String, Object> applyCoin(String coachid, Integer applyCoinNum,int type);
+	
+	/** 逻辑删除教练地址 **/
+	public abstract void deleteAddressbylogic(CaddAddressInfo cadd);
 }

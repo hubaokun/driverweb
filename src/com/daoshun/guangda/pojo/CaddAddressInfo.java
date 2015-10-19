@@ -1,6 +1,7 @@
 package com.daoshun.guangda.pojo;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,6 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.type.descriptor.sql.VarcharTypeDescriptor;
 
@@ -55,6 +58,14 @@ public class CaddAddressInfo implements Serializable {
 	@Column(name = "detail", length=400,nullable = false)
 	private String detail;
 
+	//逻辑删除标志位
+	@Column(name = "isused", length=1,nullable = false,columnDefinition = "INT default 0")
+	private Integer isused=0;
+
+	//逻辑删除时间
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "ldeletetime")
+	private Date ldeletetime;
 	
 	public int getAddressid() {
 		return addressid;
@@ -124,6 +135,29 @@ public class CaddAddressInfo implements Serializable {
 	public void setDetail(String detail) {
 		this.detail = detail;
 	}
+
+
+	public Integer getIsused() {
+		return isused;
+	}
+
+
+	public void setIsused(Integer isused) {
+		this.isused = isused;
+	}
+
+
+	public Date getLdeletetime() {
+		return ldeletetime;
+	}
+
+
+	public void setLdeletetime(Date ldeletetime) {
+		this.ldeletetime = ldeletetime;
+	}
+
+
+
 	
 	
 	

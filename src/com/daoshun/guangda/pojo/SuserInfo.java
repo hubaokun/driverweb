@@ -121,7 +121,7 @@ public class SuserInfo implements Serializable {
 	@Column(name = "coinnum", length = 10, columnDefinition = "INT default 0")
 	private Integer coinnum;
 	
-	//标识此学员是否拥有参与体验课资格
+	//标识此学员是否拥有参与体验课资格  0=有资格 1=没有资格
 	@Column(name = "freecoursestate", length = 1, columnDefinition = "INT default 0")
 	private Integer freecoursestate;
 

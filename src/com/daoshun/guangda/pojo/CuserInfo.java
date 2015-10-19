@@ -283,7 +283,7 @@ public class CuserInfo implements Serializable {
 	@Column(name = "accompanycoursestate", nullable = false, length = 1, columnDefinition = "INT default 0")
 	private Integer accompanycoursestate = 0;
 	
-	// 教练体验课是否开课
+	// 教练体验课是否开课  0=未开课 1=已开课
 	@Column(name = "freecoursestate", nullable = false, length = 1, columnDefinition = "INT default 0")
 	private Integer freecoursestate = 0;
 	

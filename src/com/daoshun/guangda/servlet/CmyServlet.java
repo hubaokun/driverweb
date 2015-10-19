@@ -495,10 +495,10 @@ public class CmyServlet extends BaseServlet {
 			resultMap.put("code", 2);
 			resultMap.put("message", "不匹配");
 		} else if (cadd.getIscurrent() == 1) {
-			// 给教练一个提醒，此地址是当前使用地址
-			cmyService.delAddress(cadd);
+			resultMap.put("code", 3);
+			resultMap.put("message", "默认地址不能删除,请重新选择！");
 		} else {
-			cmyService.delAddress(cadd);
+			cmyService.deleteAddressbylogic(cadd);
 		}
 	}
 
