@@ -616,7 +616,7 @@ public class CmyServiceImpl extends BaseServiceImpl implements ICmyService {
 		List<StudentInfo> result = new ArrayList<StudentInfo>();
 		String hql = "from SuserInfo where studentid in (select studentid from CoachStudentInfo where coachid = :coachid order by money desc)";
 		String[] params = { "coachid" };
-		List<SuserInfo> suserList = (List<SuserInfo>) dataDao.pageQueryViaParam(hql, 10, CommonUtils.parseInt(pageNum, 1), params, CommonUtils.parseInt(coachid, 0));
+		List<SuserInfo> suserList = (List<SuserInfo>) dataDao.pageQueryViaParam(hql, 10, CommonUtils.parseInt(pageNum, 0)+1, params, CommonUtils.parseInt(coachid, 0));
 		for (SuserInfo suserInfo : suserList) {
 			StudentInfo studentInfo = new StudentInfo();
 			studentInfo.setAvatar(getFilePathById(suserInfo.getAvatar()));
@@ -642,7 +642,7 @@ public class CmyServiceImpl extends BaseServiceImpl implements ICmyService {
 		}
 		returnResult.put("studentList", result);
 
-		List<SuserInfo> nextPage = (List<SuserInfo>) dataDao.pageQueryViaParam(hql, 10, (CommonUtils.parseInt(pageNum, 1) + 1), params, CommonUtils.parseInt(coachid, 0));
+		List<SuserInfo> nextPage = (List<SuserInfo>) dataDao.pageQueryViaParam(hql, 10, (CommonUtils.parseInt(pageNum, 0) + 2), params, CommonUtils.parseInt(coachid, 0));
 		if (nextPage != null && nextPage.size() > 0) {
 			returnResult.put("hasmore", 1);
 		} else {
