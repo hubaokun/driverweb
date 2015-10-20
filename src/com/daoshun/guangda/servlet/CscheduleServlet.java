@@ -1448,7 +1448,7 @@ public class CscheduleServlet extends BaseServlet {
 					   addtionalprice = nextjson.getString("addtionalprice");
 					else
 					{
-						 addtionalprice="0";
+						 addtionalprice="0.00";
 						 if(subjectid.equals("4"))
 						 {
 							 resultMap.put("code", 18);
@@ -1487,6 +1487,7 @@ public class CscheduleServlet extends BaseServlet {
 				}
 				CscheduleInfo cscheduleInfo = cscheduleService.getCscheduleByday(coachid, day, hour);// 根据时间教练 找到日程信息
                 CuserInfo cuser=cuserService.getCoachByid(CommonUtils.parseInt(coachid, 0));
+               
 				if (cscheduleInfo == null) {
 					// 新添加日程
 					CscheduleInfo scheduleInfo = new CscheduleInfo();
@@ -1527,12 +1528,9 @@ public class CscheduleServlet extends BaseServlet {
 				
 
 				cscheduleService.setDefaultNew(coachid, hour, price, addressid, subjectid,isrest,addtionalprice);
-				cuser.setAddtionalprice(new BigDecimal(CommonUtils.parseDouble(addtionalprice, 0d)));
-			    cuserService.updateCuser(cuser);
-			    realaddtionalprice=addtionalprice;
-				
+			
 			}
-			cscheduleService.setDefaultAddtionalPirce(coachid, realaddtionalprice);
+			
 			resultMap.put("code", 1);
 			resultMap.put("message", "修改成功");
 		}
@@ -1695,6 +1693,7 @@ public class CscheduleServlet extends BaseServlet {
 		int isbooked=0;
 		Calendar c=Calendar.getInstance();
 		int hournow=c.get(c.HOUR_OF_DAY);
+	//	int flag=0; //用于更新陪驾功能教练表上的用车价格，此价格一次开课过程中只能更改一次
 		//开课
 		if(type.equals("1"))
 		{
@@ -1720,6 +1719,7 @@ public class CscheduleServlet extends BaseServlet {
 					String subjectid = null;
 					String addtionalprice =null;
 					String isfreecourse =null;
+					String isnew =null;
 					try {
 						nextjson = json.getJSONObject(i);
 						hour = nextjson.getString("hour");
@@ -1729,6 +1729,8 @@ public class CscheduleServlet extends BaseServlet {
 						subjectid = nextjson.getString("subjectid");
 						addtionalprice = nextjson.getString("addtionalprice");
 						isfreecourse = nextjson.getString("isfreecourse");
+						if(nextjson.has("isnew"))
+						   isnew = nextjson.getString("isnew");//isnew=0 旧的课程 isnew=1新的课程
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
@@ -1748,6 +1750,7 @@ public class CscheduleServlet extends BaseServlet {
 						addressid=String.valueOf(defaultaddressinfo.getAddressid());
 					}
 					CuserInfo cuser=cuserService.getCoachByid(CommonUtils.parseInt(coachid, 0));
+					 String cprice= cuser.getAddtionalprice().toString();
 					if (cscheduleInfo == null) {
 						// 新添加日程
 						CscheduleInfo scheduleInfo = new CscheduleInfo();
@@ -1793,12 +1796,13 @@ public class CscheduleServlet extends BaseServlet {
 						cscheduleService.updateScheduleInfo(cscheduleInfo);
 					}
 					cscheduleService.setDefaultNew(coachid, hour, price, addressid, subjectid,isrest,addtionalprice);
-					if(!addtionalprice.equals("0.00"))
+					if(subjectid.equals("4") && !cprice.equals(addtionalprice) && isrest.equals("0") && isnew!=null && isnew.equals("1"))
 					{
-						cuser.setAddtionalprice(new BigDecimal(CommonUtils.parseDouble(addtionalprice, 0d)));
-						cuserService.updateCuser(cuser);
-						realaddtionalprice=addtionalprice;
 						
+						cuser.setAddtionalprice(new BigDecimal(CommonUtils.parseDouble(addtionalprice, 0d)));
+					    cuserService.updateCuser(cuser);
+					    realaddtionalprice=addtionalprice;
+					   // flag=1;
 					}
 				}
 				cscheduleService.setDefaultAddtionalPirce(coachid, realaddtionalprice);
