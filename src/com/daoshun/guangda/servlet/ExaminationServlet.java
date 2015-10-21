@@ -107,7 +107,7 @@ public class ExaminationServlet extends BaseServlet{
 			examination.setOptions(oplist);
 		}
 		
-		int hasmore = examinationService.getExaminationMore(type,String.valueOf(CommonUtils.parseInt(pagenum, 0)+ 1));
+		int hasmore = examinationService.getExaminationMore(type,CommonUtils.parseInt(pagenum, 0)+ 2);
 		resultMap.put("hasmore", hasmore);
 		resultMap.put("list", list);
 	}

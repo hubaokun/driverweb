@@ -363,12 +363,25 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-
+		boolean ispast=false;//是否过去时间
 		// 系统当天的当前时间,如果此时间为-1
 		// 的话表示请求的时间不是当天,如果不是-1的话,表示请求的时间是当天的时间,那么需要判断时间是否已经是过去时间
 		int currentHour = -1;
 		if (now.get(Calendar.YEAR) == request.get(Calendar.YEAR) && now.get(Calendar.MONTH) == request.get(Calendar.MONTH) && now.get(Calendar.DAY_OF_MONTH) == request.get(Calendar.DAY_OF_MONTH)) {
+			//是当天的
 			currentHour = now.get(Calendar.HOUR_OF_DAY);
+		}else{
+			//不是当天的，判断是否是过去的
+			String dnow=new SimpleDateFormat("yyyy-MM-dd").format(now.getTime());
+			try {
+				//系统当前的日期 年月日
+				Date ddnow=new SimpleDateFormat("yyyy-MM-dd").parse(dnow);
+				if(ddnow.after(request.getTime())){
+					ispast=true;
+				}
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
 		}
 
 		int defaultPrice = 100;
@@ -471,16 +484,34 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					info.setIsbooked(0);
 				}
 			}
-
-			if (currentHour == -1) {
-				info.setPasttime(2);
-			} else {
-				if (i - 1 < currentHour) {
+			//当天的
+			if(currentHour!=-1){
+					if (i - 1 < currentHour) {
+						info.setPasttime(1);
+					} else {
+						info.setPasttime(2);
+					}
+			}else{
+				if(ispast){//过去
 					info.setPasttime(1);
-				} else {
+				}else{//未来
 					info.setPasttime(2);
 				}
 			}
+			/*if(ispast){
+				info.setPasttime(1);
+			}else{
+				if (currentHour == -1) {
+					info.setPasttime(2);
+				} else {
+					if (i - 1 < currentHour) {
+						info.setPasttime(1);
+					} else {
+						info.setPasttime(2);
+					}
+				}
+			}*/
+			
             info.setCuseraddtionalprice(user.getAddtionalprice());
 			datelist.add(info);
 		}

@@ -18,7 +18,7 @@ import com.daoshun.guangda.pojo.ProvinceInfo;
  */
 public interface IExaminationService {
 	public List<Examination> getExamination(String questiontype,String pagenum);
-	public int getExaminationMore(String questiontype,String pagenum) ;
+	public int getExaminationMore(String type,int pagenum);
 	public HashMap<String, Object> getAnalogExamination(int studentid,int type,int answerid,String pagenum);
 	public boolean addQuestionFavorites(int studentid,int questionid);
 	public List<Examination> getQuestionFavorites(int studentid,String pagenum);

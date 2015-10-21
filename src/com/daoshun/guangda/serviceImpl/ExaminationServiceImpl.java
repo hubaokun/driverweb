@@ -63,7 +63,7 @@ public class ExaminationServiceImpl extends BaseServiceImpl implements IExaminat
 		//List<Examination> list=(List<Examination>) dataDao.getObjectsViaParam(querystring, params,subject,category);
 		return list;
 	}
-	public int getExaminationMore(String type,String pagenum) {
+	public int getExaminationMore(String type,int pagenum) {
 		String querystring1="select count(*) from Examination  where questiontype in (1,2)";
 		if("1".equals(type)){//1 科目一 顺序练习 
 			querystring1="select count(*) from Examination  where questiontype in (1,2)";
@@ -74,14 +74,23 @@ public class ExaminationServiceImpl extends BaseServiceImpl implements IExaminat
 		}else if("4".equals(type)){
 			querystring1="select count(*) from Examination  where animationflag=1 ";
 		}
-		List<Long> list=(List<Long>) dataDao.pageQueryViaParam(querystring1, Constant.EXAMINATION_SIZE, CommonUtils.parseInt(pagenum, 0) + 1, null);
-		if(list!=null && list.size()>0){
-			Long n=list.get(0);
-			if(n!=null && n>0){
-				return 1;
-			}
+		
+		Long l=(Long) dataDao.getFirstObjectViaParam(querystring1, null);
+		if(l==null){
+			l=0L;
 		}
-		return 0;
+		int pageCount=0;//总页数
+		if(l.intValue()%Constant.EXAMINATION_SIZE==0){
+			pageCount=l.intValue()/Constant.EXAMINATION_SIZE;
+		}else{
+			pageCount=l.intValue()/Constant.EXAMINATION_SIZE+1;
+		}
+		
+		if(pagenum<=pageCount){
+			return 1;
+		}else{
+			return 0;
+		}
 	}
 	/**
 	 * 获取模拟考试题目
@@ -117,7 +126,14 @@ public class ExaminationServiceImpl extends BaseServiceImpl implements IExaminat
 		hql3.append(aqnos).append(")");
 		
 		List<Examination> list=(List<Examination>)dataDao.pageQueryViaParam(hql3.toString(), Constant.EXAMINATION_SIZE, CommonUtils.parseInt(pagenum, 0) + 1, null);
+		List<Examination> nextlist=(List<Examination>)dataDao.pageQueryViaParam(hql3.toString(), Constant.EXAMINATION_SIZE, CommonUtils.parseInt(pagenum, 0) + 2, null);
+		
 		HashMap<String, Object> resultMap=new HashMap<String, Object>();
+		if(nextlist!=null && nextlist.size()>0){
+			resultMap.put("hasmore", 1);
+		}else{
+			resultMap.put("hasmore", 0);
+		}
 		resultMap.put("answerid", ari.getAnswerid());
 		resultMap.put("list", list);
 		return resultMap;
@@ -251,7 +267,7 @@ public class ExaminationServiceImpl extends BaseServiceImpl implements IExaminat
 	 * @param pagenum 页号
 	 */
 	public int getQuestionFavoritesMore(int studentid,String pagenum) {
-		String querystring="select count(*) from Examination where questionno in (select questionno from QuestionFavorites where studentid=:studentid)";
+		String querystring=" from Examination where questionno in (select questionno from QuestionFavorites where studentid=:studentid)";
 		String[] params={"studentid"};
 		List<Long> list=(List<Long>) dataDao.pageQueryViaParam(querystring, Constant.EXAMINATION_SIZE, CommonUtils.parseInt(pagenum, 0) + 1, params, studentid);
 		if(list!=null && list.size()>0){
