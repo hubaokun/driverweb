@@ -87,26 +87,11 @@ public class ExaminationServlet extends BaseServlet{
 		 */
 		String type = getRequestParamter(request, "type");
 		String pagenum = getRequestParamter(request, "pagenum");
+		String studentid = getRequestParamter(request, "studentid");
 		
 		CommonUtils.validateEmptytoMsg(type, "type为空");
-		List<Examination> list=examinationService.getExamination(type,pagenum);
-		for (Examination examination : list) {
-			List<String> oplist=new ArrayList<String>();
-			if(examination.getOption1()!=null && !"".equals(examination.getOption1())){
-				oplist.add(examination.getOption1());
-			}
-			if(examination.getOption2()!=null && !"".equals(examination.getOption2())){
-				oplist.add(examination.getOption2());
-			}
-			if(examination.getOption3()!=null && !"".equals(examination.getOption3())){
-				oplist.add(examination.getOption3());
-			}
-			if(examination.getOption4()!=null && !"".equals(examination.getOption4())){
-				oplist.add(examination.getOption4());
-			}
-			examination.setOptions(oplist);
-		}
-		
+		CommonUtils.validateEmptytoMsg(studentid, "studentid为空");
+		List<Examination> list=examinationService.getExamination(type,pagenum,CommonUtils.parseInt(studentid, 0));
 		int hasmore = examinationService.getExaminationMore(type,CommonUtils.parseInt(pagenum, 0)+ 2);
 		resultMap.put("hasmore", hasmore);
 		resultMap.put("list", list);

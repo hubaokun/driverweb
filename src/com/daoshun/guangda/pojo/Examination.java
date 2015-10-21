@@ -81,6 +81,10 @@ public class Examination {
 	
 	@Transient
 	private List<String> options;
+	
+	//是否收藏过,0  没有  ，1 有
+	@Transient
+	private int isfavorites=0;
 
 	public int getQuestionid() {
 		return questionid;
@@ -196,7 +200,12 @@ public class Examination {
 		this.options = options;
 	}
 
-	
-	
+	public int getIsfavorites() {
+		return isfavorites;
+	}
+
+	public void setIsfavorites(int isfavorites) {
+		this.isfavorites = isfavorites;
+	}
 	
 }

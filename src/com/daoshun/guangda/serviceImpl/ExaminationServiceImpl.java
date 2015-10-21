@@ -6,9 +6,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,7 +44,7 @@ public class ExaminationServiceImpl extends BaseServiceImpl implements IExaminat
 	 * @param pagenum 页号 ，从0开始
 	 */
 	@Override
-	public List<Examination> getExamination(String type,String pagenum) {
+	public List<Examination> getExamination(String type,String pagenum,int studentid) {
 		/*1 科目一 顺序练习  ： 1  2  
 		 *2科目四顺序练习  ：3，4, 5，
 		 *3 科目四多选练习 ： 5
@@ -61,6 +63,28 @@ public class ExaminationServiceImpl extends BaseServiceImpl implements IExaminat
 		}
 		List<Examination> list=(List<Examination>)dataDao.pageQueryViaParam(querystring1, Constant.EXAMINATION_SIZE, CommonUtils.parseInt(pagenum, 0) + 1, null);
 		//List<Examination> list=(List<Examination>) dataDao.getObjectsViaParam(querystring, params,subject,category);
+		Map<Integer,Integer> map =getQuestionFavoritesAll(studentid);
+		for (Examination examination : list) {
+			List<String> oplist=new ArrayList<String>();
+			if(examination.getOption1()!=null && !"".equals(examination.getOption1())){
+				oplist.add(examination.getOption1());
+			}
+			if(examination.getOption2()!=null && !"".equals(examination.getOption2())){
+				oplist.add(examination.getOption2());
+			}
+			if(examination.getOption3()!=null && !"".equals(examination.getOption3())){
+				oplist.add(examination.getOption3());
+			}
+			if(examination.getOption4()!=null && !"".equals(examination.getOption4())){
+				oplist.add(examination.getOption4());
+			}
+			examination.setOptions(oplist);
+			//设置是否收藏标示
+			if(map.get(examination.getQuestionno())!=null){
+				examination.setIsfavorites(1);
+			}
+			
+		}
 		return list;
 	}
 	public int getExaminationMore(String type,int pagenum) {
@@ -127,7 +151,27 @@ public class ExaminationServiceImpl extends BaseServiceImpl implements IExaminat
 		
 		List<Examination> list=(List<Examination>)dataDao.pageQueryViaParam(hql3.toString(), Constant.EXAMINATION_SIZE, CommonUtils.parseInt(pagenum, 0) + 1, null);
 		List<Examination> nextlist=(List<Examination>)dataDao.pageQueryViaParam(hql3.toString(), Constant.EXAMINATION_SIZE, CommonUtils.parseInt(pagenum, 0) + 2, null);
-		
+		Map<Integer,Integer> map =getQuestionFavoritesAll(studentid);
+		for (Examination examination : list) {
+			List<String> oplist=new ArrayList<String>();
+			if(examination.getOption1()!=null && !"".equals(examination.getOption1())){
+				oplist.add(examination.getOption1());
+			}
+			if(examination.getOption2()!=null && !"".equals(examination.getOption2())){
+				oplist.add(examination.getOption2());
+			}
+			if(examination.getOption3()!=null && !"".equals(examination.getOption3())){
+				oplist.add(examination.getOption3());
+			}
+			if(examination.getOption4()!=null && !"".equals(examination.getOption4())){
+				oplist.add(examination.getOption4());
+			}
+			examination.setOptions(oplist);
+			//设置是否收藏标示
+			if(map.get(examination.getQuestionno())!=null){
+				examination.setIsfavorites(1);
+			}
+		}
 		HashMap<String, Object> resultMap=new HashMap<String, Object>();
 		if(nextlist!=null && nextlist.size()>0){
 			resultMap.put("hasmore", 1);
@@ -260,6 +304,22 @@ public class ExaminationServiceImpl extends BaseServiceImpl implements IExaminat
 		List<Examination> list=(List<Examination>)dataDao.pageQueryViaParam(querystring, Constant.EXAMINATION_SIZE, CommonUtils.parseInt(pagenum, 0) + 1, params, studentid);
 		//List<Examination> list=(List<Examination>) dataDao.getObjectsViaParam(querystring, params,studentid);
 		return list;
+	}
+	/**
+	 * 获取用户所有的收藏题号
+	 * @param studentid
+	 * @return
+	 */
+	public Map<Integer,Integer> getQuestionFavoritesAll(int studentid) {
+		String querystring="select questionno from QuestionFavorites where studentid=:studentid";
+		String[] params={"studentid"};
+		//List<Integer> list=(List<Integer>)dataDao.pageQueryViaParam(querystring, Constant.EXAMINATION_SIZE, CommonUtils.parseInt(pagenum, 0) + 1, params, studentid);
+		List<Integer> list=(List<Integer>) dataDao.getObjectsViaParam(querystring, params,studentid);
+		Map<Integer,Integer> map=new HashMap<Integer,Integer>();
+		for (Integer integer : list) {
+			map.put(integer, integer);
+		}
+		return map;
 	}
 	/**
 	 * 获取收藏的题目 是否有下一页
