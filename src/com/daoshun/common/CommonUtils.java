@@ -633,6 +633,25 @@ public class CommonUtils {
 		return result;
 	}
 	/**
+	 *畅卓科技(暂时未使用)
+	 * @param phone
+	 * @param content
+	 * @return
+	 * @author 卢磊
+	 */
+	public static String sendSms4(String phone, String content) {
+		StringBuilder url = new StringBuilder();
+		url.append("http://sms.chanzor.com:8001/sms.aspx?action=send&account=zcs9443&password=153313&mobile=13958109962&content=");
+		try {
+			url.append(java.net.URLEncoder.encode(content, "utf-8"));
+		} catch (UnsupportedEncodingException e) {
+		}
+		url.append("&sendTime=");
+		String result = HttpRequest.sendGet(url.toString(), null);
+		 System.out.println(result);
+		return result;
+	}
+	/**
 	 * 梦网科技短信平台(暂时未使用)
 	 * @param phone
 	 * @param content
@@ -765,8 +784,9 @@ public class CommonUtils {
     	/*String phone="18758234668";
     	String code=CommonUtils.getInviteCode(phone);
     	System.out.print(code);*/
-    	sendSms3("13958109962","员工您好，感谢您对此次测试的配合。");
+    	//sendSms3("13958109962","员工您好，感谢您对此次测试的配合。");
     	//sendSms2("","【小巴科技】");
+    	sendSms4("13958109962","小巴学车学员验证码3681【小巴科技】");
     }
     
 }
