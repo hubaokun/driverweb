@@ -931,10 +931,19 @@ public class CmyServlet extends BaseServlet {
 
 	public void getMyAllStudent(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");// 用户ID
-		String pageNum = getRequestParamter(request, "pageNum");
+		String pageNum1 = getRequestParamter(request, "pagenum");
+		//兼容以前：以前的版本，IOS传的是pageNum，android传的是pagenum
+		String pageNum2 = getRequestParamter(request, "pageNum");
+		
+		String pagenum="";
+		if(pageNum1!=null){
+			pagenum=pageNum1;
+		}else if(pageNum2!=null){
+			pagenum=pageNum2;
+		}
 		CommonUtils.validateEmpty(coachid);
 
-		HashMap<String, Object> result = cmyService.getMyAllStudent(coachid, pageNum);
+		HashMap<String, Object> result = cmyService.getMyAllStudent(coachid, pagenum);
 		resultMap.putAll(result);
 	}
 

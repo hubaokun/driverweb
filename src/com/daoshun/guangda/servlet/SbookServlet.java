@@ -416,14 +416,14 @@ public class SbookServlet extends BaseServlet {
 												condition2, condition3, condition4, condition5, condition6, condition8, condition9, condition10,
 												condition11,studentid,driverschoolid,fixedposition);
 		
-			if(studentid==null || !"18".equals(studentid)){
+			/*if(studentid==null || !"18".equals(studentid)){
 				for (AppCuserInfo cuserInfo : coachlist) {
 					if(cuserInfo.getCoachid()==13){
 						coachlist.remove(cuserInfo);
 						break;
 					}
 				}
-			}
+			}*/
 		resultMap.put("coachlist", coachlist);
 	}
 	
@@ -465,14 +465,14 @@ public class SbookServlet extends BaseServlet {
 			result = sbookService.getCoachList3(cityid,condition1, condition2, condition3, condition4, condition5, condition6,
 																		condition8, condition9, condition10, condition11, pagenum,studentid,driverschoolid,fixedposition);
 			List<AppCuserInfo> list=(List<AppCuserInfo>) result.get("coachlist");
-			if(studentid==null || !"18".equals(studentid)){
+			/*if(studentid==null || !"18".equals(studentid)){
 				for (AppCuserInfo cuserInfo : list) {
 					if(cuserInfo.getCoachid()==13){
 						list.remove(cuserInfo);
 						break;
 					}
 				}
-			}
+			}*/
 		}
 		resultMap.putAll(result);
 	}
