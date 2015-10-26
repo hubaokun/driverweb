@@ -111,8 +111,8 @@ function searchfromsubmit(){
 			</div>					
 			
 		<div class="serchcontentdiv"style="float: left; margin-left: 50px; width: 175px"  >
-		<input type="text" class="searchdiv" style="width:85px;text-align: center;font-family: 微软雅黑;" value="优惠券类型" readonly="readonly">
-		<select id="searchtype" name="coupontype" class="searchdiv" style="width: 85px;">
+		<input type="text" class="searchdiv" style="width:85px;text-align: center;font-family: 微软雅黑;float:left;" value="优惠券类型" readonly="readonly">
+		<select id="searchtype" name="coupontype" class="searchdiv" style="width: 85px;float:left;">
 		<option value="">全部</option> 
 		<option value="1">时间券</option>
 		<option value="2">抵价券</option>
@@ -121,21 +121,21 @@ function searchfromsubmit(){
 		</div>
 		
 		<div class="serchcontentdiv" style="float: left; margin-left: 50px; width: 196px">
-		<select id="ownertype" name="ownertype" class="searchdiv" style="width: 100px;">
+		<select id="ownertype" name="ownertype" class="searchdiv" style="width: 100px;float:left;">
 			<option value="" selected="selected">全部</option>
 			<option value="0">平台发放</option>
 			<option value="1">驾校发放</option>
 			<option value="2">教练发放</option>
 		</select>
 		<input type="hidden" id="hiddenownertype" value="${ownertype }">
-		<input id="inputordertotal" type="text" value="${ownerkey }" name="ownerkey" class="searchdiv" style="width: 91px;text-align: center;font-family: 微软雅黑;" value="">
+		<input id="inputordertotal" type="text" value="${ownerkey }" name="ownerkey" class="searchdiv" style="width: 91px;text-align: center;font-family: 微软雅黑;float:left;" value="">
 		</div>
 								
-			<div class="serchcontentdiv"style="float: left; margin-left: 50px; width: 405px"  >
-					<input type="text" class="searchdiv" style="width: 119px;text-align: center;font-family: 微软雅黑;" value="到期时间" readonly="readonly">
-					<input id="starttime" name="starttime" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})" type="text" class="searchdiv" style="width: 120px;text-align: center;font-family: 微软雅黑;" value="${starttime}">
-					<input type="text" class="searchdiv" style="width: 30px;text-align: center;font-family: 微软雅黑;" value="到" readonly="readonly">
-					<input id="endtime" name="endtime" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})" type="text" class="searchdiv" style="width: 120px;text-align: center;font-family: 微软雅黑;" value="${endtime}">
+			<div class="serchcontentdiv"style="float: left; margin-left: 50px; width: 405px;float:left;"  >
+					<input type="text" class="searchdiv" style="width: 119px;text-align: center;font-family: 微软雅黑;float:left;" value="到期时间" readonly="readonly">
+					<input id="starttime" name="starttime" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})" type="text" class="searchdiv" style="width: 120px;text-align: center;font-family: 微软雅黑;float:left;" value="${starttime}">
+					<input type="text" class="searchdiv" style="width: 30px;text-align: center;font-family: 微软雅黑;float:left;" value="到" readonly="readonly">
+					<input id="endtime" name="endtime" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})" type="text" class="searchdiv" style="width: 120px;text-align: center;font-family: 微软雅黑;float:left;" value="${endtime}">
 				</div>
 			</div>
 			</form>

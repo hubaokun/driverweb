@@ -257,7 +257,23 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
     		iter.next().setChecked(false);
     	}
     }
-//-----权限部分开始---------------------       
+//-----权限部分开始---------------------
+    //获最后的权限id
+    public long getSubPermissionCount(int pid)
+    {
+    	long i=-1;
+    		String hql="from PermissionSetInfo where 1=1 and parentPermissionId=:pid order by permissionid desc ";
+    		String[] params={"pid"};
+    		List list=dataDao.getObjectsViaParam(hql, params,pid);
+    		if(list!=null && list.size()!=0)
+    		{
+    			i=((PermissionSetInfo)list.get(0)).getPermissionid();
+    		}else
+    		{
+    			i=0;
+    		}
+    	return i;
+    }
     /**
      * 根据命令获取权限
      * @param pString 命令串，例如1-2;3;4,2-1
@@ -270,14 +286,8 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
     	hql.append("from PermissionSetInfo where 1=1 and parentPermissionId!=0");
     	List<PermissionSetInfo> infoList =(List<PermissionSetInfo>)dataDao.getObjectsViaParam(hql.toString(),null);
     	clearCheckState(infoList);
-    	if(infoList!=null)
-    	{
-    		List<PermissionSetInfo> obtainPermission=parsePermissionString(pString);
-    		if(obtainPermission!=null && obtainPermission.size()>0)
-    		{
-    			this.checkPermission(infoList,obtainPermission);
-    		}
-    	}
+    	List<PermissionSetInfo> obtainPermission=parsePermissionString(pString);
+    	this.checkPermission(infoList,obtainPermission);
     	return infoList;
     }
 
@@ -305,7 +315,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 	}
 	
 	
-	//获取单条权限
+/*	//获取单条权限
 	private List<PermissionSetInfo> parsePermission(String permission)
 	{
 		List<PermissionSetInfo> permissionList=new ArrayList<PermissionSetInfo>();
@@ -339,6 +349,47 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 		}
 		
 		return permissionList;
+	}*/
+	
+	//通过字符串解析单个权限 ，例：1-1;3;  如果单个数字 代表父权限下所有的子权限都包含
+	private List<PermissionSetInfo> parsePermission(String singleP)
+	{
+		String pPermission="";//父权限
+		
+		List<PermissionSetInfo> pList=new ArrayList<PermissionSetInfo>();
+		if(!CommonUtils.isEmptyString(singleP))
+		{
+			
+			String[] parent=singleP.split("-");
+			String[] child=null;
+			if(parent.length>0)
+			{
+				pPermission=parent[0];
+			}
+			if(1==parent.length)//当只有父权限时,表示所有子权限获得
+			{
+				String hql="from PermissionSetInfo where parentPermissionId=:pid";
+				String[] params={"pid"};
+				pList=(List<PermissionSetInfo>)dataDao.getObjectsViaParam(hql, params,Integer.parseInt(pPermission));
+			}else
+			{
+				child=parent[1].split(";");
+				String hql="from PermissionSetInfo where parentPermissionId=:pid and permissionid=:id";
+				String[] params={"pid","id"};
+				for(int i=0;i<child.length;++i)
+				{
+					List<PermissionSetInfo> list=(List<PermissionSetInfo>)dataDao.getObjectsViaParam(hql, params,Integer.parseInt(pPermission),Integer.parseInt(child[i]));
+					if(list!=null && list.size()!=0)
+					{
+						pList.add(list.get(0));
+					}
+					
+				}
+			}
+			
+		}
+		
+		return pList;
 	}
 	
 	/**
@@ -349,25 +400,28 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 	 */
 	private void checkPermission(List<PermissionSetInfo>allPermission,List<PermissionSetInfo>permissions)
 	{
-		Iterator<PermissionSetInfo>iterP;
-		Iterator<PermissionSetInfo>iter=permissions.iterator();
-		PermissionSetInfo ptmp=null;
-		PermissionSetInfo ctmp=null;
-		
-		while(iter.hasNext())
+		if(allPermission!=null && permissions!=null && permissions.size()>0)
 		{
-			ctmp=iter.next();
-			iterP=allPermission.iterator();
-			while(iterP.hasNext())
+			Iterator<PermissionSetInfo>iterP;
+			Iterator<PermissionSetInfo>iter=permissions.iterator();
+			PermissionSetInfo ptmp=null;
+			PermissionSetInfo ctmp=null;
+			
+			while(iter.hasNext())
 			{
-				ptmp=iterP.next();
-				if(ptmp.getParentPermissionId()==ctmp.getParentPermissionId())
+				ctmp=iter.next();
+				iterP=allPermission.iterator();
+				while(iterP.hasNext())
 				{
-					if(ptmp.getPermissionid()==ctmp.getPermissionid())
+					ptmp=iterP.next();
+					if(ptmp.getParentPermissionId()==ctmp.getParentPermissionId())
 					{
-						ptmp.setChecked(true);
-						break;
-						
+						if(ptmp.getPermissionid()==ctmp.getPermissionid())
+						{
+							ptmp.setChecked(true);
+							break;
+							
+						}
 					}
 				}
 			}
@@ -905,17 +959,17 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 
     @SuppressWarnings({"unchecked", "deprecation"})
     @Override
-    public QueryResult<BalanceCoachInfo> getCoachHistoryApplyBySearch(int schoolid, String searchname, String searchphone, String amount, String inputamount, String minsdate, String maxsdate, Integer pageIndex, int pagesize) {
+    public QueryResult<CApplyCashInfo> getCoachHistoryApplyBySearch(int schoolid, String searchname, String searchphone, String amount, String inputamount, String minsdate, String maxsdate, Integer pageIndex, int pagesize) {
         StringBuffer cuserhql = new StringBuffer();
-        cuserhql.append("from BalanceCoachInfo where type=2 ");
+        cuserhql.append("from CApplyCashInfo where state=5 ");
         if (schoolid > 0) {
-            cuserhql.append(" and userid in (select coachid from CuserInfo where drive_schoolid = " + schoolid + ")");
+            cuserhql.append(" and coachid in (select coachid from CuserInfo where drive_schoolid = " + schoolid + ")");
         }
         if (!CommonUtils.isEmptyString(searchname)) {
-            cuserhql.append(" and userid in (select coachid from CuserInfo where realname like '%" + searchname + "%')");
+            cuserhql.append(" and coachid in (select coachid from CuserInfo where realname like '%" + searchname + "%')");
         }
         if (!CommonUtils.isEmptyString(searchphone)) {
-            cuserhql.append(" and userid in (select coachid from CuserInfo where phone like '%" + searchphone + "%')");
+            cuserhql.append(" and coachid in (select coachid from CuserInfo where phone like '%" + searchphone + "%')");
         }
         if (CommonUtils.parseFloat(inputamount, 0) != 0) {
             if (CommonUtils.parseInt(amount, -1) == 0) {
@@ -929,7 +983,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
             }
         }
         if (!CommonUtils.isEmptyString(minsdate)) {
-            cuserhql.append("and addtime >'" + minsdate + "'");
+            cuserhql.append("and updatetime >'" + minsdate + "'");
         }
         if (!CommonUtils.isEmptyString(maxsdate)) {
             Date enddate = CommonUtils.getDateFormat(maxsdate, "yyyy-MM-dd");
@@ -937,13 +991,13 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
             enddate.setMinutes(59);
             enddate.setSeconds(59);
             String endmaxstime = CommonUtils.getTimeFormat(enddate, "yyyy-MM-dd HH:mm:ss");
-            cuserhql.append("and addtime <'" + endmaxstime + "'");
+            cuserhql.append("and updatetime <'" + endmaxstime + "'");
         }
-        cuserhql.append("order by addtime desc");
-        List<BalanceCoachInfo> applycashlist = (List<BalanceCoachInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), pagesize, pageIndex, null);
+        cuserhql.append("order by updatetime desc");
+        List<CApplyCashInfo> applycashlist = (List<CApplyCashInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), pagesize, pageIndex, null);
         if (applycashlist != null && applycashlist.size() > 0) {
-            for (BalanceCoachInfo capplyCash : applycashlist) {
-                CuserInfo coach = dataDao.getObjectById(CuserInfo.class, capplyCash.getUserid());
+            for (CApplyCashInfo capplyCash : applycashlist) {
+                CuserInfo coach = dataDao.getObjectById(CuserInfo.class, capplyCash.getCoachid());
                 if (coach != null) {
                     capplyCash.setRealname(coach.getRealname());
                     capplyCash.setPhone(coach.getPhone());
@@ -953,22 +1007,24 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
         }
         String counthql = " select count(*) " + cuserhql.toString();
         long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
-        return new QueryResult<BalanceCoachInfo>(applycashlist, total);
+        return new QueryResult<CApplyCashInfo>(applycashlist, total);
     }
+    
     //获取教练提现二次审核通过的历史记录，由财务发起
     @SuppressWarnings({"unchecked", "deprecation"})
     @Override
-    public QueryResult<BalanceCoachInfo> getCoachHistoryBalanceBySearchFinance(int schoolid, String searchname, String searchphone, String amount, String inputamount, String minsdate, String maxsdate, Integer pageIndex, int pagesize) {
-        StringBuffer cuserhql = new StringBuffer();
-        cuserhql.append("from BalanceCoachInfo where type=7 ");
+    public QueryResult<CApplyCashInfo> getCoachHistoryBalanceBySearchFinance(int schoolid, String searchname, String searchphone, String amount, String inputamount, String minsdate, String maxsdate, Integer pageIndex, int pagesize)
+    {
+    	StringBuffer cuserhql = new StringBuffer();
+        cuserhql.append("from CApplyCashInfo where state=5 ");
         if (schoolid > 0) {
-            cuserhql.append(" and userid in (select coachid from CuserInfo where drive_schoolid = " + schoolid + ")");
+            cuserhql.append(" and coachid in (select coachid from CuserInfo where drive_schoolid = " + schoolid + ")");
         }
         if (!CommonUtils.isEmptyString(searchname)) {
-            cuserhql.append(" and userid in (select coachid from CuserInfo where realname like '%" + searchname + "%')");
+            cuserhql.append(" and coachid in (select coachid from CuserInfo where realname like '%" + searchname + "%')");
         }
         if (!CommonUtils.isEmptyString(searchphone)) {
-            cuserhql.append(" and userid in (select coachid from CuserInfo where phone like '%" + searchphone + "%')");
+            cuserhql.append(" and coachid in (select coachid from CuserInfo where phone like '%" + searchphone + "%')");
         }
         if (CommonUtils.parseFloat(inputamount, 0) != 0) {
             if (CommonUtils.parseInt(amount, -1) == 0) {
@@ -982,7 +1038,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
             }
         }
         if (!CommonUtils.isEmptyString(minsdate)) {
-            cuserhql.append("and addtime >'" + minsdate + "'");
+            cuserhql.append("and updatetime >'" + minsdate + "'");
         }
         if (!CommonUtils.isEmptyString(maxsdate)) {
             Date enddate = CommonUtils.getDateFormat(maxsdate, "yyyy-MM-dd");
@@ -990,13 +1046,13 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
             enddate.setMinutes(59);
             enddate.setSeconds(59);
             String endmaxstime = CommonUtils.getTimeFormat(enddate, "yyyy-MM-dd HH:mm:ss");
-            cuserhql.append("and addtime <'" + endmaxstime + "'");
+            cuserhql.append("and updatetime <'" + endmaxstime + "'");
         }
-        cuserhql.append("order by addtime desc");
-        List<BalanceCoachInfo> applycashlist = (List<BalanceCoachInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), pagesize, pageIndex, null);
+        cuserhql.append("order by updatetime desc");
+        List<CApplyCashInfo> applycashlist = (List<CApplyCashInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), pagesize, pageIndex, null);
         if (applycashlist != null && applycashlist.size() > 0) {
-            for (BalanceCoachInfo capplyCash : applycashlist) {
-                CuserInfo coach = dataDao.getObjectById(CuserInfo.class, capplyCash.getUserid());
+            for (CApplyCashInfo capplyCash : applycashlist) {
+                CuserInfo coach = dataDao.getObjectById(CuserInfo.class, capplyCash.getCoachid());
                 if (coach != null) {
                     capplyCash.setRealname(coach.getRealname());
                     capplyCash.setPhone(coach.getPhone());
@@ -1006,7 +1062,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
         }
         String counthql = " select count(*) " + cuserhql.toString();
         long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
-        return new QueryResult<BalanceCoachInfo>(applycashlist, total);
+        return new QueryResult<CApplyCashInfo>(applycashlist, total);
     }
 
 
@@ -2234,9 +2290,15 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 	}
 	private boolean isExist(PermissionSetInfo info)
 	{
-		String hql="from PermissionSetInfo where mappedAction=:mappedAction";
-		String[] params={"mappedAction"};
-		List<PermissionSetInfo>list=(List<PermissionSetInfo>) dataDao.getObjectsViaParam(hql, params,info.getMappedAction());
+		List<PermissionSetInfo>list=null;
+		if(CommonUtils.isEmptyString(info.getMappedAction()))
+		{
+			String hql="from PermissionSetInfo where name=:name";
+			String[] params={"name"};
+			list=(List<PermissionSetInfo>)dataDao.getObjectsViaParam(hql, params,info.getName());
+			
+		}
+		
 		if(list==null || list.size()==0)
 		{
 			return false;

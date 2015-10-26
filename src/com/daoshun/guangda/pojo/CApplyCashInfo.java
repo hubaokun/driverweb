@@ -63,6 +63,41 @@ public class CApplyCashInfo implements Serializable {
 	@Transient
 	private CuserInfo coach;
 	
+	@Transient
+	private String realname;
+	
+	
+	@Transient
+	private String phone;
+	
+	@Transient
+	private String alipay_account;
+	
+	public String getRealname() {
+		return realname;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public String getAlipay_account() {
+		return alipay_account;
+	}
+
+	public void setRealname(String realname) {
+		this.realname = realname;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public void setAlipay_account(String alipay_account) {
+		this.alipay_account = alipay_account;
+	}
+
+	
 	public int getApplyid() {
 		return applyid;
 	}

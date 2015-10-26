@@ -1,6 +1,8 @@
 package com.daoshun.guangda.serviceImpl;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -8,7 +10,15 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.daoshun.common.CommonUtils;
+import com.daoshun.common.QueryResult;
+import com.daoshun.guangda.pojo.AdminInfo;
+import com.daoshun.guangda.pojo.CuserInfo;
+import com.daoshun.guangda.pojo.DriveSchoolInfo;
+import com.daoshun.guangda.pojo.OrderInfo;
+import com.daoshun.guangda.pojo.OrderPrice;
+import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.service.IDailyService;
+
 
 @Service("dailyService")
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
@@ -101,8 +111,8 @@ public class DailyServiceImpl extends BaseServiceImpl implements IDailyService {
 	}
 
 	@Override
-	public List<Object> getCouponReportMontly(Date startdate,Date enddate) {
-		List<Object> Object = dataDao.getCouponReportMontly(startdate, enddate);
+	public List<Object> getCouponReportMontly(Date startdate,Date enddate,String schoolId){
+		List<Object> Object = dataDao.getCouponReportMontly(startdate, enddate,schoolId);
 		return Object;
 	}
 
@@ -118,8 +128,115 @@ public class DailyServiceImpl extends BaseServiceImpl implements IDailyService {
 	}
 
 	@Override
-	public List<Object> getCoinReportDetail(String coachid, Date startdate, Date enddate) {
-		List<Object> Object = dataDao.getCoinReportDetail(coachid, startdate, enddate);
+	public List<Object> getCoinReportDetail(String coachid,String ownertype, Date startdate, Date enddate) {
+		List<Object> Object = dataDao.getCoinReportDetail(coachid,ownertype, startdate, enddate);
 		return Object;
 	}
+
+	@Override
+	public QueryResult<OrderInfo> getOrderInfos(String starttime,String endtime,int pageIndex,int pagesize) {
+		StringBuffer hql=new StringBuffer("from OrderInfo where 1=1");
+		List<OrderInfo> orderList=null;
+		if(!CommonUtils.isEmptyString(starttime))
+		{
+			hql.append(" and date>='"+starttime+"'");
+		}
+		if(!CommonUtils.isEmptyString(endtime))
+		{
+			hql.append(" and date<='"+endtime+"'");
+		}
+		orderList=(List<OrderInfo>)dataDao.pageQueryViaParam(hql.toString(),pagesize,pageIndex,null);
+		
+		Iterator<OrderInfo> iterator=orderList.iterator();
+		while (iterator.hasNext()) {
+			OrderInfo order =iterator.next();
+			SuserInfo studentinfo=dataDao.getObjectById(SuserInfo.class,order.getStudentid());
+			order.setStudentinfo(studentinfo);
+			CuserInfo coachInfo=dataDao.getObjectById(CuserInfo.class,order.getCoachid());
+			DriveSchoolInfo school=null;
+			if (coachInfo!=null) {
+				if(coachInfo.getDrive_schoolid()!=null)
+				{
+					school=dataDao.getObjectById(DriveSchoolInfo.class,coachInfo.getDrive_schoolid());
+				}
+			}
+			order.setCoachInfo(coachInfo);
+			order.setSchoolInfo(school);
+			//1 ”‡∂Ó  2 –°∞Õ»Ø  3 –°∞Õ±“
+			if (order.getPaytype()==1) {
+				order.setPaytypename("”‡∂Ó");
+				order.setPaidMoney(String.valueOf(order.getTotal()));
+			}
+			if (order.getPaytype()==1) {
+				order.setPaytypename("–°∞Õ»Ø");
+				order.setPaidMoney("0");
+			}
+			if (order.getPaytype()==1) {
+				order.setPaytypename("–°∞Õ±“");
+				order.setPaidMoney("0");
+			}
+			if(order.getMixCoin()!=0 && order.getMixMoney()!=0)
+			{
+				order.setPaytypename("ªÏ∫œ÷ß∏∂");
+				order.setPaidMoney("±“:"+order.getMixCoin()+",”‡:"+order.getMixMoney());
+			}
+			OrderPrice orderPrice=dataDao.getObjectById(OrderPrice.class,order.getOrderid());
+			order.setSubjectname(orderPrice.getSubject());
+			order.setUnitPrice(orderPrice.getPrice());
+		}
+		String counthql = " select count(*) " + hql.toString();
+        long total = (Long) dataDao.getFirstObjectViaParam(counthql,null);
+		return new QueryResult<OrderInfo>(orderList, total);
+	}
+
+	@Override
+	public List<OrderInfo> getOrdersForExported(String date) {
+		
+		StringBuffer hql=new StringBuffer("from OrderInfo where 1=1");
+		List<OrderInfo> orderList=null;
+		if(!CommonUtils.isEmptyString(date))
+		{
+			hql.append(" and date=:date");
+			String[] params={"date"};
+			orderList=(List<OrderInfo>)dataDao.getObjectsViaParam(hql.toString(), params,date);
+			
+		Iterator<OrderInfo> iterator=orderList.iterator();
+		while (iterator.hasNext()) {
+			OrderInfo order =iterator.next();
+			SuserInfo studentinfo=dataDao.getObjectById(SuserInfo.class,order.getStudentid());
+			order.setStudentinfo(studentinfo);
+			CuserInfo coachInfo=dataDao.getObjectById(CuserInfo.class,order.getCoachid());
+			DriveSchoolInfo school=null;
+			if (coachInfo!=null) {
+				if(coachInfo.getDrive_schoolid()!=null)
+				{
+					school=dataDao.getObjectById(DriveSchoolInfo.class,coachInfo.getDrive_schoolid());
+				}
+			}
+			order.setCoachInfo(coachInfo);
+			order.setSchoolInfo(school);
+			//1 ”‡∂Ó  2 –°∞Õ»Ø  3 –°∞Õ±“
+			if (order.getPaytype()==1) {
+				order.setPaytypename("”‡∂Ó");
+			}
+			if (order.getPaytype()==1) {
+				order.setPaytypename("–°∞Õ»Ø");
+			}
+			if (order.getPaytype()==1) {
+				order.setPaytypename("–°∞Õ±“");
+			}
+			if(order.getMixCoin()!=0 && order.getMixMoney()!=0)
+			{
+				order.setPaytypename("ªÏ∫œ÷ß∏∂");
+				order.setPaidMoney("±“:"+order.getMixCoin()+",”‡:"+order.getMixMoney());
+			}
+			OrderPrice orderPrice=dataDao.getObjectById(OrderPrice.class,order.getOrderid());
+			order.setSubjectname(orderPrice.getSubject());
+			order.setUnitPrice(orderPrice.getPrice());
+		}
+		return orderList;
+	}else {
+		return null;
+	}
+}
 }

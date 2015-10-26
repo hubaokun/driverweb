@@ -416,16 +416,16 @@ public class CuserInfo implements Serializable {
 	private Integer usertype;
 	
 	// 小巴券发放权限0.不可发放1.可发放
-	@Column(name = "couponlimit", length = 1, columnDefinition = "INT default 0")
-	private Integer couponlimit;
+	@Column(name = "couponlimit", length = 1,nullable = false, columnDefinition = "INT default 0")
+	private Integer couponlimit=0;
 	
 	// 教练收到小巴券总额
-	@Column(name = "coupontotal", columnDefinition = "INT default 0")
-	private Integer coupontotal;
+	@Column(name = "coupontotal",nullable = false, columnDefinition = "INT default 0")
+	private Integer coupontotal = 0;
 	
 	// 教练剩余可用小巴券总额
-	@Column(name = "couponrest", columnDefinition = "INT default 0")
-	private Integer couponrest;
+	@Column(name = "couponrest",nullable = false, columnDefinition = "INT default 0")
+	private Integer couponrest = 0;
 	
 	public Integer getDevicetype() {
 		return devicetype;

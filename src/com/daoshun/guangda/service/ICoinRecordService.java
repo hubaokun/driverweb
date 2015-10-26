@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface ICoinRecordService {
 
-    public abstract QueryResult<CoinRecordInfo> getCoinRecordListByPage(int pageIndex, int pageSize, String starttime, String endtime,  Integer ownertype,  String ownerid,String receiverid);
+    public abstract QueryResult<CoinRecordInfo> getCoinRecordListByPage(int type,int pageIndex, int pageSize, String starttime, String endtime,  Integer ownertype,  String ownerid,String receiverid);
     
     public abstract QueryResult<CoinRecordInfo> getSchoolCoinRecordListByPage(int pageIndex, int pageSize, String starttime, String endtime,  Integer ownertype,  String ownerid,String receiverid);
 

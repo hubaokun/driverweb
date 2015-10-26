@@ -10,6 +10,9 @@ public class StudentCoinDetail {
     private BigDecimal coinusenumber;
     
     private BigDecimal coinpaynumber;
+    
+    
+    private String classhour;
 
 	public String getPhone() {
 		return phone;
@@ -41,6 +44,14 @@ public class StudentCoinDetail {
 
 	public void setCoinpaynumber(BigDecimal coinpaynumber) {
 		this.coinpaynumber = coinpaynumber;
+	}
+
+	public String getClasshour() {
+		return classhour;
+	}
+
+	public void setClasshour(String classhour) {
+		this.classhour = classhour;
 	}
     
     

@@ -31,7 +31,7 @@ public class CoinRecordServiceImpl extends BaseServiceImpl implements ICoinRecor
     }
 
 
-    public  QueryResult<CoinRecordInfo> getCoinRecordListByPage(int pageIndex, int pageSize, String starttime,
+    public  QueryResult<CoinRecordInfo> getCoinRecordListByPage(int type,int pageIndex, int pageSize, String starttime,
     		String endtime,  Integer ownertype,  String ownerid,String receiverid)
     {
         StringBuffer coinsql = new StringBuffer();
@@ -57,10 +57,16 @@ public class CoinRecordServiceImpl extends BaseServiceImpl implements ICoinRecor
         }
         
         if(receiverid!=null && !"".equals(receiverid) && !"null".equals(receiverid)){
-        	coinsql.append(" and receiverid="+receiverid);
-        	coinsql.append(" or payerid="+receiverid);
+        	coinsql.append(" and (receiverid="+receiverid);
+        	coinsql.append(" or payerid="+receiverid+")");
         	
         }
+
+		 if(type!=0)
+        {
+        	coinsql.append(" and type="+type);
+    	}
+
         List<CoinRecordInfo> coinRecordList = (List<CoinRecordInfo>) dataDao.pageQueryViaParam(coinsql.toString() + " order by addtime desc", pageSize, pageIndex, null);
 
         if (coinRecordList != null && coinRecordList.size() > 0) {

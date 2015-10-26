@@ -791,12 +791,12 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public QueryResult<BalanceStudentInfo> getApplyRecordList(Integer pageIndex, int pagesize) {
+	public QueryResult<StudentApplyInfo> getApplyRecordList(Integer pageIndex, int pagesize) {
 		StringBuffer cuserhql = new StringBuffer();
-		cuserhql.append("from BalanceStudentInfo where type = 2 or type = 4 or type = 6 or type = 7");
-		List<BalanceStudentInfo> balancecoachlist = (List<BalanceStudentInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), pagesize, pageIndex, null);
+		cuserhql.append("from StudentApplyInfo where state = 1");
+		List<StudentApplyInfo> balancecoachlist = (List<StudentApplyInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), pagesize, pageIndex, null);
 		if (balancecoachlist != null && balancecoachlist.size() > 0) {
-			for (BalanceStudentInfo balanceCoach : balancecoachlist) {
+			for (StudentApplyInfo balanceCoach : balancecoachlist) {
 				SuserInfo coach = dataDao.getObjectById(SuserInfo.class, balanceCoach.getUserid());
 				if (coach != null) {
 					balanceCoach.setRealname(coach.getRealname());
@@ -811,7 +811,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		}
 		String counthql = " select count(*) " + cuserhql.toString();
 		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
-		return new QueryResult<BalanceStudentInfo>(balancecoachlist, total);
+		return new QueryResult<StudentApplyInfo>(balancecoachlist, total);
 	}
 
 	@Override
@@ -879,10 +879,10 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	@Override
-	public QueryResult<BalanceStudentInfo> searchStudentBalance(String searchname, String searchphone, String amount, String inputamount, String minsdate, String maxsdate, Integer pageIndex,
+	public QueryResult<StudentApplyInfo> searchStudentBalance(String searchname, String searchphone, String amount, String inputamount, String minsdate, String maxsdate, Integer pageIndex,
 			int pagesize) {
 		StringBuffer cuserhql = new StringBuffer();
-		cuserhql.append("from BalanceStudentInfo where type = 2");
+		cuserhql.append("from StudentApplyInfo where state = 1");
 		if (!CommonUtils.isEmptyString(searchname)) {
 			cuserhql.append(" and userid in (select studentid from SuserInfo where realname like '%" + searchname + "%')");
 		}
@@ -899,7 +899,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			}
 		}
 		if (!CommonUtils.isEmptyString(minsdate)) {
-			cuserhql.append("and addtime >'" + minsdate + "'");
+			cuserhql.append("and updatetime >'" + minsdate + "'");
 		}
 		if (!CommonUtils.isEmptyString(maxsdate)) {
 			Date enddate = CommonUtils.getDateFormat(maxsdate, "yyyy-MM-dd");
@@ -907,21 +907,22 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			enddate.setMinutes(59);
 			enddate.setSeconds(59);
 			String endmaxstime = CommonUtils.getTimeFormat(enddate, "yyyy-MM-dd HH:mm:ss");
-			cuserhql.append("and addtime <'" + endmaxstime + "'");
+			cuserhql.append("and updatetime <'" + endmaxstime + "'");
 		}
-		List<BalanceStudentInfo> applycashlist = (List<BalanceStudentInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), pagesize, pageIndex, null);
+		List<StudentApplyInfo> applycashlist = (List<StudentApplyInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), pagesize, pageIndex, null);
 		if (applycashlist != null && applycashlist.size() > 0) {
-			for (BalanceStudentInfo capplyCash : applycashlist) {
+			for (StudentApplyInfo capplyCash : applycashlist) {
 				SuserInfo student = dataDao.getObjectById(SuserInfo.class, capplyCash.getUserid());
 				if (student != null) {
 					capplyCash.setRealname(student.getRealname());
 					capplyCash.setPhone(student.getPhone());
+					capplyCash.setAlipay_account(student.getAlipay_account());
 				}
 			}
 		}
 		String counthql = " select count(*) " + cuserhql.toString();
 		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
-		return new QueryResult<BalanceStudentInfo>(applycashlist, total);
+		return new QueryResult<StudentApplyInfo>(applycashlist, total);
 	}
 
 	@Override

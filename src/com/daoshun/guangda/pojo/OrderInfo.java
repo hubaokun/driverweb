@@ -93,6 +93,18 @@ public class OrderInfo implements Serializable {
 	@Column(name = "coachstate", length = 1, nullable = false, columnDefinition = "INT default 0")
 	private Integer coachstate = 0;
 
+	//客服判定状态   0代表客服未介入   1代表客服介入但未处理   2代表客服介入处理并认定可以取消    3代表客服介入并认定不可以取消
+	@Column(name = "custserv_state", length = 1, nullable = false, columnDefinition = "INT default 0")
+	private Integer custserv_state =0;
+	
+	public Integer getCustserv_state() {
+		return custserv_state;
+	}
+
+	public void setCustserv_state(Integer custserv_state) {
+		this.custserv_state = custserv_state;
+	}
+
 	@Column(name = "cancancel", length = 1, nullable = false, columnDefinition = "INT default 0")
 	private Integer cancancel;
 	
@@ -119,6 +131,10 @@ public class OrderInfo implements Serializable {
 	
 	@Column(name = "paytype", length = 11, nullable = true, columnDefinition = "INT default 0")
 	private int paytype;//1 余额  2 小巴券  3 小巴币
+	
+    //订单的备注说明
+	@Column(name = "remarks", nullable = true)
+	private String remarks;
 	// 学生的详细信息
 	@Transient
 	private SuserInfo studentinfo;
@@ -163,11 +179,39 @@ public class OrderInfo implements Serializable {
 	@Transient
 	private List<OrderPrice> orderprice;
 	
+	//教练信息
+	@Transient
+	private CuserInfo coachInfo;
 	
-	//订单的备注说明
-	@Column(name = "remarks", nullable = true)
-	private String remarks;
+	@Transient
+	private DriveSchoolInfo schoolInfo;
 	
+	@Transient
+	private String paidMoney;
+
+	public String getPaidMoney() {
+		return paidMoney;
+	}
+
+	public void setPaidMoney(String paidMoney) {
+		this.paidMoney = paidMoney;
+	}
+
+	public DriveSchoolInfo getSchoolInfo() {
+		return schoolInfo;
+	}
+
+	public void setSchoolInfo(DriveSchoolInfo schoolInfo) {
+		this.schoolInfo = schoolInfo;
+	}
+
+	public CuserInfo getCoachInfo() {
+		return coachInfo;
+	}
+
+	public void setCoachInfo(CuserInfo coachInfo) {
+		this.coachInfo = coachInfo;
+	}
 
 	// 是否有投诉
 	// @Transient
@@ -215,8 +259,29 @@ public class OrderInfo implements Serializable {
 	@Transient
 	private int disagree;//历史订单中，分原有的历史订单和教练 不同意取消的订单，原有历史订单此属性是0，教练 不同意取消的订单是1
 	
+	@Transient
+	private String paytypename;
+	
+	@Transient
+	private BigDecimal unitPrice;
 	
 	
+	public BigDecimal getUnitPrice() {
+		return unitPrice;
+	}
+
+	public void setUnitPrice(BigDecimal unitPrice) {
+		this.unitPrice = unitPrice;
+	}
+
+	public String getPaytypename() {
+		return paytypename;
+	}
+
+	public void setPaytypename(String paytypename) {
+		this.paytypename = paytypename;
+	}
+
 	public int getDisagree() {
 		return disagree;
 	}

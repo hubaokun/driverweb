@@ -54,8 +54,8 @@ public class DriveSchoolServiceImpl extends BaseServiceImpl implements IDriveSch
 	@Override
 	public List<DriveSchoolInfo> getDriveschoollist(String keyword) {
 		StringBuffer drihql=new StringBuffer();
-		drihql.append(" from DriveSchoolInfo where name like '%"+keyword+"%'");
-		List<DriveSchoolInfo> schoollist=(List<DriveSchoolInfo>) dataDao.getObjectsViaParam(drihql.toString()+" order by addtime desc ", null);
+		drihql.append(" from DriveSchoolInfo where name like '%"+keyword+"%' ");
+		List<DriveSchoolInfo> schoollist=(List<DriveSchoolInfo>) dataDao.getObjectsViaParam(drihql.toString()+" order by schoolid ", null);
 		return schoollist;
 	}
 

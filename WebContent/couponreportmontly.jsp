@@ -22,26 +22,52 @@ $(function(){
 	$("#left_list_"+index).show();
 	var j = $("#change_id").val();
 	$("#change_"+j+index).addClass('left_list_mask');
+	jQuery.post("getDriverSchoolInfo.do",getschoolinfo,'json');
 })
-
+function getschoolinfo(data)
+{  
+	 var schoolinfo=document.getElementById("driverschoolid");
+	 var id= $("#schoolid").val();
+	 schoolinfo.length=0;
+	 var firstoption=new Option("",0);
+	 schoolinfo.add(firstoption);
+	 for(var i=0;i<data.length;i++)
+     {
+     	var o=new Option(data[i].name,data[i].schoolid);
+     	schoolinfo.add(o);
+     }
+	 $("#driverschoolid").val(id);
+}
 function search(){
 	var starttime = $("#starttime").val();
 	var endtime = $("#endtime").val();
+	var driverschoolid= $("#schoolid").val();
+	if(driverschoolid==0)
+	{
+		alert("请先选择驾校");
+		return;
+	}
 	if(endtime<starttime)
 		alert("结束时间必须大于开始时间，请重新选择！");
 	else
-	   window.location.href = "GetCouponReportMontly.do?starttime="+starttime+"&endtime="+endtime;
+	   window.location.href = "GetCouponReportMontly.do?starttime="+starttime+"&endtime="+endtime+"&schoolid="+driverschoolid;
 }
 
 function dataExport(){
 	var starttime = $("#starttime").val();
 	var endtime = $("#endtime").val();
+	var driverschoolid= $("#schoolid").val();
+	if(driverschoolid==0)
+	{
+		alert("请先选择驾校");
+		return;
+	}
 	if(endtime<starttime)
 		alert("结束时间必须大于开始时间，请重新选择！");
 	else
 	{
 		if (confirm("确认导出小巴券数据？")) {
-			window.location.href="CouponReportMontlyExport.do?starttime="+starttime+"&endtime="+endtime;
+			window.location.href="CouponReportMontlyExport.do?starttime="+starttime+"&endtime="+endtime+"&schoolid="+driverschoolid;
 		}
 	}
 	
@@ -51,6 +77,10 @@ function checkdetail(coachid){
 	var endtime = $("#endtime").val();
 	window.location.href = "GetCouponReportDetail.do?starttime="+starttime+"&endtime="+endtime+"&coachid="+coachid;
 
+}
+function changeschool(){
+	var id=$("#driverschoolid").val();
+	$("#schoolid").val(id);
 }
 </script>
 
@@ -79,7 +109,14 @@ function checkdetail(coachid){
 		<div style="width: 65px; text-align: center; line-height: 40px;border-right: 1px solid #cfd9df; float:left;">开始时间</div>
 		<input id="starttime" value="${starttime }" name="starttime" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})" style="width: 225px; height: 39px; border: 0px; padding-left: 8px; float: left;"/>
 	</div>
-
+    <div class="serchcontentdiv"style="float: left; margin-left: 50px; width: 175px"  >
+		<input type="text" class="searchdiv" style="width:85px;text-align: center;font-family: 微软雅黑;float:left;" value="驾校名称" readonly="readonly">
+		<select id="driverschoolid" name="driverschoolid" onchange="changeschool();"  class="searchdiv" style="width: 85px;float:left;">
+           <input type="hidden" id="schoolid" name="schoolid" value="${schoolid}"> 
+		</select>
+	<!-- <input type="hidden" id="hiddencoupontype" value="${coupontype }"> -->	
+		</div>
+		
 </div>
 <div id="content_form_table">
 			<table border="0" cellspacing="0" cellpadding="0" style="width:100%;">
@@ -123,19 +160,20 @@ function checkdetail(coachid){
 							var pageindex = parseInt(pageindex);
 							var starttime = $("#starttime").val();
 							var endtime = $("#endtime").val();
+							var driverschoolid = $("#schoolid").val();
 							var a = [];
 					  //总页数少于10 全部显示,大于10 显示前3 后3 中间3 其余....
 					  if (pageindex == 1) {
 						  //alert(pageindex);
 					    a[a.length] = "<a onclick=\"\" class=\"hide_page_prev unclickprev on\"></a>";
 					  } else {
-					    a[a.length] = "<a onclick=\"previousPage("+pageindex+",'GetCouponReportMontly.do?starttime="+starttime+"&endtime="+endtime+"&')\" class=\"page_prev\"></a>";
+					    a[a.length] = "<a onclick=\"previousPage("+pageindex+",'GetCouponReportMontly.do?starttime="+starttime+"&endtime="+endtime+"&schoolid="+driverschoolid+"&')\" class=\"page_prev\"></a>";
 					  }
 					  function setPageList() {
 					    if (pageindex == i) {
-					      a[a.length] = "<a onclick=\"goPage('GetCouponReportMontly.do?starttime="+starttime+"&endtime="+endtime+"&',"+i+")\" class=\"on\">" + i + "</a>";
+					      a[a.length] = "<a onclick=\"goPage('GetCouponReportMontly.do?starttime="+starttime+"&endtime="+endtime+"&schoolid="+driverschoolid+"&',"+i+")\" class=\"on\">" + i + "</a>";
 					    } else {
-					      a[a.length] = "<a onclick=\"goPage('GetCouponReportMontly.do?starttime="+starttime+"&endtime="+endtime+"&',"+i+")\">" + i + "</a>";
+					      a[a.length] = "<a onclick=\"goPage('GetCouponReportMontly.do?starttime="+starttime+"&endtime="+endtime+"&schoolid="+driverschoolid+"&',"+i+")\">" + i + "</a>";
 					    }
 					  }
 					  //总页数小于10
@@ -149,31 +187,31 @@ function checkdetail(coachid){
 					      for (var i = 1; i <= 5; i++) {
 					        setPageList();
 					      }
-					      a[a.length] = "...<a onclick=\"goPage('GetCouponReportMontly.do?starttime="+starttime+"&endtime="+endtime+"&',"+count+")\">" + count + "</a>";
+					      a[a.length] = "...<a onclick=\"goPage('GetCouponReportMontly.do?starttime="+starttime+"&endtime="+endtime+"&schoolid="+driverschoolid+"&',"+count+")\">" + count + "</a>";
 					    } else if (pageindex >= count - 3) {
-					      a[a.length] = "<a onclick=\"goPage('GetCouponReportMontly.do?starttime="+starttime+"&endtime="+endtime+"&',1)\">1</a>...";
+					      a[a.length] = "<a onclick=\"goPage('GetCouponReportMontly.do?starttime="+starttime+"&endtime="+endtime+"&schoolid="+driverschoolid+"&',1)\">1</a>...";
 					      for (var i = count - 4; i <= count; i++) {
 					        setPageList();
 					      };
 					    } else { //当前页在中间部分
-					      a[a.length] = "<a onclick=\"goPage('GetCouponReportMontly.do?starttime="+starttime+"&endtime="+endtime+"&',1)\">1</a>...";
+					      a[a.length] = "<a onclick=\"goPage('GetCouponReportMontly.do?starttime="+starttime+"&endtime="+endtime+"&schoolid="+driverschoolid+"&',1)\">1</a>...";
 					      for (var i = pageindex - 2; i <= pageindex+2; i++) {
 					        setPageList();
 					      }
-					      a[a.length] = "...<a onclick=\"goPage('GetCouponReportMontly.do?starttime="+starttime+"&endtime="+endtime+"&',"+count+")\">" + count + "</a>";
+					      a[a.length] = "...<a onclick=\"goPage('GetCouponReportMontly.do?starttime="+starttime+"&endtime="+endtime+"&schoolid="+driverschoolid+"&',"+count+")\">" + count + "</a>";
 					    }
 					  }
 					  if (pageindex == count) {
 						    a[a.length] = "<a onclick=\"\" class=\"hide_page_next unclicknext\"></a> 共"+count+"页  到第  "+
 						    "<input type=\"text\" class=\"jump_num\" id=\"topage\"/> 页"+
-						    "<a class=\"jump_btn\" onclick=\"gotoPage('GetCouponReportMontly.do?starttime="+starttime+"&endtime="+endtime+"&',"+$("#pageSize").val()+")\")\">"+
+						    "<a class=\"jump_btn\" onclick=\"goPage('GetCouponReportMontly.do?starttime="+starttime+"&endtime="+endtime+"&schoolid="+driverschoolid+"&',"+$("#pageSize").val()+")\")\">"+
 						    "<a id='page_msg'></a>";
 						  } else {
 						    a[a.length] = 
-						    	"<a onclick=\"nextPage("+$("#pageIndex").val()+",'GetCouponReportMontly.do?starttime="+starttime+"&endtime="+endtime+"&')\" "+
+						    	"<a onclick=\"nextPage("+$("#pageIndex").val()+",'GetCouponReportMontly.do?starttime="+starttime+"&endtime="+endtime+"&schoolid="+driverschoolid+"&')\" "+
 						    	"class=\"page_next\"></a> 共"+count+"页 到第 "+
 						    "<input type=\"text\" class=\"jump_num\" id=\"topage\"/> 页"+
-						    "<a class=\"jump_btn\" onclick=\"gotoPage('GetCouponReportMontly.do?starttime="+starttime+"&endtime="+endtime+"&',"+$("#pageSize").val()+")\">"+
+						    "<a class=\"jump_btn\" onclick=\"goPage('GetCouponReportMontly.do?starttime="+starttime+"&endtime="+endtime+"&schoolid="+driverschoolid+"&',"+$("#pageSize").val()+")\">"+
 						    "<a id='page_msg'></a>";
 						  }
 // 					  a[a.length]="<a href='#' onclick='addunit()' style='float: right;position: relative;right: 50px;padding: 0px; margin: 0px; top: 3px;'><img src='imgs/add_.png'></a>";

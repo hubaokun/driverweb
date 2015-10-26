@@ -3,23 +3,29 @@ package com.daoshun.guangda.action;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.hssf.util.Region;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
@@ -29,6 +35,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.daoshun.common.CommonUtils;
+import com.daoshun.common.QueryResult;
 import com.daoshun.guangda.NetData.CoachAccountDaily;
 import com.daoshun.guangda.NetData.CoachApplyDailyData;
 import com.daoshun.guangda.NetData.CoachDailyData;
@@ -42,9 +49,12 @@ import com.daoshun.guangda.NetData.StudentApplyDailyData;
 import com.daoshun.guangda.NetData.StudentCoinDetail;
 import com.daoshun.guangda.NetData.StudentCouponDetail;
 import com.daoshun.guangda.NetData.XiaoBaDaily;
+import com.daoshun.guangda.pojo.AreaInfo;
 import com.daoshun.guangda.pojo.DriveSchoolInfo;
+import com.daoshun.guangda.pojo.OrderInfo;
 import com.daoshun.guangda.service.ICUserService;
 import com.daoshun.guangda.service.IDailyService;
+import com.daoshun.guangda.service.IDriveSchoolService;
 
 @ParentPackage("default")
 @Controller
@@ -61,7 +71,9 @@ public class DailyAction extends BaseAction {
 
 	@Resource
 	private ICUserService cuserService;
-
+	@Resource
+	private IDriveSchoolService driveSchoolService;
+	
 	private Integer pageIndex = 1;
 
 	private int total;
@@ -127,6 +139,10 @@ public class DailyAction extends BaseAction {
 	private String schoolname;
 	
 	private String coachid;
+	
+	private String ownertype;
+	
+	private String schoolid;
 	
 	private List<SchoolDailyData> schooldailylist;
 
@@ -805,7 +821,7 @@ public class DailyAction extends BaseAction {
 		cell = row.createCell((short) 10);
 		cell.setCellValue("已使用教练券");
 		cell.setCellStyle(style);
-		List<Object> objm = dailyService.getCouponReportMontly(CommonUtils.getDateFormat(starttime, "yyyy-MM-dd"), CommonUtils.getDateFormat(endtime, "yyyy-MM-dd"));
+		List<Object> objm = dailyService.getCouponReportMontly(CommonUtils.getDateFormat(starttime, "yyyy-MM-dd"), CommonUtils.getDateFormat(endtime, "yyyy-MM-dd"),schoolid);
 		couponreportmontly = new ArrayList<CouponReportMontly>();
 		if (objm != null && objm.size() > 0) {
 			for (Object object : objm) {
@@ -1011,17 +1027,17 @@ public class DailyAction extends BaseAction {
 		HSSFCell cell = row.createCell((short) 0);
 		cell.setCellValue("小巴币统计报表（"+starttime +"——"+endtime+ "）");
 		cell.setCellStyle(style);
-		sheet.addMergedRegion(new Region(0, (short) 0, 1, (short) 11));
+		sheet.addMergedRegion(new Region(0, (short) 0, 1, (short) 13));
 		index++;
 		row = sheet.createRow((Integer) index++);
 		cell = row.createCell((short) 0);
 		cell.setCellValue("教练 /驾校");
 		cell.setCellStyle(style);
-		sheet.addMergedRegion(new Region(2, (short) 0, 2, (short) 7));
-		cell = row.createCell((short) 8);
+		sheet.addMergedRegion(new Region(2, (short) 0, 2, (short) 8));
+		cell = row.createCell((short) 9);
 		cell.setCellValue("学员");
 		cell.setCellStyle(style);
-		sheet.addMergedRegion(new Region(2, (short) 8, 2, (short) 11));
+		sheet.addMergedRegion(new Region(2, (short) 9, 2, (short) 13));
 		
 		
 		row = sheet.createRow((Integer) index++);
@@ -1047,18 +1063,24 @@ public class DailyAction extends BaseAction {
 		cell.setCellValue("发放小巴币(个)");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 7);
-		cell.setCellValue("已结算小巴币(个)");
+		cell.setCellValue("已结算学时");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 8);
-		cell.setCellValue("学员手机号");
+		cell.setCellValue("已结算小巴币(个)");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 9);
-		cell.setCellValue("学员姓名");
+		cell.setCellValue("学员手机号");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 10);
-		cell.setCellValue("获取小巴币");
+		cell.setCellValue("学员姓名");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 11);
+		cell.setCellValue("获取小巴币");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 12);
+		cell.setCellValue("已使用学时");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 13);
 		cell.setCellValue("已使用小巴币");
 		cell.setCellStyle(style);
 		
@@ -1092,7 +1114,20 @@ public class DailyAction extends BaseAction {
 				} else {
 					cointemp.setCoinnpaycount(new BigDecimal(0));
 				}
-				List<Object> objd=dailyService.getCoinReportDetail(cointemp.getCoachid(), CommonUtils.getDateFormat(starttime, "yyyy-MM-dd"), CommonUtils.getDateFormat(endtime, "yyyy-MM-dd"));
+				if (array[8] != null) {
+					cointemp.setClasshour(CommonUtils.parseInt(array[8].toString(), 0));
+				} else {
+					cointemp.setClasshour(0);
+				}
+				if (array[9] != null) {
+					cointemp.setType(array[9].toString());
+				} else {
+					cointemp.setType("0");
+				}
+				if(!cointemp.getCoachid().equals("0"))
+				{
+
+				List<Object> objd=dailyService.getCoinReportDetail(cointemp.getCoachid(),cointemp.getType(), CommonUtils.getDateFormat(starttime, "yyyy-MM-dd"), CommonUtils.getDateFormat(endtime, "yyyy-MM-dd"));
 				studentcoinlist=new ArrayList<StudentCoinDetail>();
 						if (objd != null && objd.size() > 0) {
 							for (Object o1 : objd) {
@@ -1116,11 +1151,18 @@ public class DailyAction extends BaseAction {
 								else {
 									tempstudent.setCoinpaynumber(new BigDecimal(0));
 								}
+								if (olist[5] != null) {
+									tempstudent.setClasshour(olist[5].toString());
+								}
+								else {
+									tempstudent.setClasshour("0");
+								}
 								studentcoinlist.add(tempstudent);
 							}
 							cointemp.setStudentdetaillist(studentcoinlist);
 						}
 						coinreportmontly.add(cointemp);
+				}
 			}
 			
 		}
@@ -1174,8 +1216,14 @@ public class DailyAction extends BaseAction {
 					sheet.addMergedRegion(new Region(index,(short)6,rowendindex,(short) 6));
 				}
 				if (coinmontly.getCoinnpaycount() != null) {
-					cell=row.createCell((short) 7);
+					cell=row.createCell((short) 8);
 					cell.setCellValue(coinmontly.getCoinnpaycount().doubleValue());
+					cell.setCellStyle(style);
+					sheet.addMergedRegion(new Region(index,(short)8,rowendindex,(short) 8));
+				}
+				if (coinmontly.getClasshour() != null) {
+					cell=row.createCell((short) 7);
+					cell.setCellValue(coinmontly.getClasshour());
 					cell.setCellStyle(style);
 					sheet.addMergedRegion(new Region(index,(short)7,rowendindex,(short) 7));
 				}
@@ -1186,16 +1234,19 @@ public class DailyAction extends BaseAction {
 				    	StudentCoinDetail tempt=tempstudentlist.get(j);
 				    	if(j==0)
 				    	{
-					    	cell=row.createCell((short) 8);
+					    	cell=row.createCell((short) 9);
 					    	cell.setCellValue(tempt.getPhone());
 							cell.setCellStyle(style);
-							cell=row.createCell((short) 9);
+							cell=row.createCell((short) 10);
 					    	cell.setCellValue(tempt.getName());
 							cell.setCellStyle(style);
-							cell=row.createCell((short) 10);
+							cell=row.createCell((short) 11);
 					    	cell.setCellValue(tempt.getCoinusenumber().doubleValue());
 							cell.setCellStyle(style);
-							cell=row.createCell((short) 11);
+							cell=row.createCell((short) 12);
+					    	cell.setCellValue(tempt.getClasshour());
+							cell.setCellStyle(style);
+							cell=row.createCell((short) 13);
 					    	cell.setCellValue(tempt.getCoinpaynumber().doubleValue());
 							cell.setCellStyle(style);
 							if(j==tempstudentlist.size()-1)
@@ -1208,16 +1259,19 @@ public class DailyAction extends BaseAction {
 				    	{
 				    		index++;
 				    		row=sheet.createRow((Integer) index);
-				    		cell=row.createCell((short) 8);
+				    		cell=row.createCell((short) 9);
 					    	cell.setCellValue(tempt.getPhone());
 							cell.setCellStyle(style);
-							cell=row.createCell((short) 9);
+							cell=row.createCell((short) 10);
 					    	cell.setCellValue(tempt.getName());
 							cell.setCellStyle(style);
-							cell=row.createCell((short) 10);
+							cell=row.createCell((short) 11);
 					    	cell.setCellValue(tempt.getCoinusenumber().doubleValue());
 							cell.setCellStyle(style);
-							cell=row.createCell((short) 11);
+							cell=row.createCell((short) 12);
+					    	cell.setCellValue(tempt.getClasshour());
+							cell.setCellStyle(style);
+							cell=row.createCell((short) 13);
 					    	cell.setCellValue(tempt.getCoinpaynumber().doubleValue());
 							cell.setCellStyle(style);
 							if(j==tempstudentlist.size()-1)
@@ -3261,8 +3315,8 @@ public class DailyAction extends BaseAction {
 			@SuppressWarnings("deprecation")
 			@Action(value = "/GetCouponReportMontly",results = { @Result(name = SUCCESS, location = "/couponreportmontly.jsp") })
 			public String GetCouponReportMontly()  {
-				
-				List<Object> objm = dailyService.getCouponReportMontly(CommonUtils.getDateFormat(starttime, "yyyy-MM-dd"), CommonUtils.getDateFormat(endtime, "yyyy-MM-dd"));
+				//schoolname=request.getParameter("schoolname");
+				List<Object> objm = dailyService.getCouponReportMontly(CommonUtils.getDateFormat(starttime, "yyyy-MM-dd"), CommonUtils.getDateFormat(endtime, "yyyy-MM-dd"),schoolid);
 				couponreportmontly = new ArrayList<CouponReportMontly>();
 				total = objm.size();
 				int pagesize = 10;
@@ -3396,7 +3450,16 @@ public class DailyAction extends BaseAction {
 						} else {
 							cointemp.setCoinnpaycount(new BigDecimal(0));
 						}				
-						
+						if (array[8] != null) {
+							cointemp.setClasshour(CommonUtils.parseInt(array[8].toString(), 0));
+						} else {
+							cointemp.setClasshour(0);
+						}
+						if (array[9] != null) {
+							cointemp.setType(array[9].toString());
+						} else {
+							cointemp.setType("0");
+						}			
 						if ((pageIndex * pagesize - 9) <= indexnum && indexnum <= (pageIndex * pagesize)) {
 							coinreportmontly.add(cointemp);
 						}
@@ -3411,7 +3474,7 @@ public class DailyAction extends BaseAction {
 		@SuppressWarnings("deprecation")
 		@Action(value = "/GetCoinReportMontlyDetail",results = { @Result(name = SUCCESS, location = "/coinreportdetail.jsp") })
 		public String GetCoinReportMontlyDetail()  {
-			List<Object> objd=dailyService.getCoinReportDetail(coachid, CommonUtils.getDateFormat(starttime, "yyyy-MM-dd"), CommonUtils.getDateFormat(endtime, "yyyy-MM-dd"));
+			List<Object> objd=dailyService.getCoinReportDetail(coachid,ownertype, CommonUtils.getDateFormat(starttime, "yyyy-MM-dd"), CommonUtils.getDateFormat(endtime, "yyyy-MM-dd"));
 			studentcoinlist=new ArrayList<StudentCoinDetail>();
 			total = objd.size();
 			int pagesize = 10;
@@ -3439,6 +3502,12 @@ public class DailyAction extends BaseAction {
 							else {
 								tempstudent.setCoinpaynumber(new BigDecimal(0));
 							}
+							if (olist[5] != null) {
+								tempstudent.setClasshour(olist[5].toString());
+							}
+							else {
+								tempstudent.setClasshour("0");
+							}
 							if ((pageIndex * pagesize - 9) <= indexnum && indexnum <= (pageIndex * pagesize)) {
 								studentcoinlist.add(tempstudent);
 							}
@@ -3447,6 +3516,244 @@ public class DailyAction extends BaseAction {
 			return SUCCESS;
 		}
 	
+	private List<OrderInfo> orderList;
+	private String date;
+
+	/**
+	 * 小巴订单日统计报表  查询
+	 * @return
+	 */
+	@Action(value = "/GetDailyOrderReport",results = { @Result(name = SUCCESS, location = "/orderReport.jsp") })	
+	public String dailyOrderReport()
+	{
+		HttpSession session = ServletActionContext.getRequest().getSession();
+		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
+		QueryResult<OrderInfo> orderInfos=dailyService.getOrderInfos(starttime,endtime,pageIndex,pagesize);
+		orderList=orderInfos.getDataList();
+		total=(int) orderInfos.getTotal();
+		pageCount = ((int) orderInfos.getTotal() + pagesize - 1) / pagesize;
+		if (pageIndex > 1) {
+			if (orderList == null || orderList.size() == 0) {
+				pageIndex--;
+				dailyOrderReport();
+			}
+		}
+		return SUCCESS;
+	}
+	@Action(value = "/exportOrderReport")
+	public void exportDailyOrderReport() throws IOException
+	{
+			orderList=dailyService.getOrdersForExported(date);
+			if(orderList!=null && orderList.size()>0)
+			{
+		// 以下开始输出到EXCEL
+				String newfilename = "";
+				// 定义输出流，以便打开保存对话框begin
+				newfilename += CommonUtils.getTimeFormat(new Date(), "yyyyMMddhhmmssSSS") + "_" + (Math.random() * 100) + ".xls";
+				String filename = CommonUtils.properties.get("uploadFilePath") + newfilename;
+				File file = new File(filename);
+				if (!file.exists()) {
+					file.createNewFile();
+				}
+				
+				// 第一步，创建一个webbook，对应一个Excel文件
+				HSSFWorkbook wb = new HSSFWorkbook();
+				
+				//创建样式开始----
+				HSSFFont headfont = wb.createFont();    
+			    headfont.setFontName("宋体");    
+			    headfont.setFontHeightInPoints((short) 16);// 字体大小    
+			    headfont.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);// 加粗  
+			    
+			    HSSFFont font = wb.createFont();    
+			    font.setFontName("宋体");    
+			    font.setFontHeightInPoints((short) 12);// 字体大小    
+			    
+			    HSSFCellStyle headstyle = wb.createCellStyle();    
+			    headstyle.setFont(headfont);
+				headstyle.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
+				headstyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+
+				
+				HSSFCellStyle headlinestyle = wb.createCellStyle();
+				headlinestyle.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
+				headlinestyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+				headlinestyle.setWrapText(true); 
+				headlinestyle.setFont(font);
+				headlinestyle.setLeftBorderColor(HSSFColor.BLACK.index);    
+				headlinestyle.setBorderLeft((short) 1);    
+				headlinestyle.setRightBorderColor(HSSFColor.BLACK.index);    
+				headlinestyle.setBorderRight((short) 1);
+				headlinestyle.setBorderTop((short) 1);
+				headlinestyle.setTopBorderColor(HSSFColor.BLACK.index);
+				headlinestyle.setBorderBottom(HSSFCellStyle.BORDER_THIN); // 设置单元格的边框为粗体    
+				headlinestyle.setBottomBorderColor(HSSFColor.BLACK.index); // 设置单元格的边框颜色．    
+				headlinestyle.setFillForegroundColor(HSSFColor.LIGHT_TURQUOISE.index);;// 设置单元格的背景颜
+				headlinestyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);  
+				
+				HSSFCellStyle style = wb.createCellStyle();
+				style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
+				style.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+				style.setWrapText(true); 
+				style.setFont(font);
+				
+				style.setLeftBorderColor(HSSFColor.BLACK.index);    
+			    style.setBorderLeft((short) 1);    
+			    style.setRightBorderColor(HSSFColor.BLACK.index);    
+			    style.setBorderRight((short) 1);    
+			    style.setBorderBottom(HSSFCellStyle.BORDER_THIN); // 设置单元格的边框为粗体    
+			    style.setBottomBorderColor(HSSFColor.BLACK.index); // 设置单元格的边框颜色．    
+			    //创建样式结束----
+				
+				//新建sheet
+				HSSFSheet sheet = wb.createSheet("小巴订单日统计报表");
+				// 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
+				int index = 0;
+				HSSFRow row = sheet.createRow((Integer) index++);
+				// 第四步，创建单元格，并设置值表头 设置表头居中
+				row.setHeight((short)720);
+				
+				HSSFCell cell = row.createCell((short) 0);
+				cell.setCellValue("小巴订单日统计报表（"+date+"）");
+				cell.setCellStyle(headstyle);
+				sheet.addMergedRegion(new Region(0, (short) 0,0, (short) 13));
+				
+				String[] arr={"序号","支付方式","学员姓名","学员手机号码","订单类型（课程类别）","订单开始日期","预约课时（小时）","课时单价（元）","服务费（10%）","订单总金额（元）","实付金额（元）","教练姓名","教练所在驾校","教练手机号"};
+				row = sheet.createRow((Integer) index++);
+				row.setHeight((short)700);
+				for(short i=0;i<arr.length;++i)
+				{
+					cell = row.createCell(i);
+					cell.setCellValue(arr[i]);
+					cell.setCellStyle(headlinestyle);
+				}
+				
+				if(orderList!=null && orderList.size()>0)
+				{
+					Iterator<OrderInfo> iterator=orderList.iterator();
+					
+					short colIndex=0;
+					while (iterator.hasNext()) {
+						OrderInfo info = (OrderInfo) iterator.next();
+						colIndex=0;
+						row=sheet.createRow((Integer)index);
+						row.setHeight((short)285);
+						//行开始
+						
+						cell=row.createCell(colIndex);
+						cell.setCellValue(info.getOrderid());
+						cell.setCellStyle(style);
+						
+						++colIndex;
+						cell=row.createCell(colIndex);
+						cell.setCellValue(info.getPaytypename());
+						cell.setCellStyle(style);
+						
+						++colIndex;
+						cell=row.createCell(colIndex);
+						cell.setCellValue(info.getStudentinfo().getRealname());
+						cell.setCellStyle(style);
+						
+						++colIndex;
+						cell=row.createCell(colIndex);
+						cell.setCellValue(info.getStudentinfo().getPhone());
+						cell.setCellStyle(style);
+						
+						++colIndex;
+						cell=row.createCell(colIndex);
+						cell.setCellValue(info.getSubjectname());
+						cell.setCellStyle(style);
+						
+						++colIndex;
+						cell=row.createCell(colIndex);
+						cell.setCellValue(info.getDate());
+						cell.setCellStyle(style);
+						
+						++colIndex;
+						cell=row.createCell(colIndex);
+						cell.setCellValue(info.getTime());
+						cell.setCellStyle(style);
+						
+						++colIndex;
+						cell=row.createCell(colIndex);
+						cell.setCellValue(String.valueOf(info.getUnitPrice()));
+						cell.setCellStyle(style);
+						
+						++colIndex;
+						cell=row.createCell(colIndex);
+						cell.setCellValue(String.valueOf(info.getPrice_out1()));
+						cell.setCellStyle(style);
+						
+						++colIndex;
+						cell=row.createCell(colIndex);
+						cell.setCellValue(String.valueOf(info.getTotal()));
+						cell.setCellStyle(style);
+						
+						++colIndex;
+						cell=row.createCell(colIndex);
+						cell.setCellValue(String.valueOf(info.getPaidMoney()));
+						cell.setCellStyle(style);
+						
+						++colIndex;
+						cell=row.createCell(colIndex);
+						cell.setCellValue(info.getCoachInfo().getRealname());
+						cell.setCellStyle(style);
+						
+						++colIndex;
+						cell=row.createCell(colIndex);
+						cell.setCellValue(info.getSchoolInfo().getName());
+						cell.setCellStyle(style);
+						
+						++colIndex;
+						cell=row.createCell(colIndex);
+						cell.setCellValue(info.getCoachInfo().getPhone());
+						cell.setCellStyle(style);
+						//行结束
+						
+						++index;//行数
+						
+					}
+					for(short i=1;i<colIndex+1;++i)
+					{
+						sheet.autoSizeColumn(i);
+					}
+				}
+					
+
+				
+				try {
+					FileOutputStream fout = new FileOutputStream(file);
+					wb.write(fout);
+					fout.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				filename = CommonUtils.properties.getProperty("uploadFilePath") + newfilename;
+				HttpServletResponse response = ServletActionContext.getResponse();
+				CommonUtils.downloadExcel(filename, date+"_小巴订单日统计报表", response);
+			}
+	}
+	
+	//查询当前所有驾校信息
+	@Action(value = "getDriverSchoolInfo")
+	public void getDriverSchoolInfo(){
+		List<DriveSchoolInfo> list=driveSchoolService.getDriveschoollist("");
+		strToJson(list);
+	}
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+	public List<OrderInfo> getOrderList() {
+		return orderList;
+	}
+
+	public void setOrderList(List<OrderInfo> orderList) {
+		this.orderList = orderList;
+	}
 	public Integer getPageIndex() {
 		return pageIndex;
 	}
@@ -3782,6 +4089,26 @@ public class DailyAction extends BaseAction {
 	public void setStudentcoinlist(List<StudentCoinDetail> studentcoinlist) {
 		this.studentcoinlist = studentcoinlist;
 	}
+
+	public String getOwnertype() {
+		return ownertype;
+	}
+
+	public void setOwnertype(String ownertype) {
+		this.ownertype = ownertype;
+	}
+
+	public String getSchoolid() {
+		return schoolid;
+	}
+
+	public void setSchoolid(String schoolid) {
+		this.schoolid = schoolid;
+	}
+
+
+
+
 
 	
 

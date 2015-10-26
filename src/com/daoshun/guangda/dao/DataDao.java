@@ -531,11 +531,12 @@ public class DataDao {
 		Object obj = query.uniqueResult();
 		return obj;
 	}
-	public List<Object> getCouponReportMontly(Date startdate,Date enddate){
+	public List<Object> getCouponReportMontly(Date startdate,Date enddate,String schoolId){
 		Session session=this.getSession();
-		SQLQuery query= session.createSQLQuery("{Call couponreportmonthly(?,?)}");
+		SQLQuery query= session.createSQLQuery("{Call couponreportmonthly(?,?,?)}");
 		query.setDate(0, startdate);
 		query.setDate(1, enddate);
+		query.setString(2,schoolId);
 //		query.executeUpdate();
 		@SuppressWarnings("unchecked")
 		List<Object> list = query.list();
@@ -560,12 +561,13 @@ public class DataDao {
 		List<Object> list = query.list();
 		return list;
 	}
-	public List<Object> getCoinReportDetail(String coachid,Date startdate,Date enddate){
+	public List<Object> getCoinReportDetail(String coachid,String ownertype,Date startdate,Date enddate){
 		Session session=this.getSession();
-		SQLQuery query= session.createSQLQuery("{Call getstudentcoindetailmontly(?,?,?)}");
+		SQLQuery query= session.createSQLQuery("{Call getstudentcoindetailmontly(?,?,?,?)}");
 		query.setString(0, coachid);
-		query.setDate(1, startdate);
-		query.setDate(2, enddate);
+		query.setString(1, ownertype);
+		query.setDate(2, startdate);
+		query.setDate(3, enddate);
 //		query.executeUpdate();
 		List<Object> list = query.list();
 		return list;

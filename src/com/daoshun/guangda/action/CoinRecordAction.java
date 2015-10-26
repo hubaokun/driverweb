@@ -99,7 +99,7 @@ public class CoinRecordAction extends BaseAction{
     @Action(value = "goGrantCoinRecord", results = { @Result(name = SUCCESS, location = "/coinGrant.jsp") })
     public String goGrantCoinRecord() {
     	
-    	QueryResult<CoinRecordInfo> result = coinRecordService.getCoinRecordListByPage(pageIndex, 10, starttime, 
+    	QueryResult<CoinRecordInfo> result = coinRecordService.getCoinRecordListByPage(type,pageIndex, 10, starttime, 
     			endtime, ownertype, String.valueOf(ownerid),String.valueOf(receiverid));
 		
     	coinrecordlist = result.getDataList();
@@ -139,7 +139,7 @@ public class CoinRecordAction extends BaseAction{
     
     @Action(value = "goCoinRecord", results = { @Result(name = SUCCESS, location = "/coinrecord.jsp") })
     public String goCoinRecord() {
-    	QueryResult<CoinRecordInfo> result = coinRecordService.getCoinRecordListByPage(pageIndex, 10, starttime, endtime, ownertype, String.valueOf(ownerid),String.valueOf(receiverid));
+    	QueryResult<CoinRecordInfo> result = coinRecordService.getCoinRecordListByPage(type,pageIndex, 10, starttime, endtime, ownertype, String.valueOf(ownerid),String.valueOf(receiverid));
     	if(receiverid!=null && !"".equals(receiverid) && !"null".equals(receiverid)){
         	SuserInfo suser=suserService.getUserById(String.valueOf(receiverid));
         	coinnum=suser.getCoinnum();

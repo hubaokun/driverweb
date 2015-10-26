@@ -47,29 +47,29 @@ $(function(){
 							style="margin-top: 9px;">
 					</div>
 					<div class="serchcontentdiv" style="float: left; margin-left: 50px; width: 156px" >
-						<input  type="text" class="searchdiv" style="width: 50px;text-align: center;font-family: 微软雅黑;" value="姓名" readonly="readonly">
-						<input id="realname" type="text" class="searchdiv" style="width:100px;font-family: 微软雅黑;" value="${searchname}" maxlength="255" />
+						<input  type="text" class="searchdiv" style="width: 50px;text-align: center;font-family: 微软雅黑;float:left;" value="姓名" readonly="readonly">
+						<input id="realname" type="text" class="searchdiv" style="width:100px;font-family: 微软雅黑;float:left" value="${searchname}" maxlength="255" />
 					</div>
 
 					<div class="serchcontentdiv" style="float: left; margin-left: 50px; width: 156px" >
-						<input type="text" class="searchdiv" style="width: 50px;text-align: center;font-family: 微软雅黑;" value="电话" readonly="readonly">
-						<input id="phone" type="text" onkeyup="value=value.replace(/[^\d]/g,'')" class="searchdiv" style="width:100px;font-family: 微软雅黑;" value="${searchphone }" maxlength="11"/>
+						<input type="text" class="searchdiv" style="width: 50px;text-align: center;font-family: 微软雅黑;float:left;" value="电话" readonly="readonly">
+						<input id="phone" type="text" onkeyup="value=value.replace(/[^\d]/g,'')" class="searchdiv" style="width:100px;font-family: 微软雅黑;float:left;" value="${searchphone }" maxlength="11"/>
 					</div>
 								
 <div class="serchcontentdiv"style="float: left; margin-left: 50px; width: 191px"  >
-		<select id="amount" class="searchdiv" style="width: 115px;">
+		<select id="amount" class="searchdiv" style="width: 115px;float:left;">
 			<option value="0">提现金额大于</option>
 			<option value="1">提现金额等于</option>
 			<option value="2">提现金额小于</option>
 		</select>
-		<input id="inputamount" type="text" onkeyup="value=value.replace(/[^\d]/g,'')" class="searchdiv" style="width: 71px;text-align: center;font-family: 微软雅黑;" value="${inputamount }" maxlength="10">
+		<input id="inputamount" type="text" onkeyup="value=value.replace(/[^\d]/g,'')" class="searchdiv" style="width: 71px;text-align: center;font-family: 微软雅黑;float:left;" value="${inputamount }" maxlength="10">
 	</div>
 					
 <div class="serchcontentdiv"style="float: left; margin-left: 50px; width: 405px"  >
-		<input type="text" class="searchdiv" style="width: 119px;text-align: center;font-family: 微软雅黑;" value="处理申请时间区间" readonly="readonly">
-		<input id="minsdate" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})" type="text" class="searchdiv" style="width: 120px;text-align: center;font-family: 微软雅黑;" value="${minsdate }">
-		<input type="text" class="searchdiv" style="width: 30px;text-align: center;font-family: 微软雅黑;" value="到" readonly="readonly">
-		<input id="maxsdate" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})" type="text" class="searchdiv" style="width: 120px;text-align: center;font-family: 微软雅黑;" value="${maxsdate }">
+		<input type="text" class="searchdiv" style="width: 119px;text-align: center;font-family: 微软雅黑;float:left;" value="处理申请时间区间" readonly="readonly">
+		<input id="minsdate" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})" type="text" class="searchdiv" style="width: 120px;text-align: center;font-family: 微软雅黑;float:left;" value="${minsdate }">
+		<input type="text" class="searchdiv" style="width: 30px;text-align: center;font-family: 微软雅黑;float:left;" value="到" readonly="readonly">
+		<input id="maxsdate" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})" type="text" class="searchdiv" style="width: 120px;text-align: center;font-family: 微软雅黑;float:left;" value="${maxsdate }">
 	</div>
 	</div>
 			<div id="content_form_table">
@@ -81,9 +81,10 @@ $(function(){
 						<th>电话号码</th>
 						<th>提现金额</th>
 						<th>支付宝</th>
-						<th>申请处理时间</th>
+						<th>提交申请时间</th>
+						<th>处理申请时间</th>
 					</tr>
-					<s:iterator value="balancecoachlist" var="cuser" status="st">
+					<s:iterator value="coachApplyCashInfolist" var="cuser" status="st">
 						<tr class="tr_td">
 							<td style="width: 52px;" class="border_right_bottom"><s:property value="#st.index+1"/></td>
 							<td style="width: 100px;" class="border_right_bottom">${realname}</td>
@@ -91,6 +92,7 @@ $(function(){
 							<td style="width: 100px;" class="border_right_bottom">${amount}</td>
 							<td style="width: 100px;" class="border_right_bottom">${alipay_account}</td>
 							<td style="width: 200px;" class="border_right_bottom"><s:date name="addtime" format="yyyy-MM-dd HH:mm:ss"/></td>
+							<td style="width: 200px;" class="border_right_bottom"><s:date name="updatetime" format="yyyy-MM-dd HH:mm:ss"/></td>
 							<!-- <td style="width: 100px;" class="border_noright_bottom"></td>-->
 
 						</tr>

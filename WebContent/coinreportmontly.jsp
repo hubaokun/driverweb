@@ -45,10 +45,10 @@ function dataExport(){
 		}
 	}
 }
-function checkdetail(coachid){
+function checkdetail(coachid,type){
 	var starttime = $("#starttime").val();
 	var endtime = $("#endtime").val();
-	window.location.href = "GetCoinReportMontlyDetail.do?starttime="+starttime+"&endtime="+endtime+"&coachid="+coachid;
+	window.location.href = "GetCoinReportMontlyDetail.do?starttime="+starttime+"&endtime="+endtime+"&coachid="+coachid+"&ownertype="+type;
 
 }
 </script>
@@ -89,6 +89,7 @@ function checkdetail(coachid){
 						<th>发放教练手机号</th>
 						<th>小巴币面值(1元/个)</th>
 						<th>发放小巴币(个)</th>
+						<th>已结算学时</th>
 						<th>已结算小巴币(个)</th>
 						<th>操作</th>
 					</tr>
@@ -102,15 +103,16 @@ function checkdetail(coachid){
 							<td style="width: 10%;" class="border_right_bottom">${coachphone}</td>
 							<td style="width: 10%;" class="border_right_bottom">1</td>
 							<td style="width: 10%;" class="border_right_bottom">${coinnumber}</td>
+							<td style="width: 10%;" class="border_right_bottom">${classhour}</td>
 							<td style="width: 10%;" class="border_right_bottom">${coinnpaycount}</td>
-							<td style="width: 10%;" class="border_right_bottom"><div class="addbutton" style="background: #4cc2ff;margin-bottom: 20px" onclick="checkdetail(${coachid})">查看学员详情</div></td>
+							<td style="width: 10%;" class="border_right_bottom"><div class="addbutton" style="background: #4cc2ff;margin-bottom: 20px" onclick="checkdetail(${coachid},${type})">查看学员详情</div></td>
 						</tr>
 					</s:iterator>
 					<tr>
 						<td colspan="10" style="height: 86px;">
 							<div style="float: left; margin-top: 34px; margin-left: 20px;">
 								总计：${total}条</div> <!-- 下部翻页 -->
-							<div style="float: right; margin-top: 34px; margin-right: 20px;">
+						  	<div style="float: right; margin-top: 34px; margin-right: 20px;">
 								<s:if test="%{pageCount>1}">
 
 									<input type="hidden" value="${pageCount }" id="pageSize" />

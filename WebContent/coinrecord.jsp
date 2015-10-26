@@ -15,6 +15,7 @@
     <script type="text/javascript" src="js/common.js"></script>
     <script type="text/javascript" src="alljs/coinrecord.js"></script>
     <script type="text/javascript" src="js/page.js"></script>
+    <script type="text/javascript" src="js/My97DatePicker/WdatePicker.js"></script>
     <script type="text/javascript">
         $(function () {
             var index = $("#index").val();
@@ -38,26 +39,39 @@
 
                     
 
-                    <div id="ssearch" style="width: 100%; height: 75px; border-bottom: 1px solid #eaeff2;">
-                        <div style="float:left; width: 143px; height: 100%; line-height: 75px; border-right: 1px solid #eaeff2;text-align: right;">
-                            按学员姓名或手机查询<span style="color:#f83a22; margin-right:16px; margin-left: 8px;">*</span></div>
+                    <div id="ssearch" style="width: 100%; height: 150px; border-bottom: 1px solid #eaeff2;">
                         <div style="height: 100%; line-height: 75px; float:left; margin-left: 20px;">
-                            <input value="" name="receivername" id="receivername" onkeyup="searchSuser();"
+                        <span style="color:red;float:left;"></span><span style="float:left;display:inline-block;width:120px;height:75px;line-height:75px;text-align:right;">学员姓名或手机号：</span>
+                            <input value="${receivername}" name="receivername" id="receivername" onkeyup="searchSuser();"
                                    autocomplete="off" required="required"
-                                   style="width: 200px; height: 33px; padding-left:5px; border: 1px solid #eaeff2; margin-top: 20px;">
-                            <input value="" name="receiverid" id="receiverid" type="hidden">
+                                   style="width: 200px; height: 33px; padding-left:5px; border: 1px solid #eaeff2; margin-top: 20px;float:left;">
+                            <span style="float:left;display:inline-block;width:80px;height:75px;line-height:75px;text-align:right;">支付类型：</span>
+                            <select name="type" style="width: 200px; height: 33px; padding-left:5px; border: 1px solid #eaeff2; margin-top: 20px;float:left;">
+								<option value="">请选择</option>
+                        		<option value="1" <s:if test="1==getType()">selected</s:if>>发放给学员</option>
+                            	<option value="2" <s:if test="2==getType()">selected</s:if>>学员支付</option>
+                            	<option value="3" <s:if test="3==getType()">selected</s:if>>退款</option>
+                            	<option value="4" <s:if test="4==getType()">selected</s:if>>教练兑换</option>
+                            </select>
+                            <span style="float:left;display:inline-block;width:140px;height:75px;line-height:75px;text-align:right;">处理申请时间区间：</span>
+                            <input value="${starttime }" id="starttime" name="starttime" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})" type="text" class="searchdiv" style="width: 200px; height: 33px; padding-left:5px; border: 1px solid #eaeff2; margin-top: 20px;float:left;">
+                            <span style="float:left;display:inline-block;height:75px;line-height:75px;text-align:right;">到</span>
+                            <input value="${endtime}" id="endtime" name="endtime" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})" type="text" class="searchdiv" style="width: 200px; height: 33px; padding-left:5px; border: 1px solid #eaeff2; margin-top: 20px;float:left;">
+                            <input value="${receiverid}" name="receiverid" id="receiverid" type="hidden">
                            <s:if test="receiverid!=null">
+                             <span style="float:left;">
                              &nbsp;&nbsp;&nbsp;&nbsp;${receivername}剩余小巴币数量：${coinnum }
                              <s:if test="coinnum!=0">
 							<a href="javascript:reclaimCoin('${receivername}','${receiverid}')">全部回收${receivername }的小巴币</a>
 							</s:if>
+							</span>
                            </s:if>
-                          
+                           
                              <input type="button"  value="查询" onclick="goCoinRecord()"
-                           style="clear: both;height: 40px;width: 184px;background: #4cc2ff; color: #fff; font-size: 16px;text-align: center; line-height: 40px;margin-left: 248px;margin-top: 20px;cursor: pointer;">
+                           style="clear: both;height: 40px;width: 184px;background: #4cc2ff; color: #fff; font-size: 16px;text-align: center; line-height: 40px;margin-top: 20px;cursor: pointer;">
                         
                         </div>
-                        <div class="binding_detail" style="  left: 164px;top:-20px;clear:both;" id="optionalStudent">;
+                        <div class="binding_detail" style="  left: 145px;top:-93px;clear:both;" id="optionalStudent">;
                         </div>
                     </div>
                    
@@ -112,11 +126,12 @@
 
 									<input type="hidden" value="${pageCount }" id="pageSize" />
 									<input type="hidden" value="${pageIndex }" id="pageIndex" />
-									
-									<input type="hidden" value="" id="searchownertype" />
-									<input type="hidden" value="" id="searchownerid" />
-									<input type="hidden" value="" id="starttime" />
-									<input type="hidden" value="" id="endtime" />
+									<input type="hidden" value="${type}" id="paytype"/>
+									<input type="hidden" value="${ownertype}" id="searchownertype" />
+									<input type="hidden" value="${ownerid}" id="searchownerid" />
+									<input type="hidden" value="${starttime}" id="starttime" />
+									<input type="hidden" value="${endtime}" id="endtime" />
+									<input type="hidden" value="${receiverid}" id="receiverId"/>
 									
 									<div id="untreatedpage"></div>
 									<script type="text/javascript">
@@ -131,7 +146,8 @@
 											var ownerid = $("#searchownerid").val();
 											var starttime = $("#starttime").val();
 											var endtime = $("#endtime").val();
-											
+											var receiverid=$("#receiverId").val();
+											var paytype=$("#paytype").val();
 											
 											var a = [];
 											//总页数少于10 全部显示,大于10 显示前3 后3 中间3 其余....
@@ -149,6 +165,9 @@
 														+ starttime
 														+ "&endtime="
 														+ endtime
+														+"&receiverid="
+														+receiverid
+														+"&type="+paytype
 														+ "&')\" class=\"page_prev\"></a>";
 											}
 											function setPageList() {
@@ -161,6 +180,9 @@
 															+ starttime
 															+ "&endtime="
 															+ endtime
+															+"&receiverid="
+															+receiverid
+															+"&type="+paytype
 															+ "&',"
 															+ i
 															+ ")\" class=\"on\">"
@@ -174,6 +196,9 @@
 															+ starttime
 															+ "&endtime="
 															+ endtime
+															+"&receiverid="
+															+receiverid
+															+"&type="+paytype
 															+ "&',"
 															+ i
 															+ ")\">"
@@ -201,6 +226,9 @@
 															+ starttime
 															+ "&endtime="
 															+ endtime
+															+"&receiverid="
+															+receiverid
+															+"&type="+paytype
 															+ "&',"
 															+ count
 															+ ")\">"
@@ -214,6 +242,9 @@
 															+ starttime
 															+ "&endtime="
 															+ endtime
+															+"&receiverid="
+															+receiverid
+															+"&type="+paytype
 															+ "&',1)\">1</a>...";
 													for ( var i = count - 4; i <= count; i++) {
 														setPageList();
@@ -228,6 +259,9 @@
 															+ starttime
 															+ "&endtime="
 															+ endtime
+															+"&receiverid="
+															+receiverid
+															+"&type="+paytype
 															+ "&',1)\">1</a>...";
 													for ( var i = pageindex - 2; i <= pageindex + 2; i++) {
 														setPageList();
@@ -240,6 +274,9 @@
 															+ starttime
 															+ "&endtime="
 															+ endtime
+															+"&receiverid="
+															+receiverid
+															+"&type="+paytype
 															+ "&',"
 															+ count
 															+ ")\">"
@@ -259,6 +296,9 @@
 														+ starttime
 														+ "&endtime="
 														+ endtime
+														+"&receiverid="
+														+receiverid
+														+"&type="+paytype
 														+ "&',"
 														+ $("#pageSize").val()
 														+ ")\")\">"
@@ -274,6 +314,9 @@
 														+ starttime
 														+ "&endtime="
 														+ endtime
+														+"&receiverid="
+														+receiverid
+														+"&type="+paytype
 														+ "&')\" "
 														+ "class=\"page_next\"></a> 共"
 														+ count
@@ -287,6 +330,9 @@
 														+ starttime
 														+ "&endtime="
 														+ endtime
+														+"&receiverid="
+														+receiverid
+														+"&type="+paytype
 														+ "&',"
 														+ $("#pageSize").val()
 														+ ")\">"
