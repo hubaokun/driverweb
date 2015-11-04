@@ -48,7 +48,8 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 	@Resource
 	ISUserService suserService;
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-	@Scheduled(cron = "0 0 1 * * ?")
+	//@Scheduled(cron = "0 0 1 * * ?")
+	@Scheduled(cron = "0 10 15 ? * *")
 	//@Scheduled(cron="0/50 * *  * * ? ")
 	@Override
 	public void changeOrderState() {
@@ -215,7 +216,7 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 						cuser.setTotaltime(cuser.getTotaltime() + order.getTime());
 						student.setLearn_time(student.getLearn_time() + order.getTime());
 						
-						if(cuser.getAccompanynum()==null){
+						/*if(cuser.getAccompanynum()==null){
 							cuser.setAccompanynum(0);
 						}
 						
@@ -226,7 +227,7 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 							if("陪驾".equals(op.getSubject())){
 								cuser.setAccompanynum(cuser.getAccompanynum()+1);
 							}
-						}
+						}*/
 						
 						dataDao.updateObject(cuser);
 						dataDao.updateObject(student);
@@ -397,7 +398,7 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 			}
 		}
 		//重置教练开课状态
-		dataDao.callUpdatecoursestate();
+		//dataDao.callUpdatecoursestate();
 		System.out.println("##################定时任务执行结束#################");
 	}
 	//如果学员没有评价教练，自动结算时，给教练好评
@@ -437,13 +438,15 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 				
 				//评价后更新教练的星级
 				float score=0;
-				if(cuser.getScore()<=0){
-					score=5.0f ;//5分好评
-				}else{
-					score=(15.0f + cuser.getScore())/4 ;
+				if(cuser!=null){
+					if(cuser.getScore()<=0){
+						score=5.0f ;//5分好评
+					}else{
+						score=(15.0f + cuser.getScore())/4 ;
+					}
+					cuser.setScore(score);
+					dataDao.updateObject(cuser);
 				}
-				cuser.setScore(score);
-				dataDao.updateObject(cuser);
 			} 
 		}
 	}

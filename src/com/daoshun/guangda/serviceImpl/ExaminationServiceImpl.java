@@ -124,16 +124,30 @@ public class ExaminationServiceImpl extends BaseServiceImpl implements IExaminat
 	 * @return
 	 */
 	public HashMap<String, Object> getAnalogExamination(int studentid,int type,int answerid,String pagenum){
+		HashMap<String, Object> resultMap=new HashMap<String, Object>();
 		//如果answerid，表示第一次进入模拟题页面，需要针对这个学员创建一个新的模拟题，其他情况是对已有的模拟题分页的查询
 		if(answerid==0){
 			//创建模拟题
 			createAnalogQuestion(studentid,type);
+		}else{
+			//查询answerid是否存在
+			AnswerRecordInfo ari5=(AnswerRecordInfo) dataDao.getObjectById(AnswerRecordInfo.class, answerid);
+			if(ari5==null){
+				resultMap.put("list", null);
+				return resultMap;
+			}
 		}
-		
-		String hql4="from AnswerRecordInfo where studentid =:studentid order by addtime desc ";
-		String params[]={"studentid"};
-		AnswerRecordInfo ari=(AnswerRecordInfo) dataDao.getFirstObjectViaParam(hql4, params, studentid);
-		
+		String hql4="";
+		AnswerRecordInfo ari=null;
+		if(answerid==0){
+			hql4="from AnswerRecordInfo where analogflag=1 and studentid =:studentid order by addtime desc ";
+			String params[]={"studentid"};
+			ari=(AnswerRecordInfo) dataDao.getFirstObjectViaParam(hql4, params, studentid);
+		}else{
+			hql4="from AnswerRecordInfo where analogflag=1 and studentid =:studentid and answerid=:answerid  ";
+			String params[]={"studentid","answerid"};
+			ari=(AnswerRecordInfo) dataDao.getFirstObjectViaParam(hql4, params, studentid,answerid);
+		}
 		String aqnos="";
 		if(ari!=null ){
 			if(ari.getAnalogquestionno()!=null && !"".equals(ari.getAnalogquestionno())){
@@ -172,7 +186,7 @@ public class ExaminationServiceImpl extends BaseServiceImpl implements IExaminat
 				examination.setIsfavorites(1);
 			}
 		}
-		HashMap<String, Object> resultMap=new HashMap<String, Object>();
+		
 		if(nextlist!=null && nextlist.size()>0){
 			resultMap.put("hasmore", 1);
 		}else{
@@ -353,6 +367,28 @@ public class ExaminationServiceImpl extends BaseServiceImpl implements IExaminat
 		return num.intValue();
 	}
 	/**
+	 * 添加非模拟题答题记录
+	 * @param studentid  学号
+	 * @param lastquestionno
+	 * @param lastquestiontype
+	 * @return
+	 */
+	public int addAnswerRecord(int studentid,int lastquestionno) {
+		SuserInfo suser=dataDao.getObjectById(SuserInfo.class, studentid);
+		if(suser==null){
+			return -1;
+		}
+		AnswerRecordInfo ar=new AnswerRecordInfo();
+		//非模拟题时插入记录，记录答题的题号和类型
+		ar.setStudentid(studentid);
+		ar.setLastquestionno(lastquestionno);
+		//ar.setLastquestiontype(lastquestiontype);
+		ar.setAnalogflag(0);
+		ar.setAddtime(new Date());
+		dataDao.addObject(ar);
+		return 1;
+	}
+	/**
 	 * 添加答题记录
 	 * @param studentid 学员id
 	 * @param lastquestionno 题号
@@ -361,30 +397,28 @@ public class ExaminationServiceImpl extends BaseServiceImpl implements IExaminat
 	 * @param analogflag 是否模拟题  0 不是 ，1是
 	 * @param answerinfo 模拟题回答的内容 ：以json字符串的形式
 	 */
-	@Override
-	public int addAnswerRecordInfo(int studentid,int lastquestionno,int lastquestiontype,int score,int analogflag,String answerinfo) {
+	@Override 
+	public int addAnalogAnswerRecord(int studentid,int score,int answerid,String answerinfo) {
 		SuserInfo suser=dataDao.getObjectById(SuserInfo.class, studentid);
 		if(suser==null){
 			return -1;
 		}
-		AnswerRecordInfo ar=new AnswerRecordInfo();
-		//是模拟题
-		if(analogflag==1){
-			ar.setAddtime(new Date());
-			ar.setAnalogflag(1);
-			ar.setScore(score);
-			ar.setStudentid(studentid);
-			ar.setAnswerinfo(answerinfo);//设置用户提交的模拟题的所有选择的答案
+		//查询answerid是否存在
+		AnswerRecordInfo ari5=(AnswerRecordInfo) dataDao.getObjectById(AnswerRecordInfo.class, answerid);
+		if(ari5==null){
+			return -2;
 		}else{
-			ar.setStudentid(studentid);
-			ar.setLastquestionno(lastquestionno);
-			ar.setLastquestiontype(lastquestiontype);
-			ar.setAnalogflag(0);
-			ar.setAddtime(new Date());
+			if(studentid!=ari5.getStudentid()){
+				return -3;
+			}
 		}
-		dataDao.addObject(ar);
+		//是模拟题
+			ari5.setAddtime(new Date());
+			ari5.setScore(score);
+			ari5.setAnswerinfo(answerinfo);//设置用户提交的模拟题的所有选择的答案
+			String sql="update t_answer_record set score="+score+" ,answerinfo='"+answerinfo+"' where answerid="+answerid;
+			dataDao.updateBySql(sql);
 		return 1;
-		
 	}
 	/**
 	 * 获取学员上次的答题记录
@@ -392,7 +426,7 @@ public class ExaminationServiceImpl extends BaseServiceImpl implements IExaminat
 	 * @return
 	 */
 	public AnswerRecordInfo getAnswerRecordInfo(int studentid){
-		String hql="from AnswerRecordInfo where studentid=:studentid order by addtime desc";
+		String hql="from AnswerRecordInfo where analogflag=0 and studentid=:studentid order by addtime desc";
 		String params[]={"studentid"};
 		AnswerRecordInfo ar=(AnswerRecordInfo) dataDao.getFirstObjectViaParam(hql, params, studentid);
 		return ar;
@@ -453,7 +487,8 @@ public class ExaminationServiceImpl extends BaseServiceImpl implements IExaminat
 			ex.setOption4(option4);
 			ex.setQuestion(question);
 			ex.setQuestionid(CommonUtils.parseInt(questionid,0));
-			ex.setQuestionno(CommonUtils.parseInt(questionno,0));
+			//questionno有重复，所有取questionid
+			ex.setQuestionno(CommonUtils.parseInt(questionid,0));
 			ex.setQuestiontype(CommonUtils.parseInt(questiontype,0));
 			ex.setSubject(subject);
 			dataDao.addObject(ex);

@@ -458,9 +458,10 @@ public class Constant {
 	/**获取学员收藏题目的数量**/
 	public static final String GETQUESTIONFAVORITESNUM = "GETQUESTIONFAVORITESNUM";
 	
-	/**获取学员收藏题目的数量**/
-	public static final String ADDANSWERRECORDINFO = "ADDANSWERRECORDINFO";
+	/**添加非模拟题答题记录**/
+	public static final String ADDANSWERRECORD = "ADDANSWERRECORD";
 	
+	public static final String ADDANALOGANSWERRECORD = "ADDANALOGANSWERRECORD";
 	/**获取学员收藏题目的数量**/
 	public static final String GETANSWERRECORDINFO = "GETANSWERRECORDINFO";
 	

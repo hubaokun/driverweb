@@ -24,8 +24,9 @@ public interface IExaminationService {
 	public List<Examination> getQuestionFavorites(int studentid,String pagenum);
 	public int getQuestionFavoritesMore(int studentid,String pagenum);
 	public int getQuestionFavoritesNum(int studentid);
-	public int addAnswerRecordInfo(int studentid,int lastquestionno,int lastquestiontype,int score,int analogflag,String answerinfo);
+	public int addAnalogAnswerRecord(int studentid,int score,int answerid,String answerinfo) ;
 	public AnswerRecordInfo getAnswerRecordInfo(int studentid);
 	public  void parserJson() throws JSONException;
 	public boolean removeQuestionFavorites(int studentid,int questionno);
+	public int addAnswerRecord(int studentid,int lastquestionno);
 }

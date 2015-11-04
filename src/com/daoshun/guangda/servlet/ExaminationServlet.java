@@ -58,8 +58,10 @@ public class ExaminationServlet extends BaseServlet{
 				getQuestionFavorites(request,resultMap);
 			}else if(Constant.GETQUESTIONFAVORITESNUM.equals(action)){
 				getQuestionFavoritesNum(request,resultMap);
-			}else if(Constant.ADDANSWERRECORDINFO.equals(action)){
-				addAnswerRecordInfo(request,resultMap);
+			}else if(Constant.ADDANSWERRECORD.equals(action)){
+				addAnswerRecord(request,resultMap);
+			}else if(Constant.ADDANALOGANSWERRECORD.equals(action)){
+				addAnalogAnswerRecord(request, resultMap);
 			}else if(Constant.GETANSWERRECORDINFO.equals(action)){
 				getAnswerRecordInfo(request,resultMap);
 			}else if(Constant.REMOVEQUESTIONFAVORITES.equals(action)){
@@ -108,9 +110,15 @@ public class ExaminationServlet extends BaseServlet{
 		String studentid = getRequestParamter(request, "studentid");
 		String answerid = getRequestParamter(request, "answerid");
 		CommonUtils.validateEmptytoMsg(type, "type：不能为空，1 科目一模拟，2 科目四模拟");
+		CommonUtils.validateEmptytoMsg(answerid, "answerid：不能为空");
+		CommonUtils.validateEmptytoMsg(studentid, "studentid：不能为空");
 		HashMap<String, Object> re=examinationService.getAnalogExamination(CommonUtils.parseInt(studentid,0),
 												CommonUtils.parseInt(type,0), 
 												CommonUtils.parseInt(answerid,-1),pagenum);
+		if(re.get("list")==null){
+			resultMap.put("code",2);
+			resultMap.put("message", "传入的answerid不存在");
+		}
 		
 		resultMap.putAll(re);
 	}
@@ -123,6 +131,8 @@ public class ExaminationServlet extends BaseServlet{
 	public void addQuestionFavorites(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException{
 		String studentid = getRequestParamter(request, "studentid");
 		String questionno = getRequestParamter(request, "questionno");
+		CommonUtils.validateEmptytoMsg(studentid, "studentid：不能为空");
+		CommonUtils.validateEmptytoMsg(questionno, "questionno：不能为空");
 		boolean issucc=examinationService.addQuestionFavorites(CommonUtils.parseInt(studentid,0), CommonUtils.parseInt(questionno,0));
 		if(!issucc){
 			resultMap.put("code", 2);
@@ -178,40 +188,54 @@ public class ExaminationServlet extends BaseServlet{
 	}
 	
 	/**
-	 * 添加学员答题记录
+	 * 添加【非模拟】答题记录
 	 * @param request
 	 * @param resultMap
 	 * @throws ErrException
 	 */
-	public void addAnswerRecordInfo(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+	public void addAnswerRecord(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
 		String lastquestionno = getRequestParamter(request, "lastquestionno");
-		String lastquestiontype = getRequestParamter(request, "lastquestiontype");
-		String score = getRequestParamter(request, "score");
-		String analogflag = getRequestParamter(request, "analogflag");
-		String answerinfo = getRequestParamter(request, "answerinfo");
 		CommonUtils.validateEmptytoMsg(studentid,"studentid为空");
-		CommonUtils.validateEmptytoMsg(analogflag,"analogflag为空");
-			//模拟题
-		if("1".equals(analogflag)){
-			CommonUtils.validateEmptytoMsg(score,"score为空");
-			CommonUtils.validateEmptytoMsg(answerinfo,"answerinfo为空");
-		}else if("2".equals(analogflag)){
-			//非模拟题
-			CommonUtils.validateEmptytoMsg(lastquestionno,"lastquestionno为空");
-			CommonUtils.validateEmptytoMsg(lastquestiontype,"lastquestiontype为空");
-		}else{
-			CommonUtils.validateEmptytoMsg(analogflag,"analogflag值非法");
-		}
-		
-		int n=examinationService.addAnswerRecordInfo(CommonUtils.parseInt(studentid, 0), 
-														CommonUtils.parseInt(lastquestionno, 0), 
-														CommonUtils.parseInt(lastquestiontype, 0),
-														CommonUtils.parseInt(score, 0),
-														CommonUtils.parseInt(analogflag, 0),answerinfo);
+		//非模拟题
+		CommonUtils.validateEmptytoMsg(lastquestionno,"lastquestionno为空");
+		int n=examinationService.addAnswerRecord(CommonUtils.parseInt(studentid, 0), 
+												 CommonUtils.parseInt(lastquestionno, 0));
 		if(n==-1){
 			resultMap.put("code", -1);
 			resultMap.put("message", "用户不存在");
+		}
+	}
+	/**
+	 * 添加【模拟】答题记录
+	 * @param request
+	 * @param resultMap
+	 * @throws ErrException
+	 */
+	public void addAnalogAnswerRecord(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String studentid = getRequestParamter(request, "studentid");
+		String answerid = getRequestParamter(request, "answerid");
+		String score = getRequestParamter(request, "score");
+		String answerinfo = getRequestParamter(request, "answerinfo");
+		
+		CommonUtils.validateEmptytoMsg(studentid,"studentid为空");
+		CommonUtils.validateEmptytoMsg(answerid,"answerid为空");
+		CommonUtils.validateEmptytoMsg(score,"score为空");
+		CommonUtils.validateEmptytoMsg(answerinfo,"answerinfo为空");
+		
+		
+		int n=examinationService.addAnalogAnswerRecord(CommonUtils.parseInt(studentid, 0), 
+														CommonUtils.parseInt(score, 0),
+														CommonUtils.parseInt(answerid, 0),answerinfo);
+		if(n==-1){
+			resultMap.put("code", -1);
+			resultMap.put("message", "用户不存在");
+		}else if(n==-2){
+			resultMap.put("code", -2);
+			resultMap.put("message", "answerid传入有误");
+		}else if(n==-3){
+			resultMap.put("code", -3);
+			resultMap.put("message", "studentid与原值不符");
 		}
 	}
 	/**
@@ -230,11 +254,11 @@ public class ExaminationServlet extends BaseServlet{
 			resultMap.put("hasrecord", 1);
 			resultMap.put("data", ar);
 		}
-		/*try {
+		try {
 			examinationService.parserJson();
 		} catch (JSONException e) {
 			e.printStackTrace();
-		}*/
+		}
 	}
 	
 	

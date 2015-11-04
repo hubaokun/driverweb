@@ -48,14 +48,14 @@ public class AnswerRecordInfo {
 	
 	// 添加时间
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "addtime", nullable = false)
-	private Date addtime;
+	@Column(name = "addtime", nullable = true)
+	private Date addtime=new Date();
 	
 	@Column(name = "lastquestionno", length = 10, nullable = false, columnDefinition = "INT default 0")
 	private int lastquestionno;
 	
-	@Column(name = "lastquestiontype", length = 10, nullable = false, columnDefinition = "INT default 0")
-	private int lastquestiontype;
+	/*@Column(name = "lastquestiontype", length = 10, nullable = false, columnDefinition = "INT default 0")
+	private int lastquestiontype;*/
 	
 	@Column(name = "score", length = 10, nullable = false, columnDefinition = "INT default 0")
 	private int score;
@@ -95,12 +95,12 @@ public class AnswerRecordInfo {
 	public void setLastquestionno(int lastquestionno) {
 		this.lastquestionno = lastquestionno;
 	}
-	public int getLastquestiontype() {
+	/*public int getLastquestiontype() {
 		return lastquestiontype;
 	}
 	public void setLastquestiontype(int lastquestiontype) {
 		this.lastquestiontype = lastquestiontype;
-	}
+	}*/
 	public int getScore() {
 		return score;
 	}

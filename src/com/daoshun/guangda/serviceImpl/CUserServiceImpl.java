@@ -1917,9 +1917,8 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 		return (int) (totalin2-totalout2);
 	}
 	/**
-	 * 获取平台发给学员的可用小巴币数量
-	 * @param pid 平台ID
-	 * @param studentid 学员ID
+	 * 获取教练平台可用小巴币数量
+	 * @param coachid 教练id
 	 * @return
 	 */
 	public int getCanUseCoinnumForPlatform(String coachid) {

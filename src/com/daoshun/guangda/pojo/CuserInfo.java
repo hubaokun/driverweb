@@ -427,6 +427,27 @@ public class CuserInfo implements Serializable {
 	@Column(name = "couponrest", columnDefinition = "INT default 0")
 	private Integer couponrest;
 	
+	/**
+	 * 签约状态 ： 0 未签约，1 已签约 ，2 签约过期
+	 */
+	@Column(name = "signstate", columnDefinition = "INT default 0")
+	private Integer signstate=0;
+	
+	/**
+	 * 签约到期日期
+	 */
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "signexpired")
+	private Date signexpired;
+	
+	/**
+	 * 逻辑删除状态标示： 0 有效 ，1 无效
+	 */
+	@Column(name = "disabled", columnDefinition = "INT default 0")
+	private Integer disabled=0;
+	
+	
+	
 	public Integer getDevicetype() {
 		return devicetype;
 	}
