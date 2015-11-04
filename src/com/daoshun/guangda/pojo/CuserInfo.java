@@ -465,6 +465,79 @@ public class CuserInfo implements Serializable {
 	@Column(name = "subject2max", columnDefinition = "INT default 0")
 	private Integer subject2max=0;
 	
+	/**
+	 * 科目三范围最小值
+	 */
+	@Column(name = "subject3min", columnDefinition = "INT default 0")
+	private Integer subject3min=0;
+	
+	/**
+	 * 科目三范围最大值
+	 */
+	@Column(name = "subject3max", columnDefinition = "INT default 0")
+	private Integer subject3max=0;
+	
+	/**
+	 * 考场训练最大值
+	 */
+	@Column(name = "trainingmax", columnDefinition = "INT default 0")
+	private Integer trainingmax=0;
+	
+	/**
+	 * 考场训练最小值
+	 */
+	@Column(name = "trainingmin", columnDefinition = "INT default 0")
+	private Integer trainingmin=0;
+	
+	/**
+	 * 陪驾范围最小值
+	 */
+	@Column(name = "accompanymin", columnDefinition = "INT default 0")
+	private Integer accompanymin=0;
+	
+	/**
+	 * 陪驾范围最大值
+	 */
+	@Column(name = "accompanymax", columnDefinition = "INT default 0")
+	private Integer accompanymax=0;
+	
+	/**
+	 *租车范围最大值
+	 */
+	@Column(name = "hirecarmax", columnDefinition = "INT default 0")
+	private Integer hirecarmax=0;
+	
+	/**
+	 *租车范围最小值
+	 */
+	@Column(name = "hirecarmin", columnDefinition = "INT default 0")
+	private Integer hirecarmin=0;
+	
+	/**
+	 *体验课科目二范围最小值
+	 */
+	@Column(name = "tastesubject2min", columnDefinition = "INT default 0")
+	private Integer tastesubject2min=0;
+	
+	/**
+	 *体验课科目二范围最大值
+	 */
+	@Column(name = "tastesubject2max", columnDefinition = "INT default 0")
+	private Integer tastesubject2max=0;
+	
+	/**
+	 *体验课科目三范围最小值
+	 */
+	@Column(name = "tastesubject3min", columnDefinition = "INT default 0")
+	private Integer tastesubject3min=0;
+	
+	/**
+	 *体验课科目三范围最大值
+	 */
+	@Column(name = "tastesubject3max", columnDefinition = "INT default 0")
+	private Integer tastesubject3max=0;
+	
+	
 	
 	public Integer getDevicetype() {
 		return devicetype;
@@ -1260,5 +1333,148 @@ public class CuserInfo implements Serializable {
 	public void setFreecoursestate(Integer freecoursestate) {
 		this.freecoursestate = freecoursestate;
 	}
-	
+
+	public Integer getSignstate() {
+		return signstate;
+	}
+
+	public void setSignstate(Integer signstate) {
+		this.signstate = signstate;
+	}
+
+	public Date getSignexpired() {
+		return signexpired;
+	}
+
+	public void setSignexpired(Date signexpired) {
+		this.signexpired = signexpired;
+	}
+
+	public Integer getDisabled() {
+		return disabled;
+	}
+
+	public void setDisabled(Integer disabled) {
+		this.disabled = disabled;
+	}
+
+	public Date getModifydate() {
+		return modifydate;
+	}
+
+	public void setModifydate(Date modifydate) {
+		this.modifydate = modifydate;
+	}
+
+	public Integer getSubject2min() {
+		return subject2min;
+	}
+
+	public void setSubject2min(Integer subject2min) {
+		this.subject2min = subject2min;
+	}
+
+	public Integer getSubject2max() {
+		return subject2max;
+	}
+
+	public void setSubject2max(Integer subject2max) {
+		this.subject2max = subject2max;
+	}
+
+	public Integer getSubject3min() {
+		return subject3min;
+	}
+
+	public void setSubject3min(Integer subject3min) {
+		this.subject3min = subject3min;
+	}
+
+	public Integer getSubject3max() {
+		return subject3max;
+	}
+
+	public void setSubject3max(Integer subject3max) {
+		this.subject3max = subject3max;
+	}
+
+	public Integer getTrainingmax() {
+		return trainingmax;
+	}
+
+	public void setTrainingmax(Integer trainingmax) {
+		this.trainingmax = trainingmax;
+	}
+
+	public Integer getTrainingmin() {
+		return trainingmin;
+	}
+
+	public void setTrainingmin(Integer trainingmin) {
+		this.trainingmin = trainingmin;
+	}
+
+	public Integer getAccompanymin() {
+		return accompanymin;
+	}
+
+	public void setAccompanymin(Integer accompanymin) {
+		this.accompanymin = accompanymin;
+	}
+
+	public Integer getAccompanymax() {
+		return accompanymax;
+	}
+
+	public void setAccompanymax(Integer accompanymax) {
+		this.accompanymax = accompanymax;
+	}
+
+	public Integer getHirecarmax() {
+		return hirecarmax;
+	}
+
+	public void setHirecarmax(Integer hirecarmax) {
+		this.hirecarmax = hirecarmax;
+	}
+
+	public Integer getHirecarmin() {
+		return hirecarmin;
+	}
+
+	public void setHirecarmin(Integer hirecarmin) {
+		this.hirecarmin = hirecarmin;
+	}
+
+	public Integer getTastesubject2min() {
+		return tastesubject2min;
+	}
+
+	public void setTastesubject2min(Integer tastesubject2min) {
+		this.tastesubject2min = tastesubject2min;
+	}
+
+	public Integer getTastesubject2max() {
+		return tastesubject2max;
+	}
+
+	public void setTastesubject2max(Integer tastesubject2max) {
+		this.tastesubject2max = tastesubject2max;
+	}
+
+	public Integer getTastesubject3min() {
+		return tastesubject3min;
+	}
+
+	public void setTastesubject3min(Integer tastesubject3min) {
+		this.tastesubject3min = tastesubject3min;
+	}
+
+	public Integer getTastesubject3max() {
+		return tastesubject3max;
+	}
+
+	public void setTastesubject3max(Integer tastesubject3max) {
+		this.tastesubject3max = tastesubject3max;
+	}
 }
