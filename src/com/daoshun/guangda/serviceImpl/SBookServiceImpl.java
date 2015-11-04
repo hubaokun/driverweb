@@ -3572,14 +3572,14 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		for (EvaluationInfo eva : list) {
 			SuserInfo user = dataDao.getObjectById(SuserInfo.class, eva.getFrom_user());
 			if (user != null) {
-				if(user.getRealname()!=null && user.getRealname().length()==2){
+				/*if(user.getRealname()!=null && user.getRealname().length()==2){
 					eva.setNickname(user.getRealname().substring(0,1)+"*");
 				}else if(user.getRealname()!=null && user.getRealname().length()==3){
 					eva.setNickname(user.getRealname().substring(0,1)+"**");
 				}else if(user.getRealname()!=null && user.getRealname().length()>=4){
 					eva.setNickname(user.getRealname().substring(0,2)+"**");
-				}
-				
+				}*/
+				eva.setNickname("***");
 				eva.setAvatarUrl(getFilePathById(user.getAvatar()));
 			}
 			eva.setScore((eva.getScore1() + eva.getScore2() + eva.getScore3()) / 3);
@@ -3620,13 +3620,14 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		for (EvaluationInfo eva : list) {
 			SuserInfo user = dataDao.getObjectById(SuserInfo.class, eva.getFrom_user());
 			if (user != null) {
-				if(user.getRealname()!=null && user.getRealname().length()==2){
+				/*if(user.getRealname()!=null && user.getRealname().length()==2){
 					eva.setNickname(user.getRealname().substring(0,1)+"*");
 				}else if(user.getRealname()!=null && user.getRealname().length()==3){
 					eva.setNickname(user.getRealname().substring(0,1)+"**");
 				}else if(user.getRealname()!=null && user.getRealname().length()>=4){
 					eva.setNickname(user.getRealname().substring(0,2)+"**");
-				}
+				}*/
+				eva.setNickname("***");
 				eva.setAvatarUrl(getFilePathById(user.getAvatar()));
 			}
 			eva.setScore((eva.getScore1() + eva.getScore2() + eva.getScore3()) / 3);
