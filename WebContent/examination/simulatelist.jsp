@@ -15,11 +15,13 @@
 
 <body>
 <div class="container">
+	<div class="row empty-row"></div>
 	<div class="row question-bar">
-    	<div class="col-md-6 col-sm-6 col-xs-6">
-        	<a href="index.jsp" class="back">模拟考试</a>
+    	<div class="col-md-3 col-sm-3 col-xs-3">
+        	<a href="index.html" class="back"></a>
         </div>
-        <div class="col-md-6 col-sm-6 col-xs-6">
+		<div class="col-md-6 col-sm-6 col-xs-6"><span class="current-title">科目一顺序练习</span></div>
+        <div class="col-md-3 col-sm-3 col-xs-3">
         	<a href="javascript:void(0)" class="board" onclick="showquestionboard ()"></a>
         </div>
     </div> 
@@ -373,7 +375,7 @@ function showchoosewrongresult(obj,trueanswer)
 	$(obj).removeAttr('onclick').siblings().removeAttr('onclick');	
 }
 
-//如果questionids是在这个函数中记录的，那么这个问题肯迪是回答过的
+//单选题和判断题的选择方式
 function chooseoption(obj)
 {
 	data = questiondata;
@@ -388,6 +390,7 @@ function chooseoption(obj)
 	question[0] = questioncute;
 	question[1] = strT;
 	question[2] = str;
+	question[4] = true;
 	
 	if (strT == str)
 	{
@@ -418,6 +421,104 @@ function chooseoption(obj)
 	
 	//当回答正确的时候，自动加载下一题的数据
 	setTimeout("loadNextQuestion (data)",1000); 
+}
+
+//TO DO:get the selected choices
+function getmulselects(obj)
+{
+	var mulselects = "";
+	$(obj).parent().find('a').each(function()
+	{
+		if ($(this).hasClass('on'))
+		{
+			mulselects += $(this).attr('answer');
+		}
+	});
+	return mulselects;
+}
+
+//多选题的选择方式
+//TO DO: to identify which choise is been chosen
+function choosemuloption(obj)
+{
+	if ($(obj).hasClass('on'))
+	{
+		$(obj).removeClass('on');
+	}
+	else
+	{
+		$(obj).addClass('on');
+	}
+	var myanswer = getmulselects(obj);
+	
+	var obj_submit = $('#btn_submitmul');
+	if(myanswer.length > 1)
+	{
+		obj_submit.removeAttr("disabled");
+	}
+	else
+	{
+		obj_submit.attr("disabled","disabled");
+	}
+}
+
+//TO DO: show the result
+function showchooseresult(obj,myanswer)
+{
+	data = questiondata;
+	
+	var _obj_pre = obj.prev();
+	
+	var trueanswer = _obj_pre.attr('trueanswer');
+	var questioncute = _obj_pre.prev().attr('questioncute');
+	
+	var question = new Array();
+	
+	question[0] = questioncute;
+	question[1] = trueanswer;
+	question[2] = myanswer;
+	question[4] = false;
+	
+	_obj_pre.find("a").each(function ()
+	{
+		var _itemanswer = $(this).attr('answer');
+		var _toaddclass = "";
+		var _isitemright = trueanswer.indexOf(_itemanswer) > -1;
+		var _ismychoose = myanswer.indexOf(_itemanswer) > -1;
+		if (_isitemright) 
+		{
+			// _toaddclass = _ismychoose ? "item-right": "item-no-wrong";
+        }
+		else 
+		{
+			//_toaddclass = _ismychoose ? "item-wrong": "";
+			//changebuttonsstatement(false);
+			question[3] = false;
+        }
+		//$(this).addClass(_toaddclass);
+		$(this).attr("onclick", "");
+	});
+	
+	if (myanswer == trueanswer)
+	{
+		changebuttonsstatement(true);
+		question[3] = true;
+	}	
+	
+	answerquestions.push(question);
+	//alert (answerquestions.length);
+	
+	setTimeout("loadNextQuestion (data)",1000); 	
+}
+
+//TO DO: compare and show the result
+function submitmuloption(obj)
+{
+	var _parent = $(obj).parent();
+
+	var mychoose = getmulselects(_parent);
+	
+	showchooseresult(_parent,mychoose);
 }
 
 //TO DO: load questions for the page
@@ -500,10 +601,10 @@ function loadQuestionTitle (data,questionid)
 
 	
 	//如果是有图片或者动画的，那么就要判断、加载
-	if (data.list[questionid-1].animationflag)
+	if (data.list[questionid-1].animationimg != "")
 	{
 		var childImg = $('<img>');
-		childImg.attr('src','/driverweb/examination/img/' + data.list[questionid-1].animationimg);
+		childImg.attr('src','../examination/img/' + data.list[questionid-1].animationimg);
 		childImg.addClass('img-responsive');
 		parentDiv.append(childImg);
 	}
@@ -540,7 +641,17 @@ function loadQuestionItems (data,questionid)  ////data.list[page].answer,data.li
 		
 		childArrayA[i] = strA;
 		childArrayA[i].attr('href','javascript:void(0)');
-		childArrayA[i].attr('onclick','chooseoption(this)');
+		
+		
+		if (data.list[questionid-1].questiontype == 5)
+		{
+			childArrayA[i].attr('onclick','choosemuloption(this)');
+		}
+		else
+		{
+			childArrayA[i].attr('onclick','chooseoption(this)');	
+		}
+		
 		childArrayA[i].attr('answer',i+1);
 		
 		strDivS.addClass('item-state');
@@ -583,14 +694,36 @@ function loadQuestionItems (data,questionid)  ////data.list[page].answer,data.li
 			//alert ("这道题目已经回答过了,请不要再作答");
 			var index = returnindex(answerquestions,questionon);
 			var myanswerindex = answerquestions[index][2];
-			parentDiv.find('a').each(function ()
+			var ismulti = answerquestions[index][4];
+			
+			if (ismulti)
 			{
-				if ($(this).attr('answer') == myanswerindex)
+				parentDiv.find('a').each(function ()
 				{
-					$(this).addClass('bg-grey');
-				}
-				$(this).attr('onclick','');
-			});
+					if ($(this).attr('answer') == myanswerindex)
+					{
+						$(this).addClass('bg-grey');
+					}
+					$(this).attr('onclick','');
+				});
+			}
+			else
+			{
+				parentDiv.find("a").each(function ()
+				{
+					var _itemanswer = $(this).attr('answer');
+					var _ismychoose = myanswerindex.indexOf(_itemanswer) > -1;
+
+					if (_ismychoose)
+					{
+						$(this).addClass('bg-grey');
+					}
+					
+					$(this).attr("onclick", "");
+				});
+								
+				parentDivButton.empty();
+			}
 		}
 	}
 }
@@ -736,7 +869,7 @@ function handinpaper ()
 	answerquestions = (answerquestions.length > 0) ? answerquestions : false;
 	
 	$.ajax({
-		url: "/driverweb/examination",
+		url: "../examination",
 		data:
 			{
 			action: "ADDANSWERRECORDINFO",

@@ -172,12 +172,16 @@ ul.ul-board li
     border-radius: 8px;
 }
 /*鈥斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�攖he style of the index.html鈥斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺��*/
-.question-bar
+.empty-row
 {
-	background-color:rgb(83,162,16);
-	margin-bottom:15px;
+	margin-top:20px;
 }
-.question-bar a.back
+.question-bar,.question-bar-2
+{
+	background-color: rgb(222,222,222);
+	margin-bottom:5px;
+}
+.question-bar a.back,.question-bar-2 a.back-2
 {
     display: block;
     text-decoration: none;
@@ -188,9 +192,13 @@ ul.ul-board li
     background-size: auto 20px;
     min-height: 35px;
     line-height: 35px;
-    color: white;
-    font-size: 14px;
     padding-left: 34px;
+}
+.question-bar span.current-title
+{
+	font-size: 14px;
+	line-height: 35px;
+	color:black;
 }
 .question-bar a.board
 {
@@ -394,6 +402,10 @@ ul.subject-ul li a
 .question-col div.if
 {
 	background-image:url(../images/if-choose.png);
+}
+.question-col div.animation
+{
+	background-image:url(../images/animation-choose.png);
 }
 .question-title p
 {

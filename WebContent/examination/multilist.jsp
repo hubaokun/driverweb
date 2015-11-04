@@ -15,14 +15,16 @@
 
 <body>
 <div class="container">
+	<div class="row empty-row"></div>
 	<div class="row question-bar">
-    	<div class="col-md-6 col-sm-6 col-xs-6">
-        	<a href="index.jsp" class="back">多选练习</a>
+    	<div class="col-md-3 col-sm-3 col-xs-3">
+        	<a href="index.html" class="back"></a>
         </div>
-        <div class="col-md-6 col-sm-6 col-xs-6">
+		<div class="col-md-6 col-sm-6 col-xs-6"><span class="current-title">科目一顺序练习</span></div>
+        <div class="col-md-3 col-sm-3 col-xs-3">
         	<a href="javascript:void(0)" class="board" onclick="showquestionboard ()"></a>
         </div>
-    </div>  
+    </div> 
 	<div class="row question-col">
 
     </div>
@@ -53,19 +55,19 @@
 <!-- pop up window ends-->
 
 <!-- pop up window starts-->
-<div class="dialog">
+<div class="dialog-another dialog-restart">
 	<div class="dialog-top">
     	<div class="begin">开始练习</div>
-        <div class="goon">上次练习到第3题，是否继续？</div>
+        <div class="goon"></div>
     </div>
     <div class="dialog-bottom">
-    	<div class="cancel">取消</div>
-        <div class="certain">确定</div>
+    	<div class="cancel start-cancel">取消</div>
+        <div class="certain start-certain">确定</div>
     </div>
 </div>
-<div class="overlay">
+<div class="overlay-restart">
 </div>
-<!-- pop up window ennds-->
+<!-- pop up window ends-->
 
 <!--题板 starts-->
 <div class="dialog-board">
@@ -157,6 +159,25 @@ function hidepopwindow ()
 {
 	var obj = $('.dialog-first');
 	var obj_overlay = $('.overlay-first');
+	
+	hidewindow(obj,obj_overlay);
+}
+
+//TO DO: when load the page for the second time, show the dialog to ask whether the user want to restart?
+function showrestartdialog (str)
+{
+	var obj = $('.dialog-restart');
+	var obj_overlay = $('.overlay-restart');
+	
+	showwindow(obj,obj_overlay,true);
+	
+	var obj_tips = $('.dialog-restart .goon');
+	obj_tips.html("").html("上次练习到第" + str + "题，是否继续？");
+}
+function hiderestartdialog ()
+{
+	var obj = $('.dialog-restart');
+	var obj_overlay = $('.overlay-restart');
 	
 	hidewindow(obj,obj_overlay);
 }
@@ -353,7 +374,7 @@ function loadQuestionTitle (data,questionid)
 	if (data.list[questionid-1].animationflag)
 	{
 		var childImg = $('<img>');
-		childImg.attr('src','/driverweb/examination/images/' + data.list[questionid-1].animationimg);
+		childImg.attr('src','../examination/images/' + data.list[questionid-1].animationimg);
 		childImg.addClass('img-responsive');
 		parentDiv.append(childImg);
 	}
@@ -655,6 +676,11 @@ function gotoquestion (questionnum)
 {
 	countquestions = questionnum - 1;
 	
+	var _currentquestion = countquestions + 1;
+	
+	//本地存储：存储当前答题进行到哪一题了
+	window.localStorage.setItem("currentquestion",_currentquestion);
+	
 	if (questionnum%20 == 0)
 	{
 		questionid = 20;
@@ -691,7 +717,11 @@ function loadPreQuestion (data)
 	
 	--countquestions;
 	
-	//先判断当前是否是第一题
+	var _currentquestion = countquestions + 1;
+	alert ("在 load next question 中获得的" + _currentquestion);
+	
+	//本地存储：存储当前答题进行到哪一题了
+	window.localStorage.setItem("currentquestion",_currentquestion);
 	
 	
 	var record = --questionid;
@@ -747,6 +777,12 @@ function loadNextQuestion (data)
 	
 	++questionid;
 	
+	var _currentquestion = countquestions + 1;
+	alert ("在 load next question 中获得的" + _currentquestion);
+	
+	//本地存储：存储当前答题进行到哪一题了
+	window.localStorage.setItem("currentquestion",_currentquestion);
+	
 	if ((countquestions%20 == 0)  && (data.hasmore == 1))   //并且之后应该再加一个条件：就是hasmore要为1
 	{
 		pagenum++;
@@ -801,7 +837,7 @@ function collectcurrentquestion ()
 	var questionid = $('.question-item').attr('questioncute');   //变量： 题目id号
 	
 	$.ajax({
-		url: "/driverweb/examination",
+		url: "../examination",
 		data:
 			{
 			action:"ADDQUESTIONFAVORITES",
@@ -840,7 +876,7 @@ function removecollectquestion ()
 	//alert ("当前您想移除的题目的id号为：" + questionid);
 	
 	$.ajax({
-		url: "/driverweb/examination",
+		url: "../examination",
 		data:
 			{
 			action:"REMOVEQUESTIONFAVORITES",
@@ -874,9 +910,16 @@ $(document).ready(function ()
 {
 	loadQuestionBoard ();
 	
+	var _currentquestion_ = window.localStorage.getItem("currentquestion");
+	
+	showrestartdialog (_currentquestion_);
+	
 	var obj_cancel = $('.only-certain');
 	var objoverlay1 = $('.overlay-first');
 	var objoverlay2 = $('.overlay-board');
+	var btn_cancel = $('.start-cancel');
+	var btn_certain = $('.start-certain');
+	var overylay3 = $('.overlay-restart');
 	
 	obj_cancel.on('click',function ()
 	{
@@ -894,6 +937,19 @@ $(document).ready(function ()
 	{
 		hidequestionboard();
 	});
+	btn_certain.on('click',function ()
+			{
+				gotoquestion(_currentquestion_);
+				hiderestartdialog ();
+			});
+	btn_cancel.on('click',function ()
+			{
+				hiderestartdialog ();
+			});
+	overylay3.on('click',function ()
+			{
+				hiderestartdialog ();
+			});
 });
 </script>
 </body>

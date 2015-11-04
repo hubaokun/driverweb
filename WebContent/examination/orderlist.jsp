@@ -16,14 +16,16 @@
 
 <body>
 <div class="container">
+	<div class="row empty-row"></div>
 	<div class="row question-bar">
-    	<div class="col-md-6 col-sm-6 col-xs-6">
-        	<a href="index.jsp" class="back">顺序练习</a>
+    	<div class="col-md-3 col-sm-3 col-xs-3">
+        	<a href="index.html" class="back"></a>
         </div>
-        <div class="col-md-6 col-sm-6 col-xs-6">
+		<div class="col-md-6 col-sm-6 col-xs-6"><span class="current-title">科目一顺序练习</span></div>
+        <div class="col-md-3 col-sm-3 col-xs-3">
         	<a href="javascript:void(0)" class="board" onclick="showquestionboard ()"></a>
         </div>
-    </div>    
+    </div>   
 	<div class="row question-col">
     	
     </div>
@@ -39,7 +41,6 @@
         </div>
     </div>
 </div>
-
 
 <!-- pop up window starts-->
 <div class="dialog-first dialog-another">
@@ -59,7 +60,7 @@
 <div class="dialog-another dialog-restart">
 	<div class="dialog-top">
     	<div class="begin">开始练习</div>
-        <div class="goon">上次练习到第3题，是否继续？</div>
+        <div class="goon"></div>
     </div>
     <div class="dialog-bottom">
     	<div class="cancel start-cancel">取消</div>
@@ -92,6 +93,7 @@ var questionid = 1;	  		//记录加载到第几道题目,初始值为1
 var prequestionrealid = 1;     //用于记录当前回答题目的上一题的questiono是多少
 var pagenum = 0;      		//记录请求到第几页了  （一页的数据是20道题目）
 var questiondata;    //记录20道题的全部信息
+var countquestions = 0;     //用于记录题数
 
 //var collectquestionids = [];      //收藏的题目的id
 var answerquestions = [];         //用于保存题目信息
@@ -186,7 +188,7 @@ function showpopwindow ()
 	
 	showwindow(obj,obj_overlay,true);
 
-	if (prequestionrealid == 0)
+	if (prequestionrealid == 0 || countquestions <= 0)
 	{
 		objcount.html("").html("已经是第一题了哦~");
 	}
@@ -208,15 +210,19 @@ function hidepopwindow ()
 function showrestartdialog (str)
 {
 	var obj = $('.dialog-restart');
+	var obj_overlay = $('.overlay-restart');
 	
-	showwindow(obj,true);
+	showwindow(obj,obj_overlay,true);
 	
 	var obj_tips = $('.dialog-restart .goon');
 	obj_tips.html("").html("上次练习到第" + str + "题，是否继续？");
 }
 function hiderestartdialog ()
 {
-
+	var obj = $('.dialog-restart');
+	var obj_overlay = $('.overlay-restart');
+	
+	hidewindow(obj,obj_overlay);
 }
 
 // TO DO: show the question board
@@ -319,6 +325,7 @@ function chooseoption(obj)
 	question[0] = questioncute;
 	question[1] = strT;
 	question[2] = str;
+	question[4] = true;
 	
 	if (strT == str)
 	{
@@ -342,6 +349,107 @@ function chooseoption(obj)
 	answerquestions.push(question);
 	//alert (answerquestions);
 }
+
+//多选题的选择方式
+//TO DO:get the selected choices
+function getmulselects(obj)
+{
+	var mulselects = "";
+	$(obj).parent().find('a').each(function()
+	{
+		if ($(this).hasClass('on'))
+		{
+			mulselects += $(this).attr('answer');
+		}
+	});
+	return mulselects;
+}
+
+//TO DO: to identify which choise is been chosen
+function choosemuloption(obj)
+{
+	if ($(obj).hasClass('on'))
+	{
+		$(obj).removeClass('on');
+	}
+	else
+	{
+		$(obj).addClass('on');
+	}
+	var myanswer = getmulselects(obj);
+	
+	var obj_submit = $('#btn_submitmul');
+	if(myanswer.length > 1)
+	{
+		obj_submit.removeAttr("disabled");
+	}
+	else
+	{
+		obj_submit.attr("disabled","disabled");
+	}
+}
+
+//TO DO: show the result
+function showchooseresult(obj,myanswer)
+{
+	//alert (obj);
+	
+	data = questiondata;
+	
+	var _obj_pre = obj.prev();
+	
+	var trueanswer = _obj_pre.attr('trueanswer');
+	var questioncute = _obj_pre.prev().attr('questioncute');   //因为此时的情况是，questionno是在question-title中的
+	
+	var question = new Array();
+	
+	question[0] = questioncute;
+	question[1] = trueanswer;
+	question[2] = myanswer;
+	question[4] = false;
+	
+	_obj_pre.find("a").each(function ()
+	{
+		var _itemanswer = $(this).attr('answer');
+		var _toaddclass = "";
+		var _isitemright = trueanswer.indexOf(_itemanswer) > -1;
+		var _ismychoose = myanswer.indexOf(_itemanswer) > -1;
+		if (_isitemright) 
+		{
+			_toaddclass = _ismychoose ? "item-right": "item-no-wrong";
+        }
+		else 
+		{
+			_toaddclass = _ismychoose ? "item-wrong": "";
+			changebuttonsstatement(false);
+			question[3] = false;
+        }
+		$(this).addClass(_toaddclass);
+		$(this).attr("onclick", "");
+	});
+	
+	if (myanswer == trueanswer)
+	{
+		changebuttonsstatement(true);
+		question[3] = true;
+		
+		setTimeout("loadNextQuestion (data)",1000);
+	}	
+	
+	answerquestions.push(question);
+	//alert (answerquestions.length); 	
+}
+
+//TO DO: compare and show the result
+function submitmuloption(obj)
+{
+	var _parent = $(obj).parent();
+
+	var mychoose = getmulselects(_parent);
+	
+	showchooseresult(_parent,mychoose);
+}
+
 
 //TO DO: clean all the structure for rewritting
 function cleanStructure()
@@ -382,7 +490,7 @@ function showItems2(data)
 	//alert(data);
 	questiondata  = data;
 	
-	alert (questionid);
+	//alert (questionid);
 	
 	//TO DO: load question title 
 	loadQuestionTitle (data,questionid);
@@ -432,18 +540,30 @@ function loadQuestionTitle (data,questionid)
 	
 	var _addclass = "";
 	
-	if (data.list[questionid-1].questiontype == 1 || data.list[questionid-1].questiontype == 3)
+	if (type == 4)
 	{
-		_addclass = "single";
-	}
-	else if (data.list[questionid-1].questiontype == 2 || data.list[questionid-1].questiontype == 4)
-	{
-		_addclass = "if";
+		_addclass = "animation";
 	}
 	else
 	{
-		alert ("数据出错");
+		if (data.list[questionid-1].questiontype == 1 || data.list[questionid-1].questiontype == 3)
+		{
+			_addclass = "single";
+		}
+		else if (data.list[questionid-1].questiontype == 2 || data.list[questionid-1].questiontype == 4)
+		{
+			_addclass = "if";
+		}
+		else if (data.list[questionid-1].questiontype == 5)
+		{
+			_addclass = "multi";
+		}
+		else
+		{
+			alert ("数据出错");
+		}
 	}
+	
 	parentDiv.addClass(_addclass);
 	
 	parentDiv.attr('questioncute',data.list[questionid-1].questionno);
@@ -451,14 +571,16 @@ function loadQuestionTitle (data,questionid)
 	//alert ("保存的上一题的题号为：" + prequestionrealid);
 
 	var childP = $('<p></p>');	
-	childP.html(data.list[questionid-1].questionno + "、" +data.list[questionid-1].question);
+	var tihao = countquestions;
+	
+	childP.html((tihao+1) + "、" +data.list[questionid-1].question);
 	parentDiv.append(childP);
 	
 	//如果是有图片或者动画的，那么就要判断、加载
-	if (data.list[questionid-1].animationflag)
+	if (data.list[questionid-1].animationimg != "")
 	{
 		var childImg = $('<img>');
-		childImg.attr('src','/driverweb/examination/img/' + data.list[questionid-1].animationimg);
+		childImg.attr('src','../examination/img/' + data.list[questionid-1].animationimg);
 		childImg.addClass('img-responsive');
 		parentDiv.append(childImg);
 	}
@@ -530,7 +652,16 @@ function loadQuestionItems (data,questionid)  ////data.list[page].answer,data.li
 		
 		childArrayA[i] = strA;
 		childArrayA[i].attr('href','javascript:void(0)');
-		childArrayA[i].attr('onclick','chooseoption(this)');
+		
+		if (data.list[questionid-1].questiontype == 5)
+		{
+			childArrayA[i].attr('onclick','choosemuloption(this)');
+		}
+		else
+		{
+			childArrayA[i].attr('onclick','chooseoption(this)');	
+		}
+		
 		childArrayA[i].attr('answer',i+1);
 		
 		strDivS.addClass('item-state');
@@ -545,6 +676,26 @@ function loadQuestionItems (data,questionid)  ////data.list[page].answer,data.li
 		parentDiv.append(childArrayA[i]);
 	}
 	
+	//alert (childArrayA);
+	ancestorDiv.append(parentDiv);
+	
+	if (data.list[questionid-1].questiontype == 5)
+	{
+		//append the 'submit' button
+		var parentDivButton = $('<div></div>');
+		parentDivButton.addClass('col-md-12 col-sm-12 col-xs-12 question-btn');
+		
+		var childButton = $('<button></button>');
+		childButton.html("提交");
+		childButton.attr('type','button');
+		childButton.attr('id','btn_submitmul');
+		childButton.attr('onclick','submitmuloption(this)');
+		childButton.attr('disabled','disabled');
+		parentDivButton.append(childButton);
+		
+		ancestorDiv.append(parentDivButton);
+	}
+	
 	if (answerquestions.length > 0)
 	{
 		if (isInArray(answerquestions,questionon))
@@ -552,26 +703,52 @@ function loadQuestionItems (data,questionid)  ////data.list[page].answer,data.li
 			var index = returnindex(answerquestions,questionon);
 			var arightindex = answerquestions[index][1];
 			var awrongindex = answerquestions[index][2];
+			var ismulti = answerquestions[index][4];
 
-			if (answerquestions[index][1] == answerquestions[index][2])
+			if (ismulti)
 			{
-				childArrayA[arightindex-1].addClass('item-right');
+				if (answerquestions[index][1] == answerquestions[index][2])
+				{
+					childArrayA[arightindex-1].addClass('item-right');
+				}
+				else
+				{
+					childArrayA[arightindex-1].addClass('item-right');
+					childArrayA[awrongindex-1].addClass('item-wrong');
+				}
 			}
 			else
 			{
-				childArrayA[arightindex-1].addClass('item-right');
-				childArrayA[awrongindex-1].addClass('item-wrong');
+				parentDiv.find("a").each(function ()
+				{
+					var _itemanswer = $(this).attr('answer');
+					var _toaddclass = "";
+					var _isitemright = arightindex.indexOf(_itemanswer) > -1;
+					var _ismychoose = awrongindex.indexOf(_itemanswer) > -1;
+					if (_isitemright) 
+					{
+						_toaddclass = _ismychoose ? "item-right": "item-no-wrong";
+					}
+					else 
+					{
+						_toaddclass = _ismychoose ? "item-wrong": "";
+						changebuttonsstatement(false);
+					}
+					$(this).addClass(_toaddclass);
+					$(this).attr("onclick", "");
+				});
+						
+				parentDivButton.empty();
 			}
 		}
 	}
-	
-	//alert (childArrayA);
-	ancestorDiv.append(parentDiv);
 }
 
 //TO DO:load best explain
-function loadBestExplain(data,questionid)
+function loadBestExplain(data)
 {
+	var questionno = $('.question-item').attr('questioncute') || $('.question-title').attr('questioncute');
+	
 	var ancestorDiv = $('.best-explain');
 		
 	var childP = $('<p></p>');
@@ -587,9 +764,9 @@ function loadBestExplain(data,questionid)
 	
 	if (answerquestions.length > 0)
 	{
-		if (isInArray(answerquestions,questionid))
+		if (isInArray(answerquestions,questionno))
 		{
-			var index = returnindex(answerquestions,questionid);
+			var index = returnindex(answerquestions,questionno);
 			var arightindex = answerquestions[index][1];
 			var awrongindex = answerquestions[index][2];
 			var isopen = answerquestions[index][3];
@@ -660,7 +837,25 @@ function loadFooterBtn ()
 //TO DO: load the question board
 function loadQuestionBoard ()
 {
-	var questionnum = 1229;
+	var questionnum;
+	
+	if (type == 1)
+	{
+		questionnum = 1229;
+	}
+	else if (type == 2)
+	{
+		questionnum = 1094;
+	}
+	else if (type == 4)
+	{
+		
+		questionnum = 23;
+	}
+	else
+	{
+		alert ("数据出错啦！");
+	}
 	var parentul = $('ul.ul-board');
 	
 	for (var i=0;i<questionnum;i++)
@@ -677,6 +872,28 @@ function loadQuestionBoard ()
 //TO DO: go to the appointed question
 function gotoquestion (questionnum)
 {
+	countquestions = questionnum - 1;
+	
+	var _currentquestion = countquestions + 1;
+	
+	//本地存储：存储当前答题进行到哪一题了
+	if (type == 1)
+	{
+		window.localStorage.setItem("currentquestion1",_currentquestion);
+	}
+	else if (type == 2)
+	{
+		window.localStorage.setItem("currentquestion2",_currentquestion);
+	}
+	else if (type == 4)
+	{
+		window.localStorage.setItem("currentquestion3",_currentquestion);
+	}
+	else
+	{
+		alert ("数据出错啦！");
+	}
+	
 	if (questionnum%20 == 0)
 	{
 		questionid = 20;
@@ -693,11 +910,11 @@ function gotoquestion (questionnum)
 	{
 		pagenum = 0;
 	}
-	alert ("questionid shi :" + questionid);
+	//alert ("questionid shi :" + questionid);
 	
 	     //相当于要请求的pagenum
 	
-	alert("the pagennum in gotoquestion is " + pagenum);
+	//alert("the pagennum in gotoquestion is " + pagenum);
 	
 	params = {action:"GETEXAMINATION",type:type,studentid:18,pagenum:pagenum};
 	jQuery.post(active_url, params,showItems2, 'json'); 
@@ -712,6 +929,28 @@ function loadPreQuestion (data)
 	isopen = true; 
 	
 	data = questiondata;
+	
+	--countquestions;
+	
+	var _currentquestion = countquestions + 1;
+	
+	//本地存储：存储当前答题进行到哪一题了
+	if (type == 1)
+	{
+		window.localStorage.setItem("currentquestion1",_currentquestion);
+	}
+	else if (type == 2)
+	{
+		window.localStorage.setItem("currentquestion2",_currentquestion);
+	}
+	else if (type == 4)
+	{
+		window.localStorage.setItem("currentquestion3",_currentquestion);
+	}
+	else
+	{
+		alert ("数据出错啦！");
+	}
 	
 	var record = --questionid;
 	
@@ -733,13 +972,10 @@ function loadPreQuestion (data)
 		questionid = 1;
 	}
 	
-	var dividquestionid = (prequestionrealid)/20;     //有待验证是否正确
-	//alert ("zai pre han shu zhong de zhi " + prequestionrealid);
-	//alert ("整除的数的值 " + dividquestionid);
-	
 	//先判断当前是否是第一题	
-	if (prequestionrealid == 0)
+	if (pagenum == 0  && questionid == 1)
 	{
+		countquestions = 0;
 		showpopwindow ();
 		questionid = 1;
 		return false;           //这里的意思是立即结束这个函数
@@ -748,11 +984,11 @@ function loadPreQuestion (data)
 	if (pagenum >= 1)
 	{
 		//当questionid=1 并且questionno为20的倍数的时候，就应该请求上一页的数据,依次类推
-		if ((parseInt(dividquestionid) == dividquestionid)) 
+		if (((countquestions+1)%20 == 0)) 
 		{
 			pagenum--;
 			
-			alert ("新请求的一章页的页数为：" + pagenum);
+			//alert ("新请求的一章页的页数为：" + pagenum);
 			questionid = 20;
 			//alert ("重置：" + questionid);
 			
@@ -771,24 +1007,41 @@ function loadNextQuestion (data)
 	
 	data = questiondata;
 	
+	++countquestions;
 	++questionid;
 	
-	var dividquestionid = (questionid - 1)/20;
+	var _currentquestion = countquestions + 1;
 	
-	//alert ("sdfdsfdsfedfdfj       " + prequestionrealid);
+	//本地存储：存储当前答题进行到哪一题了
+	if (type == 1)
+	{
+		window.localStorage.setItem("currentquestion1",_currentquestion);
+	}
+	else if (type == 2)
+	{
+		window.localStorage.setItem("currentquestion2",_currentquestion);
+	}
+	else if (type == 4)
+	{
+		window.localStorage.setItem("currentquestion3",_currentquestion);
+	}
+	else
+	{
+		alert ("数据出错啦！");
+	}
 	
-	if ((parseInt(dividquestionid) == dividquestionid) && data.hasmore == 1 )
+	if ((countquestions%20 == 0)  && (data.hasmore == 1))
 	{
 		pagenum++;
 		
-		alert ("新请求的一章页的页数为：" + pagenum);
+		//alert ("新请求的一章页的页数为：" + pagenum);
 		questionid = 1;
 		//alert ("重置：" + questionid);
 		
 		params = {action:"GETEXAMINATION",type:type,studentid:18,pagenum:pagenum};
 		jQuery.post(active_url, params, showItems, 'json');
 	}
-	else if (prequestionrealid == 1228)
+	else if ((type == 1 && prequestionrealid == 1228) || (type == 2 && countquestions == 1094) || (type == 4 && countquestions == 23))
 	{
 		//alert ("没有下页的数据了");
 		showpopwindow ();
@@ -808,13 +1061,13 @@ function loadNextQuestion (data)
 	//TO DO: load best explain
 	loadBestExplain(data,questionid);    //data.list[0].commentate
 	
-	
+	//alert (" zhe ge shi bao cun de " + answerquestions);
 }
 	
 //TO DO: change the statement and presentation of the "collect" button
 function setcollect ()
 {
-	alert ("确实执行了");
+	//alert ("确实执行了");
 	var collectobj = $('.collect');
 	collectobj.addClass('collected').html("取消收藏");
 	collectobj.removeAttr('onclick').attr('onclick','removecollectquestion()');
@@ -871,10 +1124,8 @@ function removecollectquestion ()
 	var studentid = 18;
 	var questionid = $('.question-title').attr('questioncute');   //变量： 题目id号
 	
-	//alert ("当前您想移除的题目的id号为：" + questionid);
-	
 	$.ajax({
-		url: "examination",
+		url: "../examination",
 		data:
 			{
 			action:"REMOVEQUESTIONFAVORITES",
@@ -910,9 +1161,44 @@ $(document).ready(function ()
 {
 	loadQuestionBoard ();
 	
+	var _currentquestion_;
+	
+	if (type == 1)
+	{
+		_currentquestion_ = window.localStorage.getItem("currentquestion1");
+		
+		if (_currentquestion_ != null)
+		{
+			showrestartdialog (_currentquestion_);
+		}
+	}
+	else if (type == 2)
+	{
+		_currentquestion_ = window.localStorage.getItem("currentquestion2");
+		if (_currentquestion_ != null)
+		{
+			showrestartdialog (_currentquestion_);
+		}
+	}
+	else if (type == 4)
+	{
+		_currentquestion_ = window.localStorage.getItem("currentquestion3");
+		if (_currentquestion_ != null)
+		{
+			showrestartdialog (_currentquestion_);
+		}
+	}
+	else
+	{
+		alert ("数据出错啦！");
+	}
+	
 	var obj_cancel = $('.only-certain');
 	var objoverlay1 = $('.overlay-first');
 	var objoverlay2 = $('.overlay-board');
+	var btn_cancel = $('.start-cancel');
+	var btn_certain = $('.start-certain');
+	var overylay3 = $('.overlay-restart');
 	
 	obj_cancel.on('click',function ()
 	{
@@ -929,7 +1215,20 @@ $(document).ready(function ()
 	objoverlay2.on('click',function ()
 			{
 				hidequestionboard();
-			})
+			});
+	btn_certain.on('click',function ()
+			{
+				gotoquestion(_currentquestion_);
+				hiderestartdialog ();
+			});
+	btn_cancel.on('click',function ()
+			{
+				hiderestartdialog ();
+			});
+	overylay3.on('click',function ()
+			{
+				hiderestartdialog ();
+			});
 });
 </script>
 </body>
