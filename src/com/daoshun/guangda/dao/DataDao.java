@@ -1,6 +1,7 @@
 package com.daoshun.guangda.dao;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -11,6 +12,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import com.daoshun.guangda.NetData.CoinReportBySchool;
 
 
 @Repository("dataDao")
@@ -561,6 +564,16 @@ public class DataDao {
 		List<Object> list = query.list();
 		return list;
 	}
+	public List<Object> getCoinReportMontlyBySchool(Date startdate,Date enddate,Integer schoolid){
+		Session session=this.getSession();
+		SQLQuery query= session.createSQLQuery("{Call coinreportmonthlybyschool(?,?,?)}");                         
+		query.setDate(0, startdate);
+		query.setDate(1, enddate);
+		query.setInteger(2, schoolid);
+//		query.executeUpdate();
+		List<Object> list = query.list();
+		return list;
+	}
 	public List<Object> getCoinReportDetail(String coachid,String ownertype,Date startdate,Date enddate){
 		Session session=this.getSession();
 		SQLQuery query= session.createSQLQuery("{Call getstudentcoindetailmontly(?,?,?,?)}");
@@ -568,6 +581,16 @@ public class DataDao {
 		query.setString(1, ownertype);
 		query.setDate(2, startdate);
 		query.setDate(3, enddate);
+//		query.executeUpdate();
+		List<Object> list = query.list();
+		return list;
+	}
+	public List<Object> getCoinReportDetailBySchool(String coachid,Date startdate,Date enddate){
+		Session session=this.getSession();
+		SQLQuery query= session.createSQLQuery("{Call getstudentcoindetailmontlybyschool(?,?,?)}");
+		query.setString(0, coachid);
+		query.setDate(1, startdate);
+		query.setDate(2, enddate);
 //		query.executeUpdate();
 		List<Object> list = query.list();
 		return list;

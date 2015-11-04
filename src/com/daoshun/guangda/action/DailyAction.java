@@ -10,9 +10,12 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import javax.annotation.Resource;
@@ -27,6 +30,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.hssf.util.Region;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -39,7 +43,10 @@ import com.daoshun.common.QueryResult;
 import com.daoshun.guangda.NetData.CoachAccountDaily;
 import com.daoshun.guangda.NetData.CoachApplyDailyData;
 import com.daoshun.guangda.NetData.CoachDailyData;
+import com.daoshun.guangda.NetData.CoinReportBySchool;
 import com.daoshun.guangda.NetData.CoinReportMontly;
+import com.daoshun.guangda.NetData.CoinDetailMontlyStudentInfoOfCoach;
+import com.daoshun.guangda.NetData.CoinReportMontlyOfSchoolData;
 import com.daoshun.guangda.NetData.CouponReportMontly;
 import com.daoshun.guangda.NetData.SchoolBillDaily;
 import com.daoshun.guangda.NetData.SchoolDailyData;
@@ -47,14 +54,19 @@ import com.daoshun.guangda.NetData.AccountReportDaily;
 import com.daoshun.guangda.NetData.StudentAccountDaily;
 import com.daoshun.guangda.NetData.StudentApplyDailyData;
 import com.daoshun.guangda.NetData.StudentCoinDetail;
+import com.daoshun.guangda.NetData.StudentCoinReportBySchool;
 import com.daoshun.guangda.NetData.StudentCouponDetail;
 import com.daoshun.guangda.NetData.XiaoBaDaily;
 import com.daoshun.guangda.pojo.AreaInfo;
 import com.daoshun.guangda.pojo.DriveSchoolInfo;
 import com.daoshun.guangda.pojo.OrderInfo;
+import com.daoshun.guangda.pojo.daymontlyreportInfo;
 import com.daoshun.guangda.service.ICUserService;
 import com.daoshun.guangda.service.IDailyService;
 import com.daoshun.guangda.service.IDriveSchoolService;
+
+import net.sf.jxls.exception.ParsePropertyException;
+import net.sf.jxls.transformer.XLSTransformer;
 
 @ParentPackage("default")
 @Controller
@@ -164,7 +176,12 @@ public class DailyAction extends BaseAction {
 	
 	private List<CoinReportMontly> coinreportmontly;
 	
+	
+	private List<CoinReportBySchool> coinreportmontlybyschool;
+	
 	private List<StudentCoinDetail> studentcoinlist;
+	
+	private List<StudentCoinReportBySchool> studentcoinlistbyschool;
 	
 	private List<StudentCouponDetail> studentcoupondetail;
 	
@@ -177,6 +194,8 @@ public class DailyAction extends BaseAction {
 	private List<DriveSchoolInfo> driveSchoollist;
 	
 	private List<Object> cuserinfolist;//驾校报表list
+	
+	private List<daymontlyreportInfo> dailyReports;
 
 	/**
 	 * 系统日报
@@ -1293,6 +1312,161 @@ public class DailyAction extends BaseAction {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		filename = CommonUtils.properties.getProperty("uploadFilePath") + newfilename;
+		HttpServletResponse response = ServletActionContext.getResponse();
+		CommonUtils.downloadExcel(filename, "小巴币月报表", response);
+	}
+	/**
+	 * 小巴币驾校月报数据导出
+	 * 
+	 * @throws IOException
+	 * @throws InvalidFormatException 
+	 * @throws ParsePropertyException 
+	 */
+	@SuppressWarnings("deprecation")
+	@Action(value = "/CoinReportMontlyExportBySchool")
+	public void CoinReportMontlyExportBySchool() throws IOException, ParsePropertyException {
+		String newfilename = "";
+		String tplPath="";
+		Map<String, List<CoinReportBySchool>> beanParams = new HashMap<String, List<CoinReportBySchool>>();  
+		tplPath=DailyAction.class.getClassLoader().getResource("").getPath()+"/template/小巴币月报表-驾校jxls模板.xls";
+		//tplPath="D:/报表需求/小巴币月报表-驾校jxls模板.xls";
+		// 定义输出流，以便打开保存对话框begin
+		newfilename += CommonUtils.getTimeFormat(new Date(), "yyyyMMddhhmmssSSS") + "_" + (Math.random() * 100) + ".xls";
+		String filename = CommonUtils.properties.get("uploadFilePath") + newfilename;
+		File file = new File(filename);
+		if (!file.exists()) {
+			file.createNewFile();
+		}
+		int index=1;
+		List<Object> objm = dailyService.getCoinReportMontlyBySchool(CommonUtils.getDateFormat(starttime, "yyyy-MM-dd"), CommonUtils.getDateFormat(endtime, "yyyy-MM-dd"),CommonUtils.parseInt(schoolid, 0));
+		coinreportmontlybyschool = new ArrayList<CoinReportBySchool>();
+		if (objm != null && objm.size() > 0) {
+			for (Object object : objm) {
+				indexnum++;
+				CoinReportBySchool cointemp = new CoinReportBySchool();
+				Object[] array = (Object[]) object;
+				cointemp.setIndex(index++);
+				if (array[1] != null) {
+					cointemp.setPayerid(array[1].toString());
+				}
+				if (array[2] != null) {
+					cointemp.setPayername(array[2].toString());
+				}
+				if (array[3] != null) {
+					cointemp.setSchool(array[3].toString());
+				
+				}
+				if (array[4] != null) {
+					cointemp.setPhone(array[4].toString());
+				}
+				if (array[5] != null) {
+					cointemp.setCoinnumber(new BigDecimal(array[5].toString()));
+				} else {
+					cointemp.setCoinnumber(new BigDecimal(0));
+				}
+				if (array[6] != null) {
+					cointemp.setCoinpay(new BigDecimal(array[6].toString()));
+				} else {
+					cointemp.setCoinpay(new BigDecimal(0));
+				}
+				if (array[7] != null) {
+					cointemp.setScoinchange(new BigDecimal(array[7].toString()));
+				} else {
+					cointemp.setCoinpay(new BigDecimal(0));
+				}
+				if (array[8] != null) {
+					cointemp.setCoinchange(new BigDecimal(array[8].toString()));
+				} else {
+					cointemp.setCoinchange(new BigDecimal(0));
+				}
+				if (array[9] != null) {
+					cointemp.setUnscoinchange(new BigDecimal(array[9].toString()));
+				} else {
+					cointemp.setUnscoinchange(new BigDecimal(0));
+				}
+				if (array[10] != null) {
+					cointemp.setUncoinchange(new BigDecimal(array[10].toString()));
+				} else {
+					cointemp.setUncoinchange(new BigDecimal(0));
+				}
+				if (array[11] != null) {
+					cointemp.setClasshour(CommonUtils.parseInt(array[11].toString(), 0));
+				} else {
+					cointemp.setClasshour(0);
+				}
+				if(!cointemp.getPayerid().equals("0"))
+				{
+
+				List<Object> objd=dailyService.getCoinReportDetailBySchool(cointemp.getPayerid(), CommonUtils.getDateFormat(starttime, "yyyy-MM-dd"), CommonUtils.getDateFormat(endtime, "yyyy-MM-dd"));
+				studentcoinlistbyschool=new ArrayList<StudentCoinReportBySchool>();
+						if (objd != null && objd.size() > 0) {
+							for (Object o1 : objd) {
+								Object[] olist=(Object[])o1;
+								StudentCoinReportBySchool tempstudent=new StudentCoinReportBySchool();
+								if (olist[1] != null) {
+									tempstudent.setPhone(olist[1].toString());
+								}
+								if (olist[2] != null) {
+									tempstudent.setName(olist[2].toString());
+								}
+								if (olist[3] != null) {
+									tempstudent.setScoinnumber(new BigDecimal(olist[3].toString()));
+								}
+								else {
+									tempstudent.setScoinnumber(new BigDecimal(0));
+								}
+								if (olist[4] != null) {
+									tempstudent.setCoinnumber(new BigDecimal(olist[4].toString()));
+								}
+								else {
+									tempstudent.setCoinnumber(new BigDecimal(0));
+								}
+								if (olist[5] != null) {
+									tempstudent.setUsedscoinnumber(new BigDecimal(olist[5].toString()));
+								}
+								else {
+									tempstudent.setUsedscoinnumber(new BigDecimal(0));
+								}
+								if (olist[6] != null) {
+									tempstudent.setUsedcoinnumber(new BigDecimal(olist[6].toString()));
+								}
+								else {
+									tempstudent.setUsedcoinnumber(new BigDecimal(0));
+								}
+								
+								if (olist[8] != null) {
+									tempstudent.setClasshour(olist[8].toString());
+								}
+								else {
+									tempstudent.setClasshour("0");
+								}
+								studentcoinlistbyschool.add(tempstudent);
+							}
+							cointemp.setStudentlist(studentcoinlistbyschool);
+						}
+						else
+						{
+							StudentCoinReportBySchool tempstudent=new StudentCoinReportBySchool();
+							studentcoinlistbyschool.add(tempstudent);
+							cointemp.setStudentlist(studentcoinlistbyschool);
+						}
+						coinreportmontlybyschool.add(cointemp);
+				}
+			}
+			
+		}
+		
+	    beanParams.put("coinreportmontlybyschool", coinreportmontlybyschool);  
+	    XLSTransformer former = new XLSTransformer();  
+
+	    try {
+			former.transformXLS(tplPath, beanParams, filename);
+		} catch (InvalidFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    
 		filename = CommonUtils.properties.getProperty("uploadFilePath") + newfilename;
 		HttpServletResponse response = ServletActionContext.getResponse();
 		CommonUtils.downloadExcel(filename, "小巴币月报表", response);
@@ -3228,69 +3402,14 @@ public class DailyAction extends BaseAction {
 			@SuppressWarnings("deprecation")
 			@Action(value = "/getaccountreportdaliy",results = { @Result(name = SUCCESS, location = "/accountreport.jsp") })
 			public String getaccountreportdaliy(){
-				if (CommonUtils.isEmptyString(addtime) || addtime == null) {
-					DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-					addtime = formatter.format(new Date());
+				DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+				if (CommonUtils.isEmptyString(starttime) || starttime == null) {
+					
+					starttime = formatter.format(new Date());
 				}
-				Object object = dailyService.getAccountReport(addtime);
-				Object[] obj=(Object[]) object;
-				accountreportdaliy=new AccountReportDaily();
-				if(obj[0]!=null)
-			        accountreportdaliy.setRegistcoach((Integer)obj[0]);
-				else
-					accountreportdaliy.setRegistcoach(0);
-				if(obj[1]!=null)
-			        accountreportdaliy.setRegiststudent((Integer) obj[1]);
-				else
-					 accountreportdaliy.setRegiststudent(0);
-				if(obj[2]!=null)
-					 accountreportdaliy.setApply((Integer) obj[2]);
-				else
-					 accountreportdaliy.setApply(0);
-				if(obj[3]!=null)
-			         accountreportdaliy.setCoachbeginclass((Integer) obj[3]);
-				else
-					 accountreportdaliy.setCoachbeginclass(0);
-				if(obj[4]!=null)
-			         accountreportdaliy.setCoursetimecount((Integer) obj[4]);
-				else
-					accountreportdaliy.setCoursetimecount(0);
-				if(obj[5]!=null)
-			        accountreportdaliy.setReservedstudent((Integer) obj[5]);
-				else
-					accountreportdaliy.setReservedstudent(0);
-				if(obj[6]!=null)
-			        accountreportdaliy.setReservedcoursetime((Integer) obj[6]);
-				else
-					accountreportdaliy.setReservedcoursetime(0);
-				if(obj[7]!=null)
-			        accountreportdaliy.setOrderbycash((Integer) obj[7]);
-				else
-					accountreportdaliy.setOrderbycash(0);
-				if(obj[8]!=null)
-			        accountreportdaliy.setOrderbycoupon((Integer) obj[8]);
-				else
-					accountreportdaliy.setOrderbycoupon(0);
-				if(obj[9]!=null)
-			        accountreportdaliy.setOrderbycoin((Integer) obj[9]);
-				else
-					accountreportdaliy.setOrderbycoin(0);
-				if(obj[10]!=null)
-			        accountreportdaliy.setOrdercancel((Integer) obj[10]);
-				else
-					accountreportdaliy.setOrdercancel(0);
-				if(obj[11]!=null)
-			        accountreportdaliy.setCash((Integer) obj[11]);
-				else
-					accountreportdaliy.setCash(0);
-				if(obj[12]!=null)
-			        accountreportdaliy.setCoupon((Integer) obj[12]);
-				else
-					accountreportdaliy.setCoupon(0);
-				if(obj[13]!=null)
-			        accountreportdaliy.setCoin((Integer) obj[13]);
-				else
-					accountreportdaliy.setCoin(0);
+				
+				dailyReports=dailyService.getAccountReportX(starttime, endtime);
+				
 			    
 			   return SUCCESS;
 			}
@@ -3409,6 +3528,17 @@ public class DailyAction extends BaseAction {
 		@SuppressWarnings("deprecation")
 		@Action(value = "/GotoCoinReportMontly",results = { @Result(name = SUCCESS, location = "/coinreportmontly.jsp") })
 		public String GotoCoinReportMontly()  {
+			return SUCCESS;
+		}
+		
+	   /**
+	   * 跳转到小巴币月报表-驾校
+	   * @throws IOException
+	   */
+		@SuppressWarnings("deprecation")
+		@Action(value = "/GotoCoinReportMontlyBySchool",results = { @Result(name = SUCCESS, location = "/coinreportmontlyForSchool.jsp") })
+		public String GotoCoinReportMontlyBySchool()  {
+			driveSchoollist = cuserService.getDriveSchoolInfo();
 			return SUCCESS;
 		}
 		 /**
@@ -4106,8 +4236,141 @@ public class DailyAction extends BaseAction {
 		this.schoolid = schoolid;
 	}
 
+	public List<daymontlyreportInfo> getDailyReports() {
+		return dailyReports;
+	}
 
+	public void setDailyReports(List<daymontlyreportInfo> dailyReports) {
+		this.dailyReports = dailyReports;
+	}
 
+	private int coachId;
+	private List<CoinReportMontlyOfSchoolData> coinReportForSchoolData;
+	public List<CoinReportMontlyOfSchoolData> getCoinReportForSchoolData() {
+		return coinReportForSchoolData;
+	}
+
+	public void setCoinReportForSchoolData(List<CoinReportMontlyOfSchoolData> coinReportForSchoolData) {
+		this.coinReportForSchoolData = coinReportForSchoolData;
+	}
+
+	@Action(value = "/getCoinReportForSchool", results = {
+			@Result(name = SUCCESS, location = "/coinreportmontlyForSchool.jsp") })
+	public String getCoinReportForSchool() {
+		int school = 0;
+		coinReportForSchoolData = new ArrayList<CoinReportMontlyOfSchoolData>();
+		driveSchoollist = cuserService.getDriveSchoolInfo();
+		DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+		if (schoolid != null) {
+			school = Integer.parseInt(schoolid);
+		}
+		List<Object> list = dailyService.getCoinReportMontlyBySchool(starttime, endtime, school);
+
+		Iterator<Object> iter = list.iterator();
+
+		while (iter.hasNext()) {
+			Object[] arr = (Object[]) iter.next();
+			CoinReportMontlyOfSchoolData report = new CoinReportMontlyOfSchoolData();
+			if (arr[0] != null) {
+				report.setId((Integer) arr[0]);
+			}
+			if (arr[1] != null) {
+				report.setC_payerid((Integer) arr[1]);
+			}
+			if (arr[2] != null) {
+				report.setC_name((String) arr[2]);
+			}
+			if (arr[3] != null) {
+				report.setC_school((String) arr[3]);
+			}
+			if (arr[4] != null) {
+				report.setC_phone((String) arr[4]);
+			}
+			if (arr[5] != null) {
+				report.setC_coinnumber((BigDecimal) arr[5]);
+			}
+			if (arr[6] != null) {
+				report.setC_coinpay((BigDecimal) arr[6]);
+			}
+			if (arr[7] != null) {
+				report.setC_scoinchange((BigDecimal) arr[7]);
+			}
+			if (arr[8] != null) {
+				report.setC_coinchange((BigDecimal) arr[8]);
+			}
+			if (arr[9] != null) {
+				report.setC_unscoinchange((BigDecimal) arr[9]);
+			}
+			if (arr[10] != null) {
+				report.setC_uncoinchange((BigDecimal) arr[10]);
+			}
+			if (arr[11] != null) {
+				report.setC_classhour((Integer) arr[12]);
+			}
+			if (arr[12] != null) {
+				report.setC_type((Integer) arr[12]);
+			}
+			
+			CoinDetailMontlyStudentInfoOfCoach detail =null;
+			
+			List<Object> listDetail = dailyService.getCoinReportDetailMontlyBySchool(report.getC_payerid(), starttime,
+					endtime);
+			Iterator<Object> iterD = listDetail.iterator();
+				detail = new CoinDetailMontlyStudentInfoOfCoach();
+			if (listDetail!=null && listDetail.size()!=0) {
+				while (iterD.hasNext()) {
+					
+					Object[] arrD = (Object[]) iterD.next();
+					if (arrD[0] != null) {
+						detail.setId((Integer) arrD[0]);
+					}
+					if (arrD[1] != null) {
+						detail.setC_phone((String) arrD[1]);
+					}
+					if (arrD[2] != null) {
+						detail.setC_name((String) arrD[2]);
+					}
+					if (arrD[3] != null) {
+						detail.setC_scoinnumber((BigDecimal) arrD[3]);
+					}
+					if (arrD[4] != null) {
+						detail.setC_coinnumber((BigDecimal) arrD[4]);
+					}
+					if (arrD[5] != null) {
+						detail.setC_usedscoinnumber((BigDecimal) arrD[5]);
+					}
+					if (arrD[6] != null) {
+						detail.setC_usedcoinnumber((BigDecimal) arrD[6]);
+					}
+					if (arrD[7] != null) {
+						detail.setC_coinpay((BigDecimal) arrD[7]);
+					}
+					if (arrD[8] != null) {
+						detail.setC_classhour((Integer) arrD[8]);
+					}
+					report.addDetail(detail);
+					report.countPlus();
+				}
+				
+			}else
+			{
+				report.addDetail(new CoinDetailMontlyStudentInfoOfCoach());
+				report.countPlus();
+			}
+
+			coinReportForSchoolData.add(report);
+		}
+		return SUCCESS;
+	}
+
+	public int getCoachId() {
+		return coachId;
+	}
+
+	public void setCoachId(int coachId) {
+		this.coachId = coachId;
+	}
+   
 
 
 	

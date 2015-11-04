@@ -1,5 +1,6 @@
 package com.daoshun.guangda.serviceImpl;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.QueryResult;
+import com.daoshun.guangda.NetData.CoinReportBySchool;
 import com.daoshun.guangda.pojo.AdminInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.DriveSchoolInfo;
@@ -18,7 +20,7 @@ import com.daoshun.guangda.pojo.OrderInfo;
 import com.daoshun.guangda.pojo.OrderPrice;
 import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.service.IDailyService;
-
+import com.daoshun.guangda.pojo.daymontlyreportInfo;
 
 @Service("dailyService")
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
@@ -109,6 +111,68 @@ public class DailyServiceImpl extends BaseServiceImpl implements IDailyService {
 		Object obj = dataDao.getAccountReport(addtime);
 		return obj;
 	}
+	
+	//ChRx
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<daymontlyreportInfo> getAccountReportX(String starttime,String endtime)
+	{
+		StringBuffer hql=new StringBuffer("from daymontlyreportInfo where ");
+		String[] params=null;
+		Date start=null;
+		Date end=null;
+		SimpleDateFormat sdf = new SimpleDateFormat ("yyyy-MM-dd");
+		try {
+			if(!CommonUtils.isEmptyString(starttime))
+			{
+				start=sdf.parse(starttime);
+			}
+			if(!CommonUtils.isEmptyString(endtime))
+			{
+				end=sdf.parse(endtime);
+			}
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Boolean isStartTimeEmpty=CommonUtils.isEmptyString(starttime);
+		if(!isStartTimeEmpty)
+		{
+			hql.append("querydate>=:starttime");
+			params=new String[1];
+			params[0]="starttime";
+		}
+		if(!CommonUtils.isEmptyString(endtime))
+		{   if(!isStartTimeEmpty)
+			{
+				hql=new StringBuffer("from daymontlyreportInfo where querydate between :starttime and :endtime");
+				params=new String[2];
+				params[0]="starttime";
+				params[1]="endtime";
+			}else
+			{
+				hql.append("querydate<=:endtime");
+				params=new String[1];
+				params[0]="endtime";
+			}
+		}
+		Object p=new Object();
+		List<daymontlyreportInfo> result=null;
+		if(params.length==1)
+		{
+			if(isStartTimeEmpty)
+			{
+				result=(List<daymontlyreportInfo>)dataDao.getObjectsViaParam(hql.toString(), params,end);
+			}else
+			{
+				result=(List<daymontlyreportInfo>)dataDao.getObjectsViaParam(hql.toString(), params,start);
+			}
+		}else
+		{
+			  result=(List<daymontlyreportInfo>)dataDao.getObjectsViaParam(hql.toString(), params,start,end);
+		}
+		return result;
+	}
 
 	@Override
 	public List<Object> getCouponReportMontly(Date startdate,Date enddate,String schoolId){
@@ -119,6 +183,11 @@ public class DailyServiceImpl extends BaseServiceImpl implements IDailyService {
 	@Override
 	public List<Object> getCoinReportMontly(Date startdate,Date enddate) {
 		List<Object> Object = dataDao.getCoinReportMontly(startdate, enddate);
+		return Object;
+	}
+	@Override
+	public List<Object> getCoinReportMontlyBySchool(Date startdate,Date enddate,Integer schoolid) {
+		List<Object> Object = dataDao.getCoinReportMontlyBySchool(startdate, enddate,schoolid);
 		return Object;
 	}
 	@Override
@@ -133,6 +202,12 @@ public class DailyServiceImpl extends BaseServiceImpl implements IDailyService {
 		return Object;
 	}
 
+	@Override
+	public List<Object> getCoinReportDetailBySchool(String coachid, Date startdate, Date enddate) {
+		List<Object> Object = dataDao.getCoinReportDetailBySchool(coachid, startdate, enddate);
+		return Object;
+	}
+	
 	@Override
 	public QueryResult<OrderInfo> getOrderInfos(String starttime,String endtime,int pageIndex,int pagesize) {
 		StringBuffer hql=new StringBuffer("from OrderInfo where 1=1");
@@ -162,23 +237,23 @@ public class DailyServiceImpl extends BaseServiceImpl implements IDailyService {
 			}
 			order.setCoachInfo(coachInfo);
 			order.setSchoolInfo(school);
-			//1 ”‡∂Ó  2 –°∞Õ»Ø  3 –°∞Õ±“
+			//1 ‰ΩôÈ¢ù  2 Â∞èÂ∑¥Âà∏  3 Â∞èÂ∑¥Â∏Å
 			if (order.getPaytype()==1) {
-				order.setPaytypename("”‡∂Ó");
+				order.setPaytypename("‰ΩôÈ¢ù");
 				order.setPaidMoney(String.valueOf(order.getTotal()));
 			}
 			if (order.getPaytype()==1) {
-				order.setPaytypename("–°∞Õ»Ø");
+				order.setPaytypename("Â∞èÂ∑¥Âà∏");
 				order.setPaidMoney("0");
 			}
 			if (order.getPaytype()==1) {
-				order.setPaytypename("–°∞Õ±“");
+				order.setPaytypename("Â∞èÂ∑¥Â∏Å");
 				order.setPaidMoney("0");
 			}
 			if(order.getMixCoin()!=0 && order.getMixMoney()!=0)
 			{
-				order.setPaytypename("ªÏ∫œ÷ß∏∂");
-				order.setPaidMoney("±“:"+order.getMixCoin()+",”‡:"+order.getMixMoney());
+				order.setPaytypename("Ê∑∑ÂêàÊîØ‰ªò");
+				order.setPaidMoney("Â∏Å:"+order.getMixCoin()+",‰Ωô:"+order.getMixMoney());
 			}
 			OrderPrice orderPrice=dataDao.getObjectById(OrderPrice.class,order.getOrderid());
 			order.setSubjectname(orderPrice.getSubject());
@@ -215,20 +290,20 @@ public class DailyServiceImpl extends BaseServiceImpl implements IDailyService {
 			}
 			order.setCoachInfo(coachInfo);
 			order.setSchoolInfo(school);
-			//1 ”‡∂Ó  2 –°∞Õ»Ø  3 –°∞Õ±“
+			//1 ‰ΩôÈ¢ù  2 Â∞èÂ∑¥Âà∏  3 Â∞èÂ∑¥Â∏Å
 			if (order.getPaytype()==1) {
-				order.setPaytypename("”‡∂Ó");
+				order.setPaytypename("‰ΩôÈ¢ù");
 			}
 			if (order.getPaytype()==1) {
-				order.setPaytypename("–°∞Õ»Ø");
+				order.setPaytypename("Â∞èÂ∑¥Âà∏");
 			}
 			if (order.getPaytype()==1) {
-				order.setPaytypename("–°∞Õ±“");
+				order.setPaytypename("Â∞èÂ∑¥Â∏Å");
 			}
 			if(order.getMixCoin()!=0 && order.getMixMoney()!=0)
 			{
-				order.setPaytypename("ªÏ∫œ÷ß∏∂");
-				order.setPaidMoney("±“:"+order.getMixCoin()+",”‡:"+order.getMixMoney());
+				order.setPaytypename("Ê∑∑ÂêàÊîØ‰ªò");
+				order.setPaidMoney("Â∏Å:"+order.getMixCoin()+",‰Ωô:"+order.getMixMoney());
 			}
 			OrderPrice orderPrice=dataDao.getObjectById(OrderPrice.class,order.getOrderid());
 			order.setSubjectname(orderPrice.getSubject());
@@ -238,5 +313,52 @@ public class DailyServiceImpl extends BaseServiceImpl implements IDailyService {
 	}else {
 		return null;
 	}
+}
+//ChRx
+@Override
+public List<Object> getCoinReportMontlyBySchool(String startdate,String enddate,int schoolid)
+{
+	 SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+	 Date startDate=null;
+	 Date endDate=null;
+	try {
+		startDate = sdf.parse(startdate);
+		
+	} catch (ParseException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	 
+	try {
+		endDate=sdf.parse(enddate);
+	} catch (ParseException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	 List<Object> list=dataDao.getCoinReportMontlyBySchool(startDate, endDate, schoolid);
+	return list;
+}
+@Override
+public List<Object> getCoinReportDetailMontlyBySchool(int coachId,String dateStart,String dateEnd)
+{
+	 SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+	 Date startdate=null;
+	 Date enddate=null;
+	 try {
+		startdate=sdf.parse(dateStart);
+	} catch (ParseException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	 try {
+		enddate=sdf.parse(dateEnd);
+	} catch (ParseException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	 String idOfCoach=String.valueOf(coachId);
+
+	List<Object>list=dataDao.getCoinReportDetailBySchool(idOfCoach, startdate, enddate);
+	return list;
 }
 }
