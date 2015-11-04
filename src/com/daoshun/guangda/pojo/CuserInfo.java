@@ -454,10 +454,16 @@ public class CuserInfo implements Serializable {
 	private Date modifydate;
 	
 	/**
-	 * 
+	 * 科目二范围最小值
 	 */
-	@Column(name = "subject2begin", columnDefinition = "INT default 0")
-	private Integer subject2begin=0;
+	@Column(name = "subject2min", columnDefinition = "INT default 0")
+	private Integer subject2min=0;
+	
+	/**
+	 * 科目二范围最大值
+	 */
+	@Column(name = "subject2max", columnDefinition = "INT default 0")
+	private Integer subject2max=0;
 	
 	
 	public Integer getDevicetype() {

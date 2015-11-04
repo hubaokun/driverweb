@@ -1,0 +1,616 @@
+/* CSS Document */
+/*鈥斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�攖he style for the conmmon鈥斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺��*/
+body
+{
+	font-family:"Microsoft YaHei";
+}
+
+/*pop up window*/
+.overlay,.overlay-first,.overlay-restart,.overlay-board
+{
+	background-color: #000;
+    filter: alpha(opacity=60);
+    opacity: 0.6;
+    z-index: 110;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    display: none;
+}
+.dialog
+{
+    width: 100%;
+    height: auto;
+    background: #fff;
+    display: none;
+    position: fixed;
+    z-index: 1000;
+	bottom:0px;
+	animation: popwindowslider 0.5s linear;
+}
+.dialog .dialog-top
+{
+	text-align:center;
+	border-bottom:1px solid #ececec;
+}
+.dialog .dialog-top .begin
+{
+	font-size:12px;
+	padding-top:25px;
+	font-weight:700;
+}
+.dialog .dialog-top .goon
+{
+	margin-top: 21px;
+    margin-bottom: 29px;
+    font-size: 14px;
+    line-height: 20px;
+    padding: 0 12px;
+}
+.dialog .dialog-bottom div
+{
+	text-align:center;
+	display:inline-block;
+	font-size:13px;
+}
+.dialog .dialog-bottom .cancel
+{
+	width: 48%;
+    color: #737572;
+    height: 45px;
+    line-height: 45px;
+    border-right: 1px solid #cecece;
+}
+.dialog .dialog-bottom .certain
+{
+	width: 48%;
+    color: rgb(80,203,151);
+}
+.dialog .dialog-bottom .only-certain
+{
+	width:100%;
+	min-height:40px;
+	line-height:40px;
+	text-align:center;
+}
+
+/*another style for the pop up window*/
+.dialog-another
+{
+	min-width:300px;
+	height: auto;
+    background: #fff;
+    display: none;
+    position: fixed;
+    z-index: 1000;
+}
+.dialog-another .dialog-top
+{
+	text-align:center;
+	border-bottom:1px solid #ececec;
+}
+.dialog-another .dialog-top .begin
+{
+	font-size:12px;
+	padding-top:25px;
+	font-weight:700;
+}
+.dialog-another .dialog-top .goon
+{
+	margin-top: 21px;
+    margin-bottom: 29px;
+    font-size: 14px;
+    line-height: 20px;
+    padding: 0 12px;
+}
+.dialog-another .dialog-bottom div
+{
+	text-align:center;
+	display:inline-block;
+	font-size:13px;
+}
+.dialog-another .dialog-bottom .cancel
+{
+	width: 48%;
+    color: #737572;
+    height: 45px;
+    line-height: 45px;
+    border-right: 1px solid #cecece;
+}
+.dialog-another .dialog-bottom .certain
+{
+	width: 48%;
+    color: rgb(80,203,151);
+}
+.dialog-another .dialog-bottom .only-certain
+{
+	width:100%;
+	min-height:40px;
+	line-height:40px;
+	text-align:center;
+}
+
+/*dialog for board*/
+.dialog-board
+{
+	width: 100%;
+    height: 254px;
+    background-color: rgb(255,255,255);
+    display: none;
+    position: fixed;
+    z-index: 1000;
+	bottom:0px;
+	animation: popwindowslider 0.3s linear;
+}
+.dialog-board .board-content .board-inner
+{
+	height:234px;
+	overflow-y: auto;
+    overflow-x: hidden;
+	margin-top: 20px;
+    margin-left: 3%;
+}
+ul.ul-board
+{
+	list-style: none;
+    display: block;
+
+}
+ul.ul-board li
+{
+	display: inline-block;
+    color: #fff;
+    font-size: 16px;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+}
+/*鈥斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�攖he style of the index.html鈥斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺��*/
+.question-bar
+{
+	background-color:rgb(83,162,16);
+	margin-bottom:15px;
+}
+.question-bar a.back
+{
+    display: block;
+    text-decoration: none;
+    background-image: url(../images/left-arrow.png);
+    background-repeat: no-repeat;
+    background-position: left;
+    width: 100%;
+    background-size: auto 20px;
+    min-height: 35px;
+    line-height: 35px;
+    color: white;
+    font-size: 14px;
+    padding-left: 34px;
+}
+.question-bar a.board
+{
+	display: block;
+    text-decoration: none;
+    background-image: url(../images/tb_top.png);
+    background-repeat: no-repeat;
+    background-position: right;
+    width: 100%;
+    background-size: auto 20px;
+    min-height: 35px;
+    line-height: 35px;
+}
+.title-row
+{
+	background-color: rgb(222,222,222);
+    border-top: 1px solid rgb(199,199,199);
+}
+.title-row h1
+{
+	font-size: 15px;
+    color: #060606;
+	line-height:35px;
+}
+ul.subject-ul
+{
+}
+ul.subject-ul li
+{
+	position:relative;
+	border-bottom:1px solid #eee;
+} 
+ul.subject-ul li:last-child
+{
+	border-bottom-color:transparent;
+}
+ul.subject-ul li a
+{
+	color:#2a2a2a;
+	font-size:13px;
+	width:100%;
+	line-height:43px;
+	background-repeat:no-repeat;
+	background-position:left;
+	background-size: 20px;
+	text-indent:2em;
+	display:inline-block;
+	text-decoration:none;
+}
+.order-item
+{
+	background-image:url(../images/order-list.png);
+}
+.simulate-item
+{
+	background-image:url(../images/simulate-list.png);
+}
+.multi-item
+{
+	background-image:url(../images/multi-list.png);
+}
+.animation-item
+{
+	background-image:url(../images/animation-list.png);
+}
+.subject-icon-right
+{
+	width:6px;
+	height:12px;
+	top: 15px;
+    right: 0px;
+	position:absolute;
+	background-image: url(../images/right-icon.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 6px 12px;
+}
+
+
+/*鈥斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�攖he style of the orderlist.html鈥斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺��*/
+.container
+{
+	overflow:hidden;
+}
+.footbtns
+{
+	height:52px;
+	border-top:1px solid #999999;
+	background:white;
+	position:fixed;
+	bottom:0px;
+	display:-webkit-box;
+	display:-moz-box;
+	display:-webkit-flex;
+	display:-moz-flex;
+	display:-ms-flexbox;
+	display:flex;
+	width:100%;
+	z-index:100;
+}
+.footbtns .footbtns-inner
+{
+	display:-webkit-box;
+	display:-moz-box;
+	display:-webkit-flex;
+	display:-moz-flex;
+	display:-ms-flexbox;
+	display:flex;
+	width:100%;
+}
+.footbtns .footbtns-inner a
+{
+	-webkit-flex: 1;
+    flex: 1;
+    -webkit-box-flex: 1;
+    display: block;
+    text-align: center;
+    padding-top: 28px;
+    font-size: 12px;
+    color: #333333;
+    margin-top: 7px;
+    text-decoration:none;
+}
+.footbtns .footbtns-inner a.collect
+{
+	background:url(../images/collect.png) no-repeat top center;
+	background-size:24px;
+}
+.footbtns .footbtns-inner a.collected
+{
+	color:rgb(80,203,151);
+	background:url(../images/collected.png) no-repeat top center;
+	background-size:24px;
+}
+.footbtns .footbtns-inner a.explain
+{
+	background:url(../images/explain.png) no-repeat top center;
+	background-size:24px;
+}
+.footbtns .footbtns-inner a.open-explain
+{
+	color:rgb(80,203,151);
+	background:url(../images/open-explain.png) no-repeat top center;
+	background-size:24px;
+}
+.footbtns .footbtns-inner a.pre
+{
+	background:url(../images/pre.png) no-repeat top center;
+	background-size:24px;
+}
+.footbtns .footbtns-inner a.next
+{
+	background:url(../images/next.png) no-repeat top center;
+	background-size:24px;
+}
+.footbtns .footbtns-inner a.handin
+{
+	background:url(../images/handin.png) no-repeat top center;
+	background-size:24px;
+}
+.footbtns .footbtns-inner a.timer
+{
+	background:url(../images/examtime.png) no-repeat top center;
+	background-size:24px;
+}
+.question-col,.best-explain
+{
+	z-index:90;
+}
+/* .question-time
+{
+	background-color:#f4f4f4;
+	text-align:center;
+}
+.question-time p
+{
+	color:#3d3d3d;
+	font-size:12px;
+	 padding: 15px 0px;
+}
+.question-time p span#timer
+{
+	color:rgb(222,25,25);
+	font-size:17px;
+} */
+.question-title
+{
+	
+	background-repeat:no-repeat;
+	background-position:15px 5px;
+	background-size:30px auto;
+}
+.question-col div.single
+{
+	background-image:url(../images/single-choose.png);
+}
+.question-col div.multi
+{
+	background-image:url(../images/multi-choose.png);
+}
+.question-col div.if
+{
+	background-image:url(../images/if-choose.png);
+}
+.question-title p
+{
+	text-indent:2em;
+	line-height:35px;
+} 
+.question-title img
+{
+	margin-top:12px;
+}
+.question-item
+{
+	margin-top:12px;
+	padding:0px;
+}
+.question-item a
+{
+	padding:12px 15px;
+	line-height:20px;
+	display:block;
+	text-decoration:none;
+	color:#2a2a2a;
+	font-size:13px;
+}
+.multi-question-col .question-item a
+{
+	margin-bottom:20px;
+}
+.question-item a .item-state
+{
+	float: left;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    border: 1px solid #d4d4d4;
+    text-align: center;
+    color: #5c5c5c;
+    border-radius: 50%;
+    background-color: #fff;
+}
+.question-item a .item-con
+{
+	line-height: 20px;
+    margin-left: 36px;
+    margin-top: 3px;
+}
+/*difference for the two type of choose*/
+/*single choice*/
+.question-item a.item-right .item-state
+{
+	background-image:url(../images/item_state_right.png);
+	background-repeat:no-repeat;
+	background-size:24px;
+	color:transparent;
+	border:none;
+}
+.question-item a.item-right .item-con
+{
+	color:rgb(80,203,151);
+}
+.question-item a.item-wrong .item-state
+{
+	background-image:url(../images/item_state_wrong.png);
+	background-repeat:no-repeat;
+	background-size:24px;
+	color:transparent;
+	border:none;
+}
+.question-item a.item-wrong .item-con
+{
+	color:#ff4848;
+}
+.question-item a.item-no-wrong .item-state
+{
+	background-color:rgb(80,203,151);
+	border:none;
+	color:white;
+}
+.question-item a.item-no-wrong .item-con
+{
+	color:rgb(80,203,151);
+}
+/*multi-choice*/
+.on
+{}
+.question-item a.on
+{
+	background-color:rgb(245,245,245);
+}
+.question-item a.on .item-state
+{
+	background-color: rgb(245,190,146);
+	border-color:transparent;
+}
+.question-btn
+{
+	margin-top:12px;
+	text-align:center;
+}
+.question-btn button
+{
+	width:100%;
+	border:none;
+	background-color:rgb(80,202,151);
+	display:block;
+	color:white;
+	font-size:13px;
+	padding: 12px 0px;
+    border-radius: 4px;
+}
+.question-btn button[disabled]
+{
+	background-color:#eee;
+}
+
+/*the style of the best explain*/
+.best-explain
+{
+	margin-top:25px;
+	display:none;
+}
+
+.best-explain h1
+{
+	color:rgb(80,203,151);
+	font-size:12px;
+}
+.best-explain p
+{
+	margin-top:5px;
+	font-size:12px;
+	color:#333333;
+	line-height:20px;
+	text-indent:2em;
+}
+
+
+/*the style of the simulate starts*/
+.simulate-tips
+{
+	margin: 20px 15px;
+    padding: 0px 0px 8px 0px;
+    border-bottom: 1px solid #eee;
+}
+.simulatestarting img
+{
+	margin-top:40px;
+	margin-bottom:20px;
+}
+.simulate-tips p
+{
+	font-size:13px;
+}
+.simulate-tips p.pull-left
+{
+	color:#ababab;
+}
+.simulate-tips p.pull-right
+{
+	color:#333;
+}
+.simulate-start-btn
+{
+	text-align:center;
+}
+.simulate-start-btn a
+{
+	text-decoration:none;
+	color:white;
+	background-color:rgb(83,162,16);
+	display:block;
+	border-radius: 4px;
+    padding: 10px 0px;
+}
+
+/*考试结果页面的样式*/
+.resultpage {
+	padding-top: 20px;
+}
+.resultpage-img {
+	margin: 0px 0px 40px 0px;
+}
+.resultpage-btn {
+	    padding: 40px 0px;
+}
+.resultpage-btn .col-md-6 {
+	text-align: center;
+}
+.resultpage-btn .col-md-6 a {
+	text-decoration: none;
+	color: white;
+	background-color: rgb(83,162,16);
+	display: block;
+	border-radius: 4px;
+	padding: 10px 0px;
+}
+#myscore,#mytime
+{
+	font-size:30px;
+	font-style:italic;
+}
+
+
+/*动画效果*/
+@keyframes popwindowslider
+{
+	0% {bottom: -153px;}
+	100% {bottom: 0px;}
+}
+
+
+/*关于颜色的一些设置*/
+.bg-grey
+{
+	background-color:rgb(245,245,245);
+}
+.bg-deep-grey
+{
+	background-color: #ababab;
+}
