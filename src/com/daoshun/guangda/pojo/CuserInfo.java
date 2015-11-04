@@ -437,7 +437,7 @@ public class CuserInfo implements Serializable {
 	 * 签约到期日期
 	 */
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "signexpired")
+	@Column(name = "signexpired", nullable = true)
 	private Date signexpired;
 	
 	/**
@@ -446,6 +446,18 @@ public class CuserInfo implements Serializable {
 	@Column(name = "disabled", columnDefinition = "INT default 0")
 	private Integer disabled=0;
 	
+	/**
+	 * 操作修改日期
+	 */
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "modifydate", nullable = true)
+	private Date modifydate;
+	
+	/**
+	 * 
+	 */
+	@Column(name = "subject2begin", columnDefinition = "INT default 0")
+	private Integer subject2begin=0;
 	
 	
 	public Integer getDevicetype() {
