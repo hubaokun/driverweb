@@ -83,7 +83,7 @@ $(function(){
 						<th>支付宝</th>
 						<th>申请处理时间</th>
 					</tr>
-					<s:iterator value="balancecoachlist" var="cuser" status="st">
+					<s:iterator value="coachApplyCashInfolist" var="cuser" status="st">
 						<tr class="tr_td">
 							<td style="width: 52px;" class="border_right_bottom"><s:property value="#st.index+1"/></td>
 							<td style="width: 100px;" class="border_right_bottom">${realname}</td>
@@ -91,6 +91,7 @@ $(function(){
 							<td style="width: 100px;" class="border_right_bottom">${amount}</td>
 							<td style="width: 100px;" class="border_right_bottom">${alipay_account}</td>
 							<td style="width: 200px;" class="border_right_bottom"><s:date name="addtime" format="yyyy-MM-dd HH:mm:ss"/></td>
+							<td style="width: 200px;" class="border_right_bottom"><s:date name="updatetime" format="yyyy-MM-dd HH:mm:ss"/></td>
 							<!-- <td style="width: 100px;" class="border_noright_bottom"></td>-->
 
 						</tr>

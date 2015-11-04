@@ -61,6 +61,7 @@ function goback()
 						<th>学员手机号</th>
 						<th>学员姓名</th>
 						<th>获得小巴币</th>
+						<th>已使用学时</th>
 						<th>已使用小巴币</th>
 					</tr>
 					<s:iterator value="studentcoinlist" status="st">
@@ -69,15 +70,19 @@ function goback()
 							<td style="width: 10%;" class="border_right_bottom">${phone}</td>
 							<td style="width: 10%;" class="border_right_bottom">${name}</td>
 							<td style="width: 10%;" class="border_right_bottom">${coinusenumber}</td>
+							<td style="width: 10%;" class="border_right_bottom">${classhour}</td>
 							<td style="width: 10%;" class="border_right_bottom">${coinpaynumber}</td>
 							<input type="hidden" value="${coachid}" id="coachid" name="coachid" />
+							<input type="hidden" value="${ownertype}" id="coachid" name="ownertype" />
+							<input type="hidden" value="${starttime}" id="starttime" name="starttime" />
+							<input type="hidden" value="${endtime}" id="endtime" name="endtime" />
 						</tr>
 					</s:iterator>
 					<tr>
 						<td colspan="10" style="height: 86px;">
 							<div style="float: left; margin-top: 34px; margin-left: 20px;">
 								总计：${total}条</div> <!-- 下部翻页 -->
-							<div style="float: right; margin-top: 34px; margin-right: 20px;">
+						<!-- 	<div style="float: right; margin-top: 34px; margin-right: 20px;">
 								<s:if test="%{pageCount>1}">
 									<input type="hidden" value="${pageCount }" id="pageSize" />
 									<input type="hidden" value="${pageIndex }" id="pageIndex" />
@@ -91,19 +96,20 @@ function goback()
 					var starttime = $("#starttime").val();
 					var endtime = $("#endtime").val();
 					var coachid = $("#coachid").val();
+					var ownertype = $("#ownertype").val();
 					var a = [];
 					  //总页数少于10 全部显示,大于10 显示前3 后3 中间3 其余....
 					if (pageindex == 1) {
 						  //alert(pageindex);
 					    a[a.length] = "<a onclick=\"\" class=\"hide_page_prev unclickprev on\"></a>";
 					  } else {
-					    a[a.length] = "<a onclick=\"previousPage("+pageindex+",'GetCoinReportMontly.do?starttime="+starttime+"&endtime="+endtime+"&coachid="+coachid+"&')\" class=\"page_prev\"></a>";
+					    a[a.length] = "<a onclick=\"previousPage("+pageindex+",'GetCoinReportMontlyDetail.do?starttime="+starttime+"&endtime="+endtime+"&coachid="+coachid+"&ownertype="+ownertype+"&')\" class=\"page_prev\"></a>";
 					  }
 					  function setPageList() {
 					    if (pageindex == i) {
-					      a[a.length] = "<a onclick=\"goPage('GetCoinReportMontly.do?starttime="+starttime+"&endtime="+endtime+"&coachid="+coachid+"&',"+i+")\" class=\"on\">" + i + "</a>";
+					      a[a.length] = "<a onclick=\"goPage('GetCoinReportMontlyDetail.do?starttime="+starttime+"&endtime="+endtime+"&coachid="+coachid+"&ownertype="+ownertype+"&',"+i+")\" class=\"on\">" + i + "</a>";
 					    } else {
-					      a[a.length] = "<a onclick=\"goPage('GetCoinReportMontly.do?starttime="+starttime+"&endtime="+endtime+"&coachid="+coachid+"&',"+i+")\">" + i + "</a>";
+					      a[a.length] = "<a onclick=\"goPage('GetCoinReportMontlyDetail.do?starttime="+starttime+"&endtime="+endtime+"&coachid="+coachid+"&ownertype="+ownertype+"&',"+i+")\">" + i + "</a>";
 					    }
 					  }
 					  //总页数小于10
@@ -117,31 +123,31 @@ function goback()
 					      for (var i = 1; i <= 5; i++) {
 					        setPageList();
 					      }
-					      a[a.length] = "...<a onclick=\"goPage('GetCoinReportMontly.do?starttime="+starttime+"&endtime="+endtime+"&coachid="+coachid+"&',"+count+")\">" + count + "</a>";
+					      a[a.length] = "...<a onclick=\"goPage('GetCoinReportMontlyDetail.do?starttime="+starttime+"&endtime="+endtime+"&coachid="+coachid+"&ownertype="+ownertype+"&',"+count+")\">" + count + "</a>";
 					    } else if (pageindex >= count - 3) {
-					      a[a.length] = "<a onclick=\"goPage('GetCoinReportMontly.do?starttime="+starttime+"&endtime="+endtime+"&coachid="+coachid+"&',1)\">1</a>...";
+					      a[a.length] = "<a onclick=\"goPage('GetCoinReportMontlyDetail.do?starttime="+starttime+"&endtime="+endtime+"&coachid="+coachid+"&ownertype="+ownertype+"&',1)\">1</a>...";
 					      for (var i = count - 4; i <= count; i++) {
 					        setPageList();
 					      };
 					    } else { //当前页在中间部分
-					      a[a.length] = "<a onclick=\"goPage('GetCoinReportMontly.do?starttime="+starttime+"&endtime="+endtime+"&coachid="+coachid+"&',1)\">1</a>...";
+					      a[a.length] = "<a onclick=\"goPage('GetCoinReportMontlyDetail.do?starttime="+starttime+"&endtime="+endtime+"&coachid="+coachid+"&ownertype="+ownertype+"&',1)\">1</a>...";
 					      for (var i = pageindex - 2; i <= pageindex+2; i++) {
 					        setPageList();
 					      }
-					      a[a.length] = "...<a onclick=\"goPage('GetCoinReportMontly.do?starttime="+starttime+"&endtime="+endtime+"&coachid="+coachid+"&',"+count+")\">" + count + "</a>";
+					      a[a.length] = "...<a onclick=\"goPage('GetCoinReportMontlyDetail.do?starttime="+starttime+"&endtime="+endtime+"&coachid="+coachid+"&ownertype="+ownertype+"&',"+count+")\">" + count + "</a>";
 					    }
 					  }
 					  if (pageindex == count) {
 						    a[a.length] = "<a onclick=\"\" class=\"hide_page_next unclicknext\"></a> 共"+count+"页  到第  "+
 						    "<input type=\"text\" class=\"jump_num\" id=\"topage\"/> 页"+
-						    "<a class=\"jump_btn\" onclick=\"gotoPage('GetCoinReportMontly.do?starttime="+starttime+"&endtime="+endtime+"&coachid="+coachid+"&',"+$("#pageSize").val()+")\")\">"+
+						    "<a class=\"jump_btn\" onclick=\"gotoPage('GetCoinReportMontlyDetail.do?starttime="+starttime+"&endtime="+endtime+"&coachid="+coachid+"&ownertype="+ownertype+"&',"+$("#pageSize").val()+")\")\">"+
 						    "<a id='page_msg'></a>";
 						  } else {
 						    a[a.length] = 
-						    	"<a onclick=\"nextPage("+$("#pageIndex").val()+",'GetCoinReportMontly.do?starttime="+starttime+"&endtime="+endtime+"&coachid="+coachid+"&')\" "+
+						    	"<a onclick=\"nextPage("+$("#pageIndex").val()+",'GetCoinReportMontlyDetail.do?starttime="+starttime+"&endtime="+endtime+"&coachid="+coachid+"&ownertype="+ownertype+"&')\" "+
 						    	"class=\"page_next\"></a> 共"+count+"页 到第 "+
 						    "<input type=\"text\" class=\"jump_num\" id=\"topage\"/> 页"+
-						    "<a class=\"jump_btn\" onclick=\"gotoPage('GetCoinReportMontly.do?starttime="+starttime+"&endtime="+endtime+"&coachid="+coachid+"&',"+$("#pageSize").val()+")\">"+
+						    "<a class=\"jump_btn\" onclick=\"gotoPage('GetCoinReportMontlyDetail.do?starttime="+starttime+"&endtime="+endtime+"&coachid="+coachid+"&ownertype="+ownertype+"&',"+$("#pageSize").val()+")\">"+
 						    "<a id='page_msg'></a>";
 						  }
 //					  a[a.length]="<a href='#' onclick='addunit()' style='float: right;position: relative;right: 50px;padding: 0px; margin: 0px; top: 3px;'><img src='imgs/add_.png'></a>";
@@ -150,7 +156,7 @@ function goback()
 					setPage(document.getElementById("untreatedpage"),parseInt($("#pageSize").val()),parseInt($("#pageIndex").val()));
 					</script>
 								</s:if>
-							</div>
+							</div>-->
 						</td>
 					</tr>
 				</table>

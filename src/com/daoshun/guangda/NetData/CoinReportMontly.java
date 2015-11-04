@@ -19,6 +19,10 @@ public class CoinReportMontly {
     
     private BigDecimal coinnpaycount;
     
+    private Integer classhour;
+    
+    private String type;
+    
     private List<StudentCoinDetail>  studentdetaillist;
 
 	public Integer getId() {
@@ -83,6 +87,22 @@ public class CoinReportMontly {
 
 	public void setCoachid(String coachid) {
 		this.coachid = coachid;
+	}
+
+	public Integer getClasshour() {
+		return classhour;
+	}
+
+	public void setClasshour(Integer classhour) {
+		this.classhour = classhour;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
     
     

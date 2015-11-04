@@ -721,17 +721,36 @@ public String getStudentDetailByPhone() {
 				suserlist.get(i).setAge(age);
 			}
 		}
-		
-		//添加城市
-				for (int i = 0; i < suserlist.size(); i++) {
-					if (!CommonUtils.isEmptyString(String.valueOf(suserlist.get(i).getCityid()))) {
-						String city ="";
-						if(!CommonUtils.isEmptyString(suserlist.get(i).getCityid())){
-							city = suserService.getCityByCityid(Integer.parseInt(suserlist.get(i).getCityid()));
+				
+				//添加城市
+		for (int i = 0; i < suserlist.size(); i++) {
+			if (!CommonUtils.isEmptyString(String.valueOf(suserlist.get(i)
+					.getCityid()))) {
+				// int age =
+				// suserService.getSuserAgeByid(suserlist.get(i).getStudentid());
+				String city = "";
+				if (!CommonUtils.isEmptyString(suserlist.get(i).getCityid())) {
+					city = suserService.getCityByCityid(Integer
+							.parseInt(suserlist.get(i).getCityid()));
+				}
+				suserlist.get(i).setCity(city);
+				if (suserlist.get(i).getModelcityid() != null) {
+					List<ModelPrice> list = bookService
+							.getModelPriceByCityId(suserlist.get(i)
+									.getModelcityid());
+					if (list != null && list.size() > 0) {
+						ModelPrice mp = list.get(0);
+						String model = suserlist.get(i).getModel();
+						if ("c1".equals(model)) {
+							suserlist.get(i).setPrice(mp.getC1xiaobaprice());
+						} else if ("c2".equals(model)) {
+							suserlist.get(i).setPrice(mp.getC2xiaobaprice());
 						}
-						suserlist.get(i).setCity(city);;
 					}
 				}
+			}
+		}
+		
 		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
 		if (pageIndex > 1) {
 			if (suserlist == null || suserlist.size() == 0) {
@@ -1005,12 +1024,12 @@ public String getStudentDetailByPhone() {
 	public String getApplyRecordList() {
 		HttpSession session = ServletActionContext.getRequest().getSession();
 		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
-		QueryResult<BalanceStudentInfo> result = suserService.getApplyRecordList(pageIndex, pagesize);
+		QueryResult<StudentApplyInfo> result = suserService.getApplyRecordList(pageIndex, pagesize);
 		total = result.getTotal();
-		balanceStudentList = result.getDataList();
+		stuApplyList = result.getDataList();
 		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
 		if (pageIndex > 1) {
-			if (balanceStudentList == null || balanceStudentList.size() == 0) {
+			if (stuApplyList == null || stuApplyList.size() == 0) {
 				pageIndex--;
 				getApplyRecordList();
 			}
@@ -1027,12 +1046,12 @@ public String getStudentDetailByPhone() {
 	public String searchStudentBalance() {
 		HttpSession session = ServletActionContext.getRequest().getSession();
 		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
-		QueryResult<BalanceStudentInfo> result = suserService.searchStudentBalance(searchname, searchphone, amount, inputamount, minsdate, maxsdate, pageIndex, pagesize);
+		QueryResult<StudentApplyInfo> result = suserService.searchStudentBalance(searchname, searchphone, amount, inputamount, minsdate, maxsdate, pageIndex, pagesize);
 		total = result.getTotal();
-		balanceStudentList = result.getDataList();
+		stuApplyList = result.getDataList();
 		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
 		if (pageIndex > 1) {
-			if (balanceStudentList == null || balanceStudentList.size() == 0) {
+			if (stuApplyList == null || stuApplyList.size() == 0) {
 				pageIndex--;
 				searchStudentBalance();
 			}

@@ -35,7 +35,6 @@ function gotoPage(act,cnt){
 function goPage(act,cnt){
 	window.location.href = act+"pageIndex="+cnt;
 }
-
 function IsNum(e) {
     var k = window.event ? e.keyCode : e.which;
     if (((k >= 48) && (k <= 57)) || k == 8 || k == 0) {

@@ -70,7 +70,17 @@ public class CuserAction extends BaseAction {
 	private List<CApplyCashInfo> applycashlist;
 
 	private List<BalanceCoachInfo> balancecoachlist;
+	private List<CApplyCashInfo> coachApplyCashInfolist;
 
+
+	public List<CApplyCashInfo> getCoachApplyCashInfolist() {
+		return coachApplyCashInfolist;
+	}
+
+	public void setCoachApplyCashInfolist(
+			List<CApplyCashInfo> coachApplyCashInfolist) {
+		this.coachApplyCashInfolist = coachApplyCashInfolist;
+	}
 	private List<DriveSchoolInfo> driveSchoollist;
 
 	private List<BalanceCoachInfo> balanceCoachList;
@@ -1461,12 +1471,12 @@ public class CuserAction extends BaseAction {
 		if (driveschoolid != 0) {
 			schoolid = driveschoolid;
 		}
-		QueryResult<BalanceCoachInfo> result = cuserService.getCoachHistoryApplyBySearch(schoolid, searchname, searchphone, amount, inputamount, minsdate, maxsdate, pageIndex, pagesize);
+		QueryResult<CApplyCashInfo> result = cuserService.getCoachHistoryApplyBySearch(schoolid, searchname, searchphone, amount, inputamount, minsdate, maxsdate, pageIndex, pagesize);
 		total = result.getTotal();
-		balancecoachlist = result.getDataList();
+		coachApplyCashInfolist = result.getDataList();
 		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
 		if (pageIndex > 1) {
-			if (balancecoachlist == null || balancecoachlist.size() == 0) {
+			if (coachApplyCashInfolist == null || coachApplyCashInfolist.size() == 0) {
 				pageIndex--;
 				getCoachBalanceBySearch();
 			}
@@ -1486,12 +1496,12 @@ public class CuserAction extends BaseAction {
 		if (driveschoolid != 0) {
 			schoolid = driveschoolid;
 		}
-		QueryResult<BalanceCoachInfo> result = cuserService.getCoachHistoryBalanceBySearchFinance(schoolid, searchname, searchphone, amount, inputamount, minsdate, maxsdate, pageIndex, pagesize);
+		QueryResult<CApplyCashInfo> result = cuserService.getCoachHistoryBalanceBySearchFinance(schoolid, searchname, searchphone, amount, inputamount, minsdate, maxsdate, pageIndex, pagesize);
 		total = result.getTotal();
-		balancecoachlist = result.getDataList();
+		coachApplyCashInfolist = result.getDataList();
 		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
 		if (pageIndex > 1) {
-			if (balancecoachlist == null || balancecoachlist.size() == 0) {
+			if (coachApplyCashInfolist == null || coachApplyCashInfolist.size() == 0) {
 				pageIndex--;
 				getCoachBalanceListFinance();
 			}

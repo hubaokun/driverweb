@@ -256,7 +256,7 @@ public interface ISUserService {
 	 * @param pagesize
 	 * @return
 	 */
-	public abstract QueryResult<BalanceStudentInfo> getApplyRecordList(Integer pageIndex, int pagesize);
+	public abstract QueryResult<StudentApplyInfo> getApplyRecordList(Integer pageIndex, int pagesize);
 
 	/**
 	 * 获取历史充值记录
@@ -288,7 +288,7 @@ public interface ISUserService {
 	 * @param pagesize
 	 * @return
 	 */
-	public abstract QueryResult<BalanceStudentInfo> searchStudentBalance(String searchname, String searchphone, String amount, String inputamount, String minsdate, String maxsdate, Integer pageIndex,
+	public abstract QueryResult<StudentApplyInfo> searchStudentBalance(String searchname, String searchphone, String amount, String inputamount, String minsdate, String maxsdate, Integer pageIndex,
 			int pagesize);
 
 	public abstract List<SuserInfo> getStudentList();

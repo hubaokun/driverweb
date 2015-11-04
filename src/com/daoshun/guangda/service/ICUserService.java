@@ -159,10 +159,10 @@ public interface ICUserService {
 	public abstract void setLevels(String coachid, int level);
 
 	@SuppressWarnings({"unchecked", "deprecation"})
-	QueryResult<BalanceCoachInfo> getCoachHistoryApplyBySearch(int schoolid, String searchname, String searchphone, String amount, String inputamount, String minsdate, String maxsdate, Integer pageIndex, int pagesize);
+	QueryResult<CApplyCashInfo> getCoachHistoryApplyBySearch(int schoolid, String searchname, String searchphone, String amount, String inputamount, String minsdate, String maxsdate, Integer pageIndex, int pagesize);
 
 	@SuppressWarnings({"unchecked", "deprecation"})
-	QueryResult<BalanceCoachInfo> getCoachHistoryBalanceBySearchFinance(int schoolid, String searchname, String searchphone, String amount, String inputamount, String minsdate, String maxsdate, Integer pageIndex, int pagesize);
+	QueryResult<CApplyCashInfo> getCoachHistoryBalanceBySearchFinance(int schoolid, String searchname, String searchphone, String amount, String inputamount, String minsdate, String maxsdate, Integer pageIndex, int pagesize);
 
 	
 	
@@ -341,4 +341,7 @@ public interface ICUserService {
 	 
 	 //添加权限
 	 public boolean addPermission(PermissionSetInfo info);
+	 
+	 //获得权限数
+	 public long getSubPermissionCount(int pid);
 }
