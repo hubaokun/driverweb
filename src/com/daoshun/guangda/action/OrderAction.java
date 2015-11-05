@@ -100,6 +100,11 @@ public class OrderAction extends BaseAction {
 	private Integer t_paytype;
 	
 	private Integer t_ordertype;
+	
+	//完成订单时间
+	private String overtimeRangeS;
+	
+	private String overtimeRangeE;
 	/**
 	 * 获取订单列表
 	 * @return
@@ -108,7 +113,7 @@ public class OrderAction extends BaseAction {
 	public String getOrderList() {
 		HttpSession session = ServletActionContext.getRequest().getSession();
 		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
-		QueryResult<OrderInfo> result = orderService.getOrderList(coachphone,studentphone,startminsdate,startmaxsdate,endminsdate,endmaxsdate,createminsdate,createmaxsdate,state,ordertotal,inputordertotal,ishavacomplaint,t_paytype,t_ordertype, pageIndex, pagesize);
+		QueryResult<OrderInfo> result = orderService.getOrderList(coachphone,studentphone,startminsdate,startmaxsdate,endminsdate,endmaxsdate,createminsdate,createmaxsdate,state,ordertotal,inputordertotal,ishavacomplaint,t_paytype,t_ordertype,overtimeRangeS,overtimeRangeE,pageIndex, pagesize);
 		total = result.getTotal();
 		orderlist = result.getDataList();
 		for(int i=0; i< orderlist.size();i++)
@@ -637,6 +642,22 @@ public class OrderAction extends BaseAction {
 
 	public void setT_ordertype(Integer t_ordertype) {
 		this.t_ordertype = t_ordertype;
+	}
+
+	public String getOvertimeRangeS() {
+		return overtimeRangeS;
+	}
+
+	public void setOvertimeRangeS(String overtimeRangeS) {
+		this.overtimeRangeS = overtimeRangeS;
+	}
+
+	public String getOvertimeRangeE() {
+		return overtimeRangeE;
+	}
+
+	public void setOvertimeRangeE(String overtimeRangeE) {
+		this.overtimeRangeE = overtimeRangeE;
 	}
 	
 	

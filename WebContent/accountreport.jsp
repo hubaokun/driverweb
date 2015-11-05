@@ -45,7 +45,18 @@ function search(){
 	}
 	window.location.href = "getaccountreportdaliy.do"+str;
 }
-
+function dataExport(){
+	var starttime = $("#starttime").val();
+	var endtime = $("#endtime").val();
+	if(endtime<starttime)
+		alert("结束时间必须大于开始时间，请重新选择！");
+	else
+	{
+		if (confirm("确认导出小巴币数据？")) {
+			window.location.href="AccountReportDayMontlyExport.do?starttime="+starttime+"&endtime="+endtime;
+		}
+	}
+}
 
 </script>
 <title>系统日报</title>
@@ -78,6 +89,10 @@ function search(){
 	<div style="width: 300px; height: 40px; border: 1px solid #cfd9df; float: left; margin-right: 36px; margin-top: 22px;">
 		<div style="width: 65px; text-align: center; line-height: 40px;border-right: 1px solid #cfd9df; float:left;">结束时间</div>
 		<input id="endtime" value="${endtime}" name="endtime" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})" style="width: 225px; height: 39px; border: 0px; padding-left: 8px; float: left;"/>
+	</div>
+	<div class="searchbutton" style="width:80px;">
+		<div class="table_button_edit_icon"></div>
+		<div class="table_button_text" style="font-size: 12px;line-height: 38px;" onclick="dataExport();">数据导出</div>
 	</div>
 </div>
 

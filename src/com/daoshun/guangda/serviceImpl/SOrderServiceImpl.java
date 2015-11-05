@@ -1677,7 +1677,7 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 
 	@Override
 	public QueryResult<OrderInfo> getOrderList(String coachphone, String studentphone, String startminsdate, String startmaxsdate, String endminsdate, String endmaxsdate,String createminsdate, String createmaxsdate, Integer state,
-			Integer ordertotal, String inputordertotal, Integer ishavacomplaint,Integer paytype,Integer ordertype, Integer pageIndex, int pagesize) {
+			Integer ordertotal, String inputordertotal, Integer ishavacomplaint,Integer paytype,Integer ordertype,String overtimeRangeS,String overtimeRangeE,Integer pageIndex, int pagesize) {
 		StringBuffer cuserhql = new StringBuffer();
 		cuserhql.append("from OrderInfo where 1=1");
 		if (!CommonUtils.isEmptyString(coachphone)) {
@@ -1718,6 +1718,24 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 			enddate.setSeconds(59);
 			String createmaxstime = CommonUtils.getTimeFormat(enddate, "yyyy-MM-dd HH:mm:ss");
 			cuserhql.append(" and creat_time <='" + createmaxstime + "'");
+		}
+		if(!CommonUtils.isEmptyString(overtimeRangeS))
+		{
+			Date overtimeS=CommonUtils.getDateFormat(overtimeRangeS, "yyyy-MM-dd");
+			overtimeS.setHours(23);
+			overtimeS.setMinutes(59);
+			overtimeS.setSeconds(59);
+			String overtimeRS=CommonUtils.getTimeFormat(overtimeS, "yyyy-MM-dd HH:mm:ss");
+			cuserhql.append(" and over_time >='"+overtimeRS+"'");
+		}
+		if(!CommonUtils.isEmptyString(overtimeRangeE))
+		{
+			Date overtimeE=CommonUtils.getDateFormat(overtimeRangeE, "yyyy-MM-dd");
+			overtimeE.setHours(23);
+			overtimeE.setMinutes(59);
+			overtimeE.setSeconds(59);
+			String overtimeRE=CommonUtils.getTimeFormat(overtimeE, "yyyy-MM-dd HH:mm:ss");
+			cuserhql.append(" and over_time <='"+overtimeRE+"'");
 		}
 		if (state != null) {
 			if (state == 1) {
@@ -1788,7 +1806,10 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				if (coach != null) {
 					order.setCuserinfo(coach);
 				}
-				order.setSubjectname(orderprice.getSubject());
+				if(orderprice!=null)
+				{
+					order.setSubjectname(orderprice.getSubject());
+				}
 				StringBuffer cuserhql1 = new StringBuffer();
 				cuserhql1.append("from ComplaintInfo where order_id =:orderid ");
 				String[] params = { "orderid" };

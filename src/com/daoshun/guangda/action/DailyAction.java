@@ -60,7 +60,7 @@ import com.daoshun.guangda.NetData.XiaoBaDaily;
 import com.daoshun.guangda.pojo.AreaInfo;
 import com.daoshun.guangda.pojo.DriveSchoolInfo;
 import com.daoshun.guangda.pojo.OrderInfo;
-import com.daoshun.guangda.pojo.daymontlyreportInfo;
+import com.daoshun.guangda.pojo.DaymontlyReportInfo;
 import com.daoshun.guangda.service.ICUserService;
 import com.daoshun.guangda.service.IDailyService;
 import com.daoshun.guangda.service.IDriveSchoolService;
@@ -195,7 +195,7 @@ public class DailyAction extends BaseAction {
 	
 	private List<Object> cuserinfolist;//驾校报表list
 	
-	private List<daymontlyreportInfo> dailyReports;
+	private List<DaymontlyReportInfo> dailyReports;
 
 	/**
 	 * 系统日报
@@ -1469,9 +1469,45 @@ public class DailyAction extends BaseAction {
 	    
 		filename = CommonUtils.properties.getProperty("uploadFilePath") + newfilename;
 		HttpServletResponse response = ServletActionContext.getResponse();
-		CommonUtils.downloadExcel(filename, "小巴币月报表", response);
+		CommonUtils.downloadExcel(filename, "小巴币驾校月报表", response);
 	}
-	
+	/**
+	 * 运营日月报数据导出
+	 * 
+	 * @throws IOException
+	 * @throws InvalidFormatException 
+	 * @throws ParsePropertyException 
+	 */
+	@SuppressWarnings("deprecation")
+	@Action(value = "/AccountReportDayMontlyExport")
+	public void AccountReportDayMontlyExport() throws IOException, ParsePropertyException {
+		String newfilename = "";
+		String tplPath="";
+		Map<String, List<DaymontlyReportInfo>> beanParams = new HashMap<String, List<DaymontlyReportInfo>>();  
+		tplPath=DailyAction.class.getClassLoader().getResource("").getPath()+"/template/运营日月报表jxls模板.xls";
+		// 定义输出流，以便打开保存对话框begin
+		newfilename += CommonUtils.getTimeFormat(new Date(), "yyyyMMddhhmmssSSS") + "_" + (Math.random() * 100) + ".xls";
+		String filename = CommonUtils.properties.get("uploadFilePath") + newfilename;
+		File file = new File(filename);
+		if (!file.exists()) {
+			file.createNewFile();
+		}
+		dailyReports=dailyService.getAccountReportX(starttime, endtime);
+		
+	    beanParams.put("accountreprotlist", dailyReports);  
+	    XLSTransformer former = new XLSTransformer();  
+
+	    try {
+			former.transformXLS(tplPath, beanParams, filename);
+		} catch (InvalidFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    
+		filename = CommonUtils.properties.getProperty("uploadFilePath") + newfilename;
+		HttpServletResponse response = ServletActionContext.getResponse();
+		CommonUtils.downloadExcel(filename, "运营日月报表", response);
+	}
 	/**
 	 * 教练日报
 	 * 
@@ -4236,11 +4272,11 @@ public class DailyAction extends BaseAction {
 		this.schoolid = schoolid;
 	}
 
-	public List<daymontlyreportInfo> getDailyReports() {
+	public List<DaymontlyReportInfo> getDailyReports() {
 		return dailyReports;
 	}
 
-	public void setDailyReports(List<daymontlyreportInfo> dailyReports) {
+	public void setDailyReports(List<DaymontlyReportInfo> dailyReports) {
 		this.dailyReports = dailyReports;
 	}
 

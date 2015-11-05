@@ -11,7 +11,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name="t_daymonthly")
 
-public class daymontlyreportInfo {
+public class DaymontlyReportInfo {
      
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

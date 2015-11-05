@@ -20,7 +20,7 @@ import com.daoshun.guangda.pojo.OrderInfo;
 import com.daoshun.guangda.pojo.OrderPrice;
 import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.service.IDailyService;
-import com.daoshun.guangda.pojo.daymontlyreportInfo;
+import com.daoshun.guangda.pojo.DaymontlyReportInfo;
 
 @Service("dailyService")
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
@@ -115,9 +115,9 @@ public class DailyServiceImpl extends BaseServiceImpl implements IDailyService {
 	//ChRx
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<daymontlyreportInfo> getAccountReportX(String starttime,String endtime)
+	public List<DaymontlyReportInfo> getAccountReportX(String starttime,String endtime)
 	{
-		StringBuffer hql=new StringBuffer("from daymontlyreportInfo where ");
+		StringBuffer hql=new StringBuffer("from DaymontlyReportInfo where ");
 		String[] params=null;
 		Date start=null;
 		Date end=null;
@@ -145,7 +145,7 @@ public class DailyServiceImpl extends BaseServiceImpl implements IDailyService {
 		if(!CommonUtils.isEmptyString(endtime))
 		{   if(!isStartTimeEmpty)
 			{
-				hql=new StringBuffer("from daymontlyreportInfo where querydate between :starttime and :endtime");
+				hql=new StringBuffer("from DaymontlyReportInfo where querydate between :starttime and :endtime");
 				params=new String[2];
 				params[0]="starttime";
 				params[1]="endtime";
@@ -157,19 +157,19 @@ public class DailyServiceImpl extends BaseServiceImpl implements IDailyService {
 			}
 		}
 		Object p=new Object();
-		List<daymontlyreportInfo> result=null;
+		List<DaymontlyReportInfo> result=null;
 		if(params.length==1)
 		{
 			if(isStartTimeEmpty)
 			{
-				result=(List<daymontlyreportInfo>)dataDao.getObjectsViaParam(hql.toString(), params,end);
+				result=(List<DaymontlyReportInfo>)dataDao.getObjectsViaParam(hql.toString(), params,end);
 			}else
 			{
-				result=(List<daymontlyreportInfo>)dataDao.getObjectsViaParam(hql.toString(), params,start);
+				result=(List<DaymontlyReportInfo>)dataDao.getObjectsViaParam(hql.toString(), params,start);
 			}
 		}else
 		{
-			  result=(List<daymontlyreportInfo>)dataDao.getObjectsViaParam(hql.toString(), params,start,end);
+			  result=(List<DaymontlyReportInfo>)dataDao.getObjectsViaParam(hql.toString(), params,start,end);
 		}
 		return result;
 	}

@@ -163,7 +163,7 @@ public interface ISOrderService {
 	 * @return
 	 */
 	public abstract QueryResult<OrderInfo> getOrderList(String coachphone, String studentphone, String startminsdate, String startmaxsdate, String endminsdate, String endmaxsdate, String createminsdate, String createmaxsdate, Integer state,
-			Integer ordertotal, String inputordertotal, Integer ishavacomplaint,Integer paytype,Integer ordertype, Integer pageIndex, int pagesize);
+			Integer ordertotal, String inputordertotal, Integer ishavacomplaint,Integer paytype,Integer ordertype,String overtimeRangeS,String overtimeRangeE, Integer pageIndex, int pagesize);
 
 	/**
 	 * 获取投诉列表

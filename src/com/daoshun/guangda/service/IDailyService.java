@@ -6,7 +6,7 @@ import java.util.List;
 import com.daoshun.common.QueryResult;
 import com.daoshun.guangda.NetData.CoinReportBySchool;
 import com.daoshun.guangda.pojo.OrderInfo;
-import com.daoshun.guangda.pojo.daymontlyreportInfo;
+import com.daoshun.guangda.pojo.DaymontlyReportInfo;
 
 
 public interface IDailyService {
@@ -46,7 +46,7 @@ public interface IDailyService {
 	public abstract Object getAccountReport(String addtime);
 	
 	//ChRx
-	public List<daymontlyreportInfo> getAccountReportX(String starttime,String endtime);
+	public List<DaymontlyReportInfo> getAccountReportX(String starttime,String endtime);
 
 	public abstract List<Object> getCouponReportMontly(Date startdate,Date enddate,String schoolId);
 	

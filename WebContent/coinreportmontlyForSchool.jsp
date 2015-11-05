@@ -37,15 +37,21 @@
 					+ starttime + "&endtime=" + endtime+"&schoolid="+schoolid;
 	}
 
-	function dataExport() {
+	function dataExport(){
 		var starttime = $("#starttime").val();
 		var endtime = $("#endtime").val();
-		if (endtime < starttime)
+		var driverschoolid= $("#schoolid").val();
+		if(driverschoolid==0)
+		{
+			alert("请先选择驾校");
+			return;
+		}
+		if(endtime<starttime)
 			alert("结束时间必须大于开始时间，请重新选择！");
-		else {
+		else
+		{
 			if (confirm("确认导出小巴币数据？")) {
-				window.location.href = "getCoinReportForSchool.do?starttime="
-						+ starttime + "&endtime=" + endtime;
+				window.location.href="CoinReportMontlyExportBySchool.do?starttime="+starttime+"&endtime="+endtime+"&schoolid="+driverschoolid;
 			}
 		}
 	}
