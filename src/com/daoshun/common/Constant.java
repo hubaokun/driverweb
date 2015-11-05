@@ -465,5 +465,8 @@ public class Constant {
 	/**获取学员收藏题目的数量**/
 	public static final String GETANSWERRECORDINFO = "GETANSWERRECORDINFO";
 	
+	/**教练价格范围**/
+	public static final String GETCOACHPRICERANGE = "GETCOACHPRICERANGE";
+	
 	
 }

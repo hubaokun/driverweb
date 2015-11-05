@@ -75,7 +75,7 @@ public class CuserServlet extends BaseServlet {
 			String action = getAction(request);
 
 			if (Constant.CPERFECTACCOUNTINFO.equals(action) || Constant.CCHANGEAVATAR.equals(action) || Constant.CPERFECTPERSONINFO.equals(action) || Constant.CPERFECTCOACHINFO.equals(action)
-					|| Constant.RECHARGE.equals(action) || Constant.GETMYBALANCEINFO.equals(action) || Constant.GETMYCOINRECORD.equals(action) || Constant.GRANTCOUPON.equals(action) || Constant.GETCOACHCOUPONLIST.equals(action)) {
+					|| Constant.RECHARGE.equals(action) || Constant.GETMYBALANCEINFO.equals(action) || Constant.GETMYCOINRECORD.equals(action) || Constant.GRANTCOUPON.equals(action) || Constant.GETCOACHCOUPONLIST.equals(action) || Constant.GETCOACHPRICERANGE.equals(action)) {
 				if (!checkSession(request, action, resultMap)) {
 					setResult(response, resultMap);
 					return;
@@ -134,6 +134,9 @@ public class CuserServlet extends BaseServlet {
 			else if (Constant.GETCOACHCOUPONLIMIT.equals(action)) {
 				// 获取教练是否有发放小巴券权限
 				getCoachCouponlimit(request, resultMap);
+			}else if (Constant.GETCOACHPRICERANGE.equals(action)) {
+				// 获取教练是否有发放小巴券权限
+				getCoachPriceRange(request, resultMap);
 			}
 			else {
 				throw new ErrException();
@@ -178,6 +181,9 @@ public class CuserServlet extends BaseServlet {
 			userid = getRequestParamter(request, "coachid");
 			usertype = "1";
 		}else if (Constant.GETCOACHCOUPONLIST.equals(action)) {
+			userid = getRequestParamter(request, "coachid");
+			usertype = "1";
+		}else if (Constant.GETCOACHPRICERANGE.equals(action)) {
 			userid = getRequestParamter(request, "coachid");
 			usertype = "1";
 		}
@@ -963,5 +969,27 @@ public class CuserServlet extends BaseServlet {
 		CommonUtils.validateEmpty(coachid);
 		Integer flag=cuserService.getcoachcouponlimit(coachid);
 		resultMap.put("grantlimit",flag);
+	}
+	
+	/*
+	 * 教练端开课前获得该教练的课程价格区间
+	 * 科目二范围 50   1000
+	 * 科目三范围 50   1000
+	 * 考场训练范围 50  1000
+	 * 陪驾范围 50  1000
+	 * 租车范围 0   500
+	 * 科目二体验课范围 0  500
+	 * 科目三体验课范围 0  500
+	 * added by 张聚弘
+	 * 2015-11-04
+	 * */
+	public void  getCoachPriceRange(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException
+	{
+		String coachid = getRequestParamter(request, "coachid");// 教练ID
+		CommonUtils.validateEmpty(coachid);
+
+		CuserInfo cuser = cuserService.getCuserByCoachid(coachid);
+
+		resultMap.put("UserInfo",cuser);
 	}
 }

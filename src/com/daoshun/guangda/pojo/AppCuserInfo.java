@@ -42,7 +42,7 @@ public class AppCuserInfo implements Serializable {
 	private String realname;
 
 	private float score = 0;
-	private String phone;//手机号
+	private String phone;// 手机号
 	private String telphone;//
 
 	// 头像图片地址
@@ -65,31 +65,43 @@ public class AppCuserInfo implements Serializable {
 	@Transient
 	private String levelname;
 	private Integer drive_schoolid;
-	
+
 	// 准教车列表
 	@Transient
 	private List<ModelsInfo> modellist;
-	
+
 	// 教练准教车型ID集合，逗号隔开
 	@Column(name = "modelid", length = 50)
 	private String modelid;
 	// 总订单数量
-	
+
 	private Integer sumnum;
 	private String address;
 	private int avatar = 0;
 	private BigDecimal money;
 	private BigDecimal gmoney;
-	
+
 	private int coursestate;
-	
+
 	private int accompanycoursestate;
-	
+
 	private Integer accompanynum;
-	
+
 	private Integer freecoursestate;
-	
-	
+
+	/**
+	 * 签约状态 ： 0 未签约，1 已签约 ，2 签约过期
+	 */
+	@Column(name = "signstate", columnDefinition = "INT default 0")
+	private Integer signstate = 0;
+
+	public Integer getSignstate() {
+		return signstate;
+	}
+
+	public void setSignstate(Integer signstate) {
+		this.signstate = signstate;
+	}
 
 	public Integer getFreecoursestate() {
 		return freecoursestate;
@@ -178,10 +190,6 @@ public class AppCuserInfo implements Serializable {
 	public void setCoachid(int coachid) {
 		this.coachid = coachid;
 	}
-
-	
-
-	
 
 	public Integer getRealpic() {
 		return realpic;
@@ -294,7 +302,5 @@ public class AppCuserInfo implements Serializable {
 	public void setModelid(String modelid) {
 		this.modelid = modelid;
 	}
-
-	
 
 }
