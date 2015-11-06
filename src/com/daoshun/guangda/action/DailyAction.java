@@ -1506,7 +1506,9 @@ public class DailyAction extends BaseAction {
 	    
 		filename = CommonUtils.properties.getProperty("uploadFilePath") + newfilename;
 		HttpServletResponse response = ServletActionContext.getResponse();
-		CommonUtils.downloadExcel(filename, "运营日月报表", response);
+        String[] datemessage=starttime.split("-");
+        String excelname=datemessage[0]+"年"+datemessage[1]+"月运营日月报表";
+		CommonUtils.downloadExcel(filename,excelname, response);
 	}
 	/**
 	 * 教练日报
@@ -3423,7 +3425,7 @@ public class DailyAction extends BaseAction {
 	}
 
 	/**
-	   * 跳转日业绩报表
+	   * 跳转运营日月业绩报表
 	   * @throws IOException
 	   */
 		@SuppressWarnings("deprecation")
@@ -3431,8 +3433,18 @@ public class DailyAction extends BaseAction {
 		public String GotoAccountReport(){
 		   return SUCCESS;
 		}
+		/**
+		   * 跳转日业绩报表
+		   * @throws IOException
+		   */
+			@SuppressWarnings("deprecation")
+			@Action(value = "/GotoAccountReportByDay",results = { @Result(name = SUCCESS, location = "/accountreportbyday.jsp") })
+			public String GotoAccountReportByDay(){
+			   return SUCCESS;
+			}
+		
 		 /**
-		   * 日业绩报表
+		   * 运营日月业绩报表
 		   * @throws IOException
 		   */
 			@SuppressWarnings("deprecation")
@@ -3449,6 +3461,80 @@ public class DailyAction extends BaseAction {
 			    
 			   return SUCCESS;
 			}
+			
+			   /**
+			   * 日业绩报表
+			   * @throws IOException
+			   */
+				@SuppressWarnings("deprecation")
+				@Action(value = "/getaccountreportdaliybyday",results = { @Result(name = SUCCESS, location = "/accountreportbyday.jsp") })
+				public String getaccountreportdaliybyday(){
+					if (CommonUtils.isEmptyString(addtime) || addtime == null) {
+						DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+						addtime = formatter.format(new Date());
+					}
+					Object object = dailyService.getAccountReport(addtime);
+					Object[] obj=(Object[]) object;
+					accountreportdaliy=new AccountReportDaily();
+					if(obj[0]!=null)
+				        accountreportdaliy.setRegistcoach((Integer)obj[0]);
+					else
+						accountreportdaliy.setRegistcoach(0);
+					if(obj[1]!=null)
+				        accountreportdaliy.setRegiststudent((Integer) obj[1]);
+					else
+						 accountreportdaliy.setRegiststudent(0);
+					if(obj[2]!=null)
+						 accountreportdaliy.setApply((Integer) obj[2]);
+					else
+						 accountreportdaliy.setApply(0);
+					if(obj[3]!=null)
+				         accountreportdaliy.setCoachbeginclass((Integer) obj[3]);
+					else
+						 accountreportdaliy.setCoachbeginclass(0);
+					if(obj[4]!=null)
+				         accountreportdaliy.setCoursetimecount((Integer) obj[4]);
+					else
+						accountreportdaliy.setCoursetimecount(0);
+					if(obj[5]!=null)
+				        accountreportdaliy.setReservedstudent((Integer) obj[5]);
+					else
+						accountreportdaliy.setReservedstudent(0);
+					if(obj[6]!=null)
+				        accountreportdaliy.setReservedcoursetime((Integer) obj[6]);
+					else
+						accountreportdaliy.setReservedcoursetime(0);
+					if(obj[7]!=null)
+				        accountreportdaliy.setOrderbycash((Integer) obj[7]);
+					else
+						accountreportdaliy.setOrderbycash(0);
+					if(obj[8]!=null)
+				        accountreportdaliy.setOrderbycoupon((Integer) obj[8]);
+					else
+						accountreportdaliy.setOrderbycoupon(0);
+					if(obj[9]!=null)
+				        accountreportdaliy.setOrderbycoin((Integer) obj[9]);
+					else
+						accountreportdaliy.setOrderbycoin(0);
+					if(obj[10]!=null)
+				        accountreportdaliy.setOrdercancel((Integer) obj[10]);
+					else
+						accountreportdaliy.setOrdercancel(0);
+					if(obj[11]!=null)
+				        accountreportdaliy.setCash((Integer) obj[11]);
+					else
+						accountreportdaliy.setCash(0);
+					if(obj[12]!=null)
+				        accountreportdaliy.setCoupon((Integer) obj[12]);
+					else
+						accountreportdaliy.setCoupon(0);
+					if(obj[13]!=null)
+				        accountreportdaliy.setCoin((Integer) obj[13]);
+					else
+						accountreportdaliy.setCoin(0);
+				    
+				   return SUCCESS;
+				}
 	  /**
 	   * 跳转到小巴券月报表
 	 * @return 
@@ -3817,12 +3903,24 @@ public class DailyAction extends BaseAction {
 						
 						++colIndex;
 						cell=row.createCell(colIndex);
-						cell.setCellValue(info.getStudentinfo().getRealname());
+						if(info.getStudentinfo()!=null)
+						{
+							cell.setCellValue(info.getStudentinfo().getRealname());
+						}else
+						{
+							cell.setCellValue("");
+						}
 						cell.setCellStyle(style);
 						
 						++colIndex;
 						cell=row.createCell(colIndex);
-						cell.setCellValue(info.getStudentinfo().getPhone());
+						if(info.getStudentinfo()!=null)
+						{
+							cell.setCellValue(info.getStudentinfo().getPhone());
+						}else
+						{
+							cell.setCellValue("");
+						}
 						cell.setCellStyle(style);
 						
 						++colIndex;
@@ -3862,17 +3960,36 @@ public class DailyAction extends BaseAction {
 						
 						++colIndex;
 						cell=row.createCell(colIndex);
-						cell.setCellValue(info.getCoachInfo().getRealname());
+						if(info.getCoachInfo()!=null)
+						{
+							cell.setCellValue(info.getCoachInfo().getRealname());
+						}else
+						{
+							cell.setCellValue("");
+						}
 						cell.setCellStyle(style);
 						
 						++colIndex;
 						cell=row.createCell(colIndex);
-						cell.setCellValue(info.getSchoolInfo().getName());
+						if(info.getSchoolInfo()!=null)
+						{
+							cell.setCellValue(info.getSchoolInfo().getName());
+						}else
+						{
+							cell.setCellValue("");
+						}
+						
 						cell.setCellStyle(style);
 						
 						++colIndex;
 						cell=row.createCell(colIndex);
-						cell.setCellValue(info.getCoachInfo().getPhone());
+						if(info.getCoachInfo()!=null)
+						{
+							cell.setCellValue(info.getCoachInfo().getPhone());
+						}else
+						{
+							cell.setCellValue("");
+						}
 						cell.setCellStyle(style);
 						//行结束
 						

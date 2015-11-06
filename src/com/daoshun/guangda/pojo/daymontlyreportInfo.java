@@ -1,5 +1,6 @@
 package com.daoshun.guangda.pojo;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -8,11 +9,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.transaction.Transactional;
 @Entity
 @Table(name="t_daymonthly")
 
 public class DaymontlyReportInfo {
-     
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="id")
@@ -51,26 +53,30 @@ public class DaymontlyReportInfo {
 	private Integer	 c_couponschool;
 	@Column(name="c_couponcoach",columnDefinition = "INT default 0")
 	private Integer	 c_couponcoach ;
-	@Column(name="s_coinplatform",columnDefinition = "INT default 0")
-	private Integer	 s_coinplatform ;
-	@Column(name="s_coinschool",columnDefinition = "INT default 0")
-	private Integer	 s_coinschool ;
-	@Column(name="s_coincoach",columnDefinition = "INT default 0")
-	private Integer	 s_coincoach ;
-	@Column(name="c_coinplatform",columnDefinition = "INT default 0")
-	private Integer	 c_coinplatform ;
-	@Column(name="c_coinschool",columnDefinition = "INT default 0")
-	private Integer	 c_coinschool ;
-	@Column(name="c_coincoach",columnDefinition = "INT default 0")
-	private Integer	 c_coincoach ;
-	@Column(name="coachorderprice",columnDefinition = "INT default 0")
-	private Integer	 coachorderprice ;
-	@Column(name="coachrecharge",columnDefinition = "INT default 0")
-	private Integer	 coachrecharge ;
-	@Column(name="studentrecharge",columnDefinition = "INT default 0")
-	private Integer	 studentrecharge ;
-	@Column(name="studentapplycash",columnDefinition = "INT default 0")
-	private Integer	 studentapplycash ;
+	@Column(name="s_coinplatform",nullable = false,columnDefinition = "Decimal(20,2) default 0.00")
+	private BigDecimal  s_coinplatform;
+	@Column(name="s_coinschool",nullable = false,columnDefinition = "Decimal(20,2) default 0.00")
+	private BigDecimal	s_coinschool;
+	@Column(name="s_coincoach",nullable = false,columnDefinition = "Decimal(20,2) default 0.00")
+	private BigDecimal	s_coincoach;
+	@Column(name="c_coinplatform",nullable = false,columnDefinition = "Decimal(20,2) default 0.00")
+	private BigDecimal	c_coinplatform;
+	@Column(name="c_coinschool",nullable = false,columnDefinition = "Decimal(20,2) default 0.00")
+	private BigDecimal	c_coinschool;
+	@Column(name="c_coincoach",nullable = false,columnDefinition = "Decimal(20,2) default 0.00")
+	private BigDecimal	c_coincoach;
+	@Column(name="coachorderprice",nullable = false,columnDefinition = "Decimal(20,2) default 0.00")
+	private BigDecimal	coachorderprice;
+	@Column(name="coachrecharge",nullable = false,columnDefinition = "Decimal(20,2) default 0.00")
+	private BigDecimal	coachrecharge;
+	@Column(name="studentrecharge",nullable = false,columnDefinition = "Decimal(20,2) default 0.00")
+	private BigDecimal	studentrecharge;
+	@Column(name="studentapplycash",nullable = false,columnDefinition = "Decimal(20,2) default 0.00")
+	private BigDecimal	studentapplycash;
+	
+	@Column(name="now_month",columnDefinition = "INT default 0")
+	private Integer now_month;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -179,66 +185,74 @@ public class DaymontlyReportInfo {
 	public void setC_couponcoach(Integer c_couponcoach) {
 		this.c_couponcoach = c_couponcoach;
 	}
-	public Integer getS_coinplatform() {
+	
+	public BigDecimal getS_coinplatform() {
 		return s_coinplatform;
 	}
-	public void setS_coinplatform(Integer s_coinplatform) {
+	public void setS_coinplatform(BigDecimal s_coinplatform) {
 		this.s_coinplatform = s_coinplatform;
 	}
-	public Integer getS_coinschool() {
+	public BigDecimal getS_coinschool() {
 		return s_coinschool;
 	}
-	public void setS_coinschool(Integer s_coinschool) {
+	public void setS_coinschool(BigDecimal s_coinschool) {
 		this.s_coinschool = s_coinschool;
 	}
-	public Integer getS_coincoach() {
+	public BigDecimal getS_coincoach() {
 		return s_coincoach;
 	}
-	public void setS_coincoach(Integer s_coincoach) {
+	public void setS_coincoach(BigDecimal s_coincoach) {
 		this.s_coincoach = s_coincoach;
 	}
-	public Integer getC_coinplatform() {
+	public BigDecimal getC_coinplatform() {
 		return c_coinplatform;
 	}
-	public void setC_coinplatform(Integer c_coinplatform) {
+	public void setC_coinplatform(BigDecimal c_coinplatform) {
 		this.c_coinplatform = c_coinplatform;
 	}
-	public Integer getC_coinschool() {
+	public BigDecimal getC_coinschool() {
 		return c_coinschool;
 	}
-	public void setC_coinschool(Integer c_coinschool) {
+	public void setC_coinschool(BigDecimal c_coinschool) {
 		this.c_coinschool = c_coinschool;
 	}
-	public Integer getC_coincoach() {
+	public BigDecimal getC_coincoach() {
 		return c_coincoach;
 	}
-	public void setC_coincoach(Integer c_coincoach) {
+	public void setC_coincoach(BigDecimal c_coincoach) {
 		this.c_coincoach = c_coincoach;
 	}
-	public Integer getCoachorderprice() {
+	public BigDecimal getCoachorderprice() {
 		return coachorderprice;
 	}
-	public void setCoachorderprice(Integer coachorderprice) {
+	public void setCoachorderprice(BigDecimal coachorderprice) {
 		this.coachorderprice = coachorderprice;
 	}
-	public Integer getCoachrecharge() {
+	public BigDecimal getCoachrecharge() {
 		return coachrecharge;
 	}
-	public void setCoachrecharge(Integer coachrecharge) {
+	public void setCoachrecharge(BigDecimal coachrecharge) {
 		this.coachrecharge = coachrecharge;
 	}
-	public Integer getStudentrecharge() {
+	public BigDecimal getStudentrecharge() {
 		return studentrecharge;
 	}
-	public void setStudentrecharge(Integer studentrecharge) {
+	public void setStudentrecharge(BigDecimal studentrecharge) {
 		this.studentrecharge = studentrecharge;
 	}
-	public Integer getStudentapplycash() {
+	public BigDecimal getStudentapplycash() {
 		return studentapplycash;
 	}
-	public void setStudentapplycash(Integer studentapplycash) {
+	public void setStudentapplycash(BigDecimal studentapplycash) {
 		this.studentapplycash = studentapplycash;
 	}
+	public Integer getNow_month() {
+		return now_month;
+	}
+	public void setNow_month(Integer now_month) {
+		this.now_month = now_month;
+	}
+
 	
 	
 	
