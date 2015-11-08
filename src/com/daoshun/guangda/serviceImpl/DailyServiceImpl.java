@@ -237,18 +237,30 @@ public class DailyServiceImpl extends BaseServiceImpl implements IDailyService {
 			}
 			order.setCoachInfo(coachInfo);
 			order.setSchoolInfo(school);
-			//1 余额  2 小巴券  3 小巴币
+			//0：余额（原来:2015-08-05 23:00前）1余额  2 小巴券  3 小巴币
+			Date newDataBeginingDate=CommonUtils.getDateFormat("2015-08-06","yyyy-MM-dd");
+			Date currDate=CommonUtils.getDateFormat(order.getDate(),"yyyy-MM-dd");
+			if(order.getPaytype()==0 && currDate.before(newDataBeginingDate))
+			{
+				order.setPaytypename("余额");
+			}
+			
 			if (order.getPaytype()==1) {
 				order.setPaytypename("余额");
 				order.setPaidMoney(String.valueOf(order.getTotal()));
 			}
-			if (order.getPaytype()==1) {
+			if (order.getPaytype()==2) {
 				order.setPaytypename("小巴券");
 				order.setPaidMoney("0");
 			}
-			if (order.getPaytype()==1) {
+			if (order.getPaytype()==3) {
 				order.setPaytypename("小巴币");
 				order.setPaidMoney("0");
+			}
+			if(order.getPaytype()==4)
+			{
+				order.setPaytypename("混合支付");
+				order.setPaidMoney("币:"+order.getMixCoin()+",余:"+order.getMixMoney());
 			}
 			if(order.getMixCoin()!=0 && order.getMixMoney()!=0)
 			{
@@ -256,8 +268,11 @@ public class DailyServiceImpl extends BaseServiceImpl implements IDailyService {
 				order.setPaidMoney("币:"+order.getMixCoin()+",余:"+order.getMixMoney());
 			}
 			OrderPrice orderPrice=dataDao.getObjectById(OrderPrice.class,order.getOrderid());
-			order.setSubjectname(orderPrice.getSubject());
-			order.setUnitPrice(orderPrice.getPrice());
+			if(orderPrice!=null)
+			{
+				order.setSubjectname(orderPrice.getSubject());
+				order.setUnitPrice(orderPrice.getPrice());
+			}
 		}
 		String counthql = " select count(*) " + hql.toString();
         long total = (Long) dataDao.getFirstObjectViaParam(counthql,null);
@@ -290,15 +305,26 @@ public class DailyServiceImpl extends BaseServiceImpl implements IDailyService {
 			}
 			order.setCoachInfo(coachInfo);
 			order.setSchoolInfo(school);
-			//1 余额  2 小巴券  3 小巴币
-			if (order.getPaytype()==1) {
+			//0：余额（原来:2015-08-05 23:00前）1余额  2 小巴券  3 小巴币
+			Date newDataBeginingDate=CommonUtils.getDateFormat("2015-08-06","yyyy-MM-dd");
+			Date currDate=CommonUtils.getDateFormat(order.getDate(),"yyyy-MM-dd");
+			if(order.getPaytype()==0 && currDate.before(newDataBeginingDate))
+			{
 				order.setPaytypename("余额");
 			}
 			if (order.getPaytype()==1) {
+				order.setPaytypename("余额");
+			}
+			if (order.getPaytype()==2) {
 				order.setPaytypename("小巴券");
 			}
-			if (order.getPaytype()==1) {
+			if (order.getPaytype()==3) {
 				order.setPaytypename("小巴币");
+			}
+			if(order.getPaytype()==4)
+			{
+				order.setPaytypename("混合支付");
+				order.setPaidMoney("币:"+order.getMixCoin()+",余:"+order.getMixMoney());
 			}
 			if(order.getMixCoin()!=0 && order.getMixMoney()!=0)
 			{
@@ -306,8 +332,11 @@ public class DailyServiceImpl extends BaseServiceImpl implements IDailyService {
 				order.setPaidMoney("币:"+order.getMixCoin()+",余:"+order.getMixMoney());
 			}
 			OrderPrice orderPrice=dataDao.getObjectById(OrderPrice.class,order.getOrderid());
-			order.setSubjectname(orderPrice.getSubject());
-			order.setUnitPrice(orderPrice.getPrice());
+			if(orderPrice!=null)
+			{
+				order.setSubjectname(orderPrice.getSubject());
+				order.setUnitPrice(orderPrice.getPrice());
+			}
 		}
 		return orderList;
 	}else {
