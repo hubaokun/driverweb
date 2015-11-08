@@ -101,7 +101,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			}
 			
 			//计算订单总数
-			String hqlsumnum = " select count(*)   from OrderInfo where coachid= " + cuser.getCoachid();
+			String hqlsumnum = " select count(1)   from OrderInfo where coachid= " + cuser.getCoachid();
 			Long sumnum_order = (Long) dataDao.getFirstObjectViaParam(hqlsumnum, null);
 			if(sumnum_order.longValue()>0){
 				cuser.setSumnum(sumnum_order);
