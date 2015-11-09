@@ -18,9 +18,9 @@
 	<div class="row empty-row"></div>
 	<div class="row question-bar">
     	<div class="col-md-3 col-sm-3 col-xs-3">
-        	<a href="index.html" class="back"></a>
+        	<a href="index.jsp" class="back"></a>
         </div>
-		<div class="col-md-6 col-sm-6 col-xs-6"><span class="current-title">科目一顺序练习</span></div>
+		<div class="col-md-6 col-sm-6 col-xs-6"><span class="current-title">科目四多选练习</span></div>
         <div class="col-md-3 col-sm-3 col-xs-3">
         	<a href="javascript:void(0)" class="board" onclick="showquestionboard ()"></a>
         </div>
@@ -93,8 +93,7 @@ var pagenum = 0;      		//记录请求到第几页了  （一页的数据是20�
 var questiondata;    		//记录20道题的全部信息
 var countquestions = 0;     //用于记录题数
 
-//var collectquestionids = [];      //收藏的题目的id
-var answerquestions = [];         //用于保存题目信息
+var answerquestions = [];           //用于保存题目信息
 
 //TO DO: loading questions(20 unit) for the page for the first time
 var active_url = "../examination";
@@ -245,7 +244,6 @@ function returnindex (arr,num)
 		if (arr[i][0] == num)
 		{
 			index = i;
-			//alert (index);
 			break;
 		}
 	}
@@ -315,42 +313,32 @@ function changebuttonsstatement(isopen)
 //TO DO: first load all the questions for the page
 function showItems (data)
 {
-	//alert (data);
 	questiondata = data;
 	
 	if (pagenum == 0)
 	{
 		initialquestionid = data.list[0].questionno;
-		//alert ("题目的初始ID是：" + initialquestionid);
 	}
 
 	loadQuestionTitle(data,questionid);
 	
 	loadQuestionItems (data,questionid);
-	
-	//TO DO: load best explain
-	loadBestExplain(data,questionid);    //data.list[0].commentate
+
+	loadBestExplain(data,questionid);   
 	
 	loadFooterBtn ();
 }
 
 function showItems2(data)
 {
-	//alert(data);
 	questiondata  = data;
-	
-	//alert (questionid);
-	
-	//TO DO: load question title 
+
 	loadQuestionTitle (data,questionid);
-	
-	//TO DO: load question items
-	loadQuestionItems(data,questionid);  //data.list[page].answer,data.list[page].options	
-	
-	//TO DO: load best explain
-	loadBestExplain(data,questionid);    //data.list[0].commentate
-	
-	//TO DO: load the footer's buttons
+
+	loadQuestionItems(data,questionid); 
+
+	loadBestExplain(data,questionid);
+
 	loadFooterBtn ();
 }
 
@@ -380,18 +368,17 @@ function loadQuestionTitle (data,questionid)
 	}
 	else
 	{
-		//alert ("本题是没有动画或则图片的");
+		console.log ("本题是没有动画或则图片的");
 	}	
 	
 	ancestorDiv.append(parentDiv);
 }
 
 //TO DO: load the question items
-function loadQuestionItems (data,questionid)  ////data.list[page].answer,data.list[page].options
+function loadQuestionItems (data,questionid) 
 {
 	var size = data.list[questionid-1].options.length;
 	var questionon = data.list[questionid-1].questionno;
-	//alert (size);
 	
 	var ancestorDiv = $('.question-col');
 	
@@ -401,7 +388,6 @@ function loadQuestionItems (data,questionid)  ////data.list[page].answer,data.li
 	parentDiv.attr('questioncute',data.list[questionid-1].questionno);
 	
 	prequestionrealid = data.list[questionid-1].questionno;
-	//alert ("获得本页的题目的真实id号是：" + prequestionrealid);	
 	
 	var childArrayA = new Array(size);
 	
@@ -428,8 +414,7 @@ function loadQuestionItems (data,questionid)  ////data.list[page].answer,data.li
 		
 		parentDiv.append(childArrayA[i]);
 	}
-	
-	//append the 'submit' button
+
 	var parentDivButton = $('<div></div>');
 	parentDivButton.addClass('col-md-12 col-sm-12 col-xs-12 question-btn');
 	
@@ -440,8 +425,7 @@ function loadQuestionItems (data,questionid)  ////data.list[page].answer,data.li
 	childButton.attr('onclick','submitmuloption(this)');
 	childButton.attr('disabled','disabled');
 	parentDivButton.append(childButton);
-	
-	//alert (childArrayA);
+
 	ancestorDiv.append(parentDiv);
 	ancestorDiv.append(parentDivButton);	
 	
@@ -453,9 +437,6 @@ function loadQuestionItems (data,questionid)  ////data.list[page].answer,data.li
 			var arightindex = answerquestions[index][1];       //获得正确的选项 
 			var awrongindex = answerquestions[index][2];       //获得用户选择的选项
 
-			//alert ("alert parentDiv" + parentDiv);
-			
-			//*******************************************
 			parentDiv.find("a").each(function ()
 			{
 				var _itemanswer = $(this).attr('answer');
@@ -641,7 +622,6 @@ function showchooseresult(obj,myanswer)
 	}	
 	
 	answerquestions.push(question);
-	//alert (answerquestions.length);
 }
 
 //TO DO: compare and show the result
@@ -696,11 +676,6 @@ function gotoquestion (questionnum)
 	{
 		pagenum = 0;
 	}
-	//alert ("questionid shi :" + questionid);
-	
-	     //相当于要请求的pagenum
-	
-	//alert("the pagennum in gotoquestion is " + pagenum);
 	
 	params = {action:"GETEXAMINATION",type:3,studentid:18,pagenum:pagenum};
 	jQuery.post(active_url, params,showItems2, 'json'); 
@@ -718,9 +693,7 @@ function loadPreQuestion (data)
 	--countquestions;
 	
 	var _currentquestion = countquestions + 1;
-	alert ("在 load next question 中获得的" + _currentquestion);
-	
-	//本地存储：存储当前答题进行到哪一题了
+
 	window.localStorage.setItem("currentquestion",_currentquestion);
 	
 	
@@ -728,16 +701,13 @@ function loadPreQuestion (data)
 	
 	if (record >= 1)
 	{	
-		//TO DO: load question title 
 		loadQuestionTitle (data,questionid);
 	
 		loadQuestionItems(data,questionid); 	
-		
-		//TO DO: load the footer's buttons
+
 		loadFooterBtn ();
-		
-		//TO DO: load best explain
-		loadBestExplain(data,questionid);    //data.list[0].commentate
+
+		loadBestExplain(data,questionid);
 	}
 	else
 	{
@@ -756,9 +726,7 @@ function loadPreQuestion (data)
 		{
 			pagenum--;
 			
-			//alert ("新请求的一章页的页数为：" + pagenum);
 			questionid = 20;
-			//alert ("重置：" + questionid);
 			
 			params = {action:"GETEXAMINATION",type:3,studentid:18,pagenum:pagenum};
 			jQuery.post(active_url, params, showItems, 'json');
@@ -778,41 +746,36 @@ function loadNextQuestion (data)
 	++questionid;
 	
 	var _currentquestion = countquestions + 1;
-	alert ("在 load next question 中获得的" + _currentquestion);
 	
 	//本地存储：存储当前答题进行到哪一题了
 	window.localStorage.setItem("currentquestion",_currentquestion);
 	
-	if ((countquestions%20 == 0)  && (data.hasmore == 1))   //并且之后应该再加一个条件：就是hasmore要为1
+	if ((countquestions%20 == 0)  && (data.hasmore == 1))
 	{
 		pagenum++;
-		
-		//alert ("新请求的一章页的页数为：" + pagenum);
+
 		questionid = 1;
-		//alert ("重置：" + questionid);
 		
 		params = {action:"GETEXAMINATION",type:3,studentid:18,pagenum:pagenum};
 		jQuery.post(active_url, params, showItems, 'json');
 	}
 	else if (countquestions == 149)
 	{
-		//alert ("没有下页的数据了");
 		showpopwindow ();
+		
+		countquestions = 148;
+		questionid--;
 		
 		return;
 	}
 	
-	//TO DO: load question title 
 	loadQuestionTitle (data,questionid);
 	
-	//TO DO: load question items
-	loadQuestionItems(data,questionid);  //data.list[page].answer,data.list[page].options	
+	loadQuestionItems(data,questionid);	
 	
-	//TO DO: load the footer's buttons
 	loadFooterBtn ();
 	
-	//TO DO: load best explain
-	loadBestExplain(data,questionid);    //data.list[0].commentate
+	loadBestExplain(data,questionid);
 }
 
 //TO DO: change the statement and presentation of the "collect" button
@@ -873,8 +836,6 @@ function removecollectquestion ()
 	var studentid = 160;
 	var questionid = $('.question-item').attr('questioncute');   //变量： 题目id号
 	
-	//alert ("当前您想移除的题目的id号为：" + questionid);
-	
 	$.ajax({
 		url: "../examination",
 		data:
@@ -912,7 +873,10 @@ $(document).ready(function ()
 	
 	var _currentquestion_ = window.localStorage.getItem("currentquestion");
 	
-	showrestartdialog (_currentquestion_);
+	if (_currentquestion_ != null)
+	{
+		showrestartdialog (_currentquestion_);
+	}
 	
 	var obj_cancel = $('.only-certain');
 	var objoverlay1 = $('.overlay-first');

@@ -29,4 +29,7 @@ public interface IExaminationService {
 	public  void parserJson() throws JSONException;
 	public boolean removeQuestionFavorites(int studentid,int questionno);
 	public int addAnswerRecord(int studentid,int lastquestionno);
+	
+	public List<Examination> getExaminationAll(String type,int studentid);
+	public int getExaminationTotal(String type) ;
 }

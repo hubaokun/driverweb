@@ -447,6 +447,8 @@ public class Constant {
 	/**获取考驾模拟题目**/
 	public static final String GETANALOGEXAMINATION = "GETANALOGEXAMINATION";
 	
+	public static final String GETEXAMINATIONALL = "GETEXAMINATIONALL";
+	
 	/**考驾题目收藏**/
 	public static final String ADDQUESTIONFAVORITES = "ADDQUESTIONFAVORITES";
 	

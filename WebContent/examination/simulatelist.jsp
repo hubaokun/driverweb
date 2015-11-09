@@ -18,9 +18,9 @@
 	<div class="row empty-row"></div>
 	<div class="row question-bar">
     	<div class="col-md-3 col-sm-3 col-xs-3">
-        	<a href="index.html" class="back"></a>
+        	<a href="javascript:void(0);" class="back" onclick="showslidewindow ()"></a>
         </div>
-		<div class="col-md-6 col-sm-6 col-xs-6"><span class="current-title">科目一顺序练习</span></div>
+		<div class="col-md-6 col-sm-6 col-xs-6"><span class="current-title"></span></div>
         <div class="col-md-3 col-sm-3 col-xs-3">
         	<a href="javascript:void(0)" class="board" onclick="showquestionboard ()"></a>
         </div>
@@ -31,10 +31,7 @@
     <div style="height:56px; width:100px;"></div>
     <div class="row footbtns">
     	<div class="footbtns-inner">
-<!--         	<a href="javascript:void(0);" class="pre">上一题</a>
-            <a href="javascript:void(0);" class="next">下一题</a>
-            <a href="javascript:void(0);" class="timer">45:00</a>
-            <a href="javascript:void(0);" class="handin">交卷</a> -->
+
         </div>
     </div>
 </div>
@@ -89,7 +86,7 @@ var questionid = 1;	  		//记录加载到第几道题目,初始值为1
 var prequestionrealid = 1;  //用于记录当前回答题目的上一题的questiono是多少
 var pagenum = 0;      		//记录请求到第几页了  （一页的数据是20道题目）
 var questiondata;           //记录20道题的全部信息
-var scores = 100;           //用户回答的分数
+var scores = 0;           	//用户回答的分数
 var examinationid;          //用于保存当前用户当前回答的模拟题的编号
 var countquestions = 0;     //用于记录题数
 var firsttimepage = true;   //用于标记是否是第一次请求pagenum为0的数据
@@ -107,7 +104,7 @@ function getquerystring(name)
 var timegot = getquerystring ("duration");
 var type = getquerystring ("simulatetype");
 var simulatetype = getquerystring("simulatetype");           //标识此次考试是科目一还是科目四的模拟考试
-var maxtime = timegot*60;        //一个小时，按秒计算，自己调整! 
+var maxtime = timegot*60;                                    //一个小时，按秒计算，自己调整! 
 
 //TO DO: loading questions(20 unit) for the page for the first time
 var active_url = "../examination";
@@ -245,17 +242,13 @@ function gotoquestion (questionnum)
 	{
 		pagenum = 0;
 	}
-	//alert ("questionid shi :" + questionid);
-	
-	     //相当于要请求的pagenum
-	
-	//alert("the pagennum in gotoquestion is " + pagenum);
 	
 	params = {action:"GETANALOGEXAMINATION",type:type,studentid:18,answerid:examinationid,pagenum:pagenum};
 	jQuery.post(active_url, params, showItems2, 'json');
 	
 	hidequestionboard();
 }
+
 //TO DO: funciton for showing and hiding pop up window
 function showwindow(obj,obj_overlay,flag)
 {
@@ -281,8 +274,8 @@ function showwindow(obj,obj_overlay,flag)
 	{
 		return false;
 	}
-
 }
+
 function hidewindow(obj,obj_overlay)
 {
 	obj.css('display','none');
@@ -309,6 +302,7 @@ function showpopwindow ()
 		$('.next').attr('onclick','showpopwindow ()');
 	}
 }
+
 function hidepopwindow ()
 {
 	var obj = $('.dialog-first');
@@ -322,12 +316,23 @@ function showslidewindow ()
 {
 	var obj = $('.dialog');
 	var objoverlay = $('.overlay');
-	var objcount = $('.goon span');//countquestions
-	var leftquestions = 100 - countquestions;
+	var objcount = $('.goon span');
+	var leftquestions;
+	
+	if (type == 1)
+	{
+		leftquestions = 100 - answerquestions.length;
+	}
+	else if (type == 2)
+	{
+		leftquestions = 50 - answerquestions.length;
+	}
+	
 	obj.css('display','block');
 	objoverlay.css('display','block');
 	objcount.html("").html(leftquestions);
 }
+
 function hideslidewindow ()
 {
 	var obj = $('.dialog');
@@ -356,33 +361,22 @@ function hidequestionboard()
 //TO DO: show the choose result
 function showchoosetrueresult(obj)
 {
-	//obj.addClass('item-right');
 	obj.removeAttr('onclick').siblings().removeAttr('onclick');	
 }
 
 function showchoosewrongresult(obj,trueanswer)
 {
-	//var questions = document.querySelectorAll('.question-item a');
-	//obj.addClass('item-wrong')
-/* 	for (var i=0;i<questions.length;i++)
-	{
-		if (questions.item(i).getAttribute('answer') == trueanswer)
-		{
-			questions.item(i).className = 'item-right'; 
-			break;
-		}
-	} */
 	$(obj).removeAttr('onclick').siblings().removeAttr('onclick');	
 }
 
 //单选题和判断题的选择方式
 function chooseoption(obj)
-{
+{	
 	data = questiondata;
 	
 	$(obj).addClass('bg-grey');
-	var strT = $(obj).parent().attr('trueanswer');             //正确答案
-	var str = $(obj).attr('answer');                           //用户选择的答案
+	var strT = $(obj).parent().attr('trueanswer');                  //正确答案
+	var str = $(obj).attr('answer');                                //用户选择的答案
 	var questioncute = $('.question-title').attr('questioncute');   //变量： 题目id号
 		
 	//TO DO: ues an array to record the information of the current question
@@ -396,7 +390,16 @@ function chooseoption(obj)
 	{
 		isopen = true;
 		question[3] = isopen;
-		scores = scores + 0;
+		
+		if (judgesimulatetype ())
+		{
+			scores = scores + 1;
+		}
+		else
+		{
+			scores = scores + 2;
+		}
+		
 		showchoosetrueresult($(obj));	
 	}
 	if (strT != str)
@@ -404,21 +407,12 @@ function chooseoption(obj)
 		isopen = false;
 		question[3] = isopen;
 		
-		if (judgesimulatetype ())
-		{
-			scores = scores - 1;
-		}
-		else
-		{
-			scores = scores - 2;
-		}
-				
+		scores = scores + 0;
+			
 		showchoosewrongresult($(obj),strT);
 	}
 	answerquestions.push(question);
-	//alert (answerquestions);
-	//alert ("您的得分是：" + scores);
-	
+
 	//当回答正确的时候，自动加载下一题的数据
 	setTimeout("loadNextQuestion (data)",1000); 
 }
@@ -464,7 +458,7 @@ function choosemuloption(obj)
 
 //TO DO: show the result
 function showchooseresult(obj,myanswer)
-{
+{	
 	data = questiondata;
 	
 	var _obj_pre = obj.prev();
@@ -495,7 +489,6 @@ function showchooseresult(obj,myanswer)
 			//changebuttonsstatement(false);
 			question[3] = false;
         }
-		//$(this).addClass(_toaddclass);
 		$(this).attr("onclick", "");
 	});
 	
@@ -506,7 +499,6 @@ function showchooseresult(obj,myanswer)
 	}	
 	
 	answerquestions.push(question);
-	//alert (answerquestions.length);
 	
 	setTimeout("loadNextQuestion (data)",1000); 	
 }
@@ -527,9 +519,7 @@ function showItems2 (data)
 	questiondata = data;
 	
 	examinationid = data.answerid;
-	//alert (examinationid);
-	
-	//alert (data);
+
 	loadQuestionTitle (data,questionid);
 	
 	loadQuestionItems (data,questionid);
@@ -541,9 +531,7 @@ function showItems (data)
 	questiondata = data;
 	
 	examinationid = data.answerid;
-	//alert (examinationid);
-	
-	//alert (data);
+
 	loadQuestionTitle (data,questionid);
 	
 	loadQuestionItems (data,questionid);
@@ -551,7 +539,6 @@ function showItems (data)
 	if (pagenum == 0  && firsttimepage)
 	{
 		initialquestionid = data.list[0].questionno;
-		//alert ("题目的初始ID是：" + initialquestionid);
 		
 		loadFooterBtn ();
 	}
@@ -561,8 +548,6 @@ function showItems (data)
 function loadQuestionTitle (data,questionid)
 {
 	cleanStructure();
-	
-	//alert ("在loadQuestionTitile中的题目ID号：" + questionid);
 	
 	var ancestorDiv = $('.question-col');
 	
@@ -590,7 +575,6 @@ function loadQuestionTitle (data,questionid)
 	parentDiv.addClass(_addclass);
 	parentDiv.attr('questioncute',data.list[questionid-1].questionno);
 	prequestionrealid = data.list[questionid-1].questionno;
-	//alert ("保存的上一题的题号为：" + prequestionrealid);
 
 	var childP = $('<p></p>');	
 	
@@ -610,25 +594,23 @@ function loadQuestionTitle (data,questionid)
 	}
 	else
 	{
-		//alert ("本题是没有动画或则图片的");
+		console.log ("本题是没有动画或则图片的");
 	}
 	
 	ancestorDiv.append(parentDiv);
 }
 
 //TO DO: load the question items
-function loadQuestionItems (data,questionid)  ////data.list[page].answer,data.list[page].options
+function loadQuestionItems (data,questionid) 
 {
 	var size = data.list[questionid-1].options.length;
 	var questionon = data.list[questionid-1].questionno;
-	//alert (size);
 	
 	var ancestorDiv = $('.question-col');
 	
 	var parentDiv = $('<div></div>');
 	parentDiv.addClass('col-md-12 col-sm-12 col-xs-12 question-item');
 	parentDiv.attr('trueanswer',data.list[questionid-1].answer);
-	//alert ("直接从加载进来的页面获得的题号是(loadQuestionItems)：" + questionid);	
 	
 	var childArrayA = new Array(size);
 	
@@ -640,8 +622,7 @@ function loadQuestionItems (data,questionid)  ////data.list[page].answer,data.li
 		var num = 65 + i;
 		
 		childArrayA[i] = strA;
-		childArrayA[i].attr('href','javascript:void(0)');
-		
+		childArrayA[i].attr('href','javascript:void(0)');		
 		
 		if (data.list[questionid-1].questiontype == 5)
 		{
@@ -666,12 +647,10 @@ function loadQuestionItems (data,questionid)  ////data.list[page].answer,data.li
 		parentDiv.append(childArrayA[i]);
 	}
 	
-	//alert (childArrayA);
 	ancestorDiv.append(parentDiv);
 	
 	if (data.list[questionid-1].questiontype == 5)
 	{
-		//append the 'submit' button
 		var parentDivButton = $('<div></div>');
 		parentDivButton.addClass('col-md-12 col-sm-12 col-xs-12 question-btn');
 		
@@ -691,7 +670,6 @@ function loadQuestionItems (data,questionid)  ////data.list[page].answer,data.li
 	{
 		if (isInArray(answerquestions,questionon))
 		{
-			//alert ("这道题目已经回答过了,请不要再作答");
 			var index = returnindex(answerquestions,questionon);
 			var myanswerindex = answerquestions[index][2];
 			var ismulti = answerquestions[index][4];
@@ -783,6 +761,11 @@ function loadPreQuestion (data)
 	
 	--countquestions;
 	
+	if ((type == 1 && countquestions < 100) || (type == 2 && countquestions < 50))
+	{
+		$('.next').attr('onclick','loadNextQuestion()');
+	}
+	
 	if (record >= 1)
 	{	
 		//TO DO: load question title 
@@ -794,7 +777,6 @@ function loadPreQuestion (data)
 	{
 		questionid = 1;
 	}
-	//alert (pagenum);
 	
 	//先判断当前是否是第一题
 	if (pagenum == 0  && questionid == 1 )
@@ -805,15 +787,12 @@ function loadPreQuestion (data)
 	}
 	else if (pagenum >= 1)
 	{
-		//alert ("点大家开始打卡时间地方哈伤口缝合伤口的:         " + countquestions);
 		if (((countquestions+1)%20 == 0)) 
 		{
 			pagenum--;
 			firsttimepage = false;
 			
-			//alert ("新请求的一章页的页数为：" + pagenum);
 			questionid = 20;
-			//alert ("重置：" + questionid);
 			
 			params = {action:"GETANALOGEXAMINATION",type:type,studentid:18,answerid:examinationid,pagenum:pagenum};
 			jQuery.post(active_url, params, showItems, 'json');
@@ -832,29 +811,46 @@ function loadNextQuestion (data)
 	
 	++questionid;
 	
-	if ((countquestions%20 == 0) && data.hasmore == 1)    //并且之后应该再加一个条件：就是hasmore要为1
+	if ((type == 1 && countquestions < 100) || (type == 2 && countquestions < 50))
 	{
-		pagenum++;
+		if ((countquestions%20 == 0) && data.hasmore == 1)    //并且之后应该再加一个条件：就是hasmore要为1
+		{
+			pagenum++;
+			
+			questionid = 1;
+			
+			params = {action:"GETANALOGEXAMINATION",type:type,studentid:18,answerid:examinationid,pagenum:pagenum};
+			jQuery.post(active_url, params, showItems, 'json');
+		}
 		
-		//alert ("新请求的一章页的页数为：" + pagenum);
-		questionid = 1;
-		//alert ("重置：" + questionid);
+		loadQuestionTitle (data,questionid);
 		
-		params = {action:"GETANALOGEXAMINATION",type:type,studentid:18,answerid:examinationid,pagenum:pagenum};
-		jQuery.post(active_url, params, showItems, 'json');
-		
-		//countquestions = countquestions-1;
+		loadQuestionItems(data,questionid);
 	}
-	else if ((type == 1 && countquestions == 100) || (type ==2 && countquestions == 50))
+	else if ((type == 1 && countquestions == 100) || (type == 2 && countquestions == 50))
+	{
+		if (judgesimulatetype ())
+		{
+			countquestions = 99;
+		}
+		else
+		{
+			countquestions = 49;
+		}
+		questionid--;
+		
+		loadQuestionTitle (data,questionid);
+
+		loadQuestionItems(data,questionid);
+		
+		showpopwindow();
+		return;
+	}
+	else
 	{
 		showpopwindow();
 		return;
 	}
-	//TO DO: load question title 
-	loadQuestionTitle (data,questionid);
-	
-	//TO DO: load question items
-	loadQuestionItems(data,questionid);  //data.list[page].answer,data.list[page].options	
 }
 
 //TO DO: hand in the paper
@@ -862,9 +858,9 @@ function handinpaper ()
 {
 	var studentid = 18;
 	var questionid = $('.question-title').attr('questioncute');   //变量： 题目id号
+	var timeleft = $('.timer').html();
 	
-	//alert ("当前您想移除的题目的id号为：" + questionid);
-	var realscore = 100 - scores;
+	var timecontinue = computetimediff (timegot + ":00",timeleft);
 	
 	answerquestions = (answerquestions.length > 0) ? answerquestions : false;
 	
@@ -875,7 +871,7 @@ function handinpaper ()
 			action: "ADDANSWERRECORDINFO",
 			studentid: studentid,
 			analogflag: 1,
-			score: realscore,
+			score: scores,
 			answerinfo: "" + answerquestions + ""
 			},
 		type: 'post',
@@ -884,8 +880,7 @@ function handinpaper ()
 		{
 			if(data.code==1)
 			{
-				alert("成绩提交成功!");
-				window.location.href = "answerreuslt.jsp?myscore=" + scores + "&simulatetype=" + simulatetype;
+				window.location.href = "answerreuslt.jsp?myscore=" + scores + "&simulatetype=" + simulatetype + "&timecontinue=" + timecontinue;
 			}
 			else
 			{
@@ -900,16 +895,68 @@ function handinpaper ()
 	});
 }
 	
-//TO DO: auto submit the current paper
-function autosubmit ()
+//time1为总的时间，time2为剩余时间
+function computetimediff (time1,time2)
 {
-	if (countquestions == 5)               //这边有严重问题
-	{
-		alert ("答题结束，自动提交");
-		window.location.href = "answerreuslt.jsp?myscore=" + scores;
-	}
+    if (time1 != "" && time2 != "")
+    {
+        var a = time1.split(":");
+        var a1 = parseInt(a[0]);
+        var a2 = parseInt(a[1]);
+
+        var b = time2.split(":");
+        var b1 = parseInt(b[0]);
+        var b2 = parseInt(b[1]);
+
+        var c;
+        var d;
+        
+        if ((a2 - b2) > 0)
+        {
+        	c = a2 - b2;
+        	if (c < 10)
+        	{
+        		c = "0" + c;
+        	}
+        	
+        	d = a1 - b1;
+        	if (d < 10)
+        	{
+        		d = "0" + d;
+        	}
+        }
+        else if ((a2 - b2) == 0)
+        {
+        	c = "00";
+        	
+        	d = a1 - b1;
+        	if (d < 10)
+        	{
+        		d = "0" + d;
+        	}
+        }
+        else
+        {
+        	c = 60 - b2;
+        	if (c < 10)
+        	{
+        		c = "0" + c;
+        	}
+        	
+        	d = (a1 - b1) - 1;
+        	if (d < 10)
+        	{
+        		d = "0" + d;
+        	}
+        }
+    }
+    else
+    {
+        alert ("数据出错啦！");
+    }
+    
+    return d + ":" + c;
 }
-	
 
 //TO DO: count down time
 function countdown()
@@ -939,6 +986,7 @@ function countdown()
   	}  
 }  
 timer = setInterval("countdown()",1000); 
+
 </script>
 
 <script>
@@ -951,6 +999,16 @@ $(document).ready(function ()
 	var objoverlay = $('.overlay');
 	var obj_first_overlay = $('.overlay-first');
 	var objoverlay2 = $('.overlay-board');
+	
+	var _obj_title = $('.current-title');
+	if (type == 1)
+	{
+		_obj_title.html("").html("科目一模拟考试");
+	}
+	else if (type == 2)
+	{
+		_obj_title.html("").html("科目四模拟考试");
+	}
 	
 	obj_only_cancel.on('click',function()
 	{

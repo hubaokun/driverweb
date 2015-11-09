@@ -19,7 +19,7 @@
 	<div class="row empty-row"></div>
 	<div class="row question-bar">
     	<div class="col-md-3 col-sm-3 col-xs-3">
-        	<a href="index.html" class="back"></a>
+        	<a href="index.jsp" class="back"></a>
         </div>
 		<div class="col-md-6 col-sm-6 col-xs-6"><span class="current-title">科目一顺序练习</span></div>
         <div class="col-md-3 col-sm-3 col-xs-3">
@@ -95,7 +95,6 @@ var pagenum = 0;      		//记录请求到第几页了  （一页的数据是20�
 var questiondata;    //记录20道题的全部信息
 var countquestions = 0;     //用于记录题数
 
-//var collectquestionids = [];      //收藏的题目的id
 var answerquestions = [];         //用于保存题目信息
 
 //TO DO:  从URL地址中获得参数
@@ -109,22 +108,10 @@ function getquerystring(name)
 type = getquerystring("passingtype");
 
 //TO DO: loading questions(20 unit) for the page for the first time
-/* var active_url = "/driverweb/examination"; */                  //
-
 //var active_url = "http://120.25.236.228/dadmin/examination";
 var active_url = "../examination";
 var params = {action:"GETEXAMINATION",type:type,studentid:18,pagenum:0};
 jQuery.post(active_url, params,showItems, 'json'); 
-
-/* var url = "/driverweb/examination";
-var param = {action:"GETANSWERRECORDINFO",studentid:18};
-jQuery.post(url, param,ifrestart, 'json');
-
-//TO DO: 
-function ifrestart(data)
-{	
-	alert (data.hasrecord);
-} */
 
 //TO DO: change the number to letter
 function numToLetter(num)
@@ -170,8 +157,8 @@ function showwindow(obj,obj_overlay,flag)
 	{
 		return false;
 	}
-
 }
+
 function hidewindow(obj,obj_overlay)
 {
 	obj.css('display','none');
@@ -1003,7 +990,6 @@ function loadNextQuestion (data)
 {
 	//TO DO: 将“最佳解释”恢复成默认设置
 	isopen = true; 
-	//togglebestexplain(isopen);
 	
 	data = questiondata;
 	
@@ -1034,34 +1020,45 @@ function loadNextQuestion (data)
 	{
 		pagenum++;
 		
-		//alert ("新请求的一章页的页数为：" + pagenum);
 		questionid = 1;
-		//alert ("重置：" + questionid);
 		
 		params = {action:"GETEXAMINATION",type:type,studentid:18,pagenum:pagenum};
 		jQuery.post(active_url, params, showItems, 'json');
 	}
 	else if ((type == 1 && prequestionrealid == 1228) || (type == 2 && countquestions == 1094) || (type == 4 && countquestions == 23))
 	{
-		//alert ("没有下页的数据了");
 		showpopwindow ();
+		if (type == 1)
+		{
+			window.localStorage.setItem("currentquestion1",1229);
+			
+			countquestions = 1228;
+		}
+		else if (type == 2)
+		{
+			window.localStorage.setItem("currentquestion2",1094);
+			
+			countquestions = 1093;
+		}
+		else if (type == 4)
+		{
+			window.localStorage.setItem("currentquestion3",23);
+			
+			countquestions = 22;
+		}
+		
+		questionid--;
 		
 		return;
 	}
-	
-	//TO DO: load question title 
+
 	loadQuestionTitle (data,questionid);
 	
-	//TO DO: load question items
-	loadQuestionItems(data,questionid);  //data.list[page].answer,data.list[page].options	
+	loadQuestionItems(data,questionid); 
 	
-	//TO DO: load the footer's buttons
 	loadFooterBtn ();
 	
-	//TO DO: load best explain
-	loadBestExplain(data,questionid);    //data.list[0].commentate
-	
-	//alert (" zhe ge shi bao cun de " + answerquestions);
+	loadBestExplain(data,questionid);
 }
 	
 //TO DO: change the statement and presentation of the "collect" button
@@ -1162,9 +1159,12 @@ $(document).ready(function ()
 	loadQuestionBoard ();
 	
 	var _currentquestion_;
+	var _obj_title = $('.current-title');
 	
 	if (type == 1)
 	{
+		_obj_title.html("").html("科目一顺序练习");
+		
 		_currentquestion_ = window.localStorage.getItem("currentquestion1");
 		
 		if (_currentquestion_ != null)
@@ -1174,7 +1174,10 @@ $(document).ready(function ()
 	}
 	else if (type == 2)
 	{
+		_obj_title.html("").html("科目四顺序练习");
+		
 		_currentquestion_ = window.localStorage.getItem("currentquestion2");
+		
 		if (_currentquestion_ != null)
 		{
 			showrestartdialog (_currentquestion_);
@@ -1182,7 +1185,10 @@ $(document).ready(function ()
 	}
 	else if (type == 4)
 	{
+		_obj_title.html("").html("科目四动画练习");
+		
 		_currentquestion_ = window.localStorage.getItem("currentquestion3");
+		
 		if (_currentquestion_ != null)
 		{
 			showrestartdialog (_currentquestion_);

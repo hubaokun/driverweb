@@ -7,9 +7,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -2014,6 +2015,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		int coinSum=0;//所有的订单需要消耗的小巴币
 		int couponSum=0;//上传的小巴券Id的个数必须与订单个数相同
 		int couponPayNum=0;//小巴券支付的订单数量
+		//判断多个订单是否传入相同的小巴券
+		Set<String> checkSet=new HashSet<String>();
 			for (int i = 0; i < json.length(); i++) {// 每个循环是一个订单
 				JSONObject array = json.getJSONObject(i);
 				String paytype = array.getString("paytype");// 订单的日期
@@ -2030,6 +2033,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					recordid= array.getString("recordid");
 					if(!recordid.equals("")){
 						couponSum++;
+						//把小巴券ID存入set中，如果有相同的，不会重复存入，判断set的size与couponPayNum是否相同
+						checkSet.add(recordid);
 					}
 				}else if(String.valueOf(PayType.COIN).equals(paytype)){//小巴币支付
 					delmoney= array.getInt("delmoney");
@@ -2044,6 +2049,10 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					moneySum+=mixMoney;
 				}
 			}
+		//判断多个订单是否传入相同的小巴券(重复的小巴券)
+		if(checkSet.size()!=couponPayNum){
+			return 4;
+		}
 		//从t_coin_record表查询小巴币是否足够支付
 		int canUseNum[]=getCanUseCoinMoney(coachid,studentid);
 		if(coinSum>canUseNum[0]){
@@ -2203,6 +2212,9 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				}else if(checkResult==3){
 					result.put("code", 103);
 					result.put("message", "小巴券数量不正确，请重试");
+				}else if(checkResult==4){
+					result.put("code", 104);
+					result.put("message", "小巴券重复");
 				}
 				return result;
 			}

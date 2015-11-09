@@ -87,6 +87,83 @@ public class ExaminationServiceImpl extends BaseServiceImpl implements IExaminat
 		}
 		return list;
 	}
+	/**
+	 * 查询非模拟题题目
+	 * @param type 
+	 * 1 科目一 顺序练习  ： 1  2  
+	 * 2科目四顺序练习  ：3，4, 5，
+	 * 3 科目四多选练习 ： 5
+	 * 4 科目四动画题     ：
+	 * @param pagenum 页号 ，从0开始
+	 */
+	@Override
+	public List<Examination> getExaminationAll(String type,int studentid) {
+		/*1 科目一 顺序练习  ： 1  2  
+		 *2科目四顺序练习  ：3，4, 5，
+		 *3 科目四多选练习 ： 5
+		 *4 科目四动画题     ：
+		 */
+		//1 科目1的单选题	2 科目1的判断题      3 科目4的单选题     4 科目4的判断题      5 科目4的多选题 
+		String querystring1="from Examination  where questiontype in (1,2)";
+		if("1".equals(type)){//1 科目一 顺序练习 
+			querystring1="from Examination  where questiontype in (1,2)";
+		}else if("2".equals(type)){
+			querystring1="from Examination  where questiontype in (3,4,5)";
+		}else if("3".equals(type)){
+			querystring1="from Examination  where questiontype =5 ";
+		}else if("4".equals(type)){
+			querystring1="from Examination  where animationflag=1 ";
+		}
+		List<Examination> list=(List<Examination>)dataDao.getObjectsViaParam(querystring1, null);
+		//List<Examination> list=(List<Examination>)dataDao.pageQueryViaParam(querystring1, Constant.EXAMINATION_SIZE, CommonUtils.parseInt(pagenum, 0) + 1, null);
+		//List<Examination> list=(List<Examination>) dataDao.getObjectsViaParam(querystring, params,subject,category);
+		Map<Integer,Integer> map =getQuestionFavoritesAll(studentid);
+		for (Examination examination : list) {
+			List<String> oplist=new ArrayList<String>();
+			if(examination.getOption1()!=null && !"".equals(examination.getOption1())){
+				oplist.add(examination.getOption1());
+			}
+			if(examination.getOption2()!=null && !"".equals(examination.getOption2())){
+				oplist.add(examination.getOption2());
+			}
+			if(examination.getOption3()!=null && !"".equals(examination.getOption3())){
+				oplist.add(examination.getOption3());
+			}
+			if(examination.getOption4()!=null && !"".equals(examination.getOption4())){
+				oplist.add(examination.getOption4());
+			}
+			examination.setOptions(oplist);
+			//设置是否收藏标示
+			if(map.get(examination.getQuestionno())!=null){
+				examination.setIsfavorites(1);
+			}
+			
+		}
+		return list;
+	}
+	/**
+	 * 题目总数
+	 * @param type
+	 * @return
+	 */
+	public int getExaminationTotal(String type) {
+		String querystring1="select count(*) from Examination  where questiontype in (1,2)";
+		if("1".equals(type)){//1 科目一 顺序练习 
+			querystring1="select count(*) from Examination  where questiontype in (1,2)";
+		}else if("2".equals(type)){
+			querystring1="select count(*) from Examination  where questiontype in (3,4,5)";
+		}else if("3".equals(type)){
+			querystring1="select count(*) from Examination  where questiontype =5 ";
+		}else if("4".equals(type)){
+			querystring1="select count(*) from Examination  where animationflag=1 ";
+		}
+		
+		Long l=(Long) dataDao.getFirstObjectViaParam(querystring1, null);
+		if(l==null){
+			l=0L;
+		}
+		return l.intValue();
+	}
 	public int getExaminationMore(String type,int pagenum) {
 		String querystring1="select count(*) from Examination  where questiontype in (1,2)";
 		if("1".equals(type)){//1 科目一 顺序练习 
