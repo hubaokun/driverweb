@@ -100,6 +100,14 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			if (addressList != null && addressList.size() > 0) {
 				cuser.setDetail(addressList.get(0).getDetail());
 			}
+			
+			//计算订单总数
+			String hqlsumnum = " select count(*)   from OrderInfo where coachid= " + cuser.getCoachid();
+			Long sumnum_order = (Long) dataDao.getFirstObjectViaParam(hqlsumnum, null);
+			if(sumnum_order.longValue()>0){
+				cuser.setSumnum(sumnum_order);
+			}
+			
 		}
 		return cuser;
 	}
@@ -1290,7 +1298,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		}else{
 			cuserhql.append(" and usertype=0 ");
 		}
-		cuserhql.append(" and money >= gmoney and isquit = 0  order by coursestate desc,sumnum desc,score desc");
+		cuserhql.append(" and money >= gmoney and isquit = 0  order by signstate desc, coursestate desc,sumnum desc,score desc");
 		//System.out.println(cuserhql.toString());
 		List<AppCuserInfo> coachlist = (List<AppCuserInfo>) dataDao.SqlPageQuery(cuserhql.toString(), Constant.USERLIST_SIZE+1, CommonUtils.parseInt(pagenum, 0) + 1,AppCuserInfo.class, null);
 		if (coachlist != null && coachlist.size() > 0) {

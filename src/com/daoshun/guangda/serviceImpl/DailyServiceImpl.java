@@ -1,5 +1,6 @@
 package com.daoshun.guangda.serviceImpl;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.QueryResult;
+import com.daoshun.guangda.NetData.CoinReportBySchool;
 import com.daoshun.guangda.pojo.AdminInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.DriveSchoolInfo;
@@ -18,7 +20,7 @@ import com.daoshun.guangda.pojo.OrderInfo;
 import com.daoshun.guangda.pojo.OrderPrice;
 import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.service.IDailyService;
-
+import com.daoshun.guangda.pojo.DaymontlyReportInfo;
 
 @Service("dailyService")
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
@@ -109,6 +111,68 @@ public class DailyServiceImpl extends BaseServiceImpl implements IDailyService {
 		Object obj = dataDao.getAccountReport(addtime);
 		return obj;
 	}
+	
+	//ChRx
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<DaymontlyReportInfo> getAccountReportX(String starttime,String endtime)
+	{
+		StringBuffer hql=new StringBuffer("from DaymontlyReportInfo where ");
+		String[] params=null;
+		Date start=null;
+		Date end=null;
+		SimpleDateFormat sdf = new SimpleDateFormat ("yyyy-MM-dd");
+		try {
+			if(!CommonUtils.isEmptyString(starttime))
+			{
+				start=sdf.parse(starttime);
+			}
+			if(!CommonUtils.isEmptyString(endtime))
+			{
+				end=sdf.parse(endtime);
+			}
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Boolean isStartTimeEmpty=CommonUtils.isEmptyString(starttime);
+		if(!isStartTimeEmpty)
+		{
+			hql.append("querydate>=:starttime");
+			params=new String[1];
+			params[0]="starttime";
+		}
+		if(!CommonUtils.isEmptyString(endtime))
+		{   if(!isStartTimeEmpty)
+			{
+				hql=new StringBuffer("from DaymontlyReportInfo where querydate between :starttime and :endtime");
+				params=new String[2];
+				params[0]="starttime";
+				params[1]="endtime";
+			}else
+			{
+				hql.append("querydate<=:endtime");
+				params=new String[1];
+				params[0]="endtime";
+			}
+		}
+		Object p=new Object();
+		List<DaymontlyReportInfo> result=null;
+		if(params.length==1)
+		{
+			if(isStartTimeEmpty)
+			{
+				result=(List<DaymontlyReportInfo>)dataDao.getObjectsViaParam(hql.toString(), params,end);
+			}else
+			{
+				result=(List<DaymontlyReportInfo>)dataDao.getObjectsViaParam(hql.toString(), params,start);
+			}
+		}else
+		{
+			  result=(List<DaymontlyReportInfo>)dataDao.getObjectsViaParam(hql.toString(), params,start,end);
+		}
+		return result;
+	}
 
 	@Override
 	public List<Object> getCouponReportMontly(Date startdate,Date enddate,String schoolId){
@@ -119,6 +183,11 @@ public class DailyServiceImpl extends BaseServiceImpl implements IDailyService {
 	@Override
 	public List<Object> getCoinReportMontly(Date startdate,Date enddate) {
 		List<Object> Object = dataDao.getCoinReportMontly(startdate, enddate);
+		return Object;
+	}
+	@Override
+	public List<Object> getCoinReportMontlyBySchool(Date startdate,Date enddate,Integer schoolid) {
+		List<Object> Object = dataDao.getCoinReportMontlyBySchool(startdate, enddate,schoolid);
 		return Object;
 	}
 	@Override
@@ -133,6 +202,12 @@ public class DailyServiceImpl extends BaseServiceImpl implements IDailyService {
 		return Object;
 	}
 
+	@Override
+	public List<Object> getCoinReportDetailBySchool(String coachid, Date startdate, Date enddate) {
+		List<Object> Object = dataDao.getCoinReportDetailBySchool(coachid, startdate, enddate);
+		return Object;
+	}
+	
 	@Override
 	public QueryResult<OrderInfo> getOrderInfos(String starttime,String endtime,int pageIndex,int pagesize) {
 		StringBuffer hql=new StringBuffer("from OrderInfo where 1=1");
@@ -162,27 +237,42 @@ public class DailyServiceImpl extends BaseServiceImpl implements IDailyService {
 			}
 			order.setCoachInfo(coachInfo);
 			order.setSchoolInfo(school);
-			//1 ���  2 С��ȯ  3 С�ͱ�
+			//0：余额（原来:2015-08-05 23:00前）1余额  2 小巴券  3 小巴币
+			Date newDataBeginingDate=CommonUtils.getDateFormat("2015-08-06","yyyy-MM-dd");
+			Date currDate=CommonUtils.getDateFormat(order.getDate(),"yyyy-MM-dd");
+			if(order.getPaytype()==0 && currDate.before(newDataBeginingDate))
+			{
+				order.setPaytypename("余额");
+			}
+			
 			if (order.getPaytype()==1) {
-				order.setPaytypename("���");
+				order.setPaytypename("余额");
 				order.setPaidMoney(String.valueOf(order.getTotal()));
 			}
-			if (order.getPaytype()==1) {
-				order.setPaytypename("С��ȯ");
+			if (order.getPaytype()==2) {
+				order.setPaytypename("小巴券");
 				order.setPaidMoney("0");
 			}
-			if (order.getPaytype()==1) {
-				order.setPaytypename("С�ͱ�");
+			if (order.getPaytype()==3) {
+				order.setPaytypename("小巴币");
 				order.setPaidMoney("0");
+			}
+			if(order.getPaytype()==4)
+			{
+				order.setPaytypename("混合支付");
+				order.setPaidMoney("币:"+order.getMixCoin()+",余:"+order.getMixMoney());
 			}
 			if(order.getMixCoin()!=0 && order.getMixMoney()!=0)
 			{
-				order.setPaytypename("���֧��");
-				order.setPaidMoney("��:"+order.getMixCoin()+",��:"+order.getMixMoney());
+				order.setPaytypename("混合支付");
+				order.setPaidMoney("币:"+order.getMixCoin()+",余:"+order.getMixMoney());
 			}
 			OrderPrice orderPrice=dataDao.getObjectById(OrderPrice.class,order.getOrderid());
-			order.setSubjectname(orderPrice.getSubject());
-			order.setUnitPrice(orderPrice.getPrice());
+			if(orderPrice!=null)
+			{
+				order.setSubjectname(orderPrice.getSubject());
+				order.setUnitPrice(orderPrice.getPrice());
+			}
 		}
 		String counthql = " select count(*) " + hql.toString();
         long total = (Long) dataDao.getFirstObjectViaParam(counthql,null);
@@ -215,28 +305,89 @@ public class DailyServiceImpl extends BaseServiceImpl implements IDailyService {
 			}
 			order.setCoachInfo(coachInfo);
 			order.setSchoolInfo(school);
-			//1 ���  2 С��ȯ  3 С�ͱ�
-			if (order.getPaytype()==1) {
-				order.setPaytypename("���");
+			//0：余额（原来:2015-08-05 23:00前）1余额  2 小巴券  3 小巴币
+			Date newDataBeginingDate=CommonUtils.getDateFormat("2015-08-06","yyyy-MM-dd");
+			Date currDate=CommonUtils.getDateFormat(order.getDate(),"yyyy-MM-dd");
+			if(order.getPaytype()==0 && currDate.before(newDataBeginingDate))
+			{
+				order.setPaytypename("余额");
 			}
 			if (order.getPaytype()==1) {
-				order.setPaytypename("С��ȯ");
+				order.setPaytypename("余额");
 			}
-			if (order.getPaytype()==1) {
-				order.setPaytypename("С�ͱ�");
+			if (order.getPaytype()==2) {
+				order.setPaytypename("小巴券");
+			}
+			if (order.getPaytype()==3) {
+				order.setPaytypename("小巴币");
+			}
+			if(order.getPaytype()==4)
+			{
+				order.setPaytypename("混合支付");
+				order.setPaidMoney("币:"+order.getMixCoin()+",余:"+order.getMixMoney());
 			}
 			if(order.getMixCoin()!=0 && order.getMixMoney()!=0)
 			{
-				order.setPaytypename("���֧��");
-				order.setPaidMoney("��:"+order.getMixCoin()+",��:"+order.getMixMoney());
+				order.setPaytypename("混合支付");
+				order.setPaidMoney("币:"+order.getMixCoin()+",余:"+order.getMixMoney());
 			}
 			OrderPrice orderPrice=dataDao.getObjectById(OrderPrice.class,order.getOrderid());
-			order.setSubjectname(orderPrice.getSubject());
-			order.setUnitPrice(orderPrice.getPrice());
+			if(orderPrice!=null)
+			{
+				order.setSubjectname(orderPrice.getSubject());
+				order.setUnitPrice(orderPrice.getPrice());
+			}
 		}
 		return orderList;
 	}else {
 		return null;
 	}
+}
+//ChRx
+@Override
+public List<Object> getCoinReportMontlyBySchool(String startdate,String enddate,int schoolid)
+{
+	 SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+	 Date startDate=null;
+	 Date endDate=null;
+	try {
+		startDate = sdf.parse(startdate);
+		
+	} catch (ParseException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	 
+	try {
+		endDate=sdf.parse(enddate);
+	} catch (ParseException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	 List<Object> list=dataDao.getCoinReportMontlyBySchool(startDate, endDate, schoolid);
+	return list;
+}
+@Override
+public List<Object> getCoinReportDetailMontlyBySchool(int coachId,String dateStart,String dateEnd)
+{
+	 SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+	 Date startdate=null;
+	 Date enddate=null;
+	 try {
+		startdate=sdf.parse(dateStart);
+	} catch (ParseException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	 try {
+		enddate=sdf.parse(dateEnd);
+	} catch (ParseException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	 String idOfCoach=String.valueOf(coachId);
+
+	List<Object>list=dataDao.getCoinReportDetailBySchool(idOfCoach, startdate, enddate);
+	return list;
 }
 }

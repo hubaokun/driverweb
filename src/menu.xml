@@ -90,9 +90,11 @@
 		<sub-item name="特殊订单操作日志" authority="2" action="getSpecialOrderLog.do"/>
 	</menu-item>
 	<menu-item name="运营报表" iconURL="" authority="1">
-		<sub-item name="日业绩" authority="3" action="GotoAccountReport.do"/>
+	    <sub-item name="日业绩" authority="3" action="GotoAccountReportByDay.do"/>
+		<sub-item name="运营日月业绩" authority="3" action="GotoAccountReport.do"/>
 		<sub-item name="学时券月报表" authority="3" action="GotoCouponReportMontly.do"/>
 		<sub-item name="小巴币月报表" authority="3" action="GotoCoinReportMontly.do"/>
+		<sub-item name="小巴币月报表-驾校" authority="3" action="GotoCoinReportMontlyBySchool.do"/>
 		<sub-item name="小巴订单日报表" authority="4" action="GetDailyOrderReport.do"/>
 	</menu-item>
 </menu-list>

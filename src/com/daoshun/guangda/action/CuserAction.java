@@ -28,6 +28,7 @@ import com.daoshun.guangda.NetData.CoachInfoForExcel;
 import com.daoshun.guangda.pojo.BalanceCoachInfo;
 import com.daoshun.guangda.pojo.CApplyCashInfo;
 import com.daoshun.guangda.pojo.CoachLevelInfo;
+import com.daoshun.guangda.pojo.CoinRecordInfo;
 import com.daoshun.guangda.pojo.CouponCoach;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.DriveSchoolInfo;
@@ -39,6 +40,7 @@ import com.daoshun.guangda.pojo.RechargeRecordInfo;
 import com.daoshun.guangda.pojo.TeachcarInfo;
 import com.daoshun.guangda.service.IBaseService;
 import com.daoshun.guangda.service.ICUserService;
+import com.daoshun.guangda.service.ICoinRecordService;
 import com.daoshun.guangda.service.IDriveSchoolService;
 import com.daoshun.guangda.service.ILocationService;
 
@@ -64,6 +66,9 @@ public class CuserAction extends BaseAction {
 
 	@Resource
 	private IDriveSchoolService driveSchoolService;
+	
+	@Resource
+	private ICoinRecordService CoinService;
 
 	private List<CuserInfo> cuserlist;
 
@@ -1844,11 +1849,16 @@ public class CuserAction extends BaseAction {
 
 	@Action(value = "/doallpass", results = { @Result(name = SUCCESS, location = "/getCoachlist.do?pageIndex=${pageIndex}", type = "redirect") })
 	public String doallpass() {
+		CoinRecordInfo tempCoinRecordInfo =new CoinRecordInfo();
 		if (checkbox.length != 0) {
 			for (int i = 0; i < checkbox.length; i++) {
 				cuser = cuserService.getCoachByid(CommonUtils.parseInt(checkbox[i], 0));
 				cuser.setState(2);
 				cuserService.updateCuser(cuser);
+				tempCoinRecordInfo.setOwnerid(cuser.getCoachid());
+				tempCoinRecordInfo.setOwnertype(2);
+				tempCoinRecordInfo.setType(1);
+				CoinService.addCoinRecord(tempCoinRecordInfo);
 			}
 			return SUCCESS;
 		}

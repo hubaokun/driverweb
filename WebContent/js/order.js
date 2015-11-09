@@ -18,6 +18,17 @@ function searchOrder(){
 	}
 	var startminsdate=$("#startminsdate").val();
 	var startmaxsdate=$("#startmaxsdate").val();
+	var overtimeRangeS=$("#overtimeRangeS").val();
+	var overtimeRangeE=$("#overtimeRangeE").val();
+	if(overtimeRangeS!='' && overtimeRangeE!='')
+	{
+		if(overtimeRangeS>overtimeRangeE)
+		{
+			alert("完成结束时间必须在开始时间之后");
+			return ;
+		}
+	}
+	
 	if(startminsdate!=''&&startmaxsdate!=''){
 		if(startminsdate>startmaxsdate){
 			alert("结束时间必须在开始时间之后！");
@@ -40,6 +51,7 @@ function searchOrder(){
 			return;
 		}
 	}
+	
 	var state=$("#state").val();
 	var ordertotal = $("#ordertotal").val();
 	var inputordertotal = $("#inputordertotal").val();
@@ -49,5 +61,9 @@ function searchOrder(){
 	var t_paytype=$("#t_paytype").val();
 	var t_ordertype=$("#t_ordertype").val();
 	window.location.href="getOrderList.do?coachphone="+coachphone+"&studentphone="+studentphone+"&startminsdate="+startminsdate+"&startmaxsdate="+startmaxsdate+
-	"&endminsdate="+endminsdate+"&endmaxsdate="+endmaxsdate+"&createminsdate="+createminsdate+"&createmaxsdate="+createmaxsdate+"&state="+state+"&ordertotal="+ordertotal+"&inputordertotal="+inputordertotal+"&ishavacomplaint="+ishavacomplaint+"&t_paytype="+t_paytype+"&t_ordertype="+t_ordertype+"&index="+index+"&change_id="+change_id;
+	"&endminsdate="+endminsdate+"&endmaxsdate="+endmaxsdate+
+	"&createminsdate="+createminsdate+"&createmaxsdate="+createmaxsdate+"&state="+state+
+	"&ordertotal="+ordertotal+"&inputordertotal="+inputordertotal+"&ishavacomplaint="+ishavacomplaint+
+	"&t_paytype="+t_paytype+"&t_ordertype="+t_ordertype+"&index="+index+"&change_id="+change_id+
+	"&overtimeRangeS="+overtimeRangeS+"&overtimeRangeE="+overtimeRangeE;
 }

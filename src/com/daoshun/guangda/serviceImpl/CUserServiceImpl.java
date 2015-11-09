@@ -564,6 +564,16 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 	        logInfo.setOperatetime(new Date());
 	        logInfo.setOperateform("教练表");
 	        dataDao.addObject(logInfo);
+	        CoinRecordInfo tempCoinRecordInfo =new CoinRecordInfo();
+			tempCoinRecordInfo.setOwnerid(CommonUtils.parseInt(coachid, 0));
+			tempCoinRecordInfo.setOwnertype(2);
+			tempCoinRecordInfo.setType(1);
+			tempCoinRecordInfo.setCoinnum(0);
+			tempCoinRecordInfo.setReceiverid(0);
+			tempCoinRecordInfo.setReceivertype(0);
+			tempCoinRecordInfo.setPayerid(0);
+			tempCoinRecordInfo.setPayertype(0);
+			dataDao.addObject(tempCoinRecordInfo);
         }
         
         StringBuffer cuserhql1 = new StringBuffer();
