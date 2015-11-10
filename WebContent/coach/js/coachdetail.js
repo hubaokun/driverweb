@@ -1194,6 +1194,125 @@ function doeditsingle() {
 }
 
 function editsinglecoach() {
+	//增加教练价格区间输入值的判断
+	var hasEmpty=false;
+	
+	var editcar_subject2min = parseInt($("#editcar_subject2min").val());
+	if((editcar_subject2min>=0)==false){
+		$("#editcar_subject2min").after("<font color='red'>必须填写大于0的数字！</font>");
+		hasEmpty= true;
+	}
+	var editcar_subject2max = parseInt($("#editcar_subject2max").val());
+	if((editcar_subject2max>=0)==false){
+		$("#editcar_subject2max").after("<font color='red'>必须填写大于0的数字！</font>");
+		hasEmpty= true;
+	}	
+	if(editcar_subject2max<editcar_subject2min){
+		$("#editcar_subject2max").after("<font color='red'>最大值不能小于最小值！</font>");
+		hasEmpty= true;
+	}
+	
+	var editcar_subject3min = parseInt($("#editcar_subject3min").val());
+	if((editcar_subject3min>=0)==false){
+		$("#editcar_subject3min").after("<font color='red'>必须填写大于0的数字！</font>");
+		hasEmpty= true;
+	}
+	var editcar_subject3max = parseInt($("#editcar_subject3max").val());
+	if((editcar_subject3max>=0)==false){
+		$("#editcar_subject3max").after("<font color='red'>必须填写大于0的数字！</font>");
+		hasEmpty= true;
+	}
+	if(editcar_subject3max<editcar_subject3min){
+		$("#editcar_subject3max").after("<font color='red'>最大值不能小于最小值！</font>");
+		hasEmpty= true;
+	}
+	
+	var editcar_trainingmin = parseInt($("#editcar_trainingmin").val());
+	if((editcar_trainingmin>=0)==false){
+		$("#editcar_trainingmin").after("<font color='red'>必须填写大于0的数字！</font>");
+		hasEmpty= true;
+	}
+	var editcar_trainingmax = parseInt($("#editcar_trainingmax").val());
+	if((editcar_trainingmax>=0)==false){
+		$("#editcar_trainingmax").after("<font color='red'>必须填写大于0的数字！</font>");
+		hasEmpty= true;
+	}
+	if(editcar_trainingmax<editcar_trainingmin){
+		$("#editcar_trainingmax").after("<font color='red'>最大值不能小于最小值！</font>");
+		hasEmpty= true;
+	}
+	
+	var editcar_accompanymin = parseInt($("#editcar_accompanymin").val());
+	if((editcar_accompanymin>=0)==false){
+		$("#editcar_accompanymin").after("<font color='red'>必须填写大于0的数字！</font>");
+		hasEmpty= true;
+	}
+	var editcar_accompanymax = parseInt($("#editcar_accompanymax").val());
+	if((editcar_accompanymax>=0)==false){
+		$("#editcar_accompanymax").after("<font color='red'>必须填写大于0的数字！</font>");
+		hasEmpty= true;
+	}
+	if(editcar_accompanymax<editcar_accompanymin){
+		$("#editcar_accompanymax").after("<font color='red'>最大值不能小于最小值！</font>");
+		hasEmpty= true;
+	}
+	
+	var editcar_hirecarmin = parseInt($("#editcar_hirecarmin").val());
+	if((editcar_hirecarmin>=0)==false){
+		$("#editcar_hirecarmin").after("<font color='red'>必须填写大于0的数字！</font>");
+		hasEmpty= true;
+	}
+	var editcar_hirecarmax = parseInt($("#editcar_hirecarmax").val());
+	if((editcar_hirecarmax>=0)==false){
+		$("#editcar_hirecarmax").after("<font color='red'>必须填写大于0的数字！</font>");
+		hasEmpty= true;
+	}
+	if(editcar_hirecarmax<editcar_hirecarmin){
+		$("#editcar_hirecarmax").after("<font color='red'>最大值不能小于最小值！</font>");
+		hasEmpty= true;
+	}
+	
+	var editcar_tastesubject2min = parseInt($("#editcar_tastesubject2min").val());
+	if((editcar_tastesubject2min>=0)==false){
+		$("#editcar_tastesubject2min").after("<font color='red'>必须填写大于0的数字！</font>");
+		hasEmpty= true;
+	}
+	var editcar_tastesubject2max = parseInt($("#editcar_tastesubject2max").val());
+	if((editcar_tastesubject2max>=0)==false){
+		$("#editcar_tastesubject2max").after("<font color='red'>必须填写大于0的数字！</font>");
+		hasEmpty= true;
+	}
+	if(editcar_tastesubject2max<editcar_tastesubject2min){
+		$("#editcar_tastesubject2max").after("<font color='red'>最大值不能小于最小值！</font>");
+		hasEmpty= true;
+	}
+	
+	var editcar_tastesubject3min = parseInt($("#editcar_tastesubject3min").val());
+	if((editcar_tastesubject3min>=0)==false){
+		$("#editcar_tastesubject3min").after("<font color='red'>必须填写大于0的数字！</font>");
+		hasEmpty= true;
+	}
+	var editcar_tastesubject3max = parseInt($("#editcar_tastesubject3max").val());
+	if((editcar_tastesubject3max>=0)==false){
+		$("#editcar_tastesubject3max").after("<font color='red'>必须填写大于0的数字！</font>");
+		hasEmpty= true;
+	}
+	if(editcar_tastesubject3max<editcar_tastesubject3min){
+		$("#editcar_tastesubject3max").after("<font color='red'>最大值不能小于最小值！</font>");
+		hasEmpty= true;
+	}
+	
+	var editsignstate = $("#editsignstate").val();
+	var editcar_signexpired = $("#editcar_signexpired").val();
+	if(editsignstate==1&&editcar_signexpired==""){
+		$("#editcar_signexpired").after("<font color='red'>必须选择日期！</font>");
+		hasEmpty= true;
+	}
+	
+	if(hasEmpty){
+		alert("请按提示填写");
+		return;
+	}
 	$("#singlecoachForm").attr("action", "editSingleCoach.do").submit();
 }
 
@@ -2611,9 +2730,9 @@ function doeditsingle() {
 
 }
 
-function editsinglecoach() {
-	$("#singlecoachForm").attr("action", "editSingleCoach.do").submit();
-}
+//function editsinglecoach() {
+//	$("#singlecoachForm").attr("action", "editSingleCoach.do").submit();
+//}
 
 function buttonclick(index) {
 	$("#change").show();
@@ -3029,5 +3148,23 @@ function addstuschool() {
 	if (confirm("确认给所有报名学员分配驾校？")) {
 		window.location = "setStudentSchool.do";
 	}
+}
+
+//明星签约教练搜索
+function searchBySignstate() {
+	var j = $("#change_id").val();
+	var index = $("#index").val();
+	var realname = $("#realname").val();
+	var phone = $("#phone").val();
+	var driveSchoolname = $("#driveschool").val();
+	var carlicense = $("#carlicense").val();
+	var checkstate = $("#checkstate").val();
+	var signstate = $("#signstate").val();
+	var signexpiredmin = $("#signexpiredmin").val();
+	var signexpiredmax = $("#signexpiredmax").val();
+	window.location = "getCoachListBySignstate.do?searchname=" + realname
+			+ "&searchphone=" + phone + "&driveSchoolname=" + driveSchoolname
+			+ "&carlicense=" + carlicense + "&index=" + index + "&change_id="
+			+ j + "&checkstate=" + checkstate + "&signstate=" +signstate + "&signexpiredmin=" + signexpiredmin + "&signexpiredmax=" + signexpiredmax;
 }
 
