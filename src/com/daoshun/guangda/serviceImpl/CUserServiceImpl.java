@@ -2316,4 +2316,72 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 			return true;
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+    @Override
+    public QueryResult<CuserInfo> getCoachListBySignstate(String searchname, String searchphone, Integer driveSchoolname, String carlicense, Integer checkstate, Integer signstate, String signexpiredmin,String signexpiredmax,  Integer pageIndex, int pagesize) {
+        StringBuffer cuserhql = new StringBuffer();
+        cuserhql.append("from CuserInfo where 1=1 ");
+
+        if (!CommonUtils.isEmptyString(searchname)) {
+            cuserhql.append(" and realname like '%" + searchname + "%'");
+        }
+        if (!CommonUtils.isEmptyString(searchphone)) {
+            cuserhql.append(" and phone like '%" + searchphone + "%'");
+        }
+
+        if (driveSchoolname != 0) {
+            if (driveSchoolname == -1) {
+                cuserhql.append(" and drive_school =null and drive_schoolid =null ");
+            }
+            else {
+                cuserhql.append(" and drive_schoolid =" + driveSchoolname);
+            }
+
+        }
+        if (checkstate != null) {
+        	if (checkstate == 4) {
+        		cuserhql.append(" and state >= 0 ");
+        	}
+            if (checkstate == 0) {
+                cuserhql.append(" and state = 0 ");
+            }
+            if (checkstate == 1) {
+                cuserhql.append(" and state = 1 ");
+            }
+
+            if (checkstate == 2) {
+                cuserhql.append(" and state = 2 ");
+            }
+
+            if (checkstate == 3) {
+                cuserhql.append(" and state = 3 ");
+            }
+        }
+
+        if (!CommonUtils.isEmptyString(carlicense)) {
+            cuserhql.append(" and carlicense like '%" + carlicense + "%'");
+        }
+        
+        if (signstate >= 0) {
+                cuserhql.append(" and signstate =" + signstate);
+        }
+        
+        if (!CommonUtils.isEmptyString(signexpiredmin)) {
+			cuserhql.append(" and signexpired >='" + signexpiredmin + "'");
+		}
+		if (!CommonUtils.isEmptyString(signexpiredmax)) {
+			Date signexpireddate = CommonUtils.getDateFormat(signexpiredmax, "yyyy-MM-dd");
+			signexpireddate.setHours(23);
+			signexpireddate.setMinutes(59);
+			signexpireddate.setSeconds(59);
+			String signexpiredmaxstime = CommonUtils.getTimeFormat(signexpireddate, "yyyy-MM-dd HH:mm:ss");
+			cuserhql.append(" and signexpired <='" + signexpiredmaxstime + "'");
+		}
+
+        List<CuserInfo> cuserInfolist = (List<CuserInfo>) dataDao.pageQueryViaParam(cuserhql.toString() + " order by id desc ", pagesize, pageIndex, null);
+        String counthql = " select count(*) " + cuserhql.toString();
+        long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
+        return new QueryResult<CuserInfo>(cuserInfolist, total);
+    }
 }

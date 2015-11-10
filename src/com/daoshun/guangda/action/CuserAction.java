@@ -2,6 +2,8 @@ package com.daoshun.guangda.action;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -308,6 +310,28 @@ public class CuserAction extends BaseAction {
 	private String endtime;
 	
 	private Integer editusertype;
+	
+	private Integer signstate =1;	
+	private String signexpiredmin;//省ID
+	private String signexpiredmax;//市ID
+	
+	private Integer editcar_subject2min;
+	private Integer editcar_subject2max;
+	private Integer editcar_subject3min;
+	private Integer editcar_subject3max;
+	private Integer editcar_trainingmin;
+	private Integer editcar_trainingmax;
+	private Integer editcar_accompanymin;
+	private Integer editcar_accompanymax;
+	private Integer editcar_hirecarmin;
+	private Integer editcar_hirecarmax;
+	private Integer editcar_tastesubject2min;
+	private Integer editcar_tastesubject2max;
+	private Integer editcar_tastesubject3min;
+	private Integer editcar_tastesubject3max;
+	private Integer editsignstate;
+	private String editcar_signexpired;
+	
 
 	/**
 	 * 得到教练列表
@@ -1843,6 +1867,65 @@ public class CuserAction extends BaseAction {
 			}
 
 		}
+		
+		// 修改教学车车牌
+		if (editcar_subject2min>=0) {
+			cuser.setSubject2min(editcar_subject2min);
+		}
+		if (editcar_subject2max>=0) {
+			cuser.setSubject2max(editcar_subject2max);
+		}
+		if (editcar_subject3min>=0) {
+			cuser.setSubject3min(editcar_subject3min);
+		}
+		if (editcar_subject3max>=0) {
+			cuser.setSubject3max(editcar_subject3max);
+		}
+		if (editcar_trainingmin>=0) {
+			cuser.setTrainingmin(editcar_trainingmin);
+		}
+		if (editcar_trainingmax>=0) {
+			cuser.setTrainingmax(editcar_trainingmax);
+		}
+		if (editcar_accompanymin>=0) {
+			cuser.setAccompanymin(editcar_accompanymin);
+		}
+		if (editcar_accompanymax>=0) {
+			cuser.setAccompanymax(editcar_accompanymax);
+		}
+		if (editcar_hirecarmin>=0) {
+			cuser.setHirecarmin(editcar_hirecarmin);
+		}
+		if (editcar_hirecarmax>=0) {
+			cuser.setHirecarmax(editcar_hirecarmax);
+		}
+		if (editcar_tastesubject2min>=0) {
+			cuser.setTastesubject2min(editcar_tastesubject2min);
+		}
+		if (editcar_tastesubject2max>=0) {
+			cuser.setTastesubject2max(editcar_tastesubject2max);
+		}
+		if (editcar_tastesubject3min>=0) {
+			cuser.setTastesubject3min(editcar_tastesubject3min);
+		}
+		if (editcar_tastesubject3max>=0) {
+			cuser.setTastesubject3max(editcar_tastesubject3max);
+		}
+		if (editsignstate>=0) {
+			cuser.setSignstate(editsignstate);
+		}
+		if (!CommonUtils.isEmptyString(editcar_signexpired)) {
+			SimpleDateFormat sdf =   new SimpleDateFormat("yyyy-MM-dd");
+			Date dateexpired = null;
+			try {
+				dateexpired = sdf.parse(editcar_signexpired);
+				cuser.setSignexpired(dateexpired);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
 		cuserService.updateObject(cuser);
 		return SUCCESS;
 	}
@@ -3098,6 +3181,210 @@ public class CuserAction extends BaseAction {
 		this.couponlimit = couponlimit;
 	}
 	
+	/**
+	 * 根据明星教练签约状态关键字搜索
+	 * 
+	 * @return
+	 */
+	@Action(value = "/getCoachListBySignstate", results = { @Result(name = SUCCESS, location = "/coachlistbysignstate.jsp") })
+	public String getCoachListBySignstate() {
+		HttpSession session = ServletActionContext.getRequest().getSession();
+		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
+		driveSchoollist = cuserService.getDriveSchoolInfo();
+		QueryResult<CuserInfo> result = cuserService.getCoachListBySignstate(searchname, searchphone, driveSchoolname, carlicense, checkstate,signstate, signexpiredmin, signexpiredmax, pageIndex, pagesize);
+		total = result.getTotal();
+		cuserlist = result.getDataList();
+		for (int i = 0; i < cuserlist.size(); i++) {
+			if (cuserlist.get(i).getIsfrozen() == 1 && cuserlist.get(i).getFrozenend() != null) {
+				Date today = new Date();
+				Calendar nowtime = Calendar.getInstance();
+				nowtime.setTime(today);
+				nowtime.set(Calendar.HOUR_OF_DAY, 0);
+				nowtime.set(Calendar.MINUTE, 0);
+				nowtime.set(Calendar.SECOND, 0);
+				nowtime.set(Calendar.MILLISECOND, 0);
+				today = nowtime.getTime();
+				if (today.after(cuserlist.get(i).getFrozenend())) {
+					cuserlist.get(i).setIsfrozen(0);
+					cuserService.updateObject(cuserlist.get(i));
+				}
+			}
+			if (!CommonUtils.isEmptyString(cuserlist.get(i).getBirthday())) {
+				int age = cuserService.getCoachAgeByid(cuserlist.get(i).getCoachid());
+				cuserlist.get(i).setAge(age);
+			}
+			
+			if (cuserlist.get(i).getDrive_schoolid() != null && cuserlist.get(i).getDrive_schoolid() != 0) {
+				DriveSchoolInfo school = driveSchoolService.getDriveSchoolInfoByid(cuserlist.get(i).getDrive_schoolid());
+				if (school != null) {
+					cuserlist.get(i).setDrive_school(school.getName());
+//					driveSchoolname = cuser.getDrive_schoolid();
+				}
+			}
+		}
+		cuserService.setCoachDriverSchool(cuserlist);
+		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
+		if (pageIndex > 1) {
+			if (cuserlist == null || cuserlist.size() == 0) {
+				pageIndex--;
+				getCoachByKeyword();
+			}
+		}
+		return SUCCESS;
+	}
+
+	public Integer getSignstate() {
+		return signstate;
+	}
+
+	public void setSignstate(Integer signstate) {
+		this.signstate = signstate;
+	}
+
+	public String getSignexpiredmin() {
+		return signexpiredmin;
+	}
+
+	public void setSignexpiredmin(String signexpiredmin) {
+		this.signexpiredmin = signexpiredmin;
+	}
+
+	public String getSignexpiredmax() {
+		return signexpiredmax;
+	}
+
+	public void setSignexpiredmax(String signexpiredmax) {
+		this.signexpiredmax = signexpiredmax;
+	}
+
+	public Integer getEditcar_subject2min() {
+		return editcar_subject2min;
+	}
+
+	public void setEditcar_subject2min(Integer editcar_subject2min) {
+		this.editcar_subject2min = editcar_subject2min;
+	}
+
+	public Integer getEditcar_subject2max() {
+		return editcar_subject2max;
+	}
+
+	public void setEditcar_subject2max(Integer editcar_subject2max) {
+		this.editcar_subject2max = editcar_subject2max;
+	}
+
+	public Integer getEditcar_subject3min() {
+		return editcar_subject3min;
+	}
+
+	public void setEditcar_subject3min(Integer editcar_subject3min) {
+		this.editcar_subject3min = editcar_subject3min;
+	}
+
+	public Integer getEditcar_subject3max() {
+		return editcar_subject3max;
+	}
+
+	public void setEditcar_subject3max(Integer editcar_subject3max) {
+		this.editcar_subject3max = editcar_subject3max;
+	}
+
+	public Integer getEditcar_trainingmin() {
+		return editcar_trainingmin;
+	}
+
+	public void setEditcar_trainingmin(Integer editcar_trainingmin) {
+		this.editcar_trainingmin = editcar_trainingmin;
+	}
+
+	public Integer getEditcar_trainingmax() {
+		return editcar_trainingmax;
+	}
+
+	public void setEditcar_trainingmax(Integer editcar_trainingmax) {
+		this.editcar_trainingmax = editcar_trainingmax;
+	}
+
+	public Integer getEditcar_accompanymin() {
+		return editcar_accompanymin;
+	}
+
+	public void setEditcar_accompanymin(Integer editcar_accompanymin) {
+		this.editcar_accompanymin = editcar_accompanymin;
+	}
+
+	public Integer getEditcar_accompanymax() {
+		return editcar_accompanymax;
+	}
+
+	public void setEditcar_accompanymax(Integer editcar_accompanymax) {
+		this.editcar_accompanymax = editcar_accompanymax;
+	}
+
+	public Integer getEditcar_hirecarmin() {
+		return editcar_hirecarmin;
+	}
+
+	public void setEditcar_hirecarmin(Integer editcar_hirecarmin) {
+		this.editcar_hirecarmin = editcar_hirecarmin;
+	}
+
+	public Integer getEditcar_hirecarmax() {
+		return editcar_hirecarmax;
+	}
+
+	public void setEditcar_hirecarmax(Integer editcar_hirecarmax) {
+		this.editcar_hirecarmax = editcar_hirecarmax;
+	}
+
+	public Integer getEditcar_tastesubject2min() {
+		return editcar_tastesubject2min;
+	}
+
+	public void setEditcar_tastesubject2min(Integer editcar_tastesubject2min) {
+		this.editcar_tastesubject2min = editcar_tastesubject2min;
+	}
+
+	public Integer getEditcar_tastesubject2max() {
+		return editcar_tastesubject2max;
+	}
+
+	public void setEditcar_tastesubject2max(Integer editcar_tastesubject2max) {
+		this.editcar_tastesubject2max = editcar_tastesubject2max;
+	}
+
+	public Integer getEditcar_tastesubject3min() {
+		return editcar_tastesubject3min;
+	}
+
+	public void setEditcar_tastesubject3min(Integer editcar_tastesubject3min) {
+		this.editcar_tastesubject3min = editcar_tastesubject3min;
+	}
+
+	public Integer getEditcar_tastesubject3max() {
+		return editcar_tastesubject3max;
+	}
+
+	public void setEditcar_tastesubject3max(Integer editcar_tastesubject3max) {
+		this.editcar_tastesubject3max = editcar_tastesubject3max;
+	}
+
+	public Integer getEditsignstate() {
+		return editsignstate;
+	}
+
+	public void setEditsignstate(Integer editsignstate) {
+		this.editsignstate = editsignstate;
+	}
+
+	public String getEditcar_signexpired() {
+		return editcar_signexpired;
+	}
+
+	public void setEditcar_signexpired(String editcar_signexpired) {
+		this.editcar_signexpired = editcar_signexpired;
+	}
 	
 	
+		
 }

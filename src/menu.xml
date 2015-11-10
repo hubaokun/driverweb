@@ -6,6 +6,7 @@
 	<menu-item name="用户管理" iconURL="" authority="1">
 		<sub-item name="所有教练" authority="3" action="getCoachlist.do"/>
 		<sub-item name="待审核教练" authority="3" action="getCoachTobeChecked.do"/>
+		<sub-item name="明星签约教练" authority="3" action="getCoachListBySignstate.do"/>
 		<sub-item name="所有学员" authority="4" action="getStudentlist.do"/>	
 		<sub-item name="报名学员" authority="4" action="getEnrollStudentlist.do"/>
 		<sub-item name="更换教练" authority="4" action="goChangeCoach.do"/>
