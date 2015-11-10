@@ -13,6 +13,12 @@
 
 <body>
 <div class="container simulatestarting">
+	<div class="row empty-row"></div>
+	<div class="row question-bar-2">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <a href="index.jsp" class="back-2"></a>
+        </div>
+    </div>
 	<div class="row">
     	<div class="col-md-12 col-sm-12 col-xs-12">
         	<img src="images/boy.png" class="img-responsive img-circle center-block" />

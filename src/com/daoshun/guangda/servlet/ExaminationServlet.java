@@ -50,6 +50,9 @@ public class ExaminationServlet extends BaseServlet{
 			if (Constant.GETEXAMINATION.equals(action)) {
 				// 获取普通题目
 				getExamination(request,resultMap);
+			}else if(Constant.GETEXAMINATIONALL.equals(action)){
+				//所有的普通题目
+				getExaminationAll(request, resultMap);
 			}else if(Constant.GETANALOGEXAMINATION.equals(action)){
 				getAnalogExamination(request, resultMap);
 			}else if(Constant.ADDQUESTIONFAVORITES.equals(action)){
@@ -77,7 +80,7 @@ public class ExaminationServlet extends BaseServlet{
 	
 	}
 	/**
-	 *  获取非模拟类型的题目
+	 *  获取非模拟类型的题目(按分页，每页20条)
 	 */
 	public void getExamination(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		//1 科目1的单选题	2 科目1的判断题      3 科目4的单选题     4 科目4的判断题      5 科目4的多选题 
@@ -96,6 +99,26 @@ public class ExaminationServlet extends BaseServlet{
 		List<Examination> list=examinationService.getExamination(type,pagenum,CommonUtils.parseInt(studentid, 0));
 		int hasmore = examinationService.getExaminationMore(type,CommonUtils.parseInt(pagenum, 0)+ 2);
 		resultMap.put("hasmore", hasmore);
+		resultMap.put("list", list);
+	}
+	/**
+	 *  获取非模拟类型的题目(全部题目)
+	 */
+	public void getExaminationAll(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		//1 科目1的单选题	2 科目1的判断题      3 科目4的单选题     4 科目4的判断题      5 科目4的多选题 
+		//type的值说明 
+		/*1 科目一 顺序练习  ： 1, 2  
+		 *2 科目四顺序练习  ：3,4, 5，
+		 *3 科目四多选练习 ： 5
+		 *4 科目四动画题     ：
+		 */
+		String type = getRequestParamter(request, "type");
+		String studentid = getRequestParamter(request, "studentid");
+		CommonUtils.validateEmptytoMsg(type, "type为空");
+		CommonUtils.validateEmptytoMsg(studentid, "studentid为空");
+		List<Examination> list=examinationService.getExaminationAll(type,CommonUtils.parseInt(studentid, 0));
+		int pageTotal = examinationService.getExaminationTotal(type);
+		resultMap.put("pagetotal", pageTotal);
 		resultMap.put("list", list);
 	}
 	/**

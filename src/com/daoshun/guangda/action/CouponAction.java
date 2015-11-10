@@ -301,9 +301,13 @@ public class CouponAction extends BaseAction {
 		map.put("cuserlist", cuserlist);
 		strToJson(map);
 	}
-
+	/**
+	 * 发放小巴券
+	 * @return
+	 */
 	@Action(value = "addcoupon", results = { @Result(name = SUCCESS, location = "/getCouponList.do", type = "redirect") })
 	public String addcoupon() {
+		
 		CouponInfo coupon = new CouponInfo();
 		coupon.setCoupontype(addcoupontype);
 		coupon.setOwnertype(addownertype);
@@ -322,7 +326,7 @@ public class CouponAction extends BaseAction {
 		coupon.setEnd_time(newendtime);
 		coupon.setAddtime(new Date());
 		couponService.addCoupon(coupon);
-		cuserService.updateCoachCoupon(String.valueOf(addownerid),pub_count);
+		//cuserService.updateCoachCoupon(String.valueOf(addownerid),pub_count);
 		return SUCCESS;
 	}
 
@@ -350,6 +354,8 @@ public class CouponAction extends BaseAction {
 						couponrecord.setUsetime(null);
 						couponService.addCouponRecord(couponrecord);
 						coupon.setRest_count(coupon.getRest_count() - 1);
+						coupon.setCoach_rest(coupon.getCoach_rest()-1);
+						//coupon.setRest_count(coupon.getRest_count() - 1);
 						couponService.updateCouponInfo(coupon);
 					}
 					String message = "您收到" + pushnum + "张小巴券哦,请注意查收";
