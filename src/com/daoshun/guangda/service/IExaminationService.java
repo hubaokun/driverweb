@@ -32,4 +32,7 @@ public interface IExaminationService {
 	
 	public List<Examination> getExaminationAll(String type,int studentid);
 	public int getExaminationTotal(String type) ;
+	
+	public List<String> getExImgAll();
+	public HashMap<String, Object> getAnalogExaminationAll(int studentid,int type,int answerid);
 }

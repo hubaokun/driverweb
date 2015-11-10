@@ -27,7 +27,7 @@ import com.daoshun.guangda.pojo.QuestionFavorites;
 import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.service.IExaminationService;
 /**
- * 省市区查询
+ * 考驾题库
  * @author 卢磊
  *
  */
@@ -45,12 +45,12 @@ public class ExaminationServiceImpl extends BaseServiceImpl implements IExaminat
 	 */
 	@Override
 	public List<Examination> getExamination(String type,String pagenum,int studentid) {
-		/*1 科目一 顺序练习  ： 1  2  
-		 *2科目四顺序练习  ：3，4, 5，
-		 *3 科目四多选练习 ： 5
+		/*1 科目一 顺序练习  ：questiontype  1  2  
+		 *2科目四顺序练习  ：questiontype 3，4, 5，
+		 *3 科目四多选练习 ： questiontype 5
 		 *4 科目四动画题     ：
 		 */
-		//1 科目1的单选题	2 科目1的判断题      3 科目4的单选题     4 科目4的判断题      5 科目4的多选题 
+		
 		String querystring1="from Examination  where questiontype in (1,2)";
 		if("1".equals(type)){//1 科目一 顺序练习 
 			querystring1="from Examination  where questiontype in (1,2)";
@@ -270,6 +270,85 @@ public class ExaminationServiceImpl extends BaseServiceImpl implements IExaminat
 			resultMap.put("hasmore", 0);
 		}
 		resultMap.put("answerid", ari.getAnswerid());
+		resultMap.put("list", list);
+		return resultMap;
+	}
+	
+	/**
+	 * 获取模拟考试题目
+	 * @param studentid
+	 * @param type 1 科目一 模拟题  ，  2  科目四模拟题
+	 * @param pagenum
+	 * @return
+	 */
+	public HashMap<String, Object> getAnalogExaminationAll(int studentid,int type,int answerid){
+		HashMap<String, Object> resultMap=new HashMap<String, Object>();
+		//如果answerid，表示第一次进入模拟题页面，需要针对这个学员创建一个新的模拟题，其他情况是对已有的模拟题分页的查询
+		if(answerid==0){
+			//创建模拟题
+			createAnalogQuestion(studentid,type);
+		}else{
+			//查询answerid是否存在
+			AnswerRecordInfo ari5=(AnswerRecordInfo) dataDao.getObjectById(AnswerRecordInfo.class, answerid);
+			if(ari5==null){
+				resultMap.put("list", null);
+				return resultMap;
+			}
+		}
+		String hql4="";
+		AnswerRecordInfo ari=null;
+		if(answerid==0){
+			hql4="from AnswerRecordInfo where analogflag=1 and studentid =:studentid order by addtime desc ";
+			String params[]={"studentid"};
+			ari=(AnswerRecordInfo) dataDao.getFirstObjectViaParam(hql4, params, studentid);
+		}else{
+			hql4="from AnswerRecordInfo where analogflag=1 and studentid =:studentid and answerid=:answerid  ";
+			String params[]={"studentid","answerid"};
+			ari=(AnswerRecordInfo) dataDao.getFirstObjectViaParam(hql4, params, studentid,answerid);
+		}
+		String aqnos="";
+		if(ari!=null ){
+			if(ari.getAnalogquestionno()!=null && !"".equals(ari.getAnalogquestionno())){
+				aqnos=ari.getAnalogquestionno();
+			}else{
+				return null;
+			}
+		}else{
+			return null;
+		}
+		
+		StringBuffer hql3=new StringBuffer("from Examination where questionno in (0,");
+		
+		hql3.append(aqnos).append(")");
+		List<Examination> list=(List<Examination>)dataDao.getObjectsViaParam(hql3.toString(), null);
+		//List<Examination> list=(List<Examination>)dataDao.pageQueryViaParam(hql3.toString(), Constant.EXAMINATION_SIZE, CommonUtils.parseInt(pagenum, 0) + 1, null);
+		Map<Integer,Integer> map =getQuestionFavoritesAll(studentid);
+		for (Examination examination : list) {
+			List<String> oplist=new ArrayList<String>();
+			if(examination.getOption1()!=null && !"".equals(examination.getOption1())){
+				oplist.add(examination.getOption1());
+			}
+			if(examination.getOption2()!=null && !"".equals(examination.getOption2())){
+				oplist.add(examination.getOption2());
+			}
+			if(examination.getOption3()!=null && !"".equals(examination.getOption3())){
+				oplist.add(examination.getOption3());
+			}
+			if(examination.getOption4()!=null && !"".equals(examination.getOption4())){
+				oplist.add(examination.getOption4());
+			}
+			examination.setOptions(oplist);
+			//设置是否收藏标示
+			if(map.get(examination.getQuestionno())!=null){
+				examination.setIsfavorites(1);
+			}
+		}
+		resultMap.put("answerid", ari.getAnswerid());
+		if(1==type){
+			resultMap.put("recordtotal", 100);
+		}else{
+			resultMap.put("recordtotal", 50);
+		}
 		resultMap.put("list", list);
 		return resultMap;
 	}
@@ -573,6 +652,11 @@ public class ExaminationServiceImpl extends BaseServiceImpl implements IExaminat
 		}
 
 		//System.out.println(jsonFileInfo);
+	}
+	@Override
+	public List<String> getExImgAll() {
+		List<String> list=(List<String>)dataDao.getObjectsViaParam("select animationimg from Examination  where animationimg !='' ", null);
+		return list;
 	}
 
 }

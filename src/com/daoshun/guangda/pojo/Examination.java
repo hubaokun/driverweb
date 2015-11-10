@@ -38,11 +38,11 @@ public class Examination {
 	
 	 
 	/**问题题型
-	 *  1 科目1的单选题
-		2 科目1的判断题
-		3 科目4的单选题
-		4 科目4的判断题
-		5 科目4的多选题
+	 *  1 	科目一的单选题
+		2 	科目一的判断题
+		3 	科目四的单选题
+		4 	科目四的判断题
+		5 	科目四的多选题
 	 */
 	@Column(name = "questiontype", length = 10, nullable = false, columnDefinition = "INT default 0")
 	private int questiontype;
