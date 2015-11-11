@@ -1374,7 +1374,7 @@ public class DailyAction extends BaseAction {
 				if (array[7] != null) {
 					cointemp.setScoinchange(new BigDecimal(array[7].toString()));
 				} else {
-					cointemp.setCoinpay(new BigDecimal(0));
+					cointemp.setScoinchange(new BigDecimal(0));
 				}
 				if (array[8] != null) {
 					cointemp.setCoinchange(new BigDecimal(array[8].toString()));
