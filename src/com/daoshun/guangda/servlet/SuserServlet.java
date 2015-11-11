@@ -977,7 +977,7 @@ public class SuserServlet extends BaseServlet {
 	public void applyCash(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");
 		String count = getRequestParamter(request, "count");
-		String resource=getRequestParamter(request, "resource");
+		String resource=getRequestParamter(request, "resource");//来源(0:支付宝 1：微信钱包)
 		CommonUtils.validateEmpty(studentid);
 		CommonUtils.validateEmpty(count);
 		SuserInfo student = suserService.getUserById(studentid);
