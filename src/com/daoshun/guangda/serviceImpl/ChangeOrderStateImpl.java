@@ -1,6 +1,7 @@
 package com.daoshun.guangda.serviceImpl;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -48,12 +49,13 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 	@Resource
 	ISUserService suserService;
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-	//@Scheduled(cron = "0 0 1 * * ?")
-	@Scheduled(cron = "0 10 15 ? * *")
+	@Scheduled(cron = "0 0 1 * * ?")
+	//@Scheduled(cron = "0 40 10 ? * *")
 	//@Scheduled(cron="0/50 * *  * * ? ")
 	@Override
 	public void changeOrderState() {
-		System.out.println("##################定时任务执行开始#################");
+		SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		System.out.println("##################定时任务执行开始："+sf.format(new Date())+"#################");
 		Calendar now = Calendar.getInstance();
 		now.add(Calendar.SECOND, -1);
 
@@ -79,7 +81,7 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 		List<OrderInfo> orderList = (List<OrderInfo>) dataDao.getObjectsViaParam(hql, null);
 		if (orderList != null) {
 			for (OrderInfo order : orderList) {
-				order.setStudentstate(3);// 设置订单状态为已结算
+				
 				SuserInfo student = dataDao.getObjectById(SuserInfo.class, order.getStudentid());
 				CuserInfo cuser = dataDao.getObjectById(CuserInfo.class, order.getCoachid());
 				addEvaluation(order,cuser,student);
@@ -87,6 +89,7 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 				String[] params = { "orderid" };
 				OrderRecordInfo recordinfo = (OrderRecordInfo) dataDao.getFirstObjectViaParam(hql1, params, order.getOrderid());
 				if (recordinfo != null) {// 如果教练确认下车过的话
+					order.setStudentstate(3);// 设置订单状态为已结算
 					//设置订单的over_time
 					order.setOver_time(new Date());
 					if (cuser != null) {
@@ -269,8 +272,10 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 						info.setStudentid(order.getStudentid());
 						dataDao.addObject(info);
 					}
+					
+					dataDao.updateObject(order);
 				}
-				dataDao.updateObject(order);
+				
 				/*
 				order.setStudentstate(3);// 设置订单状态为已结算
 				String hql1 = "from OrderRecordInfo where operation = 4 and orderid = :orderid";
@@ -399,7 +404,7 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 		}
 		//重置教练开课状态
 		//dataDao.callUpdatecoursestate();
-		System.out.println("##################定时任务执行结束#################");
+		System.out.println("##################定时任务执行结束:"+sf.format(new Date())+"#################");
 	}
 	//如果学员没有评价教练，自动结算时，给教练好评
 	public void addEvaluation(OrderInfo orderInfo,CuserInfo cuser,SuserInfo student){

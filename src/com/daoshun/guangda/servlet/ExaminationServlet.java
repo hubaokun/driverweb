@@ -50,8 +50,14 @@ public class ExaminationServlet extends BaseServlet{
 			if (Constant.GETEXAMINATION.equals(action)) {
 				// 获取普通题目
 				getExamination(request,resultMap);
+			}else if(Constant.GETEXAMINATIONALL.equals(action)){
+				//所有的普通题目
+				getExaminationAll(request, resultMap);
 			}else if(Constant.GETANALOGEXAMINATION.equals(action)){
+				//获取分页模拟题
 				getAnalogExamination(request, resultMap);
+			}else if(Constant.GETANALOGEXAMINATIONALL.equals(action)){
+				getAnalogExaminationAll(request,resultMap);
 			}else if(Constant.ADDQUESTIONFAVORITES.equals(action)){
 				addQuestionFavorites(request,resultMap);
 			}else if(Constant.GETQUESTIONFAVORITES.equals(action)){
@@ -66,6 +72,8 @@ public class ExaminationServlet extends BaseServlet{
 				getAnswerRecordInfo(request,resultMap);
 			}else if(Constant.REMOVEQUESTIONFAVORITES.equals(action)){
 				removeQuestionFavorites(request,resultMap);
+			}else if(Constant.GETEXIMGALL.equals(action)){
+				getExImgAll(request,resultMap);
 			}
 			
 			
@@ -77,7 +85,7 @@ public class ExaminationServlet extends BaseServlet{
 	
 	}
 	/**
-	 *  获取非模拟类型的题目
+	 *  获取非模拟类型的题目(按分页，每页20条)
 	 */
 	public void getExamination(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		//1 科目1的单选题	2 科目1的判断题      3 科目4的单选题     4 科目4的判断题      5 科目4的多选题 
@@ -96,6 +104,26 @@ public class ExaminationServlet extends BaseServlet{
 		List<Examination> list=examinationService.getExamination(type,pagenum,CommonUtils.parseInt(studentid, 0));
 		int hasmore = examinationService.getExaminationMore(type,CommonUtils.parseInt(pagenum, 0)+ 2);
 		resultMap.put("hasmore", hasmore);
+		resultMap.put("list", list);
+	}
+	/**
+	 *  获取非模拟类型的题目(全部题目)
+	 */
+	public void getExaminationAll(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		//1 科目1的单选题	2 科目1的判断题      3 科目4的单选题     4 科目4的判断题      5 科目4的多选题 
+		//type的值说明 
+		/*1 科目一 顺序练习  ： 1, 2  
+		 *2 科目四顺序练习  ：3,4, 5，
+		 *3 科目四多选练习 ： 5
+		 *4 科目四动画题     ：
+		 */
+		String type = getRequestParamter(request, "type");
+		String studentid = getRequestParamter(request, "studentid");
+		CommonUtils.validateEmptytoMsg(type, "type为空");
+		CommonUtils.validateEmptytoMsg(studentid, "studentid为空");
+		List<Examination> list=examinationService.getExaminationAll(type,CommonUtils.parseInt(studentid, 0));
+		int total = examinationService.getExaminationTotal(type);
+		resultMap.put("recordtotal", total);
 		resultMap.put("list", list);
 	}
 	/**
@@ -261,7 +289,43 @@ public class ExaminationServlet extends BaseServlet{
 		}
 	}
 	
-	
+	/**
+	 * 返回考驾题目中的所有图片名称
+	 * @param request
+	 * @param resultMap
+	 * @throws ErrException
+	 */
+	public void getExImgAll(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		List<String> list=examinationService.getExImgAll();
+		resultMap.put("data", list);
+	}
+	/**
+	 * 返回所有的模拟题及模拟题的总记录条数
+	 * @param request
+	 * @param resultMap
+	 * @throws ErrException
+	 */
+	public void getAnalogExaminationAll(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String type = getRequestParamter(request, "type");
+		String studentid = getRequestParamter(request, "studentid");
+		String answerid = getRequestParamter(request, "answerid");
+		CommonUtils.validateEmptytoMsg(type, "type：不能为空，1 科目一模拟，2 科目四模拟");
+		CommonUtils.validateEmptytoMsg(answerid, "answerid：不能为空,0 新建一套题，其他为已存在题库号");
+		CommonUtils.validateEmptytoMsg(studentid, "studentid：不能为空");
+		HashMap<String, Object> re=examinationService.getAnalogExaminationAll(CommonUtils.parseInt(studentid,0),
+												CommonUtils.parseInt(type,0), 
+												CommonUtils.parseInt(answerid,-1));
+		if(re==null){
+			resultMap.put("code",3);
+			resultMap.put("message", "无数据！");
+		}
+		if(re.get("list")==null){
+			resultMap.put("code",2);
+			resultMap.put("message", "传入的answerid不存在");
+		}
+		
+		resultMap.putAll(re);
+	}
 	
 	
 	

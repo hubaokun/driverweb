@@ -450,6 +450,68 @@
 								<div class="table_button_text" onclick="changecancancel(1,${cuser.coachid})">订单可以取消</div>
 							</div></td>
 					</tr>
+					<tr>
+						<td><p>该教练科目二最低价</p>
+							<input name="editcar_subject2min" value="${cuser.subject2min }" class="inputwithborder" id="editcar_subject2min"/></td>
+						<td><p>该教练科目二最高价</p>
+							<input name="editcar_subject2max" value="${cuser.subject2max }" class="inputwithborder" id="editcar_subject2max"/></td>
+						<td><p>该教练科目三最低价</p>
+							<input name="editcar_subject3min" value="${cuser.subject3min }" class="inputwithborder" id="editcar_subject3min"/></td>
+						<td><p>该教练科目三最高价</p>
+							<input name="editcar_subject3max" value="${cuser.subject3max }" class="inputwithborder" id="editcar_subject3max"/></td>
+					</tr>
+					<tr>
+						<td><p>该教练考场训练最低价</p>
+							<input name="editcar_trainingmin" value="${cuser.trainingmin }" class="inputwithborder" id="editcar_trainingmin"/></td>
+						<td><p>该教练考场训练最高价</p>
+							<input name="editcar_trainingmax" value="${cuser.trainingmax }" class="inputwithborder" id="editcar_trainingmax"/></td>
+						<td><p>该教练陪驾最低价</p>
+							<input name="editcar_accompanymin" value="${cuser.accompanymin }" class="inputwithborder" id="editcar_accompanymin"/></td>
+						<td><p>该教练陪驾最高价</p>
+							<input name="editcar_accompanymax" value="${cuser.accompanymax }" class="inputwithborder" id="editcar_accompanymax"/></td>
+					</tr>
+					<tr>
+						<td><p>该教练租车最低价</p>
+							<input name="editcar_hirecarmin" value="${cuser.hirecarmin }" class="inputwithborder" id="editcar_hirecarmin"/></td>
+						<td><p>该教练租车最高价</p>
+							<input name="editcar_hirecarmax" value="${cuser.hirecarmax }" class="inputwithborder" id="editcar_hirecarmax"/></td>
+						<td><p>该教练体验课科目二最低价</p>
+							<input name="editcar_tastesubject2min" value="${cuser.tastesubject2min }" class="inputwithborder" id="editcar_tastesubject2min"/></td>
+						<td><p>该教练体验课科目二最高价</p>
+							<input name="editcar_tastesubject2max" value="${cuser.tastesubject2max }" class="inputwithborder" id="editcar_tastesubject2max"/></td>
+					</tr>
+					<tr>
+						<td><p>该教练体验课科目三最低价</p>
+							<input name="editcar_tastesubject3min" value="${cuser.tastesubject3min }" class="inputwithborder" id="editcar_tastesubject3min"/></td>
+						<td><p>该教练体验课科目三最高价</p>
+							<input name="editcar_tastesubject3max" value="${cuser.tastesubject3max }" class="inputwithborder" id="editcar_tastesubject3max"/></td>
+						<td><p>明星教练签约状态</p>
+							<s:if test="cuser.signstate==1">
+									<select  name="editsignstate" id="editsignstate">
+										<option   value="0" >未签约</option>
+										<option selected="selected"  value="1" >已签约未到期</option>
+										<option   value="2" >已签约到期</option>
+									</select>
+							</s:if>
+							<s:elseif test="cuser.signstate==2">
+									<select  name="editsignstate" id="editsignstate">
+										<option   value="0" >未签约</option>
+										<option   value="1" >已签约未到期</option>
+										<option selected="selected"  value="2" >已签约到期</option>
+									</select>
+							</s:elseif>
+							<s:else>
+									<select  name="editsignstate" id="editsignstate">
+										<option  selected="selected" value="0" >未签约</option>
+										<option value="1" >已签约未到期</option>
+										<option value="2" >已签约到期</option>
+									</select>
+							</s:else>
+							
+							</td>
+						<td><p>签约到期日期</p>
+							<input name="editcar_signexpired" id="editcar_signexpired" value="<s:date name="cuser.signexpired" format="yyyy-MM-dd" />" class="inputwithborder"  onclick="WdatePicker({signexpired:'',dateFmt:'yyyy-MM-dd'})"></td>
+					</tr>
 				</table>
 
 

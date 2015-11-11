@@ -447,11 +447,20 @@ public class Constant {
 	/**获取考驾模拟题目**/
 	public static final String GETANALOGEXAMINATION = "GETANALOGEXAMINATION";
 	
+	public static final String GETEXAMINATIONALL = "GETEXAMINATIONALL";
+	
+	/**所有的模拟题**/
+	public static final String GETANALOGEXAMINATIONALL = "GETANALOGEXAMINATIONALL";
+	
 	/**考驾题目收藏**/
 	public static final String ADDQUESTIONFAVORITES = "ADDQUESTIONFAVORITES";
+	  
 	
 	/**考驾题目收藏**/
 	public static final String REMOVEQUESTIONFAVORITES = "REMOVEQUESTIONFAVORITES";
+	
+	/** 获取所有的考驾图片**/
+	public static final String GETEXIMGALL = "GETEXIMGALL";
 	
 	/**获取学员收藏的题目**/
 	public static final String GETQUESTIONFAVORITES = "GETQUESTIONFAVORITES";

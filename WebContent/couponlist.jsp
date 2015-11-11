@@ -183,7 +183,7 @@ function searchfromsubmit(){
 <td  style="width:200px;" class="border_right_bottom">${pub_count}</td>
 <td  style="width:200px;" class="border_right_bottom">
 <s:date name="addtime"  format="yyyy-MM-dd HH:mm:ss" /></td>
-<td  style="width:100px;" class="border_right_bottom">${coach_rest}</td>
+<td  style="width:100px;" class="border_right_bottom">${rest_count}</td>
 <td  style="width:200px;" class="border_right_bottom">
 <s:date name="end_time"  format="yyyy-MM-dd HH:mm:ss" /></td>
 <td  style="width:120px;" class="border_noright_bottom">

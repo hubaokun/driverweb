@@ -40,13 +40,15 @@ function getquerystring(name)
 
 $(document).ready(function ()
 {
-	var myscore = 100 - getquerystring("myscore");
+	var myscore = getquerystring("myscore");
 	var simulatetype = getquerystring("simulatetype");
+	var timecontinue = getquerystring("timecontinue");
 	
 	var obj_restart = $('#restart');
 	var url_str = "simulateingstarts.jsp?simulatetype=" + simulatetype;
 	obj_restart.attr('href',url_str);
-	$('#myscore').html(myscore);
+	$('#myscore').html("").html(myscore);
+	$('#mytime').html("").html(timecontinue);
 });
 
 </script>
