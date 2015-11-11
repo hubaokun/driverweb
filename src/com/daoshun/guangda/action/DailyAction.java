@@ -1328,7 +1328,8 @@ public class DailyAction extends BaseAction {
 	public void CoinReportMontlyExportBySchool() throws IOException, ParsePropertyException {
 		String newfilename = "";
 		String tplPath="";
-		Map<String, List<CoinReportBySchool>> beanParams = new HashMap<String, List<CoinReportBySchool>>();  
+		//Map<String, List<CoinReportBySchool>> beanParams = new HashMap<String, List<CoinReportBySchool>>();  
+		Map<String, Object> beanParams = new HashMap<String, Object>();  
 		tplPath=DailyAction.class.getClassLoader().getResource("").getPath()+"/template/小巴币月报表-驾校jxls模板.xls";
 		//tplPath="D:/报表需求/小巴币月报表-驾校jxls模板.xls";
 		// 定义输出流，以便打开保存对话框begin
@@ -1458,6 +1459,7 @@ public class DailyAction extends BaseAction {
 		}
 		
 	    beanParams.put("coinreportmontlybyschool", coinreportmontlybyschool);  
+	    beanParams.put("month", starttime.substring(0, 7)); 
 	    XLSTransformer former = new XLSTransformer();  
 
 	    try {
