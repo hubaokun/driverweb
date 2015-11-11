@@ -1464,7 +1464,7 @@ public class CscheduleServlet extends BaseServlet {
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
-			  AutoPositionInfo ap=locationService.getAutoPositionInfoByCityId(cityid);
+			  /*AutoPositionInfo ap=locationService.getAutoPositionInfoByCityId(cityid);
 			  if(ap!=null  && !isfreecourse.equals("1")){
 				  if(ap.getMaxprice()!=null && ap.getMinprice()!=null){
 					  if(Integer.parseInt(price)<ap.getMinprice().intValue() || Integer.parseInt(price)>ap.getMaxprice().intValue()){
@@ -1473,7 +1473,7 @@ public class CscheduleServlet extends BaseServlet {
 		      			  return;
 					  }
 				  }
-			  }
+			  }*/
 			 /* else if(Integer.parseInt(price)<50 || Integer.parseInt(price)>500)
               {
             	  resultMap.put("code", 3);

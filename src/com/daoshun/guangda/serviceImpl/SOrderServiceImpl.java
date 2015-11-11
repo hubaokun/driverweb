@@ -890,10 +890,12 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				orderinfo.setCuserinfo(user);
 			}
 			StringBuffer cuserhql1 = new StringBuffer();
-			cuserhql1.append("from OrderPrice where orderid =:orderid");
+			cuserhql1.append("from OrderPrice where orderid =:orderid order by recordid desc");
 			String[] params1 = { "orderid" };
+			
 			List<OrderPrice> orderpricelist = (List<OrderPrice>) dataDao.getObjectsViaParam(cuserhql1.toString(), params1, CommonUtils.parseInt(orderid, 0));
 			if (orderpricelist != null && orderpricelist.size() > 0) {// 价格信息设置
+				orderpricelist=orderpricelist.subList(0, 1);
 				orderinfo.setOrderprice(orderpricelist);
 				OrderPrice op=orderpricelist.get(0);
 				if(op!=null){
