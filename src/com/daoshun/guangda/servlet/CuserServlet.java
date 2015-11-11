@@ -927,7 +927,7 @@ public class CuserServlet extends BaseServlet {
 	public void CoachGrantCouon(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException
 	{
 		String coachid = getRequestParamter(request, "coachid");// 教练ID
-		String phone = getRequestParamter(request, "phone");// 学员ID
+		String phone = getRequestParamter(request, "phone");// 手机号码
 		String pubnum= getRequestParamter(request, "pubnum");// 发放张数
 		CommonUtils.validateEmpty(coachid);
 		CommonUtils.validateEmpty(phone);
