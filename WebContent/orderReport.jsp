@@ -75,11 +75,12 @@ function exportData()
 	      <th>学员姓名</th>
 	      <th>学员手机号码</th>
 	      <th>订单类型（课程类别）</th>
-	      <th>订单开始日期</th>
+	      <th>订单开始时间</th>
 	      <th>预约课时（小时）</th>
 	      <th>课时单价（元）</th>
 	      <th>服务费（10%）</th>
 	      <th>订单总金额（元）</th>
+	      <th>订单状态</th>
 	      <th>实付金额（元）</th>
 	      <th>教练姓名</th>
 	      <th>教练所在驾校</th>
@@ -92,11 +93,29 @@ function exportData()
 		<td style="width: 40px;" class="border_right_bottom">${studentinfo.realname}</td>
 		<td style="width: 40px;" class="border_right_bottom">${studentinfo.phone}</td>
 		<td style="width: 40px;" class="border_right_bottom">${subjectname}</td>
-		<td style="width: 40px;" class="border_right_bottom">${date}</td>
+		<td style="width: 40px;" class="border_right_bottom"><s:date name="start_time" format="yyyy-MM-dd HH:mm:ss"/></td>
 		<td style="width: 40px;" class="border_right_bottom">${time}</td>
 		<td style="width: 40px;" class="border_right_bottom">${unitPrice}</td>
 		<td style="width: 40px;" class="border_right_bottom">${order_pull1}</td>
 		<td style="width: 40px;" class="border_right_bottom">${total}</td>
+		<td style="width: 40px;" class="border_right_bottom">
+		<!--订单状态-->
+		<s:if test="studentstate==0">
+			未完成
+		</s:if>
+		<s:if test="studentstate==2">
+			待评价
+		</s:if>
+		<s:if test="studentstate==3">
+			已完成
+		</s:if>
+		<s:if test="studentstate==4">
+			取消中
+		</s:if>
+		<s:if test="studentstate==5">
+			投诉中
+		</s:if>
+		</td>
 		<td style="width: 40px;" class="border_right_bottom">${paidMoney}</td>
 		<td style="width: 40px;" class="border_right_bottom">${coachInfo.realname}</td>
 		<td style="width: 40px;" class="border_right_bottom">${schoolInfo.name}</td>

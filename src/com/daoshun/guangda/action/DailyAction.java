@@ -1329,7 +1329,7 @@ public class DailyAction extends BaseAction {
 		String newfilename = "";
 		String tplPath="";
 		//Map<String, List<CoinReportBySchool>> beanParams = new HashMap<String, List<CoinReportBySchool>>();  
-		Map<String, Object> beanParams = new HashMap<String, Object>();  
+		Map<String, Object> beanParams = new HashMap<String, Object>();   
 		tplPath=DailyAction.class.getClassLoader().getResource("").getPath()+"/template/小巴币月报表-驾校jxls模板.xls";
 		//tplPath="D:/报表需求/小巴币月报表-驾校jxls模板.xls";
 		// 定义输出流，以便打开保存对话框begin
@@ -1374,7 +1374,7 @@ public class DailyAction extends BaseAction {
 				if (array[7] != null) {
 					cointemp.setScoinchange(new BigDecimal(array[7].toString()));
 				} else {
-					cointemp.setScoinchange(new BigDecimal(0));
+					cointemp.setCoinpay(new BigDecimal(0));
 				}
 				if (array[8] != null) {
 					cointemp.setCoinchange(new BigDecimal(array[8].toString()));
@@ -3872,7 +3872,7 @@ public class DailyAction extends BaseAction {
 				cell.setCellStyle(headstyle);
 				sheet.addMergedRegion(new Region(0, (short) 0,0, (short) 13));
 				
-				String[] arr={"序号","支付方式","学员姓名","学员手机号码","订单类型（课程类别）","订单开始日期","预约课时（小时）","课时单价（元）","服务费（10%）","订单总金额（元）","实付金额（元）","教练姓名","教练所在驾校","教练手机号"};
+				String[] arr={"序号","支付方式","学员姓名","学员手机号码","订单类型（课程类别）","订单开始时间","预约课时（小时）","课时单价（元）","服务费（10%）","订单总金额（元）","订单状态","实付金额（元）","教练姓名","教练所在驾校","教练手机号"};
 				row = sheet.createRow((Integer) index++);
 				row.setHeight((short)700);
 				for(short i=0;i<arr.length;++i)
@@ -3894,15 +3894,18 @@ public class DailyAction extends BaseAction {
 						row.setHeight((short)285);
 						//行开始
 						
+						//行号
 						cell=row.createCell(colIndex);
 						cell.setCellValue(info.getOrderid());
 						cell.setCellStyle(style);
 						
+						//支付方式
 						++colIndex;
 						cell=row.createCell(colIndex);
 						cell.setCellValue(info.getPaytypename());
 						cell.setCellStyle(style);
 						
+						//学员姓名
 						++colIndex;
 						cell=row.createCell(colIndex);
 						if(info.getStudentinfo()!=null)
@@ -3914,6 +3917,7 @@ public class DailyAction extends BaseAction {
 						}
 						cell.setCellStyle(style);
 						
+						//学员手机号
 						++colIndex;
 						cell=row.createCell(colIndex);
 						if(info.getStudentinfo()!=null)
@@ -3925,38 +3929,95 @@ public class DailyAction extends BaseAction {
 						}
 						cell.setCellStyle(style);
 						
+						//订单类型（课程类别）
 						++colIndex;
 						cell=row.createCell(colIndex);
 						cell.setCellValue(info.getSubjectname());
 						cell.setCellStyle(style);
 						
+						//订单开始时间
 						++colIndex;
 						cell=row.createCell(colIndex);
-						cell.setCellValue(info.getDate());
+						Date stime=info.getStart_time();
+						String time="";
+						SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						if(stime!=null)
+						{
+							time=formatter.format(stime);
+						}
+						
+						cell.setCellValue(time);
 						cell.setCellStyle(style);
 						
+						//预约课时（小时）
 						++colIndex;
 						cell=row.createCell(colIndex);
 						cell.setCellValue(info.getTime());
 						cell.setCellStyle(style);
 						
+						//课时单价（元）
 						++colIndex;
 						cell=row.createCell(colIndex);
 						cell.setCellValue(String.valueOf(info.getUnitPrice()));
 						cell.setCellStyle(style);
 						
+						//服务费（10%）
 						++colIndex;
 						cell=row.createCell(colIndex);
 						cell.setCellValue(String.valueOf(info.getPrice_out1()));
 						cell.setCellStyle(style);
 						
+						//订单总金额（元）
 						++colIndex;
 						cell=row.createCell(colIndex);
-						cell.setCellValue(String.valueOf(info.getTotal()));
+						BigDecimal totalExpense=info.getTotal();
+						if(totalExpense==null)
+						{
+							totalExpense=new BigDecimal(0);
+						}
+						if(totalExpense!=null && "null".equals(totalExpense.toString().toLowerCase()))
+						{
+							totalExpense=new BigDecimal(0);
+						}
+						cell.setCellValue(String.valueOf(totalExpense));
 						cell.setCellStyle(style);
 						
+						//订单状态
 						++colIndex;
 						cell=row.createCell(colIndex);
+						int state=info.getStudentstate();
+						String statename="";
+						if(0==state)
+						{
+							statename="未完成";
+						}
+						if(2==state)
+						{
+							statename="待评价";
+						}
+						if(3==state)
+						{
+							statename="已完成";
+						}
+						if(4==state)
+						{
+							statename="取消中";
+						}
+						if(5==state)
+						{
+							statename="投诉中";
+						}
+						cell.setCellValue(statename);
+						cell.setCellStyle(style);						
+						
+						//实付金额（元）
+						++colIndex;
+						cell=row.createCell(colIndex);
+						
+						if(info.getPaidMoney()==null)
+						{
+							info.setPaidMoney("0");
+						}
 						cell.setCellValue(String.valueOf(info.getPaidMoney()));
 						cell.setCellStyle(style);
 						

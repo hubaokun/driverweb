@@ -212,13 +212,15 @@ public class DailyServiceImpl extends BaseServiceImpl implements IDailyService {
 	public QueryResult<OrderInfo> getOrderInfos(String starttime,String endtime,int pageIndex,int pagesize) {
 		StringBuffer hql=new StringBuffer("from OrderInfo where 1=1");
 		List<OrderInfo> orderList=null;
+		starttime=starttime+" 00:00:00";
+		endtime=endtime+" 23:59:59";
 		if(!CommonUtils.isEmptyString(starttime))
 		{
-			hql.append(" and date>='"+starttime+"'");
+			hql.append(" and start_time>='"+starttime+"'");
 		}
 		if(!CommonUtils.isEmptyString(endtime))
 		{
-			hql.append(" and date<='"+endtime+"'");
+			hql.append(" and start_time<='"+endtime+"'");
 		}
 		orderList=(List<OrderInfo>)dataDao.pageQueryViaParam(hql.toString(),pagesize,pageIndex,null);
 		
