@@ -462,7 +462,7 @@ public class CuserInfo implements Serializable {
 	/**
 	 * 科目二范围最大值
 	 */
-	@Column(name = "subject2max", columnDefinition = "INT default 0")
+	@Column(name = "subject2max", columnDefinition = "INT default 100")
 	private Integer subject2max=0;
 	
 	/**
@@ -474,7 +474,7 @@ public class CuserInfo implements Serializable {
 	/**
 	 * 科目三范围最大值
 	 */
-	@Column(name = "subject3max", columnDefinition = "INT default 0")
+	@Column(name = "subject3max", columnDefinition = "INT default 100")
 	private Integer subject3max=0;
 	
 	/**
@@ -486,7 +486,7 @@ public class CuserInfo implements Serializable {
 	/**
 	 * 考场训练最小值
 	 */
-	@Column(name = "trainingmin", columnDefinition = "INT default 0")
+	@Column(name = "trainingmin", columnDefinition = "INT default 100")
 	private Integer trainingmin=0;
 	
 	/**
@@ -498,7 +498,7 @@ public class CuserInfo implements Serializable {
 	/**
 	 * 陪驾范围最大值
 	 */
-	@Column(name = "accompanymax", columnDefinition = "INT default 0")
+	@Column(name = "accompanymax", columnDefinition = "INT default 100")
 	private Integer accompanymax=0;
 	
 	/**
