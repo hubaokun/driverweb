@@ -222,6 +222,7 @@ public class DailyServiceImpl extends BaseServiceImpl implements IDailyService {
 		{
 			hql.append(" and start_time<='"+endtime+"'");
 		}
+		hql.append(" order by creat_time desc");
 		orderList=(List<OrderInfo>)dataDao.pageQueryViaParam(hql.toString(),pagesize,pageIndex,null);
 		
 		Iterator<OrderInfo> iterator=orderList.iterator();

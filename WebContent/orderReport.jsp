@@ -100,21 +100,16 @@ function exportData()
 		<td style="width: 40px;" class="border_right_bottom">${total}</td>
 		<td style="width: 40px;" class="border_right_bottom">
 		<!--订单状态-->
-		<s:if test="studentstate==0">
-			未完成
+		<s:if test="coachstate!=2 || null==over_time || 1==studentstate ||2==studentstate">
+		 	未结算
 		</s:if>
-		<s:if test="studentstate==2">
-			待评价
+		<s:if test="2==coachstate && over_time!=null && 3==studentstate">
+			已结算
 		</s:if>
-		<s:if test="studentstate==3">
-			已完成
+		<s:if test="4==coachstate && 4==studentstate">
+			已取消
 		</s:if>
-		<s:if test="studentstate==4">
-			取消中
-		</s:if>
-		<s:if test="studentstate==5">
-			投诉中
-		</s:if>
+		
 		</td>
 		<td style="width: 40px;" class="border_right_bottom">${paidMoney}</td>
 		<td style="width: 40px;" class="border_right_bottom">${coachInfo.realname}</td>

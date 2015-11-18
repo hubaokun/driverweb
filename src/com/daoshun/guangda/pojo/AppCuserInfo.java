@@ -86,7 +86,8 @@ public class AppCuserInfo implements Serializable {
 	private int accompanycoursestate;
 
 	private Integer accompanynum;
-
+	
+	//体验课
 	private Integer freecoursestate;
 
 	/**

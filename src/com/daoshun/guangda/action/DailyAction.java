@@ -3985,27 +3985,24 @@ public class DailyAction extends BaseAction {
 						//订单状态
 						++colIndex;
 						cell=row.createCell(colIndex);
-						int state=info.getStudentstate();
+						int stuState=info.getStudentstate();
+						int coachState=info.getCoachstate();
+						Date overtime=info.getOver_time();
 						String statename="";
-						if(0==state)
+						//未结算
+						if((coachState!=2 && coachState!=4) || null==overtime || 1==stuState || 2==stuState)
 						{
-							statename="未完成";
+							statename="未结算";
 						}
-						if(2==state)
+						//已结算
+						if(2==coachState && overtime!=null && 3==stuState)
 						{
-							statename="待评价";
+							statename="已结算";
 						}
-						if(3==state)
+						//已取消
+						if(4==coachState && 4==stuState)
 						{
-							statename="已完成";
-						}
-						if(4==state)
-						{
-							statename="取消中";
-						}
-						if(5==state)
-						{
-							statename="投诉中";
+							statename="已取消";
 						}
 						cell.setCellValue(statename);
 						cell.setCellStyle(style);						

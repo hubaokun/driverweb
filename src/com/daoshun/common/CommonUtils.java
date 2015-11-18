@@ -5,7 +5,6 @@ package com.daoshun.common;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,6 +25,9 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import jxl.Workbook;
 import jxl.format.Alignment;
@@ -615,6 +617,33 @@ public class CommonUtils {
 		return result;
 	}
 	/**
+	 * 根据经纬度查询城市名称
+	 * @param lng 经度
+	 * @param lat 纬度
+	 * @return
+	 */
+	public static String getAddressByLngLat(String lng, String lat) {
+		StringBuilder url = new StringBuilder();
+		url.append("http://api.map.baidu.com/geocoder/v2/?coordtype=wgs84ll&ak=nqrZOZ5ildpUxsG460VbX9B8&location=");
+		url.append(lat+","+lng);
+		url.append("&output=json&pois=0");
+		String result = HttpRequest.sendGet(url.toString(), null);
+		String cityname="";
+        try {  
+            JSONObject obj1 = new JSONObject(result);  
+            String value = obj1.getString("result"); 
+            JSONObject obj2 = new JSONObject(value);
+            String value2 = obj2.getString("addressComponent"); 
+            
+            JSONObject obj3 = new JSONObject(value2);
+            cityname = obj3.getString("city"); 
+        } catch (JSONException e) {  
+            e.printStackTrace();  
+        }  
+		return cityname;
+	}
+	
+	/**
 	 * 杭州示远科技短信平台(暂时未使用)
 	 * @param phone
 	 * @param content
@@ -786,7 +815,8 @@ public class CommonUtils {
     	System.out.print(code);*/
     	//sendSms3("13958109962","员工您好，感谢您对此次测试的配合。");
     	//sendSms2("","【小巴科技】");
-    	sendSms4("13958109962","小巴学车学员验证码3681【小巴科技】");
+    	//sendSms4("13958109962","小巴学车学员验证码3681【小巴科技】");
+    	getAddressByLngLat("40.056885091681","116.30814954222");
     }
     
 }

@@ -6,7 +6,7 @@ body
 }
 
 /*pop up window*/
-.overlay,.overlay-first,.overlay-restart,.overlay-board
+.overlay,.overlay-first,.overlay-restart,.overlay-board,.overlay-abandon
 {
 	background-color: #000;
     filter: alpha(opacity=60);
@@ -178,7 +178,7 @@ ul.ul-board li
 }
 .question-bar,.question-bar-2
 {
-	background-color: rgb(222,222,222);
+	border-bottom: 1px solid rgb(222,222,222);
 	margin-bottom:5px;
 }
 .question-bar a.back,.question-bar-2 a.back-2
@@ -336,6 +336,11 @@ ul.subject-ul li a
 .footbtns .footbtns-inner a.explain
 {
 	background:url(../images/explain.png) no-repeat top center;
+	background-size:24px;
+}
+.footbtns .footbtns-inner a.board
+{
+	background:url(../images/tb_top.png) no-repeat top center;
 	background-size:24px;
 }
 .footbtns .footbtns-inner a.open-explain
@@ -604,7 +609,7 @@ ul.subject-ul li a
 }
 #myscore,#mytime
 {
-	font-size:30px;
+	font-size:25px;
 	font-style:italic;
 }
 

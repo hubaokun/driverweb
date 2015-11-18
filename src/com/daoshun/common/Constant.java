@@ -390,9 +390,14 @@ public class Constant {
 	public static final String CHEAKINVITECODE ="CHEAKINVITECODE";
     //自动获取当前省市区信息
 	public static final String GETAUTOPOSITION="GETAUTOPOSITION";
-
-
-		//小巴服务接口
+	
+	//
+	public static final String GETADDRESSURL="GETADDRESSURL";
+	
+	//获取热门城市
+	public static final String GETHOTCITY="GETHOTCITY";
+	
+	//小巴服务接口
 	public static final String XIAOBASERVICE ="XIAOBASERVICE";
 
 	//广告服务接口

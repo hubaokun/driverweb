@@ -26,8 +26,8 @@ public class QuestionFavorites {
 	private int id;
 	
 	//学员编号
-	@Column(name = "studentid", length = 10, nullable = false, columnDefinition = "INT default 0")
-	private int studentid;
+	@Column(name = "imei", length = 10, nullable = false, columnDefinition = "INT default 0")
+	private int imei;
 	
 	//题目序号
 	@Column(name = "questionno", length = 10, nullable = false, columnDefinition = "INT default 0")
@@ -50,15 +50,13 @@ public class QuestionFavorites {
 		this.id = id;
 	}
 
-	public int getStudentid() {
-		return studentid;
+	public int getImei() {
+		return imei;
 	}
 
-	public void setStudentid(int studentid) {
-		this.studentid = studentid;
+	public void setImei(int imei) {
+		this.imei = imei;
 	}
-
-	
 
 	public int getQuestionno() {
 		return questionno;

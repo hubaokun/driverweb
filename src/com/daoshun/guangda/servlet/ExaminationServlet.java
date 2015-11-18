@@ -1,24 +1,14 @@
 package com.daoshun.guangda.servlet;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
 import com.daoshun.common.ErrException;
@@ -97,11 +87,11 @@ public class ExaminationServlet extends BaseServlet{
 		 */
 		String type = getRequestParamter(request, "type");
 		String pagenum = getRequestParamter(request, "pagenum");
-		String studentid = getRequestParamter(request, "studentid");
-		
+		//String studentid = getRequestParamter(request, "studentid");//   
+		String imei = getRequestParamter(request, "imei");  
 		CommonUtils.validateEmptytoMsg(type, "type为空");
-		CommonUtils.validateEmptytoMsg(studentid, "studentid为空");
-		List<Examination> list=examinationService.getExamination(type,pagenum,CommonUtils.parseInt(studentid, 0));
+		//CommonUtils.validateEmptytoMsg(imei, "imei为空");
+		List<Examination> list=examinationService.getExamination(type,pagenum,CommonUtils.parseInt(imei, 0));
 		int hasmore = examinationService.getExaminationMore(type,CommonUtils.parseInt(pagenum, 0)+ 2);
 		resultMap.put("hasmore", hasmore);
 		resultMap.put("list", list);
@@ -118,10 +108,10 @@ public class ExaminationServlet extends BaseServlet{
 		 *4 科目四动画题     ：
 		 */
 		String type = getRequestParamter(request, "type");
-		String studentid = getRequestParamter(request, "studentid");
+		//String imei = getRequestParamter(request, "imei");  
 		CommonUtils.validateEmptytoMsg(type, "type为空");
-		CommonUtils.validateEmptytoMsg(studentid, "studentid为空");
-		List<Examination> list=examinationService.getExaminationAll(type,CommonUtils.parseInt(studentid, 0));
+		//CommonUtils.validateEmptytoMsg(imei, "imei为空");
+		List<Examination> list=examinationService.getExaminationAll(type);
 		int total = examinationService.getExaminationTotal(type);
 		resultMap.put("recordtotal", total);
 		resultMap.put("list", list);

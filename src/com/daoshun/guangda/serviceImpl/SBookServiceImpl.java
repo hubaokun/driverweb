@@ -91,7 +91,14 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				List<ModelsInfo> list = (List<ModelsInfo>) dataDao.getObjectsViaParam(hql, params, mids);
 				cuser.setModellist(list);
 			}
-
+			//如果教练评分大于5时，设置成5
+			if(cuser.getScore()>5){
+				cuser.setScore(5);
+			}
+			//保留一位小数
+			BigDecimal bd = new BigDecimal(cuser.getScore());
+			bd = bd.setScale(1, BigDecimal.ROUND_DOWN);
+			cuser.setScore(bd.floatValue());
 
 			// 教练默认的上车地址
 			String hqladd = "from CaddAddressInfo where coachid = :coachid and iscurrent = 1";
@@ -738,6 +745,19 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			}*/
 			if (!CommonUtils.isEmptyString(cityid)) {
 				hqlCoach.append(" and cityid = " + cityid);
+			}else{
+				//如果没有传cityid时，根据经纬度查询cityid
+				String cityname="";
+				cityname=CommonUtils.getAddressByLngLat(longitude, latitude);
+				cityname=cityname.replaceAll("市", "");
+				String findCityIdHql="from CityInfo where city like '%"+cityname+"%'";
+				List<CityInfo> citylist=(List<CityInfo>) dataDao.getObjectsViaParam(findCityIdHql.toString(),null);
+				if(citylist!=null && citylist.size()>0){
+					CityInfo city=citylist.get(0);
+					if(city!=null){
+						hqlCoach.append(" and cityid = " + city.getCityid());
+					}
+				}
 			}
 			boolean accompanycoursestate=false;
 			// 真实姓名和教练所属驾校
@@ -909,6 +929,10 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					}
 					if (cuser.getMoney().doubleValue() >= cuser.getGmoney().doubleValue()) {
 						coachlist.add(cuser);
+					}
+					//如果是陪驾时，把明星教练的标示设置为0
+					if(accompanycoursestate){
+						cuser.setSignstate(0);
 					}
 				}
 			}
@@ -1202,7 +1226,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 	}
 	
 	public HashMap<String, Object> getCoachList3(String cityid,String condition1, String condition2, String condition3, String condition4, String condition5, String condition6, String condition8, String condition9,
-			String condition10, String condition11, String pagenum,String studentid,String driverschoolid,String fixedposition) {
+			String condition10, String condition11, String pagenum,String studentid,String driverschoolid,String fixedposition,String pointcenter) {
 		//long starttime=System.currentTimeMillis();
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		StringBuffer cuserhql = new StringBuffer();
@@ -1221,6 +1245,24 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		}
 		if (!CommonUtils.isEmptyString(cityid)) {
 			cuserhql.append(" and cityid = " + cityid);
+		}else{
+			//如果没有传cityid时，根据经纬度查询cityid
+			if(pointcenter!=null){
+				String[] centers = pointcenter.split(",");
+				String longitude =centers[0].trim();
+				String latitude = centers[1].trim();
+				String cityname="";
+				cityname=CommonUtils.getAddressByLngLat(longitude, latitude);
+				cityname=cityname.replaceAll("市", "");
+				String findCityIdHql="from CityInfo where city like '%"+cityname+"%'";
+				List<CityInfo> citylist=(List<CityInfo>) dataDao.getObjectsViaParam(findCityIdHql.toString(),null);
+				if(citylist!=null && citylist.size()>0){
+					CityInfo city=citylist.get(0);
+					if(city!=null){
+						cuserhql.append(" and cityid = " + city.getCityid());
+					}
+				}
+			}
 		}
 		boolean isfindByDriverSchool=false;//是否有按驾校查询
 		if(!CommonUtils.isEmptyString(driverschoolid)){
@@ -1325,7 +1367,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		return result;
 	}
 	
-	public HashMap<String, Object> getCoachListAccompany(String cityid, String pagenum,String fixedposition) {
+	public HashMap<String, Object> getCoachListAccompany(String cityid, String pagenum,String fixedposition,String pointcenter) {
 		//long starttime=System.currentTimeMillis();
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		StringBuffer cuserhql = new StringBuffer();
@@ -1344,6 +1386,24 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		}
 		if (!CommonUtils.isEmptyString(cityid)) {
 			cuserhql.append(" and cityid = " + cityid);
+		}else{
+			//如果没有传cityid时，根据经纬度查询cityid
+			if(pointcenter!=null){
+				String[] centers = pointcenter.split(",");
+				String longitude =centers[0].trim();
+				String latitude = centers[1].trim();
+				String cityname="";
+				cityname=CommonUtils.getAddressByLngLat(longitude, latitude);
+				cityname=cityname.replaceAll("市", "");
+				String findCityIdHql="from CityInfo where city like '%"+cityname+"%'";
+				List<CityInfo> citylist=(List<CityInfo>) dataDao.getObjectsViaParam(findCityIdHql.toString(),null);
+				if(citylist!=null && citylist.size()>0){
+					CityInfo city=citylist.get(0);
+					if(city!=null){
+						cuserhql.append(" and cityid = " + city.getCityid());
+					}
+				}
+			}
 		}
 		cuserhql.append(" and money >= gmoney and isquit = 0 and accompanycoursestate=1  order by accompanycoursestate desc,orderbyaccompany desc,score desc");
 		List<AppCuserInfo> coachlist = (List<AppCuserInfo>) dataDao.SqlPageQuery(cuserhql.toString(), Constant.USERLIST_SIZE+1, CommonUtils.parseInt(pagenum, 0) + 1,AppCuserInfo.class, null);
@@ -1379,6 +1439,10 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		}
 		result.put("coachlist", coachlist);
 		List<AppCuserInfo> coachlistnext = (List<AppCuserInfo>) dataDao.SqlPageQuery(cuserhql.toString(), Constant.USERLIST_SIZE, CommonUtils.parseInt(pagenum, 0) + 2,AppCuserInfo.class, null);
+		//陪驾的列表，设置明星教练标示为0
+		for (AppCuserInfo appCuserInfo : coachlistnext) {
+			appCuserInfo.setSignstate(0);
+		}
 		if (coachlistnext != null && coachlistnext.size() > 0) {
 			result.put("hasmore", 1);
 		} else {

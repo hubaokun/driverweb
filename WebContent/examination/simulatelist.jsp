@@ -18,7 +18,7 @@
 	<div class="row empty-row"></div>
 	<div class="row question-bar">
     	<div class="col-md-3 col-sm-3 col-xs-3">
-        	<a href="javascript:void(0);" class="back" onclick="showslidewindow ()"></a>
+        	<a href="javascript:void(0);" class="back" onclick="showpopwindow2 ()"></a>
         </div>
 		<div class="col-md-6 col-sm-6 col-xs-6"><span class="current-title"></span></div>
         <div class="col-md-3 col-sm-3 col-xs-3">
@@ -65,6 +65,23 @@
 </div>
 <!-- pop up window ends-->
 
+<!-- pop up window starts-->
+<div class="dialog-abandon dialog-another">
+	<div class="dialog-top">
+    	<div class="begin">友情提示</div>
+        <div class="goon">确定放弃本次模拟考试？</div>
+    </div>
+     <div class="dialog-bottom">
+    	<div class="cancel no-abandon">取消</div>
+        <div class="certain abandon">确定</div>
+    </div>
+</div>
+<div class="overlay-abandon">
+</div>
+<!-- pop up window ends-->
+
+
+
 <!--题板 starts-->
 <div class="dialog-board">
 	<div class="board-content">
@@ -81,6 +98,26 @@
 
 <script src="js/jquery-1.8.3.min.js"></script>
 <script>
+var off = true;
+//JS 监听断网或者接入网络
+window.addEventListener('load', function() {
+function updateOnlineStatus(event) {
+    var condition = navigator.onLine ? "true" : "false";
+    if (condition == "true")
+    {
+    	off = true;
+    	console.log ("网络连接上了！");
+    }
+    else
+    {
+    	off = false;
+    	showpopwindow ();
+    }
+}
+window.addEventListener('online',  updateOnlineStatus);
+window.addEventListener('offline', updateOnlineStatus);
+});
+
 var isopen = true;    		//控制“最佳解释”的开关——true:关闭；false：打开
 var questionid = 1;	  		//记录加载到第几道题目,初始值为1
 var prequestionrealid = 1;  //用于记录当前回答题目的上一题的questiono是多少
@@ -225,26 +262,33 @@ function loadQuestionBoard ()
 //TO DO: go to the appointed question
 function gotoquestion (questionnum)
 {
-	countquestions = questionnum - 1;
-	
-	if (questionnum%20 == 0)
+	if (off)
 	{
-		questionid = 20;
-		pagenum = Math.floor(questionnum/20) - 1; 
+		countquestions = questionnum - 1;
+		
+		if (questionnum%20 == 0)
+		{
+			questionid = 20;
+			pagenum = Math.floor(questionnum/20) - 1; 
+		}
+		else
+		{
+			questionid = questionnum%20;   //相当于questionid
+			pagenum = Math.floor(questionnum/20); 
+		}
+		
+		if (pagenum < 0 )
+		{
+			pagenum = 0;
+		}
+		
+		params = {action:"GETANALOGEXAMINATION",type:type,studentid:18,answerid:examinationid,pagenum:pagenum};
+		jQuery.post(active_url, params, showItems2, 'json');
 	}
 	else
 	{
-		questionid = questionnum%20;   //相当于questionid
-		pagenum = Math.floor(questionnum/20); 
+		showpopwindow (3);
 	}
-	
-	if (pagenum < 0 )
-	{
-		pagenum = 0;
-	}
-	
-	params = {action:"GETANALOGEXAMINATION",type:type,studentid:18,answerid:examinationid,pagenum:pagenum};
-	jQuery.post(active_url, params, showItems2, 'json');
 	
 	hidequestionboard();
 }
@@ -283,7 +327,7 @@ function hidewindow(obj,obj_overlay)
 }
 
 //TO DO: show and hide the pop up window to ensure handing in the current paper
-function showpopwindow ()
+function showpopwindow (str)
 {
 	var obj = $('.dialog-first');
 	var obj_overlay = $('.overlay-first');
@@ -291,16 +335,36 @@ function showpopwindow ()
 	var objcount = $('.dialog-first .goon');
 	
 	showwindow(obj,obj_overlay,true);
-
-	if (questionid == 1 & pagenum == 0)
+	
+	if (!off)
+	{
+		objcount.html("").html("请检查您的网络连接！");
+		
+		if (str == 1)
+		{
+			$('.next').attr('onclick','loadNextQuestion ()');
+		}
+		else if (str == 2)
+		{
+			$('.pre').attr('onclick','loadPreQuestion ()');
+		}
+		return ;
+	}
+	
+	if (countquestions == 0 & pagenum == 0)
 	{
 		objcount.html("").html("已经是第一题了哦~");
 	}
-	else
+	else if ((simulatetype == 1 && countquestions == 99) || (simulatetype == 2 && countquestions == 49) )
 	{
 		objcount.html("").html("已经是最后一题了哦~交卷啦~");
-		$('.next').attr('onclick','showpopwindow ()');
+		//$('.next').attr('onclick','showpopwindow ()'); 为什么这边是pop window 
 	}
+	else
+	{
+		console.log ("数据出错了");
+	}
+	
 }
 
 function hidepopwindow ()
@@ -311,26 +375,50 @@ function hidepopwindow ()
 	hidewindow(obj,obj_overlay);
 }
 
+//确认退出模拟考试的弹框
+function showpopwindow2 ()
+{
+	var obj = $('.dialog-abandon');
+	var obj_overlay = $('.overlay-abandon');
+	
+	showwindow(obj,obj_overlay,true);
+}
+
+function hidepopwindow2 ()
+{
+	var obj = $('.dialog-abandon');
+	var obj_overlay = $('.overlay-abandon');
+	
+	hidewindow(obj,obj_overlay);
+}
+
 //TO DO: show and hide the slide up window to ensure handing in the current paper
 function showslidewindow ()
 {
-	var obj = $('.dialog');
-	var objoverlay = $('.overlay');
-	var objcount = $('.goon span');
-	var leftquestions;
-	
-	if (type == 1)
+	if (off)
 	{
-		leftquestions = 100 - answerquestions.length;
+		var obj = $('.dialog');
+		var objoverlay = $('.overlay');
+		var objcount = $('.goon span');
+		var leftquestions;
+		
+		if (type == 1)
+		{
+			leftquestions = 100 - answerquestions.length;
+		}
+		else if (type == 2)
+		{
+			leftquestions = 50 - answerquestions.length;
+		}
+		
+		obj.css('display','block');
+		objoverlay.css('display','block');
+		objcount.html("").html(leftquestions);
 	}
-	else if (type == 2)
+	else
 	{
-		leftquestions = 50 - answerquestions.length;
+		showpopwindow ();
 	}
-	
-	obj.css('display','block');
-	objoverlay.css('display','block');
-	objcount.html("").html(leftquestions);
 }
 
 function hideslidewindow ()
@@ -779,7 +867,7 @@ function loadPreQuestion (data)
 	}
 	
 	//先判断当前是否是第一题
-	if (pagenum == 0  && questionid == 1 )
+	if (pagenum == 0  && countquestions == -1 )
 	{
 		countquestions = 0;
 		showpopwindow();	
@@ -787,17 +875,26 @@ function loadPreQuestion (data)
 	}
 	else if (pagenum >= 1)
 	{
-		if (((countquestions+1)%20 == 0)) 
+		if (((countquestions+1)%20 == 0))  //why not countquestions
 		{
-			pagenum--;
-			firsttimepage = false;
-			
-			questionid = 20;
-			
-			params = {action:"GETANALOGEXAMINATION",type:type,studentid:18,answerid:examinationid,pagenum:pagenum};
-			jQuery.post(active_url, params, showItems, 'json');
-			
-			//countquestions = countquestions + 1;		
+			if (off)
+			{
+				pagenum--;
+				firsttimepage = false;
+				
+				questionid = 20;
+				
+				params = {action:"GETANALOGEXAMINATION",type:type,studentid:18,answerid:examinationid,pagenum:pagenum};
+				jQuery.post(active_url, params, showItems, 'json');
+			}
+			else
+			{
+				showpopwindow (2);
+				
+				countquestions++;
+				
+				return ;
+			}
 		}
 	}
 }
@@ -813,18 +910,32 @@ function loadNextQuestion (data)
 	
 	if ((type == 1 && countquestions < 100) || (type == 2 && countquestions < 50))
 	{
+		
 		if ((countquestions%20 == 0) && data.hasmore == 1)    //并且之后应该再加一个条件：就是hasmore要为1
 		{
-			pagenum++;
-			
-			questionid = 1;
-			
-			params = {action:"GETANALOGEXAMINATION",type:type,studentid:18,answerid:examinationid,pagenum:pagenum};
-			jQuery.post(active_url, params, showItems, 'json');
+			if (off)
+			{
+				pagenum++;
+				
+				questionid = 1;
+					
+				params = {action:"GETANALOGEXAMINATION",type:type,studentid:18,answerid:examinationid,pagenum:pagenum};
+				jQuery.post(active_url, params, showItems, 'json');
+			}
+			else
+			{
+				showpopwindow ();
+				
+				countquestions--;
+				
+				questionid--;
+				
+				return ;
+			}
 		}
 		
 		loadQuestionTitle (data,questionid);
-		
+			
 		loadQuestionItems(data,questionid);
 	}
 	else if ((type == 1 && countquestions == 100) || (type == 2 && countquestions == 50))
@@ -864,35 +975,42 @@ function handinpaper ()
 	
 	answerquestions = (answerquestions.length > 0) ? answerquestions : false;
 	
-	$.ajax({
-		url: "../examination",
-		data:
+	if (off)
+	{
+		$.ajax({
+			url: "../examination",
+			data:
+				{
+				action: "ADDANSWERRECORDINFO",
+				studentid: studentid,
+				analogflag: 1,
+				score: scores,
+				answerinfo: "" + answerquestions + ""
+				},
+			type: 'post',
+			dataType: 'json',
+			success: function(data)
 			{
-			action: "ADDANSWERRECORDINFO",
-			studentid: studentid,
-			analogflag: 1,
-			score: scores,
-			answerinfo: "" + answerquestions + ""
+				if(data.code==1)
+				{
+					window.location.href = "answerreuslt.jsp?myscore=" + scores + "&simulatetype=" + simulatetype + "&timecontinue=" + timecontinue;
+				}
+				else
+				{
+					alert(data.message);
+				}
+							
 			},
-		type: 'post',
-		dataType: 'json',
-		success: function(data)
-		{
-			if(data.code==1)
+			error: function()
 			{
-				window.location.href = "answerreuslt.jsp?myscore=" + scores + "&simulatetype=" + simulatetype + "&timecontinue=" + timecontinue;
+				alert ("提交失败");
 			}
-			else
-			{
-				alert(data.message);
-			}
-						
-		},
-		error: function()
-		{
-			alert ("提交失败");
-		}
-	});
+		});
+	}
+	else
+	{
+		console.log ("由于网络未连接，所以没有办法提交答案");
+	}
 }
 	
 //time1为总的时间，time2为剩余时间
@@ -999,6 +1117,9 @@ $(document).ready(function ()
 	var objoverlay = $('.overlay');
 	var obj_first_overlay = $('.overlay-first');
 	var objoverlay2 = $('.overlay-board');
+	var objoverlay3 = $('.overlay-abandon');
+	var obj_no_abandon = $('.no-abandon');
+	var obj_abandon = $('.abandon');
 	
 	var _obj_title = $('.current-title');
 	if (type == 1)
@@ -1014,6 +1135,10 @@ $(document).ready(function ()
 	{
 		hidepopwindow ();
 	});
+	obj_no_abandon.on('click',function()
+			{
+				hidepopwindow2 ();
+			});
 	obj_cancel.on('click',function ()
 	{
 		hideslidewindow ();
@@ -1029,7 +1154,11 @@ $(document).ready(function ()
 	objoverlay2.on('click',function ()
 			{
 				hidequestionboard();
-			})
+			});
+	obj_abandon.on('click',function ()
+			{
+				window.location.href = "simulateingstarts.jsp?simulatetype=" + simulatetype;
+			});
 });
 </script>
 </body>

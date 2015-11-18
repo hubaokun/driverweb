@@ -30,7 +30,7 @@ public interface IExaminationService {
 	public boolean removeQuestionFavorites(int studentid,int questionno);
 	public int addAnswerRecord(int studentid,int lastquestionno);
 	
-	public List<Examination> getExaminationAll(String type,int studentid);
+	public List<Examination> getExaminationAll(String type);
 	public int getExaminationTotal(String type) ;
 	
 	public List<String> getExImgAll();

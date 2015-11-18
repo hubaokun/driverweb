@@ -428,6 +428,7 @@ public class SbookServlet extends BaseServlet {
 	}
 	
 	public void getCoachList(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String pointcenter = getRequestParamter(request, "pointcenter");
 		String pagenum = getRequestParamter(request, "pagenum");
 		String condition1 = getRequestParamter(request, "condition1");// 关键字:教练名称/驾校名称/教练手机号
 		if(condition1!=null){
@@ -458,12 +459,12 @@ public class SbookServlet extends BaseServlet {
 		HashMap<String, Object> result=new HashMap<String, Object>();
 		if(condition11!=null && condition11.equals("19"))
 		{
-			result = sbookService.getCoachListAccompany(cityid,pagenum,fixedposition);
+			result = sbookService.getCoachListAccompany(cityid,pagenum,fixedposition,pointcenter);
 		}
 		else
 		{
 			result = sbookService.getCoachList3(cityid,condition1, condition2, condition3, condition4, condition5, condition6,
-																		condition8, condition9, condition10, condition11, pagenum,studentid,driverschoolid,fixedposition);
+																		condition8, condition9, condition10, condition11, pagenum,studentid,driverschoolid,fixedposition,pointcenter);
 			List<AppCuserInfo> list=(List<AppCuserInfo>) result.get("coachlist");
 			/*if(studentid==null || !"18".equals(studentid)){
 				for (AppCuserInfo cuserInfo : list) {

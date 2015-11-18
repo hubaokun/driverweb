@@ -316,16 +316,16 @@ function dataExport(){
 									<td style="width: 60px;" class="border_right_bottom">未知</td>
 							</s:else>
 							<td style="width: 80px;" class="border_right_bottom">${subjectname}</td>
-							<s:if test="coachstate==2&&over_time!=null&&studentstate==3">
+							<s:if test="coachstate==2 && over_time!=null && studentstate==3">
 								<td style="width: 40px;" class="border_right_bottom">已结算</td>
 							</s:if>
-							<s:elseif test="over_time==null&&studentstate==4">
+							<s:elseif test="studentstate==4 && coachstate==4">
 								<td style="width: 80px;" class="border_right_bottom">学员已取消</td>
 							</s:elseif>
 							<s:elseif test="can_cancel>0">
 								<td style="width: 80px;" class="border_right_bottom">未开始</td>
 							</s:elseif>
-							<s:elseif test="coachstate!=2||over_time==null||studentstate!=3&&studentstate!=4">
+							<s:elseif test="(coachstate!=2 && coachstate!=4)||over_time==null||(studentstate!=3 && studentstate!=4)">
 								<td style="width: 60px;" class="border_right_bottom">未结算</td>
 							</s:elseif>
 								

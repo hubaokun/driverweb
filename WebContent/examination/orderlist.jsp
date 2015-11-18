@@ -23,7 +23,7 @@
         </div>
 		<div class="col-md-6 col-sm-6 col-xs-6"><span class="current-title">科目一顺序练习</span></div>
         <div class="col-md-3 col-sm-3 col-xs-3">
-        	<a href="javascript:void(0)" class="board" onclick="showquestionboard ()"></a>
+        	<!-- <a href="javascript:void(0)" class="board" onclick="showquestionboard ()"></a> -->
         </div>
     </div>   
 	<div class="row question-col">
@@ -85,17 +85,39 @@
 </div>
 <!--题板 ends-->  
 
-
 <script>
+var off = true;
+//JS 监听断网或者接入网络
+window.addEventListener('load', function() {
+    function updateOnlineStatus(event) {
+        var condition = navigator.onLine ? "true" : "false";
+        if (condition == "true")
+        {
+        	off = true;
+        	//$('.next').attr ('onclick','loadNextQuestion ()');
+        	console.log ("网络连接上了！");
+        }
+        else
+        {
+        	off = false;
+        	showpopwindow ();
+        }
+    }
+    window.addEventListener('online',  updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+});
+
 var type = "";              //传递过来的题目类型
 var isopen = true;    		//控制“最佳解释”的开关——true:关闭；false：打开
 var questionid = 1;	  		//记录加载到第几道题目,初始值为1
-var prequestionrealid = 1;     //用于记录当前回答题目的上一题的questiono是多少
+var prequestionrealid = 1;  //用于记录当前回答题目的上一题的questiono是多少
 var pagenum = 0;      		//记录请求到第几页了  （一页的数据是20道题目）
-var questiondata;    //记录20道题的全部信息
+var questiondata;   	    //记录20道题的全部信息
 var countquestions = 0;     //用于记录题数
 
-var answerquestions = [];         //用于保存题目信息
+var answerquestions = [];   //用于保存题目信息
+
+var toalrecord;
 
 //TO DO:  从URL地址中获得参数
 function getquerystring(name)
@@ -107,8 +129,25 @@ function getquerystring(name)
 
 type = getquerystring("passingtype");
 
+if (type == 1)
+{
+	toalrecord = 1229;
+}
+else if (type == 2)
+{
+	toalrecord = 1094;
+}
+else if (type == 4)
+{
+	
+	toalrecord = 23;
+}
+else
+{
+	alert ("数据出错啦！");
+}
+
 //TO DO: loading questions(20 unit) for the page for the first time
-//var active_url = "http://120.25.236.228/dadmin/examination";
 var active_url = "../examination";
 var params = {action:"GETEXAMINATION",type:type,studentid:18,pagenum:0};
 jQuery.post(active_url, params,showItems, 'json'); 
@@ -166,7 +205,7 @@ function hidewindow(obj,obj_overlay)
 }
 
 //TO DO: show and hide the pop up window to ensure handing in the current paper
-function showpopwindow ()
+function showpopwindow (str)
 {
 	var obj = $('.dialog-first');
 	var obj_overlay = $('.overlay-first');
@@ -174,17 +213,38 @@ function showpopwindow ()
 	var objcount = $('.dialog-first .goon');
 	
 	showwindow(obj,obj_overlay,true);
+	
+	if (!off)
+	{
+		objcount.html("").html("请检查您的网络连接！");
+		
+		if (str == 1)
+		{
+			$('.next').attr('onclick','loadNextQuestion ()');
+		}
+		else if (str == 2)
+		{
+			$('.pre').attr('onclick','loadPreQuestion ()');
+		}
+		return ;
+	}
 
 	if (prequestionrealid == 0 || countquestions <= 0)
 	{
 		objcount.html("").html("已经是第一题了哦~");
 	}
-	else
+	else if ((type == 1 && countquestions == 1229) || (type == 2 && countquestions == 1094) || (type == 4 && countquestions == 23))
 	{
 		objcount.html("").html("已经是最后一题了哦~");
 		$('.next').attr('onclick','showpopwindow ()');
 	}
+	
+	if (!off && str == 3)
+	{
+		objcount.html("").html("请检查您的网络连接！");
+	}
 }
+
 function hidepopwindow ()
 {
 	var obj = $('.dialog-first');
@@ -776,15 +836,15 @@ function loadFooterBtn ()
 	var ancestorDiv = $('.footbtns-inner');
 	
 	//collect question
-	var collectA = $('<a></a>');
+/* 	var collectA = $('<a></a>');
 	collectA.attr('href','javascript:void(0)');
 	collectA.attr('onclick','collectcurrentquestion()');
 	//collectA.bind('click','collectcurremtquestion()');
 	collectA.addClass('collect');
-	collectA.html("收藏本题");
+	collectA.html("收藏本题"); */
 	
 	//alert (questiondata.list[questionid-1].isfavorites);
-	if (questiondata.list[questionid-1].isfavorites == 1)
+/* 	if (questiondata.list[questionid-1].isfavorites == 1)
 	{
 		//alert ("此题已经收藏过了")
 		collectA.addClass('collected').html("取消收藏");
@@ -792,7 +852,16 @@ function loadFooterBtn ()
 	}
 	else
 	{
-	}
+	} */
+	
+	var boardA = $('<a></a>');
+	boardA.attr('href','javascript:void(0)');
+	boardA.attr('onclick','showquestionboard()');
+	boardA.addClass('board');
+	
+	var currentquestion = countquestions + 1;
+		
+	boardA.html("" + currentquestion + "/" + toalrecord);
 	
 	//explain question
 	var explainA = $('<a></a>');
@@ -815,7 +884,7 @@ function loadFooterBtn ()
 	nextA.addClass('next');
 	nextA.html("下一题");
 	
-	ancestorDiv.append(collectA);
+	ancestorDiv.append(boardA);
 	ancestorDiv.append(explainA);
 	ancestorDiv.append(preA);
 	ancestorDiv.append(nextA);	
@@ -859,52 +928,53 @@ function loadQuestionBoard ()
 //TO DO: go to the appointed question
 function gotoquestion (questionnum)
 {
-	countquestions = questionnum - 1;
-	
-	var _currentquestion = countquestions + 1;
-	
-	//本地存储：存储当前答题进行到哪一题了
-	if (type == 1)
+	if (off)
 	{
-		window.localStorage.setItem("currentquestion1",_currentquestion);
+		countquestions = questionnum - 1;
+		
+		var _currentquestion = countquestions + 1;
+		
+		//本地存储：存储当前答题进行到哪一题了
+		if (type == 1)
+		{
+			window.localStorage.setItem("currentquestion1",_currentquestion);
+		}
+		else if (type == 2)
+		{
+			window.localStorage.setItem("currentquestion2",_currentquestion);
+		}
+		else if (type == 4)
+		{
+			window.localStorage.setItem("currentquestion3",_currentquestion);
+		}
+		else
+		{
+			alert ("数据出错啦！");
+		}
+		
+		if (questionnum%20 == 0)
+		{
+			questionid = 20;
+			pagenum = Math.floor(questionnum/20) - 1; 
+		}
+		else
+		{
+			questionid = questionnum%20;   //相当于questionid
+			pagenum = Math.floor(questionnum/20); 
+		}
+			
+		if (pagenum < 0 )
+		{
+			pagenum = 0;
+		}
+		
+		params = {action:"GETEXAMINATION",type:type,studentid:18,pagenum:pagenum};
+		jQuery.post(active_url, params,showItems2, 'json'); 
 	}
-	else if (type == 2)
+	else 
 	{
-		window.localStorage.setItem("currentquestion2",_currentquestion);
+		showpopwindow (3);
 	}
-	else if (type == 4)
-	{
-		window.localStorage.setItem("currentquestion3",_currentquestion);
-	}
-	else
-	{
-		alert ("数据出错啦！");
-	}
-	
-	if (questionnum%20 == 0)
-	{
-		questionid = 20;
-		pagenum = Math.floor(questionnum/20) - 1; 
-	}
-	else
-	{
-		questionid = questionnum%20;   //相当于questionid
-		pagenum = Math.floor(questionnum/20); 
-	}
-	
-	
-	if (pagenum < 0 )
-	{
-		pagenum = 0;
-	}
-	//alert ("questionid shi :" + questionid);
-	
-	     //相当于要请求的pagenum
-	
-	//alert("the pagennum in gotoquestion is " + pagenum);
-	
-	params = {action:"GETEXAMINATION",type:type,studentid:18,pagenum:pagenum};
-	jQuery.post(active_url, params,showItems2, 'json'); 
 	
 	hidequestionboard();
 }
@@ -960,7 +1030,7 @@ function loadPreQuestion (data)
 	}
 	
 	//先判断当前是否是第一题	
-	if (pagenum == 0  && questionid == 1)
+	if (pagenum == 0  && countquestions == -1)
 	{
 		countquestions = 0;
 		showpopwindow ();
@@ -973,14 +1043,23 @@ function loadPreQuestion (data)
 		//当questionid=1 并且questionno为20的倍数的时候，就应该请求上一页的数据,依次类推
 		if (((countquestions+1)%20 == 0)) 
 		{
-			pagenum--;
-			
-			//alert ("新请求的一章页的页数为：" + pagenum);
-			questionid = 20;
-			//alert ("重置：" + questionid);
-			
-			params = {action:"GETEXAMINATION",type:type,studentid:18,pagenum:pagenum};
-			jQuery.post(active_url, params, showItemsPre, 'json');
+			if (off)
+			{
+				pagenum--;
+
+				questionid = 20;
+				
+				params = {action:"GETEXAMINATION",type:type,studentid:18,pagenum:pagenum};
+				jQuery.post(active_url, params, showItemsPre, 'json');
+			}
+			else
+			{
+				showpopwindow (2);
+				
+				countquestions++;
+				
+				return ;
+			}
 		}
 	}	
 }
@@ -1018,12 +1097,25 @@ function loadNextQuestion (data)
 	
 	if ((countquestions%20 == 0)  && (data.hasmore == 1))
 	{
-		pagenum++;
-		
-		questionid = 1;
-		
-		params = {action:"GETEXAMINATION",type:type,studentid:18,pagenum:pagenum};
-		jQuery.post(active_url, params, showItems, 'json');
+		if (off)
+		{			
+			pagenum++;
+			
+			questionid = 1;
+			
+			params = {action:"GETEXAMINATION",type:type,studentid:18,pagenum:pagenum};
+			jQuery.post(active_url, params, showItems, 'json');
+		}
+		else
+		{
+			showpopwindow (1);
+			
+			countquestions--;
+			
+			questionid--;
+			
+			return ;
+		}
 	}
 	else if ((type == 1 && prequestionrealid == 1228) || (type == 2 && countquestions == 1094) || (type == 4 && countquestions == 23))
 	{
@@ -1064,7 +1156,6 @@ function loadNextQuestion (data)
 //TO DO: change the statement and presentation of the "collect" button
 function setcollect ()
 {
-	//alert ("确实执行了");
 	var collectobj = $('.collect');
 	collectobj.addClass('collected').html("取消收藏");
 	collectobj.removeAttr('onclick').attr('onclick','removecollectquestion()');
@@ -1167,7 +1258,7 @@ $(document).ready(function ()
 		
 		_currentquestion_ = window.localStorage.getItem("currentquestion1");
 		
-		if (_currentquestion_ != null)
+		if ((_currentquestion_ != null) && (_currentquestion_ != 0))
 		{
 			showrestartdialog (_currentquestion_);
 		}
@@ -1178,7 +1269,7 @@ $(document).ready(function ()
 		
 		_currentquestion_ = window.localStorage.getItem("currentquestion2");
 		
-		if (_currentquestion_ != null)
+		if ((_currentquestion_ != null) && (_currentquestion_ != 0))
 		{
 			showrestartdialog (_currentquestion_);
 		}
@@ -1189,7 +1280,7 @@ $(document).ready(function ()
 		
 		_currentquestion_ = window.localStorage.getItem("currentquestion3");
 		
-		if (_currentquestion_ != null)
+		if ((_currentquestion_ != null) && (_currentquestion_ != 0))
 		{
 			showrestartdialog (_currentquestion_);
 		}

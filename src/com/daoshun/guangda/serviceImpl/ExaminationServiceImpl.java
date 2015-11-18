@@ -44,7 +44,7 @@ public class ExaminationServiceImpl extends BaseServiceImpl implements IExaminat
 	 * @param pagenum 页号 ，从0开始
 	 */
 	@Override
-	public List<Examination> getExamination(String type,String pagenum,int studentid) {
+	public List<Examination> getExamination(String type,String pagenum,int imei) {
 		/*1 科目一 顺序练习  ：questiontype  1  2  
 		 *2科目四顺序练习  ：questiontype 3，4, 5，
 		 *3 科目四多选练习 ： questiontype 5
@@ -63,7 +63,7 @@ public class ExaminationServiceImpl extends BaseServiceImpl implements IExaminat
 		}
 		List<Examination> list=(List<Examination>)dataDao.pageQueryViaParam(querystring1, Constant.EXAMINATION_SIZE, CommonUtils.parseInt(pagenum, 0) + 1, null);
 		//List<Examination> list=(List<Examination>) dataDao.getObjectsViaParam(querystring, params,subject,category);
-		Map<Integer,Integer> map =getQuestionFavoritesAll(studentid);
+		Map<Integer,Integer> map =getQuestionFavoritesAll(imei);
 		for (Examination examination : list) {
 			List<String> oplist=new ArrayList<String>();
 			if(examination.getOption1()!=null && !"".equals(examination.getOption1())){
@@ -97,7 +97,7 @@ public class ExaminationServiceImpl extends BaseServiceImpl implements IExaminat
 	 * @param pagenum 页号 ，从0开始
 	 */
 	@Override
-	public List<Examination> getExaminationAll(String type,int studentid) {
+	public List<Examination> getExaminationAll(String type) {
 		/*1 科目一 顺序练习  ： 1  2  
 		 *2科目四顺序练习  ：3，4, 5，
 		 *3 科目四多选练习 ： 5
@@ -117,7 +117,7 @@ public class ExaminationServiceImpl extends BaseServiceImpl implements IExaminat
 		List<Examination> list=(List<Examination>)dataDao.getObjectsViaParam(querystring1, null);
 		//List<Examination> list=(List<Examination>)dataDao.pageQueryViaParam(querystring1, Constant.EXAMINATION_SIZE, CommonUtils.parseInt(pagenum, 0) + 1, null);
 		//List<Examination> list=(List<Examination>) dataDao.getObjectsViaParam(querystring, params,subject,category);
-		Map<Integer,Integer> map =getQuestionFavoritesAll(studentid);
+		//Map<Integer,Integer> map =getQuestionFavoritesAll(studentid);
 		for (Examination examination : list) {
 			List<String> oplist=new ArrayList<String>();
 			if(examination.getOption1()!=null && !"".equals(examination.getOption1())){
@@ -134,9 +134,9 @@ public class ExaminationServiceImpl extends BaseServiceImpl implements IExaminat
 			}
 			examination.setOptions(oplist);
 			//设置是否收藏标示
-			if(map.get(examination.getQuestionno())!=null){
+			/*if(map.get(examination.getQuestionno())!=null){
 				examination.setIsfavorites(1);
-			}
+			}*/
 			
 		}
 		return list;
@@ -427,17 +427,17 @@ public class ExaminationServiceImpl extends BaseServiceImpl implements IExaminat
 	 * @param studentid 学员ID
 	 * @param questionid 问题id
 	 */
-	public boolean addQuestionFavorites(int studentid,int questionno){
+	public boolean addQuestionFavorites(int imei,int questionno){
 		String querystring="from QuestionFavorites where studentid=:studentid and questionno=:questionno";
-		String[] params={"studentid","questionno"};
-		List<QuestionFavorites> list=(List<QuestionFavorites>) dataDao.getObjectsViaParam(querystring, params,studentid,questionno);
+		String[] params={"imei","questionno"};
+		List<QuestionFavorites> list=(List<QuestionFavorites>) dataDao.getObjectsViaParam(querystring, params,imei,questionno);
 		if(list!=null && list.size()>0){
 			//以前收藏过
 			return false;
 		}
 		QuestionFavorites qf=new QuestionFavorites();
 		qf.setAddtime(new Date());
-		qf.setStudentid(studentid);
+		qf.setImei(imei);
 		qf.setQuestionno(questionno);
 		dataDao.addObject(qf);
 		return true;

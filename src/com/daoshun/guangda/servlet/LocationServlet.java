@@ -11,6 +11,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
 import com.daoshun.common.ErrException;
 import com.daoshun.guangda.pojo.AreaInfo;
@@ -59,12 +60,17 @@ public class LocationServlet extends BaseServlet{
 			}else if (Constant.GETPROCITYAREA.equals(action)) {
 				//返回所有的省市区JSON
 				getProCityArea(request,resultMap);
-			}
-			else if(Constant.GETAUTOPOSITION.equals(action))
-			{
+			}else if(Constant.GETAUTOPOSITION.equals(action)){
 				getAutoPosition(request,resultMap);
 				//自动获取当前位置省市区信息
+			}else if(Constant.GETADDRESSURL.equals(action)){
+				getAddressUrl(request,resultMap);
+			}else if(Constant.GETHOTCITY.equals(action)){
+				//获取热门城市
+				getHotCity(request, resultMap);
 			}
+			
+			//
 		} catch (ErrException e) {
 			e.printStackTrace();
 			setResultWhenException(response, e.getMessage());
@@ -134,13 +140,20 @@ public class LocationServlet extends BaseServlet{
 		}
 		resultMap.put("china", list);
 	}
+	
 	/**
 	 * 小巴服务接口
 	 * @throws UnsupportedEncodingException
 	 */
 	public void getAutoPosition(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException, UnsupportedEncodingException {
+		String pointcenter = getRequestParamter(request, "pointcenter");
 		String cityid=getRequestParamter(request,"cityid");
 		String provinceid=getRequestParamter(request,"provinceid");
+		// 取得中心点经纬度
+		String[] centers = pointcenter.split(",");
+		String longitude =centers[0].trim();
+		String latitude = centers[1].trim();
+		
 		AutoPositionInfo tempAutoPositionInfo=locationService.getAutoPositionInfoByCityId(cityid);
 		if(tempAutoPositionInfo!=null){
 			resultMap.put("simulateUrl", tempAutoPositionInfo.getSimulateexamurl());
@@ -178,4 +191,52 @@ public class LocationServlet extends BaseServlet{
 		}
 		
 	}
+	/**
+	 * 根据cityid或经纬度查询商城地址url
+	 * @param request
+	 * @param resultMap
+	 * @throws ErrException
+	 * @throws UnsupportedEncodingException
+	 * @author 卢磊
+	 */
+	public void getAddressUrl(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException, UnsupportedEncodingException {
+		String pointcenter = getRequestParamter(request, "pointcenter");
+		String cityid=getRequestParamter(request,"cityid");
+		if(cityid==null || "".equals(cityid)){
+			if(pointcenter!=null){
+				String[] centers = pointcenter.split(",");
+				String longitude =centers[0].trim();
+				String latitude = centers[1].trim();
+				//如果没有传cityid时，根据经纬度查询cityid
+				String cityname="";
+				cityname=CommonUtils.getAddressByLngLat(longitude, latitude);
+				cityname=cityname.replaceAll("市", "");
+				List<CityInfo> citylist=locationService.getCityByCName(cityname);
+				if(citylist!=null && citylist.size()>0){
+					CityInfo city=citylist.get(0);
+					cityid=city.getCityid().toString();
+				}
+			}
+		}
+		AutoPositionInfo tempAutoPositionInfo=locationService.getAutoPositionInfoByCityId(cityid);
+		if(tempAutoPositionInfo!=null){
+			resultMap.put("simulateUrl", tempAutoPositionInfo.getSimulateexamurl());
+			resultMap.put("bookreceptionUrl", tempAutoPositionInfo.getBookreceptionurl());
+		}else{
+			resultMap.put(Constant.CODE, 2);
+			resultMap.put(Constant.MESSAGE, "cityid对应的数据不存在");
+		}
+	}
+	/**
+	 * 获取热门城市
+	 * @param request
+	 * @param resultMap
+	 * @throws ErrException
+	 * @throws UnsupportedEncodingException
+	 */
+	public void getHotCity(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException, UnsupportedEncodingException {
+		String str[]={"杭州","金华","宁波","上海"};
+		resultMap.put("city", str);
+	}
+	
 }
