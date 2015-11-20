@@ -137,6 +137,9 @@ public class CuserServlet extends BaseServlet {
 			}else if (Constant.GETCOACHPRICERANGE.equals(action)) {
 				// 获取教练是否有发放小巴券权限
 				getCoachPriceRange(request, resultMap);
+			}else if ("COINEXCEPTION".equals(action)) {
+				// 获取教练异常小巴币归属
+				getCoachCoinAffiliationExcetpion(request, resultMap);
 			}
 			else {
 				throw new ErrException();
@@ -903,6 +906,12 @@ public class CuserServlet extends BaseServlet {
 		HashMap<String, Object> result=cuserService.getCoinAffiliation(coachid);
 		resultMap.putAll(result);
 	}
+	//获取教练小巴币归属那些教练的异常数据
+		public void getCoachCoinAffiliationExcetpion(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+			
+			HashMap<String, Object> result=cuserService.getCoinAffiliationException();
+			//resultMap.putAll(result);
+		}
 	//获取教练有关联学员信息
 	public void getCoachStudentRelationShip(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException
 	{

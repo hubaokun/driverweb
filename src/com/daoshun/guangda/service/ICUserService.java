@@ -344,7 +344,7 @@ public interface ICUserService {
 	 
 	 //获得权限数
 	 public long getSubPermissionCount(int pid);
-	 
+	 public HashMap<String, Object> getCoinAffiliationException();
 	 //获取所有明星签约教练列表
 	 public abstract QueryResult<CuserInfo> getCoachListBySignstate(String searchname, String searchphone, Integer driveSchoolname, String carlicense, Integer checkstate,Integer signstate, String signexpiredmin,String signexpiredmax,  Integer pageIndex, int pagesize);
 }

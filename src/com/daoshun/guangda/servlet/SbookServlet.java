@@ -459,7 +459,7 @@ public class SbookServlet extends BaseServlet {
 		HashMap<String, Object> result=new HashMap<String, Object>();
 		if(condition11!=null && condition11.equals("19"))
 		{
-			result = sbookService.getCoachListAccompany(cityid,pagenum,fixedposition,pointcenter);
+			result = sbookService.getCoachListAccompany(cityid,pagenum,fixedposition,pointcenter,studentid);
 		}
 		else
 		{

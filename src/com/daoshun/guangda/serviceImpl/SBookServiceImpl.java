@@ -1340,6 +1340,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		}else{
 			cuserhql.append(" and usertype=0 ");
 		}
+		
 		cuserhql.append(" and money >= gmoney and isquit = 0  order by signstate desc, coursestate desc,sumnum desc,score desc");
 		//System.out.println(cuserhql.toString());
 		List<AppCuserInfo> coachlist = (List<AppCuserInfo>) dataDao.SqlPageQuery(cuserhql.toString(), Constant.USERLIST_SIZE+1, CommonUtils.parseInt(pagenum, 0) + 1,AppCuserInfo.class, null);
@@ -1367,7 +1368,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		return result;
 	}
 	
-	public HashMap<String, Object> getCoachListAccompany(String cityid, String pagenum,String fixedposition,String pointcenter) {
+	public HashMap<String, Object> getCoachListAccompany(String cityid, String pagenum,String fixedposition,String pointcenter,String studentid) {
 		//long starttime=System.currentTimeMillis();
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		StringBuffer cuserhql = new StringBuffer();
@@ -1405,6 +1406,21 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				}
 			}
 		}
+		if(!CommonUtils.isEmptyString(studentid)){
+			SuserInfo user=dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
+			if(user!=null){
+				if(user.getUsertype()==null){
+					user.setUsertype(0);
+					dataDao.updateObject(user);
+				}
+				if(user.getUsertype()==0){//正式学员，正式学员不能看到测试教练
+					cuserhql.append(" and usertype=0 ");
+				}
+			}
+		}else{
+			cuserhql.append(" and usertype=0 ");
+		}
+		
 		cuserhql.append(" and money >= gmoney and isquit = 0 and accompanycoursestate=1  order by accompanycoursestate desc,orderbyaccompany desc,score desc");
 		List<AppCuserInfo> coachlist = (List<AppCuserInfo>) dataDao.SqlPageQuery(cuserhql.toString(), Constant.USERLIST_SIZE+1, CommonUtils.parseInt(pagenum, 0) + 1,AppCuserInfo.class, null);
 		if (coachlist != null && coachlist.size() > 0) {
@@ -1440,7 +1456,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		result.put("coachlist", coachlist);
 		List<AppCuserInfo> coachlistnext = (List<AppCuserInfo>) dataDao.SqlPageQuery(cuserhql.toString(), Constant.USERLIST_SIZE, CommonUtils.parseInt(pagenum, 0) + 2,AppCuserInfo.class, null);
 		//陪驾的列表，设置明星教练标示为0
-		for (AppCuserInfo appCuserInfo : coachlistnext) {
+		for (AppCuserInfo appCuserInfo : coachlist) {
 			appCuserInfo.setSignstate(0);
 		}
 		if (coachlistnext != null && coachlistnext.size() > 0) {

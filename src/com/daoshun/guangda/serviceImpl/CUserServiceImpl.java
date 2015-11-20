@@ -1956,9 +1956,9 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 			String countinhql = "select sum(coinnum) from CoinRecordInfo where (receiverid ="+coachid+" and receivertype="+ UserType.COAH+" and ownertype="+UserType.COAH+" and ownerid="+coachid+")";
 			Object in= dataDao.getFirstObjectViaParam(countinhql, null);
 			int totalin= in==null?0:CommonUtils.parseInt(in.toString(), 0);
-			if(totalin==0){
+			/*if(totalin==0){
 				return 0;
-			}
+			}*/
 			String countouthql = "select sum(coinnum) from CoinRecordInfo where (payerid ="+coachid+" and payertype="+ UserType.COAH+" and ownertype="+UserType.COAH+"  and ownerid="+coachid+")";
 			Object out= dataDao.getFirstObjectViaParam(countouthql, null);
 			int totalout = (out==null) ? 0: CommonUtils.parseInt(out.toString(),0);
@@ -1973,9 +1973,9 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 		String countinhql2 = "select sum(coinnum) from CoinRecordInfo where (receiverid ="+coachid+" and receivertype="+ UserType.COAH+" and ownertype="+UserType.DRIVESCHOOL+")";
 		Object in2= dataDao.getFirstObjectViaParam(countinhql2, null);
 		int totalin2= in2==null?0:CommonUtils.parseInt(in2.toString(), 0);
-		if(totalin2==0){
+		/*if(totalin2==0){
 			return 0;
-		}
+		}*/
 		String countouthql3 = "select sum(coinnum) from CoinRecordInfo where (payerid ="+coachid+" and payertype="+ UserType.COAH+" and ownertype="+UserType.DRIVESCHOOL+")";
 		Object out2= dataDao.getFirstObjectViaParam(countouthql3, null);
 		int totalout2 = (out2==null) ? 0: CommonUtils.parseInt(out2.toString(),0);
@@ -1991,9 +1991,9 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 			String countinhql = "select sum(coinnum) from CoinRecordInfo where (receiverid ="+coachid+" and receivertype="+ UserType.COAH+" and ownertype="+UserType.PLATFORM+")";
 			Object in= dataDao.getFirstObjectViaParam(countinhql, null);
 			int totalin= in==null?0:CommonUtils.parseInt(in.toString(), 0);
-			if(totalin==0){
+			/*if(totalin==0){
 				return 0;
-			}
+			}*/
 			String countouthql = "select sum(coinnum) from CoinRecordInfo where (payerid = "+coachid+" and payertype="+ UserType.COAH+" and ownertype="+UserType.PLATFORM+")";
 			Object out= dataDao.getFirstObjectViaParam(countouthql, null);
 			int totalout = (out==null) ? 0: CommonUtils.parseInt(out.toString(),0);
@@ -2010,17 +2010,14 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 		CoinAffiliation cf=new CoinAffiliation(numForPlatform,"",UserType.PLATFORM);
 		List<CoinAffiliation> mList=new ArrayList<CoinAffiliation>();
 		mList.add(cf);
-		
 		//教练
 		int coachCoin=getCanUseCoinnumForCoach(coachid);
 		CoinAffiliation ca=new CoinAffiliation(coachCoin,"",UserType.COAH);
 		mList.add(ca);
-		
 		//驾校
 		int schoolCoin=getCanUseCoinnumForDriveSchool(coachid);
 		CoinAffiliation ca2=new CoinAffiliation(schoolCoin,"",UserType.DRIVESCHOOL);
 		mList.add(ca2);
-		
 		/*String hql="from CoinRecordInfo where receiverid =:receiverid and receivertype=2 and ownertype=:ownertype GROUP BY ownerid";
 		String params[]={"receiverid","ownertype"};
 		List<CoinRecordInfo> crlist= (List<CoinRecordInfo>) dataDao.getObjectsViaParam(hql, params, CommonUtils.parseInt(coachid, 0),UserType.COAH);
@@ -2042,6 +2039,45 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 			}
 		}*/
 		result.put("coinaffiliationlist",mList);//教练
+		return result;
+	}
+	/**
+	 * 获取教练小巴币归属那些教练或驾校使用 异常数据查询
+	 */
+	public HashMap<String, Object> getCoinAffiliationException(){
+		HashMap<String, Object> result = new HashMap<String, Object>();
+		
+		String hql="from CuserInfo";
+		List<CuserInfo> list=(List<CuserInfo>) dataDao.getObjectsViaParam(hql, null);
+		for (CuserInfo cuserInfo : list) {
+			String coachid=String.valueOf(cuserInfo.getCoachid());
+			//平台小巴币
+			int numForPlatform=getCanUseCoinnumForPlatform(coachid);
+			CoinAffiliation cf=new CoinAffiliation(numForPlatform,"",UserType.PLATFORM);
+			List<CoinAffiliation> mList=new ArrayList<CoinAffiliation>();
+			mList.add(cf);
+			if(numForPlatform<0){
+				System.out.println("coachid="+coachid+"  ,平台小巴币="+numForPlatform);
+			}
+			//教练
+			int coachCoin=getCanUseCoinnumForCoach(coachid);
+			CoinAffiliation ca=new CoinAffiliation(coachCoin,"",UserType.COAH);
+			mList.add(ca);
+			if(coachCoin<0){
+				System.out.println("coachid="+coachid+"  ,教练小巴币="+coachCoin);
+			}
+			//驾校
+			int schoolCoin=getCanUseCoinnumForDriveSchool(coachid);
+			CoinAffiliation ca2=new CoinAffiliation(schoolCoin,"",UserType.DRIVESCHOOL);
+			mList.add(ca2);
+			if(schoolCoin<0){
+				System.out.println("coachid="+coachid+"  ,驾校小巴币="+schoolCoin);
+			}
+			
+			
+		}
+		
+		
 		return result;
 	}
 

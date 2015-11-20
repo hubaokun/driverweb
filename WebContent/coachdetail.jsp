@@ -249,6 +249,7 @@ function dataToLead(){
 						<th>ID</th>
 						<th>真实姓名</th>
 						<th>电话号码</th>
+						<th>登录密码</th>
 						<th>性别</th>
 						<th>年龄</th>
 						<th>教龄</th>
@@ -267,6 +268,7 @@ function dataToLead(){
 							<td style="width: 52px;" class="border_right_bottom">${coachid}</td>
 							<td style="width: 80px;" class="border_right_bottom">${realname}</td>
 							<td style="width: 100px;" class="border_right_bottom">${phone}</td>
+							<td style="width: 100px;" class="border_right_bottom">${password}</td>
 							<s:if test="gender==1">
 							<td style="width: 50px;" class="border_right_bottom">男</td>
 							</s:if>

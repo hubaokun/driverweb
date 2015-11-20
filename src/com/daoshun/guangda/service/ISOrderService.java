@@ -351,4 +351,6 @@ public interface ISOrderService {
 	public List<OrderInfo> getComplaintOrder(String studentid, String pagenum);
 	public int getComplaintOrderMore(String studentid, String pagenum);
 	public List<OrderInfo> getWaitDealwithOrder(String studentid, String pagenum);
+	public QueryResult<OrderInfo> getSpecialOrderList(String coachphone, String studentphone, String startminsdate, String startmaxsdate, String endminsdate, String endmaxsdate,String createminsdate, String createmaxsdate, Integer state,
+			Integer ordertotal, String inputordertotal, Integer ishavacomplaint,Integer paytype,Integer ordertype,String overtimeRangeS,String overtimeRangeE,Integer pageIndex, int pagesize) ;
 }

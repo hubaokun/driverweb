@@ -67,3 +67,4 @@ function searchOrder(){
 	"&t_paytype="+t_paytype+"&t_ordertype="+t_ordertype+"&index="+index+"&change_id="+change_id+
 	"&overtimeRangeS="+overtimeRangeS+"&overtimeRangeE="+overtimeRangeE;
 }
+

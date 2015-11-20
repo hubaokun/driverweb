@@ -344,4 +344,5 @@ public interface ISUserService {
     //学员是否拥有参与体验课资格的状态
     public boolean getFreecoursestate(int studentid);
     public int getCoinnumForDriveSchool( String studentid,String coachid);
+    public void getFrozenCoinAffiliationException();
 }

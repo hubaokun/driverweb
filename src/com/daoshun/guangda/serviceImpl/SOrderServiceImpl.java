@@ -1824,6 +1824,154 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
 		return new QueryResult<OrderInfo>(orderlist, total);
 	}
+	
+	@Override
+	public QueryResult<OrderInfo> getSpecialOrderList(String coachphone, String studentphone, String startminsdate, String startmaxsdate, String endminsdate, String endmaxsdate,String createminsdate, String createmaxsdate, Integer state,
+			Integer ordertotal, String inputordertotal, Integer ishavacomplaint,Integer paytype,Integer ordertype,String overtimeRangeS,String overtimeRangeE,Integer pageIndex, int pagesize) {
+		StringBuffer cuserhql = new StringBuffer();
+		cuserhql.append("from OrderInfo where (coachstate=5 or studentstate =5) ");
+		if (!CommonUtils.isEmptyString(coachphone)) {
+			cuserhql.append(" and coachid in(select coachid from CuserInfo where phone like '%" + coachphone + "%')");
+		}
+		if (!CommonUtils.isEmptyString(studentphone)) {
+			cuserhql.append(" and studentid in(select studentid from SuserInfo where phone like '%" + studentphone + "%')");
+		}
+		if (!CommonUtils.isEmptyString(startminsdate)) {
+			cuserhql.append(" and start_time >='" + startminsdate + "'");
+		}
+		if (!CommonUtils.isEmptyString(startmaxsdate)) {
+			Date startdate = CommonUtils.getDateFormat(startmaxsdate, "yyyy-MM-dd");
+			startdate.setHours(23);
+			startdate.setMinutes(59);
+			startdate.setSeconds(59);
+			String startmaxstime = CommonUtils.getTimeFormat(startdate, "yyyy-MM-dd HH:mm:ss");
+			cuserhql.append(" and start_time <='" + startmaxstime + "'");
+		}
+		if (!CommonUtils.isEmptyString(endminsdate)) {
+			cuserhql.append(" and end_time >='" + endminsdate + "'");
+		}
+		if (!CommonUtils.isEmptyString(endmaxsdate)) {
+			Date enddate = CommonUtils.getDateFormat(endmaxsdate, "yyyy-MM-dd");
+			enddate.setHours(23);
+			enddate.setMinutes(59);
+			enddate.setSeconds(59);
+			String endmaxstime = CommonUtils.getTimeFormat(enddate, "yyyy-MM-dd HH:mm:ss");
+			cuserhql.append(" and end_time <='" + endmaxstime + "'");
+		}
+		if (!CommonUtils.isEmptyString(createminsdate)) {
+			cuserhql.append(" and creat_time >='" + createminsdate + "'");
+		}
+		if (!CommonUtils.isEmptyString(createmaxsdate)) {
+			Date enddate = CommonUtils.getDateFormat(createmaxsdate, "yyyy-MM-dd");
+			enddate.setHours(23);
+			enddate.setMinutes(59);
+			enddate.setSeconds(59);
+			String createmaxstime = CommonUtils.getTimeFormat(enddate, "yyyy-MM-dd HH:mm:ss");
+			cuserhql.append(" and creat_time <='" + createmaxstime + "'");
+		}
+		if(!CommonUtils.isEmptyString(overtimeRangeS))
+		{
+			Date overtimeS=CommonUtils.getDateFormat(overtimeRangeS, "yyyy-MM-dd");
+			overtimeS.setHours(23);
+			overtimeS.setMinutes(59);
+			overtimeS.setSeconds(59);
+			String overtimeRS=CommonUtils.getTimeFormat(overtimeS, "yyyy-MM-dd HH:mm:ss");
+			cuserhql.append(" and over_time >='"+overtimeRS+"'");
+		}
+		if(!CommonUtils.isEmptyString(overtimeRangeE))
+		{
+			Date overtimeE=CommonUtils.getDateFormat(overtimeRangeE, "yyyy-MM-dd");
+			overtimeE.setHours(23);
+			overtimeE.setMinutes(59);
+			overtimeE.setSeconds(59);
+			String overtimeRE=CommonUtils.getTimeFormat(overtimeE, "yyyy-MM-dd HH:mm:ss");
+			cuserhql.append(" and over_time <='"+overtimeRE+"'");
+		}
+		if (state != null) {
+			if (state == 1) {
+				cuserhql.append(" and ((coachstate<>2 and coachstate<>4) or over_time is null or studentstate in(0,2))");
+			}
+			if (state == 2) {
+				cuserhql.append(" and (coachstate=2 and over_time is not null and studentstate=3)");
+			}
+			if (state == 3) {
+				cuserhql.append(" and (coachstate=4 and  studentstate=4)");
+			}
+		}
+		if (!CommonUtils.isEmptyString(inputordertotal)) {
+			if (ordertotal == 0) {
+				cuserhql.append(" and total >" + inputordertotal);
+			}
+			if (ordertotal == 1) {
+				cuserhql.append(" and total =" + inputordertotal);
+			}
+			if (ordertotal == 2) {
+				cuserhql.append(" and total <" + inputordertotal);
+			}
+		}
+		if (ishavacomplaint != null) {
+			if (ishavacomplaint == 1) {
+				cuserhql.append(" and orderid in (select orderid from OrderRecordInfo where operation in(7,9))");
+			}
+			if (ishavacomplaint == 2) {
+				cuserhql.append(" and orderid not in (select orderid from OrderRecordInfo where operation in(7,9))");
+			}
+		}
+		if(paytype!=null && paytype!=0)
+		{
+			cuserhql.append(" and paytype ="+paytype);
+		}
+		if(ordertype!=null && ordertype!=0)
+		{
+			if(ordertype==1)
+			{
+				cuserhql.append(" and orderid in (select orderid from OrderPrice where subject='科目二')");
+			}
+			if(ordertype==2)
+			{
+				cuserhql.append(" and orderid in (select orderid from OrderPrice where subject='科目三')");
+			}
+			if(ordertype==3)
+			{
+				cuserhql.append(" and orderid in (select orderid from OrderPrice where subject='考场练习')");
+			}
+			if(ordertype==4)
+			{
+				cuserhql.append(" and orderid in (select orderid from OrderPrice where subject='陪驾')");
+			}
+		}
+		
+		cuserhql.append(" order by creat_time desc");
+		List<OrderInfo> orderlist = (List<OrderInfo>) dataDao.pageQueryViaParam(cuserhql.toString(), pagesize, pageIndex, null);
+		if (orderlist != null && orderlist.size() > 0) {
+			for (OrderInfo order : orderlist) {
+				SuserInfo student = dataDao.getObjectById(SuserInfo.class, order.getStudentid());
+				CuserInfo coach = dataDao.getObjectById(CuserInfo.class, order.getCoachid());
+				String querystring="from OrderPrice where orderid=:orderid";
+				String[] param={"orderid"};
+				OrderPrice orderprice=(OrderPrice) dataDao.getFirstObjectViaParam(querystring, param, order.getOrderid());
+				if (student != null) {
+					order.setStudentinfo(student);
+				}
+				if (coach != null) {
+					order.setCuserinfo(coach);
+				}
+				if(orderprice!=null)
+				{
+					order.setSubjectname(orderprice.getSubject());
+				}
+				StringBuffer cuserhql1 = new StringBuffer();
+				cuserhql1.append("from ComplaintInfo where order_id =:orderid ");
+				String[] params = { "orderid" };
+				String countnumhql = " select count(*) " + cuserhql1.toString();
+				long complaintnum = (Long) dataDao.getFirstObjectViaParam(countnumhql, params, order.getOrderid());
+				order.setComplaintnum(complaintnum);
+			}
+		}
+		String counthql = " select count(*) " + cuserhql.toString();
+		long total = (Long) dataDao.getFirstObjectViaParam(counthql, null);
+		return new QueryResult<OrderInfo>(orderlist, total);
+	}
 
 	@Override
 	public QueryResult<ComplaintInfo> getComplaintList(Integer pageIndex, int pagesize) {

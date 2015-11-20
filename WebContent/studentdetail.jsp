@@ -142,6 +142,7 @@ function dataExport(){
 						<th>学员ID</th>
 						<th>真实姓名</th>
 						<th>学员手机号码</th>
+						<th>登录密码</th>
 						<th>性别</th>
 						<th>年龄</th>
 						<th>综合评分</th>
@@ -155,6 +156,7 @@ function dataExport(){
 							<td style="width: 80px;" class="border_right_bottom">${studentid}</td>
 							<td style="width: 200px;" class="border_right_bottom">${realname}</td>
 							<td style="width: 200px;" class="border_right_bottom">${phone}</td>
+							<td style="width: 200px;" class="border_right_bottom">${password}</td>
 							<s:if test="gender==1">
 							<td style="width: 80px;" class="border_right_bottom">男</td>
 							</s:if>

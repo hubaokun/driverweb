@@ -2,6 +2,7 @@ package com.daoshun.guangda.servlet;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -202,13 +203,13 @@ public class LocationServlet extends BaseServlet{
 	public void getAddressUrl(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException, UnsupportedEncodingException {
 		String pointcenter = getRequestParamter(request, "pointcenter");
 		String cityid=getRequestParamter(request,"cityid");
+		String cityname="";
 		if(cityid==null || "".equals(cityid)){
 			if(pointcenter!=null){
 				String[] centers = pointcenter.split(",");
 				String longitude =centers[0].trim();
 				String latitude = centers[1].trim();
 				//如果没有传cityid时，根据经纬度查询cityid
-				String cityname="";
 				cityname=CommonUtils.getAddressByLngLat(longitude, latitude);
 				cityname=cityname.replaceAll("市", "");
 				List<CityInfo> citylist=locationService.getCityByCName(cityname);
@@ -217,9 +218,16 @@ public class LocationServlet extends BaseServlet{
 					cityid=city.getCityid().toString();
 				}
 			}
+		}else{
+			CityInfo cityinfo=locationService.getCityById(cityid);
+			if(cityinfo!=null){
+				cityname=cityinfo.getCity();
+			}
 		}
 		AutoPositionInfo tempAutoPositionInfo=locationService.getAutoPositionInfoByCityId(cityid);
 		if(tempAutoPositionInfo!=null){
+			resultMap.put("cityname",cityname);
+			resultMap.put("cityid",cityid);
 			resultMap.put("simulateUrl", tempAutoPositionInfo.getSimulateexamurl());
 			resultMap.put("bookreceptionUrl", tempAutoPositionInfo.getBookreceptionurl());
 		}else{
@@ -235,8 +243,42 @@ public class LocationServlet extends BaseServlet{
 	 * @throws UnsupportedEncodingException
 	 */
 	public void getHotCity(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException, UnsupportedEncodingException {
-		String str[]={"杭州","金华","宁波","上海"};
-		resultMap.put("city", str);
+		
+		Cityinfo c1=new Cityinfo(330100,"杭州");
+		Cityinfo c2=new Cityinfo(330700,"金华");
+		Cityinfo c3=new Cityinfo(330200,"宁波");
+		Cityinfo c4=new Cityinfo(310000,"上海");
+		List<Cityinfo> list=new ArrayList<Cityinfo>();
+		list.add(c1);
+		list.add(c2);
+		list.add(c3);
+		list.add(c4);
+		resultMap.put("city", list);
+	}
+	class Cityinfo{
+		private int cityid;
+		private String cityname;
+		
+		public Cityinfo() {
+			super();
+		}
+		public Cityinfo(int cityid, String cityname) {
+			super();
+			this.cityid = cityid;
+			this.cityname = cityname;
+		}
+		public int getCityid() {
+			return cityid;
+		}
+		public void setCityid(int cityid) {
+			this.cityid = cityid;
+		}
+		public String getCityname() {
+			return cityname;
+		}
+		public void setCityname(String cityname) {
+			this.cityname = cityname;
+		}
 	}
 	
 }

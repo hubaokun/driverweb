@@ -137,6 +137,9 @@ public class SuserServlet extends BaseServlet {
 			}else if (Constant.GETQUERYSUBJECT.equals(action)) {
 				// 显示客户端筛选的按 科目筛选的文字
 				getQuerySubject(request, resultMap);
+			}else if ("COINEXCEPTION".equals(action)) {
+				// 学员小巴币异常查询
+				getCoinAffiliationException(request, resultMap);
 			}
 			else {
 				throw new ErrException();
@@ -1057,6 +1060,10 @@ public class SuserServlet extends BaseServlet {
 		HashMap<String, Object> result=suserService.getCoinAffiliation(studentid);
 		resultMap.putAll(result);
 	}
+	//获取学员小巴币归属那些教练或驾校使用 异常数据
+		public void getCoinAffiliationException(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+			suserService.getFrozenCoinAffiliationException();
+		}
 
 	// 获取账户小巴币记录
 	public void getMyCoinRecord(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {

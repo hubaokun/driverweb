@@ -417,6 +417,61 @@ public class OrderAction extends BaseAction {
 	   return SUCCESS;
 	}
 	
+	/**
+	 * 获取特殊订单列表（订单取消教练不同意等特殊情况）
+	 * @return
+	 */
+	@Action(value = "/specialOrder", results = { @Result(name = SUCCESS, location = "/specialOrder.jsp") })
+	public String getSpecialOrderList() {
+		HttpSession session = ServletActionContext.getRequest().getSession();
+		int pagesize = CommonUtils.parseInt(String.valueOf(session.getAttribute("pagesize")), 10);
+		QueryResult<OrderInfo> result = orderService.getSpecialOrderList(coachphone,studentphone,startminsdate,startmaxsdate,endminsdate,endmaxsdate,createminsdate,createmaxsdate,state,ordertotal,inputordertotal,ishavacomplaint,t_paytype,t_ordertype,overtimeRangeS,overtimeRangeE,pageIndex, pagesize);
+		total = result.getTotal();
+		orderlist = result.getDataList();
+		for(int i=0; i< orderlist.size();i++)
+		{
+			OrderInfo o = orderlist.get(i);
+			Calendar now = Calendar.getInstance();
+			
+			Calendar starttime = Calendar.getInstance();
+			starttime.setTime(o.getStart_time());
+			
+			if (now.before(starttime))
+				o.setCan_cancel(1);
+		}
+		pageCount = ((int) result.getTotal() + pagesize - 1) / pagesize;
+		if (pageIndex > 1) {
+			if (orderlist == null || orderlist.size() == 0) {
+				pageIndex--;
+				getSpecialOrderList();
+			}
+		}
+		return SUCCESS;
+	}
+	
+	/**
+	 * 学员取消订单教练不同意，学员又【去学车了】
+	 * @return
+	 */
+	@Action(value = "/alreadyLearn", results = { @Result(name = SUCCESS, type="redirect", location = "/specialOrder.do") })
+	public String alreadyLearn() {
+		order = orderService.getOrderById(orderid);
+		order.setCoachstate(1);
+		orderService.updateOrderInfo(order);
+		return SUCCESS;
+	}
+	
+	/**
+	 * 学员取消订单教练不同意，最后学员【未去学车】
+	 * @return
+	 */
+	@Action(value = "/noLearn", results = { @Result(name = SUCCESS, type="redirect", location = "/specialOrder.do") })
+	public String noLearn() {
+		order = orderService.getOrderById(orderid);
+		order.setCoachstate(1);
+		orderService.updateOrderInfo(order);
+		return SUCCESS;
+	}
 	
 	public long getTotal() {
 		return total;
