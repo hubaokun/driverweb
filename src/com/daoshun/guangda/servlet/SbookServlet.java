@@ -578,9 +578,9 @@ public class SbookServlet extends BaseServlet {
 		String modelid = getRequestParamter(request, "modelid");// 预订的教练ID
 		CommonUtils.validateEmpty(studentid);
 		CommonUtils.validateEmpty(coachid);
-		CommonUtils.validateEmpty(modelid);
+		//CommonUtils.validateEmpty(modelid);
 		List<CouponRecord> list=new ArrayList<CouponRecord>();
-		if(!modelid.equals("19"))
+		if(modelid==null ||(modelid!=null && !modelid.equals("19")))
 		    list = sbookService.getCanUseCouponList(studentid, coachid);
 
 		int canUseDiff = 0;
