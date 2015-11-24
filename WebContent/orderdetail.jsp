@@ -42,6 +42,9 @@ $(function(){
 <th>开始时间</th>
 <th>结束时间</th>
 <th>总价</th>
+<th>支付方式</th>
+<th>混合支付中使用小巴币个数</th>
+<th>混合支付中使用余额数量</th>
 <th>订单状态</th>
 </tr>
 <tr class="tr_td">
@@ -51,6 +54,33 @@ $(function(){
 <td style="width: 200px;" class="border_right_bottom"><s:date name="order.start_time" format="yyyy-MM-dd HH:mm:ss"/></td>
 <td style="width: 200px;" class="border_right_bottom"><s:date name="order.end_time" format="yyyy-MM-dd HH:mm:ss"/></td>
 <td style="width: 100px;" class="border_right_bottom"><s:property value="order.total"/></td>
+<td style="width: 100px;" class="border_right_bottom" paytype='<s:property value="order.paytype"/>'>
+<s:if test="order.paytype==1">
+	余额
+</s:if>
+<s:elseif test="order.paytype==2">
+	小巴券
+</s:elseif>
+<s:elseif test="order.paytype==3">
+	小巴币
+</s:elseif>
+<s:elseif test="order.paytype==4">
+	小巴币+余额混合支付
+</s:elseif>
+<s:elseif test="order.paytype==0">
+	<s:if test="order.delmoney>0 ">
+		小巴券
+	</s:if>
+	<s:else>
+		余额
+	</s:else>
+</s:elseif>
+<s:else>
+	未知
+</s:else>
+</td>
+<td style="width: 100px;" class="border_right_bottom"><s:property value="order.mixCoin"/></td>
+<td style="width: 100px;" class="border_right_bottom"><s:property value="order.mixMoney"/></td>
 <s:if test="order.coachstate==2&&order.over_time!=null&&order.studentstate==3">
 	<td style="width: 100px;" class="border_right_bottom">已结算</td>
 </s:if>

@@ -193,24 +193,35 @@ function dataExport(){
 			    <option value="1"  selected="selected">余额</option>
 			    <option value="2">小巴券</option>
 			    <option value="3">小巴币</option>
+				<option value="4">小巴币+余额混合支付</option>
 			</s:if>
 			<s:elseif test="t_paytype == 2">
 				<option value="0" >不限</option>
 			    <option value="1">余额</option>
 			    <option value="2" selected="selected">小巴券</option>
 			    <option value="3">小巴币</option>
+				<option value="4">小巴币+余额混合支付</option>
 			</s:elseif>
 			<s:elseif test="t_paytype == 3">
 				<option value="0" >不限</option>
 			    <option value="1">余额</option>
 			    <option value="2">小巴券</option>
-			    <option value="3"selected="selected">小巴币</option>
+			    <option value="3" selected="selected">小巴币</option>
+				<option value="4">小巴币+余额混合支付</option>
+			</s:elseif>
+			<s:elseif test="t_paytype == 4">
+				<option value="0" >不限</option>
+			    <option value="1">余额</option>
+			    <option value="2">小巴券</option>
+			    <option value="3">小巴币</option>
+				<option value="4" selected="selected">小巴币+余额混合支付</option>
 			</s:elseif>
 			<s:else>
 				<option value="0"  selected="selected">不限</option>
 			    <option value="1">余额</option>
 			    <option value="2">小巴券</option>
 			    <option value="3">小巴币</option>
+				<option value="4">小巴币+余额混合支付</option>
 			</s:else>
 		</select>
 	</div>
@@ -300,6 +311,9 @@ function dataExport(){
 							</s:elseif>
 							<s:elseif test="paytype==3">
 								<td style="width: 60px;" class="border_right_bottom">小巴币</td>
+							</s:elseif>
+							<s:elseif test="paytype==4">
+								<td style="width: 60px;" class="border_right_bottom">小巴币+余额混合支付</td>
 							</s:elseif>
 							<s:else>
 							   <td style="width: 60px;" class="border_right_bottom">未知方式</td>
