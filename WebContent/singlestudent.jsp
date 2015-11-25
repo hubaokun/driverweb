@@ -75,7 +75,7 @@ $(function(){
 <th>电话号码</th>
 <th>性别</th>
 <th>出生日期</th>
-<th>城市</th>
+<th></th>
 </tr>
 
 <tr class="tr_td">
@@ -100,7 +100,7 @@ $(function(){
 </td>
 </s:else>
 <td  style="width:80px;min-width:150px;" class="border_right_bottom"><input name="editbirthday" value="${suser.birthday }" style="text-align: center;width:150px;height: 35px;font-size:18px" onclick="WdatePicker({startDate:'',dateFmt:'yyyy-MM-dd'})"/></td>
-<td  style="width:150px;min-width: 150px" class="border_right_bottom"><input name="editcity" value="${suser.cityid}" style="text-align: center;width:90px;height: 35px;font-size:18px"  /></td>
+<td  style="width:150px;min-width: 150px" class="border_right_bottom"></td>
 </tr>
 
 
@@ -126,6 +126,27 @@ $(function(){
 <td  style="width:150px;min-width: 150px" class="border_right_bottom">
 <input  name="editusertype" type="radio" value="0" ${suser.usertype=='0'?'checked':'' } ${suser.usertype==null?'checked':'' }/>不是 
 <input  name="editusertype" type="radio" value="1" ${suser.usertype=='1'?'checked':'' }/>是</td>
+</tr>
+
+<tr class="tr_th">
+<th>所在省ID</th>
+<th>所在省</th>
+<th>所在城市ID</th>
+<th>所在城市</th>
+<th>绑定驾校ID</th>
+<th>绑定驾校</th>
+</tr>
+
+
+<tr class="tr_td">
+<td  style="width:180px;min-width: 180px" class="border_right_bottom"><input name="editprovinceid"  value="${suser.provinceid}" style="text-align: center;width:180px;height: 35px;font-size:18px"  /></td>
+<td  style="width:150px;min-width: 150px" class="border_right_bottom"><input name="editprovince" value="${suser.provinceid }" style="text-align: center;width:150px;height: 35px;font-size:18px"  /></td>
+<td  style="width:150px;min-width: 150px" class="border_right_bottom"><input name="editcityid" value="${suser.cityid }"   style="text-align: center;width:150px;height: 35px;font-size:18px" /></td>
+<td  style="width:150px;min-width: 150px" class="border_right_bottom"><input name="editcity" value="${suser.city}" style="text-align: center;width:175px;height: 35px;font-size:18px" /></td>
+<td  style="width:150px;min-width: 150px" class="border_right_bottom"><input  name="editdrive_schoolid"  value="${suser.drive_schoolid }" style="text-align: center;width:150px;height: 35px;font-size:18px"/></td>
+<td  style="width:150px;min-width: 150px" class="border_right_bottom"><input  name="editdrive_school"  value="${suser.drive_school }" style="text-align: center;width:150px;height: 35px;font-size:18px"/></td>
+
+
 </tr>
 
 </table>

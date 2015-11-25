@@ -743,11 +743,12 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					}
 				}
 			}*/
+			
+			String cityname="";
 			if (!CommonUtils.isEmptyString(cityid)) {
 				hqlCoach.append(" and cityid = " + cityid);
 			}else{
 				//如果没有传cityid时，根据经纬度查询cityid
-				String cityname="";
 				cityname=CommonUtils.getAddressByLngLat(longitude, latitude);
 				cityname=cityname.replaceAll("市", "");
 				String findCityIdHql="from CityInfo where city like '%"+cityname+"%'";
@@ -755,6 +756,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				if(citylist!=null && citylist.size()>0){
 					CityInfo city=citylist.get(0);
 					if(city!=null){
+						cityid = city.getCityid().intValue()+"";
 						hqlCoach.append(" and cityid = " + city.getCityid());
 					}
 				}
@@ -842,6 +844,42 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					}
 					if(user.getUsertype()==0){//正式学员，正式学员不能看到测试教练
 						hqlCoach.append(" and usertype=0 ");
+					}
+					
+					//增加学员登录状态下，如果绑定驾校ID不为空，需要按照绑定驾校ID进行教练过滤
+					if(user.getDrive_schoolid()!=null){
+						hqlCoach.append(" and drive_schoolid="+user.getDrive_schoolid().intValue()+" ");
+					}
+					
+					//增加检测学员所在cityid是否为空，如果为空，则需要按照以下规则进行设置：
+					//1、如果绑定驾校ID不为空，需要按照绑定驾校ID的所在城市进行设置
+					//2、如果绑定驾校ID为空，按照传入或根据经纬度确定的cityid
+					if(user.getCityid()==null||user.getCityid().length()!=6||user.getCity()==null||user.getCity().length()<2){
+						String studentCityid =null;
+
+						if(user.getDrive_schoolid()!=null&&user.getDrive_schoolid().intValue()>0){
+							DriveSchoolInfo driverSchool=dataDao.getObjectById(DriveSchoolInfo.class, user.getDrive_schoolid().intValue());
+							if(driverSchool!=null&&driverSchool.getCityid()!=null){
+								studentCityid = user.getDrive_schoolid().intValue()+"";
+							}
+						}else{
+							studentCityid = cityid;
+						}
+						
+						//根据cityid，获取cityname	
+						if(studentCityid!=null){
+							String findCityIdHql="from CityInfo where cityid ="+studentCityid+" ";
+							List<CityInfo> citylist=(List<CityInfo>) dataDao.getObjectsViaParam(findCityIdHql.toString(),null);
+							if(citylist!=null && citylist.size()>0){
+								CityInfo city=citylist.get(0);
+								if(city!=null){
+									user.setCityid(city.getCityid()+"");
+									user.setCity(city.getCity());
+									user.setProvinceid(city.getProvinceid()+"");
+									dataDao.updateBySql("update t_user_student set provinceid = '"+city.getProvinceid()+"' ,cityid = '"+city.getCityid()+"' ,city = '"+city.getCity()+"' ");
+								}
+							}
+						}
 					}
 				}
 			}else{

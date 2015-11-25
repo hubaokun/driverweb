@@ -146,7 +146,8 @@ function dataExport(){
 						<th>性别</th>
 						<th>年龄</th>
 						<th>综合评分</th>
-						<th>教练验证状态</th>
+						<th>所在城市</th>
+						<th>绑定驾校</th>
 						<th>注册时间</th>
 						<th>操作</th>
 
@@ -154,28 +155,20 @@ function dataExport(){
 					<s:iterator value="suserlist" var="suser">
 						<tr class="tr_td">
 							<td style="width: 80px;" class="border_right_bottom">${studentid}</td>
-							<td style="width: 200px;" class="border_right_bottom">${realname}</td>
-							<td style="width: 200px;" class="border_right_bottom">${phone}</td>
-							<td style="width: 200px;" class="border_right_bottom">${password}</td>
+							<td style="width: 100px;" class="border_right_bottom">${realname}</td>
+							<td style="width: 100px;" class="border_right_bottom">${phone}</td>
+							<td style="width: 100px;" class="border_right_bottom">${password}</td>
 							<s:if test="gender==1">
-							<td style="width: 80px;" class="border_right_bottom">男</td>
+							<td style="width: 50px;" class="border_right_bottom">男</td>
 							</s:if>
 							<s:else>
-							<td style="width: 80px;" class="border_right_bottom">女</td>
+							<td style="width: 50px;" class="border_right_bottom">女</td>
 							</s:else>
-							<td style="width: 80px;" class="border_right_bottom">${age}</td>
+							<td style="width: 50px;" class="border_right_bottom">${age}</td>
 							<td style="width: 100px;" class="border_right_bottom">${score}&nbsp;分</td>
-							
-							<s:if test="coachstate==0">
-							<td style="width: 100px;" class="border_right_bottom">未认证</td>
-							</s:if>
-						<s:elseif test="coachstate==1">
-								<td style="width: 100px;" class="border_right_bottom">认证</td>
-						</s:elseif>
-						<s:else>
-						<td style="width: 100px;" class="border_right_bottom">审核未通过</td>
-						</s:else>
-							<td style="width: 100px;" class="border_right_bottom">
+							<td style="width: 100px;" class="border_right_bottom">${city}</td>
+							<td style="width: 100px;" class="border_right_bottom">${drive_school}</td>
+							<td style="width: 120px;" class="border_right_bottom">
 							<s:date name="addtime" format="yyyy-MM-dd HH:mm:ss" />
 							</td>
 							<td style="width: 100px;" class="border_noright_bottom">

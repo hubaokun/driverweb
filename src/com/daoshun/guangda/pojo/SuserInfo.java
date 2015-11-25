@@ -79,7 +79,7 @@ public class SuserInfo implements Serializable {
 	
 
 	// 城市
-	@Column(name = "cityid")
+	@Column(name = "cityid", length = 6, columnDefinition = "varchar default 330100")
 	private String cityid;
 
 	// 地址
@@ -91,7 +91,7 @@ public class SuserInfo implements Serializable {
 	private Integer gender;
 
 	// 出生日期
-	@Column(name = "birthday")
+	@Column(name = "birthday", length = 20, columnDefinition = "varchar default '1995-06-24'")
 	private String birthday;
 
 	// 真实姓名
@@ -230,7 +230,7 @@ public class SuserInfo implements Serializable {
 	@Transient
 	private CuserInfo cuser;
 	
-	@Column(name = "provinceid", length = 100)
+	@Column(name = "provinceid", length = 6, columnDefinition = "varchar default 330000")
 	private String provinceid;
 	
 	//所分配驾校id
@@ -243,8 +243,9 @@ public class SuserInfo implements Serializable {
 	// 驾校名
 	@Transient
 	private String dschoolname;
+	
 	// 城市
-	@Transient
+	@Column(name = "city", length = 20)
 	private String city;
 	
 	@Column(name = "areaid", length = 100)
@@ -277,7 +278,13 @@ public class SuserInfo implements Serializable {
 	@Column(name = "enrollstate", columnDefinition = "INT default 0")
 	private Integer enrollstate = 0;
 	
+	// 绑定驾校id
+	@Column(name = "drive_schoolid", length = 10)
+	private Integer drive_schoolid;
 	
+	// 绑定驾校名称
+	@Column(name = "drive_school")
+	private String drive_school;
 	
 	public Integer getEnrollstate() {
 		return enrollstate;
@@ -809,6 +816,22 @@ public class SuserInfo implements Serializable {
 
 	public void setFreecoursestate(Integer freecoursestate) {
 		this.freecoursestate = freecoursestate;
+	}
+
+	public Integer getDrive_schoolid() {
+		return drive_schoolid;
+	}
+
+	public void setDrive_schoolid(Integer drive_schoolid) {
+		this.drive_schoolid = drive_schoolid;
+	}
+
+	public String getDrive_school() {
+		return drive_school;
+	}
+
+	public void setDrive_school(String drive_school) {
+		this.drive_school = drive_school;
 	}
 	
 }
