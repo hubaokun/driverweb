@@ -595,4 +595,11 @@ public class DataDao {
 		List<Object> list = query.list();
 		return list;
 	}
+	
+	public List<Object[]> createSQLQuery(String querysql){
+		Session session=this.getSession();
+		SQLQuery query= session.createSQLQuery(querysql);
+		List<Object[]>  list = query.list();
+		return list;
+	}
 }
