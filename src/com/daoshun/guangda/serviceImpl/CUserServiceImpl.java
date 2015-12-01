@@ -1970,13 +1970,18 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 	 * @return
 	 */
 	public int getCanUseCoinnumForDriveSchool( String coachid) {
-		String countinhql2 = "select sum(coinnum) from CoinRecordInfo where (receiverid ="+coachid+" and receivertype="+ UserType.COAH+" and ownertype="+UserType.DRIVESCHOOL+")";
+		//added by 张聚弘 20151127，由于目前还没有找到该bug的错误代码并修正，同时目前小巴币的发放都是驾校发放的，先临时性的修改过滤条件，去掉ownertype的过滤，
+		//String countinhql2 = "select sum(coinnum) from CoinRecordInfo where (receiverid ="+coachid+" and receivertype="+ UserType.COAH+" and ownertype="+UserType.DRIVESCHOOL+")";
+		String countinhql2 = "select sum(coinnum) from CoinRecordInfo where (receiverid ="+coachid+" and receivertype="+ UserType.COAH+" )";
 		Object in2= dataDao.getFirstObjectViaParam(countinhql2, null);
 		int totalin2= in2==null?0:CommonUtils.parseInt(in2.toString(), 0);
 		/*if(totalin2==0){
 			return 0;
 		}*/
-		String countouthql3 = "select sum(coinnum) from CoinRecordInfo where (payerid ="+coachid+" and payertype="+ UserType.COAH+" and ownertype="+UserType.DRIVESCHOOL+")";
+		//由于目前小巴币流转记录表中针对paytype=2 学员支付记录中ownertype类型错误的从1 驾校发放标成了2教练发放。
+		//added by 张聚弘  20151127，由于目前还没有找到该bug的错误代码并修正，同时目前小巴币的发放都是驾校发放的，先临时性的修改过滤条件，去掉ownertype的过滤，
+		//String countouthql3 = "select sum(coinnum) from CoinRecordInfo where (payerid ="+coachid+" and payertype="+ UserType.COAH+" and ownertype="+UserType.DRIVESCHOOL+")";
+		String countouthql3 = "select sum(coinnum) from CoinRecordInfo where (payerid ="+coachid+" and payertype="+ UserType.COAH+" )";
 		Object out2= dataDao.getFirstObjectViaParam(countouthql3, null);
 		int totalout2 = (out2==null) ? 0: CommonUtils.parseInt(out2.toString(),0);
 		

@@ -482,5 +482,8 @@ public class Constant {
 	/**教练价格范围**/
 	public static final String GETCOACHPRICERANGE = "GETCOACHPRICERANGE";
 	
+	/**根据参数获取广告**/
+	public static final String GETADVERTISEMENTBYPARAM = "GETADVERTISEMENTBYPARAM";
+	
 	
 }
