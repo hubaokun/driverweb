@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -188,27 +189,34 @@ public class SystemServlet extends BaseServlet {
 		CommonUtils.validateEmpty(userid);
 		CommonUtils.validateEmpty(usertype);
 		CommonUtils.validateEmpty(devicetype);
-		UserPushInfo userPushInfo = systemService.getUserPushInfoBykeyword(CommonUtils.parseInt(userid, 0), CommonUtils.parseInt(usertype, 0));
-
+		
 		int dtype = CommonUtils.parseInt(devicetype, 0);// 2:安卓 1:IOS
-		if (userPushInfo != null) {
-			if (dtype == DeviceType.ANDROID && !CommonUtils.isEmptyString(jpushid)) {
-				userPushInfo.setDevicetoken("");
-				userPushInfo.setJpushid(jpushid);
-				userPushInfo.setType(DeviceType.ANDROID);
-				userPushInfo.setUserid(CommonUtils.parseInt(userid, 0));
-				userPushInfo.setUsertype(CommonUtils.parseInt(usertype, 0));
-				cuserService.updateObject(userPushInfo);
-			} else if (dtype == DeviceType.IOS && !CommonUtils.isEmptyString(devicetoken)) {
-				userPushInfo.setDevicetoken(devicetoken);
-				userPushInfo.setJpushid("");
-				userPushInfo.setType(DeviceType.IOS);
-				userPushInfo.setUserid(CommonUtils.parseInt(userid, 0));
-				userPushInfo.setUsertype(CommonUtils.parseInt(usertype, 0));
-				cuserService.updateObject(userPushInfo);
+		
+		List<UserPushInfo> ups = systemService.getUserPushInfosBykeyword(CommonUtils.parseInt(userid, 0), CommonUtils.parseInt(usertype, 0));
+		
+		UserPushInfo userPushInfo = null;
+		
+		for (UserPushInfo upi : ups) {
+			if(upi.getType().intValue()==dtype){
+				if(dtype==DeviceType.ANDROID ){
+					if(!upi.getJpushid().equals(jpushid)){
+						cuserService.delObject(upi);//如果纪录与当前登录设备不符合则删除
+					}else{
+						userPushInfo = upi;
+					}
+				}else{//ios
+					if(!upi.getDevicetoken().equals(devicetoken)){
+						cuserService.delObject(upi);//如果纪录与当前登录设备不符合则删除
+					}else{
+						userPushInfo = upi;
+					}
+				}
+			}else{
+				cuserService.delObject(upi);//如果纪录与当前登录设备不符合则删除
 			}
+		}
 
-		} else {
+		if(userPushInfo==null){
 			if (dtype == DeviceType.ANDROID && !CommonUtils.isEmptyString(jpushid)) {
 				UserPushInfo newuserPush = new UserPushInfo();
 				newuserPush.setDevicetoken("");
