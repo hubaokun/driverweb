@@ -456,55 +456,55 @@ public class CuserInfo implements Serializable {
 	/**
 	 * 科目二范围最小值
 	 */
-	@Column(name = "subject2min", columnDefinition = "INT default 0")
+	@Column(name = "subject2min", columnDefinition = "INT default 50")
 	private Integer subject2min=0;
 	
 	/**
 	 * 科目二范围最大值
 	 */
-	@Column(name = "subject2max", columnDefinition = "INT default 100")
+	@Column(name = "subject2max", columnDefinition = "INT default 120")
 	private Integer subject2max=0;
 	
 	/**
 	 * 科目三范围最小值
 	 */
-	@Column(name = "subject3min", columnDefinition = "INT default 0")
+	@Column(name = "subject3min", columnDefinition = "INT default 50")
 	private Integer subject3min=0;
 	
 	/**
 	 * 科目三范围最大值
 	 */
-	@Column(name = "subject3max", columnDefinition = "INT default 100")
+	@Column(name = "subject3max", columnDefinition = "INT default 150")
 	private Integer subject3max=0;
 	
 	/**
 	 * 考场训练最大值
 	 */
-	@Column(name = "trainingmax", columnDefinition = "INT default 0")
+	@Column(name = "trainingmax", columnDefinition = "INT default 150")
 	private Integer trainingmax=0;
 	
 	/**
 	 * 考场训练最小值
 	 */
-	@Column(name = "trainingmin", columnDefinition = "INT default 100")
+	@Column(name = "trainingmin", columnDefinition = "INT default 50")
 	private Integer trainingmin=0;
 	
 	/**
 	 * 陪驾范围最小值
 	 */
-	@Column(name = "accompanymin", columnDefinition = "INT default 0")
+	@Column(name = "accompanymin", columnDefinition = "INT default 79")
 	private Integer accompanymin=0;
 	
 	/**
 	 * 陪驾范围最大值
 	 */
-	@Column(name = "accompanymax", columnDefinition = "INT default 100")
+	@Column(name = "accompanymax", columnDefinition = "INT default 79")
 	private Integer accompanymax=0;
 	
 	/**
 	 *租车范围最大值
 	 */
-	@Column(name = "hirecarmax", columnDefinition = "INT default 0")
+	@Column(name = "hirecarmax", columnDefinition = "INT default 50")
 	private Integer hirecarmax=0;
 	
 	/**
