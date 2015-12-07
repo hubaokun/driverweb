@@ -579,6 +579,8 @@ public class CtaskServlet extends BaseServlet {
 
 					} else {// 结算
 						if (orderInfo.getOver_time() == null) {// 订单未结算过
+							orderInfo.setStudentstate(3);//studentstate 3:已完成订单
+							ctaskService.updateOrderInfo(orderInfo);//added by 张聚弘 20151204 17：00
 							ctaskService.SettlementOrder(orderInfo.getOrderid());
 						}
 					}

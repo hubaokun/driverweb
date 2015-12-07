@@ -2,6 +2,7 @@ package com.daoshun.guangda.serviceImpl;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -20,12 +21,13 @@ import com.daoshun.guangda.service.ISystemService;
 public class SystemServiceImpl extends BaseServiceImpl implements ISystemService {
 
 	@Override
-	public UserPushInfo getUserPushInfoBykeyword(int userid, int usertype) {
+	public List<UserPushInfo> getUserPushInfosBykeyword(int userid, int usertype) {
 		StringBuffer syshql = new StringBuffer();
 		syshql.append("from UserPushInfo where userid = :userid and usertype = :usertype");
 		String[] params = { "userid", "usertype" };
-		UserPushInfo userPushInfo = (UserPushInfo) dataDao.getFirstObjectViaParam(syshql.toString(), params, userid, usertype);
-		return userPushInfo;
+
+		List<UserPushInfo>  ups = (List<UserPushInfo>) dataDao.getObjectsViaParam(syshql.toString(), params, new Integer(userid),new Integer(usertype));
+		return ups;
 	}
 
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)

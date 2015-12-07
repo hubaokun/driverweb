@@ -1,6 +1,7 @@
 package com.daoshun.guangda.service;
 
 import java.util.HashMap;
+import java.util.List;
 
 import com.daoshun.guangda.pojo.SystemSetInfo;
 import com.daoshun.guangda.pojo.UserPushInfo;
@@ -18,7 +19,7 @@ public interface ISystemService {
 	 *            设备类型 安卓、IOS
 	 * @return
 	 */
-	public abstract UserPushInfo getUserPushInfoBykeyword(int userid, int usertype);
+	public abstract List<UserPushInfo> getUserPushInfosBykeyword(int userid, int usertype);
 
 	public abstract void updateUserLocation(String openid, String devicetype, String usertype, String appversion, String province, String city, String area);
 
