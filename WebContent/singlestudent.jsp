@@ -15,7 +15,11 @@
 <script type="text/javascript" src="js/common.js"></script>
 <script  type="text/javascript" src="coach/js/coachdetail.js"></script>
 <script type="text/javascript" src="systemconfig/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript"src="student/js/singlestudent.js"></script>
+<script type="text/javascript" src="student/js/locationjs/j.dimensions.js"></script>
+<script type="text/javascript" src="student/js/locationjs/j.suggest.js"></script>
 <script type="text/javascript">
+var isLocationPickerInit=0;
 $(function(){
 	var index = $("#index").val();
 	$("#left_list_"+index).show();
@@ -23,6 +27,33 @@ $(function(){
 	$("#change_"+j+index).addClass('left_list_mask');
 	
 	$("#nav").css("min-height","1260px");
+	$("#editprovince").add($("#editprovinceid")).bind({
+		focus:function(){
+			locationPicker();
+			isLocationPickerInit=1;
+			return true;
+		}
+	});
+	
+	$("#editcity").add($("#editcityid")).bind({
+		focus:function(){
+			if(isLocationPickerInit==0)
+			{
+				triggerCity();
+			}
+			return true;
+		}
+	});
+	
+	$("#editdrive_school").add($("#editdrive_schoolid")).bind({
+		focus:function(){
+			if(isLocationPickerInit==0)
+			{
+				triggerSchool();
+			}
+			return true;
+		}
+	});
 })
 </script>
 <style type="text/css">
@@ -45,6 +76,35 @@ $(function(){
 	margin: 0 auto;
 	display: none;
 }
+
+.c_selections{
+    display:none;
+	position:absolute;
+	width:150px;
+	z-index:5;
+	background:red;
+}
+
+.c_selections span
+{
+	display:block;
+	width:100%;
+	height:35px;
+	line-height:35px;
+	font-size: 18px;
+	text-align: center;
+	border:1px solid #eaeff2;
+}
+#suggest,#suggest2,#suggest3{width:200px;}
+.gray{color:gray;}
+.ac_results {background:#fff;border:1px solid #7f9db9;position:absolute;z-index:10000;display:none;}
+.ac_results ul{margin:0;padding:0;list-style:none;}
+.ac_results li a{white-space:nowrap;text-decoration:none;display:block;color:#05a;padding:1px 3px;}
+.ac_results li{border:1px solid #fff;}
+.ac_over,.ac_results li a:hover {background:#c8e3fc;}
+.ac_results li a span{float:right;}
+.ac_result_tip{border-bottom:1px dashed #666;padding:3px;}
+
 </style>
 
 <title>学员个人详情</title>
@@ -139,12 +199,12 @@ $(function(){
 
 
 <tr class="tr_td">
-<td  style="width:180px;min-width: 180px" class="border_right_bottom"><input name="editprovinceid"  value="${suser.provinceid}" style="text-align: center;width:180px;height: 35px;font-size:18px"  /></td>
-<td  style="width:150px;min-width: 150px" class="border_right_bottom"><input name="editprovince" value="${suser.provinceid }" style="text-align: center;width:150px;height: 35px;font-size:18px"  /></td>
-<td  style="width:150px;min-width: 150px" class="border_right_bottom"><input name="editcityid" value="${suser.cityid }"   style="text-align: center;width:150px;height: 35px;font-size:18px" /></td>
-<td  style="width:150px;min-width: 150px" class="border_right_bottom"><input name="editcity" value="${suser.city}" style="text-align: center;width:175px;height: 35px;font-size:18px" /></td>
-<td  style="width:150px;min-width: 150px" class="border_right_bottom"><input  name="editdrive_schoolid"  value="${suser.drive_schoolid }" style="text-align: center;width:150px;height: 35px;font-size:18px"/></td>
-<td  style="width:150px;min-width: 150px" class="border_right_bottom"><input  name="editdrive_school"  value="${suser.drive_school }" style="text-align: center;width:150px;height: 35px;font-size:18px"/></td>
+<td  style="width:180px;min-width: 180px" class="border_right_bottom"><input id="editprovinceid" 		name="editprovinceid"     value="${suser.provinceid}"     style="text-align: center;width:180px;height: 35px;font-size:18px" readonly="readonly"  /></td>
+<td  style="width:150px;min-width: 150px" class="border_right_bottom"><input id="editprovince"   		name="editprovince"       value="${suser.province}"    style="text-align: center;width:150px;height: 35px;font-size:18px"  /></td>
+<td  style="width:150px;min-width: 150px" class="border_right_bottom"><input id="editcityid"    		name="editcityid"         value="${suser.cityid }"        style="text-align: center;width:150px;height: 35px;font-size:18px" readonly="readonly"/></td>
+<td  style="width:150px;min-width: 150px" class="border_right_bottom"><input id="editcity"       		name="editcity"           value="${suser.city}"           style="text-align: center;width:175px;height: 35px;font-size:18px" /></td>
+<td  style="width:150px;min-width: 150px" class="border_right_bottom"><input id="editdrive_schoolid" 	name="editdrive_schoolid" value="${suser.drive_schoolid }"style="text-align: center;width:150px;height: 35px;font-size:18px" readonly="readonly"/></td>
+<td  style="width:150px;min-width: 150px" class="border_right_bottom"><input id="editdrive_school" 		name="editdrive_school"   value="${suser.drive_school}"  style="text-align: center;width:150px;height: 35px;font-size:18px"/></td>
 
 
 </tr>
@@ -290,13 +350,35 @@ $(function(){
 		</div>
 		</div>
 	</div>
+<div id="suggest" class="ac_results" style="top: 158px; left: 443px; display: none;">
+<div class="gray ac_result_tip">请输入中文/拼音或者↑↓选择</div>
+<ul></ul>
+</div>
 
+<div id="suggest2" class="ac_results" style="top: 158px; left: 443px; display: none;">
+<div class="gray ac_result_tip">请输入中文/拼音或者↑↓选择</div>
+<ul></ul>
+</div>
 
+<div id="suggest3" class="ac_results" style="top: 158px; left: 443px; display: none;">
+<div class="gray ac_result_tip">请输入中文/拼音或者↑↓选择</div>
+<ul></ul>
+</div>
 </body>
 <script type="text/javascript">
+<% String error = new String(request.getParameter("msgError").getBytes("ISO8859-1"),"UTF-8");%>
 	var editsucc='${param.editsucc}';
+	var errorMsg='<%=error%>'
 	if(editsucc=='1'){
-		alert("修改成功!");
+		if(errorMsg=="")
+		{
+			alert("修改成功!");
+		}else
+		{
+			errorMsg= unescape(errorMsg); 
+			alert(errorMsg);
+		}
+		
 	}
 </script>
 </html>
