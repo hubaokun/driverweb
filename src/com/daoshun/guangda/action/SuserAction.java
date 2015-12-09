@@ -1,7 +1,6 @@
 package com.daoshun.guangda.action;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,17 +25,13 @@ import com.daoshun.common.QueryResult;
 import com.daoshun.guangda.NetData.StudentInfoForExcel;
 import com.daoshun.guangda.pojo.BalanceStudentInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
-import com.daoshun.guangda.pojo.DriveSchoolInfo;
 import com.daoshun.guangda.pojo.ModelPrice;
-import com.daoshun.guangda.pojo.ProvinceInfo;
 import com.daoshun.guangda.pojo.StudentApplyInfo;
 import com.daoshun.guangda.pojo.StudentCheckInfo;
 import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.pojo.SuserState;
 import com.daoshun.guangda.service.IBaseService;
 import com.daoshun.guangda.service.ICUserService;
-import com.daoshun.guangda.service.IDriveSchoolService;
-import com.daoshun.guangda.service.ILocationService;
 import com.daoshun.guangda.service.ISBookService;
 import com.daoshun.guangda.service.ISUserService;
 
@@ -63,12 +58,6 @@ public class SuserAction extends BaseAction {
 	@Resource
 	private ICUserService cuserService;
 
-	@Resource
-	private ILocationService locationService;
-	
-	@Resource
-	private IDriveSchoolService schoolService;
-	
 	private StudentCheckInfo studentcheck;
 	private SuserInfo suser;
 	private CuserInfo cuser;
@@ -223,7 +212,6 @@ public class SuserAction extends BaseAction {
 	
 	private String editprovinceid;//省ID
 
-	private int isSuccessful=1;
 	/**
 	 * 得到学员列表
 	 * 
@@ -534,8 +522,6 @@ public class SuserAction extends BaseAction {
 			String city = "";
 			city = suserService.getCityByCityid(Integer.parseInt(suser.getCityid()));
 			suser.setCity(city);
-			ProvinceInfo province=locationService.getProvinceByCityId(suser.getCityid());
-			suser.setProvince(province.getProvince());
 		}
 		if (suser.getCoachstate() == 1) {
 			studentcheck = suserService.getcoachbycheck(suser.getStudentid());
@@ -1455,9 +1441,9 @@ public class SuserAction extends BaseAction {
 		HttpServletResponse response = ServletActionContext.getResponse();
 		CommonUtils.downloadExcel(filename, "小巴学员信息表", response);
 	}
-	private String msgError="";
+
 	@Action(value = "/editsinglestudent", results = {
-			@Result(name = SUCCESS, location = "/getStudentDetail.do?studentid=${studentid}&index=${index}&change_id=${change_id}&editsucc=1&msgError=${msgError}", type = "redirect") })
+			@Result(name = SUCCESS, location = "/getStudentDetail.do?studentid=${studentid}&index=${index}&change_id=${change_id}&editsucc=1", type = "redirect") })
 
 	public String editSingleStudent() {
 		suser = suserService.getUserById(String.valueOf(studentid));
@@ -1478,65 +1464,24 @@ public class SuserAction extends BaseAction {
 		if (!CommonUtils.isEmptyString(editbirthday)) {
 			suser.setBirthday(editbirthday);
 		}
-		
-		
-		//判断省—市-驾校是否对应
-		boolean isValid=false;
-		if(!CommonUtils.isEmptyString(editcityid) && !CommonUtils.isEmptyString(editprovinceid))
-		{	
-			ProvinceInfo province=locationService.getProvinceByCityId(editcityid);
-			if(province!=null)
-			{
-				//判断省-市是否对应
-				if(String.valueOf(province.getProvinceid()).equals(editprovinceid))
-				{
-					
-					//判断市-驾校是否对应	
-					DriveSchoolInfo school=schoolService.getDriveSchoolInfoByid(editdrive_schoolid);
-					if(school.getCityid().equals(editcityid))
-					{
-						isValid=true;
-					}
-				}
-			}
-			
-		}
-		if(!isValid)
-		{
-			//失败，省-市-驾校不一致
-			try
-			{
-				msgError = new String("失败，省-市-驾校不一致".getBytes("utf-8"), "ISO-8859-1");
-			}
-			catch (UnsupportedEncodingException e)
-			{
-				e.printStackTrace();
-			}
-		}
-		
 		// 修改城市ID
 		if (!CommonUtils.isEmptyString(editcityid)) {
-			if(isValid)
 			suser.setCityid(editcityid);
 		}
 		// 修改城市
 		if (!CommonUtils.isEmptyString(editcity)) {
-			if(isValid)
 			suser.setCity(editcity);
 		}
 		// 修改省
 		if (!CommonUtils.isEmptyString(editprovinceid)) {
-			if(isValid)
 			suser.setProvinceid(editprovinceid);
 		}
 		// 修改驾校ID
 		if (editdrive_schoolid!=null) {
-			if(isValid)
 			suser.setDrive_schoolid(editdrive_schoolid);
 		}
 		// 修改驾校名称
 		if (!CommonUtils.isEmptyString(editdrive_school)) {
-			if(isValid)
 			suser.setDrive_school(editdrive_school);
 		}
 		// 修改紧急联系人
@@ -2357,16 +2302,6 @@ public class SuserAction extends BaseAction {
 
 	public void setEditprovinceid(String editprovinceid) {
 		this.editprovinceid = editprovinceid;
-	}
-
-	public String getMsgError()
-	{
-		return msgError;
-	}
-
-	public void setMsgError(String msgError)
-	{
-		this.msgError = msgError;
 	}
 
 }
