@@ -946,16 +946,22 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 					&& orderinfo.getCoachstate()!=4 && orderinfo.getCoachstate()!=5 && (cList == null || cList.size() == 0)){// 未完成订单
 
 				// 是否已经确认上车
-				StringBuffer cuserhql5 = new StringBuffer();
-				cuserhql5.append("from OrderRecordInfo where orderid =:orderid and userid =:userid and operation = 1");
-				String[] params5 = { "orderid", "userid" };
-				OrderRecordInfo orderRecord = (OrderRecordInfo) dataDao.getFirstObjectViaParam(cuserhql5.toString(), params5, orderinfo.getOrderid(), orderinfo.getStudentid());
+				StringBuffer cuserhq_student_up = new StringBuffer();
+				cuserhq_student_up.append("from OrderRecordInfo where orderid =:orderid and userid =:userid and operation = 1");
+				String[] params_student_up = { "orderid", "userid" };
+				OrderRecordInfo orderRecord = (OrderRecordInfo) dataDao.getFirstObjectViaParam(cuserhq_student_up.toString(), params_student_up, orderinfo.getOrderid(), orderinfo.getStudentid());
 
 				// 是否已经确认下车
 				StringBuffer cuserhql2 = new StringBuffer();
 				cuserhql2.append("from OrderRecordInfo where orderid =:orderid and userid =:userid and operation = 2");
 				String[] params2 = { "orderid", "userid" };
 				OrderRecordInfo orderRecord2 = (OrderRecordInfo) dataDao.getFirstObjectViaParam(cuserhql2.toString(), params2, orderinfo.getOrderid(), orderinfo.getStudentid());
+				
+				// 教练已经确认上车
+				StringBuffer cuserhql5 = new StringBuffer();
+				cuserhql5.append("from OrderRecordInfo where orderid =:orderid and userid =:userid and operation = 3");
+				String[] params5 = { "orderid", "userid" };
+				OrderRecordInfo orderRecord5 = (OrderRecordInfo) dataDao.getFirstObjectViaParam(cuserhql5.toString(), params5, orderinfo.getOrderid(), orderinfo.getStudentid());
 
 				// 可以确认上车的时间点
 				Calendar left = Calendar.getInstance();
@@ -977,7 +983,7 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				} else if (now.before(left)) {// 订单显示距离开始时间
 					long millisecond = orderinfo.getStart_time().getTime() - now.getTimeInMillis();
 					orderinfo.setHours((int) (millisecond / 60000));
-				} else if (orderRecord != null && orderRecord2 == null && now.before(right1)) {// 订单显示正在学车
+				} else if (orderRecord5 != null && orderRecord2 == null && now.before(right1)) {// 订单显示正在学车
 					orderinfo.setHours(-1);
 				} else if (orderRecord2 != null || now.after(right1)) {// 订单显示学车已经结束
 					orderinfo.setHours(-2);
@@ -987,6 +993,11 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 					orderinfo.setHours(-4);
 				} else {// 订单显示学车已经结束
 					orderinfo.setHours(-2);
+				}
+				
+				//如果教练确认上车，则学员端hours=-1 ，订单显示正在学车
+				if(orderinfo.getCoachstate()==1){ //coachstate=1表示教练已经确认上车
+					orderinfo.setHours(-1);
 				}
 
 				// 是否可以投诉
