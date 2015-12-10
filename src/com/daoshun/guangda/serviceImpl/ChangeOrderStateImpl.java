@@ -84,11 +84,12 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 				
 				SuserInfo student = dataDao.getObjectById(SuserInfo.class, order.getStudentid());
 				CuserInfo cuser = dataDao.getObjectById(CuserInfo.class, order.getCoachid());
-				addEvaluation(order,cuser,student);
+				
 				String hql1 = "from OrderRecordInfo where operation = 4 and orderid = :orderid";
 				String[] params = { "orderid" };
 				OrderRecordInfo recordinfo = (OrderRecordInfo) dataDao.getFirstObjectViaParam(hql1, params, order.getOrderid());
 				if (recordinfo != null) {// 如果教练确认下车过的话
+					addEvaluation(order,cuser,student);//生成默认好评
 					order.setStudentstate(3);// 设置订单状态为已结算
 					//设置订单的over_time
 					order.setOver_time(new Date());
