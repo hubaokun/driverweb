@@ -560,8 +560,17 @@ public class SuserServlet extends BaseServlet {
 				user.setDevicetype(dtype);//设置设备类型
 			}
 			if(version!=null && !"".equals(version)){
+				//强制1.×。×版本必须升级
+				if (version.startsWith("1"))
+				{
+					resultMap.put("code", 2);
+					resultMap.put("message", "您的app版本太低,请退出app并重新进入,将自动检测更新");
+					System.out.println("***suser.login check version****** "+version+" ******phone****** "+phone+" *****code** "+2+" *** logintime ****** "+ new Date().toLocaleString());
+					return;
+				}
 				user.setVersion(version);//设置版本号
 			}
+			
 			if(openid!=null && !"".equals(openid)){
 				user.setOpenid(openid);//更新微信openid
 			}

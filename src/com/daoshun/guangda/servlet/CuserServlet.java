@@ -376,6 +376,14 @@ public class CuserServlet extends BaseServlet {
 					cuser.setDevicetype(dtype);//设置设备类型
 				}
 				if(version!=null && !"".equals(version)){
+					//强制1.×。×版本必须升级
+					if (version.startsWith("1"))
+					{
+						resultMap.put("code", 4);
+						resultMap.put("message", "您的app版本太低,请退出app并重新进入,将自动检测更新");
+						System.out.println("******************check version****** "+version+" ******phone****** "+loginid+" ***** logintime ****** "+ new Date().toLocaleString());
+						return;
+					}
 					cuser.setVersion(version);//设置版本号
 				}
 				resultMap.put("isregister", 1);
@@ -387,7 +395,16 @@ public class CuserServlet extends BaseServlet {
 				if(dtype!=0){
 					cuser.setDevicetype(dtype);//设置设备类型
 				}
+				
 				if(version!=null && !"".equals(version)){
+					//强制1.×。×版本必须升级
+					if (version.startsWith("1"))
+					{
+						resultMap.put("code", 4);
+						resultMap.put("message", "您的app版本太低,请退出app并重新进入,将自动检测更新");
+						System.out.println("*****cuser.login check version****** "+version+" ******phone****** "+loginid+" ***** logintime ****** "+ new Date().toLocaleString());
+						return;
+					}
 					cuser.setVersion(version);//设置版本号
 				}
 				cuserService.updateCuser(cuser);

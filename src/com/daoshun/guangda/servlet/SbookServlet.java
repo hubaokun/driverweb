@@ -494,10 +494,11 @@ public class SbookServlet extends BaseServlet {
 		String date = getRequestParamter(request, "date");
 		//String paytype = getRequestParamter(request, "paytype");
 		String version=getRequestParamter(request, "version");
-		if (version == null || version.length() == 0)
+		if (version == null || version.length() == 0 || version.startsWith("1"))
 		{
 			resultMap.put("code", 4);
 			resultMap.put("message", "您的app版本太低,请退出app并重新进入,将自动检测更新");
+			System.out.println("*****sbook.bookcoach check version****** "+version+" ******coachid****** "+coachid+" *******studentid***** "+studentid+" ***** booktime ****** "+ new Date().toLocaleString());
 			return;
 		}
 
