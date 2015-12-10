@@ -1994,7 +1994,7 @@ function lessenStudentBalanceSubmit() {
 			url : "lessenStudentBalance.do",
 			data : {
 				money : clevel,
-				coachid : level_coachid
+				studentid : level_coachid
 			},
 			success : function(data) {
 				if (data == "error") {
