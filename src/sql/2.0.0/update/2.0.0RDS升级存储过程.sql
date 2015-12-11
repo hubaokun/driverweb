@@ -1595,3 +1595,5 @@ DELIMITER ;;
 CREATE DEFINER=`driver`@`%` EVENT `job_update_coach_signstate` ON SCHEDULE EVERY 1 MINUTE STARTS '2015-11-20 02:30:00' ON COMPLETION PRESERVE ENABLE DO CALL update_coach_signstate()
 ;;
 DELIMITER ;
+
+update t_user_coach c set c.modelid = '17' where c.modelid is null;
