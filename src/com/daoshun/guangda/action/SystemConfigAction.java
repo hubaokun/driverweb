@@ -1,4 +1,4 @@
-﻿package com.daoshun.guangda.action;
+package com.daoshun.guangda.action;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,591 +37,591 @@ import com.daoshun.guangda.service.ISBookService;
 @Scope("prototype")
 public class SystemConfigAction extends BaseAction {
 
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = -2449919380551492547L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -2449919380551492547L;
 
-	@Resource
-	private ICUserService cuserService;
+    @Resource
+    private ICUserService cuserService;
 
-	@Resource
-	private IAdvertisementService advertisementService;
-	
-	private List<ModelsInfo> modelslist;
+    @Resource
+    private IAdvertisementService advertisementService;
 
-	private List<CoachLevelInfo> levellist;
+    private List<ModelsInfo> modelslist;
 
-	private List<ComplaintSetInfo> complaintSetInfolist;
+    private List<CoachLevelInfo> levellist;
 
-	private List<CsubjectInfo> subjectlist;
+    private List<ComplaintSetInfo> complaintSetInfolist;
 
-	private List<TeachcarInfo> teachcarInfolist;
+    private List<CsubjectInfo> subjectlist;
 
-	private ModelsInfo model;
+    private List<TeachcarInfo> teachcarInfolist;
 
-	private CoachLevelInfo levelInfo;
+    private ModelsInfo model;
 
-	private ModelsInfo oldmodel;
+    private CoachLevelInfo levelInfo;
 
-	private ComplaintSetInfo complaintSetInfo;
+    private ModelsInfo oldmodel;
 
-	private CsubjectInfo subjectInfo;
+    private ComplaintSetInfo complaintSetInfo;
 
-	private CsubjectInfo newsubjectInfo;
+    private CsubjectInfo subjectInfo;
 
-	private SystemSetInfo systemSetInfo;
+    private CsubjectInfo newsubjectInfo;
 
-	private TeachcarInfo teachcar;
+    private SystemSetInfo systemSetInfo;
 
-	private TeachcarInfo newteachcar;
+    private TeachcarInfo teachcar;
 
-	private Integer pageIndex = 1;
+    private TeachcarInfo newteachcar;
 
-	private Integer pageCount = 0;
+    private Integer pageIndex = 1;
 
-	private long total;
+    private Integer pageCount = 0;
 
-	private String modelname;
+    private long total;
 
-	// 原来的车型名称
-	private String oldmodelname;
+    private String modelname;
 
-	// 修改后的车型名称
-	private String editmodelname;
+    // 原来的车型名称
+    private String oldmodelname;
 
-	private String searchname;
+    // 修改后的车型名称
+    private String editmodelname;
 
-	// 等级名称
-	private String levelname;
+    private String searchname;
 
-	// 原来的教练等级名称
-	private String oldlevelname;
+    // 等级名称
+    private String levelname;
 
-	// 修改后的教练等级名称
-	private String newlevelname;
+    // 原来的教练等级名称
+    private String oldlevelname;
 
-	// 查询类型
-	private int searchtype;
+    // 修改后的教练等级名称
+    private String newlevelname;
 
-	// 投诉原因设置id
-	private int setid;
+    // 查询类型
+    private int searchtype;
 
-	// 投诉内容
-	private String content;
+    // 投诉原因设置id
+    private int setid;
 
-	// 投诉对象类型
-	private int type;
+    // 投诉内容
+    private String content;
 
-	// 修改投诉原因
-	private String newcontent;
+    // 投诉对象类型
+    private int type;
 
-	// 科目id
-	private int subjectid;
+    // 修改投诉原因
+    private String newcontent;
 
-	// 添加的科目名称
-	private String addsubjectname;
+    // 科目id
+    private int subjectid;
 
-	// 修改的科目名称
-	private String editsubjectname;
+    // 添加的科目名称
+    private String addsubjectname;
 
-	// 原来的科目名称
-	private String oldsubjectname;
+    // 修改的科目名称
+    private String editsubjectname;
 
-	private int index;
+    // 原来的科目名称
+    private String oldsubjectname;
 
-	private int change_id;
+    private int index;
 
-	//新编辑的holidays
-	private String newholidays;
+    private int change_id;
 
-	//点击日期
-	private String clickholiday;
+    //新编辑的holidays
+    private String newholidays;
 
-	//数据id
-	private int dataid;
+    //点击日期
+    private String clickholiday;
 
-	//编辑值
-	private String editvalue;
+    //数据id
+    private int dataid;
 
-	//要修改的列名
-	private String colname;
+    //编辑值
+    private String editvalue;
 
-	//图片文件
-	private File ad_img;
-	
-	
-	//图片路径
-	private String ad_url;
-	/**
-	 * 得到车型列表
-	 *
-	 * @return
-	 */
-	@Action(value = "/getTeachcarModellist", results = { @Result(name = SUCCESS, location = "/coachcar.jsp") })
-	public String getTeachcarModellist() {
-		teachcarInfolist = cuserService.getTeachcarInfolist();
-		return SUCCESS;
-	}
+    //要修改的列名
+    private String colname;
 
-	/**
-	 * 添加车型
-	 */
-	@Action(value = "/addTeachcarModel")
-	public void addTeachcarModel() {
+    //图片文件
+    private File ad_img;
+
+
+    //图片路径
+    private String ad_url;
+    /**
+     * 得到车型列表
+     *
+     * @return
+     */
+    @Action(value = "/getTeachcarModellist", results = { @Result(name = SUCCESS, location = "/coachcar.jsp") })
+    public String getTeachcarModellist() {
+        teachcarInfolist = cuserService.getTeachcarInfolist();
+        return SUCCESS;
+    }
+
+    /**
+     * 添加车型
+     */
+    @Action(value = "/addTeachcarModel")
+    public void addTeachcarModel() {
 //		model = cuserService.getModelsInfoBymodelname(modelname);
-		teachcar=cuserService.getTeachcarInfoBymodelname(modelname);
-		if (teachcar != null) {
-			setResponseStr("error");
-			return;
-		} else {
-			TeachcarInfo teachcar = new TeachcarInfo();
-			teachcar.setModelname(modelname);
-			teachcar.setAddtime(new Date());
-			cuserService.addObject(teachcar);
-			setResponseStr("success");
-		}
-	}
+        teachcar=cuserService.getTeachcarInfoBymodelname(modelname);
+        if (teachcar != null) {
+            setResponseStr("error");
+            return;
+        } else {
+            TeachcarInfo teachcar = new TeachcarInfo();
+            teachcar.setModelname(modelname);
+            teachcar.setAddtime(new Date());
+            cuserService.addObject(teachcar);
+            setResponseStr("success");
+        }
+    }
 
 
-	/**
-	 * 删除车型
-	 */
-	@Action(value = "/delTeachcarModel")
-	public void delTeachcarModel() {
-		teachcar = cuserService.getTeachcarInfoBymodelname(modelname);
-		if (teachcar == null) {
-			setResponseStr("error");
-			return;
-		} else {
-			cuserService.delObject(teachcar);
-			setResponseStr("success");
-		}
-	}
+    /**
+     * 删除车型
+     */
+    @Action(value = "/delTeachcarModel")
+    public void delTeachcarModel() {
+        teachcar = cuserService.getTeachcarInfoBymodelname(modelname);
+        if (teachcar == null) {
+            setResponseStr("error");
+            return;
+        } else {
+            cuserService.delObject(teachcar);
+            setResponseStr("success");
+        }
+    }
 
-	/**
-	 * 修改车型
-	 */
-	@Action(value = "/editTeachcarModel")
-	public void editTeachcarModel() {
-		teachcar = cuserService.getTeachcarInfoBymodelname(oldmodelname);
-		newteachcar=cuserService.getTeachcarInfoBymodelname(editmodelname);
-		if(newteachcar!=null){
-			setResponseStr("error1");
-		}else{
-			if (teachcar == null) {
-				setResponseStr("error");
-			} else {
-				teachcar.setModelname(editmodelname);
-				cuserService.updateObject(teachcar);
-				setResponseStr("success");
-			}
-		}
-	}
+    /**
+     * 修改车型
+     */
+    @Action(value = "/editTeachcarModel")
+    public void editTeachcarModel() {
+        teachcar = cuserService.getTeachcarInfoBymodelname(oldmodelname);
+        newteachcar=cuserService.getTeachcarInfoBymodelname(editmodelname);
+        if(newteachcar!=null){
+            setResponseStr("error1");
+        }else{
+            if (teachcar == null) {
+                setResponseStr("error");
+            } else {
+                teachcar.setModelname(editmodelname);
+                cuserService.updateObject(teachcar);
+                setResponseStr("success");
+            }
+        }
+    }
 
-	/**
-	 * 得到准教车型列表
-	 *
-	 * @return
-	 */
-	@Action(value = "/getModellist", results = { @Result(name = SUCCESS, location = "/modellist.jsp") })
-	public String getModellist() {
-		modelslist = cuserService.getModelList();
-		return SUCCESS;
-	}
+    /**
+     * 得到准教车型列表
+     *
+     * @return
+     */
+    @Action(value = "/getModellist", results = { @Result(name = SUCCESS, location = "/modellist.jsp") })
+    public String getModellist() {
+        modelslist = cuserService.getModelList();
+        return SUCCESS;
+    }
 
-	/**
-	 * 添加准教车型
-	 */
-	@Action(value = "/addModel")
-	public void addModel() {
-		model = cuserService.getModelsInfoBymodelname(modelname);
-		if (model != null) {
-			setResponseStr("error");
-			return;
-		} else {
-			ModelsInfo model = new ModelsInfo();
-			model.setModelname(modelname);
-			model.setSearchname(searchname);
-			model.setAddtime(new Date());
-			cuserService.addObject(model);
-			setResponseStr("success");
-		}
-	}
+    /**
+     * 添加准教车型
+     */
+    @Action(value = "/addModel")
+    public void addModel() {
+        model = cuserService.getModelsInfoBymodelname(modelname);
+        if (model != null) {
+            setResponseStr("error");
+            return;
+        } else {
+            ModelsInfo model = new ModelsInfo();
+            model.setModelname(modelname);
+            model.setSearchname(searchname);
+            model.setAddtime(new Date());
+            cuserService.addObject(model);
+            setResponseStr("success");
+        }
+    }
 
-	/**
-	 * 删除准教车型
-	 */
-	@Action(value = "/delModel")
-	public void delModel() {
-		model = cuserService.getModelsInfoBymodelname(modelname);
-		if (model == null) {
-			setResponseStr("error");
-			return;
-		} else {
-			cuserService.delObject(model);
-			setResponseStr("success");
-		}
-	}
+    /**
+     * 删除准教车型
+     */
+    @Action(value = "/delModel")
+    public void delModel() {
+        model = cuserService.getModelsInfoBymodelname(modelname);
+        if (model == null) {
+            setResponseStr("error");
+            return;
+        } else {
+            cuserService.delObject(model);
+            setResponseStr("success");
+        }
+    }
 
-	/**
-	 * 修改准教车型
-	 */
-	@Action(value = "/editModel")
-	public void editModel() {
-		oldmodel = cuserService.getModelsInfoBymodelname(oldmodelname);
-		model=cuserService.getModelsInfoBymodelname(editmodelname);
-		if(model!=null){
-			setResponseStr("error1");
-		}else{
-			if (oldmodel == null) {
-				setResponseStr("error");
-			} else {
-				if(searchname==null){
-					oldmodel.setSearchname(oldmodel.getSearchname());
-				}else{
-					oldmodel.setSearchname(searchname);
-				}
-				if(editmodelname==null){
-					oldmodel.setModelname(oldmodel.getModelname());
-				}else{
-					oldmodel.setModelname(editmodelname);
-				}
-				cuserService.updateObject(oldmodel);
-				setResponseStr("success");
-			}
-		}
-	}
+    /**
+     * 修改准教车型
+     */
+    @Action(value = "/editModel")
+    public void editModel() {
+        oldmodel = cuserService.getModelsInfoBymodelname(oldmodelname);
+        model=cuserService.getModelsInfoBymodelname(editmodelname);
+        if(model!=null){
+            setResponseStr("error1");
+        }else{
+            if (oldmodel == null) {
+                setResponseStr("error");
+            } else {
+                if(searchname==null){
+                    oldmodel.setSearchname(oldmodel.getSearchname());
+                }else{
+                    oldmodel.setSearchname(searchname);
+                }
+                if(editmodelname==null){
+                    oldmodel.setModelname(oldmodel.getModelname());
+                }else{
+                    oldmodel.setModelname(editmodelname);
+                }
+                cuserService.updateObject(oldmodel);
+                setResponseStr("success");
+            }
+        }
+    }
 
-	/**
-	 * 得到教练等级列表
-	 *
-	 * @return
-	 */
-	@Action(value = "/getallLevellist", results = { @Result(name = SUCCESS, location = "/levellist.jsp") })
-	public String getallLevellist() {
-		levellist = cuserService.getLevellist();
-		return SUCCESS;
-	}
+    /**
+     * 得到教练等级列表
+     *
+     * @return
+     */
+    @Action(value = "/getallLevellist", results = { @Result(name = SUCCESS, location = "/levellist.jsp") })
+    public String getallLevellist() {
+        levellist = cuserService.getLevellist();
+        return SUCCESS;
+    }
 
-	/**
-	 * 添加教练等级
-	 */
-	@Action(value = "/addLevel")
-	public void addLevel() {
-		levelInfo = cuserService.getLevelInfoBylevelname(levelname);
-		if (levelInfo != null) {
-			setResponseStr("error");
-			return;
-		} else {
-			CoachLevelInfo levelInfo = new CoachLevelInfo();
-			levelInfo.setLevelname(levelname);
-			levelInfo.setAddtime(new Date());
-			cuserService.addObject(levelInfo);
-			setResponseStr("success");
-		}
-	}
+    /**
+     * 添加教练等级
+     */
+    @Action(value = "/addLevel")
+    public void addLevel() {
+        levelInfo = cuserService.getLevelInfoBylevelname(levelname);
+        if (levelInfo != null) {
+            setResponseStr("error");
+            return;
+        } else {
+            CoachLevelInfo levelInfo = new CoachLevelInfo();
+            levelInfo.setLevelname(levelname);
+            levelInfo.setAddtime(new Date());
+            cuserService.addObject(levelInfo);
+            setResponseStr("success");
+        }
+    }
 
-	/**
-	 * 删除教练等级
-	 */
-	@Action(value = "/delLevel")
-	public void delLevel() {
-		levelInfo = cuserService.getLevelInfoBylevelname(levelname);
-		if (levelInfo == null) {
-			setResponseStr("error");
-		} else {
-			cuserService.delObject(levelInfo);
-			setResponseStr("success");
-		}
-	}
+    /**
+     * 删除教练等级
+     */
+    @Action(value = "/delLevel")
+    public void delLevel() {
+        levelInfo = cuserService.getLevelInfoBylevelname(levelname);
+        if (levelInfo == null) {
+            setResponseStr("error");
+        } else {
+            cuserService.delObject(levelInfo);
+            setResponseStr("success");
+        }
+    }
 
-	/**
-	 * 修改教练等级
-	 */
-	@Action(value = "/editLevel")
-	public void editLevel() {
-		levelInfo = cuserService.getLevelInfoBylevelname(oldlevelname);
-		if (levelInfo == null) {
-			setResponseStr("error");
-		} else {
-			levelInfo.setLevelname(newlevelname);
-			cuserService.updateObject(levelInfo);
-			setResponseStr("success");
-		}
-	}
+    /**
+     * 修改教练等级
+     */
+    @Action(value = "/editLevel")
+    public void editLevel() {
+        levelInfo = cuserService.getLevelInfoBylevelname(oldlevelname);
+        if (levelInfo == null) {
+            setResponseStr("error");
+        } else {
+            levelInfo.setLevelname(newlevelname);
+            cuserService.updateObject(levelInfo);
+            setResponseStr("success");
+        }
+    }
 
-	/**
-	 * 得到投诉原因
-	 *
-	 * @return
-	 */
-	@Action(value = "/getComplaintlist", results = { @Result(name = SUCCESS, location = "/complaintlist.jsp") })
-	public String getComplaintlist() {
-		if (searchtype == 1) {
-			complaintSetInfolist = cuserService.getComplaintSetByType(searchtype);
-			return SUCCESS;
-		} else if (searchtype == 2) {
-			complaintSetInfolist = cuserService.getComplaintSetByType(searchtype);
-			return SUCCESS;
-		} else {
-			complaintSetInfolist = cuserService.getComplaintSetInfolist();
-			return SUCCESS;
-		}
-	}
+    /**
+     * 得到投诉原因
+     *
+     * @return
+     */
+    @Action(value = "/getComplaintlist", results = { @Result(name = SUCCESS, location = "/complaintlist.jsp") })
+    public String getComplaintlist() {
+        if (searchtype == 1) {
+            complaintSetInfolist = cuserService.getComplaintSetByType(searchtype);
+            return SUCCESS;
+        } else if (searchtype == 2) {
+            complaintSetInfolist = cuserService.getComplaintSetByType(searchtype);
+            return SUCCESS;
+        } else {
+            complaintSetInfolist = cuserService.getComplaintSetInfolist();
+            return SUCCESS;
+        }
+    }
 
-	/**
-	 * 添加投诉
-	 */
-	@Action(value = "/addComplaintSetInfo")
-	public void addComplaintSetInfo() {
-		if (content != null && type != 0) {
-			complaintSetInfo = new ComplaintSetInfo();
-			complaintSetInfo.setContent(content);
-			complaintSetInfo.setAddtime(new Date());
-			complaintSetInfo.setType(type);
-			cuserService.addObject(complaintSetInfo);
-			setResponseStr("success");
-		} else {
-			setResponseStr("error");
-		}
-	}
+    /**
+     * 添加投诉
+     */
+    @Action(value = "/addComplaintSetInfo")
+    public void addComplaintSetInfo() {
+        if (content != null && type != 0) {
+            complaintSetInfo = new ComplaintSetInfo();
+            complaintSetInfo.setContent(content);
+            complaintSetInfo.setAddtime(new Date());
+            complaintSetInfo.setType(type);
+            cuserService.addObject(complaintSetInfo);
+            setResponseStr("success");
+        } else {
+            setResponseStr("error");
+        }
+    }
 
-	/**
-	 * 删除投诉原因
-	 */
-	@Action(value = "/delComplaintSetInfo")
-	public void delComplaintSetInfo() {
-		complaintSetInfo = cuserService.getComplaintSetInfoByid(setid);
-		if (complaintSetInfo == null) {
-			setResponseStr("error");
-		} else {
-			cuserService.delObject(complaintSetInfo);
-			setResponseStr("success");
-		}
-	}
+    /**
+     * 删除投诉原因
+     */
+    @Action(value = "/delComplaintSetInfo")
+    public void delComplaintSetInfo() {
+        complaintSetInfo = cuserService.getComplaintSetInfoByid(setid);
+        if (complaintSetInfo == null) {
+            setResponseStr("error");
+        } else {
+            cuserService.delObject(complaintSetInfo);
+            setResponseStr("success");
+        }
+    }
 
-	/**
-	 * 修改投诉原因
-	 */
-	@Action(value = "/editComplaintSet")
-	public void editComplaintSet() {
-		complaintSetInfo = cuserService.getComplaintSetInfoByid(setid);
-		if (complaintSetInfo == null) {
-			setResponseStr("error");
-		} else {
-			complaintSetInfo.setContent(newcontent);
-			cuserService.updateObject(complaintSetInfo);
-			setResponseStr("success");
-		}
-	}
+    /**
+     * 修改投诉原因
+     */
+    @Action(value = "/editComplaintSet")
+    public void editComplaintSet() {
+        complaintSetInfo = cuserService.getComplaintSetInfoByid(setid);
+        if (complaintSetInfo == null) {
+            setResponseStr("error");
+        } else {
+            complaintSetInfo.setContent(newcontent);
+            cuserService.updateObject(complaintSetInfo);
+            setResponseStr("success");
+        }
+    }
 
-	/**
-	 * 得到科目信息列表
-	 * @return
-	 */
-	@Action(value = "/getSubjectlists", results = { @Result(name = SUCCESS, location = "/subjectlist.jsp") })
-	public String getSubjectlists() {
-		subjectlist = cuserService.getSubjectInfo();
-		return SUCCESS;
-	}
+    /**
+     * 得到科目信息列表
+     * @return
+     */
+    @Action(value = "/getSubjectlists", results = { @Result(name = SUCCESS, location = "/subjectlist.jsp") })
+    public String getSubjectlists() {
+        subjectlist = cuserService.getSubjectInfo();
+        return SUCCESS;
+    }
 
-	/**
-	 * 删除科目信息
-	 */
-	@Action(value = "/delSubject")
-	public void delSubject() {
-		subjectInfo = cuserService.getSubjectById(subjectid);
-		if (subjectInfo == null) {
-			setResponseStr("error");
-		} else {
-			cuserService.delObject(subjectInfo);
-			setResponseStr("success");
-		}
-	}
+    /**
+     * 删除科目信息
+     */
+    @Action(value = "/delSubject")
+    public void delSubject() {
+        subjectInfo = cuserService.getSubjectById(subjectid);
+        if (subjectInfo == null) {
+            setResponseStr("error");
+        } else {
+            cuserService.delObject(subjectInfo);
+            setResponseStr("success");
+        }
+    }
 
-	/**
-	 * 添加科目信息
-	 */
-	@Action(value = "/addSubject")
-	public void addSubject() {
-		subjectInfo = cuserService.getSubjectByName(addsubjectname);
-		if (subjectInfo != null) {
-			setResponseStr("error");
-		} else {
-			subjectInfo = new CsubjectInfo();
-			subjectInfo.setSubjectname(addsubjectname);
-			subjectInfo.setAddtime(new Date());
-			cuserService.addObject(subjectInfo);
-			setResponseStr("success");
-		}
-	}
+    /**
+     * 添加科目信息
+     */
+    @Action(value = "/addSubject")
+    public void addSubject() {
+        subjectInfo = cuserService.getSubjectByName(addsubjectname);
+        if (subjectInfo != null) {
+            setResponseStr("error");
+        } else {
+            subjectInfo = new CsubjectInfo();
+            subjectInfo.setSubjectname(addsubjectname);
+            subjectInfo.setAddtime(new Date());
+            cuserService.addObject(subjectInfo);
+            setResponseStr("success");
+        }
+    }
 
-	/**
-	 *修改科目信息
-	 */
-	@Action(value = "/editSubject")
-	public void editSubject() {
-		subjectInfo = cuserService.getSubjectByName(oldsubjectname);
-		newsubjectInfo = cuserService.getSubjectByName(editsubjectname);
-		if (subjectInfo == null) {
-			setResponseStr("error");
-		} else if (newsubjectInfo == null) {
-			subjectInfo.setSubjectname(editsubjectname);
-			cuserService.updateObject(subjectInfo);
-			setResponseStr("success");
-		} else {
-			setResponseStr("error1");
-		}
-	}
+    /**
+     *修改科目信息
+     */
+    @Action(value = "/editSubject")
+    public void editSubject() {
+        subjectInfo = cuserService.getSubjectByName(oldsubjectname);
+        newsubjectInfo = cuserService.getSubjectByName(editsubjectname);
+        if (subjectInfo == null) {
+            setResponseStr("error");
+        } else if (newsubjectInfo == null) {
+            subjectInfo.setSubjectname(editsubjectname);
+            cuserService.updateObject(subjectInfo);
+            setResponseStr("success");
+        } else {
+            setResponseStr("error1");
+        }
+    }
 
-	/**
-	 * 获取节假日
-	 * @return
-	 */
-	@Action(value = "/getHolidays", results = { @Result(name = SUCCESS, location = "/holidays.jsp") })
-	public String getHolidays(){
-		systemSetInfo=cuserService.getSystemSetInfo();
-		return SUCCESS;
-	}
+    /**
+     * 获取节假日
+     * @return
+     */
+    @Action(value = "/getHolidays", results = { @Result(name = SUCCESS, location = "/holidays.jsp") })
+    public String getHolidays(){
+        systemSetInfo=cuserService.getSystemSetInfo();
+        return SUCCESS;
+    }
 
-	@Action(value = "/getHolidaysday")
-	public void getHolidaysday(){
-		String[] nowholiday=newholidays.split(",");
-		int count=0;
-		String[] nowclickholiday=clickholiday.split(",");
-		for (int i = 0; i < nowholiday.length; i++) {
-			for (int j = 0; j < nowclickholiday.length; j++) {
-				if(nowclickholiday[j].equals(nowholiday[i])){
-					count++;
-				}
-			}
-		}
-		if(count==0){
-			setResponseStr("success");
-		}else{
-			setResponseStr("error");
-		}
-	}
+    @Action(value = "/getHolidaysday")
+    public void getHolidaysday(){
+        String[] nowholiday=newholidays.split(",");
+        int count=0;
+        String[] nowclickholiday=clickholiday.split(",");
+        for (int i = 0; i < nowholiday.length; i++) {
+            for (int j = 0; j < nowclickholiday.length; j++) {
+                if(nowclickholiday[j].equals(nowholiday[i])){
+                    count++;
+                }
+            }
+        }
+        if(count==0){
+            setResponseStr("success");
+        }else{
+            setResponseStr("error");
+        }
+    }
 
-	/**
-	 * 更新节假日
-	 */
-	@Action(value = "/updateHolidays")
-	public void updateHolidays(){
-		if(!CommonUtils.isEmptyString(newholidays)){
-			systemSetInfo=cuserService.getSystemSetInfoByid(dataid);
-			if(systemSetInfo==null){
-				SystemSetInfo systemSetInfos=new SystemSetInfo();
-				systemSetInfos.setTime_cancel(0);
-				if(!CommonUtils.isEmptyString(newholidays)){
-					systemSetInfos.setHolidays(newholidays);
-				}
-				cuserService.addObject(systemSetInfos);
-				setResponseStr("success");
-			}else{
-				systemSetInfo.setHolidays(newholidays);
-				cuserService.updateObject(systemSetInfo);
-				setResponseStr("success");
-			}}else{
-			setResponseStr("error");
-		}
-	}
+    /**
+     * 更新节假日
+     */
+    @Action(value = "/updateHolidays")
+    public void updateHolidays(){
+        if(!CommonUtils.isEmptyString(newholidays)){
+            systemSetInfo=cuserService.getSystemSetInfoByid(dataid);
+            if(systemSetInfo==null){
+                SystemSetInfo systemSetInfos=new SystemSetInfo();
+                systemSetInfos.setTime_cancel(0);
+                if(!CommonUtils.isEmptyString(newholidays)){
+                    systemSetInfos.setHolidays(newholidays);
+                }
+                cuserService.addObject(systemSetInfos);
+                setResponseStr("success");
+            }else{
+                systemSetInfo.setHolidays(newholidays);
+                cuserService.updateObject(systemSetInfo);
+                setResponseStr("success");
+            }}else{
+            setResponseStr("error");
+        }
+    }
 
-	/**
-	 * @return
-	 */
-	@Action(value = "/getTimeCancel", results = { @Result(name = SUCCESS, location = "/timecancel.jsp") })
-	public String getTimeCancel(){
-		systemSetInfo=cuserService.getSystemSetInfo();
-		return SUCCESS;
-	}
-	
-	/**显示重置教练开课状态页面
-	 * @return
-	 */
-	@Action(value = "/showResetCoachCoursestate", results = { @Result(name = SUCCESS, location = "/restcoachstate.jsp") })
-	public String showResetCoachCoursestate(){
-		return SUCCESS;
-	}
-	/**重置教练开课状态
-	 * @return
-	 */
-	@Action(value = "/resetCoachCoursestate")
-	public void resetCoachCoursestate(){
-		cuserService.resetCoachCoursestate();
-		Map map=new HashMap();
-		map.put("code", "0");
-		map.put("message", "重置成功!");
-		strToJson(map);
-	}
-	/**打开广告设置
-	 * @return
-	 */
-	@Action(value = "/gotosetAdvertisement", results = { @Result(name = SUCCESS, location = "/setadvertisement.jsp") })
-	public String gotosetAdvertisement(){
-		return SUCCESS;
-	}
-	
-	/**进行广告设置
-	 * @return
-	 */
-	@Action(value = "/setAdvertisement", results = { @Result(name = SUCCESS, location = "/setadvertisement.jsp") })
-	public String setAdvertisement(){
-		try {
-			File f=new File("ad_img.jpg");		
-			FileUtils.copyFile(ad_img, f);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return SUCCESS;
-	}
-	/**
-	 *
-	 */
-	@Action(value = "/editValue")
-	public void editTime(){
-		systemSetInfo=cuserService.getSystemSetInfoByid(dataid);
-		if(systemSetInfo==null){
-			setResponseStr("error");
-		}else{
-			if(colname.equals("time_cancel"))
-				systemSetInfo.setTime_cancel(Integer.parseInt(editvalue));
-			else if(colname.equals("s_can_up"))
-				systemSetInfo.setS_can_up(Integer.parseInt(editvalue));
-			else if(colname.equals("s_can_down"))
-				systemSetInfo.setS_can_down(Integer.parseInt(editvalue));
-			else if(colname.equals("s_order_end"))
-				systemSetInfo.setS_order_end(Integer.parseInt(editvalue));
-			else if(colname.equals("order_pull"))
-				systemSetInfo.setOrder_pull(Integer.parseInt(editvalue));
-			else if(colname.equals("s_register_money"))
-				systemSetInfo.setS_register_money(new BigDecimal(editvalue));
-			else if(colname.equals("c_register_money"))
-				systemSetInfo.setC_register_money(new BigDecimal(editvalue));
-			else if(colname.equals("c_register_gmoney"))
-				systemSetInfo.setC_register_gmoney(new BigDecimal(editvalue));
-			else if(colname.equals("s_default_coment"))
-				systemSetInfo.setS_default_coment(editvalue);
-			else if(colname.equals("c_default_coment"))
-				systemSetInfo.setC_default_coment(editvalue);
-			else if(colname.equals("login_vcode_time"))
-				systemSetInfo.setLogin_vcode_time(Integer.parseInt(editvalue));
-			else if(colname.equals("book_day_max"))
-				systemSetInfo.setBook_day_max(Integer.parseInt(editvalue));
-			else if(colname.equals("coach_default_price"))
-				systemSetInfo.setCoach_default_price(Integer.parseInt(editvalue));
-			else if(colname.equals("coach_default_subject"))
-				systemSetInfo.setCoach_default_subject(Integer.parseInt(editvalue));
-			else if(colname.equals("can_use_coupon_count"))
-				systemSetInfo.setCan_use_coupon_count(Integer.parseInt(editvalue));
-			else if(colname.equals("can_use_diff_coupon"))
-				systemSetInfo.setCan_use_diff_coupon(Integer.parseInt(editvalue));
+    /**
+     * @return
+     */
+    @Action(value = "/getTimeCancel", results = { @Result(name = SUCCESS, location = "/timecancel.jsp") })
+    public String getTimeCancel(){
+        systemSetInfo=cuserService.getSystemSetInfo();
+        return SUCCESS;
+    }
+
+    /**显示重置教练开课状态页面
+     * @return
+     */
+    @Action(value = "/showResetCoachCoursestate", results = { @Result(name = SUCCESS, location = "/restcoachstate.jsp") })
+    public String showResetCoachCoursestate(){
+        return SUCCESS;
+    }
+    /**重置教练开课状态
+     * @return
+     */
+    @Action(value = "/resetCoachCoursestate")
+    public void resetCoachCoursestate(){
+        cuserService.resetCoachCoursestate();
+        Map map=new HashMap();
+        map.put("code", "0");
+        map.put("message", "重置成功!");
+        strToJson(map);
+    }
+    /**打开广告设置
+     * @return
+     */
+    @Action(value = "/gotosetAdvertisement", results = { @Result(name = SUCCESS, location = "/setadvertisement.jsp") })
+    public String gotosetAdvertisement(){
+        return SUCCESS;
+    }
+
+    /**进行广告设置
+     * @return
+     */
+    @Action(value = "/setAdvertisement", results = { @Result(name = SUCCESS, location = "/setadvertisement.jsp") })
+    public String setAdvertisement(){
+        try {
+            File f=new File("ad_img.jpg");
+            FileUtils.copyFile(ad_img, f);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return SUCCESS;
+    }
+    /**
+     *
+     */
+    @Action(value = "/editValue")
+    public void editTime(){
+        systemSetInfo=cuserService.getSystemSetInfoByid(dataid);
+        if(systemSetInfo==null){
+            setResponseStr("error");
+        }else{
+            if(colname.equals("time_cancel"))
+                systemSetInfo.setTime_cancel(Integer.parseInt(editvalue));
+            else if(colname.equals("s_can_up"))
+                systemSetInfo.setS_can_up(Integer.parseInt(editvalue));
+            else if(colname.equals("s_can_down"))
+                systemSetInfo.setS_can_down(Integer.parseInt(editvalue));
+            else if(colname.equals("s_order_end"))
+                systemSetInfo.setS_order_end(Integer.parseInt(editvalue));
+            else if(colname.equals("order_pull"))
+                systemSetInfo.setOrder_pull(Integer.parseInt(editvalue));
+            else if(colname.equals("s_register_money"))
+                systemSetInfo.setS_register_money(new BigDecimal(editvalue));
+            else if(colname.equals("c_register_money"))
+                systemSetInfo.setC_register_money(new BigDecimal(editvalue));
+            else if(colname.equals("c_register_gmoney"))
+                systemSetInfo.setC_register_gmoney(new BigDecimal(editvalue));
+            else if(colname.equals("s_default_coment"))
+                systemSetInfo.setS_default_coment(editvalue);
+            else if(colname.equals("c_default_coment"))
+                systemSetInfo.setC_default_coment(editvalue);
+            else if(colname.equals("login_vcode_time"))
+                systemSetInfo.setLogin_vcode_time(Integer.parseInt(editvalue));
+            else if(colname.equals("book_day_max"))
+                systemSetInfo.setBook_day_max(Integer.parseInt(editvalue));
+            else if(colname.equals("coach_default_price"))
+                systemSetInfo.setCoach_default_price(Integer.parseInt(editvalue));
+            else if(colname.equals("coach_default_subject"))
+                systemSetInfo.setCoach_default_subject(Integer.parseInt(editvalue));
+            else if(colname.equals("can_use_coupon_count"))
+                systemSetInfo.setCan_use_coupon_count(Integer.parseInt(editvalue));
+            else if(colname.equals("can_use_diff_coupon"))
+                systemSetInfo.setCan_use_diff_coupon(Integer.parseInt(editvalue));
 //			else if(colname.equals("advertisement_flag"))
 //				systemSetInfo.setAdvertisement_flag(Integer.parseInt(editvalue));
-			else if(colname.equals("coursedate_flag"))
-				systemSetInfo.setCoursedate(Integer.parseInt(editvalue));
+            else if(colname.equals("coursedate_flag"))
+                systemSetInfo.setCoursedate(Integer.parseInt(editvalue));
 //			else if(colname.equals("coach_advertisement_flag"))
 //				systemSetInfo.setCoach_advertisement_flag(Integer.parseInt(editvalue));
 //			else if(colname.equals("coach_advertisement_urlflag"))
@@ -634,542 +634,542 @@ public class SystemConfigAction extends BaseAction {
 //				systemSetInfo.setStudent_advertisement_url(editvalue);
 //			else if(colname.equals("student_advertisement_imgflag"))
 //				systemSetInfo.setStudent_advertisement_img(editvalue);
-			else if(colname.equals("crewardamount_flag"))
-				systemSetInfo.setCrewardamount(new BigDecimal(editvalue));
-			else if(colname.equals("orewardamount_flag"))
-				systemSetInfo.setOrewardamount(new BigDecimal(editvalue));
-			else if(colname.equals("weixinpay_flag"))
-				systemSetInfo.setWeixinpay_flag(Integer.parseInt(editvalue));
-			else if(colname.equals("advertisement_coach"))
-			{
-				String[] value=editvalue.split(",");
-				systemSetInfo.setCoach_advertisement_flag_flash(Integer.parseInt(value[0]));
-				systemSetInfo.setCoach_advertisement_img_flash_android(value[1]);
-				systemSetInfo.setCoach_advertisement_img_flash_ios(value[2]);
-				systemSetInfo.setCoach_advertisement_flag(Integer.parseInt(value[3]));
-				systemSetInfo.setCoach_advertisement_img_android(value[4]);
-				systemSetInfo.setCoach_advertisement_img_ios(value[5]);
-				systemSetInfo.setCoach_advertisement_url(value[6]);
-			}
-			else if(colname.equals("advertisement_student"))
-			{
-				String[] value=editvalue.split(",");
-				systemSetInfo.setStudent_advertisement_flag_flash(Integer.parseInt(value[0]));
-				systemSetInfo.setStudent_advertisement_img_flash_android(value[1]);
-				systemSetInfo.setStudent_advertisement_img_flash_ios(value[2]);
-				systemSetInfo.setStudent_advertisement_flag(Integer.parseInt(value[3]));
-				systemSetInfo.setStudent_advertisement_img_android(value[4]);
-				systemSetInfo.setStudent_advertisement_img_ios(value[5]);
-				systemSetInfo.setStudent_advertisement_url(value[6]);
-			}
-			cuserService.updateObject(systemSetInfo);
-			setResponseStr("success");
-		}
-	}
-
-	@Action(value = "/jumpp", results = { @Result(name = SUCCESS, location = "/newday.jsp") })
-	public String jumpp(){
-		return SUCCESS;
-	}
-	
-	@Resource
-	private ISBookService sbookService;
-	@Resource
-	private ILocationService locationService;
-	/**
-	 * 显示所有的开通城市
-	 * @return
-	 */
-	@Action(value = "/getOpenModelPrice", results = { @Result(name = SUCCESS, location = "/openmodelprice.jsp") })
-	public String getOpenModelPrice(){
-		mplist=sbookService.getOpenModelPrice();
-		return SUCCESS;
-	}
-	
-	/**
-	 * 添加开通城市
-	 * @return
-	 */
-	@Action(value = "/addOpenModelPrice", results = { @Result(name = SUCCESS,type="redirect", location = "/getOpenModelPrice.do") })
-	public String addOpenModelPrice(){
-		List<ModelPrice> list=sbookService.getModelPriceByCityId(city);
-		if(list!=null && list.size()>0 ){
-			return SUCCESS;
-		}
-		ModelPrice mp=new ModelPrice();
-		mp.setC1marketprice(c1marketprice);
-		mp.setC1xiaobaprice(c1xiaobaprice);
-		mp.setC2marketprice(c2marketprice);
-		mp.setC2xiaobaprice(c2xiaobaprice);
-		mp.setCityid(city);
-		CityInfo cityinfo=locationService.getCityById(String.valueOf(city));
-		if(cityinfo!=null){
-			mp.setCityname(cityinfo.getCity());
-		}
-		sbookService.addOpenModelPrice(mp);
-		return SUCCESS;
-	}
-	
-
-	//删除开通城市
-	@Action(value = "/deleteOpenModelPrice")
-	public void deleteOpenModelPrice(){
-		String citys=request.getParameter("cities");
-		String flag="-1";
-		if(citys!=null)
-		{
-			sbookService.deleteOpenModelPrice(citys);
-			flag="1";
-		}
-		strToJson(flag);
-	}
-	
-	//通过城市id获取具体
-	@Action(value = "/getOpenModelPriceByCityId")
-	public void getOpenModelPriceByCityId(){
-		String citys=request.getParameter("cid");
-		if(citys!=null)
-		{
-			ModelPrice mp=sbookService.getModelPriceByCityId(Integer.valueOf(citys)).get(0);
-			strToJson(mp);
-		}
-	}
-	
-	//编辑开通城市
-	@Action(value = "/editOpenModelPrice", results = { @Result(name = SUCCESS,type="redirect", location = "/getOpenModelPrice.do") })
-	public String editOpenModelPrice(){
-		String citys=request.getParameter("cid");
-		if(citys!=null)
-		{
-			ModelPrice mp=sbookService.getModelPriceById(Integer.valueOf(citys));
-			mp.setC1marketprice(c1marketprice);
-			mp.setC1xiaobaprice(c1xiaobaprice);
-			mp.setC2marketprice(c2marketprice);
-			mp.setC2xiaobaprice(c2xiaobaprice);
-			mp.setCityid(city);
-			CityInfo cityinfo=locationService.getCityById(String.valueOf(city));
-			if(cityinfo!=null){
-				mp.setCityname(cityinfo.getCity());
-			}
-			sbookService.updateOpenModelPrice(mp);
-		}
-		return SUCCESS;
-	}
-	
-
-	
-	private int c1marketprice;
-	private int c2marketprice;
-	private int c1xiaobaprice;
-	private int c2xiaobaprice;
-	private int city;//城市ID
-	
-	
-	
-	
-	
-	
-	
-	public int getC1marketprice() {
-		return c1marketprice;
-	}
-
-	public void setC1marketprice(int c1marketprice) {
-		this.c1marketprice = c1marketprice;
-	}
-
-	public int getC2marketprice() {
-		return c2marketprice;
-	}
-
-	public void setC2marketprice(int c2marketprice) {
-		this.c2marketprice = c2marketprice;
-	}
-
-	public int getC1xiaobaprice() {
-		return c1xiaobaprice;
-	}
-
-	public void setC1xiaobaprice(int c1xiaobaprice) {
-		this.c1xiaobaprice = c1xiaobaprice;
-	}
-
-	public int getC2xiaobaprice() {
-		return c2xiaobaprice;
-	}
-
-	public void setC2xiaobaprice(int c2xiaobaprice) {
-		this.c2xiaobaprice = c2xiaobaprice;
-	}
-
-	public int getCity() {
-		return city;
-	}
-
-	public void setCity(int city) {
-		this.city = city;
-	}
-
-	private List<ModelPrice> mplist;
-	
-	public List<ModelPrice> getMplist() {
-		return mplist;
-	}
-
-	public void setMplist(List<ModelPrice> mplist) {
-		this.mplist = mplist;
-	}
-
-	public ComplaintSetInfo getComplaintSetInfo() {
-		return complaintSetInfo;
-	}
-
-	public void setComplaintSetInfo(ComplaintSetInfo complaintSetInfo) {
-		this.complaintSetInfo = complaintSetInfo;
-	}
-
-	public List<ModelsInfo> getModelslist() {
-		return modelslist;
-	}
-
-	public void setModelslist(List<ModelsInfo> modelslist) {
-		this.modelslist = modelslist;
-	}
-
-	public ModelsInfo getModel() {
-		return model;
-	}
-
-	public void setModel(ModelsInfo model) {
-		this.model = model;
-	}
-
-	public ModelsInfo getOldmodel() {
-		return oldmodel;
-	}
-
-	public void setOldmodel(ModelsInfo oldmodel) {
-		this.oldmodel = oldmodel;
-	}
-
-	public Integer getPageIndex() {
-		return pageIndex;
-	}
-
-	public void setPageIndex(Integer pageIndex) {
-		this.pageIndex = pageIndex;
-	}
-
-	public Integer getPageCount() {
-		return pageCount;
-	}
-
-	public void setPageCount(Integer pageCount) {
-		this.pageCount = pageCount;
-	}
-
-	public String getModelname() {
-		return modelname;
-	}
-
-	public void setModelname(String modelname) {
-		this.modelname = modelname;
-	}
-
-	public String getOldmodelname() {
-		return oldmodelname;
-	}
-
-	public void setOldmodelname(String oldmodelname) {
-		this.oldmodelname = oldmodelname;
-	}
-
-	public String getEditmodelname() {
-		return editmodelname;
-	}
-
-	public void setEditmodelname(String editmodelname) {
-		this.editmodelname = editmodelname;
-	}
-
-	public long getTotal() {
-		return total;
-	}
-
-	public void setLevellist(List<CoachLevelInfo> levellist) {
-		this.levellist = levellist;
-	}
-
-	public List<CoachLevelInfo> getLevellist() {
-		return levellist;
-	}
-
-	public CoachLevelInfo getLevelInfo() {
-		return levelInfo;
-	}
-
-	public void setLevelInfo(CoachLevelInfo levelInfo) {
-		this.levelInfo = levelInfo;
-	}
-
-	public String getLevelname() {
-		return levelname;
-	}
-
-	public void setLevelname(String levelname) {
-		this.levelname = levelname;
-	}
-
-	public String getOldlevelname() {
-		return oldlevelname;
-	}
-
-	public void setOldlevelname(String oldlevelname) {
-		this.oldlevelname = oldlevelname;
-	}
-
-	public String getNewlevelname() {
-		return newlevelname;
-	}
-
-	public void setNewlevelname(String newlevelname) {
-		this.newlevelname = newlevelname;
-	}
-
-	public List<ComplaintSetInfo> getComplaintSetInfolist() {
-		return complaintSetInfolist;
-	}
-
-	public void setComplaintSetInfolist(List<ComplaintSetInfo> complaintSetInfolist) {
-		this.complaintSetInfolist = complaintSetInfolist;
-	}
-
-	public int getSearchtype() {
-		return searchtype;
-	}
-
-	public void setSearchtype(int searchtype) {
-		this.searchtype = searchtype;
-	}
-
-	public int getSetid() {
-		return setid;
-	}
-
-	public void setSetid(int setid) {
-		this.setid = setid;
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
-
-	public int getType() {
-		return type;
-	}
-
-	public void setType(int type) {
-		this.type = type;
-	}
-
-	public String getNewcontent() {
-		return newcontent;
-	}
-
-	public void setNewcontent(String newcontent) {
-		this.newcontent = newcontent;
-	}
-
-	public List<CsubjectInfo> getSubjectlist() {
-		return subjectlist;
-	}
-
-	public void setSubjectlist(List<CsubjectInfo> subjectlist) {
-		this.subjectlist = subjectlist;
-	}
-
-	public int getIndex() {
-		return index;
-	}
-
-	public void setIndex(int index) {
-		this.index = index;
-	}
-
-	public int getSubjectid() {
-		return subjectid;
-	}
-
-	public void setSubjectid(int subjectid) {
-		this.subjectid = subjectid;
-	}
+            else if(colname.equals("crewardamount_flag"))
+                systemSetInfo.setCrewardamount(new BigDecimal(editvalue));
+            else if(colname.equals("orewardamount_flag"))
+                systemSetInfo.setOrewardamount(new BigDecimal(editvalue));
+            else if(colname.equals("weixinpay_flag"))
+                systemSetInfo.setWeixinpay_flag(Integer.parseInt(editvalue));
+            else if(colname.equals("advertisement_coach"))
+            {
+                String[] value=editvalue.split(",");
+                systemSetInfo.setCoach_advertisement_flag_flash(Integer.parseInt(value[0]));
+                systemSetInfo.setCoach_advertisement_img_flash_android(value[1]);
+                systemSetInfo.setCoach_advertisement_img_flash_ios(value[2]);
+                systemSetInfo.setCoach_advertisement_flag(Integer.parseInt(value[3]));
+                systemSetInfo.setCoach_advertisement_img_android(value[4]);
+                systemSetInfo.setCoach_advertisement_img_ios(value[5]);
+                systemSetInfo.setCoach_advertisement_url(value[6]);
+            }
+            else if(colname.equals("advertisement_student"))
+            {
+                String[] value=editvalue.split(",");
+                systemSetInfo.setStudent_advertisement_flag_flash(Integer.parseInt(value[0]));
+                systemSetInfo.setStudent_advertisement_img_flash_android(value[1]);
+                systemSetInfo.setStudent_advertisement_img_flash_ios(value[2]);
+                systemSetInfo.setStudent_advertisement_flag(Integer.parseInt(value[3]));
+                systemSetInfo.setStudent_advertisement_img_android(value[4]);
+                systemSetInfo.setStudent_advertisement_img_ios(value[5]);
+                systemSetInfo.setStudent_advertisement_url(value[6]);
+            }
+            cuserService.updateObject(systemSetInfo);
+            setResponseStr("success");
+        }
+    }
+
+    @Action(value = "/jumpp", results = { @Result(name = SUCCESS, location = "/newday.jsp") })
+    public String jumpp(){
+        return SUCCESS;
+    }
+
+    @Resource
+    private ISBookService sbookService;
+    @Resource
+    private ILocationService locationService;
+    /**
+     * 显示所有的开通城市
+     * @return
+     */
+    @Action(value = "/getOpenModelPrice", results = { @Result(name = SUCCESS, location = "/openmodelprice.jsp") })
+    public String getOpenModelPrice(){
+        mplist=sbookService.getOpenModelPrice();
+        return SUCCESS;
+    }
+
+    /**
+     * 添加开通城市
+     * @return
+     */
+    @Action(value = "/addOpenModelPrice", results = { @Result(name = SUCCESS,type="redirect", location = "/getOpenModelPrice.do") })
+    public String addOpenModelPrice(){
+        List<ModelPrice> list=sbookService.getModelPriceByCityId(city);
+        if(list!=null && list.size()>0 ){
+            return SUCCESS;
+        }
+        ModelPrice mp=new ModelPrice();
+        mp.setC1marketprice(c1marketprice);
+        mp.setC1xiaobaprice(c1xiaobaprice);
+        mp.setC2marketprice(c2marketprice);
+        mp.setC2xiaobaprice(c2xiaobaprice);
+        mp.setCityid(city);
+        CityInfo cityinfo=locationService.getCityById(String.valueOf(city));
+        if(cityinfo!=null){
+            mp.setCityname(cityinfo.getCity());
+        }
+        sbookService.addOpenModelPrice(mp);
+        return SUCCESS;
+    }
+
+
+    //删除开通城市
+    @Action(value = "/deleteOpenModelPrice")
+    public void deleteOpenModelPrice(){
+        String citys=request.getParameter("cities");
+        String flag="-1";
+        if(citys!=null)
+        {
+            sbookService.deleteOpenModelPrice(citys);
+            flag="1";
+        }
+        strToJson(flag);
+    }
+
+    //通过城市id获取具体
+    @Action(value = "/getOpenModelPriceByCityId")
+    public void getOpenModelPriceByCityId(){
+        String citys=request.getParameter("cid");
+        if(citys!=null)
+        {
+            ModelPrice mp=sbookService.getModelPriceByCityId(Integer.valueOf(citys)).get(0);
+            strToJson(mp);
+        }
+    }
+
+    //编辑开通城市
+    @Action(value = "/editOpenModelPrice", results = { @Result(name = SUCCESS,type="redirect", location = "/getOpenModelPrice.do") })
+    public String editOpenModelPrice(){
+        String citys=request.getParameter("cid");
+        if(citys!=null)
+        {
+            ModelPrice mp=sbookService.getModelPriceById(Integer.valueOf(citys));
+            mp.setC1marketprice(c1marketprice);
+            mp.setC1xiaobaprice(c1xiaobaprice);
+            mp.setC2marketprice(c2marketprice);
+            mp.setC2xiaobaprice(c2xiaobaprice);
+            mp.setCityid(city);
+            CityInfo cityinfo=locationService.getCityById(String.valueOf(city));
+            if(cityinfo!=null){
+                mp.setCityname(cityinfo.getCity());
+            }
+            sbookService.updateOpenModelPrice(mp);
+        }
+        return SUCCESS;
+    }
 
-	public CsubjectInfo getSubjectInfo() {
-		return subjectInfo;
-	}
 
-	public void setSubjectInfo(CsubjectInfo subjectInfo) {
-		this.subjectInfo = subjectInfo;
-	}
 
-	public String getAddsubjectname() {
-		return addsubjectname;
-	}
+    private int c1marketprice;
+    private int c2marketprice;
+    private int c1xiaobaprice;
+    private int c2xiaobaprice;
+    private int city;//城市ID
 
-	public void setAddsubjectname(String addsubjectname) {
-		this.addsubjectname = addsubjectname;
-	}
 
-	public String getEditsubjectname() {
-		return editsubjectname;
-	}
 
-	public void setEditsubjectname(String editsubjectname) {
-		this.editsubjectname = editsubjectname;
-	}
 
-	public String getOldsubjectname() {
-		return oldsubjectname;
-	}
 
-	public void setOldsubjectname(String oldsubjectname) {
-		this.oldsubjectname = oldsubjectname;
-	}
 
-	public CsubjectInfo getNewsubjectInfo() {
-		return newsubjectInfo;
-	}
 
-	public void setNewsubjectInfo(CsubjectInfo newsubjectInfo) {
-		this.newsubjectInfo = newsubjectInfo;
-	}
+    public int getC1marketprice() {
+        return c1marketprice;
+    }
 
+    public void setC1marketprice(int c1marketprice) {
+        this.c1marketprice = c1marketprice;
+    }
 
-	public SystemSetInfo getSystemSetInfo() {
-		return systemSetInfo;
-	}
+    public int getC2marketprice() {
+        return c2marketprice;
+    }
 
+    public void setC2marketprice(int c2marketprice) {
+        this.c2marketprice = c2marketprice;
+    }
 
-	public void setSystemSetInfo(SystemSetInfo systemSetInfo) {
-		this.systemSetInfo = systemSetInfo;
-	}
+    public int getC1xiaobaprice() {
+        return c1xiaobaprice;
+    }
 
+    public void setC1xiaobaprice(int c1xiaobaprice) {
+        this.c1xiaobaprice = c1xiaobaprice;
+    }
 
-	public String getNewholidays() {
-		return newholidays;
-	}
+    public int getC2xiaobaprice() {
+        return c2xiaobaprice;
+    }
 
+    public void setC2xiaobaprice(int c2xiaobaprice) {
+        this.c2xiaobaprice = c2xiaobaprice;
+    }
 
-	public void setNewholidays(String newholidays) {
-		this.newholidays = newholidays;
-	}
+    public int getCity() {
+        return city;
+    }
 
+    public void setCity(int city) {
+        this.city = city;
+    }
 
-	public int getDataid() {
-		return dataid;
-	}
+    private List<ModelPrice> mplist;
 
+    public List<ModelPrice> getMplist() {
+        return mplist;
+    }
 
-	public void setDataid(int dataid) {
-		this.dataid = dataid;
-	}
+    public void setMplist(List<ModelPrice> mplist) {
+        this.mplist = mplist;
+    }
 
+    public ComplaintSetInfo getComplaintSetInfo() {
+        return complaintSetInfo;
+    }
 
-	public String getEditvalue() {
-		return editvalue;
-	}
+    public void setComplaintSetInfo(ComplaintSetInfo complaintSetInfo) {
+        this.complaintSetInfo = complaintSetInfo;
+    }
 
-	public void setEditvalue(String editvalue) {
-		this.editvalue = editvalue.trim();
-	}
+    public List<ModelsInfo> getModelslist() {
+        return modelslist;
+    }
 
+    public void setModelslist(List<ModelsInfo> modelslist) {
+        this.modelslist = modelslist;
+    }
 
-	public String getClickholiday() {
-		return clickholiday;
-	}
+    public ModelsInfo getModel() {
+        return model;
+    }
 
+    public void setModel(ModelsInfo model) {
+        this.model = model;
+    }
 
-	public void setClickholiday(String clickholiday) {
-		this.clickholiday = clickholiday;
-	}
+    public ModelsInfo getOldmodel() {
+        return oldmodel;
+    }
 
+    public void setOldmodel(ModelsInfo oldmodel) {
+        this.oldmodel = oldmodel;
+    }
 
+    public Integer getPageIndex() {
+        return pageIndex;
+    }
 
-	public List<TeachcarInfo> getTeachcarInfolist() {
-		return teachcarInfolist;
-	}
+    public void setPageIndex(Integer pageIndex) {
+        this.pageIndex = pageIndex;
+    }
 
+    public Integer getPageCount() {
+        return pageCount;
+    }
 
+    public void setPageCount(Integer pageCount) {
+        this.pageCount = pageCount;
+    }
 
-	public void setTeachcarInfolist(List<TeachcarInfo> teachcarInfolist) {
-		this.teachcarInfolist = teachcarInfolist;
-	}
+    public String getModelname() {
+        return modelname;
+    }
 
+    public void setModelname(String modelname) {
+        this.modelname = modelname;
+    }
 
-	public TeachcarInfo getTeachcar() {
-		return teachcar;
-	}
+    public String getOldmodelname() {
+        return oldmodelname;
+    }
 
+    public void setOldmodelname(String oldmodelname) {
+        this.oldmodelname = oldmodelname;
+    }
 
-	public void setTeachcar(TeachcarInfo teachcar) {
-		this.teachcar = teachcar;
-	}
+    public String getEditmodelname() {
+        return editmodelname;
+    }
 
+    public void setEditmodelname(String editmodelname) {
+        this.editmodelname = editmodelname;
+    }
 
-	public TeachcarInfo getNewteachcar() {
-		return newteachcar;
-	}
+    public long getTotal() {
+        return total;
+    }
 
+    public void setLevellist(List<CoachLevelInfo> levellist) {
+        this.levellist = levellist;
+    }
 
-	public void setNewteachcar(TeachcarInfo newteachcar) {
-		this.newteachcar = newteachcar;
-	}
+    public List<CoachLevelInfo> getLevellist() {
+        return levellist;
+    }
 
-	public int getChange_id() {
-		return change_id;
-	}
+    public CoachLevelInfo getLevelInfo() {
+        return levelInfo;
+    }
 
-	public void setChange_id(int change_id) {
-		this.change_id = change_id;
-	}
+    public void setLevelInfo(CoachLevelInfo levelInfo) {
+        this.levelInfo = levelInfo;
+    }
 
-	public String getColname() {
-		return colname;
-	}
+    public String getLevelname() {
+        return levelname;
+    }
 
-	public void setColname(String colname) {
-		this.colname = colname;
-	}
+    public void setLevelname(String levelname) {
+        this.levelname = levelname;
+    }
 
-	public String getSearchname() {
-		return searchname;
-	}
+    public String getOldlevelname() {
+        return oldlevelname;
+    }
 
-	public void setSearchname(String searchname) {
-		this.searchname = searchname;
-	}
+    public void setOldlevelname(String oldlevelname) {
+        this.oldlevelname = oldlevelname;
+    }
 
-	
+    public String getNewlevelname() {
+        return newlevelname;
+    }
 
-	public File getAd_img() {
-		return ad_img;
-	}
+    public void setNewlevelname(String newlevelname) {
+        this.newlevelname = newlevelname;
+    }
 
-	public void setAd_img(File ad_img) {
-		this.ad_img = ad_img;
-	}
+    public List<ComplaintSetInfo> getComplaintSetInfolist() {
+        return complaintSetInfolist;
+    }
 
-	public String getAd_url() {
-		return ad_url;
-	}
+    public void setComplaintSetInfolist(List<ComplaintSetInfo> complaintSetInfolist) {
+        this.complaintSetInfolist = complaintSetInfolist;
+    }
 
-	public void setAd_url(String ad_url) {
-		this.ad_url = ad_url;
-	}
+    public int getSearchtype() {
+        return searchtype;
+    }
+
+    public void setSearchtype(int searchtype) {
+        this.searchtype = searchtype;
+    }
+
+    public int getSetid() {
+        return setid;
+    }
+
+    public void setSetid(int setid) {
+        this.setid = setid;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public String getNewcontent() {
+        return newcontent;
+    }
+
+    public void setNewcontent(String newcontent) {
+        this.newcontent = newcontent;
+    }
+
+    public List<CsubjectInfo> getSubjectlist() {
+        return subjectlist;
+    }
+
+    public void setSubjectlist(List<CsubjectInfo> subjectlist) {
+        this.subjectlist = subjectlist;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public int getSubjectid() {
+        return subjectid;
+    }
+
+    public void setSubjectid(int subjectid) {
+        this.subjectid = subjectid;
+    }
+
+    public CsubjectInfo getSubjectInfo() {
+        return subjectInfo;
+    }
+
+    public void setSubjectInfo(CsubjectInfo subjectInfo) {
+        this.subjectInfo = subjectInfo;
+    }
+
+    public String getAddsubjectname() {
+        return addsubjectname;
+    }
+
+    public void setAddsubjectname(String addsubjectname) {
+        this.addsubjectname = addsubjectname;
+    }
+
+    public String getEditsubjectname() {
+        return editsubjectname;
+    }
+
+    public void setEditsubjectname(String editsubjectname) {
+        this.editsubjectname = editsubjectname;
+    }
+
+    public String getOldsubjectname() {
+        return oldsubjectname;
+    }
+
+    public void setOldsubjectname(String oldsubjectname) {
+        this.oldsubjectname = oldsubjectname;
+    }
+
+    public CsubjectInfo getNewsubjectInfo() {
+        return newsubjectInfo;
+    }
+
+    public void setNewsubjectInfo(CsubjectInfo newsubjectInfo) {
+        this.newsubjectInfo = newsubjectInfo;
+    }
+
+
+    public SystemSetInfo getSystemSetInfo() {
+        return systemSetInfo;
+    }
+
+
+    public void setSystemSetInfo(SystemSetInfo systemSetInfo) {
+        this.systemSetInfo = systemSetInfo;
+    }
+
+
+    public String getNewholidays() {
+        return newholidays;
+    }
+
+
+    public void setNewholidays(String newholidays) {
+        this.newholidays = newholidays;
+    }
+
+
+    public int getDataid() {
+        return dataid;
+    }
+
+
+    public void setDataid(int dataid) {
+        this.dataid = dataid;
+    }
+
+
+    public String getEditvalue() {
+        return editvalue;
+    }
+
+    public void setEditvalue(String editvalue) {
+        this.editvalue = editvalue.trim();
+    }
+
+
+    public String getClickholiday() {
+        return clickholiday;
+    }
+
+
+    public void setClickholiday(String clickholiday) {
+        this.clickholiday = clickholiday;
+    }
+
+
+
+    public List<TeachcarInfo> getTeachcarInfolist() {
+        return teachcarInfolist;
+    }
+
+
+
+    public void setTeachcarInfolist(List<TeachcarInfo> teachcarInfolist) {
+        this.teachcarInfolist = teachcarInfolist;
+    }
+
+
+    public TeachcarInfo getTeachcar() {
+        return teachcar;
+    }
+
+
+    public void setTeachcar(TeachcarInfo teachcar) {
+        this.teachcar = teachcar;
+    }
+
+
+    public TeachcarInfo getNewteachcar() {
+        return newteachcar;
+    }
+
+
+    public void setNewteachcar(TeachcarInfo newteachcar) {
+        this.newteachcar = newteachcar;
+    }
+
+    public int getChange_id() {
+        return change_id;
+    }
+
+    public void setChange_id(int change_id) {
+        this.change_id = change_id;
+    }
+
+    public String getColname() {
+        return colname;
+    }
+
+    public void setColname(String colname) {
+        this.colname = colname;
+    }
+
+    public String getSearchname() {
+        return searchname;
+    }
+
+    public void setSearchname(String searchname) {
+        this.searchname = searchname;
+    }
+
+
+
+    public File getAd_img() {
+        return ad_img;
+    }
+
+    public void setAd_img(File ad_img) {
+        this.ad_img = ad_img;
+    }
+
+    public String getAd_url() {
+        return ad_url;
+    }
+
+    public void setAd_url(String ad_url) {
+        this.ad_url = ad_url;
+    }
 
 
 }
