@@ -756,9 +756,17 @@ public class CscheduleServlet extends BaseServlet {
 						info.setCuseraddtionalprice(cuser.getAddtionalprice());
 						schedulelist.add(info);
 					} else {
+						//获取该教练的价格区间
+						Integer subject2min = 50;
+						if (cuser != null) {
+							subject2min = cuser.getSubject2min();
+						}
+						
+						
 						info = new CscheduleInfo();
 						info.setHour(String.valueOf(k));
-						info.setPrice(new BigDecimal(100.0));
+						//info.setPrice(new BigDecimal(100.0));
+						info.setPrice(new BigDecimal(subject2min));
 						info.setSubjectid(1);
 						info.setIsrest(1);
 						info.setDate(newnow);
@@ -1771,7 +1779,7 @@ public class CscheduleServlet extends BaseServlet {
 					CaddAddressInfo addressinfo = cuserService.getaddress(CommonUtils.parseInt(addressid, 0));// 检查地址是否被删除
 					CaddAddressInfo defaultaddressinfo = cuserService.getcoachaddress(coachid);
 					// 如果地址不存在，已被删除。那么就取默认地址
-					if (addressinfo.getIsused() == 1) {
+					if (addressinfo==null || addressinfo.getIsused() == 1) {
 						addressid = String.valueOf(defaultaddressinfo.getAddressid());
 					}
 					CuserInfo cuser = cuserService.getCoachByid(CommonUtils.parseInt(coachid, 0));
@@ -2253,7 +2261,7 @@ public class CscheduleServlet extends BaseServlet {
 		Integer hirecarmax = 0;
 		Integer hirecarmin = 50;
 
-		CuserInfo cuser = cuserService.getCoachByIdnum(coachid);
+		CuserInfo cuser = cuserService.getCoachByid(new Integer(coachid).intValue());
 		if (cuser != null) {
 			subject2min = cuser.getSubject2min();
 			subject2max = cuser.getSubject2max();
