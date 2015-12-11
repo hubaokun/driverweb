@@ -359,7 +359,7 @@ public class CuserServlet extends BaseServlet {
 		String loginid = getRequestParamter(request, "loginid");// 电话号码
 		CommonUtils.validateEmpty(loginid);
 		String password = getRequestParamter(request, "password");// 验证码
-		String devicetype = getRequestParamter(request, "devicetype");//设备类型  1 IOS  2 ADNROID
+		String devicetype = getRequestParamter(request, "ostype");//getRequestParamter(request, "devicetype");//设备类型  1 IOS  2 ADNROID
 		String version = getRequestParamter(request, "version");//版本
 		CommonUtils.validateEmpty(password);
 		// 验证验证码的有效性
