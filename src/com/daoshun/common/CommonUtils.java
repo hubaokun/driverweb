@@ -628,7 +628,7 @@ public class CommonUtils {
 		url.append(lat+","+lng);
 		url.append("&output=json&pois=0");
 		String result = HttpRequest.sendGet(url.toString(), null);
-		String cityname="";
+		String cityname="杭州市";//设置默认值为杭州市
         try {  
             JSONObject obj1 = new JSONObject(result);  
             String value = obj1.getString("result"); 
@@ -638,7 +638,8 @@ public class CommonUtils {
             JSONObject obj3 = new JSONObject(value2);
             cityname = obj3.getString("city"); 
         } catch (JSONException e) {  
-            e.printStackTrace();  
+        	System.out.println("****** SBookServiceImpl.getNearByCoach2()  --> CommonUtils.getAddressByLngLat() ***** get JSON from baidu api error null *****lat = "+lat+"***lng = "+lng);
+           // e.printStackTrace();  
         }  
 		return cityname;
 	}
