@@ -224,16 +224,16 @@ public class AdvertisementServlet extends BaseServlet {
 
 		SystemSetInfo resultpojo = advertisementService.getAdvertisementcontent();
 
-		resultMap.put("c_img_ios", resultpojo.getCoach_advertisement_img_ios() + c_image_ios);
-		resultMap.put("c_img_android", resultpojo.getCoach_advertisement_img_android() + c_image_android);
-		resultMap.put("s_img_ios", resultpojo.getStudent_advertisement_img_ios() + s_image_ios);
-		resultMap.put("s_img_android", resultpojo.getStudent_advertisement_img_android() + s_image_android);
-		resultMap.put("c_flag", resultpojo.getCoach_advertisement_flag());
-		resultMap.put("s_flag", resultpojo.getStudent_advertisement_flag());
+		resultMap.put("c_img_ios", resultpojo.getCoach_advertisement_img_ios() + c_image_ios);//IOS教练端弹屏广告的图片地址
+		resultMap.put("c_img_android", resultpojo.getCoach_advertisement_img_android() + c_image_android);//android教练端弹屏广告图片url
+		resultMap.put("s_img_ios", resultpojo.getStudent_advertisement_img_ios() + s_image_ios);//IOS学员端弹屏广告的图片地址
+		resultMap.put("s_img_android", resultpojo.getStudent_advertisement_img_android() + s_image_android);//android学员端弹屏图片url
+		resultMap.put("c_flag", resultpojo.getCoach_advertisement_flag());//IOS&android教练端弹屏广告打开的方式 0=不显示 1=跳转到url，2=跳转到内部action（现只能跳转到分享页面）
+		resultMap.put("s_flag", resultpojo.getStudent_advertisement_flag());//IOS&android学员端弹屏广告打开方式   1=跳转到url，2=跳转到内部action（现只能跳转到人人店）
 		resultMap.put("c_flash_flag", resultpojo.getCoach_advertisement_flag_flash());
 		resultMap.put("s_flash_flag", resultpojo.getStudent_advertisement_flag_flash());
-		resultMap.put("c_url", resultpojo.getCoach_advertisement_url());
-		resultMap.put("s_url", resultpojo.getStudent_advertisement_url());
+		resultMap.put("c_url", resultpojo.getCoach_advertisement_url());//IOS&android教练端弹屏广告点击图片跳转的url；当c_url为recommend时，跳转至推荐页面
+		resultMap.put("s_url", resultpojo.getStudent_advertisement_url()); //IOS&android学员端弹屏图片点击跳转url
 		resultMap.put("c_img_android_flash",
 				resultpojo.getCoach_advertisement_img_flash_android() + c_image_android_flash);
 		resultMap.put("c_img_ios_flash", resultpojo.getCoach_advertisement_img_flash_ios() + c_image_ios_flash);
