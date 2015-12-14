@@ -69,6 +69,7 @@ public class SystemServlet extends BaseServlet {
 				checkconfig(request, resultMap);
 			} 
 			else {
+				System.out.println("***** system servlet **** unused action = "+action);
 				throw new ErrException();
 			}
 
