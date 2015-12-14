@@ -1,12 +1,12 @@
 /* CSS Document */
-/*鈥斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�攖he style for the conmmon鈥斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺�斺��*/
+
 body
 {
 	font-family:"Microsoft YaHei";
 }
 
 /*pop up window*/
-.overlay,.overlay-first,.overlay-restart,.overlay-board,.overlay-abandon
+.overlay,.overlay-first,.overlay-restart,.overlay-board,.overlay-abandon,.overlay-network
 {
 	background-color: #000;
     filter: alpha(opacity=60);
@@ -24,6 +24,7 @@ body
     width: 100%;
     height: auto;
     background: #fff;
+    border-radius: 5px;
     display: none;
     position: fixed;
     z-index: 1000;
@@ -68,7 +69,7 @@ body
 	width: 48%;
     color: rgb(80,203,151);
 }
-.dialog .dialog-bottom .only-certain
+.dialog .dialog-bottom .only-certain,.dialog-another .dialog-bottom .network-certain
 {
 	width:100%;
 	min-height:40px;
@@ -85,6 +86,7 @@ body
     display: none;
     position: fixed;
     z-index: 1000;
+    border-radius: 5px;
 }
 .dialog-another .dialog-top
 {
@@ -147,7 +149,7 @@ body
 .dialog-board .board-content .board-inner
 {
 	height:234px;
-	overflow-y: auto;
+	overflow-y: scroll;
     overflow-x: hidden;
 	margin-top: 20px;
     margin-left: 3%;
