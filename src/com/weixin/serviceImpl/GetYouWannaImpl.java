@@ -453,7 +453,7 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 		    	 else	 
 		    		 sb.append(list.get(i)+"="+map.get(list.get(i))+"&");  
 		     }
-		   String  stringA=sb.toString();
+		   String  stringA=sb.toString();System.out.println("**********weixinpay**stringA********"+stringA);
 		   String  stringSignTemp=stringA+"&key="+CommonUtils.getWXKey();
 		   // MD5加密
 	       MessageDigest md;
@@ -542,7 +542,7 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 
 				
 				 //取得HttpResponse             
-				 HttpResponse httpResponse = httpclient.execute(httpRequest);              
+				 HttpResponse httpResponse = httpclient.execute(httpRequest);      System.out.println("**********weixinpay**httpResponse.getStatusLine().getStatusCode()********"+httpResponse.getStatusLine().getStatusCode());        
 				//HttpStatus.SC_OK表示连接成功              
 				if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK)              
 				{                 
@@ -556,7 +556,7 @@ public class GetYouWannaImpl extends BaseServiceImpl implements IGetYouWanna{
 					 Element root = document.getRootElement();
 					 List<Element> elements=root.elements();
 					 for(Element e:elements)
-					 {
+					 {System.out.println("**********weixinpay**elements******e.getName()**"+e.getName() +"****e.getText()*****"+e.getText());
 	                //    System.out.println(e.getName()+":"+e.getText());
 						if(e.getText().equals("FAIL"))
 							return result;
