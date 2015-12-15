@@ -2461,15 +2461,15 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				// 学员金额的修改
 				SuserInfo student = dataDao.getObjectById(SuserInfo.class, order.getStudentid());
 				if (student != null) {
-					BigDecimal subToStudent = order.getTotal();
-					subToStudent = subToStudent.subtract(new BigDecimal(order.getDelmoney()));
-					student.setFmoney(student.getFmoney().subtract(subToStudent));
+					//BigDecimal subToStudent = order.getTotal();
+					//subToStudent = subToStudent.subtract(new BigDecimal(order.getDelmoney()));
+					student.setFmoney(student.getFmoney().subtract(order.getTotal().subtract(new BigDecimal(order.getDelmoney()))));
 					student.setLearn_time(student.getLearn_time() + order.getTime());
 					dataDao.updateObject(student);
 
 					BalanceStudentInfo balanceStudent = new BalanceStudentInfo();
 					balanceStudent.setAddtime(new Date());
-					balanceStudent.setAmount(subToStudent);
+					balanceStudent.setAmount(order.getTotal().subtract(new BigDecimal(order.getDelmoney())));
 					balanceStudent.setType(3);
 					balanceStudent.setUserid(student.getStudentid());
 					dataDao.addObject(balanceStudent);
