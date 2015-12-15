@@ -1970,7 +1970,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 	 * @return
 	 */
 	public int getCanUseCoinnumForDriveSchool( String coachid) {
-		//added by 张聚弘 20151127，由于目前还没有找到该bug的错误代码并修正，同时目前小巴币的发放都是驾校发放的，先临时性的修改过滤条件，去掉ownertype的过滤，
+		//added by 张聚弘 20151214，由于目前小巴币的发放都是驾校发放的，先临时性的修改过滤条件，去掉ownertype的过滤，
 		//String countinhql2 = "select sum(coinnum) from CoinRecordInfo where (receiverid ="+coachid+" and receivertype="+ UserType.COAH+" and ownertype="+UserType.DRIVESCHOOL+")";
 		String countinhql2 = "select sum(coinnum) from CoinRecordInfo where (receiverid ="+coachid+" and receivertype="+ UserType.COAH+" )";
 		Object in2= dataDao.getFirstObjectViaParam(countinhql2, null);
@@ -1979,7 +1979,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 			return 0;
 		}*/
 		//由于目前小巴币流转记录表中针对paytype=2 学员支付记录中ownertype类型错误的从1 驾校发放标成了2教练发放。
-		//added by 张聚弘  20151127，由于目前还没有找到该bug的错误代码并修正，同时目前小巴币的发放都是驾校发放的，先临时性的修改过滤条件，去掉ownertype的过滤，
+		//added by 张聚弘  20151214，由于目前小巴币的发放都是驾校发放的，先临时性的修改过滤条件，去掉ownertype的过滤，
 		//String countouthql3 = "select sum(coinnum) from CoinRecordInfo where (payerid ="+coachid+" and payertype="+ UserType.COAH+" and ownertype="+UserType.DRIVESCHOOL+")";
 		String countouthql3 = "select sum(coinnum) from CoinRecordInfo where (payerid ="+coachid+" and payertype="+ UserType.COAH+" )";
 		Object out2= dataDao.getFirstObjectViaParam(countouthql3, null);
@@ -2011,16 +2011,18 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 	public HashMap<String, Object> getCoinAffiliation(String coachid){
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		//平台小巴币
-		int numForPlatform=getCanUseCoinnumForPlatform(coachid);
+		//int numForPlatform=getCanUseCoinnumForPlatform(coachid);
+		int numForPlatform=0;//平台小巴币临时处理成显示0   张聚弘 20151214
 		CoinAffiliation cf=new CoinAffiliation(numForPlatform,"",UserType.PLATFORM);
 		List<CoinAffiliation> mList=new ArrayList<CoinAffiliation>();
 		mList.add(cf);
 		//教练
-		int coachCoin=getCanUseCoinnumForCoach(coachid);
+		//int coachCoin=getCanUseCoinnumForCoach(coachid);
+		int coachCoin=0;//教练小巴币临时处理成显示0   张聚弘 20151214
 		CoinAffiliation ca=new CoinAffiliation(coachCoin,"",UserType.COAH);
 		mList.add(ca);
 		//驾校
-		int schoolCoin=getCanUseCoinnumForDriveSchool(coachid);
+		int schoolCoin=getCanUseCoinnumForDriveSchool(coachid);//临时处理成只显示驾校小巴币  张聚弘 20151214
 		CoinAffiliation ca2=new CoinAffiliation(schoolCoin,"",UserType.DRIVESCHOOL);
 		mList.add(ca2);
 		/*String hql="from CoinRecordInfo where receiverid =:receiverid and receivertype=2 and ownertype=:ownertype GROUP BY ownerid";
