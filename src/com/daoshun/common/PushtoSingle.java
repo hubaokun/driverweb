@@ -30,6 +30,7 @@ public class PushtoSingle {
 				// 用户别名推送，cid和用户别名只能2者选其一
 				// String alias = "个";
 				// target.setAlias(alias);
+				System.out.println("****push message Android ClientId= "+cid+"******message= "+jsonMessage);
 				IPushResult ret = push.pushMessageToSingle(message, target);
 				System.out.println(ret.getResponse().toString());
 			} catch (IOException e) {
