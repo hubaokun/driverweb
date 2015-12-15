@@ -143,7 +143,7 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 							}else{
 								System.out.println("小巴币结算：自动结算方法中：学员小巴币解冻时发现数量小于订单额!停止结算");
 								System.out.println("studentid="+student.getStudentid()+",本次结算学员被冻结的小巴币："+student.getFcoinnum().intValue());
-								System.out.println("studentid="+student.getStudentid()+",本次结算订单额："+b1.intValue());
+								System.out.println("studentid="+student.getStudentid()+",本次结算订单额："+b1.intValue()+"orderid = "+order.getOrderid());
 								continue;
 								//return;
 							}
@@ -181,7 +181,7 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 							}else{
 								System.out.println("小巴币+余额混合支付结算小巴币结算部分：自动结算方法中：学员小巴币解冻时发现数量小于订单额!停止结算");
 								System.out.println("studentid="+student.getStudentid()+",本次结算学员被冻结的小巴币："+student.getFcoinnum().intValue());
-								System.out.println("studentid="+student.getStudentid()+",本次结算订单额："+b1.intValue());
+								System.out.println("studentid="+student.getStudentid()+",本次结算订单额："+b1.intValue()+"orderid = "+order.getOrderid());
 								continue;
 								//return;
 							}
