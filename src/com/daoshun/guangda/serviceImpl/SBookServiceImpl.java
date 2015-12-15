@@ -1713,8 +1713,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					result.put("code", -1);
 					return result;
 				}
-//				array.has("delmoney");
-//				array.get("delmoney")
+
 				int delmoney = array.getInt("delmoney");
 				BigDecimal total = new BigDecimal(0);// 订单的总价
 				String longitude = null;
@@ -1898,25 +1897,6 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						order.setLongitude(longitude);
 						order.setDetail(detail);
 
-						// 订单是否可以被取消
-						// if (cancel != -1) {
-						// order.setCancancel(cancel);
-						// } else {
-						// // 首先判断是否是节假日或者是星期天
-						// Calendar calBookDate = Calendar.getInstance();
-						// calBookDate.setTime(startTime);
-						// int dayOfWeek = calBookDate.get(Calendar.DAY_OF_WEEK);
-						// if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) {
-						// order.setCancancel(1);
-						// } else {
-						// String dateCheck = CommonUtils.getTimeFormat(startTime, "yyyy年MM月dd日");
-						// if (holidays.contains(dateCheck)) {
-						// order.setCancancel(1);
-						// } else {
-						// order.setCancancel(0);
-						// }
-						// }
-						// }
 						order.setCancancel(1);// 目前所有订单不可以取消
 
 						order.setPrice_out1(new BigDecimal(0d));
@@ -2442,12 +2422,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				String detail = null;
 				// 判断时间是否还可以预订
 				// 首先查询当天的全天休息情况
-//				List<CscheduleInfo> scheduleinfoList = (List<CscheduleInfo>) dataDao.getObjectsViaParam(hql1, params1, CommonUtils.parseInt(coachid, 0), date1, "0");
-//				int state = 0;
-//				if (scheduleinfoList != null && scheduleinfoList.size() > 0) {
-//					state = scheduleinfoList.get(0).getState();
-//					cancel = scheduleinfoList.get(0).getCancelstate();
-//				}
+
 				// 如果使用了小巴券,但是又没有传delmoney的话,订单预订失败
 				if(String.valueOf(PayType.COUPON).equals(paytype)){
 					if (!CommonUtils.isEmptyString(recordid) && delmoney == 0 && recordid.length()>2 ) {//
@@ -2461,16 +2436,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						canOrder = false;
 					}
 				}
-//				if (state == 0) {// 当天休息的情况
-//					for (int j = 0; j < times.length(); j++) {
-//						if (failtimes.length() == 0) {
-//							failtimes = date1 + times.get(j).toString() + "点";
-//						} else {
-//							failtimes += "," + date1 + times.get(j).toString() + "点";
-//						}
-//					}
-//					canOrder = false;
-//				} else {
+
 					// 查看时间是否被预订或者是休息的
 					int coursetype=0;
 					int isfreecourse=0;
@@ -2540,68 +2506,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 								coursetype=scheduleinfoList2.get(0).getSubjectid();
 								isfreecourse=scheduleinfoList2.get(0).getIsfreecourse();
 							}
-//							else {
-//								// 获取教练是否有默认设置
-//								int isrest = getDefaultRest(coachid, hour);
-//								if (isrest == -1) {// 默认没有设置
-//									if (CommonUtils.parseInt(hour, 0) == 5 || CommonUtils.parseInt(hour, 0) == 6 || CommonUtils.parseInt(hour, 0) == 12 || CommonUtils.parseInt(hour, 0) == 18) {
-//										if (failtimes.length() == 0) {// 休息
-//											failtimes = date1 + hour + "点";
-//										} else {
-//											failtimes += "," + date1 + hour + "点";
-//										}
-//										canOrder = false;
-//										result.put("message", "教练没有默认设置");
-//										result.put("code", 12);
-//										return result;
-//									} else {
-//										// 采用默认的价格设置
-//										BigDecimal price = getDefaultPrice(coachid, hour);
-//										if (price != null) {
-//											total = total.add(price);
-//										} else {
-//											total = total.add(new BigDecimal(defaultPrice));
-//										}
-//
-//										if (CommonUtils.isEmptyString(latitude) || CommonUtils.isEmptyString(longitude) || CommonUtils.isEmptyString(detail)) {
-//											List<CaddAddressInfo> address = (List<CaddAddressInfo>) dataDao.getObjectsViaParam(hql3, params3, CommonUtils.parseInt(coachid, 0));
-//											if (address != null && address.size() > 0) {
-//												latitude = address.get(0).getLatitude();
-//												longitude = address.get(0).getLongitude();
-//												detail = address.get(0).getDetail();
-//											}
-//										}
-//									}
-//								} else if (isrest == 1) {
-//									if (failtimes.length() == 0) {// 休息
-//										failtimes = date1 + hour + "点";
-//									} else {
-//										failtimes += "," + date1 + hour + "点";
-//									}
-//									canOrder = false;
-//									result.put("message", failtimes+"是休息，请刷新后再试!");
-//									result.put("code", 13);
-//									return result;
-//								} else {
-//									// 采用默认的价格设置
-//									BigDecimal price = getDefaultPrice(coachid, hour);
-//									if (price != null) {
-//										total = total.add(price);
-//									} else {
-//										total = total.add(new BigDecimal(defaultPrice));
-//									}
-//
-//									if (CommonUtils.isEmptyString(latitude) || CommonUtils.isEmptyString(longitude) || CommonUtils.isEmptyString(detail)) {
-//										List<CaddAddressInfo> address = (List<CaddAddressInfo>) dataDao.getObjectsViaParam(hql3, params3, CommonUtils.parseInt(coachid, 0));
-//										if (address != null && address.size() > 0) {
-//											latitude = address.get(0).getLatitude();
-//											longitude = address.get(0).getLongitude();
-//											detail = address.get(0).getDetail();
-//										}
-//									}
-//								}
-//
-//							}
+
 						}
 					}
 
@@ -2662,24 +2567,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						order.setDetail(detail);
 
 						// 订单是否可以被取消
-						// if (cancel != -1) {
-						// order.setCancancel(cancel);
-						// } else {
-						// // 首先判断是否是节假日或者是星期天
-						// Calendar calBookDate = Calendar.getInstance();
-						// calBookDate.setTime(startTime);
-						// int dayOfWeek = calBookDate.get(Calendar.DAY_OF_WEEK);
-						// if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) {
-						// order.setCancancel(1);
-						// } else {
-						// String dateCheck = CommonUtils.getTimeFormat(startTime, "yyyy年MM月dd日");
-						// if (holidays.contains(dateCheck)) {
-						// order.setCancancel(1);
-						// } else {
-						// order.setCancancel(0);
-						// }
-						// }
-						// }
+
 						order.setCancancel(1);// 目前所有订单不可以取消
 
 						order.setPrice_out1(new BigDecimal(0d));
@@ -2758,15 +2646,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						orderList.add(orderModel);
 					} else {
 						hasError = true;
-					}
-				//}
-				//判断订单总价格，如果没有在50到500价格之间，返回预订失败
-				/*if(total.doubleValue()>500 ||total.doubleValue()<50){
-					result.put("code", 26);
-					result.put("message", "订单额非法");
-					return result;
-				}*/
-					
+					}					
 			}
 			
 			if (!hasError) {
@@ -2777,7 +2657,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						//混合支付时：
 						int mixCoin=0;//混合支付时小巴币个数
 						int mixMoney=0;//混合支付时余额
-						dataDao.addObject(orderList.get(m).mOrderInfo);
+						
 						// 查看订单的提醒设置
 						if (orderNotiList != null && orderNotiList.size() > 0) {
 							for (OrderNotiSetInfo setInfo1 : orderNotiList) {
@@ -2831,10 +2711,6 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 											record.setUsetime(new Date());//使用时间
 											record.setOrderid(orderList.get(m).mOrderInfo.getOrderid());//订单号
 											dataDao.updateObject(record);
-											if (record.getCoupontype() == 1) {// 时间
-											} else {// 钱
-												// 只需要修改为已经使用,
-											}
 										}
 									}
 								}
@@ -2883,35 +2759,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 									result.put("message", "小巴币余额不足!");
 									return result;
 								}
-								//教练小巴币数量增加
-								//int coachid=orderList.get(m).mOrderInfo.getCoachid();
-								if(cuser!=null){
-									//cuser.setCoinnum(cuser.getCoinnum()+total.intValue());
-									//并且冻结教练订单总额的小巴币，直到双方互评后取消冻结，已防止在为评价前教练提现
-									//cuser.setFcoinnum(cuser.getFcoinnum()+total.intValue());
-									//dataDao.updateObject(cuser);
-									//System.out.println("教练获取小巴币成功"+total.intValue());
-								}else{
-									//System.out.println("教练获取小巴币失败"+total.intValue());
-								}
-								//suserService.addCoinForSettlement(order, cuser, student,1);
-								//向小巴币记录表中插入数据 已修改，移动到结算方法中
-								/////////////////////////////////////////////
-								/* CoinRecordInfo coinRecordInfo = new CoinRecordInfo ();
-							        coinRecordInfo.setReceiverid(cuser.getCoachid());
-							        coinRecordInfo.setReceivertype(UserType.COAH);
-							        coinRecordInfo.setReceivername(cuser.getRealname());
-							        coinRecordInfo.setOwnerid(cuser.getCoachid());
-							        coinRecordInfo.setPayerid(student.getStudentid());
-							        coinRecordInfo.setPayertype(UserType.STUDENT);
-							        coinRecordInfo.setPayername(student.getRealname());
-							        coinRecordInfo.setType(CoinType.STUDENT_PAY);//学员支付
-							        coinRecordInfo.setOwnertype(2);
-							        coinRecordInfo.setCoinnum(total.intValue());
-							        coinRecordInfo.setAddtime(new Date());
-							        coinRecordInfo.setOrderid(orderList.get(m).mOrderInfo.getOrderid());//设置小巴币所属的订单的ID
-							        dataDao.addObject(coinRecordInfo);*/
-								///////////////////////////////////////////
+
 							}else if(PayType.COIN_MONEY==orderList.get(m).mOrderInfo.getPaytype()){
 								//小巴币和余额混合支付
 								//#############先处理小巴币 开始###########################  
@@ -2959,6 +2807,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 								//#############余额支付结束############################
 							}
 							dataDao.updateObject(student);
+							dataDao.addObject(orderList.get(m).mOrderInfo);//更改完学员的冻结金额等以后再生成订单  moved by 张聚弘 20151215 
+							//TODO: 后继需要重构代码并使用事物进行rollback处理
 						}
 					}
 				
