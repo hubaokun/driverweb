@@ -597,7 +597,7 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 		StringBuffer cuserhql = new StringBuffer();
 		List<OrderInfo> orderlist = new ArrayList<OrderInfo>();
 		cuserhql.append("from OrderInfo a where a.studentid =:studentid and a.coachstate=5 or (select count(*) from ComplaintInfo c where c.order_id"
-				+ " = a.orderid and c.type = 1 and c.state = 0) > 0 "
+				+ " = a.orderid and c.type = 1 and c.state = 0 and c.from_user=:studentid ) > 0 "
 				+ "  order by a.start_time desc");
 		String[] params = { "studentid" };
 		//System.out.println(cuserhql.toString());
