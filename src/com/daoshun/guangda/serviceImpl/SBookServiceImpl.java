@@ -749,7 +749,6 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				hqlCoach.append(" and cityid = " + cityid);
 			}else{
 				//如果没有传cityid时，根据经纬度查询cityid
-				System.out.println("****** SBookServiceImpl.getNearByCoach2()   ***** set to CommonUtils.getAddressByLngLat *****latitude = "+latitude+"***longitude = "+longitude);
 				cityname=CommonUtils.getAddressByLngLat(longitude, latitude);
 				cityname=cityname.replaceAll("市", "");
 				String findCityIdHql="from CityInfo where city like '%"+cityname+"%'";
