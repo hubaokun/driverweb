@@ -77,7 +77,7 @@ $(document).ready(function ()
 	else if (simulatetype == 2)
 	{
 		duration = 30;
-		obj_standard.html("").html("100题，30分钟");
+		obj_standard.html("").html("50题，30分钟");
 		obj_name.html("").html("科目四理论考试");
 	}
 	else

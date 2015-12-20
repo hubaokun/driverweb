@@ -231,19 +231,16 @@ function showchooseresult(obj,myanswer,flag)
 	var question = new Array();
 	
 	if (trueanswer == myanswer)
-	{
-		if (type == 1)
+	{		
+		switch (type)
 		{
-			scores  = scores + 1;
-		}
-		else if (type == 2)
-		{
-			scores = scores + 2
-		}
-		else
-		{
-			alert ("数据出错了！");
-		}
+			case "1":scores  = scores + 1;
+				break;
+			case "2":scores  = scores + 2;
+				break;
+			default:console.log ("该题不是属于模拟题");
+				break;
+		} 
 	}
 	
 	question[0] = questioncute;

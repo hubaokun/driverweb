@@ -126,6 +126,7 @@ window.addEventListener('load', function() {
 var type = "";              //传递过来的题目类型
 var _data;      		    //记录请全部要道题的全部信息
 var ifAnalog = false;       //用于标识是否是模拟考试
+var scores = 0;             //这个scores不做任何用处
 
 type = getquerystring("passingtype");
 totalrecord = sumquestions(type);
