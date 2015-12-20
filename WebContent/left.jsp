@@ -53,7 +53,7 @@ function goaction(actionUrl,index,j){
 					%>
 					<div id="change_<%=j%><%=i%>" class="left_list_mask_detail"
 						onclick="goaction('<%=subItems.get(j).getAction()%>','<%=i%>','<%=j%>');">
-						<div class="left_list_detail">
+						<div class="left_list_detail"><img src="imgs/item.png" width="20px" height="20px" margin-top="25px" alt=".">
 							<%=subItems.get(j).getName()%>
 						</div>
 					</div>
