@@ -33,9 +33,6 @@ function goaction(actionUrl,index,j){
 	<jsp:include page="top.jsp" />
 	<div id="nav" style="left: 0px;">
 		<div id="nav_left">
-
-
-
 			<s:if test="#session.usertype==0">
 				<%
 					List<MenuItem> menuItems = instance.getMenuItems();
@@ -63,7 +60,7 @@ function goaction(actionUrl,index,j){
 				</div>
 
 				<%
-					}
+				}
 				%>
 			</s:if>
 			<s:elseif test="#session.usertype==2">
