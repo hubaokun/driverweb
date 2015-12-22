@@ -140,6 +140,30 @@ public class SuserServlet extends BaseServlet {
 			}else if ("COINEXCEPTION".equals(action)) {
 				// 学员小巴币异常查询
 				getCoinAffiliationException(request, resultMap);
+			}else if ("TESTSTUDENTMONEY".equals(action)) {
+				// 学员余额查询测试
+				testStudentMoney(request, resultMap);
+			}else if ("FINDSTUDENTMONEYEX".equals(action)) {
+				//查询学员余额异常
+				testfindStudentMoneyEx(request, resultMap);
+			}else if ("TESTCOACHMONEY".equals(action)) {
+				//教练余额查询测试
+				testCoachMoney(request, resultMap);
+			}else if ("TESTCOACHMONEYEX".equals(action)) {
+				//教练余额异常查询
+				testfindCoachMoneyEx(request, resultMap);
+			}else if ("TESTSTUDENTCOIN".equals(action)) {
+				// 学员小巴币查询测试
+				testStudentCoin(request, resultMap);
+			}else if ("TESTCOACHCOIN".equals(action)) {
+				//教练小巴币查询测试
+				testCoachCoin(request, resultMap);
+			}else if ("TESTCOACHCOINEX".equals(action)) {
+				//教练小巴币异常查询
+				testfindCoachCoinEx(request, resultMap);
+			}else if ("FINDSTUDENTCOINEX".equals(action)) {
+				//查询学员小巴币异常
+				testfindStudentCoinEx(request, resultMap);
 			}
 			else {
 				throw new ErrException();
@@ -1132,8 +1156,52 @@ public class SuserServlet extends BaseServlet {
 		public void setSubjectname(String subjectname) {
 			this.subjectname = subjectname;
 		}
-		
-		
-		
 	}
+	
+	public void testStudentMoney(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String studentid = getRequestParamter(request, "studentid");//教练ID
+		CommonUtils.validateEmptytoMsg(studentid, "studentid为空");
+		int n[]=suserService.getStudentMoney(CommonUtils.parseInt(studentid, 0));
+		System.out.println(n);
+		resultMap.put("re",n);
+	}
+	public void testCoachMoney(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String coachid = getRequestParamter(request, "coachid");//教练ID
+		CommonUtils.validateEmptytoMsg(coachid, "coachid为空");
+		int n[]=suserService.getCoachMoney(CommonUtils.parseInt(coachid, 0));
+		System.out.println(n);
+		resultMap.put("re",n);
+	}
+	public void testfindStudentMoneyEx(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		List list=suserService.findStudentMoneyException();
+		resultMap.put("list",list);
+	}
+	public void testfindCoachMoneyEx(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		List list=suserService.findCoachMoneyException();
+		resultMap.put("list",list);
+	}
+	public void testStudentCoin(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String studentid = getRequestParamter(request, "studentid");//教练ID
+		CommonUtils.validateEmptytoMsg(studentid, "studentid为空");
+		int n[]=suserService.getStudentCoin(CommonUtils.parseInt(studentid, 0));
+		System.out.println(n);
+		resultMap.put("re",n);
+	}
+	
+	public void testCoachCoin(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String coachid = getRequestParamter(request, "coachid");//教练ID
+		CommonUtils.validateEmptytoMsg(coachid, "coachid为空");
+		int n=suserService.getCoachCoin(CommonUtils.parseInt(coachid, 0));
+		System.out.println(n);
+		resultMap.put("re",n);
+	}
+	public void testfindCoachCoinEx(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		List list=suserService.findCoachCoinException();
+		resultMap.put("list",list);
+	}
+	public void testfindStudentCoinEx(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		List list=suserService.findStudentCoinException();
+		resultMap.put("list",list);
+	}
+	
 }

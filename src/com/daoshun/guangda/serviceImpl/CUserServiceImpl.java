@@ -696,9 +696,12 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
             
             CuserInfo coach = dataDao.getObjectById(CuserInfo.class, capplyCash.getCoachid());
             if (coach != null) {
-                coach.setFmoney(coach.getFmoney().subtract(capplyCash.getAmount()));
                 //增加教练可提现余额
-                coach.setMoney(coach.getMoney().add(capplyCash.getAmount()));
+                int cmoney[]=suserService.getCoachMoney(coach.getCoachid());
+    			BigDecimal cuserOrderMoney=new BigDecimal(cmoney[0]);//教练余额
+    			BigDecimal cuserOrderFMoney=new BigDecimal(cmoney[1]);//教练冻结金额
+    			coach.setFmoney(cuserOrderFMoney.subtract(capplyCash.getAmount()));
+                coach.setMoney(cuserOrderMoney.add(capplyCash.getAmount()));
                 dataDao.updateObject(coach);
             }
             
@@ -743,7 +746,9 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
             
             CuserInfo coach = dataDao.getObjectById(CuserInfo.class, capplyCash.getCoachid());
             if (coach != null) {
-                coach.setFmoney(coach.getFmoney().subtract(capplyCash.getAmount()));
+            	int cmoney[]=suserService.getCoachMoney(coach.getCoachid());
+            	BigDecimal cuserOrderFMoney=new BigDecimal(cmoney[1]);
+                coach.setFmoney(cuserOrderFMoney.subtract(capplyCash.getAmount()));
                 dataDao.updateObject(coach);
             }
             /*
@@ -811,7 +816,9 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
             capplyCash.setUpdatetime(todate);
             CuserInfo coach = dataDao.getObjectById(CuserInfo.class, capplyCash.getCoachid());
 	          if (coach != null) {
-	              coach.setFmoney(coach.getFmoney().subtract(capplyCash.getAmount()));
+	        	  int cmoney[]=suserService.getCoachMoney(coach.getCoachid());
+	    		  BigDecimal cuserOrderFMoney=new BigDecimal(cmoney[1]);//教练冻结金额
+	              coach.setFmoney(cuserOrderFMoney.subtract(capplyCash.getAmount()));
 	              dataDao.updateObject(coach);
 	          }
             dataDao.updateObject(capplyCash); 
@@ -1419,7 +1426,9 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
             if (type == 1) {
                 CuserInfo user = dataDao.getObjectById(CuserInfo.class, info.getUserid());
                 if (user != null) {
-                    user.setMoney(user.getMoney().add(info.getAmount()));
+                	int cmoney[]=suserService.getCoachMoney(user.getCoachid());
+            		BigDecimal cuserOrderMoney=new BigDecimal(cmoney[0]);
+                    user.setMoney(cuserOrderMoney.add(info.getAmount()));
                     dataDao.updateObject(user);
                     // 插入充值记录
                     BalanceCoachInfo balance = new BalanceCoachInfo();
@@ -1435,7 +1444,9 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
             else if (type == 2) {
                 SuserInfo user = dataDao.getObjectById(SuserInfo.class, info.getUserid());
                 if (user != null) {
-                    user.setMoney(user.getMoney().add(info.getAmount()));
+                	int cmoney[]=suserService.getStudentMoney(user.getStudentid());
+                	BigDecimal suserOrderMoney=new BigDecimal(cmoney[0]);
+                    user.setMoney(suserOrderMoney.add(info.getAmount()));
                     dataDao.updateObject(user);
                     // 插入充值记录
                     BalanceStudentInfo balance = new BalanceStudentInfo();
@@ -2103,7 +2114,9 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
             if (type == 1) {
                 CuserInfo user = dataDao.getObjectById(CuserInfo.class, info.getUserid());
                 if (user != null) {
-                    user.setMoney(user.getMoney().add(info.getAmount()));
+                	int cmoney[]=suserService.getCoachMoney(user.getCoachid());
+            		BigDecimal cuserOrderMoney=new BigDecimal(cmoney[0]);
+                    user.setMoney(cuserOrderMoney.add(info.getAmount()));
                     dataDao.updateObject(user);
                     // 插入充值记录
                     BalanceCoachInfo balance = new BalanceCoachInfo();
@@ -2119,7 +2132,9 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
             else if (type == 2) {
                 SuserInfo user = dataDao.getObjectById(SuserInfo.class, info.getUserid());
                 if (user != null) {
-                    user.setMoney(user.getMoney().add(info.getAmount()));
+                	int cmoney[]=suserService.getStudentMoney(user.getStudentid());
+                	BigDecimal suserOrderMoney=new BigDecimal(cmoney[0]);
+                    user.setMoney(suserOrderMoney.add(info.getAmount()));
                     dataDao.updateObject(user);
                     // 插入充值记录
                     BalanceStudentInfo balance = new BalanceStudentInfo();

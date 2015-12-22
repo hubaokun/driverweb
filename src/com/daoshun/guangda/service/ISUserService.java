@@ -345,4 +345,13 @@ public interface ISUserService {
     public boolean getFreecoursestate(int studentid);
     public int getCoinnumForDriveSchool( String studentid,String coachid);
     public void getFrozenCoinAffiliationException();
+    public int getCoachCoin(int coachid);
+	public int[] getCoachMoney(int coachid);
+	public int[] getStudentMoney(int studentid);
+	public int[] getStudentCoin(int studentid);
+	public List findStudentMoneyException();
+	public List findCoachMoneyException();
+	public List findCoachCoinException();
+	public List findStudentCoinException();
+
 }

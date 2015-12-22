@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.apache.poi.util.SystemOutLogger;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -27,6 +29,7 @@ import com.daoshun.guangda.pojo.RecommendInfo;
 import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.pojo.SystemSetInfo;
 import com.daoshun.guangda.service.IRecommendService;
+import com.daoshun.guangda.service.ISUserService;
 /**
  * 
  * @author wjr  推荐分享服务实现类
@@ -35,7 +38,8 @@ import com.daoshun.guangda.service.IRecommendService;
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendService {
 	private SessionFactory sessionFactory;
-
+	@Resource
+	private ISUserService suserService;
 	@Override
 	//获取教练推荐人员列表
 	public QueryResult<RecommendInfo> getRecommendList(String coachid,int page,int type) {
@@ -353,7 +357,9 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 		int result=1;
 		if(tempCuserInfo!=null && tempRecommendInfo!=null)
 	    {    	
-		    BigDecimal Balance=tempCuserInfo.getMoney();
+			int cmoney[]=suserService.getCoachMoney(tempCuserInfo.getCoachid());
+			BigDecimal cuserOrderMoney=new BigDecimal(cmoney[0]);
+			BigDecimal Balance=cuserOrderMoney;
 		    BigDecimal Balanceplus=new BigDecimal(0);
 		    BalanceCoachInfo tempBalanceCoachInfo=new BalanceCoachInfo();
 			if(type==0)

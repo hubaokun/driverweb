@@ -1318,8 +1318,11 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 					}
 					else
 					{
-						student.setMoney(student.getMoney().add(order.getTotal()));
-						student.setFmoney(student.getFmoney().subtract(order.getTotal()));
+						int cmoney[]=suserService.getStudentMoney(student.getStudentid());
+						BigDecimal suserOrderMoney=new BigDecimal(cmoney[0]);
+						BigDecimal suserOrderFMoney=new BigDecimal(cmoney[1]);
+						student.setMoney(suserOrderMoney.add(order.getTotal()));
+						student.setFmoney(suserOrderFMoney.subtract(order.getTotal()));
 						dataDao.updateObject(student);
 					}
 				}
@@ -1477,6 +1480,15 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 			result = 60;
 		}
 		if (order != null) {
+			//学员订单余额
+			int cmoney[]=suserService.getStudentMoney(student.getStudentid());
+			BigDecimal suserOrderMoney=new BigDecimal(cmoney[0]);
+			BigDecimal suserOrderFMoney=new BigDecimal(cmoney[1]);
+			//学员订单小巴币
+			int scoinnums[]=suserService.getStudentCoin(student.getStudentid());
+			BigDecimal scoinnum = new BigDecimal(scoinnums[0]);
+			BigDecimal sfcoinnum = new BigDecimal(scoinnums[1]);
+			
 			//if (order.getStart_time().after(c.getTime())) {
 			cuser=dataDao.getObjectById(CuserInfo.class, order.getCoachid());
 			Calendar c1=Calendar.getInstance();
@@ -1484,8 +1496,9 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			cscheduleService.setCscheduleByday(String.valueOf(order.getCoachid()), sdf.format(c1.getTime()),String.valueOf(c1.get(Calendar.HOUR_OF_DAY)),0);
 			if(order.getPaytype()==PayType.MONEY){
-				student.setFmoney(student.getFmoney().subtract(order.getTotal()));
-				student.setMoney(student.getMoney().add(order.getTotal()));
+				
+				student.setFmoney(suserOrderFMoney.subtract(order.getTotal()));
+				student.setMoney(suserOrderMoney.add(order.getTotal()));
 			}else if(order.getPaytype()==PayType.COUPON){
 				String coupongetrecordids=order.getCouponrecordid();
 				if(coupongetrecordids.lastIndexOf(',')== coupongetrecordids.length()-1)
@@ -1498,29 +1511,27 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 			}else if(order.getPaytype()==PayType.COIN){
 				//教练同意时，取消冻结金额。如果冻结金额小于订单额，直接相减后，冻结金额会出现负数，所以判断
 				if(student.getFcoinnum().intValue()>=order.getTotal().intValue()){
-					student.setFcoinnum(student.getFcoinnum().subtract(order.getTotal()));
+					student.setFcoinnum(sfcoinnum.subtract(order.getTotal()));
 				}else{
 					System.out.println("cancelOrderByCoach方法中：小巴币解冻时发现数量小于订单额!停止解冻");
 					return -1;
 				}
-				
-				student.setCoinnum(student.getCoinnum()+order.getTotal().intValue());
+				student.setCoinnum(scoinnum.intValue()+order.getTotal().intValue());
 			}else if(order.getPaytype()==PayType.COIN_MONEY){
 				//***********小巴币的处理*************
 				//教练同意时，取消冻结金额。如果冻结金额小于订单额，直接相减后，冻结金额会出现负数，所以判断
 				if(student.getFcoinnum().intValue()>=order.getMixCoin()){
-					student.setFcoinnum(student.getFcoinnum().subtract(new BigDecimal(order.getMixCoin())));
+					student.setFcoinnum(sfcoinnum.subtract(new BigDecimal(order.getMixCoin())));
 				}else{
 					System.out.println("cancelOrderByCoach方法中：小巴币解冻时发现数量小于订单额!停止解冻");
 					return -1;
 				}
-				student.setCoinnum(student.getCoinnum()+order.getMixCoin());
+				student.setCoinnum(scoinnum.intValue()+order.getMixCoin());
 				order.setMixCoin(0);
 				//***********余额的处理***************
-				student.setFmoney(student.getFmoney().subtract(new BigDecimal(order.getMixMoney())));
-				student.setMoney(student.getMoney().add(new BigDecimal(order.getMixMoney())));
+				student.setFmoney(suserOrderMoney.subtract(new BigDecimal(order.getMixMoney())));
+				student.setMoney(suserOrderFMoney.add(new BigDecimal(order.getMixMoney())));
 				order.setMixMoney(0);
-				
 			}
 			
 				
@@ -2391,7 +2402,8 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 		List<ComplaintInfo> complaintlist = (List<ComplaintInfo>) dataDao.getObjectsViaParam(cuserhql.toString(), params, orderid);
 		return complaintlist;
 	}
-
+	
+	@Deprecated
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override
 	public void SettlementOrder(int orderid) {

@@ -576,9 +576,14 @@ public class CmyServlet extends BaseServlet {
 			resultMap.put("code", 3);
 			resultMap.put("message", "您的余额不足");
 		} else {
+			
+			//从订单表查询教练的余额
+			int cmoney[]=suserService.getCoachMoney(cuser.getCoachid());
+			BigDecimal cuserOrderMoney=new BigDecimal(cmoney[0]);
+			BigDecimal cuserOrderFMoney=new BigDecimal(cmoney[1]);
 			// 更改教练信息 并且生成提现信息
-			cuser.setFmoney(cuser.getFmoney().add(new BigDecimal(CommonUtils.parseFloat(count, 0))));
-			cuser.setMoney(cuser.getMoney().subtract(new BigDecimal(CommonUtils.parseFloat(count, 0))));
+			cuser.setFmoney(cuserOrderFMoney.add(new BigDecimal(CommonUtils.parseFloat(count, 0))));
+			cuser.setMoney(cuserOrderMoney.subtract(new BigDecimal(CommonUtils.parseFloat(count, 0))));
 			cuserService.updateCuser(cuser);
 			CApplyCashInfo applycash = new CApplyCashInfo();
 			applycash.setCoachid(CommonUtils.parseInt(coachid, 0));
@@ -885,11 +890,9 @@ public class CmyServlet extends BaseServlet {
 		String type = getRequestParamter(request, "type");// 类型 1教练 2学员
 		String aliaccount = getRequestParamter(request, "aliaccount");// 支付宝账户
 		String cashtype = getRequestParamter(request, "cashtype");// 提现类型
-
 		CommonUtils.validateEmpty(userid);
 		CommonUtils.validateEmpty(type);
 		CommonUtils.validateEmpty(aliaccount);
-
 		resultMap.putAll(cmyService.updateAliAccount(userid, type, aliaccount, cashtype));
 	}
 
