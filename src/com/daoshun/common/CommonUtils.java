@@ -636,7 +636,7 @@ public class CommonUtils {
             String value2 = obj2.getString("addressComponent"); 
             
             JSONObject obj3 = new JSONObject(value2);
-            cityname = obj3.getString("city"); 
+            cityname = obj3.getString("city"); System.out.println("****** SBookServiceImpl.getNearByCoach2()  --> CommonUtils.getAddressByLngLat() ***** get JSON from baidu api city = "+cityname+" ***** lat = "+lat+"*** lng = "+lng);
         } catch (JSONException e) {  
         	System.out.println("****** SBookServiceImpl.getNearByCoach2()  --> CommonUtils.getAddressByLngLat() ***** get JSON from baidu api error null *****lat = "+lat+"***lng = "+lng);
            // e.printStackTrace();  

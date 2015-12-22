@@ -694,7 +694,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			String condition8, String condition9, String condition10, String condition11,String studentid,String driverschoolid,String fixedposition) {
 		List<AppCuserInfo> coachlist = new ArrayList<AppCuserInfo>();
 		// 取得中心点经纬度
-		String[] centers = pointcenter.split(",");System.out.println("****** SBookServiceImpl.getNearByCoach2()   ***** get param from request ***** centers = "+centers);
+		String[] centers = pointcenter.split(",");
 		String longitude =centers[0].trim();
 		String latitude = centers[1].trim();
 		//120.048943   30.329578
@@ -749,7 +749,6 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				hqlCoach.append(" and cityid = " + cityid);
 			}else{
 				//如果没有传cityid时，根据经纬度查询cityid
-				System.out.println("****** SBookServiceImpl.getNearByCoach2()   ***** set to CommonUtils.getAddressByLngLat *****latitude = "+latitude+"***longitude = "+longitude);
 				cityname=CommonUtils.getAddressByLngLat(longitude, latitude);
 				cityname=cityname.replaceAll("市", "");
 				String findCityIdHql="from CityInfo where city like '%"+cityname+"%'";
@@ -878,7 +877,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 									user.setCityid(city.getCityid()+"");
 									user.setCity(city.getCity());
 									user.setProvinceid(city.getProvinceid()+"");
-									dataDao.updateBySql("update t_user_student set provinceid = '"+city.getProvinceid()+"' ,cityid = '"+city.getCityid()+"' ,city = '"+city.getCity()+"' ");
+									dataDao.updateBySql("update t_user_student set provinceid = '"+city.getProvinceid()+"' ,cityid = '"+city.getCityid()+"' ,city = '"+city.getCity()+"' where studentid = "+user.getStudentid());
 								}
 							}
 						}

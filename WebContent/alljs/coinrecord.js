@@ -370,7 +370,9 @@ function selectall() {
 
 
 function grantCoinRecord(){
-	var ownertype = $("#ownertype").val();
+    $("#grantCoinRecordButton").attr("disabled",true);
+    $("#grantCoinRecordButton").css("background-color", "#d6d6d6");//改变背景色
+    var ownertype = $("#ownertype").val();
     if(ownertype=="-1"){
     	alert("请选择发放类型");
     	return false;
@@ -396,14 +398,21 @@ function grantCoinRecord(){
             var obj = eval("("+msg+")");
             var code = obj.code;
             if(code==1)
+            {
                 alert("添加成功!");
+                $("#grantCoinRecordButton").css("background-color", "#4cc2ff");//改变背景色
+            }
             else
+            {
                 alert("添加失败!");
+                $("#grantCoinRecordButton").css("background-color", "#4cc2ff");//改变背景色
+            }
             $("#receivername").val('');
         },
         error:function(msg)
         {
             alert("添加失败,请重试!");
+            $("#grantCoinRecordButton").css("background-color", "#4cc2ff");//改变背景色
         }
     });
     //}

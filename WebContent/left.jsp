@@ -33,9 +33,6 @@ function goaction(actionUrl,index,j){
 	<jsp:include page="top.jsp" />
 	<div id="nav" style="left: 0px;">
 		<div id="nav_left">
-
-
-
 			<s:if test="#session.usertype==0">
 				<%
 					List<MenuItem> menuItems = instance.getMenuItems();
@@ -53,7 +50,7 @@ function goaction(actionUrl,index,j){
 					%>
 					<div id="change_<%=j%><%=i%>" class="left_list_mask_detail"
 						onclick="goaction('<%=subItems.get(j).getAction()%>','<%=i%>','<%=j%>');">
-						<div class="left_list_detail">
+						<div class="left_list_detail"><img src="imgs/item.png" width="20px" height="20px" margin-top="25px" alt=".">
 							<%=subItems.get(j).getName()%>
 						</div>
 					</div>
@@ -63,7 +60,7 @@ function goaction(actionUrl,index,j){
 				</div>
 
 				<%
-					}
+				}
 				%>
 			</s:if>
 			<s:elseif test="#session.usertype==2">
