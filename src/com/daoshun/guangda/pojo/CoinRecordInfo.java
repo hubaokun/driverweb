@@ -48,7 +48,7 @@ public class CoinRecordInfo implements Serializable {
 	private Integer coinnum;
 
 	// 支付类型,由2位数构成，便于将来状态扩展；10~19:驾校或教练发给学员；20~29学员订单支付;30~39教练兑换；40~49退款
-	//type  1 发放给学员    2 学员支付    3 退款    4 教练兑换	
+	//type  1 发放给学员    2 学员支付    3 回收小巴币    4 教练兑换	
 	@Column(name = "type", length = 2,  nullable = false, columnDefinition = "TINYINT default 0" )
 	private int type;
 

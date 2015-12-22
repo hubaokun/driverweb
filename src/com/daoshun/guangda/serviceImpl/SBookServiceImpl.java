@@ -2045,10 +2045,12 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					// 修改用户的余额，如果是paytype是1 余额  2 小巴卷 3 小巴币  如果1 ，2 
 
 					if (student != null) {
-						
+						int cmoney[]=suserService.getStudentMoney(student.getStudentid());
+						BigDecimal suserOrderMoney=new BigDecimal(cmoney[0]);
+						BigDecimal suserOrderFMoney=new BigDecimal(cmoney[1]);
 						//  判断 1 或者 3  1 扣余额  2 扣小巴币
-						student.setFmoney(student.getFmoney().add(total));
-						student.setMoney(student.getMoney().subtract(total));
+						student.setFmoney(suserOrderFMoney.add(total));
+						student.setMoney(suserOrderMoney.subtract(total));
 						//如果是小巴币，直接扣除  ，如果是余额，
 						if (student.getMoney().doubleValue() < 0 || student.getFmoney().doubleValue() < 0) {
 							result.put("failtimes", failtimes);
@@ -2721,7 +2723,9 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						// 修改用户的余额，如果是paytype是1 余额  2 小巴卷 3 小巴币   
 
 						if (student != null) {
-							
+							int cmoney[]=suserService.getStudentMoney(student.getStudentid());
+							BigDecimal suserOrderMoney=new BigDecimal(cmoney[0]);
+							BigDecimal suserOrderFMoney=new BigDecimal(cmoney[1]);
 							//  判断 1 或者 3  1 扣余额
 							if(PayType.MONEY==orderList.get(m).mOrderInfo.getPaytype()){
 								if(student.getMoney().subtract(total).doubleValue()<0){
@@ -2730,8 +2734,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 									return result;
 									
 								}
-								student.setFmoney(student.getFmoney().add(total));
-								student.setMoney(student.getMoney().subtract(total));
+								student.setFmoney(suserOrderFMoney.add(total));
+								student.setMoney(suserOrderMoney.subtract(total));
 								/*
 								 * 学员下订单时，订单价格为M，此时学员的余额减M，冻结金额加M,教练的账户金额不变
 									取消订单时，学员的冻结金额减去M,学员的余额加M,教练的账户金额不变
@@ -2749,12 +2753,14 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 									return result;
 								}
 							}else if(PayType.COIN==orderList.get(m).mOrderInfo.getPaytype()){
-								BigDecimal cnum = new BigDecimal(student.getCoinnum());
-								double dc=cnum.subtract(total).doubleValue();
+								int scoinnums[]=suserService.getStudentCoin(student.getStudentid());
+								BigDecimal scoinnum = new BigDecimal(scoinnums[0]);
+								BigDecimal sfcoinnum = new BigDecimal(scoinnums[1]);
+								double dc=scoinnum.subtract(total).doubleValue();
 								//小巴币大于0，并且剩余小巴币余额减去支付额大于等于0，表示余额购，否则余额不足
 								if(dc>=0){
 									student.setCoinnum((int)dc); //学员小巴币数量减少
-									student.setFcoinnum(student.getFcoinnum().add(total));
+									student.setFcoinnum(sfcoinnum.add(total));
 								}else{
 									//不足
 									result.put("code", 6);
@@ -2766,13 +2772,15 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 								//小巴币和余额混合支付
 								//#############先处理小巴币 开始###########################  
 								int mixcoin=orderList.get(m).mOrderInfo.getMixCoin();
-								
+								int scoinnums[]=suserService.getStudentCoin(student.getStudentid());
+								BigDecimal scoinnum = new BigDecimal(scoinnums[0]);
+								BigDecimal sfcoinnum = new BigDecimal(scoinnums[1]);
 								//BigDecimal cnum = new BigDecimal(student.getCoinnum());
-								double dc=student.getCoinnum()-mixcoin;
+								double dc=scoinnum.intValue()-mixcoin;
 								//小巴币大于0，并且剩余小巴币余额减去支付额大于等于0，表示余额购，否则余额不足
 								if(dc>=0){
 									student.setCoinnum((int)dc); //学员小巴币数量减少
-									student.setFcoinnum(student.getFcoinnum().add(new BigDecimal(mixcoin)));
+									student.setFcoinnum(sfcoinnum.add(new BigDecimal(mixcoin)));
 								}else{
 									//不足
 									result.put("code", 6);
@@ -2788,8 +2796,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 									result.put("message", "账户余额不足！");
 									return result;
 								}
-								student.setFmoney(student.getFmoney().add(mmoney));
-								student.setMoney(student.getMoney().subtract(mmoney));
+								student.setFmoney(suserOrderFMoney.add(mmoney));
+								student.setMoney(suserOrderMoney.subtract(mmoney));
 								/*
 								 * 学员下订单时，订单价格为M，此时学员的余额减M，冻结金额加M,教练的账户金额不变
 									取消订单时，学员的冻结金额减去M,学员的余额加M,教练的账户金额不变
@@ -3414,7 +3422,9 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						// 修改用户的余额，如果是paytype是1 余额  2 小巴卷 3 小巴币   
 
 						if (student != null) {
-							
+							int cmoney[]=suserService.getStudentMoney(student.getStudentid());
+							BigDecimal suserOrderMoney=new BigDecimal(cmoney[0]);
+							BigDecimal suserOrderFMoney=new BigDecimal(cmoney[1]);
 							//  判断 1 或者 3  1 扣余额
 							if(PayType.MONEY==orderList.get(m).mOrderInfo.getPaytype()){
 								if(student.getMoney().subtract(total).doubleValue()<0){
@@ -3423,8 +3433,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 									return result;
 									
 								}
-								student.setFmoney(student.getFmoney().add(total));
-								student.setMoney(student.getMoney().subtract(total));
+								student.setFmoney(suserOrderFMoney.add(total));
+								student.setMoney(suserOrderMoney.subtract(total));
 								/*
 								 * 学员下订单时，订单价格为M，此时学员的余额减M，冻结金额加M,教练的账户金额不变
 									取消订单时，学员的冻结金额减去M,学员的余额加M,教练的账户金额不变
@@ -3442,12 +3452,15 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 									return result;
 								}
 							}else if(PayType.COIN==orderList.get(m).mOrderInfo.getPaytype()){
-								BigDecimal cnum = new BigDecimal(student.getCoinnum());
-								double dc=cnum.subtract(total).doubleValue();
+								
+								int scoinnums[]=suserService.getStudentCoin(student.getStudentid());
+								BigDecimal scoinnum = new BigDecimal(scoinnums[0]);
+								BigDecimal sfcoinnum = new BigDecimal(scoinnums[1]);
+								double dc=scoinnum.subtract(total).doubleValue();
 								//小巴币大于0，并且剩余小巴币余额减去支付额大于等于0，表示余额购，否则余额不足
 								if(dc>=0){
 									student.setCoinnum((int)dc); //学员小巴币数量减少
-									student.setFcoinnum(student.getFcoinnum().add(total));
+									student.setFcoinnum(sfcoinnum.add(total));
 								}else{
 									//不足
 									result.put("code", 6);

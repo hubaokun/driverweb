@@ -915,7 +915,9 @@ public class SuserAction extends BaseAction {
 		if (checkbox.length != 0) {
 			for (int i = 0; i < checkbox.length; i++) {
 				suser = suserService.getUserById(checkbox[i]);
-				suser.setMoney(suser.getMoney().add(money));
+				int cmoney[]=suserService.getStudentMoney(suser.getStudentid());
+				BigDecimal suserOrderMoney=new BigDecimal(cmoney[0]);
+				suser.setMoney(suserOrderMoney.add(money));
 				suserService.updateUserInfo(suser);
 			}
 			return SUCCESS;
@@ -931,7 +933,9 @@ public class SuserAction extends BaseAction {
 	@Action(value = "/setStudentBalance")
 	public void setStudentBalance() {
 		SuserInfo student = suserService.getUserById(studentid.toString());
-		student.setMoney(student.getMoney().add(money));
+		int cmoney[]=suserService.getStudentMoney(student.getStudentid());
+		BigDecimal suserOrderMoney=new BigDecimal(cmoney[0]);
+		student.setMoney(suserOrderMoney.add(money));
 		suserService.updateUserInfo(student);
 		setResponseStr("success");
 	}
@@ -988,7 +992,9 @@ public class SuserAction extends BaseAction {
 	@Action(value = "/lessenStudentBalance")
 	public void lessenStudentBalance() {
 		SuserInfo student = suserService.getUserById(studentid.toString());
-		BigDecimal bigdecimal = student.getMoney().subtract(money);
+		int cmoney[]=suserService.getStudentMoney(student.getStudentid());
+		BigDecimal suserOrderMoney=new BigDecimal(cmoney[0]);
+		BigDecimal bigdecimal = suserOrderMoney.subtract(money);
 		if (bigdecimal.compareTo(BigDecimal.ZERO) == -1) {
 			setResponseStr("error");
 		} else {

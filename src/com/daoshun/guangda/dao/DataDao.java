@@ -1,19 +1,17 @@
 package com.daoshun.guangda.dao;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import com.daoshun.guangda.NetData.CoinReportBySchool;
 
 
 @Repository("dataDao")
@@ -109,6 +107,27 @@ public class DataDao {
 	 */
 	public List<?> getObjectsViaParam(String hql, String[] params, Object... p) {
 		Query query = getSession().createQuery(hql);
+		if (params != null) {
+			for (int i = 0; i < p.length; i++) {
+				if(p[i] instanceof List){
+					query.setParameterList(params[i], (Collection) p[i]);
+				}else{
+					query.setParameter(params[i], p[i]);
+				}
+			}
+		}
+		return query.list();
+	}
+	/**
+	 * 条件检索对象数据集(按sql查询)
+	 * @param sql语句
+	 * @param params
+	 * @param p
+	 * @author 卢磊
+	 * @return
+	 */
+	public List<?> getObjectsViaParamSql(String sql,String[] params, Object... p) {
+		Query query = getSession().createSQLQuery(sql);
 		if (params != null) {
 			for (int i = 0; i < p.length; i++) {
 				if(p[i] instanceof List){
@@ -290,11 +309,21 @@ public class DataDao {
 	 */
 	public Object getFirstObjectViaParam(String hql, String[] params, Object... p) {
 		List<?> list = getObjectsViaParam(hql, params, p);
-		if (list != null && list.size() > 0) {
+		if (list != null && list.size() > 0 ) {
 			return list.get(0);
 		}
 		return null;
 	}
+	
+	public Object getFirstObjectViaParamSql(String hql, String[] params, Object... p) {
+		List<?> list = getObjectsViaParamSql(hql, params, p);
+		if (list != null && list.size() > 0 && list.get(0)!=null) {
+			return list.get(0);
+		}
+		return null;
+	}
+	
+	
 
 	/**
 	 * 按条件批量删除数据

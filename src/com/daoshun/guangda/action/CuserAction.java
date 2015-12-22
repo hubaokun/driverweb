@@ -19,7 +19,6 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
-import org.hibernate.Session;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -31,7 +30,6 @@ import com.daoshun.guangda.pojo.BalanceCoachInfo;
 import com.daoshun.guangda.pojo.CApplyCashInfo;
 import com.daoshun.guangda.pojo.CoachLevelInfo;
 import com.daoshun.guangda.pojo.CoinRecordInfo;
-import com.daoshun.guangda.pojo.CouponCoach;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.DriveSchoolInfo;
 import com.daoshun.guangda.pojo.LogInfo;
@@ -45,6 +43,7 @@ import com.daoshun.guangda.service.ICUserService;
 import com.daoshun.guangda.service.ICoinRecordService;
 import com.daoshun.guangda.service.IDriveSchoolService;
 import com.daoshun.guangda.service.ILocationService;
+import com.daoshun.guangda.service.ISUserService;
 
 import jxl.Sheet;
 import jxl.Workbook;
@@ -62,6 +61,8 @@ public class CuserAction extends BaseAction {
 
 	@Resource
 	private ICUserService cuserService;
+	@Resource
+	private ISUserService suserService;
 
 	@Resource
 	private IBaseService baseService;
@@ -1143,7 +1144,9 @@ public class CuserAction extends BaseAction {
 	@Action(value = "/setBalance")
 	public void setBalance() {
 		CuserInfo cuserInfo = cuserService.getCuserByCoachid(coachid);
-		cuserInfo.setMoney(cuserInfo.getMoney().add(money));
+		int cmoney[]=suserService.getCoachMoney(cuserInfo.getCoachid());
+		BigDecimal cuserOrderMoney=new BigDecimal(cmoney[0]);
+		cuserInfo.setMoney(cuserOrderMoney.add(money));
 		cuserService.updateCuser(cuserInfo);
 		setResponseStr("success");
 	}
@@ -1156,7 +1159,9 @@ public class CuserAction extends BaseAction {
 	@Action(value = "/lessenBalance")
 	public void lessenBalance() {
 		CuserInfo cuserInfo = cuserService.getCuserByCoachid(coachid);
-		BigDecimal bigdecimal = cuserInfo.getMoney().subtract(money);
+		int cmoney[]=suserService.getCoachMoney(cuserInfo.getCoachid());
+		BigDecimal cuserOrderMoney=new BigDecimal(cmoney[0]);
+		BigDecimal bigdecimal = cuserOrderMoney.subtract(money);
 		if (bigdecimal.compareTo(BigDecimal.ZERO) == -1) {
 			setResponseStr("error");
 		} else {
@@ -1984,7 +1989,10 @@ public class CuserAction extends BaseAction {
 		if (checkbox.length != 0) {
 			for (int i = 0; i < checkbox.length; i++) {
 				cuser = cuserService.getCoachByid(CommonUtils.parseInt(checkbox[i], 0));
-				cuser.setMoney(cuser.getMoney().add(money));
+				//从订单表查询教练的余额
+				int cmoney[]=suserService.getCoachMoney(cuser.getCoachid());
+				BigDecimal cuserOrderMoney=new BigDecimal(cmoney[0]);
+				cuser.setMoney(money.add(cuserOrderMoney));
 				cuserService.updateCuser(cuser);
 			}
 			return SUCCESS;
@@ -2025,7 +2033,9 @@ public class CuserAction extends BaseAction {
 			if (less != -1) {
 				for (int i = 0; i < checkbox.length; i++) {
 					cuser = cuserService.getCoachByid(CommonUtils.parseInt(checkbox[i], 0));
-					BigDecimal bigdecimal = cuser.getMoney().subtract(money);
+					int cmoney[]=suserService.getCoachMoney(cuser.getCoachid());
+					BigDecimal cuserOrderMoney=new BigDecimal(cmoney[0]);
+					BigDecimal bigdecimal = cuserOrderMoney.subtract(money);
 					cuser.setMoney(bigdecimal);
 					cuserService.updateCuser(cuser);
 				}

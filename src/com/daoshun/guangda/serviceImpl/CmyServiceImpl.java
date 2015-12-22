@@ -6,6 +6,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.annotation.Resource;
+import javax.annotation.Resources;
+
 import com.daoshun.common.UserType;
 import com.daoshun.guangda.pojo.*;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,7 @@ import com.daoshun.guangda.NetData.ComplaintNetData;
 import com.daoshun.guangda.NetData.EvaluationNetData;
 import com.daoshun.guangda.model.StudentInfo;
 import com.daoshun.guangda.service.ICmyService;
+import com.daoshun.guangda.service.ISUserService;
 
 /**
  * @author liukn
@@ -26,7 +30,8 @@ import com.daoshun.guangda.service.ICmyService;
 @Service("cmyService")
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 public class CmyServiceImpl extends BaseServiceImpl implements ICmyService {
-
+	@Resource
+	private ISUserService suserService;
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override
 	public void setPrice(CuserInfo cuser) {
@@ -468,8 +473,12 @@ public class CmyServiceImpl extends BaseServiceImpl implements ICmyService {
 					CouponCoach cc = dataDao.getObjectById(CouponCoach.class, recordid);
 					if (cc != null) {
 						cc.setState(2);// 设置状态
-						cuser.setFmoney(cuser.getFmoney().add(new BigDecimal(cc.getMoney_value())));// 增加用户冻结金额
-						cuser.setMoney(cuser.getMoney().add(new BigDecimal(cc.getMoney_value())));
+						
+						int cmoney[]=suserService.getCoachMoney(cuser.getCoachid());
+		    			BigDecimal cuserOrderMoney=new BigDecimal(cmoney[0]);
+		    			BigDecimal cuserOrderFMoney=new BigDecimal(cmoney[1]);
+		    			cuser.setFmoney(cuserOrderFMoney.add(new BigDecimal(cc.getMoney_value())));// 增加用户冻结金额
+						cuser.setMoney(cuserOrderMoney.add(new BigDecimal(cc.getMoney_value())));
 					}
 					dataDao.updateObject(cc);
 
@@ -497,6 +506,7 @@ public class CmyServiceImpl extends BaseServiceImpl implements ICmyService {
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		CuserInfo cuser = dataDao.getObjectById(CuserInfo.class, CommonUtils.parseInt(coachid, 0));
 			if (cuser != null) {
+				int coachOrderCoinNum=suserService.getCoachCoin(cuser.getCoachid());
 				if(cuser.getCoinnum()<applyCoinNum){
 					result.put("code", 4);
 					result.put("message", "小巴币余额不足兑换");
@@ -507,7 +517,7 @@ public class CmyServiceImpl extends BaseServiceImpl implements ICmyService {
 					result.put("message", "数据异常");
 				}
 				else{
-					cuser.setCoinnum(cuser.getCoinnum()-applyCoinNum);
+					cuser.setCoinnum(coachOrderCoinNum-applyCoinNum);
 					dataDao.updateObject(cuser);
 					CoinRecordInfo c = new CoinRecordInfo();
 					c.setCoinnum(applyCoinNum);
@@ -542,6 +552,7 @@ public class CmyServiceImpl extends BaseServiceImpl implements ICmyService {
 			HashMap<String, Object> result = new HashMap<String, Object>();
 			CuserInfo cuser = dataDao.getObjectById(CuserInfo.class, CommonUtils.parseInt(coachid, 0));
 				if (cuser != null) {
+					int coachOrderCoinNum=suserService.getCoachCoin(cuser.getCoachid());
 					if(cuser.getCoinnum()<applyCoinNum){
 						result.put("code", 4);
 						result.put("message", "小巴币余额不足兑换");
@@ -552,7 +563,7 @@ public class CmyServiceImpl extends BaseServiceImpl implements ICmyService {
 						result.put("message", "数据异常");
 					}
 					else{
-						cuser.setCoinnum(cuser.getCoinnum()-applyCoinNum);
+						cuser.setCoinnum(coachOrderCoinNum-applyCoinNum);
 						dataDao.updateObject(cuser);
 						CoinRecordInfo c = new CoinRecordInfo();
 						c.setCoinnum(applyCoinNum);

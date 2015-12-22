@@ -1,5 +1,6 @@
 package com.daoshun.guangda.action;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -308,7 +309,9 @@ public class CoinRecordAction extends BaseAction{
         	 if(suser.getCoinnum()==null){
         		 suser.setCoinnum(coinnum);
         	 }else{
-        		 suser.setCoinnum(suser.getCoinnum()+coinnum);
+        		 int scoinnums[]=suserService.getStudentCoin(suser.getStudentid());
+        		 BigDecimal scoinnum = new BigDecimal(scoinnums[0]);
+        		 suser.setCoinnum(scoinnum.intValue()+coinnum);
         	 }
              suserService.updateUserInfo(suser);
         }
