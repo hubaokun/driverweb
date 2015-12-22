@@ -484,6 +484,26 @@ public class Constant {
 	
 	/**根据参数获取广告**/
 	public static final String GETADVERTISEMENTBYPARAM = "GETADVERTISEMENTBYPARAM";
+
+/**
+ * 防止反复重试,暴力破解登录
+  */
+	/**尝试登录限制设置  间隔时间10分钟**/
+	public static final int TRY_LOGIN_INTERVAL=2;
+
+	/**尝试登录限制设置  可尝试次数6次**/
+	public static final int TRY_TIMES=6;
+
+	/*****广告报名*
+	****/
+
+	/**广告页action**/
+	public static final String ADVERTISEMENT_ACTION="ADVERTISEMENT_ACTION";
+
+	/**广告报名表单action**/
+	public static final String ADVERTISEMENT_SIGNUP_ACTION="ADVERTISEMENT_SIGNUP_ACTION";
+
+	/*****广告报名*****/
 	
 	
 }

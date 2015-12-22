@@ -4,17 +4,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import com.daoshun.common.ErrException;
+import com.daoshun.guangda.pojo.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.daoshun.common.CommonUtils;
-import com.daoshun.guangda.pojo.ActiveRecord;
-import com.daoshun.guangda.pojo.SystemSetInfo;
-import com.daoshun.guangda.pojo.UserLocationInfo;
-import com.daoshun.guangda.pojo.UserPushInfo;
-import com.daoshun.guangda.pojo.VersionInfo;
 import com.daoshun.guangda.service.ISystemService;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Service("systemService")
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
@@ -109,5 +108,91 @@ public class SystemServiceImpl extends BaseServiceImpl implements ISystemService
 		SystemSetInfo systemSet = (SystemSetInfo) dataDao.getFirstObjectViaParam(hql, null, null);
 		return systemSet;
 	}
+
+
+
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	@Override
+	public  boolean overLoginLimitCount(String loginid, int usertype, int flag, HttpServletRequest request, HashMap<String, Object> resultMap, int limitTimes, int timeout) throws ErrException
+	{
+		long limitTime=0;
+		//默认10分钟
+		if(timeout==0)
+		{
+			timeout=10;
+		}
+		limitTime=timeout*60;
+
+		int loginCount=0;
+
+		String hql="from UserLoginStatus where phone="+loginid+" and userType="+usertype;
+		UserLoginStatus userloginstatus=(UserLoginStatus) dataDao.getFirstObjectViaParam(hql,null,null);
+		//数据库中不存在，则添加一条添加时间，失败次数为空的记录
+		if(userloginstatus==null)
+		{
+			userloginstatus=new UserLoginStatus();
+			userloginstatus.setPhone(loginid);
+			userloginstatus.setUserType(usertype);
+			dataDao.addObject(userloginstatus);
+			userloginstatus=(UserLoginStatus) dataDao.getFirstObjectViaParam(hql, null, null);
+		}
+
+		//清除上次登录尝试的数据（过期的）
+		clearLoginStatus(limitTime,userloginstatus);
+
+		//没有超过登录限制
+		if(userloginstatus.getFailedCount()<limitTimes)
+		{
+			//登录成功
+			if(UserLoginStatus.LOGIN_SUCCESS==flag)
+			{
+				return false;
+			}
+
+			//登录失败
+			if(UserLoginStatus.LOGIN_FAIL==flag)
+			{
+				//第一次登录时，添加时间
+				if(userloginstatus.getFailedCount()==0)
+				{
+					userloginstatus.setAddtime(new Date());
+				}
+				userloginstatus.setFailedCount(userloginstatus.getFailedCount()+1);
+				dataDao.updateObject(userloginstatus);
+				return false;
+			}
+		}else
+		{
+			resultMap.put("code", 2);
+			resultMap.put("message", "请"+timeout+"分钟后再次尝试！");
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * 已超出限制冻结时间，对登录失败次数置零
+	 * @param time 限制时间  单位秒
+	 * @param userloginstatus 登录信息
+	 * @return
+	 */
+	private void clearLoginStatus(long time,UserLoginStatus userloginstatus)
+	{
+		time=time*1000;
+		Date addtime=userloginstatus.getAddtime();
+		if(addtime!=null)
+		{
+			long frozenTime=addtime.getTime()+time;
+			long now=new Date().getTime();
+			if(now>frozenTime)
+			{
+				userloginstatus.setAddtime(null);
+				userloginstatus.setFailedCount(0);
+				dataDao.updateObject(userloginstatus);
+			}
+		}
+	}
+
 
 }

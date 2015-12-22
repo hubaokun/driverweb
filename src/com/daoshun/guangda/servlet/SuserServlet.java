@@ -568,7 +568,9 @@ public class SuserServlet extends BaseServlet {
 					System.out.println("***suser.login check version****** "+version+" ******phone****** "+phone+" *****code** "+2+" *** logintime ****** "+ new Date().toLocaleString());
 					return;
 				}
-				user.setVersion(version);//设置版本号
+				else {//2.0以上版本可以正常使用
+					user.setVersion(version);//设置版本号
+				}
 			}
 			
 			if(openid!=null && !"".equals(openid)){
@@ -580,7 +582,6 @@ public class SuserServlet extends BaseServlet {
 				ProvinceInfo pro=locationService.getProvincesById(user.getProvinceid());
 				CityInfo city=locationService.getCityById(user.getCityid());
 				AreaInfo area=locationService.getAreaById(user.getAreaid());
-				
 				String locationname="";
 				if(pro!=null && city!=null && area!=null){
 					locationname=pro.getProvince()+"-"+city.getCity()+"-"+area.getArea();
