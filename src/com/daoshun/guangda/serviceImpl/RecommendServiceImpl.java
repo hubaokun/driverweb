@@ -357,8 +357,7 @@ public class RecommendServiceImpl extends BaseServiceImpl implements IRecommendS
 		int result=1;
 		if(tempCuserInfo!=null && tempRecommendInfo!=null)
 	    {    	
-			int cmoney[]=suserService.getCoachMoney(tempCuserInfo.getCoachid());
-			BigDecimal cuserOrderMoney=new BigDecimal(cmoney[0]);
+			BigDecimal cuserOrderMoney=suserService.getCoachMoney(tempCuserInfo.getCoachid());
 			BigDecimal Balance=cuserOrderMoney;
 		    BigDecimal Balanceplus=new BigDecimal(0);
 		    BalanceCoachInfo tempBalanceCoachInfo=new BalanceCoachInfo();

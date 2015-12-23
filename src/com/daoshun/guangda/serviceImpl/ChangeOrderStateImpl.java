@@ -1,6 +1,7 @@
 package com.daoshun.guangda.serviceImpl;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -13,23 +14,18 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.daoshun.common.CoinType;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.PayType;
-import com.daoshun.common.UserType;
 import com.daoshun.guangda.pojo.BalanceCoachInfo;
 import com.daoshun.guangda.pojo.BalanceStudentInfo;
 import com.daoshun.guangda.pojo.CoachBalancerecord;
 import com.daoshun.guangda.pojo.CoachStudentInfo;
-import com.daoshun.guangda.pojo.CoinRecordInfo;
-import com.daoshun.guangda.pojo.ComplaintInfo;
 import com.daoshun.guangda.pojo.CouponCoach;
 import com.daoshun.guangda.pojo.CouponRecord;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.EvaluationInfo;
 import com.daoshun.guangda.pojo.OrderInfo;
 import com.daoshun.guangda.pojo.OrderNotiRecord;
-import com.daoshun.guangda.pojo.OrderPrice;
 import com.daoshun.guangda.pojo.OrderRecordInfo;
 import com.daoshun.guangda.pojo.StudentBalanceRecord;
 import com.daoshun.guangda.pojo.SuserInfo;
@@ -95,21 +91,15 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 					order.setOver_time(new Date());
 					if (cuser != null) {
 						//订单中的学员小巴币及冻结小巴币
-						int scoinnums[]=suserService.getStudentCoin(student.getStudentid());
-						//BigDecimal studentCoinNum = new BigDecimal(scoinnums[0]);
-						BigDecimal studentFCoinNum = new BigDecimal(scoinnums[1]);
-						
+						BigDecimal studentFCoinNum =suserService.getStudentFrozenCoin(student.getStudentid());
 						//订单中的教练小巴币
-						int coachOrdercoinnum=suserService.getCoachCoin(cuser.getCoachid());
-						
+						int coachOrdercoinnum=suserService.getCoachCoin(cuser.getCoachid()).intValue();
 						//订单中的教练余额及冻结额
-						int cmoney[]=suserService.getCoachMoney(cuser.getCoachid());
 						//BigDecimal cuserOrderFMoney=new BigDecimal(cmoney[1]);
-						BigDecimal coachOrderMoney=new BigDecimal(cmoney[0]);
+						BigDecimal coachOrderMoney=suserService.getCoachMoney(cuser.getCoachid());
 						
 						//订单中的学员余额及冻结余额
-						int smoney[]=suserService.getStudentMoney(student.getStudentid());
-						BigDecimal studentOrderFMoney=new BigDecimal(smoney[1]);
+						BigDecimal studentOrderFMoney=suserService.getStudentFrozenMoney(student.getStudentid());
 						
 						
 						if(order.getPaytype()==PayType.MONEY){
@@ -156,16 +146,15 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 						}else if(order.getPaytype()==PayType.COIN){
 							//学员冻结小巴币取消
 							BigDecimal orderTotal=new BigDecimal(order.getTotal().intValue());
-							if(student.getFcoinnum().intValue()>=orderTotal.intValue()){
+							/*if(student.getFcoinnum().intValue()>=orderTotal.intValue()){
 								student.setFcoinnum(studentFCoinNum.subtract(orderTotal));
-							}else{
+							}else{ 
 								System.out.println("小巴币结算：自动结算方法中：学员小巴币解冻时发现数量小于订单额!停止结算");
 								System.out.println("studentid="+student.getStudentid()+",本次结算学员被冻结的小巴币："+student.getFcoinnum().intValue());
 								System.out.println("studentid="+student.getStudentid()+",本次结算订单额："+orderTotal.intValue()+"orderid = "+order.getOrderid());
 								continue;
 								//return;
-							}
-							
+							}*/
 							orderTotal=orderTotal.add(new BigDecimal(coachOrdercoinnum));
 							//教练小巴币增加
 							cuser.setCoinnum(orderTotal.intValue());
@@ -194,7 +183,7 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 							//###############处理 小巴币 开始###################
 							//学员冻结小巴币取消
 							BigDecimal mixCoin=new BigDecimal(order.getMixCoin());
-							if(student.getFcoinnum().intValue()>=mixCoin.intValue()){
+							/*if(student.getFcoinnum().intValue()>=mixCoin.intValue()){
 								student.setFcoinnum(studentFCoinNum.subtract(mixCoin));
 							}else{
 								System.out.println("小巴币+余额混合支付结算小巴币结算部分：自动结算方法中：学员小巴币解冻时发现数量小于订单额!停止结算");
@@ -202,8 +191,7 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 								System.out.println("studentid="+student.getStudentid()+",本次结算订单额："+mixCoin.intValue()+"orderid = "+order.getOrderid());
 								continue;
 								//return;
-							}
-							
+							}*/
 							mixCoin=mixCoin.add(new BigDecimal(coachOrdercoinnum));
 							//教练小巴币增加
 							cuser.setCoinnum(mixCoin.intValue());
@@ -280,8 +268,10 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 					String[] params8 = { "coachid", "studentid" };
 					CoachStudentInfo info = (CoachStudentInfo) dataDao.getFirstObjectViaParam(hqlCoachStudent, params8, order.getCoachid(), order.getStudentid());
 					if (info != null) {
-						info.setMoney(info.getMoney().add(order.getTotal()));
-						info.setHour(info.getHour() + order.getTime());
+						BigDecimal settleOrderTotal=suserService.getSettleOrderTotal(order.getCoachid(),order.getStudentid());
+						BigInteger settleOrderTime=suserService.getSettleOrderTime(order.getCoachid(),order.getStudentid());
+						info.setMoney(settleOrderTotal.add(order.getTotal()));
+						info.setHour(settleOrderTime.intValue() + order.getTime());
 						dataDao.updateObject(info);
 					} else {
 						info = new CoachStudentInfo();
@@ -403,6 +393,7 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 		}
 
 		List<SuserInfo> sUserList = dataDao.getAllObject(SuserInfo.class);
+		
 		for (SuserInfo suser : sUserList) {
 			StudentBalanceRecord record = new StudentBalanceRecord();
 			record.setAddtime(now.getTime());

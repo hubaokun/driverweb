@@ -251,6 +251,11 @@ public class SystemServlet extends BaseServlet {
 				resultMap.put(Constant.MESSAGE, "教练找不到");
 				return;
 			}
+			//订单中的教练小巴币
+			BigDecimal coachOrdercoinnum=suserService.getCoachCoin(cuser.getCoachid());
+			//订单中的教练余额及冻结额
+			BigDecimal coachOrderMoney=suserService.getCoachMoney(cuser.getCoachid());
+			BigDecimal coachOrderFrozenMoney=suserService.getCoachFrozenMoney(cuser.getCoachid());
 			if(cuser.getCoinnum()==null){
 				cuser.setCoinnum(0);
 			}
@@ -260,12 +265,11 @@ public class SystemServlet extends BaseServlet {
 			if(cuser.getFmoney()==null){
 				cuser.setFmoney(new BigDecimal(0));
 			}
-			int coinnum=cuser.getCoinnum();
 			if (cuser != null) {
-				resultMap.put("money", cuser.getMoney());
-				resultMap.put("fmoney", cuser.getFmoney());
+				resultMap.put("money", coachOrderMoney.intValue());
+				resultMap.put("fmoney", coachOrderFrozenMoney.intValue());
 				resultMap.put("gmoney", cuser.getGmoney());
-				resultMap.put("coinnum", coinnum);
+				resultMap.put("coinnum", coachOrdercoinnum.intValue());
 				// 这里需要把教练总共的小巴券时间返回
 				int allhour = cuserService.getCoachAllCouponTime(cuser.getCoachid());
 				resultMap.put("couponhour", allhour);
@@ -282,9 +286,13 @@ public class SystemServlet extends BaseServlet {
 				suser.setFmoney(new BigDecimal(0));
 			}
 			if (suser != null) {// 学员
-				resultMap.put("money", suser.getMoney());
-				resultMap.put("fmoney", suser.getFmoney());
-				resultMap.put("coinnum", suser.getCoinnum());
+				BigDecimal money=suserService.getStudentMoney(suser.getStudentid());
+				BigDecimal fmoney=suserService.getStudentFrozenCoin(suser.getStudentid());
+				BigDecimal studentCoinNum =suserService.getStudentCoin(suser.getStudentid());
+				//BigDecimal studentFCoinNum =suserService.getStudentFrozenCoin(suser.getStudentid());
+				resultMap.put("money", money.intValue());
+				resultMap.put("fmoney", fmoney.intValue());
+				resultMap.put("coinnum", studentCoinNum.intValue());
 				resultMap.put("gmoney", 0);
 			}else{
 					resultMap.put(Constant.CODE, 2);

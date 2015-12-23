@@ -608,16 +608,19 @@ public class SbookServlet extends BaseServlet {
 				resultMap.put(Constant.MESSAGE, "根据studentid查询不到此学员");
 				return;
 		}
-		int coinnum=0;
+		BigDecimal money=suserService.getStudentMoney(suser.getStudentid());
+		BigDecimal studentCoinNum =suserService.getStudentCoin(suser.getStudentid());
+
+		/*int coinnum=0;
 		if(suser.getFcoinnum()==null){
 			suser.setFcoinnum(new BigDecimal(0));
 		}
 		if(num>=suser.getFcoinnum().intValue()){//可用小巴币减去冻结小巴币
 			coinnum=num-suser.getFcoinnum().intValue();
-		}
+		}*/
 		resultMap.put("couponlist", list);
-		resultMap.put("coinnum", coinnum);//可用小巴币
-		resultMap.put("money", suser.getMoney()==null?0:suser.getMoney());
+		resultMap.put("coinnum", studentCoinNum.intValue());//可用小巴币
+		resultMap.put("money", money.intValue());
 		resultMap.put("canUseDiff", canUseDiff);
 		resultMap.put("canUseMaxCount", canUseMaxCount);
 	}

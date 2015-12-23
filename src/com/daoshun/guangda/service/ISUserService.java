@@ -1,6 +1,8 @@
 package com.daoshun.guangda.service;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 
@@ -8,11 +10,8 @@ import com.daoshun.common.QueryResult;
 import com.daoshun.guangda.pojo.AdminInfo;
 import com.daoshun.guangda.pojo.BalanceStudentInfo;
 import com.daoshun.guangda.pojo.CoachStudentInfo;
-import com.daoshun.guangda.pojo.CouponInfo;
-import com.daoshun.guangda.pojo.CouponRecord;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.DriveSchoolInfo;
-import com.daoshun.guangda.pojo.NoticesInfo;
 import com.daoshun.guangda.pojo.OrderInfo;
 import com.daoshun.guangda.pojo.StudentApplyInfo;
 import com.daoshun.guangda.pojo.StudentCheckInfo;
@@ -345,13 +344,18 @@ public interface ISUserService {
     public boolean getFreecoursestate(int studentid);
     public int getCoinnumForDriveSchool( String studentid,String coachid);
     public void getFrozenCoinAffiliationException();
-    public int getCoachCoin(int coachid);
-	public int[] getCoachMoney(int coachid);
-	public int[] getStudentMoney(int studentid);
-	public int[] getStudentCoin(int studentid);
-	public List findStudentMoneyException();
-	public List findCoachMoneyException();
-	public List findCoachCoinException();
-	public List findStudentCoinException();
+    public BigDecimal getCoachCoin(int coachid);
+	public BigDecimal getCoachMoney(int coachid);
+	public BigDecimal getCoachFrozenMoney(int coachid);
+	public BigDecimal getStudentMoney(int studentid);
+	public BigDecimal getStudentFrozenMoney(int studentid);
+	public BigDecimal getStudentCoin(int studentid);
+	public BigDecimal getStudentFrozenCoin(int studentid);
+	public List<String> findStudentMoneyException();
+	public List<String> findCoachMoneyException();
+	public List<String> findCoachCoinException();
+	public List<String> findStudentCoinException();
+	public BigDecimal getSettleOrderTotal(int coachid,int studentid);
+	public BigInteger getSettleOrderTime(int coachid,int studentid);
 
 }

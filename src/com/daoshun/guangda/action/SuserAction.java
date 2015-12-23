@@ -915,8 +915,7 @@ public class SuserAction extends BaseAction {
 		if (checkbox.length != 0) {
 			for (int i = 0; i < checkbox.length; i++) {
 				suser = suserService.getUserById(checkbox[i]);
-				int cmoney[]=suserService.getStudentMoney(suser.getStudentid());
-				BigDecimal suserOrderMoney=new BigDecimal(cmoney[0]);
+				BigDecimal suserOrderMoney=suserService.getStudentMoney(suser.getStudentid());
 				suser.setMoney(suserOrderMoney.add(money));
 				suserService.updateUserInfo(suser);
 			}
@@ -933,8 +932,7 @@ public class SuserAction extends BaseAction {
 	@Action(value = "/setStudentBalance")
 	public void setStudentBalance() {
 		SuserInfo student = suserService.getUserById(studentid.toString());
-		int cmoney[]=suserService.getStudentMoney(student.getStudentid());
-		BigDecimal suserOrderMoney=new BigDecimal(cmoney[0]);
+		BigDecimal suserOrderMoney=suserService.getStudentMoney(student.getStudentid());
 		student.setMoney(suserOrderMoney.add(money));
 		suserService.updateUserInfo(student);
 		setResponseStr("success");
@@ -966,7 +964,8 @@ public class SuserAction extends BaseAction {
 		if (checkbox.length != 0) {
 			for (int i = 0; i < checkbox.length; i++) {
 				suser = suserService.getUserById(checkbox[i]);
-				BigDecimal bigdecimal = suser.getMoney().subtract(money);
+				BigDecimal studentOrderMoney=suserService.getStudentMoney(suser.getStudentid());
+				BigDecimal bigdecimal = studentOrderMoney.subtract(money);
 				if (bigdecimal.compareTo(BigDecimal.ZERO) == -1) {
 					less = -1;
 				}
@@ -992,8 +991,7 @@ public class SuserAction extends BaseAction {
 	@Action(value = "/lessenStudentBalance")
 	public void lessenStudentBalance() {
 		SuserInfo student = suserService.getUserById(studentid.toString());
-		int cmoney[]=suserService.getStudentMoney(student.getStudentid());
-		BigDecimal suserOrderMoney=new BigDecimal(cmoney[0]);
+		BigDecimal suserOrderMoney=suserService.getStudentMoney(student.getStudentid());
 		BigDecimal bigdecimal = suserOrderMoney.subtract(money);
 		if (bigdecimal.compareTo(BigDecimal.ZERO) == -1) {
 			setResponseStr("error");

@@ -1318,9 +1318,8 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 					}
 					else
 					{
-						int cmoney[]=suserService.getStudentMoney(student.getStudentid());
-						BigDecimal suserOrderMoney=new BigDecimal(cmoney[0]);
-						BigDecimal suserOrderFMoney=new BigDecimal(cmoney[1]);
+						BigDecimal suserOrderMoney=suserService.getStudentMoney(student.getStudentid());
+						BigDecimal suserOrderFMoney=suserService.getStudentFrozenMoney(student.getStudentid());
 						student.setMoney(suserOrderMoney.add(order.getTotal()));
 						student.setFmoney(suserOrderFMoney.subtract(order.getTotal()));
 						dataDao.updateObject(student);
@@ -1481,13 +1480,11 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 		}
 		if (order != null) {
 			//学员订单余额
-			int cmoney[]=suserService.getStudentMoney(student.getStudentid());
-			BigDecimal suserOrderMoney=new BigDecimal(cmoney[0]);
-			BigDecimal suserOrderFMoney=new BigDecimal(cmoney[1]);
+			BigDecimal suserOrderMoney=suserService.getStudentMoney(student.getStudentid());
+			BigDecimal suserOrderFMoney=suserService.getStudentFrozenMoney(student.getStudentid());
 			//学员订单小巴币
-			int scoinnums[]=suserService.getStudentCoin(student.getStudentid());
-			BigDecimal scoinnum = new BigDecimal(scoinnums[0]);
-			BigDecimal sfcoinnum = new BigDecimal(scoinnums[1]);
+			BigDecimal scoinnum = suserService.getStudentCoin(student.getStudentid());
+			BigDecimal sfcoinnum = suserService.getStudentFrozenCoin(student.getStudentid());
 			
 			//if (order.getStart_time().after(c.getTime())) {
 			cuser=dataDao.getObjectById(CuserInfo.class, order.getCoachid());
@@ -1510,22 +1507,22 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 				
 			}else if(order.getPaytype()==PayType.COIN){
 				//教练同意时，取消冻结金额。如果冻结金额小于订单额，直接相减后，冻结金额会出现负数，所以判断
-				if(student.getFcoinnum().intValue()>=order.getTotal().intValue()){
+				/*if(student.getFcoinnum().intValue()>=order.getTotal().intValue()){
 					student.setFcoinnum(sfcoinnum.subtract(order.getTotal()));
 				}else{
 					System.out.println("cancelOrderByCoach方法中：小巴币解冻时发现数量小于订单额!停止解冻");
 					return -1;
-				}
+				}*/
 				student.setCoinnum(scoinnum.intValue()+order.getTotal().intValue());
 			}else if(order.getPaytype()==PayType.COIN_MONEY){
 				//***********小巴币的处理*************
 				//教练同意时，取消冻结金额。如果冻结金额小于订单额，直接相减后，冻结金额会出现负数，所以判断
-				if(student.getFcoinnum().intValue()>=order.getMixCoin()){
+				/*if(student.getFcoinnum().intValue()>=order.getMixCoin()){
 					student.setFcoinnum(sfcoinnum.subtract(new BigDecimal(order.getMixCoin())));
 				}else{
 					System.out.println("cancelOrderByCoach方法中：小巴币解冻时发现数量小于订单额!停止解冻");
 					return -1;
-				}
+				}*/
 				student.setCoinnum(scoinnum.intValue()+order.getMixCoin());
 				order.setMixCoin(0);
 				//***********余额的处理***************
