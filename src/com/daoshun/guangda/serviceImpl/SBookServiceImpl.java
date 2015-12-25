@@ -670,7 +670,8 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			List<CuserInfo> cuserlist = (List<CuserInfo>) dataDao.getObjectsViaParam(hqlCoach.toString(), paramsCoach, cids, now, now, now, now, now);
 			if (cuserlist != null && cuserlist.size() > 0) {
 				for (CuserInfo cuser : cuserlist) {
-					if (cuser.getMoney().doubleValue() >= cuser.getGmoney().doubleValue()) {
+					BigDecimal coachOrderMoney=suserService.getCoachMoney(cuser.getCoachid());
+					if (coachOrderMoney.intValue() >= cuser.getGmoney().doubleValue()) {
 						coachlist.add(cuser);
 					}
 				}
@@ -1637,9 +1638,17 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 
 		String hql3 = "from CaddAddressInfo where coachid =:coachid and iscurrent = 1";
 		String params3[] = { "coachid" };
-
+		
+		
+		
 		SuserInfo student = dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
-		if(student.getMoney().doubleValue()<0.0||student.getFmoney().doubleValue()<0.0||student.getCoinnum()<0)// 余额不够
+		
+		BigDecimal suserOrderMoney=suserService.getStudentMoney(student.getStudentid());
+		BigDecimal suserOrderFMoney=suserService.getStudentFrozenCoin(student.getStudentid());
+		BigDecimal studentCoinNum = suserService.getStudentCoin(student.getStudentid());
+		BigDecimal studentFCoinNum = suserService.getStudentFrozenCoin(student.getStudentid());
+		
+		if(suserOrderMoney.intValue()<0||suserOrderFMoney.intValue()<0||studentCoinNum.intValue()<0)// 余额不够
 		{
 			//版本需要更新
 			result.put("failtimes",11);
@@ -2044,14 +2053,13 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 					// 修改用户的余额，如果是paytype是1 余额  2 小巴卷 3 小巴币  如果1 ，2 
 
 					if (student != null) {
-						int cmoney[]=suserService.getStudentMoney(student.getStudentid());
-						BigDecimal suserOrderMoney=new BigDecimal(cmoney[0]);
-						BigDecimal suserOrderFMoney=new BigDecimal(cmoney[1]);
+						/*BigDecimal suserOrderMoney=suserService.getStudentMoney(student.getStudentid());
+						BigDecimal suserOrderFMoney=suserService.getStudentFrozenCoin(student.getStudentid());*/
 						//  判断 1 或者 3  1 扣余额  2 扣小巴币
 						student.setFmoney(suserOrderFMoney.add(total));
 						student.setMoney(suserOrderMoney.subtract(total));
 						//如果是小巴币，直接扣除  ，如果是余额，
-						if (student.getMoney().doubleValue() < 0 || student.getFmoney().doubleValue() < 0) {
+						if (suserOrderMoney.intValue() < 0 || suserOrderFMoney.intValue() < 0) {
 							result.put("failtimes", failtimes);
 							result.put("successorderid", successorderid);
 							result.put("coachauth", student.getCoachstate());
@@ -2197,7 +2205,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 	 */
 	public int[] getCanUseCoinMoney(String coachid,String studentid){
 				int canUseNum[]=new int[2];
-				//小巴币的总数=教练可用小巴币+驾校可用小巴币+平台可用小巴币
+				/*//小巴币的总数=教练可用小巴币+驾校可用小巴币+平台可用小巴币
 				int num=suserService.getCanUseCoinnum(coachid,studentid);//获取教练可用小巴币
 				int numForSchool=suserService.getCoinnumForDriveSchool(studentid,coachid);//获取驾校可用小巴币
 				//获取平台发送的小巴币
@@ -2216,6 +2224,13 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				}
 				canUseNum[0]=coinnum;//可用小巴币
 				canUseNum[1]=suser.getMoney()==null?0:suser.getMoney().intValue();
+				*/
+				SuserInfo student=suserService.getUserById(studentid);
+				BigDecimal studentOrderMoney=suserService.getStudentMoney(student.getStudentid());
+				BigDecimal studentCoinNum = suserService.getStudentCoin(student.getStudentid());
+				
+				canUseNum[0]=studentCoinNum.intValue();//可用小巴币
+				canUseNum[1]=studentOrderMoney.intValue();//
 				return canUseNum;
 	}
 	
@@ -2254,8 +2269,13 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 
 		String hql3 = "from CaddAddressInfo where coachid =:coachid and iscurrent = 1";
 		String params3[] = { "coachid" };
+		//
+		BigDecimal suserOrderMoney=suserService.getStudentMoney(student.getStudentid());
+		BigDecimal suserOrderFMoney=suserService.getStudentFrozenCoin(student.getStudentid());
+		BigDecimal studentCoinNum = suserService.getStudentCoin(student.getStudentid());
+		BigDecimal studentFCoinNum = suserService.getStudentFrozenCoin(student.getStudentid());
 		
-		if(student.getMoney().doubleValue()<0.0||student.getFmoney().doubleValue()<0.0||student.getCoinnum()<0)// 余额不够
+		if(suserOrderMoney.intValue()<0||suserOrderFMoney.intValue()<0||studentCoinNum.intValue()<0)// 余额不够
 		{
 			//版本需要更新
 			result.put("failtimes",11);
@@ -2722,12 +2742,9 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						// 修改用户的余额，如果是paytype是1 余额  2 小巴卷 3 小巴币   
 
 						if (student != null) {
-							int cmoney[]=suserService.getStudentMoney(student.getStudentid());
-							BigDecimal suserOrderMoney=new BigDecimal(cmoney[0]);
-							BigDecimal suserOrderFMoney=new BigDecimal(cmoney[1]);
 							//  判断 1 或者 3  1 扣余额
 							if(PayType.MONEY==orderList.get(m).mOrderInfo.getPaytype()){
-								if(student.getMoney().subtract(total).doubleValue()<0){
+								if(suserOrderMoney.subtract(total).doubleValue()<0){
 									result.put("code", 4);
 									result.put("message", "账户余额不足！");
 									return result;
@@ -2739,7 +2756,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 								 * 学员下订单时，订单价格为M，此时学员的余额减M，冻结金额加M,教练的账户金额不变
 									取消订单时，学员的冻结金额减去M,学员的余额加M,教练的账户金额不变
 								 */
-								if (student.getMoney().doubleValue() < 0 || student.getFmoney().doubleValue() < 0) {
+								if (suserOrderMoney.intValue() < 0 || suserOrderFMoney.intValue() < 0) {
 									result.put("failtimes", failtimes);
 									result.put("successorderid", successorderid);
 									result.put("coachauth", student.getCoachstate());
@@ -2752,14 +2769,14 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 									return result;
 								}
 							}else if(PayType.COIN==orderList.get(m).mOrderInfo.getPaytype()){
-								int scoinnums[]=suserService.getStudentCoin(student.getStudentid());
+								/*int scoinnums[]=suserService.getStudentCoin(student.getStudentid());
 								BigDecimal scoinnum = new BigDecimal(scoinnums[0]);
-								BigDecimal sfcoinnum = new BigDecimal(scoinnums[1]);
-								double dc=scoinnum.subtract(total).doubleValue();
+								BigDecimal sfcoinnum = new BigDecimal(scoinnums[1]);*/
+								double dc=studentCoinNum.subtract(total).doubleValue();
 								//小巴币大于0，并且剩余小巴币余额减去支付额大于等于0，表示余额购，否则余额不足
 								if(dc>=0){
 									student.setCoinnum((int)dc); //学员小巴币数量减少
-									student.setFcoinnum(sfcoinnum.add(total));
+									//student.setFcoinnum(studentFCoinNum.add(total));
 								}else{
 									//不足
 									result.put("code", 6);
@@ -2771,15 +2788,13 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 								//小巴币和余额混合支付
 								//#############先处理小巴币 开始###########################  
 								int mixcoin=orderList.get(m).mOrderInfo.getMixCoin();
-								int scoinnums[]=suserService.getStudentCoin(student.getStudentid());
-								BigDecimal scoinnum = new BigDecimal(scoinnums[0]);
-								BigDecimal sfcoinnum = new BigDecimal(scoinnums[1]);
+								
 								//BigDecimal cnum = new BigDecimal(student.getCoinnum());
-								double dc=scoinnum.intValue()-mixcoin;
+								double dc=studentCoinNum.intValue()-mixcoin;
 								//小巴币大于0，并且剩余小巴币余额减去支付额大于等于0，表示余额购，否则余额不足
 								if(dc>=0){
 									student.setCoinnum((int)dc); //学员小巴币数量减少
-									student.setFcoinnum(sfcoinnum.add(new BigDecimal(mixcoin)));
+									student.setFcoinnum(studentFCoinNum.add(new BigDecimal(mixcoin)));
 								}else{
 									//不足
 									result.put("code", 6);
@@ -2801,7 +2816,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 								 * 学员下订单时，订单价格为M，此时学员的余额减M，冻结金额加M,教练的账户金额不变
 									取消订单时，学员的冻结金额减去M,学员的余额加M,教练的账户金额不变
 								 */
-								if (student.getMoney().doubleValue() < 0 || student.getFmoney().doubleValue() < 0) {
+								if (suserOrderMoney.intValue() < 0 || suserOrderFMoney.intValue() < 0) {
 									result.put("failtimes", failtimes);
 									result.put("successorderid", successorderid);
 									result.put("coachauth", student.getCoachstate());
@@ -2925,9 +2940,12 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		String hql3 = "from CaddAddressInfo where coachid =:coachid and iscurrent = 1";
 		String params3[] = { "coachid" };
 		
-		 
+		BigDecimal suserOrderMoney=suserService.getStudentMoney(student.getStudentid());
+		BigDecimal suserOrderFMoney=suserService.getStudentFrozenCoin(student.getStudentid());
+		BigDecimal studentCoinNum = suserService.getStudentCoin(student.getStudentid());
+		BigDecimal studentFCoinNum = suserService.getStudentFrozenCoin(student.getStudentid());
 		
-		if(student.getMoney().doubleValue()<0.0||student.getFmoney().doubleValue()<0.0||student.getCoinnum()<0)// 余额不够
+		if(suserOrderMoney.intValue()<0||suserOrderFMoney.intValue()<0||studentCoinNum.intValue()<0)// 余额不够
 		{
 			//版本需要更新
 			result.put("failtimes",11);
@@ -3421,16 +3439,14 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						// 修改用户的余额，如果是paytype是1 余额  2 小巴卷 3 小巴币   
 
 						if (student != null) {
-							int cmoney[]=suserService.getStudentMoney(student.getStudentid());
-							BigDecimal suserOrderMoney=new BigDecimal(cmoney[0]);
-							BigDecimal suserOrderFMoney=new BigDecimal(cmoney[1]);
+							/*BigDecimal suserOrderMoney=suserService.getStudentMoney(student.getStudentid());
+							BigDecimal suserOrderFMoney=suserService.getStudentFrozenCoin(student.getStudentid());*/
 							//  判断 1 或者 3  1 扣余额
 							if(PayType.MONEY==orderList.get(m).mOrderInfo.getPaytype()){
-								if(student.getMoney().subtract(total).doubleValue()<0){
+								if(suserOrderMoney.subtract(total).doubleValue()<0){
 									result.put("code", 4);
 									result.put("message", "账户余额不足！");
 									return result;
-									
 								}
 								student.setFmoney(suserOrderFMoney.add(total));
 								student.setMoney(suserOrderMoney.subtract(total));
@@ -3438,7 +3454,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 								 * 学员下订单时，订单价格为M，此时学员的余额减M，冻结金额加M,教练的账户金额不变
 									取消订单时，学员的冻结金额减去M,学员的余额加M,教练的账户金额不变
 								 */
-								if (student.getMoney().doubleValue() < 0 || student.getFmoney().doubleValue() < 0) {
+								if (suserOrderMoney.intValue()< 0 || suserOrderFMoney.intValue() < 0) {
 									result.put("failtimes", failtimes);
 									result.put("successorderid", successorderid);
 									result.put("coachauth", student.getCoachstate());
@@ -3451,15 +3467,13 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 									return result;
 								}
 							}else if(PayType.COIN==orderList.get(m).mOrderInfo.getPaytype()){
-								
-								int scoinnums[]=suserService.getStudentCoin(student.getStudentid());
-								BigDecimal scoinnum = new BigDecimal(scoinnums[0]);
-								BigDecimal sfcoinnum = new BigDecimal(scoinnums[1]);
-								double dc=scoinnum.subtract(total).doubleValue();
+								/*BigDecimal studentCoinNum = suserService.getStudentCoin(student.getStudentid());
+								BigDecimal studentFrozenCoinNum = suserService.getStudentFrozenCoin(student.getStudentid());*/
+								double dc=studentCoinNum.subtract(total).doubleValue();
 								//小巴币大于0，并且剩余小巴币余额减去支付额大于等于0，表示余额购，否则余额不足
 								if(dc>=0){
 									student.setCoinnum((int)dc); //学员小巴币数量减少
-									student.setFcoinnum(sfcoinnum.add(total));
+									//student.setFcoinnum(studentFrozenCoinNum.add(total));
 								}else{
 									//不足
 									result.put("code", 6);

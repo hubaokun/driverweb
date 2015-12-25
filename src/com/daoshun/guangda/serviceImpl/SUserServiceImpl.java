@@ -2,6 +2,7 @@ package com.daoshun.guangda.serviceImpl;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -294,9 +295,8 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		// 修改学员的余额信息
 		SuserInfo student = dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
 		if (student != null) {
-			int cmoney[]=getStudentMoney(student.getStudentid());
-			BigDecimal suserOrderMoney=new BigDecimal(cmoney[0]);
-			BigDecimal suserOrderFMoney=new BigDecimal(cmoney[1]);
+			BigDecimal suserOrderMoney=getStudentMoney(student.getStudentid());
+			BigDecimal suserOrderFMoney=getStudentFrozenCoin(student.getStudentid());
 			student.setMoney(suserOrderMoney.subtract(new BigDecimal(CommonUtils.parseInt(count, 0))));
 			student.setFmoney(suserOrderFMoney.add(new BigDecimal(CommonUtils.parseInt(count, 0))));
 			dataDao.updateObject(student);
@@ -661,8 +661,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			dataDao.updateObject(studentApply);
 			SuserInfo student = dataDao.getObjectById(SuserInfo.class, studentApply.getUserid());
 			if (student != null) {
-				int cmoney[]=getStudentMoney(student.getStudentid());
-				BigDecimal suserOrderFMoney=new BigDecimal(cmoney[1]);
+				BigDecimal suserOrderFMoney=getStudentFrozenCoin(student.getStudentid());;
 				student.setFmoney(suserOrderFMoney.subtract(studentApply.getAmount()));
 				dataDao.updateObject(student);
 			}
@@ -691,9 +690,8 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	            
 	         SuserInfo suserInfo = dataDao.getObjectById(SuserInfo.class, coachid);
 	         if(suserInfo != null){
-	        	 int cmoney[]=getStudentMoney(suserInfo.getStudentid());
-	        	 BigDecimal suserOrderMoney=new BigDecimal(cmoney[0]);
-	        	 BigDecimal suserOrderFMoney=new BigDecimal(cmoney[1]);
+	        	 BigDecimal suserOrderMoney=getStudentMoney(suserInfo.getStudentid());
+	        	 BigDecimal suserOrderFMoney=getStudentFrozenCoin(suserInfo.getStudentid());
 	        	 suserInfo.setFmoney(suserOrderFMoney.subtract(studentApply.getAmount()));
 	        	 //增加学员可提现余额
 	        	 suserInfo.setMoney(suserOrderMoney.add(studentApply.getAmount()));
@@ -728,8 +726,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
             
             SuserInfo suserInfo = dataDao.getObjectById(SuserInfo.class, coachid);
             if(suserInfo != null){
-            	int cmoney[]=getStudentMoney(suserInfo.getStudentid());
-            	BigDecimal suserOrderFMoney=new BigDecimal(cmoney[1]);
+            	BigDecimal suserOrderFMoney=getStudentFrozenMoney(suserInfo.getStudentid());
             	suserInfo.setFmoney(suserOrderFMoney.subtract(studentApply.getAmount()));
             	dataDao.updateObject(suserInfo);
             }
@@ -1851,16 +1848,13 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	 */
 	public HashMap<String, Object> getCoinAffiliation(String studentid){
 		HashMap<String, Object> result = new HashMap<String, Object>();
-		
 		SuserInfo suser=dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
-		
 		//获取冻结小巴币数量
-		int frozenCoin=0;
-		if(suser.getFcoinnum()!=null){
-			frozenCoin=suser.getFcoinnum().intValue();
-		}
+		int frozenCoinNum=getStudentFrozenCoin(suser.getStudentid()).intValue();
+		
+		
 		//获取冻结扣除数量
-		int[] coinAn=getFrozenCoinAffiliation(CommonUtils.parseInt(studentid, 0),frozenCoin);
+		int[] coinAn=getFrozenCoinAffiliation(CommonUtils.parseInt(studentid, 0),frozenCoinNum);
 		List<CoinAffiliation> mList=new ArrayList<CoinAffiliation>();
 		//getFrozenCoinAffiliation(studentid,100);
 		String hql="from CoinRecordInfo where receiverid =:receiverid and receivertype=3 and ownertype=:ownertype GROUP BY ownerid";
@@ -1937,12 +1931,8 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		if (user != null) {
 			int coinnum=0;
 			int fcoinnum=0;
-			if(user.getCoinnum()!=null){
-				coinnum=user.getCoinnum();
-			}
-			if(user.getFcoinnum()!=null){
-				fcoinnum=user.getFcoinnum().intValue();
-			}
+			coinnum=getStudentCoin(user.getStudentid()).intValue();
+			fcoinnum=getStudentFrozenCoin(user.getStudentid()).intValue();
 			result.put("coinnum", coinnum);
 			result.put("fcoinnum", fcoinnum);
 			String hql = "from CoinRecordInfo where (receiverid =:receiverid and receivertype="+ UserType.STUDENT+" ) or (payerid =:payerid and payertype="+ UserType.STUDENT+")  order by addtime desc";
@@ -2142,71 +2132,75 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	 * @param studentid 学员id
 	 * @return
 	 */
-	public int[] getStudentCoin(int studentid){
-		int coin_fcoin[]=new int[2];
+	public BigDecimal getStudentCoin(int studentid){
 		SuserInfo suser=dataDao.getObjectById(SuserInfo.class, studentid);
 		if(suser==null){
-			return coin_fcoin;
+			return new BigDecimal(0);
 		}
 		//【充值的小巴币】
-		int receiverCoinNum=0;
-		String hql1="select sum(coinnum) from CoinRecordInfo where  type=1 and receiverid="+studentid;
-		Long sumcoinnum=(Long) dataDao.getFirstObjectViaParam(hql1, null);
+		String hqlRecharge="select sum(coinnum) from CoinRecordInfo where receivertype=3 and receiverid="+studentid;
+		Long sumcoinnum=(Long) dataDao.getFirstObjectViaParam(hqlRecharge, null);
 		if(sumcoinnum==null){
 			sumcoinnum=0L;
 		}
-		String hql1_1="select sum(coinnum) from CoinRecordInfo where  type=3 and payerid="+studentid;
-		Long retrieveCoin=(Long) dataDao.getFirstObjectViaParam(hql1_1, null);
+		//【回收的小巴币】
+		String hqlRetrieve="select sum(coinnum) from CoinRecordInfo where  type=3 and payerid="+studentid;
+		Long retrieveCoin=(Long) dataDao.getFirstObjectViaParam(hqlRetrieve, null);
 		if(retrieveCoin==null){
 			retrieveCoin=0L;
 		}
-		//【回收的小巴币】
-		receiverCoinNum=sumcoinnum.intValue()-retrieveCoin.intValue();
+		BigDecimal receiverCoinNum=new BigDecimal(sumcoinnum).subtract(new BigDecimal(retrieveCoin));
 		//【订单中已结算的小巴币】
-		int settleCoinNum=0;
-		String hql2="select sum(total) from t_order where studentid=:studentid and paytype=3 and studentstate=3  and coachstate=2 and over_time is not null";
-		String hql3="select sum(mixCoin) from t_order where studentid=:studentid and paytype=4  and studentstate=3  and coachstate=2 and over_time is not null";
-		BigDecimal n1=(BigDecimal) dataDao.getFirstObjectViaParamSql(hql2, new String[]{"studentid"}, studentid);
-		if(n1==null){
-			n1=new BigDecimal(0);
+		String hqlPureSettle ="select sum(total) from t_order where studentid=:studentid and paytype=3 and studentstate=3  and coachstate=2 and over_time is not null";
+		String hqlMixSettle="select sum(mixCoin) from t_order where studentid=:studentid and paytype=4  and studentstate=3  and coachstate=2 and over_time is not null";
+		BigDecimal pureSettleCoin=(BigDecimal) dataDao.getFirstObjectViaParamSql(hqlPureSettle, new String[]{"studentid"}, studentid);
+		if(pureSettleCoin==null){
+			pureSettleCoin=new BigDecimal(0);
 		}
-		BigDecimal n2=(BigDecimal) dataDao.getFirstObjectViaParamSql(hql3, new String[]{"studentid"}, studentid);
-		if(n2==null){
-			n2=new BigDecimal(0);
+		BigDecimal settleMixCoin=(BigDecimal) dataDao.getFirstObjectViaParamSql(hqlMixSettle, new String[]{"studentid"}, studentid);
+		if(settleMixCoin==null){
+			settleMixCoin=new BigDecimal(0);
 		}
-		settleCoinNum=(int)(n1.intValue()+n2.intValue());
+		BigDecimal settleCoinTotal=settleMixCoin.add(pureSettleCoin);
+		//【小巴币个数=充值的小巴币数-订单中已结算的小巴币-冻结 小巴币】
+		BigDecimal studentCoinNum=receiverCoinNum.subtract(settleCoinTotal).subtract(getStudentFrozenCoin(studentid));
+		return studentCoinNum;
+	}
+	/**
+	 * 从订单中查询学员冻结小巴币个数
+	 * @param studentid 学员ID
+	 * @return 学员冻结小巴币个数
+	 */
+	public BigDecimal getStudentFrozenCoin(int studentid){
+		SuserInfo suser=dataDao.getObjectById(SuserInfo.class, studentid);
+		if(suser==null){
+			return new BigDecimal(0);
+		}
 		//【冻结 小巴币】 =纯余额支付订单中的冻结金额+混合支付订单中的冻结小巴币
 		//纯小巴币支付订单中的冻结小巴币
-		StringBuffer sql6=new StringBuffer();
-		sql6.append("select sum(total) from t_order where studentid=:studentid and paytype=3 and orderid not in (")
+		StringBuffer sqlCoinPay=new StringBuffer();
+		sqlCoinPay.append("select sum(total) from t_order where studentid=:studentid and paytype=3 and orderid not in (")
 		.append("select orderid from t_order where studentid=:studentid and paytype=3 and (")
 		.append("( studentstate=3 and coachstate=2 and over_time is not  null)")
 		.append("or ( studentstate=4 and coachstate=4 and over_time is  null)))");
 		
-		BigDecimal n3=(BigDecimal) dataDao.getFirstObjectViaParamSql(sql6.toString(), new String[]{"studentid","studentid"}, studentid,studentid);
-		if(n3==null){
-			n3=new BigDecimal(0);
+		BigDecimal coinPayNum=(BigDecimal) dataDao.getFirstObjectViaParamSql(sqlCoinPay.toString(), new String[]{"studentid","studentid"}, studentid,studentid);
+		if(coinPayNum==null){
+			coinPayNum=new BigDecimal(0);
 		}
-		
 		//混合支付订单中的冻结小巴币
-		StringBuffer sql7=new StringBuffer();
-		sql7.append("select sum(mixCoin) from t_order where studentid=:studentid and paytype=4 and orderid not in (")
+		StringBuffer sqlMixPay=new StringBuffer();
+		sqlMixPay.append("select sum(mixCoin) from t_order where studentid=:studentid and paytype=4 and orderid not in (")
 		.append("select orderid from t_order where studentid=:studentid and paytype=4 and (")
 		.append("( studentstate=3 and coachstate=2 and over_time is not  null)")
 		.append("or ( studentstate=4 and coachstate=4 and over_time is  null)))");
 				
-		BigDecimal n4=(BigDecimal) dataDao.getFirstObjectViaParamSql(sql7.toString(), new String[]{"studentid","studentid"}, studentid,studentid);
-		if(n4==null){
-			n4=new BigDecimal(0);
+		BigDecimal mixPayNum=(BigDecimal) dataDao.getFirstObjectViaParamSql(sqlMixPay.toString(), new String[]{"studentid","studentid"}, studentid,studentid);
+		if(mixPayNum==null){
+			mixPayNum=new BigDecimal(0);
 		}
 		//【冻结 小巴币】 =纯小巴币支付订单中的冻结小巴币+混合支付订单中的冻结小巴币
-		int fcoinNum=n3.intValue()+n4.intValue();
-		
-		//【小巴币个数=充值的小巴币数-订单中已结算的小巴币-冻结 小巴币】
-		int rn=receiverCoinNum-settleCoinNum-fcoinNum;
-		coin_fcoin[0]=rn;//小巴币
-		coin_fcoin[1]=fcoinNum;
-		return coin_fcoin;
+		return coinPayNum.add(mixPayNum);
 	}
   	
 	/**
@@ -2216,86 +2210,78 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	 * @param studentid
 	 * @return
 	 */
-	public int[] getStudentMoney(int studentid){
-		int money_fmoney[]=new int[2];
+	public BigDecimal getStudentMoney(int studentid){
 		SuserInfo suser=dataDao.getObjectById(SuserInfo.class, studentid);
 		if(suser==null){
-			return money_fmoney;
+			return new BigDecimal(0);
 		}
 		//学员充值金额
-		String hql1="select sum(amount) from RechargeRecordInfo where userid=:userid  and type=2 and state=1";
-		BigDecimal rechargeMoney=(BigDecimal) dataDao.getFirstObjectViaParam(hql1, new String[]{"userid"}, studentid);
+		String hqlRecharge="select sum(amount) from RechargeRecordInfo where userid=:userid  and type=2 and state=1";
+		BigDecimal rechargeMoney=(BigDecimal) dataDao.getFirstObjectViaParam(hqlRecharge, new String[]{"userid"}, studentid);
 		if(rechargeMoney==null){
 			rechargeMoney=new BigDecimal(0);
 		}
 		
 		//已提现金额
-		String hql2="select sum(amount) from StudentApplyInfo where userid=:userid and state=1";
-		BigDecimal cashMoney=(BigDecimal) dataDao.getFirstObjectViaParam(hql2, new String[]{"userid"}, studentid);
+		String hqlCash="select sum(amount) from StudentApplyInfo where userid=:userid and state=1";
+		BigDecimal cashMoney=(BigDecimal) dataDao.getFirstObjectViaParam(hqlCash, new String[]{"userid"}, studentid);
 		if(cashMoney==null){
 			cashMoney=new BigDecimal(0);
 		}
 		
 		//已结算订单消费的金额
-		int settleMoney=0;
-		String hql3="select sum(total) from OrderInfo where studentid=:studentid and paytype=1 and studentstate=3  and coachstate=2 and over_time is not null";
-		String hql4="select sum(mixmoney) from t_order where studentid=:studentid and paytype=4  and studentstate=3  and coachstate=2 and over_time is not null";
-		BigDecimal n1=(BigDecimal) dataDao.getFirstObjectViaParam(hql3, new String[]{"studentid"}, studentid);
-		if(n1==null){
-			n1=new BigDecimal(0);
+		String hqlConsume="select sum(total) from t_order where studentid=:studentid and paytype=1 and studentstate=3  and coachstate=2 and over_time is not null";
+		String hqlMixConsume="select sum(mixmoney) from t_order where studentid=:studentid and paytype=4  and studentstate=3  and coachstate=2 and over_time is not null";
+		BigDecimal consume=(BigDecimal) dataDao.getFirstObjectViaParamSql(hqlConsume, new String[]{"studentid"}, studentid);
+		if(consume==null){
+			consume=new BigDecimal(0);
 		}
-		BigDecimal n2=new BigDecimal(0);
-		n2=(BigDecimal) dataDao.getFirstObjectViaParamSql(hql4, new String[]{"studentid"}, studentid);
-		/*if(nmlist!=null && nmlist.size()>0 &&  nmlist.get(0)!=null){
-			n2=(BigDecimal) nmlist.get(0);
-		}*/
-		//BigDecimal n2=(BigDecimal) dataDao.getFirstObjectViaParam(hql4, new String[]{"studentid"}, studentid);
-		if(n2==null){
-			n2=new BigDecimal(0);
+		BigDecimal mixConsume=new BigDecimal(0);
+		mixConsume=(BigDecimal) dataDao.getFirstObjectViaParamSql(hqlMixConsume, new String[]{"studentid"}, studentid);
+		if(mixConsume==null){
+			mixConsume=new BigDecimal(0);
 		}
-		settleMoney=(int)(n1.intValue()+n2.intValue());
-		
+		BigDecimal settleMoney=consume.add(mixConsume);
+		//【余额值=学员充值金额-提现金额-已结算订单消费的金额-冻结金额】
+		BigDecimal rn=rechargeMoney.subtract(cashMoney).subtract(settleMoney).subtract(getStudentFrozenMoney(studentid));
+		return rn;
+	}
+	
+	public BigDecimal getStudentFrozenMoney(int studentid){
 		//【冻结 金额】 =提现时的冻结金额+(纯余额支付订单中的冻结金额+混合支付订单中的冻结金额)
-		
 		//提现中金额，会冻结
-		String hql5="select sum(amount) from StudentApplyInfo where userid=:userid and state=0";
-		BigDecimal freezeCashMoney=(BigDecimal) dataDao.getFirstObjectViaParam(hql5, new String[]{"userid"}, studentid);
+		String hqlWithdraw="select sum(amount) from StudentApplyInfo where userid=:userid and state=0";
+		BigDecimal freezeCashMoney=(BigDecimal) dataDao.getFirstObjectViaParam(hqlWithdraw, new String[]{"userid"}, studentid);
 		if(freezeCashMoney==null){
 			freezeCashMoney=new BigDecimal(0);
 		}
 		
 		//纯余额支付订单中的冻结金额
-		StringBuffer sql6=new StringBuffer();
-		sql6.append("select sum(total) from t_order where studentid=:studentid and paytype=1 and orderid not in (")
+		StringBuffer sqlOrderPay=new StringBuffer();
+		sqlOrderPay.append("select sum(total) from t_order where studentid=:studentid and paytype=1 and orderid not in (")
 		.append("select orderid from t_order where studentid=:studentid and paytype=1 and (")
 		.append("( studentstate=3 and coachstate=2 and over_time is not  null)")
 		.append("or ( studentstate=4 and coachstate=4 and over_time is  null)))");
 		
-		BigDecimal n3=(BigDecimal) dataDao.getFirstObjectViaParamSql(sql6.toString(), new String[]{"studentid","studentid"}, studentid,studentid);
-		if(n3==null){
-			n3=new BigDecimal(0);
+		BigDecimal orderPay=(BigDecimal) dataDao.getFirstObjectViaParamSql(sqlOrderPay.toString(), new String[]{"studentid","studentid"}, studentid,studentid);
+		if(orderPay==null){
+			orderPay=new BigDecimal(0);
 		}
 		
 		//混合支付订单中的冻结金额
-		StringBuffer sql7=new StringBuffer();
-		sql7.append("select sum(mixMoney) from t_order where studentid=:studentid and paytype=4 and orderid not in (")
+		StringBuffer sqlOrderMixPay=new StringBuffer();
+		sqlOrderMixPay.append("select sum(mixMoney) from t_order where studentid=:studentid and paytype=4 and orderid not in (")
 		.append("select orderid from t_order where studentid=:studentid and paytype=4 and (")
 		.append("( studentstate=3 and coachstate=2 and over_time is not  null)")
 		.append("or ( studentstate=4 and coachstate=4 and over_time is  null)))");
 				
-		BigDecimal n4=(BigDecimal) dataDao.getFirstObjectViaParamSql(sql7.toString(), new String[]{"studentid","studentid"}, studentid,studentid);
-		if(n4==null){
-			n4=new BigDecimal(0);
+		BigDecimal orderMixPay=(BigDecimal) dataDao.getFirstObjectViaParamSql(sqlOrderMixPay.toString(), new String[]{"studentid","studentid"}, studentid,studentid);
+		if(orderMixPay==null){
+			orderMixPay=new BigDecimal(0);
 		}
 		//【冻结 金额】 =提现时的冻结金额+(纯余额支付订单中的冻结金额+混合支付订单中的冻结金额)
-		int fmoney=freezeCashMoney.intValue()+n3.intValue()+n4.intValue();
-		
-		//【余额值=学员充值金额-提现金额-已结算订单消费的金额-冻结金额】
-		int rn=(int) (rechargeMoney.intValue()-cashMoney.intValue()-settleMoney-fmoney);
-		
-		money_fmoney[0]=rn;//余额
-		money_fmoney[1]=fmoney;//冻结余额
-		return money_fmoney;
+		BigDecimal fmoney=freezeCashMoney.add(orderPay).add(orderMixPay);
+		return fmoney;
 	}
 	/**
 	 * 查询有异常的学员余额
@@ -2312,13 +2298,14 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 				if(user.getFmoney()==null){
 					user.setFmoney(new BigDecimal(0));
 				}
-				int m1[]=getStudentMoney(user.getStudentid());
+				int m1=getStudentMoney(user.getStudentid()).intValue();
+				int m3=getStudentFrozenMoney(user.getStudentid()).intValue();
 				int m2=user.getMoney().intValue()-user.getFmoney().intValue();
-				if(m1[0]!=m2 || m2<0 || m1[0]<0 ||m1[1]<0 ||m1[1]!=user.getFmoney().intValue()){
+				if(m1!=m2 || m2<0 || m1<0 ||m3<0 ||m3!=user.getFmoney().intValue()){
 					/*String str="studentid="+user.getStudentid()+",money="+m2+",订单结算值="+m1+"<br>";
 					relist.add(str);*/
 					//System.out.println("studentid="+user.getStudentid()+",money="+m2+",订单结算值="+m1+"<br>");
-					dataDao.updateBySql("update t_user_student_copy2 set money2="+m1[0]+", fmoney2="+m1[1]+" where studentid="+user.getStudentid());
+					dataDao.updateBySql("update t_user_student_copy2 set money2="+m1+", fmoney2="+m3+" where studentid="+user.getStudentid());
 				}
 			}
 			
@@ -2330,42 +2317,47 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
   	 * @param coachid
   	 * @return
   	 */
-	public int[] getCoachMoney(int coachid){
-		int money_fmoney[]=new int[2];
+	public BigDecimal getCoachMoney(int coachid){
 		CuserInfo cuser=dataDao.getObjectById(CuserInfo.class, coachid);
 		if(cuser==null){
-			return money_fmoney;
+			return new BigDecimal(0);
 		}
 		//订单表教练获取的金额
-		int receiverMoney=0;
-		String hql1="select sum(total) from t_order where coachid=:coachid and paytype=1 and studentstate=3 and coachstate=2 and over_time is not null";
-		BigDecimal n1=(BigDecimal) dataDao.getFirstObjectViaParamSql(hql1, new String[]{"coachid"}, coachid);
-		if(n1==null){
-			n1=new BigDecimal(0);
+		BigDecimal receiverMoney=new BigDecimal(0);
+		String hqlCoachMoney="select sum(total) from t_order where coachid=:coachid and paytype=1 and studentstate=3 and coachstate=2 and over_time is not null";
+		BigDecimal coachMoney=(BigDecimal) dataDao.getFirstObjectViaParamSql(hqlCoachMoney, new String[]{"coachid"}, coachid);
+		if(coachMoney==null){
+			coachMoney=new BigDecimal(0);
 		}
-		String hql2="select sum(mixmoney) from t_order where coachid=:coachid and paytype=4 and studentstate=3 and coachstate=2 and over_time is not null";
-		BigDecimal n2=(BigDecimal) dataDao.getFirstObjectViaParamSql(hql2, new String[]{"coachid"}, coachid);
-		if(n2==null){
-			n2=new BigDecimal(0);
+		String hqlCoachMixMoney="select sum(mixmoney) from t_order where coachid=:coachid and paytype=4 and studentstate=3 and coachstate=2 and over_time is not null";
+		BigDecimal coachMixMoney=(BigDecimal) dataDao.getFirstObjectViaParamSql(hqlCoachMixMoney, new String[]{"coachid"}, coachid);
+		if(coachMixMoney==null){
+			coachMixMoney=new BigDecimal(0);
 			
 		}
-		receiverMoney=n1.intValue()+n2.intValue();
+		receiverMoney=coachMoney.add(coachMixMoney);
 		//提现金额
 		String hql3="select sum(amount) from CApplyCashInfo where coachid=:coachid and state=1";
 		BigDecimal amount=(BigDecimal) dataDao.getFirstObjectViaParam(hql3, new String[]{"coachid"}, coachid);
 		if(amount==null){
 			amount=new BigDecimal(0);
 		}
+		return receiverMoney.subtract(amount).subtract(getCoachFrozenMoney(coachid));
+	}
+	
+	/**
+  	 * 教练提现冻结金额
+  	 * @param coachid
+  	 * @return
+  	 */
+	public BigDecimal getCoachFrozenMoney(int coachid){
 		//提现冻结金额
-		String hql4="select sum(amount) from CApplyCashInfo where coachid=:coachid and state=0";
-		BigDecimal freezeAmount=(BigDecimal) dataDao.getFirstObjectViaParam(hql4, new String[]{"coachid"}, coachid);
+		String hqlFreeze="select sum(amount) from CApplyCashInfo where coachid=:coachid and state=0";
+		BigDecimal freezeAmount=(BigDecimal) dataDao.getFirstObjectViaParam(hqlFreeze, new String[]{"coachid"}, coachid);
 		if(freezeAmount==null){
 			freezeAmount=new BigDecimal(0);
 		}
-		// 【教练金额=订单表教练获取的金额-提现金额-提现冻结金额】
-		money_fmoney[0]=receiverMoney-amount.intValue()-freezeAmount.intValue();
-		money_fmoney[1]=freezeAmount.intValue();
-		return money_fmoney;
+		return freezeAmount;
 	}
 	/**
 	 * 查询有异常的教练余额
@@ -2382,13 +2374,14 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 				if(user.getFmoney()==null){
 					user.setFmoney(new BigDecimal(0));
 				}
-				int m1[]=getCoachMoney(user.getCoachid());
+				int m1=getCoachMoney(user.getCoachid()).intValue();
+				int m3=getCoachFrozenMoney(user.getCoachid()).intValue();
 				int m2=user.getMoney().intValue()-user.getFmoney().intValue();
-				if(m1[0]!=m2 || m2<0 || m1[0]<0 ||m1[1]<0 ||m1[1]!=user.getFmoney().intValue()){
+				if(m1!=m2 || m2<0 || m1<0 ||m3<0 ||m3!=user.getFmoney().intValue()){
 					/*String str="studentid="+user.getStudentid()+",money="+m2+",订单结算值="+m1+"<br>";
 					relist.add(str);*/
 					//System.out.println("studentid="+user.getStudentid()+",money="+m2+",订单结算值="+m1+"<br>");
-					dataDao.updateBySql("update t_user_coach_copy2 set money2="+m1[0]+", fmoney2="+m1[1]+" where coachid="+user.getCoachid());
+					dataDao.updateBySql("update t_user_coach_copy2 set money2="+m1+", fmoney2="+m3+" where coachid="+user.getCoachid());
 				}
 			}
 			
@@ -2401,38 +2394,36 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
   	 * @param coachid
   	 * @return
   	 */
-	public int getCoachCoin(int coachid){
-		//int coin_fcoin[]=new int[2];
+	public BigDecimal getCoachCoin(int coachid){
 		CuserInfo cuser=dataDao.getObjectById(CuserInfo.class, coachid);
 		if(cuser==null){
-			return 0;
+			return new BigDecimal(0);
 		}
 		//订单表教练获取的金额
-		int receiverCoin=0;
-		String hql1="select sum(total) from t_order where coachid=:coachid and paytype=3 and studentstate=3 and coachstate=2  and over_time is not null";
-		BigDecimal n1=(BigDecimal) dataDao.getFirstObjectViaParamSql(hql1, new String[]{"coachid"}, coachid);
-		if(n1==null){
-			n1=new BigDecimal(0);
+		String hqlCoachMoney="select sum(total) from t_order where coachid=:coachid and paytype=3 and studentstate=3 and coachstate=2  and over_time is not null";
+		BigDecimal coachMoney=(BigDecimal) dataDao.getFirstObjectViaParamSql(hqlCoachMoney, new String[]{"coachid"}, coachid);
+		if(coachMoney==null){
+			coachMoney=new BigDecimal(0);
 		}
-		String hql2="select sum(mixcoin) from t_order where coachid=:coachid and paytype=4 and studentstate=3 and coachstate=2 and over_time is not null";
-		BigDecimal n2=(BigDecimal) dataDao.getFirstObjectViaParamSql(hql2, new String[]{"coachid"}, coachid);
-		if(n2==null){
-			n2=new BigDecimal(0);
+		String hqlCoachMixMoney="select sum(mixcoin) from t_order where coachid=:coachid and paytype=4 and studentstate=3 and coachstate=2 and over_time is not null";
+		BigDecimal coachMixMoney=(BigDecimal) dataDao.getFirstObjectViaParamSql(hqlCoachMixMoney, new String[]{"coachid"}, coachid);
+		if(coachMixMoney==null){
+			coachMixMoney=new BigDecimal(0);
 		}
-		receiverCoin=n1.intValue()+n2.intValue();
+		BigDecimal receiverCoin=coachMoney.add(coachMixMoney);
 		//兑换的小巴币
-		String hql3="select sum(coinnum) from t_coin_record where payertype=2 and payerid=:payerid";
-		BigDecimal amount=(BigDecimal) dataDao.getFirstObjectViaParamSql(hql3, new String[]{"payerid"}, coachid);
+		String hqlExchange="select sum(coinnum) from t_coin_record where payertype=2 and payerid=:payerid";
+		BigDecimal amount=(BigDecimal) dataDao.getFirstObjectViaParamSql(hqlExchange, new String[]{"payerid"}, coachid);
 		if(amount==null){
 			amount=new BigDecimal(0);
 		}
-		return receiverCoin-amount.intValue();//订单获取的小巴币
+		return receiverCoin.subtract(amount);//订单获取的小巴币
 	}
 	/**
 	 * 查询有异常的教练小巴币
 	 */
-	public List findCoachCoinException(){
-		List relist=new ArrayList();
+	public List<String> findCoachCoinException(){
+		List<String> relist=new ArrayList<String>();
 		String hql="from CuserInfo";
 		List<CuserInfo> list=(List<CuserInfo>) dataDao.getObjectsViaParam(hql, null);
 		for (CuserInfo user : list) {
@@ -2440,13 +2431,13 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 				if(user.getCoinnum()==null){
 					user.setCoinnum(new BigDecimal(0).intValue());
 				}
-				int m1=getCoachCoin(user.getCoachid());
+				int m1=getCoachCoin(user.getCoachid()).intValue();
 				int m2=user.getCoinnum().intValue();
 				if(m1!=m2 || m2<0 || m1<0 ){
 					/*String str="studentid="+user.getStudentid()+",money="+m2+",订单结算值="+m1+"<br>";
 					relist.add(str);*/
 					//System.out.println("coachid="+user.getCoachid()+",coinnum="+m2+",订单结算值="+m1+"<br>");
-					dataDao.updateBySql("update t_user_coach_copy2 set coinnum2="+m1+" where coachid="+user.getCoachid());
+					dataDao.updateBySql("update t_user_coach_copy2 set coinnum="+m1+" where coachid="+user.getCoachid());
 				}
 			}
 			
@@ -2456,8 +2447,8 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	/**
 	 * 查询有异常的学员小巴币
 	 */
-	public List findStudentCoinException(){
-		List relist=new ArrayList();
+	public List<String> findStudentCoinException(){
+		List<String> relist=new ArrayList<String>();
 		String hql="from SuserInfo";
 		List<SuserInfo> list=(List<SuserInfo>) dataDao.getObjectsViaParam(hql, null);
 		for (SuserInfo user : list) {
@@ -2468,18 +2459,51 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 				if(user.getFcoinnum()==null){
 					user.setFcoinnum(new BigDecimal(0));
 				}
-				int m1[]=getStudentCoin(user.getStudentid());
+				int studentCoin=getStudentCoin(user.getStudentid()).intValue();
+				int studentFrozenCoin=getStudentCoin(user.getStudentid()).intValue();
 				int m2=user.getCoinnum().intValue();
 				int m3=user.getFcoinnum().intValue();
-				if(m1[0]!=m2 || m2<0 || m1[0]<0 ||m1[1]<0 ||m1[1]!=user.getFcoinnum().intValue() ||m3<0){
+				if(studentCoin!=m2 || m2<0 || studentCoin<0 ||studentFrozenCoin<0 ||studentFrozenCoin!=user.getFcoinnum().intValue() ||m3<0){
 					/*String str="studentid="+user.getStudentid()+",money="+m2+",订单结算值="+m1+"<br>";
 					relist.add(str);*/
 					//System.out.println("studentid="+user.getStudentid()+",可用小巴币="+m2+",fcoinnum="+m3+",订单结算值 小巴币="+m1[0]+"，订单冻结小巴币="+m1[1]);
-					dataDao.updateBySql("update t_user_student_copy2 set coinnum2="+m1[0]+", fcoinnum="+m1[1]+" where studentid="+user.getStudentid());
+					dataDao.updateBySql("update t_user_student_copy2 set coinnum2="+studentCoin+", fcoinnum="+studentFrozenCoin+" where studentid="+user.getStudentid());
 				}
 			}
 			
 		}
 		return relist;
+	}
+	/**
+	 * 查询某个学员和一个教练的总消费额
+	 * @param coachid  教练ID
+	 * @param studentid 学员ID
+	 * @return
+	 */
+	public BigDecimal getSettleOrderTotal(int coachid,int studentid){
+		StringBuffer sqlSettle=new StringBuffer();
+		sqlSettle.append("select sum(total) from t_order where studentid=:studentid and coachid=:coachid ")
+			     .append(" and studentstate=3  and coachstate=2 and over_time is not null");
+		BigDecimal settleMoney=(BigDecimal) dataDao.getFirstObjectViaParamSql(sqlSettle.toString(), new String[]{"studentid","coachid"},studentid, coachid);
+		if(settleMoney==null){
+			settleMoney=new BigDecimal(0);
+		}
+		return settleMoney;
+	}
+	/**
+	 * 查询某个学员和一个教练的总消费小时数
+	 * @param coachid  教练ID
+	 * @param studentid 学员ID
+	 * @return
+	 */
+	public BigInteger getSettleOrderTime(int coachid,int studentid){
+		StringBuffer sqlSettle=new StringBuffer();
+		sqlSettle.append("select count(*) from t_order where studentid=:studentid and coachid=:coachid ")
+			     .append(" and studentstate=3  and coachstate=2 and over_time is not null");
+		BigInteger settleMoney=(BigInteger) dataDao.getFirstObjectViaParamSql(sqlSettle.toString(), new String[]{"studentid","coachid"},studentid, coachid);
+		if(settleMoney==null){
+			settleMoney=new BigInteger("0");
+		}
+		return settleMoney;
 	}
 }

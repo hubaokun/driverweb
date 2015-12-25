@@ -143,7 +143,7 @@ public class CoinRecordAction extends BaseAction{
     	QueryResult<CoinRecordInfo> result = coinRecordService.getCoinRecordListByPage(type,pageIndex, 10, starttime, endtime, ownertype, String.valueOf(ownerid),String.valueOf(receiverid));
     	if(receiverid!=null && !"".equals(receiverid) && !"null".equals(receiverid)){
         	SuserInfo suser=suserService.getUserById(String.valueOf(receiverid));
-        	coinnum=suser.getCoinnum();
+        	coinnum=suserService.getStudentCoin(suser.getStudentid()).intValue();
         	receivername=suser.getRealname();
         }
     	coinrecordlist = result.getDataList();
@@ -196,7 +196,7 @@ public class CoinRecordAction extends BaseAction{
     	QueryResult<CoinRecordInfo> result = coinRecordService.getSchoolCoinRecordListByPage(pageIndex, 10, starttime, endtime, 1,String.valueOf(schoolid) ,String.valueOf(receiverid));
     	if(receiverid!=null && !"".equals(receiverid) && !"null".equals(receiverid)){
         	SuserInfo suser=suserService.getUserById(String.valueOf(receiverid));
-        	coinnum=suser.getCoinnum();
+        	coinnum=suserService.getStudentCoin(suser.getStudentid()).intValue();
         	receivername=suser.getRealname();
         }
     	coinrecordlist = result.getDataList();
@@ -306,14 +306,9 @@ public class CoinRecordAction extends BaseAction{
 
        
         if(suser!=null){
-        	 if(suser.getCoinnum()==null){
-        		 suser.setCoinnum(coinnum);
-        	 }else{
-        		 int scoinnums[]=suserService.getStudentCoin(suser.getStudentid());
-        		 BigDecimal scoinnum = new BigDecimal(scoinnums[0]);
-        		 suser.setCoinnum(scoinnum.intValue()+coinnum);
-        	 }
-             suserService.updateUserInfo(suser);
+        	BigDecimal scoinnum = suserService.getStudentCoin(suser.getStudentid());
+        	suser.setCoinnum(scoinnum.intValue()+coinnum);
+            suserService.updateUserInfo(suser);
         }
        
 

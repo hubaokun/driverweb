@@ -1,6 +1,7 @@
 package com.daoshun.guangda.servlet;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -19,8 +20,6 @@ import com.daoshun.common.ErrException;
 import com.daoshun.guangda.pojo.AreaInfo;
 import com.daoshun.guangda.pojo.CaddAddressInfo;
 import com.daoshun.guangda.pojo.CityInfo;
-import com.daoshun.guangda.pojo.CoachStudentInfo;
-import com.daoshun.guangda.pojo.CouponRecord;
 import com.daoshun.guangda.pojo.CsubjectInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
 import com.daoshun.guangda.pojo.DriveSchoolInfo;
@@ -416,6 +415,7 @@ public class CuserServlet extends BaseServlet {
 					cuser.setVersion(version);//设置版本号
 				}
 				cuserService.updateCuser(cuser);
+				BigDecimal coachOrderFrozenMoney=suserService.getCoachFrozenMoney(cuser.getCoachid());
 				cuser.setCar_cardpicfurl(cuserService.backUrl(cuser.getCar_cardpicf())); // 行驶证正面照
 				cuser.setCar_cardpicburl(cuserService.backUrl(cuser.getCar_cardpicb())); // 行驶证反面照
 				cuser.setCoach_cardpicurl(cuserService.backUrl(cuser.getCoach_cardpic())); // 教练证照片
@@ -425,7 +425,7 @@ public class CuserServlet extends BaseServlet {
 				cuser.setId_cardpicburl(cuserService.backUrl(cuser.getId_cardpicb())); // 身份证反面照
 				cuser.setRealpicurl(cuserService.backUrl(cuser.getRealpic())); // 真实照片
 				cuser.setPassword(password);
-				cuser.setMoney_frozen(String.valueOf(cuser.getFmoney())); // 冻结金额
+				cuser.setMoney_frozen(String.valueOf(coachOrderFrozenMoney.intValue())); // 冻结金额
 				if (cuser.getModelid() != null) {
 					String[] ml = cuser.getModelid().split(",");
 					List<ModelsInfo> modellist = new ArrayList<ModelsInfo>();

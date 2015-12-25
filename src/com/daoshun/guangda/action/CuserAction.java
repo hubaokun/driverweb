@@ -1144,8 +1144,7 @@ public class CuserAction extends BaseAction {
 	@Action(value = "/setBalance")
 	public void setBalance() {
 		CuserInfo cuserInfo = cuserService.getCuserByCoachid(coachid);
-		int cmoney[]=suserService.getCoachMoney(cuserInfo.getCoachid());
-		BigDecimal cuserOrderMoney=new BigDecimal(cmoney[0]);
+		BigDecimal cuserOrderMoney=suserService.getCoachMoney(cuserInfo.getCoachid());
 		cuserInfo.setMoney(cuserOrderMoney.add(money));
 		cuserService.updateCuser(cuserInfo);
 		setResponseStr("success");
@@ -1159,8 +1158,7 @@ public class CuserAction extends BaseAction {
 	@Action(value = "/lessenBalance")
 	public void lessenBalance() {
 		CuserInfo cuserInfo = cuserService.getCuserByCoachid(coachid);
-		int cmoney[]=suserService.getCoachMoney(cuserInfo.getCoachid());
-		BigDecimal cuserOrderMoney=new BigDecimal(cmoney[0]);
+		BigDecimal cuserOrderMoney=suserService.getCoachMoney(cuserInfo.getCoachid());
 		BigDecimal bigdecimal = cuserOrderMoney.subtract(money);
 		if (bigdecimal.compareTo(BigDecimal.ZERO) == -1) {
 			setResponseStr("error");
@@ -1990,8 +1988,7 @@ public class CuserAction extends BaseAction {
 			for (int i = 0; i < checkbox.length; i++) {
 				cuser = cuserService.getCoachByid(CommonUtils.parseInt(checkbox[i], 0));
 				//从订单表查询教练的余额
-				int cmoney[]=suserService.getCoachMoney(cuser.getCoachid());
-				BigDecimal cuserOrderMoney=new BigDecimal(cmoney[0]);
+				BigDecimal cuserOrderMoney=suserService.getCoachMoney(cuser.getCoachid());
 				cuser.setMoney(money.add(cuserOrderMoney));
 				cuserService.updateCuser(cuser);
 			}
@@ -2025,7 +2022,8 @@ public class CuserAction extends BaseAction {
 		if (checkbox.length != 0) {
 			for (int i = 0; i < checkbox.length; i++) {
 				cuser = cuserService.getCoachByid(CommonUtils.parseInt(checkbox[i], 0));
-				BigDecimal bigdecimal = cuser.getMoney().subtract(money);
+				BigDecimal coachOrderMoney=suserService.getCoachMoney(cuser.getCoachid());
+				BigDecimal bigdecimal = coachOrderMoney.subtract(money);
 				if (bigdecimal.compareTo(BigDecimal.ZERO) == -1) {
 					less = -1;
 				}
@@ -2033,8 +2031,7 @@ public class CuserAction extends BaseAction {
 			if (less != -1) {
 				for (int i = 0; i < checkbox.length; i++) {
 					cuser = cuserService.getCoachByid(CommonUtils.parseInt(checkbox[i], 0));
-					int cmoney[]=suserService.getCoachMoney(cuser.getCoachid());
-					BigDecimal cuserOrderMoney=new BigDecimal(cmoney[0]);
+					BigDecimal cuserOrderMoney=suserService.getCoachMoney(cuser.getCoachid());
 					BigDecimal bigdecimal = cuserOrderMoney.subtract(money);
 					cuser.setMoney(bigdecimal);
 					cuserService.updateCuser(cuser);

@@ -697,9 +697,8 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
             CuserInfo coach = dataDao.getObjectById(CuserInfo.class, capplyCash.getCoachid());
             if (coach != null) {
                 //增加教练可提现余额
-                int cmoney[]=suserService.getCoachMoney(coach.getCoachid());
-    			BigDecimal cuserOrderMoney=new BigDecimal(cmoney[0]);//教练余额
-    			BigDecimal cuserOrderFMoney=new BigDecimal(cmoney[1]);//教练冻结金额
+    			BigDecimal cuserOrderMoney=suserService.getCoachMoney(coach.getCoachid());//教练余额
+    			BigDecimal cuserOrderFMoney=suserService.getCoachFrozenMoney(coach.getCoachid());//教练冻结金额
     			coach.setFmoney(cuserOrderFMoney.subtract(capplyCash.getAmount()));
                 coach.setMoney(cuserOrderMoney.add(capplyCash.getAmount()));
                 dataDao.updateObject(coach);
@@ -746,8 +745,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
             
             CuserInfo coach = dataDao.getObjectById(CuserInfo.class, capplyCash.getCoachid());
             if (coach != null) {
-            	int cmoney[]=suserService.getCoachMoney(coach.getCoachid());
-            	BigDecimal cuserOrderFMoney=new BigDecimal(cmoney[1]);
+            	BigDecimal cuserOrderFMoney=suserService.getCoachFrozenMoney(coach.getCoachid());
                 coach.setFmoney(cuserOrderFMoney.subtract(capplyCash.getAmount()));
                 dataDao.updateObject(coach);
             }
@@ -816,8 +814,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
             capplyCash.setUpdatetime(todate);
             CuserInfo coach = dataDao.getObjectById(CuserInfo.class, capplyCash.getCoachid());
 	          if (coach != null) {
-	        	  int cmoney[]=suserService.getCoachMoney(coach.getCoachid());
-	    		  BigDecimal cuserOrderFMoney=new BigDecimal(cmoney[1]);//教练冻结金额
+	    		  BigDecimal cuserOrderFMoney=suserService.getCoachFrozenMoney(coach.getCoachid());//教练冻结金额
 	              coach.setFmoney(cuserOrderFMoney.subtract(capplyCash.getAmount()));
 	              dataDao.updateObject(coach);
 	          }
@@ -1426,8 +1423,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
             if (type == 1) {
                 CuserInfo user = dataDao.getObjectById(CuserInfo.class, info.getUserid());
                 if (user != null) {
-                	int cmoney[]=suserService.getCoachMoney(user.getCoachid());
-            		BigDecimal cuserOrderMoney=new BigDecimal(cmoney[0]);
+            		BigDecimal cuserOrderMoney=suserService.getCoachMoney(user.getCoachid());
                     user.setMoney(cuserOrderMoney.add(info.getAmount()));
                     dataDao.updateObject(user);
                     // 插入充值记录
@@ -1444,8 +1440,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
             else if (type == 2) {
                 SuserInfo user = dataDao.getObjectById(SuserInfo.class, info.getUserid());
                 if (user != null) {
-                	int cmoney[]=suserService.getStudentMoney(user.getStudentid());
-                	BigDecimal suserOrderMoney=new BigDecimal(cmoney[0]);
+                	BigDecimal suserOrderMoney=suserService.getStudentMoney(user.getStudentid());
                     user.setMoney(suserOrderMoney.add(info.getAmount()));
                     dataDao.updateObject(user);
                     // 插入充值记录
@@ -1471,9 +1466,12 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
     public HashMap<String, Object> getBalanceList(String coachid) {
         HashMap<String, Object> result = new HashMap<String, Object>();
         CuserInfo user = dataDao.getObjectById(CuserInfo.class, CommonUtils.parseInt(coachid, 0));
+        
         if (user != null) {
-            result.put("balance", user.getMoney());
-            result.put("fmoney", user.getFmoney());
+        	BigDecimal coachOrderMoney=suserService.getCoachMoney(user.getCoachid());
+        	BigDecimal coachOrderFrozenMoney=suserService.getCoachFrozenMoney(user.getCoachid());
+            result.put("balance", coachOrderMoney.intValue());
+            result.put("fmoney", coachOrderFrozenMoney.intValue());
             result.put("gmoney", user.getGmoney());
             String hql = "from BalanceCoachInfo where userid =:userid and amount>0 order by addtime desc";
             String[] params = {"userid"};
@@ -1496,7 +1494,8 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
         HashMap<String, Object> result = new HashMap<String, Object>();
         CuserInfo user = dataDao.getObjectById(CuserInfo.class, CommonUtils.parseInt(coachid, 0));
         if (user != null) {
-            result.put("coinnum", user.getCoinnum());
+        	int coachOrdercoinnum=suserService.getCoachCoin(user.getCoachid()).intValue();
+            result.put("coinnum", coachOrdercoinnum);
             String hql = "from CoinRecordInfo  where (receiverid =:receiverid and receivertype="+ UserType.COAH+" ) or (payerid =:payerid and payertype="+ UserType.COAH+")  order by addtime desc";
             //String hql = "from CoinRecordInfo a left join SuserInfo b on a.payerid=b.studentid   where (receiverid =:receiverid and receivertype="+ UserType.COAH+" ) or (payerid =:payerid and payertype="+ UserType.COAH+")  order by addtime desc";
             String[] params = {"receiverid", "payerid"};
@@ -1520,7 +1519,8 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
         HashMap<String, Object> result = new HashMap<String, Object>();
         CuserInfo user = dataDao.getObjectById(CuserInfo.class, CommonUtils.parseInt(coachid, 0));
         if (user != null) {
-            result.put("coinnum", user.getCoinnum());
+        	int coachOrdercoinnum=suserService.getCoachCoin(user.getCoachid()).intValue();
+            result.put("coinnum", coachOrdercoinnum);
             Integer cid = CommonUtils.parseInt(coachid, 0);
             String hql = "from CoinRecordInfo  where (receiverid =:receiverid and receivertype="+ UserType.COAH+" ) or (payerid =:payerid and payertype="+ UserType.COAH+")  order by addtime desc";
             //System.out.println(hql);
@@ -2114,8 +2114,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
             if (type == 1) {
                 CuserInfo user = dataDao.getObjectById(CuserInfo.class, info.getUserid());
                 if (user != null) {
-                	int cmoney[]=suserService.getCoachMoney(user.getCoachid());
-            		BigDecimal cuserOrderMoney=new BigDecimal(cmoney[0]);
+            		BigDecimal cuserOrderMoney=suserService.getCoachMoney(user.getCoachid());
                     user.setMoney(cuserOrderMoney.add(info.getAmount()));
                     dataDao.updateObject(user);
                     // 插入充值记录
@@ -2132,8 +2131,7 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
             else if (type == 2) {
                 SuserInfo user = dataDao.getObjectById(SuserInfo.class, info.getUserid());
                 if (user != null) {
-                	int cmoney[]=suserService.getStudentMoney(user.getStudentid());
-                	BigDecimal suserOrderMoney=new BigDecimal(cmoney[0]);
+                	BigDecimal suserOrderMoney=suserService.getStudentMoney(user.getStudentid());
                     user.setMoney(suserOrderMoney.add(info.getAmount()));
                     dataDao.updateObject(user);
                     // 插入充值记录

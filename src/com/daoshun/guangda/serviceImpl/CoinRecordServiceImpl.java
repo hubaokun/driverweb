@@ -4,6 +4,8 @@ package com.daoshun.guangda.serviceImpl;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,7 @@ import com.daoshun.common.UserType;
 import com.daoshun.guangda.pojo.CoinRecordInfo;
 import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.service.ICoinRecordService;
+import com.daoshun.guangda.service.ISUserService;
 
 /**
  * Created by tutu on 15/7/24.
@@ -23,7 +26,8 @@ import com.daoshun.guangda.service.ICoinRecordService;
 @Service("CoinService")
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 public class CoinRecordServiceImpl extends BaseServiceImpl implements ICoinRecordService {
-
+	@Resource
+    private ISUserService suserService;
 
     @Override
     public void addCoinRecord(CoinRecordInfo coinRecordInfo) {
@@ -136,7 +140,8 @@ public class CoinRecordServiceImpl extends BaseServiceImpl implements ICoinRecor
 	public void reclaimCoin(int receiverid) {
     	SuserInfo suser=dataDao.getObjectById(SuserInfo.class, receiverid);
     	if(suser!=null){
-    		if(suser.getCoinnum()!=null && suser.getCoinnum()>0){
+    		int coinnum=suserService.getStudentCoin(suser.getStudentid()).intValue();
+    		if(coinnum>0){
 				//回收即学员向平台支付剩余所有的小巴币
 				CoinRecordInfo coinRecordInfo = new CoinRecordInfo ();
 		        coinRecordInfo.setReceiverid(0);
@@ -154,7 +159,7 @@ public class CoinRecordServiceImpl extends BaseServiceImpl implements ICoinRecor
 		        coinRecordInfo.setOwnertype(UserType.PLATFORM);
 		        coinRecordInfo.setOwnername("平台");
 		        
-		        coinRecordInfo.setCoinnum(suser.getCoinnum());
+		        coinRecordInfo.setCoinnum(coinnum);
 		        coinRecordInfo.setAddtime(new Date());
 		        
 		        dataDao.addObject(coinRecordInfo);
@@ -172,7 +177,8 @@ public class CoinRecordServiceImpl extends BaseServiceImpl implements ICoinRecor
    	public void reclaimSchoolCoin(int receiverid,int schoolid,String schoolname) {
        	SuserInfo suser=dataDao.getObjectById(SuserInfo.class, receiverid);
        	if(suser!=null){
-       		if(suser.getCoinnum()!=null && suser.getCoinnum()>0){
+       		int coinnum=suserService.getStudentCoin(suser.getStudentid()).intValue();
+       		if(coinnum>0){
    				//回收即学员向驾校支付剩余所有的小巴币
    				CoinRecordInfo coinRecordInfo = new CoinRecordInfo ();
    		        coinRecordInfo.setReceiverid(schoolid);
@@ -190,7 +196,7 @@ public class CoinRecordServiceImpl extends BaseServiceImpl implements ICoinRecor
    		        coinRecordInfo.setOwnertype(UserType.PLATFORM);
    		        coinRecordInfo.setOwnername("平台");
    		        
-   		        coinRecordInfo.setCoinnum(suser.getCoinnum());
+   		        coinRecordInfo.setCoinnum(coinnum);
    		        coinRecordInfo.setAddtime(new Date());
    		        
    		        dataDao.addObject(coinRecordInfo);

@@ -1,6 +1,8 @@
 package com.daoshun.guangda.servlet;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -164,6 +166,12 @@ public class SuserServlet extends BaseServlet {
 			}else if ("FINDSTUDENTCOINEX".equals(action)) {
 				//查询学员小巴币异常
 				testfindStudentCoinEx(request, resultMap);
+			}else if ("GETSETTLEORDERTOTAL".equals(action)) {
+				//教练学员总订单额
+				getSettleOrderTotal(request, resultMap);
+			}else if ("GETSETTLEORDERTIME".equals(action)) {
+				//教练学员总订单小时数
+				getSettleOrderTime(request, resultMap);
 			}
 			else {
 				throw new ErrException();
@@ -1000,13 +1008,16 @@ public class SuserServlet extends BaseServlet {
 		String studentid = getRequestParamter(request, "studentid");
 		CommonUtils.validateEmpty(studentid);
 		SuserInfo student = suserService.getUserById(studentid);
+		
 		if (student == null) {
 			resultMap.put("code", 2);
 			resultMap.put("message", "该用户不存在");
 			return;
 		} else {
-			resultMap.put("balance", student.getMoney());
-			resultMap.put("fmoney", student.getFmoney());
+			BigDecimal money=suserService.getStudentMoney(student.getStudentid());
+			BigDecimal fmoney=suserService.getStudentFrozenMoney(student.getStudentid());
+			resultMap.put("balance", money.intValue());
+			resultMap.put("fmoney", fmoney.intValue());
 			resultMap.put("recordlist", suserService.getMyBalanceList(studentid));
 		}
 	}
@@ -1023,13 +1034,15 @@ public class SuserServlet extends BaseServlet {
 			resultMap.put("message", "该用户不存在");
 			return;
 		}
-		else if(student.getMoney().doubleValue()<0 || student.getFmoney().doubleValue()<0 || CommonUtils.parseDouble(count, 0)<0)
+		BigDecimal money=suserService.getStudentMoney(student.getStudentid());
+		BigDecimal fmoney=suserService.getStudentFrozenCoin(student.getStudentid());
+		if(money.intValue()<0 || fmoney.intValue()<0 || CommonUtils.parseDouble(count, 0)<0)
 		{
 			resultMap.put("code", 6);
 			resultMap.put("message", "您已欠费");
 			return;
 		}
-		else if ((student.getMoney().doubleValue()) < CommonUtils.parseDouble(count, 0)) {
+		else if (money.intValue() < CommonUtils.parseDouble(count, 0)) {
 			resultMap.put("code", 3);
 			resultMap.put("message", "账户余额不足");
 			return;
@@ -1070,15 +1083,9 @@ public class SuserServlet extends BaseServlet {
 		double money=0;
 		int fcoinsum=0;
 		if(su!=null){
-			if(su.getCoinnum()!=null){
-				coinsum=su.getCoinnum();
-			}
-			if(su.getMoney()!=null){
-				money=su.getMoney().doubleValue();
-			}
-			if(su.getFcoinnum()!=null){
-				fcoinsum=su.getFcoinnum().intValue();
-			}
+			coinsum=suserService.getStudentCoin(su.getStudentid()).intValue();
+			money=suserService.getStudentMoney(su.getStudentid()).intValue();
+			fcoinsum=suserService.getStudentCoin(su.getStudentid()).intValue();
 		}
 		resultMap.put("couponsum", sum);
 		resultMap.put("money", money);
@@ -1161,14 +1168,14 @@ public class SuserServlet extends BaseServlet {
 	public void testStudentMoney(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");//教练ID
 		CommonUtils.validateEmptytoMsg(studentid, "studentid为空");
-		int n[]=suserService.getStudentMoney(CommonUtils.parseInt(studentid, 0));
+		BigDecimal n=suserService.getStudentMoney(CommonUtils.parseInt(studentid, 0));
 		System.out.println(n);
 		resultMap.put("re",n);
 	}
 	public void testCoachMoney(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");//教练ID
 		CommonUtils.validateEmptytoMsg(coachid, "coachid为空");
-		int n[]=suserService.getCoachMoney(CommonUtils.parseInt(coachid, 0));
+		int n=suserService.getCoachMoney(CommonUtils.parseInt(coachid, 0)).intValue();
 		System.out.println(n);
 		resultMap.put("re",n);
 	}
@@ -1183,7 +1190,7 @@ public class SuserServlet extends BaseServlet {
 	public void testStudentCoin(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");//教练ID
 		CommonUtils.validateEmptytoMsg(studentid, "studentid为空");
-		int n[]=suserService.getStudentCoin(CommonUtils.parseInt(studentid, 0));
+		int n=suserService.getStudentCoin(CommonUtils.parseInt(studentid, 0)).intValue();
 		System.out.println(n);
 		resultMap.put("re",n);
 	}
@@ -1191,7 +1198,7 @@ public class SuserServlet extends BaseServlet {
 	public void testCoachCoin(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");//教练ID
 		CommonUtils.validateEmptytoMsg(coachid, "coachid为空");
-		int n=suserService.getCoachCoin(CommonUtils.parseInt(coachid, 0));
+		int n=suserService.getCoachCoin(CommonUtils.parseInt(coachid, 0)).intValue();
 		System.out.println(n);
 		resultMap.put("re",n);
 	}
@@ -1202,6 +1209,26 @@ public class SuserServlet extends BaseServlet {
 	public void testfindStudentCoinEx(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		List list=suserService.findStudentCoinException();
 		resultMap.put("list",list);
+	}
+	
+	public void getSettleOrderTotal(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String studentid = getRequestParamter(request, "studentid");//学员ID
+		CommonUtils.validateEmptytoMsg(studentid, "studentid为空");
+		String coachid = getRequestParamter(request, "coachid");//教练ID
+		CommonUtils.validateEmptytoMsg(coachid, "coachid为空");
+		
+		BigDecimal st=suserService.getSettleOrderTotal(CommonUtils.parseInt(coachid, 0),CommonUtils.parseInt(studentid, 0));
+		resultMap.put("list",st);
+		
+	}
+	public void getSettleOrderTime(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String studentid = getRequestParamter(request, "studentid");//学员ID
+		CommonUtils.validateEmptytoMsg(studentid, "studentid为空");
+		String coachid = getRequestParamter(request, "coachid");//教练ID
+		CommonUtils.validateEmptytoMsg(coachid, "coachid为空");
+		
+		BigInteger st=suserService.getSettleOrderTime(CommonUtils.parseInt(coachid, 0),CommonUtils.parseInt(studentid, 0));
+		resultMap.put("list",st);
 	}
 	
 }

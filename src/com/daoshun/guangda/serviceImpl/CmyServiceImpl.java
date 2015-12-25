@@ -473,10 +473,8 @@ public class CmyServiceImpl extends BaseServiceImpl implements ICmyService {
 					CouponCoach cc = dataDao.getObjectById(CouponCoach.class, recordid);
 					if (cc != null) {
 						cc.setState(2);// 设置状态
-						
-						int cmoney[]=suserService.getCoachMoney(cuser.getCoachid());
-		    			BigDecimal cuserOrderMoney=new BigDecimal(cmoney[0]);
-		    			BigDecimal cuserOrderFMoney=new BigDecimal(cmoney[1]);
+		    			BigDecimal cuserOrderMoney=suserService.getCoachMoney(cuser.getCoachid());
+		    			BigDecimal cuserOrderFMoney=suserService.getCoachFrozenMoney(cuser.getCoachid());
 		    			cuser.setFmoney(cuserOrderFMoney.add(new BigDecimal(cc.getMoney_value())));// 增加用户冻结金额
 						cuser.setMoney(cuserOrderMoney.add(new BigDecimal(cc.getMoney_value())));
 					}
@@ -506,12 +504,13 @@ public class CmyServiceImpl extends BaseServiceImpl implements ICmyService {
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		CuserInfo cuser = dataDao.getObjectById(CuserInfo.class, CommonUtils.parseInt(coachid, 0));
 			if (cuser != null) {
-				int coachOrderCoinNum=suserService.getCoachCoin(cuser.getCoachid());
-				if(cuser.getCoinnum()<applyCoinNum){
+				int coachOrderCoinNum=suserService.getCoachCoin(cuser.getCoachid()).intValue();
+				int coachOrderFrozenCoinNum=suserService.getCoachFrozenMoney(cuser.getCoachid()).intValue();
+				if(coachOrderCoinNum<applyCoinNum){
 					result.put("code", 4);
 					result.put("message", "小巴币余额不足兑换");
 				}
-				else if(cuser.getCoinnum()<0 ||cuser.getFcoinnum()<0 || applyCoinNum<0)
+				else if(coachOrderCoinNum<0 ||coachOrderFrozenCoinNum<0 || applyCoinNum<0)
 				{
 					result.put("code", 5);
 					result.put("message", "数据异常");
@@ -552,12 +551,13 @@ public class CmyServiceImpl extends BaseServiceImpl implements ICmyService {
 			HashMap<String, Object> result = new HashMap<String, Object>();
 			CuserInfo cuser = dataDao.getObjectById(CuserInfo.class, CommonUtils.parseInt(coachid, 0));
 				if (cuser != null) {
-					int coachOrderCoinNum=suserService.getCoachCoin(cuser.getCoachid());
-					if(cuser.getCoinnum()<applyCoinNum){
+					int coachOrderCoinNum=suserService.getCoachCoin(cuser.getCoachid()).intValue();
+					int coachOrderFrozenCoinNum=suserService.getCoachFrozenMoney(cuser.getCoachid()).intValue();
+					if(coachOrderCoinNum<applyCoinNum){
 						result.put("code", 4);
 						result.put("message", "小巴币余额不足兑换");
 					}
-					else if(cuser.getCoinnum()<0 ||cuser.getFcoinnum()<0 || applyCoinNum<0)
+					else if(coachOrderCoinNum<0 ||coachOrderFrozenCoinNum<0 || applyCoinNum<0)
 					{
 						result.put("code", 5);
 						result.put("message", "数据异常");

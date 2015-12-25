@@ -566,21 +566,20 @@ public class CmyServlet extends BaseServlet {
 			resultMap.put("code", 2);
 			resultMap.put("message", "用户不存在");
 		}
-		else if(cuser.getMoney().doubleValue()<0 || cuser.getFmoney().doubleValue()<0 || CommonUtils.parseFloat(count, 0)<0)
+		//从订单表查询教练的余额
+		BigDecimal cuserOrderMoney=suserService.getCoachMoney(cuser.getCoachid());
+		BigDecimal cuserOrderFMoney=suserService.getCoachFrozenMoney(cuser.getCoachid());
+		if(cuserOrderMoney.intValue()<0 || cuserOrderFMoney.intValue()<0 || CommonUtils.parseFloat(count, 0)<0)
 		{
 			resultMap.put("code", 6);
 			resultMap.put("message", "数据异常");
 		}
-		else if (cuser.getMoney().doubleValue() < CommonUtils.parseFloat(count, 0)) {
+		else if (cuserOrderMoney.intValue()< CommonUtils.parseFloat(count, 0)) {
 			// 余额不足 无法提现
 			resultMap.put("code", 3);
 			resultMap.put("message", "您的余额不足");
 		} else {
 			
-			//从订单表查询教练的余额
-			int cmoney[]=suserService.getCoachMoney(cuser.getCoachid());
-			BigDecimal cuserOrderMoney=new BigDecimal(cmoney[0]);
-			BigDecimal cuserOrderFMoney=new BigDecimal(cmoney[1]);
 			// 更改教练信息 并且生成提现信息
 			cuser.setFmoney(cuserOrderFMoney.add(new BigDecimal(CommonUtils.parseFloat(count, 0))));
 			cuser.setMoney(cuserOrderMoney.subtract(new BigDecimal(CommonUtils.parseFloat(count, 0))));
