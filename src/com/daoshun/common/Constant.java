@@ -131,6 +131,43 @@ public class Constant {
 	//显示客户端筛选的按 科目筛选的文字
 	public static final String GETQUERYSUBJECT="GETQUERYSUBJECT";
 	
+	//学员小巴币异常查询
+	public static final String COINEXCEPTION="COINEXCEPTION";
+	
+	//学员余额查询测试
+	public static final String TESTSTUDENTMONEY="TESTSTUDENTMONEY";
+	
+	//学员余额查询测试
+	public static final String FINDSTUDENTMONEYEX="FINDSTUDENTMONEYEX";
+	
+	//教练余额查询测试
+	public static final String TESTCOACHMONEY="TESTCOACHMONEY";
+	
+	
+	//教练余额异常查询
+	public static final String TESTCOACHMONEYEX="TESTCOACHMONEYEX";
+	
+	//学员小巴币查询测试
+	public static final String TESTSTUDENTCOIN="TESTSTUDENTCOIN";
+	
+	//教练小巴币查询测试
+	public static final String TESTCOACHCOIN="TESTCOACHCOIN";
+	
+	//教练小巴币异常查询
+	public static final String TESTCOACHCOINEX="TESTCOACHCOINEX";
+	
+	//查询学员小巴币异常
+	public static final String FINDSTUDENTCOINEX="FINDSTUDENTCOINEX";
+	
+	//教练学员总订单额
+	public static final String GETSETTLEORDERTOTAL="GETSETTLEORDERTOTAL";
+	
+	//教练学员总订单小时数
+	public static final String GETSETTLEORDERTIME="GETSETTLEORDERTIME";
+	
+	//教练学员总订单可用小巴券数
+	public static final String GETCANUSECOUPONNUM="GETCANUSECOUPONNUM";
+	
 	// 申请提现
 	public static final String APPLYCASH = "APPLYCASH";
 

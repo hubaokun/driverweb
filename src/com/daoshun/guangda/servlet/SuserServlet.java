@@ -139,41 +139,43 @@ public class SuserServlet extends BaseServlet {
 			}else if (Constant.GETQUERYSUBJECT.equals(action)) {
 				// 显示客户端筛选的按 科目筛选的文字
 				getQuerySubject(request, resultMap);
-			}else if ("COINEXCEPTION".equals(action)) {
+			}else if (Constant.COINEXCEPTION.equals(action)) {
 				// 学员小巴币异常查询
 				getCoinAffiliationException(request, resultMap);
-			}else if ("TESTSTUDENTMONEY".equals(action)) {
+			}else if (Constant.TESTSTUDENTMONEY.equals(action)) {
 				// 学员余额查询测试
 				testStudentMoney(request, resultMap);
-			}else if ("FINDSTUDENTMONEYEX".equals(action)) {
+			}else if (Constant.FINDSTUDENTMONEYEX.equals(action)) {
 				//查询学员余额异常
-				testfindStudentMoneyEx(request, resultMap);
-			}else if ("TESTCOACHMONEY".equals(action)) {
+				testfindStudentMoneyAbnormal(request, resultMap);
+			}else if (Constant.TESTCOACHMONEY.equals(action)) {
 				//教练余额查询测试
 				testCoachMoney(request, resultMap);
-			}else if ("TESTCOACHMONEYEX".equals(action)) {
+			}else if (Constant.TESTCOACHMONEYEX.equals(action)) {
 				//教练余额异常查询
-				testfindCoachMoneyEx(request, resultMap);
-			}else if ("TESTSTUDENTCOIN".equals(action)) {
+				testfindCoachMoneyAbnormal(request, resultMap);
+			}else if (Constant.TESTSTUDENTCOIN.equals(action)) {
 				// 学员小巴币查询测试
 				testStudentCoin(request, resultMap);
-			}else if ("TESTCOACHCOIN".equals(action)) {
+			}else if (Constant.TESTCOACHCOIN.equals(action)) {
 				//教练小巴币查询测试
 				testCoachCoin(request, resultMap);
-			}else if ("TESTCOACHCOINEX".equals(action)) {
+			}else if (Constant.TESTCOACHCOINEX.equals(action)) {
 				//教练小巴币异常查询
-				testfindCoachCoinEx(request, resultMap);
-			}else if ("FINDSTUDENTCOINEX".equals(action)) {
+				testfindCoachCoinAbnormal(request, resultMap);
+			}else if (Constant.FINDSTUDENTCOINEX.equals(action)) {
 				//查询学员小巴币异常
-				testfindStudentCoinEx(request, resultMap);
-			}else if ("GETSETTLEORDERTOTAL".equals(action)) {
+				testfindStudentCoinAbnormal(request, resultMap);
+			}else if (Constant.GETSETTLEORDERTOTAL.equals(action)) {
 				//教练学员总订单额
 				getSettleOrderTotal(request, resultMap);
-			}else if ("GETSETTLEORDERTIME".equals(action)) {
+			}else if (Constant.GETSETTLEORDERTIME.equals(action)) {
 				//教练学员总订单小时数
 				getSettleOrderTime(request, resultMap);
-			}
-			else {
+			}else if (Constant.GETCANUSECOUPONNUM.equals(action)) {
+				//教练学员总订单可用小巴券数
+				getCanUseCouponNum(request, resultMap);
+			}else {
 				throw new ErrException();
 			}
 
@@ -1168,29 +1170,26 @@ public class SuserServlet extends BaseServlet {
 		String studentid = getRequestParamter(request, "studentid");//教练ID
 		CommonUtils.validateEmptytoMsg(studentid, "studentid为空");
 		BigDecimal n=suserService.getStudentMoney(CommonUtils.parseInt(studentid, 0));
-		System.out.println(n);
 		resultMap.put("re",n);
 	}
 	public void testCoachMoney(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");//教练ID
 		CommonUtils.validateEmptytoMsg(coachid, "coachid为空");
 		int n=suserService.getCoachMoney(CommonUtils.parseInt(coachid, 0)).intValue();
-		System.out.println(n);
 		resultMap.put("re",n);
 	}
-	public void testfindStudentMoneyEx(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
-		List list=suserService.findStudentMoneyException();
+	public void testfindStudentMoneyAbnormal(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		List<String> list=suserService.findStudentMoneyAbnormal();
 		resultMap.put("list",list);
 	}
-	public void testfindCoachMoneyEx(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
-		List list=suserService.findCoachMoneyException();
+	public void testfindCoachMoneyAbnormal(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		List<String> list=suserService.findCoachMoneyAbnormal();
 		resultMap.put("list",list);
 	}
 	public void testStudentCoin(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");//教练ID
 		CommonUtils.validateEmptytoMsg(studentid, "studentid为空");
 		int n=suserService.getStudentCoin(CommonUtils.parseInt(studentid, 0)).intValue();
-		System.out.println(n);
 		resultMap.put("re",n);
 	}
 	
@@ -1198,28 +1197,36 @@ public class SuserServlet extends BaseServlet {
 		String coachid = getRequestParamter(request, "coachid");//教练ID
 		CommonUtils.validateEmptytoMsg(coachid, "coachid为空");
 		int n=suserService.getCoachCoin(CommonUtils.parseInt(coachid, 0)).intValue();
-		System.out.println(n);
 		resultMap.put("re",n);
 	}
-	public void testfindCoachCoinEx(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
-		List list=suserService.findCoachCoinException();
+	public void testfindCoachCoinAbnormal(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		List<String> list=suserService.findCoachCoinAbnormal();
 		resultMap.put("list",list);
 	}
-	public void testfindStudentCoinEx(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
-		List list=suserService.findStudentCoinException();
+	public void testfindStudentCoinAbnormal(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		List<String> list=suserService.findStudentCoinAbnormal();
 		resultMap.put("list",list);
 	}
-	
+	/**
+	 * 查询某个学员和一个教练的总消费额
+	 * @param request
+	 * @param resultMap
+	 * @throws ErrException
+	 */
 	public void getSettleOrderTotal(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");//学员ID
 		CommonUtils.validateEmptytoMsg(studentid, "studentid为空");
 		String coachid = getRequestParamter(request, "coachid");//教练ID
 		CommonUtils.validateEmptytoMsg(coachid, "coachid为空");
-		
 		BigDecimal st=suserService.getSettleOrderTotal(CommonUtils.parseInt(coachid, 0),CommonUtils.parseInt(studentid, 0));
 		resultMap.put("list",st);
-		
 	}
+	/**
+	 * 查询某个学员和一个教练的总消费小时数
+	 * @param request
+	 * @param resultMap
+	 * @throws ErrException
+	 */
 	public void getSettleOrderTime(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");//学员ID
 		CommonUtils.validateEmptytoMsg(studentid, "studentid为空");
@@ -1227,6 +1234,18 @@ public class SuserServlet extends BaseServlet {
 		CommonUtils.validateEmptytoMsg(coachid, "coachid为空");
 		
 		BigInteger st=suserService.getSettleOrderTime(CommonUtils.parseInt(coachid, 0),CommonUtils.parseInt(studentid, 0));
+		resultMap.put("list",st);
+	}
+	/**
+	 * 测试学员可用小巴券数量
+	 * @param request
+	 * @param resultMap
+	 * @throws ErrException
+	 */
+	public void getCanUseCouponNum(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+		String studentid = getRequestParamter(request, "studentid");//学员ID
+		CommonUtils.validateEmptytoMsg(studentid, "studentid为空");
+		BigInteger st=suserService.getCanUseCouponNum(CommonUtils.parseInt(studentid, 0));
 		resultMap.put("list",st);
 	}
 	

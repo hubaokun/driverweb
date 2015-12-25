@@ -1,6 +1,7 @@
 package com.daoshun.guangda.serviceImpl;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -2144,7 +2145,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 				if(String.valueOf(PayType.MONEY).equals(paytype)){
 					delmoney= array.getInt("delmoney");
 					//需要的余额累加
-					moneySum+=delmoney;
+					moneySum+=delmoney;  
 				}else if(String.valueOf(PayType.COUPON).equals(paytype)){
 					couponPayNum++;
 					recordid= array.getString("recordid");
@@ -2176,21 +2177,18 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 			//小巴币不足
 			return 1;
 		}
-		//再从t_user_student表的coinnum字段查询小巴币是否足够支付
-		SuserInfo suser=dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
-		if(suser.getCoinnum()==null){
-			suser.setCoinnum(0);
-		}
-		if(coinSum>suser.getCoinnum()){
-			//小巴币不足
-			return 1;
-		}
-		
 		if(moneySum>canUseNum[1]){
 			//余额不足
 			return 2;
 		}
+		//要提交的订单中包含重复小巴券ID，不允许下单
 		if(couponSum<couponPayNum){
+			//小巴券不足
+			return 3;
+		}
+		//收到的小巴券减去订单中已使用的小巴券，得到的可用小巴券数量
+		int canUserCouponNum=suserService.getCanUseCouponNum(CommonUtils.parseInt(studentid, 0)).intValue();
+		if(couponPayNum<canUserCouponNum){
 			//小巴券不足
 			return 3;
 		}
