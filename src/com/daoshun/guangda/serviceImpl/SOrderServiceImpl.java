@@ -1484,7 +1484,6 @@ public class SOrderServiceImpl extends BaseServiceImpl implements ISOrderService
 			BigDecimal suserOrderFMoney=suserService.getStudentFrozenMoney(student.getStudentid());
 			//学员订单小巴币
 			BigDecimal scoinnum = suserService.getStudentCoin(student.getStudentid());
-			BigDecimal sfcoinnum = suserService.getStudentFrozenCoin(student.getStudentid());
 			
 			//if (order.getStart_time().after(c.getTime())) {
 			cuser=dataDao.getObjectById(CuserInfo.class, order.getCoachid());

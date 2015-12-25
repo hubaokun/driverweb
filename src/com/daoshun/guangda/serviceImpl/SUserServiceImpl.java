@@ -2519,14 +2519,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		if(provideCoupon==null){
 			provideCoupon=new BigInteger("0");
 		}
-		//订单中已经消费的小巴券数量
-		StringBuffer sqlOrderCoupon=new StringBuffer();
-		sqlOrderCoupon.append("select sum(time) from t_order where studentstate=4 and coachstate=4 and studentid=:studentid ");
-		BigDecimal orderCoupon=(BigDecimal) dataDao.getFirstObjectViaParamSql(sqlOrderCoupon.toString(), new String[]{"studentid"},studentid);
-		if(orderCoupon==null){
-			orderCoupon=new BigDecimal("0");
-		}
-		return provideCoupon.subtract(new BigInteger(orderCoupon.toString()));
+		return provideCoupon;
 	}
 	
 }

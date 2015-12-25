@@ -2188,7 +2188,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		}
 		//收到的小巴券减去订单中已使用的小巴券，得到的可用小巴券数量
 		int canUserCouponNum=suserService.getCanUseCouponNum(CommonUtils.parseInt(studentid, 0)).intValue();
-		if(couponPayNum<canUserCouponNum){
+		if(canUserCouponNum<couponPayNum){
 			//小巴券不足
 			return 3;
 		}
