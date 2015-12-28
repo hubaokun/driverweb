@@ -7,8 +7,9 @@
 		<sub-item name="所有教练" authority="3" action="getCoachlist.do"/>
 		<sub-item name="待审核教练" authority="3" action="getCoachTobeChecked.do"/>
 		<sub-item name="明星签约教练" authority="3" action="getCoachListBySignstate.do"/>
-		<sub-item name="所有学员" authority="4" action="getStudentlist.do"/>	
+		<sub-item name="所有学员" authority="4" action="getStudentlist.do"/>
 		<sub-item name="报名学员" authority="4" action="getEnrollStudentlist.do"/>
+		<sub-item name="广告报名" authority="4" action="getSignUpInfoListFromAds.do"/>
 		<sub-item name="更换教练" authority="4" action="goChangeCoach.do"/>
 		<sub-item name="教练邀请教练" authority="1" action="getRecommendList.do?"/>
 		<sub-item name="教练邀请学员" authority="1" action="getRecommendListc2s.do?"/>
@@ -87,15 +88,15 @@
 		<sub-item name="教练提现日报" authority="3" action="coachapply.do"/>
 		<sub-item name="驾校对账单" authority="3" action="schoolbilldaily.do"/>
 		<sub-item name="小巴券日报" authority="3" action="xiaobadaily.do"/>
-	    <sub-item name="邀请日报" authority="2" action="getRecommendReport.do"/>
+		<sub-item name="邀请日报" authority="2" action="getRecommendReport.do"/>
 	</menu-item>
-	
+
 	<menu-item name="日志" iconURL="" authority="1">
 		<sub-item name="教练日志" authority="3" action="CoachLog.do"/>
 		<sub-item name="特殊订单操作日志" authority="2" action="getSpecialOrderLog.do"/>
 	</menu-item>
 	<menu-item name="运营报表" iconURL="" authority="1">
-	    <sub-item name="日业绩" authority="3" action="GotoAccountReportByDay.do"/>
+		<sub-item name="日业绩" authority="3" action="GotoAccountReportByDay.do"/>
 		<sub-item name="运营日月业绩" authority="3" action="GotoAccountReport.do"/>
 		<sub-item name="学时券月报表" authority="3" action="GotoCouponReportMontly.do"/>
 		<sub-item name="小巴币月报表" authority="3" action="GotoCoinReportMontly.do"/>
