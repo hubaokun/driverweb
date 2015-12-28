@@ -1,11 +1,11 @@
 /**
- * 
+ *
  */
 package com.daoshun.common;
 
 /**
  * @author wangcl
- * 
+ *
  */
 public class Constant {
 
@@ -73,7 +73,7 @@ public class Constant {
 
 	// 学员登录
 	public static final String SLOGIN = "LOGIN";
-	
+
 	// 学员登录
 	public static final String SENROLL = "ENROLL";
 
@@ -108,29 +108,29 @@ public class Constant {
 
 	// 获取账户小巴币信息
 	public static final String GETMYCOINRECORD = "GETMYCOINRECORD";
-	
+
 	public static final String GETCOACHCOINAFFILIATION = "GETCOACHCOINAFFILIATION";
 
 	//获取学员钱包页面所需的附加信息：券的张数，小巴币的
 	public static final String GETSTUDENTWALLETINFO="GETSTUDENTWALLETINFO";
 	
 	/*public static final String PROMOENROLLCALLBACK="PROMOENROLLCALLBACK";*/
-	
+
 	//获取学员小巴券列表
 	public static final String GETSTUDENTCOUPONLIST="GETSTUDENTCOUPONLIST";
 
 	//获取学员小巴币变动记录getCoinAffiliation
 	public static final String GETSTUDENTCOINRECORDLIST="GETSTUDENTCOINRECORDLIST";
-	
+
 	public static final String GETCOINAFFILIATION="GETCOINAFFILIATION";
 	//获取学员基本信息
 	public static final String GETSTUDENTINFO="GETSTUDENTINFO";
 	//获取学员基本信息
 	public static final String GETFREECOURSESTATE="GETFREECOURSESTATE";
-	
+
 	//显示客户端筛选的按 科目筛选的文字
 	public static final String GETQUERYSUBJECT="GETQUERYSUBJECT";
-	
+
 	// 申请提现
 	public static final String APPLYCASH = "APPLYCASH";
 
@@ -147,7 +147,7 @@ public class Constant {
 	// 删除通知
 	public static final String DELNOTICE = "DELNOTICE";
 
-	
+
 
 	// 获取未读消息条数
 	public static final String GETMESSAGECOUNT = "GETMESSAGECOUNT";
@@ -194,7 +194,7 @@ public class Constant {
 
 	// 取消订单
 	public static final String CANCELORDER = "CANCELORDER";
-	
+
 	// 教练同意取消订单
 	public static final String CANCELORDERAGREE = "CANCELORDERAGREE";
 
@@ -267,9 +267,9 @@ public class Constant {
 
 	// 删除通知
 	public static final String CDELNOTICE = "DELNOTICE";
-	
+
 	// 修改通知状态为已读
-	public static final String READNOTICE = "READNOTICE"; 
+	public static final String READNOTICE = "READNOTICE";
 
 	// 取的投诉我的列表
 	public static final String CGETCOMPLAINTTOMY = "GETCOMPLAINTTOMY";
@@ -291,10 +291,10 @@ public class Constant {
 
 	// 取得教练今天日程安排
 	public static final String CGETSCHEDULE = "GETSCHEDULE";
-	
+
 	// 根据日期取得教练日程安排
 	public static final String CGETSCHEDULEBYDATE = "GETSCHEDULEBYDATE";
-	
+
 	// 修改某天的休息时间
 	public static final String CSETDATETIME = "SETDATETIME";
 
@@ -338,7 +338,7 @@ public class Constant {
 	public static final String UPDATEUSERLOCATION = "UPDATEUSERLOCATION";
 
 	public static final String CHECKVERSION = "CHECKVERSION";
-	
+
 	public static final String CHECKCONFIG = "CHECKCONFIG";
 
 	// 获取教练教学用车车型
@@ -378,48 +378,48 @@ public class Constant {
 	public static final String APPLYCOIN = "APPLYCOIN";
 
 	public static final String GETMYALLSTUDENT = "GETMYALLSTUDENT";
-	
+
 	public static final String DELALIACCOUNT = "DELALIACCOUNT";
 	public static final String CHANGEAPPLYTYPE = "CHANGEAPPLYTYPE";
-	
+
 	//提现手续费说明
 	public static final String CASHEXPLAIN = "CASHEXPLAIN";
-    //获取推荐人员列表
+	//获取推荐人员列表
 	public static final String CGETRECOMMENDLIST = "CGETRECOMMENDLIST";
 	//增加推荐人员
 	public static final String CHEAKINVITECODE ="CHEAKINVITECODE";
-    //自动获取当前省市区信息
+	//自动获取当前省市区信息
 	public static final String GETAUTOPOSITION="GETAUTOPOSITION";
-	
+
 	//
 	public static final String GETADDRESSURL="GETADDRESSURL";
-	
+
 	//获取热门城市
 	public static final String GETHOTCITY="GETHOTCITY";
-	
+
 	//小巴服务接口
 	public static final String XIAOBASERVICE ="XIAOBASERVICE";
 
 	//广告服务接口
 	public static final String GETADVERTISEMENT ="GETADVERTISEMENT";
-	
+
 	// 获取默认日程设置
-    public static final String GETDEFAULTSCHEDULE = "GETDEFAULTSCHEDULE";
+	public static final String GETDEFAULTSCHEDULE = "GETDEFAULTSCHEDULE";
 
 	//获取某个教练有关联的学员
-    public static final String GETCOACHSTUDENT="GETCOACHSTUDENT";
-    
-    //获取学员可用小巴券数，剩余数
-    public static final String GETSTUDENTCOUPON="GETSTUDENTCOUPON";
-    
-    //教练发放小巴券
-    public static final String GRANTCOUPON="GRANTCOUPON";
-    
-   //获取教练发放小巴券记录
-    public static final String GETCOACHCOUPONLIST="GETCOACHCOUPONLIST";
-    
-    //获取教练是否有小巴券发放权限
-    public static final String GETCOACHCOUPONLIMIT="GETCOACHCOUPONLIMIT";
+	public static final String GETCOACHSTUDENT="GETCOACHSTUDENT";
+
+	//获取学员可用小巴券数，剩余数
+	public static final String GETSTUDENTCOUPON="GETSTUDENTCOUPON";
+
+	//教练发放小巴券
+	public static final String GRANTCOUPON="GRANTCOUPON";
+
+	//获取教练发放小巴券记录
+	public static final String GETCOACHCOUPONLIST="GETCOACHCOUPONLIST";
+
+	//获取教练是否有小巴券发放权限
+	public static final String GETCOACHCOUPONLIMIT="GETCOACHCOUPONLIMIT";
 
 	/**************************** 默认属性设置 ********************************/
 	/************ 默认全天状态 ************/
@@ -427,7 +427,7 @@ public class Constant {
 	/****************** 短信配置 ********************/
 	public static final String SMS_USER = "6799";
 	public static final String SMS_PWD = "yjia@6799yz";
-	
+
 	/******************省市区查询常量 ********************/
 	/**获取省信息**/
 	public static final String GETPROVINCE = "GETPROVINCE";
@@ -437,65 +437,61 @@ public class Constant {
 	public static final String GETCITYBYHOTKEY = "GETCITYBYHOTKEY";
 	/**通过城市名称获取市信息**/
 	public static final String GETCITYBYCNAME = "GETCITYBYCNAME";
-	
-	
+
+
 	/**按城市ID获取区信息**/
 	public static final String GETAREABYCITYID = "GETAREABYCITYID";
 	/**按区ID获取区信息**/
 	public static final String GETAREABYAREAID = "GETAREABYAREAID";
-	
+
 	/**按区ID获取区信息**/
-	public static final String GETPROCITYAREA = "GETPROCITYAREA"; 
-	
+	public static final String GETPROCITYAREA = "GETPROCITYAREA";
+
 	/**考驾非模拟题目**/
 	public static final String GETEXAMINATION = "GETEXAMINATION";
 	/**获取考驾模拟题目**/
 	public static final String GETANALOGEXAMINATION = "GETANALOGEXAMINATION";
-	
+
 	public static final String GETEXAMINATIONALL = "GETEXAMINATIONALL";
-	
+
 	/**所有的模拟题**/
 	public static final String GETANALOGEXAMINATIONALL = "GETANALOGEXAMINATIONALL";
-	
+
 	/**考驾题目收藏**/
 	public static final String ADDQUESTIONFAVORITES = "ADDQUESTIONFAVORITES";
-	  
-	
+
+
 	/**考驾题目收藏**/
 	public static final String REMOVEQUESTIONFAVORITES = "REMOVEQUESTIONFAVORITES";
-	
+
 	/** 获取所有的考驾图片**/
 	public static final String GETEXIMGALL = "GETEXIMGALL";
-	
+
 	/**获取学员收藏的题目**/
 	public static final String GETQUESTIONFAVORITES = "GETQUESTIONFAVORITES";
 	/**获取学员收藏题目的数量**/
 	public static final String GETQUESTIONFAVORITESNUM = "GETQUESTIONFAVORITESNUM";
-	
+
 	/**添加非模拟题答题记录**/
 	public static final String ADDANSWERRECORD = "ADDANSWERRECORD";
-	
+
 	public static final String ADDANALOGANSWERRECORD = "ADDANALOGANSWERRECORD";
 	/**获取学员收藏题目的数量**/
 	public static final String GETANSWERRECORDINFO = "GETANSWERRECORDINFO";
-	
+
 	/**教练价格范围**/
 	public static final String GETCOACHPRICERANGE = "GETCOACHPRICERANGE";
-	
-	/**根据参数获取广告**/
-	public static final String GETADVERTISEMENTBYPARAM = "GETADVERTISEMENTBYPARAM";
 
-/**
- * 防止反复重试,暴力破解登录
-  */
+	/**
+	 * 防止反复重试,暴力破解登录
+	 */
 	/**尝试登录限制设置  间隔时间10分钟**/
 	public static final int TRY_LOGIN_INTERVAL=2;
 
 	/**尝试登录限制设置  可尝试次数6次**/
 	public static final int TRY_TIMES=6;
 
-	/*****广告报名*
-	****/
+	/*****广告报名*****/
 
 	/**广告页action**/
 	public static final String ADVERTISEMENT_ACTION="ADVERTISEMENT_ACTION";
@@ -504,6 +500,9 @@ public class Constant {
 	public static final String ADVERTISEMENT_SIGNUP_ACTION="ADVERTISEMENT_SIGNUP_ACTION";
 
 	/*****广告报名*****/
-	
-	
+
+	/**根据参数获取广告**/
+	public static final String GETADVERTISEMENTBYPARAM = "GETADVERTISEMENTBYPARAM";
+
+
 }

@@ -11,11 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
-
-
 /**
- * 记录用户登录信息,包括重试登录,主要用于防止用户反复重试暴力破解
+ * 版本信息表
  * @author liukn
  *
  */
@@ -25,9 +22,7 @@ public class UserLoginStatus implements Serializable {
 
 	public final static int TYPE_STUDENT=1;
 	public final static int TYPE_COACH=2;
-	
-	public final static int LOGIN_SUCCESS=1;
-	public final static int LOGIN_FAIL=-1;
+
 	// 版本id
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,19 +31,19 @@ public class UserLoginStatus implements Serializable {
 
 	@Column(name = "phone")
 	private String phone;
-	
+
 	@Column(name = "userType")
 	private int userType;
-	
+
 	// 添加时间
 	@Column(name = "addtime")
 	private Date addtime;
-	
+
 	//登录失败次数记录
 	@Column(name="failedCount")
 	private int failedCount=0;
-	
-	
+
+
 	public int getId()
 	{
 		return id;
@@ -58,7 +53,7 @@ public class UserLoginStatus implements Serializable {
 	{
 		this.id = signupId;
 	}
-	
+
 
 	public String getPhone()
 	{
@@ -101,9 +96,9 @@ public class UserLoginStatus implements Serializable {
 	}
 
 
-	
-	
-	
-	
+
+
+
+
 
 }

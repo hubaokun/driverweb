@@ -11,6 +11,14 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.daoshun.common.CommonUtils;
+import com.daoshun.common.Constant;
+import com.daoshun.common.ErrException;
+import com.daoshun.guangda.pojo.ActiveRecord;
+import com.daoshun.guangda.pojo.SystemSetInfo;
+import com.daoshun.guangda.pojo.UserLocationInfo;
+import com.daoshun.guangda.pojo.UserLoginStatus;
+import com.daoshun.guangda.pojo.UserPushInfo;
+import com.daoshun.guangda.pojo.VersionInfo;
 import com.daoshun.guangda.service.ISystemService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -83,11 +91,11 @@ public class SystemServiceImpl extends BaseServiceImpl implements ISystemService
 
 		return result;
 	}
-	
-	
 
-	
-	
+
+
+
+
 
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override
@@ -110,80 +118,99 @@ public class SystemServiceImpl extends BaseServiceImpl implements ISystemService
 	}
 
 
-
-	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	@Transactional(readOnly = false, propagation = Propagation.SUPPORTS)
 	@Override
-	public  boolean overLoginLimitCount(String loginid, int usertype, int flag, HttpServletRequest request, HashMap<String, Object> resultMap, int limitTimes, int timeout) throws ErrException
+	public  boolean overLoginLimitCount(String phone,int usertype,int limitCount, int timeIntervalMinute)
 	{
-		long limitTime=0;
 		//默认10分钟
-		if(timeout==0)
+		if(timeIntervalMinute==0)
 		{
-			timeout=10;
+			timeIntervalMinute=10;
 		}
-		limitTime=timeout*60;
 
-		int loginCount=0;
+		UserLoginStatus userloginstatus = getLoginCountInfo(phone, usertype,timeIntervalMinute);
 
-		String hql="from UserLoginStatus where phone="+loginid+" and userType="+usertype;
+		//没有超过登录限制
+		if(userloginstatus.getFailedCount()<limitCount-1)
+		{
+			return false;
+		}else
+		{
+			return true;
+		}
+	}
+
+	@Transactional(readOnly = false, propagation = Propagation.SUPPORTS)
+	@Override
+	public void successThenClear(String phone, int usertype, int timeIntervalMinute)
+	{
+		UserLoginStatus userloginstatus= getLoginCountInfo(phone,usertype,timeIntervalMinute);
+		//第一次登录时，添加时间
+		if(userloginstatus.getFailedCount()==0)
+		{
+			userloginstatus.setAddtime(new Date());
+		}
+		userloginstatus.setAddtime(null);
+		userloginstatus.setFailedCount(0);
+		dataDao.updateObject(userloginstatus);
+	}
+
+
+	@Transactional(readOnly = false, propagation = Propagation.SUPPORTS)
+	@Override
+	public void failedThenCount(String phone, int usertype,int timeIntervalMinute)
+	{
+		UserLoginStatus userloginstatus= getLoginCountInfo(phone,usertype,timeIntervalMinute);
+		//第一次登录时，添加时间
+		if(userloginstatus.getFailedCount()==0)
+		{
+			userloginstatus.setAddtime(new Date());
+		}
+		userloginstatus.setFailedCount(userloginstatus.getFailedCount()+1);
+		dataDao.updateObject(userloginstatus);
+	}
+
+
+
+
+	/**
+	 *
+	 * @param loginid             登录帐号
+	 * @param usertype            用户类型
+	 * @param timeIntervalMinute  时间限制：分钟
+	 * @return UserLoginStatus类型
+	 */
+	private UserLoginStatus getLoginCountInfo(String phone, int usertype, int timeIntervalMinute)
+	{
+		String hql="from UserLoginStatus where phone="+phone+" and userType="+usertype;
 		UserLoginStatus userloginstatus=(UserLoginStatus) dataDao.getFirstObjectViaParam(hql,null,null);
 		//数据库中不存在，则添加一条添加时间，失败次数为空的记录
 		if(userloginstatus==null)
 		{
 			userloginstatus=new UserLoginStatus();
-			userloginstatus.setPhone(loginid);
+			userloginstatus.setPhone(phone);
 			userloginstatus.setUserType(usertype);
 			dataDao.addObject(userloginstatus);
 			userloginstatus=(UserLoginStatus) dataDao.getFirstObjectViaParam(hql, null, null);
 		}
-
 		//清除上次登录尝试的数据（过期的）
-		clearLoginStatus(limitTime,userloginstatus);
-
-		//没有超过登录限制
-		if(userloginstatus.getFailedCount()<limitTimes)
-		{
-			//登录成功
-			if(UserLoginStatus.LOGIN_SUCCESS==flag)
-			{
-				return false;
-			}
-
-			//登录失败
-			if(UserLoginStatus.LOGIN_FAIL==flag)
-			{
-				//第一次登录时，添加时间
-				if(userloginstatus.getFailedCount()==0)
-				{
-					userloginstatus.setAddtime(new Date());
-				}
-				userloginstatus.setFailedCount(userloginstatus.getFailedCount()+1);
-				dataDao.updateObject(userloginstatus);
-				return false;
-			}
-		}else
-		{
-			resultMap.put("code", 2);
-			resultMap.put("message", "请"+timeout+"分钟后再次尝试！");
-			return true;
-		}
-
-		return false;
+		clearLoginCountInfoExpired(userloginstatus,timeIntervalMinute);
+		return userloginstatus;
 	}
+
 
 	/**
 	 * 已超出限制冻结时间，对登录失败次数置零
-	 * @param time 限制时间  单位秒
+	 * @param timeIntervalMinute 限制时间  单位分钟
 	 * @param userloginstatus 登录信息
-	 * @return
 	 */
-	private void clearLoginStatus(long time,UserLoginStatus userloginstatus)
+	private void clearLoginCountInfoExpired(UserLoginStatus userloginstatus,int timeIntervalMinute)
 	{
-		time=time*1000;
+		long timeIntervalMicrosecond=timeIntervalMinute*60*1000;
 		Date addtime=userloginstatus.getAddtime();
 		if(addtime!=null)
 		{
-			long frozenTime=addtime.getTime()+time;
+			long frozenTime=addtime.getTime()+timeIntervalMicrosecond;
 			long now=new Date().getTime();
 			if(now>frozenTime)
 			{
@@ -193,6 +220,5 @@ public class SystemServiceImpl extends BaseServiceImpl implements ISystemService
 			}
 		}
 	}
-
 
 }

@@ -362,23 +362,31 @@ public class CuserServlet extends BaseServlet {
 		String devicetype = getRequestParamter(request, "ostype");//getRequestParamter(request, "devicetype");//设备类型  1 IOS  2 ADNROID
 		String version = getRequestParamter(request, "version");//版本
 		CommonUtils.validateEmpty(password);
-		// 验证验证码的有效性
-		int result = cuserService.checkVerCode(loginid, password);
 
-		int flag=0;
-		if(1==result)
-		{
-			flag=UserLoginStatus.LOGIN_SUCCESS;
-		}else
-		{
-			flag=UserLoginStatus.LOGIN_FAIL;
-		}
+
+//登录验证次数限制 开始
 
 		//判断是否超出验证码验证次数                限制次数6次  间隔10分钟
-		if(systemService.overLoginLimitCount(loginid,UserLoginStatus.TYPE_COACH,flag,request, resultMap,Constant.TRY_TIMES,Constant.TRY_LOGIN_INTERVAL))
+		if(systemService.overLoginLimitCount(loginid,UserLoginStatus.TYPE_COACH,Constant.TRY_TIMES,Constant.TRY_LOGIN_INTERVAL))
 		{
+			//超出限制
+			resultMap.put("code", 2);
+			resultMap.put("message", "请"+Constant.TRY_LOGIN_INTERVAL+"分钟后再次尝试！");
 			return;
 		}
+
+		// 验证验证码的有效性
+		int result = cuserService.checkVerCode(loginid, password);
+		//登录成功
+		if(1==result)
+		{
+			systemService.successThenClear(loginid, UserLoginStatus.TYPE_COACH, Constant.TRY_TIMES);
+		}else
+		{
+			systemService.failedThenCount(loginid, UserLoginStatus.TYPE_COACH, Constant.TRY_TIMES);
+		}
+
+		//登录验证次数限制 结束
 
 		//result=1;
 		if (result == 1) {// 可以登录
