@@ -351,11 +351,12 @@ public interface ISUserService {
 	public BigDecimal getStudentFrozenMoney(int studentid);
 	public BigDecimal getStudentCoin(int studentid);
 	public BigDecimal getStudentFrozenCoin(int studentid);
-	public List<String> findStudentMoneyException();
-	public List<String> findCoachMoneyException();
-	public List<String> findCoachCoinException();
-	public List<String> findStudentCoinException();
+	public List<String> findStudentMoneyAbnormal();
+	public List<String> findCoachMoneyAbnormal();
+	public List<String> findCoachCoinAbnormal();
+	public List<String> findStudentCoinAbnormal();
 	public BigDecimal getSettleOrderTotal(int coachid,int studentid);
 	public BigInteger getSettleOrderTime(int coachid,int studentid);
+	public BigInteger getCanUseCouponNum(int studentid);
 
 }

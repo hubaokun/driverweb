@@ -2286,7 +2286,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	/**
 	 * 查询有异常的学员余额
 	 */
-	public List findStudentMoneyException(){
+	public List findStudentMoneyAbnormal(){
 		List relist=new ArrayList();
 		String hql="from SuserInfo";
 		List<SuserInfo> list=(List<SuserInfo>) dataDao.getObjectsViaParam(hql, null);
@@ -2362,7 +2362,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	/**
 	 * 查询有异常的教练余额
 	 */
-	public List findCoachMoneyException(){
+	public List findCoachMoneyAbnormal(){
 		List relist=new ArrayList();
 		String hql="from CuserInfo";
 		List<CuserInfo> list=(List<CuserInfo>) dataDao.getObjectsViaParam(hql, null);
@@ -2422,7 +2422,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	/**
 	 * 查询有异常的教练小巴币
 	 */
-	public List<String> findCoachCoinException(){
+	public List<String> findCoachCoinAbnormal(){
 		List<String> relist=new ArrayList<String>();
 		String hql="from CuserInfo";
 		List<CuserInfo> list=(List<CuserInfo>) dataDao.getObjectsViaParam(hql, null);
@@ -2447,7 +2447,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	/**
 	 * 查询有异常的学员小巴币
 	 */
-	public List<String> findStudentCoinException(){
+	public List<String> findStudentCoinAbnormal(){
 		List<String> relist=new ArrayList<String>();
 		String hql="from SuserInfo";
 		List<SuserInfo> list=(List<SuserInfo>) dataDao.getObjectsViaParam(hql, null);
@@ -2506,4 +2506,20 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		}
 		return settleMoney;
 	}
+	/**
+	 * 学员可用小巴券=发放的可用小巴券数量-订单中已经消费的小巴券数量
+	 * @param studentid 学员ID
+	 * @return
+	 */
+	public BigInteger getCanUseCouponNum(int studentid){
+		//发放的可用小巴券数量
+		StringBuffer sqlProvide=new StringBuffer();
+		sqlProvide.append("select count(*) from t_couponget_record where state=0 and userid=:userid and end_time>now() ");
+		BigInteger provideCoupon=(BigInteger) dataDao.getFirstObjectViaParamSql(sqlProvide.toString(), new String[]{"userid"},studentid);
+		if(provideCoupon==null){
+			provideCoupon=new BigInteger("0");
+		}
+		return provideCoupon;
+	}
+	
 }
