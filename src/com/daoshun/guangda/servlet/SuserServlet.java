@@ -21,15 +21,7 @@ import javax.servlet.http.HttpSession;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
 import com.daoshun.common.ErrException;
-import com.daoshun.guangda.pojo.AreaInfo;
-import com.daoshun.guangda.pojo.CityInfo;
-import com.daoshun.guangda.pojo.CuserInfo;
-import com.daoshun.guangda.pojo.ModelPrice;
-import com.daoshun.guangda.pojo.ProvinceInfo;
-import com.daoshun.guangda.pojo.RecommendInfo;
-import com.daoshun.guangda.pojo.SuserInfo;
-import com.daoshun.guangda.pojo.SystemSetInfo;
-import com.daoshun.guangda.pojo.VerifyCodeInfo;
+import com.daoshun.guangda.pojo.*;
 import com.daoshun.guangda.service.IBaseService;
 import com.daoshun.guangda.service.ILocationService;
 import com.daoshun.guangda.service.IRecommendService;
@@ -564,12 +556,40 @@ public class SuserServlet extends BaseServlet {
 		CommonUtils.validateEmpty(phone);
 		CommonUtils.validateEmpty(password);
 		HttpSession session= request.getSession();
+
+
+
+		//登录验证次数限制 开始
+
+		//判断是否超出验证码验证次数                限制次数6次  间隔10分钟
+		if(systemService.overLoginLimitCount(phone, UserLoginStatus.TYPE_STUDENT,Constant.TRY_TIMES,Constant.TRY_LOGIN_INTERVAL))
+		{
+			//超出限制
+			resultMap.put("code", 2);
+			resultMap.put("message", "请"+Constant.TRY_LOGIN_INTERVAL+"分钟后再次尝试！");
+			return;
+		}
+
+		// 验证验证码的有效性
 		int result =0;
+
 		// 验证验证码的有效性
 		if(!password.equals("weixin"))
 			result= suserService.checkVerCode(phone, password);
 		else
 			result=1;
+		//登录成功
+
+		if(1==result)
+		{
+			systemService.successThenClear(phone, UserLoginStatus.TYPE_STUDENT, Constant.TRY_TIMES);
+		}else
+		{
+			systemService.failedThenCount(phone, UserLoginStatus.TYPE_STUDENT, Constant.TRY_TIMES);
+		}
+		//登录验证次数限制 结束
+
+
 		if (result == 1){
 			String token = request.getSession().getId().toLowerCase();
 //			System.out.println("longin set token="+token+" "+Thread.currentThread().getId());
@@ -602,7 +622,9 @@ public class SuserServlet extends BaseServlet {
 					System.out.println("***suser.login check version****** "+version+" ******phone****** "+phone+" *****code** "+2+" *** logintime ****** "+ new Date().toLocaleString());
 					return;
 				}
-				user.setVersion(version);//设置版本号
+				else {//2.0以上版本可以正常使用
+					user.setVersion(version);//设置版本号
+				}
 			}
 			
 			if(openid!=null && !"".equals(openid)){
@@ -614,7 +636,6 @@ public class SuserServlet extends BaseServlet {
 				ProvinceInfo pro=locationService.getProvincesById(user.getProvinceid());
 				CityInfo city=locationService.getCityById(user.getCityid());
 				AreaInfo area=locationService.getAreaById(user.getAreaid());
-				
 				String locationname="";
 				if(pro!=null && city!=null && area!=null){
 					locationname=pro.getProvince()+"-"+city.getCity()+"-"+area.getArea();

@@ -29,6 +29,7 @@ import com.daoshun.guangda.pojo.RecommendInfo;
 import com.daoshun.guangda.pojo.SuserInfo;
 import com.daoshun.guangda.pojo.SystemSetInfo;
 import com.daoshun.guangda.pojo.TeachcarInfo;
+import com.daoshun.guangda.pojo.UserLoginStatus;
 import com.daoshun.guangda.service.ICUserService;
 import com.daoshun.guangda.service.ILocationService;
 import com.daoshun.guangda.service.IRecommendService;
@@ -40,21 +41,21 @@ import com.daoshun.guangda.service.ISystemService;
  */
 /**
  * @author liukn
- * 
+ *
  */
 @WebServlet("/cuser")
 public class CuserServlet extends BaseServlet {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 6998440419757851253L;
 
 	private ICUserService cuserService;
 	private ISystemService systemService;
 	private ISUserService suserService;
-    private IRecommendService recommendService;
-    private ILocationService locationService;
+	private IRecommendService recommendService;
+	private ILocationService locationService;
 
 
 	@Override
@@ -320,7 +321,7 @@ public class CuserServlet extends BaseServlet {
 
 	/**
 	 * 注册
-	 * 
+	 *
 	 * @param request
 	 * @throws ErrException
 	 */
@@ -350,7 +351,7 @@ public class CuserServlet extends BaseServlet {
 
 	/**
 	 * 登录
-	 * 
+	 *
 	 * @param request
 	 * @throws ErrException
 	 */
@@ -361,13 +362,37 @@ public class CuserServlet extends BaseServlet {
 		String devicetype = getRequestParamter(request, "ostype");//getRequestParamter(request, "devicetype");//设备类型  1 IOS  2 ADNROID
 		String version = getRequestParamter(request, "version");//版本
 		CommonUtils.validateEmpty(password);
+
+
+//登录验证次数限制 开始
+
+		//判断是否超出验证码验证次数                限制次数6次  间隔10分钟
+		if(systemService.overLoginLimitCount(loginid,UserLoginStatus.TYPE_COACH,Constant.TRY_TIMES,Constant.TRY_LOGIN_INTERVAL))
+		{
+			//超出限制
+			resultMap.put("code", 2);
+			resultMap.put("message", "请"+Constant.TRY_LOGIN_INTERVAL+"分钟后再次尝试！");
+			return;
+		}
+
 		// 验证验证码的有效性
 		int result = cuserService.checkVerCode(loginid, password);
+		//登录成功
+		if(1==result)
+		{
+			systemService.successThenClear(loginid, UserLoginStatus.TYPE_COACH, Constant.TRY_TIMES);
+		}else
+		{
+			systemService.failedThenCount(loginid, UserLoginStatus.TYPE_COACH, Constant.TRY_TIMES);
+		}
+
+		//登录验证次数限制 结束
+
 		//result=1;
 		if (result == 1) {// 可以登录
 			String token = request.getSession().getId().toLowerCase();
 			CuserInfo cuser = cuserService.getCuserByPhone(loginid);
-			if (cuser == null) {				
+			if (cuser == null) {
 				cuser = cuserService.registerUser(loginid, token);// 注册
 				cuser.setPassword(password);
 				int dtype=CommonUtils.parseInt(devicetype, 0);
@@ -394,16 +419,7 @@ public class CuserServlet extends BaseServlet {
 				if(dtype!=0){
 					cuser.setDevicetype(dtype);//设置设备类型
 				}
-				
 				if(version!=null && !"".equals(version)){
-					//强制1.×。×版本必须升级
-					if (version.startsWith("1"))
-					{
-						resultMap.put("code", 4);
-						resultMap.put("message", "您的app版本太低,请退出app并重新进入,将自动检测更新");
-						System.out.println("*****cuser.login check version****** "+version+" ******phone****** "+loginid+" ***** logintime ****** "+ new Date().toLocaleString());
-						return;
-					}
 					cuser.setVersion(version);//设置版本号
 				}
 				cuserService.updateCuser(cuser);
@@ -490,17 +506,17 @@ public class CuserServlet extends BaseServlet {
 			}
 			resultMap.put("UserInfo", cuser);
 			int rflag=recommendService.checkRecommendinfo(String.valueOf(cuser.getCoachid()),1);
-	        int cflag=recommendService.isoversixhour(String.valueOf(cuser.getCoachid()),1);
+			int cflag=recommendService.isoversixhour(String.valueOf(cuser.getCoachid()),1);
 			if(rflag==0 || cflag==0)
 				//返回0代表已经存在记录了或者已经超过6个小时
 				resultMap.put("isInvited", 0);
 			else
 				//返回1代表没有记录并且未超过6个小时
 				resultMap.put("isInvited", 1);
-			 SystemSetInfo systemSetInfo=cuserService.getSystemSetInfo();
-			 resultMap.put("crewardamount", systemSetInfo.getCrewardamount());
-			 resultMap.put("orewardamount", systemSetInfo.getOrewardamount());
-			
+			SystemSetInfo systemSetInfo=cuserService.getSystemSetInfo();
+			resultMap.put("crewardamount", systemSetInfo.getCrewardamount());
+			resultMap.put("orewardamount", systemSetInfo.getOrewardamount());
+
 		} else if (result == 0) {
 			resultMap.put("code", 2);
 			resultMap.put("message", "验证码错误,请重新输入");
@@ -512,7 +528,7 @@ public class CuserServlet extends BaseServlet {
 
 	/**
 	 * 完善账号信息
-	 * 
+	 *
 	 * @param request
 	 * @throws ErrException
 	 */
@@ -569,12 +585,12 @@ public class CuserServlet extends BaseServlet {
 				recommendService.updateRecommendInfo(temp);
 			}
 		}
-		
+
 	}
 
 	/**
 	 * 修改头像
-	 * 
+	 *
 	 * @param request
 	 * @throws ErrException
 	 */
@@ -594,7 +610,7 @@ public class CuserServlet extends BaseServlet {
 
 	/**
 	 * 得到所有准教车型
-	 * 
+	 *
 	 * @param request
 	 * @throws ErrException
 	 */
@@ -606,13 +622,13 @@ public class CuserServlet extends BaseServlet {
 		if("".equals(version) || version==null ){
 			modellist=modellist.subList(0, 2);
 		}
-		
+
 		resultMap.put("modellist", modellist);
 	}
 
 	/**
 	 * 完善教练个人资料信息
-	 * 
+	 *
 	 * @param request
 	 * @throws ErrException
 	 */
@@ -667,7 +683,7 @@ public class CuserServlet extends BaseServlet {
 
 	/**
 	 * 找回原密码
-	 * 
+	 *
 	 * @param request
 	 * @throws ErrException
 	 */
@@ -690,7 +706,7 @@ public class CuserServlet extends BaseServlet {
 
 	/**
 	 * 修改密码验证原密码
-	 * 
+	 *
 	 * @param request
 	 * @throws ErrException
 	 */
@@ -711,7 +727,7 @@ public class CuserServlet extends BaseServlet {
 
 	/**
 	 * 修改密码
-	 * 
+	 *
 	 * @param request
 	 * @throws ErrException
 	 */
@@ -747,7 +763,7 @@ public class CuserServlet extends BaseServlet {
 	}
 	/**
 	 * 完善教练资格资料
-	 * 
+	 *
 	 * @param request
 	 * @throws ErrException
 	 */
@@ -778,7 +794,7 @@ public class CuserServlet extends BaseServlet {
 		String cradpic5 = (String) request.getAttribute("cardpic5"); // 车辆行驶证正面照
 		String cradpic6 = (String) request.getAttribute("cardpic6"); // 车辆行驶证反面照
 		String cradpic7 = (String) request.getAttribute("cardpic7"); // 教练真实照片
-		
+
 		CuserInfo cuser = cuserService.getCuserByCoachid(coachid);
 		if (cuser == null) {
 			resultMap.put("code", 2);
@@ -893,7 +909,7 @@ public class CuserServlet extends BaseServlet {
 	public void recharge(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String coachid = getRequestParamter(request, "coachid");// 教练ID
 		String amount = getRequestParamter(request, "amount");// 充值金额
-	
+
 		CommonUtils.validateEmpty(coachid);
 		CommonUtils.validateEmpty(amount);
 		HashMap<String, Object> rechargeResult = cuserService.recharge(coachid, amount);
@@ -924,20 +940,20 @@ public class CuserServlet extends BaseServlet {
 		resultMap.putAll(result);
 	}
 	//获取教练小巴币归属那些教练的异常数据
-		public void getCoachCoinAffiliationExcetpion(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
-			
-			HashMap<String, Object> result=cuserService.getCoinAffiliationException();
-			//resultMap.putAll(result);
-		}
+	public void getCoachCoinAffiliationExcetpion(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
+
+		HashMap<String, Object> result=cuserService.getCoinAffiliationException();
+		//resultMap.putAll(result);
+	}
 	//获取教练有关联学员信息
 	public void getCoachStudentRelationShip(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException
 	{
 		String coachid = getRequestParamter(request, "coachid");// 教练ID
 		CommonUtils.validateEmpty(coachid);
 		List<SuserInfo> suser=cuserService.getCoachStudent(coachid);
-		  resultMap.put("studentlist", suser);
+		resultMap.put("studentlist", suser);
 	}
-    //获取学员小巴券可用，剩余张数
+	//获取学员小巴券可用，剩余张数
 	public void getStudentCouon(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException
 	{
 		String coachid = getRequestParamter(request, "coachid");// 教练ID
@@ -996,7 +1012,7 @@ public class CuserServlet extends BaseServlet {
 		Integer flag=cuserService.getcoachcouponlimit(coachid);
 		resultMap.put("grantlimit",flag);
 	}
-	
+
 	/*
 	 * 教练端开课前获得该教练的课程价格区间
 	 * 科目二范围 50   1000

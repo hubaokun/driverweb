@@ -157,36 +157,36 @@ public class CoinRecordAction extends BaseAction{
 		}
         return SUCCESS;
     }
-	//小巴币发放记录类型拆分
-    
-    //发送给学员的小巴币记录
-    @Action(value="goCoinRecordRelease",results={ @Result(name=SUCCESS,  location="goCoinRecord.do?type=1", type="redirect")})
-    public String goCoinRecordRelease()
-    {
-    	return SUCCESS;
-    }
-    
-    //学员支付小巴币给教练记录
-    @Action(value="goCoinRecordToCoach",results={ @Result(name=SUCCESS,  location="goCoinRecord.do?type=2", type="redirect")})
-    public String goCoinRecordToCoach()
-    {
-    	return SUCCESS;
-    }
-    
-    //小巴币退款记录
-    @Action(value="goCoinRecordRefund",results={ @Result(name=SUCCESS,  location="goCoinRecord.do?type=3", type="redirect")})
-    public String goCoinRecordRefund()
-    {
-    	return SUCCESS;
-    }
-    
-    //教练兑换小巴币记录
-    @Action(value="goCoinRecordExchangeByCoach",results={ @Result(name=SUCCESS,  location="goCoinRecord.do?type=4", type="redirect")})
-    public String goCoinRecordExchangeByCoach()
-    {
-    	return SUCCESS;
-    }
-    
+//	//小巴币发放记录类型拆分
+//
+//    //发送给学员的小巴币记录
+//    @Action(value="goCoinRecordRelease",results={ @Result(name=SUCCESS,  location="goCoinRecord.do?type=1", type="redirect")})
+//    public String goCoinRecordRelease()
+//    {
+//    	return SUCCESS;
+//    }
+//
+//    //学员支付小巴币给教练记录
+//    @Action(value="goCoinRecordToCoach",results={ @Result(name=SUCCESS,  location="goCoinRecord.do?type=2", type="redirect")})
+//    public String goCoinRecordToCoach()
+//    {
+//    	return SUCCESS;
+//    }
+//
+//    //小巴币退款记录
+//    @Action(value="goCoinRecordRefund",results={ @Result(name=SUCCESS,  location="goCoinRecord.do?type=3", type="redirect")})
+//    public String goCoinRecordRefund()
+//    {
+//    	return SUCCESS;
+//    }
+//
+//    //教练兑换小巴币记录
+//    @Action(value="goCoinRecordExchangeByCoach",results={ @Result(name=SUCCESS,  location="goCoinRecord.do?type=4", type="redirect")})
+//    public String goCoinRecordExchangeByCoach()
+//    {
+//    	return SUCCESS;
+//    }
+//
     
     //驾校小巴币发放记录
     @Action(value = "goSchoolCoinRecord", results = { @Result(name = SUCCESS, location = "/schoolcoinrecord.jsp") })
