@@ -74,7 +74,7 @@
                         <div class="binding_detail" style="  left: 145px;top:-93px;clear:both;" id="optionalStudent">;
                         </div>
                     </div>
-                   
+				</div>
         </form>
         </div>
     </div>
@@ -95,17 +95,25 @@
 				<tr class="tr_td">
 					<td style="width: 100px;" class="border_right_bottom"><s:if
 							test="ownertype==0">平台发行</s:if> <s:elseif test="ownertype==1">驾校发行
-							</s:elseif> <s:elseif test="ownertype==2">教练发行
-							</s:elseif>
+					</s:elseif> <s:elseif test="ownertype==2">教练发行
+					</s:elseif>
 					</td>
 					<td style="width: 100px;" class="border_right_bottom">${payername}</td>
 					<td style="width: 100px;" class="border_right_bottom">${receivername}</td>
-					<td style="width: 100px;" class="border_right_bottom">${coinnum}</td>
+					<td style="width: 100px;" class="border_right_bottom">
+						<s:if test="(1==type || 2==type || 4==type) && 0!=coinnum">
+							-
+						</s:if>
+						<s:elseif test="3==type && 0!=coinnum">
+							+
+						</s:elseif>
+							${coinnum}
+					</td>
 					<td style="width: 150px;" class="border_right_bottom"><s:if
 							test="type==1">发放给学员</s:if> <s:elseif test="type==2">学员支付
-							</s:elseif> <s:elseif test="type==3">退款
-							</s:elseif><s:elseif test="type==4">教练兑换
-							</s:elseif>
+					</s:elseif> <s:elseif test="type==3">退款
+					</s:elseif><s:elseif test="type==4">教练兑换
+					</s:elseif>
 					</td>
 					<td style="width: 100px;" class="border_right_bottom">${ownername}</td>
 					<td style="width: 200px;" class="border_right_bottom"><s:date
