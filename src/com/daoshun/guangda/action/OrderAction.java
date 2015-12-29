@@ -457,6 +457,7 @@ public class OrderAction extends BaseAction {
 	public String alreadyLearn() {
 		order = orderService.getOrderById(orderid);
 		order.setCoachstate(1);
+		order.setStudentstate(2);
 		orderService.updateOrderInfo(order);
 		return SUCCESS;
 	}

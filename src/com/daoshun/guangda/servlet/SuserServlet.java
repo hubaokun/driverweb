@@ -778,7 +778,7 @@ public class SuserServlet extends BaseServlet {
 			if (cityid != null) {
 				user.setCityid(cityid);
 			}
-			if (areaid != null) {
+			if (areaid != null ) {
 				user.setAreaid(areaid);
 			}
 			suserService.updateUserInfo(user);
