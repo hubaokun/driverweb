@@ -115,7 +115,8 @@ public class SuserAction extends BaseAction {
 
 	// 添加新跟进记录
 	private String addcontent;
-
+	
+	private String reason;
 	// 学员提现申请id
 	private int applyid;
 
@@ -931,10 +932,7 @@ public class SuserAction extends BaseAction {
 	 */
 	@Action(value = "/setStudentBalance")
 	public void setStudentBalance() {
-		SuserInfo student = suserService.getUserById(studentid.toString());
-		BigDecimal suserOrderMoney=suserService.getStudentMoney(student.getStudentid());
-		student.setMoney(suserOrderMoney.add(money));
-		suserService.updateUserInfo(student);
+		suserService.addBackstageRecharge(String.valueOf(studentid), String.valueOf(money.intValue()),"1",reason);
 		setResponseStr("success");
 	}
 
@@ -984,7 +982,7 @@ public class SuserAction extends BaseAction {
 	}
 
 	/**
-	 * 减少教练余额
+	 * 减少学员余额
 	 * 
 	 * @return
 	 */
@@ -996,8 +994,7 @@ public class SuserAction extends BaseAction {
 		if (bigdecimal.compareTo(BigDecimal.ZERO) == -1) {
 			setResponseStr("error");
 		} else {
-			student.setMoney(bigdecimal);
-			suserService.updateUserInfo(student);
+			suserService.addBackstageRecharge(String.valueOf(studentid), String.valueOf(money.intValue()),"2",reason);
 			setResponseStr("success");
 		}
 	}
@@ -2308,4 +2305,12 @@ public class SuserAction extends BaseAction {
 		this.editprovinceid = editprovinceid;
 	}
 
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+	
 }

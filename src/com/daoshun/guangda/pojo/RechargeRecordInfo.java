@@ -30,10 +30,10 @@ public class RechargeRecordInfo implements Serializable {
 	@Column(name = "userid", length = 10, nullable = false)
 	private Integer userid;
 
-	// 1.教练 2.学员充值 3.学员报名
+	// 1.教练充值 2.学员充值 3.学员报名  4 管理后台添加学员余额   5 管理后台添加教练余额 
 	@Column(name = "type", length = 1, nullable = false, columnDefinition = "INt default 0")
 	private Integer type;
-	// 0.支付宝 1.微信            ——支付来源
+	// 0.支付宝 1.微信       ——支付来源
 	@Column(name = "paytype", length = 1 , columnDefinition = "INt default 0")
 	private Integer paytype;
 	// 金额

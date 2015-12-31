@@ -362,8 +362,8 @@ function lessenbalance(coachid) {
 	}
 }
 
-//添加教练余额
-function addBalanceSubmit() {
+//添加教练余额，已废弃，TMD，写2个同名同参的函数，啃死人了
+function addBalanceSubmit_1() {
 	var a= $("#changebalance").val();
 	if(a==-1){
 		$("#changebalance").val("");
@@ -379,7 +379,8 @@ function addBalanceSubmit() {
 			url : "setBalance.do",
 			data : {
 				money : gmoney,
-				coachid : gmoney_coachid
+				coachid : gmoney_coachid,
+				reason  :reason
 			},
 			success : function(data) {
 				if (data == "success") {
@@ -394,7 +395,7 @@ function addBalanceSubmit() {
 }
 
 //减少余额
-function lessenBalanceSubmit() {
+function lessenBalanceSubmit_1() {
 	var a= $("#allchangelevel").val();
 	if(a==-1){
 		$("#allchangelevel").val("");
@@ -483,7 +484,7 @@ function lessenstudentbalance(coachid) {
 }
 
 //添加学员余额
-function addStudentBalanceSubmit() {
+function addStudentBalanceSubmit_1() {
 	var a= $("#changebalance").val();
 	if(a==-1){
 		$("#changebalance").val("");
@@ -514,7 +515,7 @@ function addStudentBalanceSubmit() {
 }
 
 //减少学员余额
-function lessenStudentBalanceSubmit() {
+function lessenStudentBalanceSubmit_1() {
 	var a= $("#allchangelevel").val();
 	if(a==-1){
 		$("#allchangelevel").val("");
@@ -1837,13 +1838,24 @@ function addBalanceSubmit() {
 	}else{
 	var gmoney = document.getElementById("morebalance").value;
 	var gmoney_coachid = document.getElementById("gmoney_coachid").value;
+	var reason=document.getElementById("morereason").value;
+	if(gmoney==""){
+		alert("金额不能为空！");
+		return ;
+	}
+	if(reason==""){
+		alert("添加原因不能为空！");
+		return ;
+	}
+	
 	if (confirm("是否修改教练余额？")) {
 		$.ajax({
 			type : "POST",
 			url : "setBalance.do",
 			data : {
 				money : gmoney,
-				coachid : gmoney_coachid
+				coachid : gmoney_coachid,
+				reason  : reason
 			},
 			success : function(data) {
 				if (data == "success") {
@@ -1868,13 +1880,23 @@ function lessenBalanceSubmit() {
 	}else{
 	var clevel = document.getElementById("lessbalance").value;
 	var level_coachid = document.getElementById("level_coachid").value;
+	var reason=document.getElementById("lessreason").value;
+	if(clevel==""){
+		alert("金额不能为空！");
+		return ;
+	}
+	if(reason==""){
+		alert("添加原因不能为空！");
+		return ;
+	}
 	if (confirm("是否修改教练余额？")) {
 		$.ajax({
 			type : "POST",
 			url : "lessenBalance.do",
 			data : {
 				money : clevel,
-				coachid : level_coachid
+				coachid : level_coachid,
+				reason  : reason
 			},
 			success : function(data) {
 				if (data == "error") {
@@ -1957,13 +1979,23 @@ function addStudentBalanceSubmit() {
 	}else{
 	var gmoney = document.getElementById("morebalance").value;
 	var gmoney_coachid = document.getElementById("gmoney_coachid").value;
+	var reason=document.getElementById("morereason").value;
+	if(gmoney==""){
+		alert("金额不能为空！");
+		return ;
+	}
+	if(reason==""){
+		alert("添加原因不能为空！");
+		return ;
+	}
 	if (confirm("是否修改学员余额？")) {
 		$.ajax({
 			type : "POST",
 			url : "setStudentBalance.do",
 			data : {
 				money : gmoney,
-				studentid : gmoney_coachid
+				studentid : gmoney_coachid,
+				reason : reason
 			},
 			success : function(data) {
 				if (data == "success") {
@@ -1988,13 +2020,23 @@ function lessenStudentBalanceSubmit() {
 	}else{
 	var clevel = document.getElementById("lessbalance").value;
 	var level_coachid = document.getElementById("level_coachid").value;
+	var reason=document.getElementById("lessreason").value;
+	if(clevel==""){
+		alert("金额不能为空！");
+		return ;
+	}
+	if(reason==""){
+		alert("添加原因不能为空！");
+		return ;
+	}
 	if (confirm("是否修改学员余额？")) {
 		$.ajax({
 			type : "POST",
 			url : "lessenStudentBalance.do",
 			data : {
 				money : clevel,
-				studentid : level_coachid
+				studentid : level_coachid,
+				reason :reason
 			},
 			success : function(data) {
 				if (data == "error") {

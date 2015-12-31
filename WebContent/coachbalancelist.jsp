@@ -331,6 +331,7 @@ $(function(){
 		<div style="position: fixed; width: 300px; height: 200px;background: #4cc2ff;margin-left: 100px;margin-top: 50px;">
 		<input type="hidden" id="gmoney_coachid" value=""/>
 		<input id="morebalance" type="text" style="width: 170px;height: 40px;margin: auto;margin-left: 70px;margin-top: 45px;font-size: 18px;text-align: center;"  placeholder="请输添加金额" onkeyup="value=value.replace(/[^\d]/g,'')"/>
+		<input id="morereason" type="text" style="width: 170px;height: 40px;margin: auto;margin-left: 70px;margin-top: 25px;font-size: 18px;text-align: center;"  placeholder="请输添加原因" />
 		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 50px;margin-top: 40px;font-size: 18px" value="确定" onclick="addBalanceSubmit()">
 		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 180px;margin-top: -40px;font-size: 18px" value="取消" onclick="unshowchangegmoney()">
 		<input type="hidden" value="" id="changebalance">
@@ -345,6 +346,7 @@ $(function(){
 		<div style="position: fixed; width: 300px; height: 200px;background: #4cc2ff;margin-left: 100px;margin-top: 50px;">
 		<input type="hidden" id="level_coachid" value=""/>
 		<input id="lessbalance" type="text" style="width: 170px;height: 40px;margin: auto;margin-left: 70px;margin-top: 45px;font-size: 18px;text-align: center;"  placeholder="输入减少金额" onkeyup="value=value.replace(/[^\d]/g,'')"/>
+		<input id="lessreason" type="text" style="width: 170px;height: 40px;margin: auto;margin-left: 70px;margin-top: 25px;font-size: 18px;text-align: center;"  placeholder="请输添加原因" />
 		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 50px;margin-top: 40px;font-size: 18px" value="确定" onclick="lessenBalanceSubmit()">
 		<input type="button" style="width: 100px;height: 40px;margin: auto;margin-left: 180px; margin-top: -40px;font-size: 18px" value="取消" onclick="unshowchangelevel()">
 		<input type="hidden" value="" id="allchangelevel">

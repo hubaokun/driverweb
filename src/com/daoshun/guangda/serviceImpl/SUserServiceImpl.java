@@ -22,6 +22,7 @@ import com.daoshun.common.QueryResult;
 import com.daoshun.common.UserType;
 import com.daoshun.guangda.pojo.AdminInfo;
 import com.daoshun.guangda.pojo.AlipayCallBack;
+import com.daoshun.guangda.pojo.BackstageRecharge;
 import com.daoshun.guangda.pojo.BalanceStudentInfo;
 import com.daoshun.guangda.pojo.CoachStudentInfo;
 import com.daoshun.guangda.pojo.CoinAffiliation;
@@ -955,7 +956,33 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		List<SuserInfo> studentlist = (List<SuserInfo>) dataDao.getObjectsViaParam(cuserhql.toString(), null);
 		return studentlist;
 	}
-
+	/**
+	 * 后台管理员充值余额
+	 */
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public void addBackstageRecharge(String studentid, String amount,String operatetype,String reason)  {
+		// 插入数据
+		/*RechargeRecordInfo info = new RechargeRecordInfo();
+		info.setAddtime(new Date());
+		info.setAmount(new BigDecimal(CommonUtils.parseFloat(amount, 0.0f)));
+		info.setType(4);
+		info.setUserid(CommonUtils.parseInt(studentid, 0));
+		info.setPaytype(2);
+		info.setState(1);*/
+		BackstageRecharge br=new BackstageRecharge();
+		br.setAddtime(new Date());
+		br.setAmount(new BigDecimal(CommonUtils.parseFloat(amount, 0.0f)));
+		br.setOperatetype(CommonUtils.parseInt(operatetype, 0));
+		br.setUserid(CommonUtils.parseInt(studentid, 0));
+		br.setUsertype(1);
+		br.setReason(reason);
+		dataDao.addObject(br);
+		SuserInfo student = getUserById(studentid.toString());
+		BigDecimal suserOrderMoney=getStudentMoney(student.getStudentid());
+		student.setMoney(suserOrderMoney);
+		dataDao.updateObject(student);
+	}
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	public HashMap<String, Object> recharge(String studentid, String amount,String resource,String cip,String trade_type,String appid) throws IOException {
@@ -2216,12 +2243,23 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			return new BigDecimal(0);
 		}
 		//学员充值金额
-		String hqlRecharge="select sum(amount) from RechargeRecordInfo where userid=:userid  and type=2 and state=1";
+		String hqlRecharge="select sum(amount) from RechargeRecordInfo where userid=:userid  and type in (2,4) and state=1";
 		BigDecimal rechargeMoney=(BigDecimal) dataDao.getFirstObjectViaParam(hqlRecharge, new String[]{"userid"}, studentid);
 		if(rechargeMoney==null){
 			rechargeMoney=new BigDecimal(0);
 		}
-		
+		//后台增加学员余额
+		String sqlBackstageAdd="select sum(amount) from t_backstage_recharge where userid=:userid  and usertype =1 and operatetype=1";
+		BigDecimal backstageAdd=(BigDecimal) dataDao.getFirstObjectViaParamSql(sqlBackstageAdd, new String[]{"userid"}, studentid);
+		if(backstageAdd==null){
+			backstageAdd=new BigDecimal(0);
+		}
+		//后台减少学员余额
+		String sqlBackstageReduce="select sum(amount) from t_backstage_recharge where userid=:userid  and usertype =1 and operatetype=2";
+		BigDecimal backstageReduce=(BigDecimal) dataDao.getFirstObjectViaParamSql(sqlBackstageReduce, new String[]{"userid"}, studentid);
+		if(backstageReduce==null){
+			backstageReduce=new BigDecimal(0);
+		}		
 		//已提现金额
 		String hqlCash="select sum(amount) from StudentApplyInfo where userid=:userid and state=1";
 		BigDecimal cashMoney=(BigDecimal) dataDao.getFirstObjectViaParam(hqlCash, new String[]{"userid"}, studentid);
@@ -2243,7 +2281,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		}
 		BigDecimal settleMoney=consume.add(mixConsume);
 		//【余额值=学员充值金额-提现金额-已结算订单消费的金额-冻结金额】
-		BigDecimal rn=rechargeMoney.subtract(cashMoney).subtract(settleMoney).subtract(getStudentFrozenMoney(studentid));
+		BigDecimal rn=backstageAdd.subtract(backstageReduce).add(rechargeMoney).subtract(cashMoney).subtract(settleMoney).subtract(getStudentFrozenMoney(studentid));
 		return rn;
 	}
 	
@@ -2313,7 +2351,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		return relist;
 	}
 	/**
-  	 * 【教练金额=订单表教练获取的金额-提现金额-提现冻结金额】
+  	 * 【教练金额=教练充值金额+订单表教练获取的金额-提现金额-提现冻结金额】
   	 * @param coachid
   	 * @return
   	 */
@@ -2321,6 +2359,24 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		CuserInfo cuser=dataDao.getObjectById(CuserInfo.class, coachid);
 		if(cuser==null){
 			return new BigDecimal(0);
+		}
+		//教练充值金额
+		String hqlRecharge="select sum(amount) from RechargeRecordInfo where userid=:userid  and type =1 and state=1";
+		BigDecimal rechargeMoney=(BigDecimal) dataDao.getFirstObjectViaParam(hqlRecharge, new String[]{"userid"}, coachid);
+		if(rechargeMoney==null){
+			rechargeMoney=new BigDecimal(0);
+		}	
+		//后台增加教练余额
+		String sqlBackstageAdd="select sum(amount) from t_backstage_recharge where userid=:userid  and usertype =2 and operatetype=1";
+		BigDecimal backstageAdd=(BigDecimal) dataDao.getFirstObjectViaParamSql(sqlBackstageAdd, new String[]{"userid"}, coachid);
+		if(backstageAdd==null){
+			backstageAdd=new BigDecimal(0);
+		}
+		//后台减少余额
+		String sqlBackstageReduce="select sum(amount) from t_backstage_recharge where userid=:userid  and usertype =2 and operatetype=2";
+		BigDecimal backstageReduce=(BigDecimal) dataDao.getFirstObjectViaParamSql(sqlBackstageReduce, new String[]{"userid"}, coachid);
+		if(backstageReduce==null){
+			backstageReduce=new BigDecimal(0);
 		}
 		//订单表教练获取的金额
 		BigDecimal receiverMoney=new BigDecimal(0);
@@ -2335,14 +2391,14 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			coachMixMoney=new BigDecimal(0);
 			
 		}
-		receiverMoney=coachMoney.add(coachMixMoney);
+		receiverMoney=backstageAdd.subtract(backstageReduce).add(coachMoney).add(coachMixMoney);
 		//提现金额
 		String hql3="select sum(amount) from CApplyCashInfo where coachid=:coachid and state=1";
 		BigDecimal amount=(BigDecimal) dataDao.getFirstObjectViaParam(hql3, new String[]{"coachid"}, coachid);
 		if(amount==null){
 			amount=new BigDecimal(0);
 		}
-		return receiverMoney.subtract(amount).subtract(getCoachFrozenMoney(coachid));
+		return rechargeMoney.add(receiverMoney).subtract(amount).subtract(getCoachFrozenMoney(coachid));
 	}
 	
 	/**

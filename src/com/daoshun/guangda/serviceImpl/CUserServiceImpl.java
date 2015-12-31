@@ -26,6 +26,7 @@ import com.daoshun.common.QueryResult;
 import com.daoshun.common.SendPushThreadTask;
 import com.daoshun.common.UserType;
 import com.daoshun.guangda.pojo.AdminInfo;
+import com.daoshun.guangda.pojo.BackstageRecharge;
 import com.daoshun.guangda.pojo.BalanceCoachInfo;
 import com.daoshun.guangda.pojo.BalanceStudentInfo;
 import com.daoshun.guangda.pojo.CApplyCashInfo;
@@ -1368,7 +1369,26 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
         CuserInfo cuser = (CuserInfo) dataDao.getFirstObjectViaParam(cuserhql.toString(), params, idnum);
         return cuser;
     }
-
+    /**
+     * 管理员后台给教练添加余额
+     */
+    @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    public void addBackstageRecharge(String coachid, String amount,String operatetype,String reason) {
+        // 插入数据
+    	BackstageRecharge br=new BackstageRecharge();
+		br.setAddtime(new Date());
+		br.setAmount(new BigDecimal(CommonUtils.parseFloat(amount, 0.0f)));
+		br.setOperatetype(CommonUtils.parseInt(operatetype, 0));
+		br.setUserid(CommonUtils.parseInt(coachid, 0));
+		br.setUsertype(2);
+		br.setReason(reason);
+		dataDao.addObject(br);
+		CuserInfo cuserInfo = getCuserByCoachid(coachid);
+		BigDecimal cuserOrderMoney=suserService.getCoachMoney(cuserInfo.getCoachid());
+		cuserInfo.setMoney(cuserOrderMoney);
+		dataDao.updateObject(cuserInfo);
+    }
     // 充值
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)

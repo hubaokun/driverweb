@@ -277,6 +277,8 @@ public class CuserAction extends BaseAction {
 	private Date allfrozenend;
 
 	private BigDecimal money;
+	
+	private String reason;//原因
 
 	private List<ModelsInfo> modellist;
 
@@ -1143,10 +1145,11 @@ public class CuserAction extends BaseAction {
 	 */
 	@Action(value = "/setBalance")
 	public void setBalance() {
-		CuserInfo cuserInfo = cuserService.getCuserByCoachid(coachid);
+		cuserService.addBackstageRecharge(coachid, String.valueOf(money.intValue()),"1",reason);
+		/*CuserInfo cuserInfo = cuserService.getCuserByCoachid(coachid);
 		BigDecimal cuserOrderMoney=suserService.getCoachMoney(cuserInfo.getCoachid());
-		cuserInfo.setMoney(cuserOrderMoney.add(money));
-		cuserService.updateCuser(cuserInfo);
+		cuserInfo.setMoney(cuserOrderMoney);
+		cuserService.updateCuser(cuserInfo);*/
 		setResponseStr("success");
 	}
 
@@ -1159,12 +1162,12 @@ public class CuserAction extends BaseAction {
 	public void lessenBalance() {
 		CuserInfo cuserInfo = cuserService.getCuserByCoachid(coachid);
 		BigDecimal cuserOrderMoney=suserService.getCoachMoney(cuserInfo.getCoachid());
-		BigDecimal bigdecimal = cuserOrderMoney.subtract(money);
-		if (bigdecimal.compareTo(BigDecimal.ZERO) == -1) {
+		if (cuserOrderMoney.compareTo(BigDecimal.ZERO) == -1) {
 			setResponseStr("error");
 		} else {
-			cuserInfo.setMoney(bigdecimal);
-			cuserService.updateCuser(cuserInfo);
+			cuserService.addBackstageRecharge(coachid, String.valueOf(money.intValue()),"2",reason);
+			/*cuserInfo.setMoney(cuserOrderMoney);
+			cuserService.updateCuser(cuserInfo);*/
 			setResponseStr("success");
 		}
 	}
@@ -3390,6 +3393,14 @@ public class CuserAction extends BaseAction {
 
 	public void setEditcar_signexpired(String editcar_signexpired) {
 		this.editcar_signexpired = editcar_signexpired;
+	}
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
 	}
 	
 	

@@ -358,5 +358,6 @@ public interface ISUserService {
 	public BigDecimal getSettleOrderTotal(int coachid,int studentid);
 	public BigInteger getSettleOrderTime(int coachid,int studentid);
 	public BigInteger getCanUseCouponNum(int studentid);
+	public void addBackstageRecharge(String studentid, String amount,String operatetype,String reason) ;
 
 }
