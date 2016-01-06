@@ -121,6 +121,7 @@ public class AdvertisementServiceImpl extends BaseServiceImpl implements IAdvert
 			
 		}
 		adsql.append(" ) order by ad.ordervalue ASC, ad.begintime ASC");
+		//System.out.println(adsql.toString());
 		List<Object[]>  list = dataDao.createSQLQuery(adsql.toString());
 
 		List<AdvertisementConfig> advcfglist = new ArrayList<AdvertisementConfig>();

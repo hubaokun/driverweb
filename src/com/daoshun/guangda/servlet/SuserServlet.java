@@ -1120,7 +1120,7 @@ public class SuserServlet extends BaseServlet {
 	public void getCoinAffiliation(HttpServletRequest request, HashMap<String, Object> resultMap) throws ErrException {
 		String studentid = getRequestParamter(request, "studentid");// 教练ID
 		CommonUtils.validateEmpty(studentid);
-		HashMap<String, Object> result=suserService.getCoinAffiliation(studentid);
+		HashMap<String, Object> result=suserService.getCoinAffiliation2(studentid);
 		resultMap.putAll(result);
 	}
 	//获取学员小巴币归属那些教练或驾校使用 异常数据

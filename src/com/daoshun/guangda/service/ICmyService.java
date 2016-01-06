@@ -122,4 +122,5 @@ public interface ICmyService {
 	
 	/** 逻辑删除教练地址 **/
 	public abstract void deleteAddressbylogic(CaddAddressInfo cadd);
+	public void addCashOrder(String coachid,String count) ;
 }

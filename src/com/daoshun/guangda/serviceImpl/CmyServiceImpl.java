@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.Constant;
+import com.daoshun.common.SuitScope;
 import com.daoshun.guangda.NetData.ComplaintNetData;
 import com.daoshun.guangda.NetData.EvaluationNetData;
 import com.daoshun.guangda.model.StudentInfo;
@@ -497,7 +498,9 @@ public class CmyServiceImpl extends BaseServiceImpl implements ICmyService {
 
 
 
-	//申请兑现小巴币
+	/**
+	 * 申请兑换小巴币
+	 */
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Override
 	public HashMap<String, Object> applyCoin(String coachid, Integer applyCoinNum) {
@@ -534,6 +537,8 @@ public class CmyServiceImpl extends BaseServiceImpl implements ICmyService {
 					c.setReceivertype(UserType.PLATFORM);//1代表平台
 					c.setReceivername("平台");
 					c.setType(4);
+					c.setSettlementtype(SuitScope.COAH);
+					c.setSettlementid(Integer.parseInt(coachid));
 					dataDao.addObject(c);
 					result.put("code", 1);
 					result.put("message", "申请提交成功");
@@ -750,5 +755,39 @@ public class CmyServiceImpl extends BaseServiceImpl implements ICmyService {
 	public void deleteAddressbylogic(CaddAddressInfo cadd) {
 		cadd.setIsused(1);
 		dataDao.updateObject(cadd);
+	}
+	
+	/**
+	 * 添加教练提现订单关联
+	 * @param cadd
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	@Override
+	public void addCashOrder(String coachid,String count) {
+		CApplyCashInfo applycash = new CApplyCashInfo();
+		applycash.setCoachid(CommonUtils.parseInt(coachid, 0));
+		applycash.setAmount(new BigDecimal(CommonUtils.parseDouble(count, 0)));
+		applycash.setState(Constant.COCAHAPPLY_UNCOMPLETE);
+		applycash.setAddtime(new Date());
+		applycash.setUpdatetime(new Date());
+		applycash.setSchoolid(0);
+		addApplyCash(applycash);
+		int applyid=applycash.getApplyid();
+		StringBuffer hqlCoachMoney=new StringBuffer();
+		//查询未提现的教练订单
+		hqlCoachMoney.append("select orderid from OrderInfo where coachid=:coachid and paytype=1 and studentstate=3 ")
+		.append(" and coachstate=2 and over_time is not null ")
+		//.append(" and creat_time>'2016-01-01' ")
+		.append(" and orderid not in (select orderid from CashOrder where coachid=:coachid)");
+		List<Integer> orderIdList=(List<Integer>) dataDao.getObjectsViaParam(hqlCoachMoney.toString(),new String[]{"coachid","coachid"},CommonUtils.parseInt(coachid, 0),CommonUtils.parseInt(coachid, 0));
+		for (Integer orderid : orderIdList) {
+			CashOrder co=new CashOrder();
+			co.setApplyid(applyid);
+			co.setOrderid(orderid);
+			co.setCoachid(CommonUtils.parseInt(coachid, 0));
+			co.setAddtime(new Date());
+			dataDao.addObject(co);
+		}
+		
 	}
 }

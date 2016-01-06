@@ -1269,6 +1269,17 @@ public class CuserAction extends BaseAction {
 		recharglist=(List<RechargeRecordInfo>) result.get("RechargeRecordInfo");
 		return SUCCESS;
 	}
+	/**
+	 * 教练提现关联的订单
+	 * 
+	 * @return
+	 */
+	@Action(value = "/getCoachCashOrder", results = { @Result(name = SUCCESS, location = "/coachcashorder.jsp") })
+	public String getCoachCashOrder() {
+		Map result=cuserService.getCoachCashOrder(applyid, coachid);
+		orderlist=(List<OrderInfo>) result.get("orderList");
+		return SUCCESS;
+	}
 	
 	
 	/**

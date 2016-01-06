@@ -584,14 +584,15 @@ public class CmyServlet extends BaseServlet {
 			cuser.setFmoney(cuserOrderFMoney.add(new BigDecimal(CommonUtils.parseFloat(count, 0))));
 			cuser.setMoney(cuserOrderMoney.subtract(new BigDecimal(CommonUtils.parseFloat(count, 0))));
 			cuserService.updateCuser(cuser);
-			CApplyCashInfo applycash = new CApplyCashInfo();
+			/*CApplyCashInfo applycash = new CApplyCashInfo();
 			applycash.setCoachid(CommonUtils.parseInt(coachid, 0));
 			applycash.setAmount(new BigDecimal(CommonUtils.parseDouble(count, 0)));
 			applycash.setState(Constant.COCAHAPPLY_UNCOMPLETE);
 			applycash.setAddtime(new Date());
 			applycash.setUpdatetime(new Date());
 			applycash.setSchoolid(0);
-			cmyService.addApplyCash(applycash);
+			cmyService.addApplyCash(applycash);*/
+			cmyService.addCashOrder(coachid,count);
 			resultMap.put("code", 1);
 			resultMap.put("message", "申请提交成功");
 			resultMap.put("money", cuser.getMoney());

@@ -38,17 +38,31 @@
 
                     <div style=" height: 75px; border-bottom: 1px solid #eaeff2;">
                         <div style="float:left; width: 143px; height: 100%; line-height: 75px; border-right: 1px solid #eaeff2;text-align: right;">
-                            发放类型<span style="color:#f83a22; margin-right:16px; margin-left: 8px;">*</span></div>
+                            适用范围<span style="color:#f83a22; margin-right:16px; margin-left: 8px;">*</span></div>
                         <div style="height:50%; line-height: 75px; float:left; margin-left: 20px;">
                             <select name="ownertype" id="ownertype" onchange="showsearchowner()" class="searchdiv"
                                     style="  height: 50px;  border: 1px solid #cfd9df;margin-top:10px;">
-                                <option value="0">平台发放</option>
-                                <option value="1">驾校发放</option>
-                                <option value="2">教练发放</option>
+                                <option value="1">平台发放</option>
+                                <option value="2">驾校发放</option>
+                                <option value="3">教练发放</option>
                             </select>
                         </div>
                     </div>
+                    
                     <div id="searchbefore" style="width: 100%; height: 75px; border-bottom: 1px solid #eaeff2;">
+                        <div style="float:left; width: 143px; height: 100%; line-height: 75px; border-right: 1px solid #eaeff2;text-align: right;">
+                            结算方类型<span style="color:#f83a22; margin-right:16px; margin-left: 8px;">*</span></div>
+                        <div style="height: 100%; line-height: 75px; float:left; margin-left: 20px;">
+                            <select name="settlementtype" id="settlementtype" onchange="showSettlement()" class="searchdiv"
+                                    style="  height: 50px;  border: 1px solid #cfd9df;margin-top:10px;">
+                                <option value="1">平台</option>
+                                <option value="2">驾校</option>
+                                <option value="3">教练</option>
+                            </select>
+                        </div>
+
+                    </div>
+                     <div id="settlementbefore" style="width: 100%; height: 75px; border-bottom: 1px solid #eaeff2;">
                         <div style="float:left; width: 143px; height: 100%; line-height: 75px; border-right: 1px solid #eaeff2;text-align: right;">
                             发放数量<span style="color:#f83a22; margin-right:16px; margin-left: 8px;">*</span></div>
                         <div style="height: 100%; line-height: 75px; float:left; margin-left: 20px;">

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.QueryResult;
+import com.daoshun.common.SuitScope;
 import com.daoshun.common.UserType;
 import com.daoshun.guangda.pojo.CoinRecordInfo;
 import com.daoshun.guangda.pojo.CuserInfo;
@@ -95,6 +96,12 @@ public class CoinRecordAction extends BaseAction{
     private int pageCount;
     
     private List<DriveSchoolInfo> driveSchoollist;
+    
+    // 结算方类型
+    private Integer settlementtype;
+    
+    // 结算方id
+    private Integer settlementid;
     
 
     @Action(value = "goGrantCoinRecord", results = { @Result(name = SUCCESS, location = "/coinGrant.jsp") })
@@ -260,6 +267,12 @@ public class CoinRecordAction extends BaseAction{
              coinRecordInfo.setPayerid(UserType.PLATFORM);
              coinRecordInfo.setPayertype(UserType.PLATFORM);//0 平台  1 驾校  2 教练  3 学员
              coinRecordInfo.setPayername("平台");
+             
+             coinRecordInfo.setSuitscope(SuitScope.PLATFORM);//适用范围：平台
+             coinRecordInfo.setSuitid(0);//平台ID 
+             coinRecordInfo.setSettlementtype(settlementtype);//结算方类型
+             coinRecordInfo.setSettlementid(settlementid);//结算方id：广大驾校，ID 1
+             
         }else if(ownertype==UserType.DRIVESCHOOL){//驾校发放
         	 coinRecordInfo.setOwnerid(ownerid);//驾校ID
         	 coinRecordInfo.setOwnertype(ownertype);
@@ -267,12 +280,19 @@ public class CoinRecordAction extends BaseAction{
         	 if(ds!=null){
         		 coinRecordInfo.setOwnername(ds.getName());//驾校名称
         		 coinRecordInfo.setPayername(ds.getName());
+        	 }else{
+        		 coinRecordInfo.setPayername("平台");
         	 }
         	 /*coinRecordInfo.setPayerid(ownerid);
              coinRecordInfo.setPayertype(UserType.DRIVESCHOOL);*///0 平台  1 驾校  2 教练  3 学员
         	 coinRecordInfo.setPayerid(UserType.PLATFORM);
              coinRecordInfo.setPayertype(UserType.PLATFORM);//0 平台  1 驾校  2 教练  3 学员
-             coinRecordInfo.setPayername("平台");
+             
+             
+             coinRecordInfo.setSuitscope(SuitScope.DRIVESCHOOL);//适用范围：驾校
+             coinRecordInfo.setSuitid(ownerid);//驾校ID 
+             coinRecordInfo.setSettlementtype(settlementtype);//结算方类型
+             coinRecordInfo.setSettlementid(settlementid);//结算方id：广大驾校，ID 1
         }else if(ownertype==UserType.COAH){//教练发放
             /* coinRecordInfo.setOwnerid(ownerid);
              coinRecordInfo.setOwnertype(ownertype);
@@ -295,6 +315,11 @@ public class CoinRecordAction extends BaseAction{
            coinRecordInfo.setPayerid(UserType.PLATFORM);
            coinRecordInfo.setPayertype(UserType.PLATFORM);//0 平台  1 驾校  2 教练  3 学员
            coinRecordInfo.setPayername("平台");
+           
+           coinRecordInfo.setSuitscope(SuitScope.COAH);//适用范围：教练
+           coinRecordInfo.setSuitid(ownerid);//教练ID 
+           coinRecordInfo.setSettlementtype(settlementtype);//结算方类型
+           coinRecordInfo.setSettlementid(settlementid);//结算方id：
         }
         
         coinRecordInfo.setType(1);//type  1 发放给学员    2 学员支付    3 退款    4 教练兑换
@@ -511,14 +536,21 @@ public class CoinRecordAction extends BaseAction{
 	public void setSchoolid(Integer schoolid) {
 		this.schoolid = schoolid;
 	}
+
+	public Integer getSettlementtype() {
+		return settlementtype;
+	}
+
+	public void setSettlementtype(Integer settlementtype) {
+		this.settlementtype = settlementtype;
+	}
+
+	public Integer getSettlementid() {
+		return settlementid;
+	}
+
+	public void setSettlementid(Integer settlementid) {
+		this.settlementid = settlementid;
+	}
     
-    
-
-    
-    
-
-
-
-
-
 }

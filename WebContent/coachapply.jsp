@@ -44,6 +44,10 @@ function getdetail(applyid,coachid,amount)
 {
 	window.location.href="getWithdrawCashDetailByCoach.do?applyid="+applyid+"&coachid="+coachid+"&amount="+amount;
 }
+function getCoachCashOrder(applyid,coachid)
+{
+	window.location.href="getCoachCashOrder.do?applyid="+applyid+"&coachid="+coachid;
+}
 </script>
 <title>教练提现申请</title>
 </head>
@@ -174,6 +178,11 @@ function getdetail(applyid,coachid,amount)
 									<div class="table_button_edit_icon"></div>
 									<div class="table_button_text"
 										onclick="getdetail(${applyid},${coach.coachid},${amount});">提现详情</div>
+								</div>
+								<div class="table_edit_button" style="width: 90px;background:#ff9966;margin-top:15px">
+									<div class="table_button_edit_icon"></div>
+									<div class="table_button_text"
+										onclick="getCoachCashOrder(${applyid},${coach.coachid});">提现订单</div>
 								</div>
 								
 								</s:if>

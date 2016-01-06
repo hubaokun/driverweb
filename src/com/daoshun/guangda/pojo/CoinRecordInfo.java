@@ -71,6 +71,23 @@ public class CoinRecordInfo implements Serializable {
 	@Column(name = "orderid", length = 10, nullable = true, columnDefinition = "INT default 0")
 	private Integer orderid;
 	
+	
+	
+	//小巴币适用范围类型 ：平台、教练、驾校
+	@Column(name = "suitscope", length = 10, nullable = true, columnDefinition = "INT default 0")
+	private Integer suitscope;
+	//小巴币适用对象 :平台ID、教练ID、驾校ID
+	@Column(name = "suitid", length = 10, nullable = true, columnDefinition = "INT default 0")
+	private Integer suitid;	
+	
+	//结算方类型
+	@Column(name = "settlementtype", length = 10, nullable = true, columnDefinition = "INT default 0")
+	private Integer settlementtype;	
+	//结算方ID
+	@Column(name = "settlementid", length = 10, nullable = true, columnDefinition = "INT default 0")
+	private Integer settlementid;		
+	
+	
 	//教练姓名
 	@Transient
 	private String coachname;
@@ -213,6 +230,38 @@ public class CoinRecordInfo implements Serializable {
 
 	public void setCoachname(String coachname) {
 		this.coachname = coachname;
+	}
+
+	public Integer getSuitscope() {
+		return suitscope;
+	}
+
+	public void setSuitscope(Integer suitscope) {
+		this.suitscope = suitscope;
+	}
+
+	public Integer getSuitid() {
+		return suitid;
+	}
+
+	public void setSuitid(Integer suitid) {
+		this.suitid = suitid;
+	}
+
+	public Integer getSettlementtype() {
+		return settlementtype;
+	}
+
+	public void setSettlementtype(Integer settlementtype) {
+		this.settlementtype = settlementtype;
+	}
+
+	public Integer getSettlementid() {
+		return settlementid;
+	}
+
+	public void setSettlementid(Integer settlementid) {
+		this.settlementid = settlementid;
 	}
 	
 }

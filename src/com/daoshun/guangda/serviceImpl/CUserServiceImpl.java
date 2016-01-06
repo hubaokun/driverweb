@@ -24,6 +24,7 @@ import com.daoshun.common.DeviceType;
 import com.daoshun.common.PushtoSingle;
 import com.daoshun.common.QueryResult;
 import com.daoshun.common.SendPushThreadTask;
+import com.daoshun.common.SuitScope;
 import com.daoshun.common.UserType;
 import com.daoshun.guangda.pojo.AdminInfo;
 import com.daoshun.guangda.pojo.BackstageRecharge;
@@ -1951,6 +1952,37 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 		 result.put("RechargeRecordInfo", tempRechargeRecordInfo);
 		 return result;
 	}
+	/**
+	 * 教练提现关联的订单
+	 */
+	@Override
+	public Map getCoachCashOrder(int applyid, String coachid) {
+		 Map result=new HashMap();
+		 CuserInfo tempCuserInfo=(CuserInfo) dataDao.getObjectById(CuserInfo.class, CommonUtils.parseInt(coachid, 0));
+		 StringBuffer querystring2=new StringBuffer();
+		 String[] params={"applyid","coachid"};
+		 querystring2.append("from OrderInfo where orderid in ");
+		 querystring2.append(" (select orderid from CashOrder where applyid=:applyid  and coachid=:coachid  )");
+		 List<OrderInfo> tempOrderInfo=(List<OrderInfo>) dataDao.getObjectsViaParam(querystring2.toString(), params,applyid,CommonUtils.parseInt(coachid, 0));
+		 List<Integer> studentname=new ArrayList<Integer>();
+		 if(tempOrderInfo!=null)
+		 {
+			 for(OrderInfo c:tempOrderInfo)
+			 {
+				 //如果未添加该学院ID
+				 if(!studentname.contains(c.getStudentid()))
+				 {
+					 studentname.add(c.getStudentid());
+				 }
+				 c.setCuserinfo(tempCuserInfo);
+				 SuserInfo temps=dataDao.getObjectById(SuserInfo.class,c.getStudentid());
+				 c.setStudentinfo(temps);
+			 }
+		 }
+		 
+		 result.put("orderList", tempOrderInfo);
+		 return result;
+	}
 
 	@Override
 	public void setCoachDriverSchool(List<CuserInfo> cusrlist) {
@@ -1996,6 +2028,23 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 			return (int) (totalin-totalout);
 	}
 	/**
+	 * 教练的可用小巴币2
+	 * @param coachid
+	 * @return
+	 */
+	public int getCanUseCoinnumForCoach2(String coachid) {
+			String countinhql = "select sum(coinnum) from CoinRecordInfo where (receiverid ="+coachid+" and receivertype="+ UserType.COAH+" and settlementtype="+SuitScope.COAH+" and settlementid="+coachid+")";
+			Object in= dataDao.getFirstObjectViaParam(countinhql, null);
+			int totalin= in==null?0:CommonUtils.parseInt(in.toString(), 0);
+			/*if(totalin==0){
+				return 0;
+			}*/
+			String countouthql = "select sum(coinnum) from CoinRecordInfo where (payerid ="+coachid+" and payertype="+ UserType.COAH+" and settlementtype="+SuitScope.COAH+"  and settlementid="+coachid+")";
+			Object out= dataDao.getFirstObjectViaParam(countouthql, null);
+			int totalout = (out==null) ? 0: CommonUtils.parseInt(out.toString(),0);
+			return (int) (totalin-totalout);
+	}
+	/**
 	 * 驾校发放的小巴币
 	 * @param coachid
 	 * @return
@@ -2018,6 +2067,16 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 		
 		return (int) (totalin2-totalout2);
 	}
+	
+	public int getCanUseCoinnumForDriveSchool2( String coachid) {
+		String countinhql2 = "select sum(coinnum) from CoinRecordInfo where (receiverid ="+coachid+" and receivertype="+ UserType.COAH+" and settlementtype="+SuitScope.DRIVESCHOOL+" )";
+		Object in2= dataDao.getFirstObjectViaParam(countinhql2, null);
+		int totalin2= in2==null?0:CommonUtils.parseInt(in2.toString(), 0);
+		String countouthql3 = "select sum(coinnum) from CoinRecordInfo where (payerid ="+coachid+" and payertype="+ UserType.COAH+" and settlementtype="+SuitScope.DRIVESCHOOL+" )";
+		Object out2= dataDao.getFirstObjectViaParam(countouthql3, null);
+		int totalout2 = (out2==null) ? 0: CommonUtils.parseInt(out2.toString(),0);
+		return (int) (totalin2-totalout2);
+	}
 	/**
 	 * 获取教练平台可用小巴币数量
 	 * @param coachid 教练id
@@ -2031,6 +2090,23 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 				return 0;
 			}*/
 			String countouthql = "select sum(coinnum) from CoinRecordInfo where (payerid = "+coachid+" and payertype="+ UserType.COAH+" and ownertype="+UserType.PLATFORM+")";
+			Object out= dataDao.getFirstObjectViaParam(countouthql, null);
+			int totalout = (out==null) ? 0: CommonUtils.parseInt(out.toString(),0);
+		return (int) (totalin-totalout);
+	}
+	/**
+	 * 获取教练平台可用小巴币数量
+	 * @param coachid 教练id
+	 * @return
+	 */
+	public int getCanUseCoinnumForPlatform2(String coachid) {
+			String countinhql = "select sum(coinnum) from CoinRecordInfo where (receiverid ="+coachid+" and receivertype="+ UserType.COAH+" and settlementtype="+SuitScope.PLATFORM+")";
+			Object in= dataDao.getFirstObjectViaParam(countinhql, null);
+			int totalin= in==null?0:CommonUtils.parseInt(in.toString(), 0);
+			/*if(totalin==0){
+				return 0;
+			}*/
+			String countouthql = "select sum(coinnum) from CoinRecordInfo where (payerid = "+coachid+" and payertype="+ UserType.COAH+" and settlementtype="+SuitScope.PLATFORM+")";
 			Object out= dataDao.getFirstObjectViaParam(countouthql, null);
 			int totalout = (out==null) ? 0: CommonUtils.parseInt(out.toString(),0);
 		return (int) (totalin-totalout);
@@ -2076,6 +2152,27 @@ public class CUserServiceImpl extends BaseServiceImpl implements ICUserService {
 				mList.add(ca);
 			}
 		}*/
+		result.put("coinaffiliationlist",mList);//教练
+		return result;
+	}
+	/**
+	 * 获取教练小巴币归属那些教练或驾校使用
+	 */
+	public HashMap<String, Object> getCoinAffiliation2(String coachid){
+		HashMap<String, Object> result = new HashMap<String, Object>();
+		//平台小巴币
+		int numForPlatform=getCanUseCoinnumForPlatform2(coachid);
+		CoinAffiliation cf=new CoinAffiliation(numForPlatform,"",SuitScope.PLATFORM);
+		List<CoinAffiliation> mList=new ArrayList<CoinAffiliation>();
+		mList.add(cf);
+		//教练小巴币
+		int coachCoin=getCanUseCoinnumForCoach2(coachid);
+		CoinAffiliation ca=new CoinAffiliation(coachCoin,"",SuitScope.COAH);
+		mList.add(ca);
+		//驾校小巴币
+		int schoolCoin=getCanUseCoinnumForDriveSchool2(coachid);//
+		CoinAffiliation ca2=new CoinAffiliation(schoolCoin,"",SuitScope.DRIVESCHOOL);
+		mList.add(ca2);
 		result.put("coinaffiliationlist",mList);//教练
 		return result;
 	}
