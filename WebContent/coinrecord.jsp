@@ -81,7 +81,7 @@
 
 	
 	<div id="content_form_table">
-		<table border="0" cellspacing="0" cellpadding="0" style="width: 98%;">
+		<table border="0" cellspacing="0" cellpadding="0" style="width: 86%;">
 			<tr class="tr_th">
 				<th>发行者类型</th>
 				<th>支付者</th>
