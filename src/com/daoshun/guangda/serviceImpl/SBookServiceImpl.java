@@ -2678,7 +2678,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 						//混合支付时：
 						int mixCoin=0;//混合支付时小巴币个数
 						int mixMoney=0;//混合支付时余额
-						
+						dataDao.addObject(orderList.get(m).mOrderInfo);//更改完学员的冻结金额等以后再生成订单  moved by 张聚弘 20151215 
 						// 查看订单的提醒设置
 						if (orderNotiList != null && orderNotiList.size() > 0) {
 							for (OrderNotiSetInfo setInfo1 : orderNotiList) {
@@ -2829,7 +2829,7 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 								//#############余额支付结束############################
 							}
 							dataDao.updateObject(student);
-							dataDao.addObject(orderList.get(m).mOrderInfo);//更改完学员的冻结金额等以后再生成订单  moved by 张聚弘 20151215 
+							
 							//TODO: 后继需要重构代码并使用事物进行rollback处理
 						}
 					}

@@ -1947,12 +1947,12 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 	 * @return
 	 */
 	public CoinRecordInfo getCanUseCoinnumSettlementInfo(String studentid) {
-		String countinhql = "from CoinRecordInfo where (receiverid ="+studentid+" and receivertype="+ UserType.STUDENT+" group by settlementtype  having sum(coinnum)>0)";
+		String countinhql = "from CoinRecordInfo where receiverid ="+studentid+" and receivertype="+ UserType.STUDENT+" group by settlementtype  having sum(coinnum)>0";
 		CoinRecordInfo cr= (CoinRecordInfo) dataDao.getFirstObjectViaParam(countinhql, null);
 		return cr;
 	}
 	public List<CoinRecordInfo> getCanUseCoinnumSettlementInfo2(String studentid) {
-		String countinhql = "from CoinRecordInfo where (receiverid ="+studentid+" and receivertype="+ UserType.STUDENT+" group by settlementtype  having sum(coinnum)>0)";
+		String countinhql = "from CoinRecordInfo where receiverid ="+studentid+" and receivertype="+ UserType.STUDENT+" group by settlementtype  having sum(coinnum)>0";
 		List<CoinRecordInfo> crlist= (List<CoinRecordInfo>) dataDao.getObjectsViaParam(countinhql, null);
 		return crlist;
 	}
