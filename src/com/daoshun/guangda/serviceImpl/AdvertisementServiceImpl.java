@@ -107,18 +107,15 @@ public class AdvertisementServiceImpl extends BaseServiceImpl implements IAdvert
 			adsql.append(" AND img.width = " + width);
 		}
 		if (!CommonUtils.isEmptyString(cityid)) {
-			adsql.append(" AND ( sco.cityid = '" + cityid + "' ");
+			adsql.append(" AND ( ( sco.cityid = '" + cityid + "' AND sco.driverschoolid IS NULL ) ");
 		} else {
-			adsql.append(" AND ( sco.cityid = '330100' ");
+			adsql.append(" AND ( ( sco.cityid = '330100' AND sco.driverschoolid IS NULL ) ");
 		}
 		if (!CommonUtils.isEmptyString(driverschoolid)) {
-			adsql.append(" OR (sco.driverschoolid = " + driverschoolid);
-			if(CommonUtils.isEmptyString(coachid)){
-				adsql.append(" and sco.coachid = " + coachid +") ");
-			}else{
-				adsql.append(" and sco.coachid is null) ");
-			}
-			
+			adsql.append(" OR (sco.driverschoolid = " + driverschoolid +"  AND sco.coachid IS NULL )");
+		}
+		if(CommonUtils.isEmptyString(coachid)){
+			adsql.append(" OR sco.coachid = " + coachid +" ");
 		}
 		adsql.append(" ) order by ad.ordervalue ASC, ad.begintime ASC");
 		//System.out.println(adsql.toString());
