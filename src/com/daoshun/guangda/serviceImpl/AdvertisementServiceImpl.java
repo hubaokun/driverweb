@@ -97,9 +97,9 @@ public class AdvertisementServiceImpl extends BaseServiceImpl implements IAdvert
 		if (!CommonUtils.isEmptyString(position)) {
 			adsql.append(" AND ad.position = " + position);
 		}
-		if (!CommonUtils.isEmptyString(devicetype)) {
-			adsql.append(" AND img.devicetype = " + devicetype);
-		}
+//		if (!CommonUtils.isEmptyString(devicetype)) {
+//			adsql.append(" AND img.devicetype = " + devicetype);
+//		}
 		if (!CommonUtils.isEmptyString(height)) {
 			adsql.append(" AND img.height = " + height);
 		}
