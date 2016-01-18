@@ -16,6 +16,7 @@
 <script  type="text/javascript" src="coach/js/coachdetail.js"></script>
 <script type="text/javascript" src="systemconfig/js/My97DatePicker/WdatePicker.js"></script>
 <script type="text/javascript"src="student/js/singlestudent.js"></script>
+<script type="text/javascript" src="student/js/locationjs/aircity.js"></script>
 <script type="text/javascript" src="student/js/locationjs/j.dimensions.js"></script>
 <script type="text/javascript" src="student/js/locationjs/j.suggest.js"></script>
 <script type="text/javascript">
@@ -366,7 +367,12 @@ $(function(){
 </div>
 </body>
 <script type="text/javascript">
-<% String error = new String(request.getParameter("msgError").getBytes("ISO8859-1"),"UTF-8");%>
+<% 
+String msgError = "";
+if(request.getParameter("msgError")!=null){
+	msgError = request.getParameter("msgError");
+}
+String error = new String(msgError.getBytes("ISO8859-1"),"UTF-8");%>
 	var editsucc='${param.editsucc}';
 	var errorMsg='<%=error%>'
 	if(editsucc=='1'){

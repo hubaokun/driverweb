@@ -28,4 +28,7 @@ public interface IDriveSchoolService {
 	 * @return
 	 */
 	public List<DriveSchoolInfo> getDriveschoolByCityName(String cityid) ;
+	
+	
+	public List<DriveSchoolInfo> getDriveschoolByCityId(String cityid) ;
 }

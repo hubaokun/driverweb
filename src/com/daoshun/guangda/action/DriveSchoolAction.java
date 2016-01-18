@@ -362,6 +362,13 @@ public class DriveSchoolAction extends BaseAction {
 			strToJson(map);
 		
 	}
+	@Action(value = "getschoollistByCityId")
+	public void getschoollistByCityId(){
+			driveSchoollist=driveSchoolService.getDriveschoolByCityId(cityid);
+			HashMap<String,Object> map = new HashMap<String,Object>();
+			map.put("driveSchoollist", driveSchoollist);
+			strToJson(map);
+	}
 	
 	
 	

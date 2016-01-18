@@ -286,6 +286,19 @@ public class SuserInfo implements Serializable {
 	@Column(name = "drive_school")
 	private String drive_school;
 	
+	@Transient
+	private String province;
+	
+	public String getProvince()
+	{
+		return province;
+	}
+
+	public void setProvince(String province)
+	{
+		this.province = province;
+	}
+
 	public Integer getEnrollstate() {
 		return enrollstate;
 	}
