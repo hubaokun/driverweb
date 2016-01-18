@@ -3056,24 +3056,24 @@ function addcoach() {
 }
 
 
-//添加学员
-function addstudent() {
-//	var admin_login=$("#admin_login").val();
-//	var admin_name=$("#admin_name").val();
-//	var admin_password=$("#admin_password").val();
-	var newstudentphone=$("#newstudentphone").val();
-	var regu =/^(?:13\d|15[0123456789]|12[0123456789]|11[0123456789]|14[0123456789]|16[0123456789]|17[0123456789]|19[0123456789]|18[0123456789]|17[0123456789])-?\d{5}(\d{3}|\*{3})$/;
-	if(!regu.test($("input[name=newstudentphone]").val())){
-		alert("用户联系电话格式不正确");
-		return;
-	}
-	if(newstudentphone==""){
-		alert("手机号码不能为空");
-		return;
-	}else{
-		$("#form_submit").submit();
-	}
-}
+////添加学员
+//function addstudent() {
+////	var admin_login=$("#admin_login").val();
+////	var admin_name=$("#admin_name").val();
+////	var admin_password=$("#admin_password").val();
+//	var newstudentphone=$("#newstudentphone").val();
+//	var regu =/^(?:13\d|15[0123456789]|12[0123456789]|11[0123456789]|14[0123456789]|16[0123456789]|17[0123456789]|19[0123456789]|18[0123456789]|17[0123456789])-?\d{5}(\d{3}|\*{3})$/;
+//	if(!regu.test($("input[name=newstudentphone]").val())){
+//		alert("用户联系电话格式不正确");
+//		return;
+//	}
+//	if(newstudentphone==""){
+//		alert("手机号码不能为空");
+//		return;
+//	}else{
+//		$("#form_submit").submit();
+//	}
+//}
 
 //添加跟进记录
 function addcontent(){
