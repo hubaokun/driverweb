@@ -179,11 +179,7 @@ function getCoachCashOrder(applyid,coachid)
 									<div class="table_button_text"
 										onclick="getdetail(${applyid},${coach.coachid},${amount});">提现详情</div>
 								</div>
-								<div class="table_edit_button" style="width: 90px;background:#ff9966;margin-top:15px">
-									<div class="table_button_edit_icon"></div>
-									<div class="table_button_text"
-										onclick="getCoachCashOrder(${applyid},${coach.coachid});">提现订单</div>
-								</div>
+
 								
 								</s:if>
 								<s:else><!--

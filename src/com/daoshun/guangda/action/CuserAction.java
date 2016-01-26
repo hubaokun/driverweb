@@ -334,6 +334,7 @@ public class CuserAction extends BaseAction {
 	private Integer editcar_tastesubject3max;
 	private Integer editsignstate;
 	private String editcar_signexpired;
+	private List<OrderInfo> cashOrderlist;//本次提现管理订单
 	
 
 	/**
@@ -1267,6 +1268,7 @@ public class CuserAction extends BaseAction {
 		cacash=(CApplyCashInfo) result.get("CApplyCashInfo");
 		orderlist=(List<OrderInfo>) result.get("OrderInfo");
 		recharglist=(List<RechargeRecordInfo>) result.get("RechargeRecordInfo");
+		cashOrderlist = (List<OrderInfo>) result.get("cashOrderlist");
 		return SUCCESS;
 	}
 	/**
@@ -3412,6 +3414,14 @@ public class CuserAction extends BaseAction {
 
 	public void setReason(String reason) {
 		this.reason = reason;
+	}
+
+	public List<OrderInfo> getCashOrderlist() {
+		return cashOrderlist;
+	}
+
+	public void setCashOrderlist(List<OrderInfo> cashOrderlist) {
+		this.cashOrderlist = cashOrderlist;
 	}
 	
 	

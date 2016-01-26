@@ -19,7 +19,6 @@ import com.alipay.config.AlipayConfig;
 import com.daoshun.common.CoinType;
 import com.daoshun.common.CommonUtils;
 import com.daoshun.common.QueryResult;
-import com.daoshun.common.SuitScope;
 import com.daoshun.common.UserType;
 import com.daoshun.guangda.pojo.AdminInfo;
 import com.daoshun.guangda.pojo.AlipayCallBack;
@@ -1615,153 +1614,6 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			//}
 		}
 	}
-	public void addCoinForSettlement2(OrderInfo order,CuserInfo cuser,SuserInfo student,int type){
-		//可用教练小巴币
-		//int coinnumForCoach=getCanUseCoinnum(String.valueOf(order.getCoachid()),);
-		int coinnumForCoach=getCanUseCoinnumForCoach2(String.valueOf(order.getStudentid()));
-		//获取驾校可用小巴币
-		int coinnumForSchool=getCanUseCoinnumForDriveSchool2(String.valueOf(order.getStudentid()));
-		//获取平台发送的小巴币
-		int coinnumForPlatform=getCanUseCoinnumForPlatform2(String.valueOf(order.getStudentid()));//获取平台可用小巴币
-		/*CoinRecordInfo coinRec=getCanUseCoinnumSettlementInfo(String.valueOf(order.getStudentid()));
-		int settlementtype=0;//结算方类型
-		int settlementid=0;//结算方ID
-		if(coinRec!=null){
-			if(coinRec.getSettlementid()!=null){
-				settlementid=coinRec.getSettlementid();
-			}
-			if(coinRec.getSettlementtype()!=null){
-				settlementtype=coinRec.getSettlementtype();
-			}
-		}*/
-		
-		List<CoinRecordInfo> crlist=getCanUseCoinnumSettlementInfo2(String.valueOf(order.getStudentid()));
-		int coachSettlementtype=0;
-		int coachSettlementid=0;
-		
-		int driverSchoolSettlementtype=0;
-		int driverSchoolSettlementid=0;
-		
-		int platformSettlementtype=0;
-		int platformSettlementid=0;
-		
-		for (CoinRecordInfo cr : crlist) {
-			if(cr.getSettlementtype()==SuitScope.COAH){
-				coachSettlementtype=cr.getSettlementtype();
-				coachSettlementid=cr.getSettlementid();
-			}
-			if(cr.getSettlementtype()==SuitScope.DRIVESCHOOL){
-				driverSchoolSettlementtype=cr.getSettlementtype();
-				driverSchoolSettlementid=cr.getSettlementid();
-			}
-			if(cr.getSettlementtype()==SuitScope.PLATFORM){
-				platformSettlementtype=cr.getSettlementtype();
-				platformSettlementid=cr.getSettlementid();
-			}
-		}
-		
-		//订单额
-		int total=0;
-		if(type==1){
-			total=order.getTotal().intValue();
-		}else if(type==2){
-			total=order.getMixCoin();
-		}
-		//小巴币结算优先顺序 ：教练--驾校--平台
-		if(coinnumForCoach>=total){//驾校小巴币大于等于订单额时，使用平台小巴币结算
-			CoinRecordInfo cr1=createRecordInfo(order,cuser,student);
-			cr1.setOwnerid(order.getCoachid());
-			cr1.setOwnertype(UserType.COAH);
-			cr1.setOwnername(cuser.getRealname());
-			cr1.setCoinnum(order.getTotal().intValue());
-			cr1.setSuitscope(SuitScope.COAH);
-			cr1.setSuitid(cuser.getCoachid());
-			cr1.setSettlementid(coachSettlementid);
-			cr1.setSettlementtype(coachSettlementtype);
-	        dataDao.addObject(cr1);
-		}else if((coinnumForCoach+coinnumForSchool)>=total){//教练小巴币与驾校小巴币大于等于订单额时，使用教练小巴币和驾校小巴币结算
-			//需要插入2条记录
-			//教练的小巴币全部结算掉
-			if(coinnumForCoach>0){
-				CoinRecordInfo cr2=createRecordInfo(order,cuser,student);
-				cr2.setOwnerid(order.getCoachid());
-				cr2.setOwnertype(UserType.COAH);
-				cr2.setOwnername(cuser.getRealname());
-				cr2.setCoinnum(coinnumForCoach);
-				cr2.setSuitscope(SuitScope.COAH);
-				cr2.setSuitid(cuser.getCoachid());
-				cr2.setSettlementid(coachSettlementid);
-				cr2.setSettlementtype(coachSettlementtype);
-		        dataDao.addObject(cr2);
-			}
-			if(coinnumForSchool>0){
-				CoinRecordInfo cr3=createRecordInfo(order,cuser,student);
-				//剩余部分由驾校小巴币结算
-		        DriveSchoolInfo school=getCoinForDriveSchool2(student.getStudentid());
-		        if(school!=null){
-		        	cr3.setOwnerid(school.getSchoolid());
-		        	cr3.setOwnername(school.getName());
-		        	cr3.setSuitscope(SuitScope.DRIVESCHOOL);
-				    cr3.setSuitid(school.getSchoolid());
-		        }else{
-		        	cr3.setOwnerid(-1);
-		        	cr3.setOwnername("驾校");
-		        }
-		        cr3.setOwnertype(UserType.DRIVESCHOOL);
-		        cr3.setSettlementid(driverSchoolSettlementid);
-				cr3.setSettlementtype(driverSchoolSettlementtype);
-		        cr3.setCoinnum(total-coinnumForCoach);//剩余部分由驾校小巴币结算
-		        dataDao.addObject(cr3);
-			}
-		}else if((coinnumForCoach+coinnumForSchool+coinnumForPlatform)>=total){
-			//最多需要插入3条记录
-			//if(coinnumForPlatform>0 && coinnumForSchool>0 && coinnumForCoach>0 && (coinnumForPlatform+coinnumForSchool)<total){
-				if(coinnumForCoach>0){
-					CoinRecordInfo cr4=createRecordInfo(order,cuser,student);
-					cr4.setOwnerid(order.getCoachid());
-					cr4.setOwnertype(UserType.COAH);
-					cr4.setOwnername(cuser.getRealname());
-					cr4.setCoinnum(coinnumForCoach);
-					cr4.setSuitscope(SuitScope.COAH);
-					cr4.setSuitid(cuser.getCoachid());
-					cr4.setSettlementid(coachSettlementid);
-					cr4.setSettlementtype(coachSettlementtype);
-			        dataDao.addObject(cr4);
-				}
-		        //剩余其中一部分由驾校小巴币结算
-				if(coinnumForSchool>0){
-					CoinRecordInfo cr5=createRecordInfo(order,cuser,student);
-				    DriveSchoolInfo school=getCoinForDriveSchool2(student.getStudentid());
-				    if(school!=null){
-				    	cr5.setOwnerid(school.getSchoolid());
-				    	cr5.setOwnername(school.getName());
-				    	cr5.setSuitscope(SuitScope.DRIVESCHOOL);
-				    	cr5.setSuitid(school.getSchoolid());
-				    }else{
-				    	cr5.setOwnerid(-1);
-				    	cr5.setOwnername("驾校");
-				    }
-				    cr5.setOwnertype(UserType.DRIVESCHOOL);
-				    cr5.setSettlementid(driverSchoolSettlementid);
-					cr5.setSettlementtype(driverSchoolSettlementtype);
-				    cr5.setCoinnum(coinnumForSchool);//剩余其中一部分由驾校小巴币结算
-				    dataDao.addObject(cr5);
-				}
-				if(coinnumForPlatform>0){
-					CoinRecordInfo cr6=createRecordInfo(order,cuser,student);
-					cr6.setOwnerid(0);
-					cr6.setOwnertype(UserType.PLATFORM);
-					cr6.setOwnername("平台");
-					cr6.setSuitscope(SuitScope.PLATFORM);
-					cr6.setSuitid(0);
-					cr6.setSettlementid(platformSettlementid);
-					cr6.setSettlementtype(platformSettlementtype);
-					cr6.setCoinnum(total-coinnumForCoach-coinnumForSchool);//平台小巴币结算一部分
-			        dataDao.addObject(cr6);
-				}
-			//}
-		}
-	}
 	public void getFrozenCoinAffiliationException(){
 		String hql="from SuserInfo";
 		
@@ -1891,26 +1743,6 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		}
 	}
 	/**
-	 * 获取学员针对某个教练的可用小巴币
-	 * @param coachid 教练ID
-	 * @param studentid 学员ID
-	 * @return 小巴币个数
-	 */
-	
-	public int getCanUseCoinnum2(String coachid, String studentid) {
-			String countinhql = "select sum(coinnum) from CoinRecordInfo where (receiverid ="+studentid+" and receivertype="+ UserType.STUDENT+" and suitscope="+UserType.COAH+" and suitid="+coachid+")";
-			Object in= dataDao.getFirstObjectViaParam(countinhql, null);
-			int totalin= in==null?0:CommonUtils.parseInt(in.toString(), 0);
-		String countouthql = "select sum(coinnum) from CoinRecordInfo where (payerid ="+studentid+" and payertype="+ UserType.STUDENT+" and suitscope="+UserType.COAH+"  and suitid="+coachid+")";
-		Object out= dataDao.getFirstObjectViaParam(countouthql, null);
-		int totalout = (out==null) ? 0: CommonUtils.parseInt(out.toString(),0);
-		if((totalin-totalout)>=0){
-			return (totalin-totalout);
-		}else{
-			return 0;
-		}
-	}
-	/**
 	 * 获取学员针对所有教练的可用小巴币
 	 * @param coachid 教练ID
 	 * @param studentid 学员ID
@@ -1928,33 +1760,6 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		Object out= dataDao.getFirstObjectViaParam(countouthql, null);
 		int totalout = (out==null) ? 0: CommonUtils.parseInt(out.toString(),0);
 		return (int) (totalin-totalout);
-	}
-	public int getCanUseCoinnumForCoach2(String studentid) {
-		String countinhql = "select sum(coinnum) from CoinRecordInfo where (receiverid ="+studentid+" and receivertype="+ UserType.STUDENT+" and suitscope="+SuitScope.COAH+")";
-		Object in= dataDao.getFirstObjectViaParam(countinhql, null);
-		int totalin= in==null?0:CommonUtils.parseInt(in.toString(), 0);
-		/*if(totalin==0){
-			return 0;
-		}*/
-		String countouthql = "select sum(coinnum) from CoinRecordInfo where (payerid ="+studentid+" and payertype="+ UserType.STUDENT+" and suitscope="+SuitScope.COAH+")";
-		Object out= dataDao.getFirstObjectViaParam(countouthql, null);
-		int totalout = (out==null) ? 0: CommonUtils.parseInt(out.toString(),0);
-		return (int) (totalin-totalout);
-	}
-	/**
-	 * 可用小巴币结算方信息
-	 * @param studentid
-	 * @return
-	 */
-	public CoinRecordInfo getCanUseCoinnumSettlementInfo(String studentid) {
-		String countinhql = "from CoinRecordInfo where receiverid ="+studentid+" and receivertype="+ UserType.STUDENT+" group by settlementtype  having sum(coinnum)>0";
-		CoinRecordInfo cr= (CoinRecordInfo) dataDao.getFirstObjectViaParam(countinhql, null);
-		return cr;
-	}
-	public List<CoinRecordInfo> getCanUseCoinnumSettlementInfo2(String studentid) {
-		String countinhql = "from CoinRecordInfo where receiverid ="+studentid+" and receivertype="+ UserType.STUDENT+" group by settlementtype  having sum(coinnum)>0";
-		List<CoinRecordInfo> crlist= (List<CoinRecordInfo>) dataDao.getObjectsViaParam(countinhql, null);
-		return crlist;
 	}
 	
 	
@@ -1987,23 +1792,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		String countouthql3 = "select sum(coinnum) from CoinRecordInfo where (payerid ="+studentid+" and payertype="+ UserType.STUDENT+" and ownertype="+UserType.DRIVESCHOOL+")";
 		Object out2= dataDao.getFirstObjectViaParam(countouthql3, null);
 		int totalout2 = (out2==null) ? 0: CommonUtils.parseInt(out2.toString(),0);
-		return (int) (totalin2-totalout2);
-	}
-	/**
-	 * 学员驾校可用小巴币
-	 * @param studentid
-	 * @return
-	 */
-	public int getCanUseCoinnumForDriveSchool2( String studentid) {
-		String countinhql2 = "select sum(coinnum) from CoinRecordInfo where (receiverid ="+studentid+" and receivertype="+ UserType.STUDENT+" and suitscope="+SuitScope.DRIVESCHOOL+")";
-		Object in2= dataDao.getFirstObjectViaParam(countinhql2, null);
-		int totalin2= in2==null?0:CommonUtils.parseInt(in2.toString(), 0);
-		/*if(totalin2==0){
-			return 0;
-		}*/
-		String countouthql3 = "select sum(coinnum) from CoinRecordInfo where (payerid ="+studentid+" and payertype="+ UserType.STUDENT+" and suitscope="+SuitScope.DRIVESCHOOL+")";
-		Object out2= dataDao.getFirstObjectViaParam(countouthql3, null);
-		int totalout2 = (out2==null) ? 0: CommonUtils.parseInt(out2.toString(),0);
+		
 		return (int) (totalin2-totalout2);
 	}
 	/**
@@ -2051,17 +1840,6 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		}
 		return school;
 	}
-	public DriveSchoolInfo getCoinForDriveSchool2(int studentid) {
-		String dschoolhql="from CoinRecordInfo where receiverid =:receiverid and receivertype=3 and suitscope=:suitscope GROUP BY suitscope";
-		String dparams[]={"receiverid","ownertype"};
-		List<CoinRecordInfo> slist= (List<CoinRecordInfo>)dataDao.getObjectsViaParam(dschoolhql, dparams, studentid,SuitScope.DRIVESCHOOL);
-		DriveSchoolInfo school=null;
-		if(slist!=null && slist.size()>0){
-			CoinRecordInfo cr=slist.get(0);
-			school=dataDao.getObjectById(DriveSchoolInfo.class, cr.getOwnerid());
-		}
-		return school;
-	}
 	/*public DriveSchoolInfo getCoinForCoach(int studentid) {
 		String dschoolhql="from CoinRecordInfo where receiverid =:receiverid and receivertype=3 and ownertype=:ownertype GROUP BY ownerid";
 		String dparams[]={"receiverid","ownertype"};
@@ -2093,26 +1871,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		return (int) (totalin-totalout);
 	}
 	/**
-	 * 获取平台发给学员的可用小巴币数量2
-	 * @param pid 平台ID
-	 * @param studentid 学员ID
-	 * 
-	 * @return
-	 */
-	public int getCanUseCoinnumForPlatform2(String studentid) {
-			String countinhql = "select sum(coinnum) from CoinRecordInfo where (receiverid ="+studentid+" and receivertype="+ UserType.STUDENT+" and suitscope="+SuitScope.PLATFORM+")";
-			Object in= dataDao.getFirstObjectViaParam(countinhql, null);
-			int totalin= in==null?0:CommonUtils.parseInt(in.toString(), 0);
-			/*if(totalin==0){
-				return 0;
-			}*/
-			String countouthql = "select sum(coinnum) from CoinRecordInfo where (payerid ="+studentid+" and payertype="+ UserType.STUDENT+" and suitscope="+SuitScope.PLATFORM+")";
-			Object out= dataDao.getFirstObjectViaParam(countouthql, null);
-			int totalout = (out==null) ? 0: CommonUtils.parseInt(out.toString(),0);
-		return (int) (totalin-totalout);
-	}
-	/**
-	 * 获取学员小巴币归属哪些教练或驾校使用
+	 * 获取学员小巴币归属那些教练或驾校使用
 	 */
 	public HashMap<String, Object> getCoinAffiliation(String studentid){
 		HashMap<String, Object> result = new HashMap<String, Object>();
@@ -2179,55 +1938,6 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 			CoinAffiliation cf=new CoinAffiliation(numForPlatform,"适用:所有教练");
 			mList.add(cf);//通用
 		}
-		result.put("coinaffiliationlist",mList);//教练
-		return result;
-	}
-	/*public List<CoinRecordInfo> getCoinRecordAffiliation(int suitscope,int suitid,int receiverid){
-		String hql="from CoinRecordInfo where suitscope=:suitscope and suitid=:suitid and type=1 and receiverid=:receiverid";
-		String params[]={"suitscope","suitid","receiverid"};
-		List<CoinRecordInfo> crlist= (List<CoinRecordInfo>) dataDao.getObjectsViaParam(hql, params,suitscope,suitid,receiverid);
-		return crlist;
-	}*/
-	/**
-	 * 获取学员小巴币归属哪些教练或驾校使用2
-	 */
-	public HashMap<String, Object> getCoinAffiliation2(String studentid){
-		HashMap<String, Object> result = new HashMap<String, Object>();
-		List<CoinAffiliation> mList=new ArrayList<CoinAffiliation>();
-		String hql="from CoinRecordInfo where receiverid =:receiverid and receivertype=3 and suitscope=:suitscope GROUP BY suitscope";
-		String params[]={"receiverid","suitscope"};
-		List<CoinRecordInfo> crlist= (List<CoinRecordInfo>) dataDao.getObjectsViaParam(hql, params, CommonUtils.parseInt(studentid, 0),UserType.COAH);
-		if(crlist!=null && crlist.size()>0){
-			for (CoinRecordInfo coinRecordInfo : crlist) {
-				int coachid=coinRecordInfo.getOwnerid();
-				int coachCoin=getCanUseCoinnum2(String.valueOf(coachid),studentid);
-				String coachName="";
-				if(coinRecordInfo.getOwnername()!=null){
-					coachName=coinRecordInfo.getOwnername();
-				}else{
-					CuserInfo cuser=dataDao.getObjectById(CuserInfo.class, coachid);
-					if(cuser!=null){
-						coachName=cuser.getRealname();
-					}
-				}
-				CoinAffiliation ca=new CoinAffiliation(coachCoin,"仅限:"+coachName+"教练");
-				mList.add(ca);
-			}
-		}
-		String dschoolhql="from CoinRecordInfo where receiverid =:receiverid and receivertype=3 and suitscope=:suitscope GROUP BY suitscope";
-		String dparams[]={"receiverid","suitscope"};
-		List<CoinRecordInfo> slist= (List<CoinRecordInfo>)dataDao.getObjectsViaParam(dschoolhql, dparams, CommonUtils.parseInt(studentid, 0),UserType.DRIVESCHOOL);
-		if(slist!=null && slist.size()>0){
-			for (CoinRecordInfo coinRecordInfo : slist) {
-				int schoolCoin=getCanUseCoinnumForDriveSchool2(studentid);
-				CoinAffiliation ca=new CoinAffiliation(schoolCoin,"仅限:"+coinRecordInfo.getOwnername());
-				mList.add(ca);
-			}
-		}
-		//平台小巴币
-		int numForPlatform=getCanUseCoinnumForPlatform2(studentid);
-		CoinAffiliation cf=new CoinAffiliation(numForPlatform,"适用:所有教练");
-		mList.add(cf);
 		result.put("coinaffiliationlist",mList);//教练
 		return result;
 	}
@@ -2683,7 +2393,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		}
 		receiverMoney=backstageAdd.subtract(backstageReduce).add(coachMoney).add(coachMixMoney);
 		//提现金额
-		String hql3="select sum(amount) from CApplyCashInfo where coachid=:coachid and state=1";
+		String hql3="select sum(amount) from CApplyCashInfo where coachid=:coachid and state=5";
 		BigDecimal amount=(BigDecimal) dataDao.getFirstObjectViaParam(hql3, new String[]{"coachid"}, coachid);
 		if(amount==null){
 			amount=new BigDecimal(0);
@@ -2698,7 +2408,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
   	 */
 	public BigDecimal getCoachFrozenMoney(int coachid){
 		//提现冻结金额
-		String hqlFreeze="select sum(amount) from CApplyCashInfo where coachid=:coachid and state=0";
+		String hqlFreeze="select sum(amount) from CApplyCashInfo where coachid=:coachid and state in (0,1,2)";
 		BigDecimal freezeAmount=(BigDecimal) dataDao.getFirstObjectViaParam(hqlFreeze, new String[]{"coachid"}, coachid);
 		if(freezeAmount==null){
 			freezeAmount=new BigDecimal(0);

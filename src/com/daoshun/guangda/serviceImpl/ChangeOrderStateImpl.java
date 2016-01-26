@@ -158,7 +158,7 @@ public class ChangeOrderStateImpl extends BaseServiceImpl implements IChangeOrde
 							orderTotal=orderTotal.add(new BigDecimal(coachOrdercoinnum));
 							//教练小巴币增加
 							cuser.setCoinnum(orderTotal.intValue());
-							suserService.addCoinForSettlement2(order, cuser, student,1);
+							suserService.addCoinForSettlement(order, cuser, student,1);
 							/*CoinRecordInfo coinRecordInfo = new CoinRecordInfo ();
 					        coinRecordInfo.setReceiverid(cuser.getCoachid());
 					        coinRecordInfo.setReceivertype(UserType.COAH);

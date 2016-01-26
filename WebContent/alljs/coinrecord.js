@@ -221,51 +221,24 @@ function showsearchowner(){
     var ownertype = $("#ownertype").val();
     $("#ownerid").remove();
     $("#bigsearch").remove();
-    if(ownertype==3){
+    if(ownertype==2){
         var html = "";
         html +='<div id="bigsearch" style="width: 100%; height: 75px; border-bottom: 1px solid #eaeff2;">';
-        html +='<div style="float:left; width: 143px; height: 100%; line-height: 75px; border-right: 1px solid #eaeff2;text-align: right;">适用的教练名称或手机<span style="color:#f83a22; margin-right:16px; margin-left: 8px;">*</span></div>';
+        html +='<div style="float:left; width: 143px; height: 100%; line-height: 75px; border-right: 1px solid #eaeff2;text-align: right;">教练名称或手机<span style="color:#f83a22; margin-right:16px; margin-left: 8px;">*</span></div>';
         html +='<div style="height: 100%; line-height: 75px; float:left; margin-left: 20px;">';
         html +='<input value="" name="owenersearch" id="coachsearchname" onkeyup="searchCuser();" autocomplete="off"  required="required" style="width: 800px; height: 33px; padding-left:5px; border: 1px solid #eaeff2; margin-top: 20px;">';
         html +='</div><div class="binding_detail"  style="  left: 164px;top:-20px;clear:both;" id="gartenDetail" >';
         html +='</div><input type="hidden" id="ownerid" name="ownerid" required="required">';
         $("#searchbefore").before(html);
-    }else if(ownertype==2){
+    }else if(ownertype==1){
         var html = "";
         html +='<div  id="bigsearch" style="width: 100%; height: 75px; border-bottom: 1px solid #eaeff2;">';
-        html +='<div style="float:left; width: 143px; height: 100%; line-height: 75px; border-right: 1px solid #eaeff2;text-align: right;">适用的驾校名称<span style="color:#f83a22; margin-right:16px; margin-left: 8px;">*</span></div>';
+        html +='<div style="float:left; width: 143px; height: 100%; line-height: 75px; border-right: 1px solid #eaeff2;text-align: right;">驾校名称<span style="color:#f83a22; margin-right:16px; margin-left: 8px;">*</span></div>';
         html +='<div style="height: 100%; line-height: 75px; float:left; margin-left: 20px;">';
         html +='<input value="" name="owenersearch" id="searchname" onkeyup="searchDriveSchool();" autocomplete="off"  required="required" style="width: 800px; height: 33px; padding-left:5px; border: 1px solid #eaeff2; margin-top: 20px;">';
         html +='</div><div class="binding_detail" style="  left: 164px;top:-20px;clear:both;" id="gartenDetail" >';
         html +='</div><input type="hidden" id="ownerid" name="ownerid" required="required">';
         $("#searchbefore").before(html);
-    }
-}
-
-//显示结算方信息
-function showSettlement(){
-	
-    var settlementtype = $("#settlementtype").val();
-    //$("#ownerid").remove();
-    $("#bigsearch2").remove();
-    if(settlementtype==3){
-        var html = "";
-        html +='<div id="bigsearch2" style="width: 100%; height: 75px; border-bottom: 1px solid #eaeff2;">';
-        html +='<div style="float:left; width: 143px; height: 100%; line-height: 75px; border-right: 1px solid #eaeff2;text-align: right;">结算方教练名称或手机<span style="color:#f83a22; margin-right:16px; margin-left: 8px;">*</span></div>';
-        html +='<div style="height: 100%; line-height: 75px; float:left; margin-left: 20px;">';
-        html +='<input value="" name="owenersearch2" id="coachsearchname2" onkeyup="searchCuser2();" autocomplete="off"  required="required" style="width: 800px; height: 33px; padding-left:5px; border: 1px solid #eaeff2; margin-top: 20px;">';
-        html +='</div><div class="binding_detail"  style="  left: 164px;top:-20px;clear:both;" id="gartenDetail2" >';
-        html +='</div><input type="hidden" id="settlementid" name="settlementid" required="required">';
-        $("#settlementbefore").before(html);
-    }else if(settlementtype==2){
-        var html = "";
-        html +='<div  id="bigsearch2" style="width: 100%; height: 75px; border-bottom: 1px solid #eaeff2;">';
-        html +='<div style="float:left; width: 143px; height: 100%; line-height: 75px; border-right: 1px solid #eaeff2;text-align: right;">结算方驾校名称<span style="color:#f83a22; margin-right:16px; margin-left: 8px;">*</span></div>';
-        html +='<div style="height: 100%; line-height: 75px; float:left; margin-left: 20px;">';
-        html +='<input value="" name="owenersearch" id="searchname2" onkeyup="searchDriveSchool2();" autocomplete="off"  required="required" style="width: 800px; height: 33px; padding-left:5px; border: 1px solid #eaeff2; margin-top: 20px;">';
-        html +='</div><div class="binding_detail" style="  left: 164px;top:-20px;clear:both;" id="gartenDetail2" >';
-        html +='</div><input type="hidden" id="settlementid" name="settlementid" required="required">';
-        $("#settlementbefore").before(html);
     }
 }
 
@@ -331,31 +304,7 @@ function searchDriveSchool(){
         }
     });
 }
-function searchDriveSchool2(){
-    var name = $("#searchname2").val();
-    if(name == ''){
-        return;
-    }
-    $.ajax({
-        url: "searchDriveSchool.do",
-        data:{schoolkeyword: name},
-        type: "POST",
-        success: function(msg){
-            var obj = eval("("+msg+")");
-            var schoollist = obj.schoollist;
-            $("#gartenDetail2").empty();
-            $("#gartenDetail2").show();
-            for(var i = 0; i < schoollist.length; i++){
-                var id = schoollist[i].schoolid;
-                var name = schoollist[i].name;
-                $("#gartenDetail2").append(
-                    '<div class="binding_detail_item" onclick="searchOwner3('+id+', \''+name+'\')">'
-                    +name+'</div>'
-                );
-            }
-        }
-    });
-}
+
 function searchCuser(){
     var name = $("#coachsearchname").val();
     if(name == ''){
@@ -384,34 +333,6 @@ function searchCuser(){
     });
 }
 
-function searchCuser2(){
-    var name = $("#coachsearchname2").val();
-    if(name == ''){
-        return;
-    }
-    $.ajax({
-        url: "searchCuser.do",
-        data:{cuserkeyword: name},
-        type: "POST",
-        success: function(msg){
-            var obj = eval("("+msg+")");
-            var cuserlist = obj.cuserlist;
-            $("#gartenDetail2").empty();
-            $("#gartenDetail2").show();
-            for(var i = 0; i < cuserlist.length; i++){
-                var id = cuserlist[i].coachid;
-                var name = cuserlist[i].realname;
-                var phone = cuserlist[i].phone;
-                $("#gartenDetail2").append(
-                    '<div class="binding_detail_item" onclick="searchOwner4('+id+', \''+name+'\')">'
-                    +name+":"+phone
-                    +'</div>'
-                );
-            }
-        }
-    });
-}
-
 function searchOwner(id,name){
     $("#ownerid").val(id);
     $("#coachsearchname").val(name);
@@ -425,18 +346,7 @@ function searchOwner2(id,name){
     $("#gartenDetail").hide();
 }
 
-function searchOwner3(id,name){
-    $("#settlementid").val(id);
-    $("#searchname2").val(name);
-    $("#gartenDetail2").empty();
-    $("#gartenDetail2").hide();
-}
-function searchOwner4(id,name){
-    $("#settlementid").val(id);
-    $("#coachsearchname2").val(name);
-    $("#gartenDetail2").empty();
-    $("#gartenDetail2").hide();
-}
+
 function selectall() {
     var aa = $("#allcheck").val();
     if (aa == 0) {
@@ -477,16 +387,11 @@ function grantCoinRecord(){
     var ownerid = $("#ownerid").val();
     //var schoolownerid = $("#schoolownerid").val();
     var ownertype = $("#ownertype").val();
-    var settlementtype=$("#settlementtype").val();
-    var settlementid=$("#settlementid").val();
-    if(settlementtype==0){
-    	settlementid=0;
-    }
     //alert(receiverid+" "+ownerid+" "+coinnum+" "+ownertype+" "+schoolownerid);
     // if(ownertype==1){
     $.ajax({
         url: "grantCoinRecord.do",
-        data:{ownerid: ownerid,receiverid:receiverid,coinnum:coinnum,ownertype:ownertype,settlementid:settlementid,settlementtype:settlementtype},
+        data:{ownerid: ownerid,receiverid:receiverid,coinnum:coinnum,ownertype:ownertype},
         type: "POST",
         success: function(msg){
             //alert(msg);

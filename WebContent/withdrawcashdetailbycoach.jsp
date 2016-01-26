@@ -73,26 +73,113 @@ $(function(){
 				</div>
 	
 		</div>
-		
+		<div id="content_form">
+			<div id="content_form_table">
+					<font size="4" color="#4cc3ff">本次提现交易订单详情:</font><br>
+					<table border="0" cellspacing="0" cellpadding="0" style="width: 100%;">
+					  <tr class="tr_th">
+					  <th>学员姓名</th>
+					  <th>学员电话</th>
+					  <th>开始时间</th>
+					  <th>结束时间</th>
+					  <th>小巴券号码</th>
+					  <th>支付方式</th>
+					  <th>创建时间</th>
+					  <th>结算时间</th>
+					  <th>订单状态</th>
+					  <th>抵扣金额</th>
+					  <th>总价</th>
+					  </tr>
+					  <s:if test="cashOrderlist.size()>0">
+						  <s:iterator value="cashOrderlist">
+						   <tr class="tr_td">
+						    <td class="border_right_bottom">${studentinfo.realname}</td>
+						    <td class="border_right_bottom">${studentinfo.phone}</td>
+						    <td class="border_right_bottom">${start_time}</td>
+						    <td class="border_right_bottom">${end_time}</td>
+						    <td class="border_right_bottom">${couponrecordid}</td>
+						    <s:if test="paytype==0">
+						       <s:if test="couponrecordid==0 || couponrecordid==''">
+						            <td class="border_right_bottom">余额</td>
+						       </s:if>
+						       <s:else>
+						            <td class="border_right_bottom"><font color="red">老数据错单</font></td>
+						       </s:else>
+						    </s:if>
+						     <s:elseif test="paytype==1">
+						      <td class="border_right_bottom">余额</td>
+						    </s:elseif>
+						    <s:elseif test="paytype==2">
+						      <td class="border_right_bottom">小巴券</td>
+						    </s:elseif>
+						    <s:elseif test="paytype==3">
+						      <td class="border_right_bottom">小巴币</td>
+						    </s:elseif>
+						    <s:else>
+						      <td class="border_right_bottom">小巴币+余额混合支付</td>
+						    </s:else>
+						    <td class="border_right_bottom">${creat_time}</td>
+						    <td class="border_right_bottom">${over_time}</td>
+						    <td class="border_right_bottom">已结算</td>
+						    <td class="border_right_bottom">${delmoney}</td>
+						    <td class="border_right_bottom">${total}</td>
+						   </tr>
+						  </s:iterator>
+					    </s:if>
+					    <s:else>
+					     <tr class="tr_td">
+						    <td class="border_right_bottom">——</td>
+						    <td class="border_right_bottom">——</td>
+						    <td class="border_right_bottom">——</td>
+						    <td class="border_right_bottom">——</td>
+						    <td class="border_right_bottom">——</td>
+						    <td class="border_right_bottom">——</td>
+						    <td class="border_right_bottom">——</td>
+						    <td class="border_right_bottom">——</td>
+						    <td class="border_right_bottom">——</td>
+						    <td class="border_right_bottom">——</td>
+						    <td class="border_right_bottom">——</td>
+						   </tr>    
+					    </s:else>
+					</table>
+				</div>
+		</div>
 		<div id="content_form">
 			<div id="content_form_table">
 					<font size="4" color="#4cc3ff">历史提现申请详情:</font><br>
 					<table border="0" cellspacing="0" cellpadding="0" style="width: 100%;">
 					  <tr class="tr_th">
-					  <th>教练姓名</th>
-					  <th>电话号码</th>
-					  <th>提现金额</th>
+					  <th>提现申请记录ID</th>
 					  <th>申请时间</th>
-					  <th>支付宝账号</th>
+					  <th>提现金额</th>
+					  <th>审核状态</th>
+					  <th>最后操作时间</th>
 					  </tr>
 					 <s:if test="balancecoachlist.size()>0">
 					  <s:iterator value="balancecoachlist">
-					   <tr class="tr_td">
-					    <td class="border_right_bottom">${realname}</td>
-					    <td class="border_right_bottom">${phone}</td>
-					    <td class="border_right_bottom">${amount}</td>
+					   <tr class="tr_td" applystate=${state}>
+					   <td class="border_right_bottom">${applyid}</td>
 					    <td style="width: 200px;" class="border_right_bottom"><s:date name="addtime" format="yyyy-MM-dd HH:mm:ss"/></td>
-					    <td class="border_right_bottom">${alipay_account}</td>
+					    <td class="border_right_bottom">${amount}</td>
+					    <s:if test="state==0">
+							<td class="border_right_bottom">正在申请中</td>
+						</s:if>
+						<s:elseif test="state==1">
+						    <td class="border_right_bottom">一次申请通过</td>
+						</s:elseif>
+						<s:elseif test="state==2">
+						    <td class="border_right_bottom">驾校通过</td>
+						</s:elseif>
+						<s:elseif test="state==3">
+						    <td class="border_right_bottom">审核不通过</td>
+						</s:elseif>
+						<s:elseif test="state==4">
+						    <td class="border_right_bottom">作废</td>
+						</s:elseif>
+						<s:elseif test="state==5">
+						    <td class="border_right_bottom">二次申请通过</td>
+						</s:elseif>
+					    <td style="width: 200px;" class="border_right_bottom"><s:date name="updatetime" format="yyyy-MM-dd HH:mm:ss"/></td>
 					   </tr>
 					  </s:iterator>
 					  </s:if>

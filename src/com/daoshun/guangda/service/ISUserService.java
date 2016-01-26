@@ -359,6 +359,5 @@ public interface ISUserService {
 	public BigInteger getSettleOrderTime(int coachid,int studentid);
 	public BigInteger getCanUseCouponNum(int studentid);
 	public void addBackstageRecharge(String studentid, String amount,String operatetype,String reason) ;
-	public HashMap<String, Object> getCoinAffiliation2(String studentid);
-	public void addCoinForSettlement2(OrderInfo order,CuserInfo cuser,SuserInfo student,int type);
+
 }
