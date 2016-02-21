@@ -75,6 +75,12 @@ public class SignUpInfoFromAds implements Serializable {
 	@Transient
 	private AdminInfo processor;
 	
+	/**
+	 * 报名渠道来源
+	 */
+	@Column(name = "source", length = 50)
+	private String source;
+	
 	public int getSignupId()
 	{
 		return signupId;
@@ -183,6 +189,14 @@ public class SignUpInfoFromAds implements Serializable {
 	public void setProcessor(AdminInfo processor)
 	{
 		this.processor = processor;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
 	}
 	
 	

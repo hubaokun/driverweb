@@ -61,7 +61,8 @@ public class AdvertisementForm extends BaseServlet {
 		String name=request.getParameter("name");
 		String phone=request.getParameter("phoneNum");
 		Date addTime=new Date();
-		String advertiseName="学车必须这个价 2999";
+		String advertiseName=request.getParameter("advertiseName");
+		String source=request.getParameter("source");
 		
 		if(!CommonUtils.isEmptyString(name) && !CommonUtils.isEmptyString(phone))
 		{
@@ -71,6 +72,7 @@ public class AdvertisementForm extends BaseServlet {
 			signUpInfo.setAddtime(addTime);
 			signUpInfo.setState(ISignUpInfoFromAdsService.STATE_NOT_PROCESSED);
 			signUpInfo.setAdsTypeName(advertiseName);
+			signUpInfo.setSource(source);
 			signUpInfoFromAdsService.addSignUpInfo(signUpInfo);
 			code=SIGNUP_SUCCESS;
 			
