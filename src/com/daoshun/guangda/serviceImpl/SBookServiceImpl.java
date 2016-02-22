@@ -3567,7 +3567,9 @@ public class SBookServiceImpl extends BaseServiceImpl implements ISBookService {
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		String hql="";
 		if("1".equals(type)){ // type=1 过滤重复学员
-			hql = "from EvaluationInfo  where to_user = :to_user and type = 1 group by from_user order by addtime desc";
+			//hql = "from EvaluationInfo  where to_user = :to_user and type = 1 group by from_user order by addtime desc";
+			//每个学员只获取1条最新评价
+			hql = "from EvaluationInfo  where to_user = :to_user and type = 1 and evaluationid in (SELECT max(evaluationid) from EvaluationInfo  where to_user = :to_user and type = 1 group by from_user) order by addtime desc";
 		}else if("2".equals(type)){
 			hql = "from EvaluationInfo  where to_user = :to_user and type = 1 order by addtime desc";
 		}else{
