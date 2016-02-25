@@ -625,7 +625,8 @@ public class CmyServiceImpl extends BaseServiceImpl implements ICmyService {
 		HashMap<String, Object> returnResult = new HashMap<String, Object>();
 
 		List<StudentInfo> result = new ArrayList<StudentInfo>();
-		String hql = "from SuserInfo where studentid in (select studentid from CoachStudentInfo where coachid = :coachid order by money desc)";
+		//String hql = "from SuserInfo where studentid in (select studentid from CoachStudentInfo where coachid = :coachid order by money desc)";
+		String hql = "select s from SuserInfo s, CoachStudentInfo c where c.studentid = s.studentid and c.coachid = :coachid ORDER BY c.recordid desc";
 		String[] params = { "coachid" };
 		List<SuserInfo> suserList = (List<SuserInfo>) dataDao.pageQueryViaParam(hql, 10, CommonUtils.parseInt(pageNum, 0)+1, params, CommonUtils.parseInt(coachid, 0));
 		for (SuserInfo suserInfo : suserList) {
