@@ -1057,7 +1057,7 @@ public class SuserServlet extends BaseServlet {
 			return;
 		}
 		BigDecimal money=suserService.getStudentMoney(student.getStudentid());
-		BigDecimal fmoney=suserService.getStudentFrozenCoin(student.getStudentid());
+		BigDecimal fmoney=suserService.getStudentFrozenMoney(student.getStudentid());
 		if(money.intValue()<0 || fmoney.intValue()<0 || CommonUtils.parseDouble(count, 0)<0)
 		{
 			resultMap.put("code", 6);

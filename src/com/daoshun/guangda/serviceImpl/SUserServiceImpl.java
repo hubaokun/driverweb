@@ -297,7 +297,7 @@ public class SUserServiceImpl extends BaseServiceImpl implements ISUserService {
 		SuserInfo student = dataDao.getObjectById(SuserInfo.class, CommonUtils.parseInt(studentid, 0));
 		if (student != null) {
 			BigDecimal suserOrderMoney=getStudentMoney(student.getStudentid());
-			BigDecimal suserOrderFMoney=getStudentFrozenCoin(student.getStudentid());
+			BigDecimal suserOrderFMoney=getStudentFrozenMoney(student.getStudentid());
 			student.setMoney(suserOrderMoney.subtract(new BigDecimal(CommonUtils.parseInt(count, 0))));
 			student.setFmoney(suserOrderFMoney.add(new BigDecimal(CommonUtils.parseInt(count, 0))));
 			dataDao.updateObject(student);
